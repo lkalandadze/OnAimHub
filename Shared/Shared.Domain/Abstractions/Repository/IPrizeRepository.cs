@@ -2,6 +2,6 @@
 
 namespace Shared.Domain.Abstractions.Repository;
 
-public interface IPrizeRepository : IBaseRepository<Prize>
+public interface IPrizeRepository : IBaseRepository<Base.Prize>
 {
 }

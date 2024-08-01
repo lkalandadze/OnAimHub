@@ -2,13 +2,12 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shared.Domain.Entities;
-using System.Reflection.Emit;
 
 namespace Shared.Infrastructure.TypeConfigurations;
 
-public class PrizeGroupTypeConfiguration : IEntityTypeConfiguration<PrizeGroup>
+public class PrizeGroupTypeConfiguration : IEntityTypeConfiguration<Base.PrizeGroup>
 {
-    public void Configure(EntityTypeBuilder<PrizeGroup> builder)
+    public void Configure(EntityTypeBuilder<Base.PrizeGroup> builder)
     {
         builder.Property(e => e.Sequence)
                 .HasConversion(new ValueConverter<List<int>, string>(

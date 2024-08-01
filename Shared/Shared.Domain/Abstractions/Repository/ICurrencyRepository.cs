@@ -2,6 +2,6 @@
 
 namespace Shared.Domain.Abstractions.Repository;
 
-public interface ICurrencyRepository : IBaseRepository<Currency>
+public interface ICurrencyRepository : IBaseRepository<Base.Currency>
 {
 }

@@ -4,20 +4,20 @@ using System.Reflection;
 
 namespace Shared.Infrastructure.DataAccess;
 
-public class GameConfigDbContext() : DbContext
+public class GameConfigDbContext(DbContextOptions options) : DbContext(options)
 {
-    public DbSet<Prize> Prizes { get; set; }
-    public DbSet<PrizeType> PrizeTypes { get; set; }
-    public DbSet<PrizeGroup> PrizeGroups { get; set; }
-    public DbSet<Price> Prices { get; set; }
-    public DbSet<Currency> Curencies { get; set; }
-    public DbSet<Segment> Segments { get; set; }
-    public DbSet<Configuration> Configurations { get; set; }
-    public DbSet<GameVersion> GameVersions { get; set; }
+    public DbSet<Base.Prize> Prizes { get; set; }
+    public DbSet<Base.PrizeType> PrizeTypes { get; set; }
+    public DbSet<Base.PrizeGroup> PrizeGroups { get; set; }
+    public DbSet<Base.Price> Prices { get; set; }
+    public DbSet<Base.Currency> Curencies { get; set; }
+    public DbSet<Base.Segment> Segments { get; set; }
+    public DbSet<Base.Configuration> Configurations { get; set; }
+    public DbSet<Base.GameVersion> GameVersions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(GameConfigDbContext)));
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(GameConfigDbContext))!);
 
         base.OnModelCreating(modelBuilder);
     }
