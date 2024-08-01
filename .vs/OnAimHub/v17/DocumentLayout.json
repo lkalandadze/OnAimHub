@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\generators\\generator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\generators\\generator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\holders\\generatorholder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\holders\\generatorholder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,16 +15,16 @@
       "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\generators\\sequenceprizegenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{5C6A7F63-8901-4FB1-A197-4376C1A7DD6E}|Shared\\Shared.Infrastructure\\Shared.Infrastructure.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.infrastructure\\repositories\\baserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5C6A7F63-8901-4FB1-A197-4376C1A7DD6E}|Shared\\Shared.Infrastructure\\Shared.Infrastructure.csproj|solutionrelative:shared\\shared.infrastructure\\repositories\\baserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\generators\\rngprizegenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\generators\\rngprizegenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\generators\\prizegenerationtype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\generators\\prizegenerationtype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\generators\\generator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\generators\\generator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,24 +34,79 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "SequencePrizeGenerator.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
+              "RelativeToolTip": "Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
+              "ViewState": "AQIAACAAAAAAAAAAAAAIwDAAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-01T12:37:30.427Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Generator.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\Generator.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\Generator.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\Generator.cs",
+              "RelativeToolTip": "Shared\\Shared.Application\\Generators\\Generator.cs",
+              "ViewState": "AQIAAAQAAAAAAAAAAAAAAA4AAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-01T12:51:07.199Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "GeneratorHolder.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
+              "RelativeToolTip": "Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAlwB8AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-01T12:36:23.105Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BaseRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Infrastructure\\Repositories\\BaseRepository.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Infrastructure\\Repositories\\BaseRepository.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Infrastructure\\Repositories\\BaseRepository.cs",
+              "RelativeToolTip": "Shared\\Shared.Infrastructure\\Repositories\\BaseRepository.cs",
+              "ViewState": "AQIAACkAAAAAAAAAAAAwwDEAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-01T13:32:56.464Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "RNGPrizeGenerator.cs",
               "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\RNGPrizeGenerator.cs",
               "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\RNGPrizeGenerator.cs",
               "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\RNGPrizeGenerator.cs",
               "RelativeToolTip": "Shared\\Shared.Application\\Generators\\RNGPrizeGenerator.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAbAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAdAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-01T12:37:54.351Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "PrizeGenerationType.cs",
               "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
               "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
@@ -56,45 +115,6 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-01T12:37:52.613Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Generator.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\Generator.cs",
-              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\Generator.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\Generator.cs",
-              "RelativeToolTip": "Shared\\Shared.Application\\Generators\\Generator.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAbAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-01T12:37:46.226Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "SequencePrizeGenerator.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
-              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
-              "RelativeToolTip": "Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAA8AAAAcAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-01T12:37:30.427Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "GeneratorHolder.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
-              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
-              "RelativeToolTip": "Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-01T12:36:23.105Z",
               "EditorCaption": ""
             }
           ]

@@ -47,4 +47,9 @@ public abstract class BaseRepository<TContext, TAggregateRoot>(TContext context)
     {
         _context.Set<TAggregateRoot>().Remove(aggregateRoot);
     }
+
+    public async Task SaveAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
 }

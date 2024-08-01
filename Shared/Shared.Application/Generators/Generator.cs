@@ -1,4 +1,5 @@
-﻿using Shared.Domain.Entities;
+﻿using Shared.Domain.Abstractions.Repository;
+using Shared.Domain.Entities;
 
 namespace Shared.Application.Generators;
 
@@ -11,6 +12,13 @@ internal abstract class Generator
     {
         Id = id;
         Prizes = prizes;
+    }
+
+    internal static Generator Create(IPrizeGroupRepository prizeGroupRepository, Base.PrizeGroup prizeGroup, PrizeGenerationType type)
+    {
+        return type == PrizeGenerationType.RNG
+            ? new RNGPrizeGenerator(prizeGroup.Id, prizeGroup.Prizes.ToList())
+            : new SequencePrizeGenerator(prizeGroupRepository, prizeGroup.Id, prizeGroup.Prizes.ToList(), prizeGroup.Sequence, prizeGroup.NextPrizeIndex!.Value);
     }
 
     internal abstract Base.Prize GetPrize();

@@ -15,4 +15,6 @@ public interface IBaseRepository<TAggregateRoot> where TAggregateRoot : BaseEnti
     Task InsertAsync(TAggregateRoot aggregateRoot);
 
     void Update(TAggregateRoot aggregateRoot);
+
+    Task SaveAsync();
 }

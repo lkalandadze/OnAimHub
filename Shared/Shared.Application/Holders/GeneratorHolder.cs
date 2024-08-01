@@ -9,6 +9,7 @@ namespace Shared.Application.Holders;
 public class GeneratorHolder
 {
     private Dictionary<Base.PrizeGroup, Generator> Generators = [];
+    private object _sync = new();
     private readonly IPrizeGroupRepository _prizeGroupRepository;
     private readonly PrizeGenerationSettings _settings;
     
@@ -26,9 +27,7 @@ public class GeneratorHolder
 
         Generators = prizeGroups.ToDictionary(x => x, x =>
         {
-            return (Generator)(_settings.PrizeGenerationType == PrizeGenerationType.RNG
-                ? new RNGPrizeGenerator(x.Id, x.Prizes.ToList())
-                : new SequencePrizeGenerator(x.Id, x.Prizes.ToList(), x.Sequence, x.NextPrizeIndex!.Value));
+            return Generator.Create(_prizeGroupRepository, x, _settings.PrizeGenerationType);
         });
     }
 
@@ -39,8 +38,11 @@ public class GeneratorHolder
 
     internal Generator GetGenerator(int versionId, int segmentId, Predicate<Base.PrizeGroup> predicate)
     {
-        return Generators.First(x => x.Key.Configuration.GameVersionId == versionId &&
-                                     x.Key.SegmentId == segmentId &&
-                                     predicate(x.Key)).Value;
+        lock (_sync)
+        {
+            return Generators.First(x => x.Key.Configuration.GameVersionId == versionId &&
+                                         x.Key.SegmentId == segmentId &&
+                                         predicate(x.Key)).Value;
+        }
     }
 }
