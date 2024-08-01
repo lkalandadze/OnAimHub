@@ -1,0 +1,17 @@
+C:\Users\Foft\source\repos\GameHub\Shared.Application\bin\Debug\net8.0\Shared.Application.deps.json
+C:\Users\Foft\source\repos\GameHub\Shared.Application\bin\Debug\net8.0\Shared.Application.dll
+C:\Users\Foft\source\repos\GameHub\Shared.Application\bin\Debug\net8.0\Shared.Application.pdb
+C:\Users\Foft\source\repos\GameHub\Shared.Application\bin\Debug\net8.0\RNG.dll
+C:\Users\Foft\source\repos\GameHub\Shared.Application\bin\Debug\net8.0\Shared.Domain.dll
+C:\Users\Foft\source\repos\GameHub\Shared.Application\bin\Debug\net8.0\RNG.pdb
+C:\Users\Foft\source\repos\GameHub\Shared.Application\bin\Debug\net8.0\Shared.Domain.pdb
+C:\Users\Foft\source\repos\GameHub\Shared.Application\obj\Debug\net8.0\Shared.Application.csproj.AssemblyReference.cache
+C:\Users\Foft\source\repos\GameHub\Shared.Application\obj\Debug\net8.0\Shared.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Foft\source\repos\GameHub\Shared.Application\obj\Debug\net8.0\Shared.Application.AssemblyInfoInputs.cache
+C:\Users\Foft\source\repos\GameHub\Shared.Application\obj\Debug\net8.0\Shared.Application.AssemblyInfo.cs
+C:\Users\Foft\source\repos\GameHub\Shared.Application\obj\Debug\net8.0\Shared.Application.csproj.CoreCompileInputs.cache
+C:\Users\Foft\source\repos\GameHub\Shared.Application\obj\Debug\net8.0\Shared.A.5A1F1DEE.Up2Date
+C:\Users\Foft\source\repos\GameHub\Shared.Application\obj\Debug\net8.0\Shared.Application.dll
+C:\Users\Foft\source\repos\GameHub\Shared.Application\obj\Debug\net8.0\refint\Shared.Application.dll
+C:\Users\Foft\source\repos\GameHub\Shared.Application\obj\Debug\net8.0\Shared.Application.pdb
+C:\Users\Foft\source\repos\GameHub\Shared.Application\obj\Debug\net8.0\ref\Shared.Application.dll
