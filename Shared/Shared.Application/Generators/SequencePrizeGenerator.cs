@@ -9,14 +9,14 @@ internal class SequencePrizeGenerator : Generator
     public int NextPrizeIndex { get; set; }
     public List<int> Sequence { get; } 
 
-    public SequencePrizeGenerator(int id, List<Prize> prizes, List<int> sequence, int nextPrizeIndex) 
+    public SequencePrizeGenerator(int id, List<Base.Prize> prizes, List<int> sequence, int nextPrizeIndex) 
         : base(id, prizes)
     {
         NextPrizeIndex = nextPrizeIndex;
         Sequence = sequence;
     }
 
-    internal override Prize GetPrize()
+    internal override Base.Prize GetPrize()
     {
         lock (_sync)
         {

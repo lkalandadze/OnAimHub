@@ -6,12 +6,12 @@ internal class RNGPrizeGenerator : Generator
 {
     private int ProbabilitySum => Prizes.Sum(x => x.Probability);
 
-    public RNGPrizeGenerator(int id, List<Prize> prizes) 
+    public RNGPrizeGenerator(int id, List<Base.Prize> prizes) 
         : base(id, prizes)
     {
     }
 
-    internal override Prize GetPrize()
+    internal override Base.Prize GetPrize()
     {
         var randomNumber = RNG.RNG.Next(ProbabilitySum);
         var sum = 0;

@@ -5,13 +5,13 @@ namespace Shared.Application.Generators;
 internal abstract class Generator
 {
     internal int Id { get; }
-    internal List<Prize> Prizes { get; }
+    internal List<Base.Prize> Prizes { get; }
 
-    internal Generator(int id, List<Prize> prizes)
+    internal Generator(int id, List<Base.Prize> prizes)
     {
         Id = id;
         Prizes = prizes;
     }
 
-    internal abstract Prize GetPrize();
+    internal abstract Base.Prize GetPrize();
 }

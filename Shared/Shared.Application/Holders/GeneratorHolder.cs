@@ -8,7 +8,7 @@ namespace Shared.Application.Holders;
 
 public class GeneratorHolder
 {
-    private Dictionary<PrizeGroup, Generator> Generators = [];
+    private Dictionary<Base.PrizeGroup, Generator> Generators = [];
     private readonly IPrizeGroupRepository _prizeGroupRepository;
     private readonly PrizeGenerationSettings _settings;
     
@@ -32,12 +32,12 @@ public class GeneratorHolder
         });
     }
 
-    public Prize GetPrize(int versionId, int segmentId, Predicate<PrizeGroup> predicate)
+    public Base.Prize GetPrize(int versionId, int segmentId, Predicate<Base.PrizeGroup> predicate)
     {
         return GetGenerator(versionId, segmentId, predicate).GetPrize();
     }
 
-    internal Generator GetGenerator(int versionId, int segmentId, Predicate<PrizeGroup> predicate)
+    internal Generator GetGenerator(int versionId, int segmentId, Predicate<Base.PrizeGroup> predicate)
     {
         return Generators.First(x => x.Key.Configuration.GameVersionId == versionId &&
                                      x.Key.SegmentId == segmentId &&
