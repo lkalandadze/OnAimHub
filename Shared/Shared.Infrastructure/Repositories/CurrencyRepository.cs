@@ -4,6 +4,6 @@ using Shared.Infrastructure.DataAccess;
 
 namespace Shared.Infrastructure.Repositories;
 
-public class CurrencyRepository(GameConfigDbContext context) : BaseRepository<GameConfigDbContext, Base.Currency>(context), ICurrencyRepository
+public class CurrencyRepository(SharedGameConfigDbContext context) : BaseRepository<SharedGameConfigDbContext, Base.Currency>(context), ICurrencyRepository
 {
 }

@@ -16,4 +16,9 @@ public partial class Base
         public int PrizeGroupId { get; set; }
         public PrizeGroup PrizeGroup { get; set; }
     }
+
+    public class WheelPrize
+    {
+
+    }
 }

@@ -4,6 +4,6 @@ using Shared.Infrastructure.DataAccess;
 
 namespace Shared.Infrastructure.Repositories;
 
-public class SegmentRepository(GameConfigDbContext context) : BaseRepository<GameConfigDbContext, Base.Segment>(context), ISegmentRepository
+public class SegmentRepository(SharedGameConfigDbContext context) : BaseRepository<SharedGameConfigDbContext, Base.Segment>(context), ISegmentRepository
 {
 }

@@ -4,6 +4,6 @@ using Shared.Infrastructure.DataAccess;
 
 namespace Shared.Infrastructure.Repositories;
 
-public class PrizeRepository(GameConfigDbContext context) : BaseRepository<GameConfigDbContext, Base.Prize>(context), IPrizeRepository
+public class PrizeRepository(SharedGameConfigDbContext context) : BaseRepository<SharedGameConfigDbContext, Base.Prize>(context), IPrizeRepository
 {
 }

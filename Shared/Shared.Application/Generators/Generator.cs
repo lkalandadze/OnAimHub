@@ -10,6 +10,7 @@ internal abstract class Generator
 
     internal Generator(int id, List<Base.Prize> prizes)
     {
+        prizes = new List<Base.Prize>();
         Id = id;
         Prizes = prizes;
     }

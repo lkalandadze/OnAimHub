@@ -8,35 +8,22 @@ namespace Shared.Application.Holders;
 
 public class GeneratorHolder
 {
-    private Dictionary<Base.PrizeGroup, Generator> Generators = [];
-    private object _sync = new();
-    private readonly IPrizeGroupRepository _prizeGroupRepository;
-    private readonly PrizeGenerationSettings _settings;
-    
-    public GeneratorHolder(IPrizeGroupRepository prizeGroupRepository, IOptions<PrizeGenerationSettings> settings)
-    {
-        _prizeGroupRepository = prizeGroupRepository;
-        _settings = settings.Value;
+    private static Dictionary<Base.PrizeGroup, Generator> Generators = [];
+    private static object _sync = new();
+    //private readonly IPrizeGroupRepository _prizeGroupRepository;
+    //private readonly PrizeGenerationSettings _settings;
 
-        Init().Wait();
+    internal static void SetConfigs(Dictionary<Base.PrizeGroup, Generator> generators)
+    {
+        Generators = generators;
     }
 
-    internal async Task Init()
-    {
-        var prizeGroups = await _prizeGroupRepository.QueryAsync();
-
-        Generators = prizeGroups.ToDictionary(x => x, x =>
-        {
-            return Generator.Create(_prizeGroupRepository, x, _settings.PrizeGenerationType);
-        });
-    }
-
-    public Base.Prize GetPrize(int versionId, int segmentId, Predicate<Base.PrizeGroup> predicate)
+    public static Base.Prize GetPrize(int versionId, int segmentId, Predicate<Base.PrizeGroup> predicate)
     {
         return GetGenerator(versionId, segmentId, predicate).GetPrize();
     }
 
-    internal Generator GetGenerator(int versionId, int segmentId, Predicate<Base.PrizeGroup> predicate)
+    internal static Generator GetGenerator(int versionId, int segmentId, Predicate<Base.PrizeGroup> predicate)
     {
         lock (_sync)
         {
@@ -44,5 +31,18 @@ public class GeneratorHolder
                                          x.Key.SegmentId == segmentId &&
                                          predicate(x.Key)).Value;
         }
+    }
+}
+
+public class Configurator
+{
+    public Configurator(IPrizeGroupRepository prizeGroupRepository, IOptions<PrizeGenerationSettings> settings)
+    {
+        var prizeGroups = prizeGroupRepository.Query().ToDictionary(x => x, x =>
+        {
+            return Generator.Create(prizeGroupRepository, x, settings.Value.PrizeGenerationType);
+        });
+
+        GeneratorHolder.SetConfigs(prizeGroups);
     }
 }

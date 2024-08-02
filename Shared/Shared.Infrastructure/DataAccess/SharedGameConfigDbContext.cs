@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Shared.Domain;
 using Shared.Domain.Entities;
+using Shared.Infrastructure.TypeConfigurations;
 using System.Reflection;
 
 namespace Shared.Infrastructure.DataAccess;
-
-public class GameConfigDbContext(DbContextOptions options) : DbContext(options)
+public class SharedGameConfigDbContext(DbContextOptions options) : DbContext(options)
 {
-    public DbSet<Base.Prize> Prizes { get; set; }
+    public virtual DbSet<Base.Prize> Prizes { get; set; }
     public DbSet<Base.PrizeType> PrizeTypes { get; set; }
     public DbSet<Base.PrizeGroup> PrizeGroups { get; set; }
     public DbSet<Base.Price> Prices { get; set; }
@@ -17,7 +18,8 @@ public class GameConfigDbContext(DbContextOptions options) : DbContext(options)
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(GameConfigDbContext))!);
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(PrizeGroupTypeConfiguration))!);
+        modelBuilder.Entity<Base.Prize>().ToTable(TableNames.Prizes);
 
         base.OnModelCreating(modelBuilder);
     }
