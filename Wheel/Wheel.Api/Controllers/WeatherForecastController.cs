@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Shared.Application.Holders;
+using Shared.Domain.Abstractions.Repository;
+using Wheel.Domain.Entities;
 
 namespace Wheel.Api.Controllers
 {
@@ -6,6 +9,18 @@ namespace Wheel.Api.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
+        private readonly IPrizeRepository _repo;
+
+        public WeatherForecastController(IPrizeRepository repo)
+        {
+            _repo = repo;
+        }
+
+        public ActionResult<IEnumerable<Prize>> GetPrizes()
+        {
+            return Ok(_repo.QueryAsync());
+        }
+
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
