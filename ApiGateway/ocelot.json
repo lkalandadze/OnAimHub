@@ -2,33 +2,48 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/{everything}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7217
+          "Host": "hubapi",
+          "Port": 8080
         }
       ],
-      //"AuthenticationOptions": {
-      //  "AuthenticationProviderKey": "1d0ea6fa85f1479751eba393ef7985b63a636d6e5423a6474fb729245266f9d6"
-      //},
       "UpstreamPathTemplate": "/api/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
     },
     {
       "DownstreamPathTemplate": "/api/auth/{everything}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7069
+          "Host": "hubapi",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/auth/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/Test",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hubapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/api/auth/Test",
+      "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7133"
+    "BaseUrl": "http://ocelotapigateway:8080",
+    "ServiceDiscoveryProvider": {
+      "Type": "Consul",
+      "Scheme": "http",
+      "Host": "consul",
+      "Port": 8500
+    }
   }
 }

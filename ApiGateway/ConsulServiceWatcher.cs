@@ -1,4 +1,7 @@
 ﻿using Consul;
+using Microsoft.Extensions.Options;
+using Ocelot.Configuration.File;
+using Ocelot.Configuration.Repository;
 using System.Text.Json;
 
 namespace ApiGateway;
@@ -8,14 +11,16 @@ public class ConsulServiceWatcher : BackgroundService
     private readonly IConsulClient _consulClient;
     private readonly IConfiguration _configuration;
     private readonly ILogger<ConsulServiceWatcher> _logger;
-    private readonly string _ocelotConfigPath;
+    private readonly IFileConfigurationRepository _fileConfigurationRepository;
+    private readonly ConsulConfig _consulConfig;
 
-    public ConsulServiceWatcher(IConsulClient consulClient, IConfiguration configuration, ILogger<ConsulServiceWatcher> logger)
+    public ConsulServiceWatcher(IConsulClient consulClient, IConfiguration configuration, ILogger<ConsulServiceWatcher> logger, IFileConfigurationRepository fileConfigurationRepository, IOptions<ConsulConfig> consulConfig)
     {
         _consulClient = consulClient;
         _configuration = configuration;
         _logger = logger;
-        _ocelotConfigPath = "ocelot.json";
+        _fileConfigurationRepository = fileConfigurationRepository;
+        _consulConfig = consulConfig.Value;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -25,25 +30,35 @@ public class ConsulServiceWatcher : BackgroundService
             try
             {
                 var services = await _consulClient.Agent.Services();
-                var routes = services.Response.Values.Select(service => new
+                var routes = services.Response.Values.Select(service => new FileRoute
                 {
-                    DownstreamPathTemplate = $"/{service.Service}/{service.ID}",
+                    DownstreamPathTemplate = $"/{service.Service}/{{everything}}",
                     DownstreamScheme = "http",
-                    DownstreamHostAndPorts = new[]
-                    {
-                        new { Host = service.Address, Port = service.Port }
-                    },
-                    UpstreamPathTemplate = $"/{service.Service}/{service.ID}",
-                    UpstreamHttpMethod = new[] { "Get", "Post", "Put", "Delete" }
+                    DownstreamHostAndPorts = new List<FileHostAndPort>
+                        {
+                            new FileHostAndPort { Host = service.Address, Port = service.Port }
+                        },
+                    UpstreamPathTemplate = $"/{service.Service}/{{everything}}",
+                    UpstreamHttpMethod = new List<string> { "Get", "Post", "Put", "Delete" }
                 }).ToList();
 
-                var ocelotConfig = new
+                var ocelotConfig = new FileConfiguration
                 {
-                    GlobalConfiguration = _configuration.GetSection("GlobalConfiguration").GetChildren().ToDictionary(x => x.Key, x => x.Value),
+                    GlobalConfiguration = new FileGlobalConfiguration
+                    {
+                        BaseUrl = _configuration["GlobalConfiguration:BaseUrl"],
+                        ServiceDiscoveryProvider = new FileServiceDiscoveryProvider
+                        {
+                            Type = _consulConfig.Type,
+                            Scheme = "http",
+                            Host = _consulConfig.Host,
+                            Port = _consulConfig.Port
+                        }
+                    },
                     Routes = routes
                 };
 
-                await File.WriteAllTextAsync(_ocelotConfigPath, JsonSerializer.Serialize(ocelotConfig, new JsonSerializerOptions { WriteIndented = true }), stoppingToken);
+                await _fileConfigurationRepository.Set(ocelotConfig);
             }
             catch (Exception ex)
             {

@@ -24,17 +24,6 @@ public class ConsulHostedService : IHostedService
     {
         var uri = new Uri(_consulConfig.ServiceAddress);
 
-        //var uri = new Uri("http://localhost:8080"); // Ensure this matches your Dockerfile EXPOSE port
-
-        //var registration = new AgentServiceRegistration()
-        //{
-        //    ID = _serviceId,
-        //    Name = "hubapi",
-        //    Address = uri.Host,
-        //    Port = uri.Port,
-        //    Tags = new[] { "hubapi" }
-        //};
-
         var registration = new AgentServiceRegistration()
         {
             ID = _serviceId,
