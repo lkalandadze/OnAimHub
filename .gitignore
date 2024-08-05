@@ -8,7 +8,6 @@
 # User-specific files
 *.user
 *.userosscache
-*.suo
 *.vscode/
 .vs/
 
@@ -26,3 +25,9 @@ node_modules/
 
 # Npm package lock
 package-lock.json
+
+# Ignore Visual Studio solution user options file
+*.suo
+
+# Ignore DocumentLayout files
+DocumentLayout.json
