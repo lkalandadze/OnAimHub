@@ -2,7 +2,7 @@
 
 namespace Shared.Domain.Abstractions.Repository
 {
-    public interface IPrizeHistoryRepository : IBaseRepository<Base.PrizeHistory>
+    public interface IPrizeHistoryRepository : IBaseRepository<PrizeHistory>
     {
     }
 }

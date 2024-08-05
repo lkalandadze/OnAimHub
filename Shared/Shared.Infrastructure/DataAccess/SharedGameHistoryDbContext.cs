@@ -5,7 +5,7 @@ namespace Shared.Infrastructure.DataAccess;
 
 public class SharedGameHistoryDbContext(DbContextOptions options) : DbContext(options)
 {
-    public DbSet<Base.PrizeHistory> PrizeHistories { get; set; }
+    public DbSet<PrizeHistory> PrizeHistories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -8,11 +8,4 @@ namespace Wheel.Infrastructure.DataAccess;
 public class WheelConfigDbContext(DbContextOptions<WheelConfigDbContext> options) : SharedGameConfigDbContext(options)
 {
     public DbSet<Prize> Prizes { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Prize>().ToTable(TableNames.Prizes);
-
-        base.OnModelCreating(modelBuilder);
-    }
 }

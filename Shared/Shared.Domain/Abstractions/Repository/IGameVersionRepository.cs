@@ -2,6 +2,6 @@
 
 namespace Shared.Domain.Abstractions.Repository;
 
-public interface IGameVersionRepository : IBaseRepository<Base.GameVersion>
+public interface IGameVersionRepository : IBaseRepository<GameVersion>
 {
 }

@@ -1,48 +1,55 @@
 ﻿using Microsoft.Extensions.Options;
 using Shared.Application.Generators;
 using Shared.Application.Options;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Repository;
-using Shared.Domain.Entities;
-
 namespace Shared.Application.Holders;
 
 public class GeneratorHolder
 {
-    private static Dictionary<Base.PrizeGroup, Generator> Generators = [];
+    private static Dictionary<BasePrizeGroup, Generator> Generators = [];
     private static object _sync = new();
-    //private readonly IPrizeGroupRepository _prizeGroupRepository;
-    //private readonly PrizeGenerationSettings _settings;
 
-    internal static void SetConfigs(Dictionary<Base.PrizeGroup, Generator> generators)
+    private readonly IBaseRepository<BasePrizeGroup> _prizeGroupRepository;
+    private readonly PrizeGenerationSettings _settings;
+
+    public GeneratorHolder(IBaseRepository<BasePrizeGroup> prizeGroupRepository, IOptions<PrizeGenerationSettings> settings)
     {
-        Generators = generators;
+        _prizeGroupRepository = prizeGroupRepository;
+        _settings = settings.Value;
+
+        InitializeAsync().Wait();
     }
 
-    public static Base.Prize GetPrize(int versionId, int segmentId, Predicate<Base.PrizeGroup> predicate)
+    private async Task InitializeAsync()
     {
-        return GetGenerator(versionId, segmentId, predicate).GetPrize();
+        var prizeGroups = await _prizeGroupRepository.QueryAsync();
+
+        Generators = prizeGroups.ToDictionary(x => x, x =>
+        {
+            return Generator.Create(_prizeGroupRepository, x, _settings.PrizeGenerationType);
+        });
     }
 
-    internal static Generator GetGenerator(int versionId, int segmentId, Predicate<Base.PrizeGroup> predicate)
+    public static TPrize GetPrize<TPrize>(int configId, int segmentId, Predicate<BasePrizeGroup> predicate)
+        where TPrize : BasePrize
+    {
+        var generator = GetGenerator<TPrize>(configId, segmentId, predicate);
+
+        return (TPrize)generator.GetPrize();
+    }
+
+    internal static Generator GetGenerator<TPrize>(int configId, int segmentId, Predicate<BasePrizeGroup> predicate)
+        where TPrize : BasePrize
     {
         lock (_sync)
         {
-            return Generators.First(x => x.Key.Configuration.GameVersionId == versionId &&
-                                         x.Key.SegmentId == segmentId &&
-                                         predicate(x.Key)).Value;
+            return Generators
+                .Where(x => x.Key.Prizes.GetType().GenericTypeArguments[0] == typeof(TPrize)
+                         && x.Key.SegmentId == segmentId
+                         && x.Key.ConfigurationId == configId)
+                .First(x => (predicate?.Invoke(x.Key) ?? true))
+                .Value!;
         }
-    }
-}
-
-public class Configurator
-{
-    public Configurator(IPrizeGroupRepository prizeGroupRepository, IOptions<PrizeGenerationSettings> settings)
-    {
-        var prizeGroups = prizeGroupRepository.Query().ToDictionary(x => x, x =>
-        {
-            return Generator.Create(prizeGroupRepository, x, settings.Value.PrizeGenerationType);
-        });
-
-        GeneratorHolder.SetConfigs(prizeGroups);
     }
 }

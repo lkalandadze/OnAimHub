@@ -2,6 +2,6 @@
 
 namespace Shared.Domain.Abstractions.Repository;
 
-public interface ISegmentRepository : IBaseRepository<Base.Segment>
+public interface ISegmentRepository : IBaseRepository<Segment>
 {
 }

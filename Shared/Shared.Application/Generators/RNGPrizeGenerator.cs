@@ -1,4 +1,4 @@
-﻿using Shared.Domain.Entities;
+﻿using Shared.Domain.Abstractions;
 
 namespace Shared.Application.Generators;
 
@@ -6,12 +6,12 @@ internal class RNGPrizeGenerator : Generator
 {
     private int ProbabilitySum => Prizes.Sum(x => x.Probability);
 
-    public RNGPrizeGenerator(int id, List<Base.Prize> prizes) 
+    internal RNGPrizeGenerator(int id, List<BasePrize> prizes) 
         : base(id, prizes)
     {
     }
 
-    internal override Base.Prize GetPrize()
+    internal override BasePrize GetPrize()
     {
         var randomNumber = RNG.RNG.Next(ProbabilitySum);
         var sum = 0;

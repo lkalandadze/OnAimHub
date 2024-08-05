@@ -1,24 +1,24 @@
-﻿using Shared.Domain.Abstractions.Repository;
-using Shared.Domain.Entities;
+﻿using Shared.Domain.Abstractions;
+using Shared.Domain.Abstractions.Repository;
 
 namespace Shared.Application.Generators;
 
 internal class SequencePrizeGenerator : Generator
 {
-    private readonly IPrizeGroupRepository _prizeGroupRepository;
+    private readonly IBaseRepository<BasePrizeGroup> _prizeGroupRepository;
     private object _sync = new();
 
     public int NextPrizeIndex { get; set; }
     public List<int> Sequence { get; } 
 
-    public SequencePrizeGenerator(IPrizeGroupRepository prizeGroupRepository, int id, List<Base.Prize> prizes, List<int> sequence, int nextPrizeIndex) : base(id, prizes)
+    public SequencePrizeGenerator(IBaseRepository<BasePrizeGroup> prizeGroupRepository, int id, List<BasePrize> prizes, List<int> sequence, int nextPrizeIndex) : base(id, prizes)
     {
         NextPrizeIndex = nextPrizeIndex;
         Sequence = sequence;
         _prizeGroupRepository = prizeGroupRepository;
     }
 
-    internal override Base.Prize GetPrize()
+    internal override BasePrize GetPrize()
     {
         lock (_sync)
         {

@@ -1,14 +1,13 @@
-﻿using Shared.Domain.Entities;
+﻿using Shared.Domain.Abstractions;
 
 namespace Wheel.Domain.Entities;
 
-public class Prize : Base.Prize
+public class Prize : BasePrize
 {
     void Test()
     {
-        Base.Prize a = new Prize();
+        BasePrize a = new Prize();
     }
 
     //public int? WheelIndex { get; set; }
-    public int Testtfgggggggggggtttt { get; set; }
 }

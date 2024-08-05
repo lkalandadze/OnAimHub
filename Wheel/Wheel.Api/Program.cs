@@ -1,12 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Shared.Infrastructure.DataAccess;
-using Shared.ServiceRegistry;
 using Wheel.Infrastructure.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -18,8 +16,6 @@ builder.Services.AddDbContext<WheelConfigDbContext>(opt =>
 
 builder.Services.AddDbContext<SharedGameHistoryDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("GameHistory")));
-
-builder.Services.Resolve<WheelConfigDbContext>(builder.Configuration);
 
 var app = builder.Build();
 
