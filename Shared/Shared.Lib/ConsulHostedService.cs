@@ -5,16 +5,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Shared.Lib;
 
-public class ConsulHostedService : IHostedService
+// TEST 
+public class ConsulHostedServices : IHostedService
 {
     private readonly IConsulClient _consulClient;
     private readonly IConfiguration _configuration;
-    private readonly ILogger<ConsulHostedService> _logger;
+    private readonly ILogger<ConsulHostedServices> _logger;
     private readonly IHostApplicationLifetime _hostApplicationLifetime;
     private string _registrationId;
     private bool _isDeregistered;
 
-    public ConsulHostedService(IConsulClient consulClient, IConfiguration configuration, ILogger<ConsulHostedService> logger, IHostApplicationLifetime hostApplicationLifetime)
+    public ConsulHostedServices(IConsulClient consulClient, IConfiguration configuration, ILogger<ConsulHostedServices> logger, IHostApplicationLifetime hostApplicationLifetime)
     {
         _consulClient = consulClient;
         _configuration = configuration;

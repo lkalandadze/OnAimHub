@@ -1,0 +1,48 @@
+version: '3.9'
+
+services:
+  consul:
+    image: consul:1.7.14
+    ports:
+      - "8500:8500"
+    command: "consul agent -dev -client=0.0.0.0"
+
+  ocelotapigateway:
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    ports:
+      - "5000:8080"  # Map host port 5000 to container port 8080
+    depends_on:
+      - consul
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./ApiGateway/appsettings.json:/app/appsettings.json
+      - ./ApiGateway/ocelot.json:/app/ocelot.json
+
+  wheelapi:
+    build:
+      context: .
+      dockerfile: Wheel/Wheel.Api/Dockerfile
+    ports:
+      - "5001:8080"  # Map host port 5001 to container port 8080
+    depends_on:
+      - consul
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./Wheel/Wheel.Api/appsettings.json:/app/appsettings.json
+      
+  hubapi:
+    build:
+      context: .
+      dockerfile: Hub/Hub.Api/Dockerfile
+    ports:
+      - "5002:8080"  # Map host port 5002 to container port 8080
+    depends_on:
+      - consul
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./Hub/Hub.Api/appsettings.json:/app/appsettings.json
