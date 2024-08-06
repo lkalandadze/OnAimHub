@@ -12,6 +12,6 @@ public class Configuration : BaseEntity
     public int GameVersionId { get; set; }
     public GameVersion GameVersion { get; set; }
 
-    public ICollection<BasePrizeGroup> PrizeGroups { get; set; }
-    public ICollection<BasePrize> Prizes { get; set; }
+    //public ICollection<BasePrizeGroup> PrizeGroups { get; set; }
+    //public ICollection<BasePrize> Prizes { get; set; }
 }

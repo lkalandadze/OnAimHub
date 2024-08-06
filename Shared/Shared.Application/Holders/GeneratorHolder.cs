@@ -1,33 +1,53 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Shared.Application.Generators;
 using Shared.Application.Options;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Repository;
+using Shared.Domain.Entities;
 namespace Shared.Application.Holders;
 
 public class GeneratorHolder
 {
-    private static Dictionary<BasePrizeGroup, Generator> Generators = [];
+    internal static Dictionary<BasePrizeGroup, Generator> Generators = [];
+    internal List<Type> prizeGroupTypes;
     private static object _sync = new();
 
-    private readonly IBaseRepository<BasePrizeGroup> _prizeGroupRepository;
     private readonly PrizeGenerationSettings _settings;
 
-    public GeneratorHolder(IBaseRepository<BasePrizeGroup> prizeGroupRepository, IOptions<PrizeGenerationSettings> settings)
-    {
-        _prizeGroupRepository = prizeGroupRepository;
-        _settings = settings.Value;
+    private IServiceScopeFactory _serviceScopeFactory;
 
-        InitializeAsync().Wait();
+    public GeneratorHolder(IServiceScopeFactory serviceScopeFactory, IOptions<PrizeGenerationSettings> settings, List<Type> prizeGroupTypes)
+    {
+        _serviceScopeFactory = serviceScopeFactory;
+        _settings = settings.Value;
+        this.prizeGroupTypes = prizeGroupTypes;
     }
 
-    private async Task InitializeAsync()
+    internal void Initialize()
     {
-        var prizeGroups = await _prizeGroupRepository.QueryAsync();
+        using var scope = _serviceScopeFactory.CreateScope();
 
-        Generators = prizeGroups.ToDictionary(x => x, x =>
+        prizeGroupTypes.ForEach(type =>
         {
-            return Generator.Create(_prizeGroupRepository, x, _settings.PrizeGenerationType);
+            var genericType = typeof(IPrizeGroupRepository<>).MakeGenericType(type);
+            var prizeGroupRepository = scope.ServiceProvider.GetRequiredService(genericType) as IBaseRepository;
+
+            var queryAsyncMethod = prizeGroupRepository.GetType().GetMethod(nameof(IPrizeGroupRepository<BasePrizeGroup>.QueryWithPrizes));
+
+            if (queryAsyncMethod != null)
+            {
+                var prizeGroups = (IEnumerable<BasePrizeGroup>)queryAsyncMethod.Invoke(prizeGroupRepository, [])!;
+
+                foreach (var prizeGroup in prizeGroups)
+                {
+                    var prizeGroupType = prizeGroup.ToString()!.Split('.')[^1];
+
+                    var generator = Generator.Create(prizeGroup, _settings.PrizeGenerationType);
+
+                    Generators.Add(prizeGroup, generator);
+                }
+            }
         });
     }
 

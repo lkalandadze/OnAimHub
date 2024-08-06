@@ -9,6 +9,6 @@ public class Segment : BaseEntity
     public int Value { get; set; }
     public bool IsActive { get; set; }
 
-    public ICollection<BasePrizeGroup> PrizeGroups { get; set; }
+    //public ICollection<BasePrizeGroup> PrizeGroups { get; set; }
     public ICollection<Price> Prices { get; set; }
 }

@@ -3,8 +3,13 @@ using Shared.Domain.Entities;
 using System.Reflection;
 
 namespace Shared.Infrastructure.DataAccess;
-public class SharedGameConfigDbContext(DbContextOptions options) : DbContext(options)
+public abstract class SharedGameConfigDbContext : DbContext
 {
+    public SharedGameConfigDbContext(DbContextOptions options)
+        : base(options)
+    {
+    }
+
     public DbSet<GameVersion> GameVersions { get; set; }
     public DbSet<Configuration> Configurations { get; set; }
     public DbSet<Currency> Curencies { get; set; }

@@ -9,6 +9,6 @@
 		<ProjectReference Include="..\..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
 		<ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7"/>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7" />
 	</ItemGroup>
 </Project>

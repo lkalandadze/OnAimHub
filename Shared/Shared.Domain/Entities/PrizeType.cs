@@ -11,5 +11,5 @@ public class PrizeType : BaseEntity
     public int CurrencyId { get; set; }
     public Currency Currency { get; set; }
 
-    public ICollection<BasePrize> Prizes { get; set; }
+    //public ICollection<BasePrize> Prizes { get; set; }
 }

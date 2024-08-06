@@ -3,20 +3,48 @@
   "WorkspaceRootPath": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\wheel\\wheel.api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\holders\\generatorholder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\holders\\generatorholder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C601018A-2CF9-4D59-9BF6-10C64E81CC67}|Wheel\\Wheel.Infrastructure\\Wheel.Infrastructure.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\wheel\\wheel.infrastructure\\wheel.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{C601018A-2CF9-4D59-9BF6-10C64E81CC67}|Wheel\\Wheel.Infrastructure\\Wheel.Infrastructure.csproj|solutionrelative:wheel\\wheel.infrastructure\\wheel.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C601018A-2CF9-4D59-9BF6-10C64E81CC67}|Wheel\\Wheel.Infrastructure\\Wheel.Infrastructure.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\wheel\\wheel.infrastructure\\dataaccess\\wheelconfigdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C601018A-2CF9-4D59-9BF6-10C64E81CC67}|Wheel\\Wheel.Infrastructure\\Wheel.Infrastructure.csproj|solutionrelative:wheel\\wheel.infrastructure\\dataaccess\\wheelconfigdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A20AD3CC-90A6-487C-88FD-04F22ACB728A}|Wheel\\Wheel.Domain\\Wheel.Domain.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\wheel\\wheel.domain\\entities\\prize.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A20AD3CC-90A6-487C-88FD-04F22ACB728A}|Wheel\\Wheel.Domain\\Wheel.Domain.csproj|solutionrelative:wheel\\wheel.domain\\entities\\prize.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\wheel\\wheel.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\holders\\generatorholder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\holders\\generatorholder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A20AD3CC-90A6-487C-88FD-04F22ACB728A}|Wheel\\Wheel.Domain\\Wheel.Domain.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\wheel\\wheel.domain\\entities\\wheelprizegroup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A20AD3CC-90A6-487C-88FD-04F22ACB728A}|Wheel\\Wheel.Domain\\Wheel.Domain.csproj|solutionrelative:wheel\\wheel.domain\\entities\\wheelprizegroup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A20AD3CC-90A6-487C-88FD-04F22ACB728A}|Wheel\\Wheel.Domain\\Wheel.Domain.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\wheel\\wheel.domain\\entities\\wheelprize.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A20AD3CC-90A6-487C-88FD-04F22ACB728A}|Wheel\\Wheel.Domain\\Wheel.Domain.csproj|solutionrelative:wheel\\wheel.domain\\entities\\wheelprize.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{822314CA-D49F-4869-9508-DD47A80AE350}|Shared\\Shared.Domain\\Shared.Domain.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.domain\\abstractions\\repository\\ibaserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{822314CA-D49F-4869-9508-DD47A80AE350}|Shared\\Shared.Domain\\Shared.Domain.csproj|solutionrelative:shared\\shared.domain\\abstractions\\repository\\ibaserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\services\\updateprizegroupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\services\\updateprizegroupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\services\\prizeconfiguratorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\services\\prizeconfiguratorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5C6A7F63-8901-4FB1-A197-4376C1A7DD6E}|Shared\\Shared.Infrastructure\\Shared.Infrastructure.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.infrastructure\\repositories\\prizegrouprepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5C6A7F63-8901-4FB1-A197-4376C1A7DD6E}|Shared\\Shared.Infrastructure\\Shared.Infrastructure.csproj|solutionrelative:shared\\shared.infrastructure\\repositories\\prizegrouprepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5C6A7F63-8901-4FB1-A197-4376C1A7DD6E}|Shared\\Shared.Infrastructure\\Shared.Infrastructure.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.infrastructure\\repositories\\baserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5C6A7F63-8901-4FB1-A197-4376C1A7DD6E}|Shared\\Shared.Infrastructure\\Shared.Infrastructure.csproj|solutionrelative:shared\\shared.infrastructure\\repositories\\baserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\generators\\sequenceprizegenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -31,8 +59,32 @@
       "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\generators\\prizegenerationtype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{822314CA-D49F-4869-9508-DD47A80AE350}|Shared\\Shared.Domain\\Shared.Domain.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.domain\\abstractions\\repository\\iprizegrouprepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{822314CA-D49F-4869-9508-DD47A80AE350}|Shared\\Shared.Domain\\Shared.Domain.csproj|solutionrelative:shared\\shared.domain\\abstractions\\repository\\iprizegrouprepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\generators\\generator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\generators\\generator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{822314CA-D49F-4869-9508-DD47A80AE350}|Shared\\Shared.Domain\\Shared.Domain.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.domain\\abstractions\\baseprizegroup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{822314CA-D49F-4869-9508-DD47A80AE350}|Shared\\Shared.Domain\\Shared.Domain.csproj|solutionrelative:shared\\shared.domain\\abstractions\\baseprizegroup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8654B545-238F-4871-95E3-0F4C0CE3A27E}|Shared\\Shared.ServiceRegistry\\Shared.ServiceRegistry.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.serviceregistry\\dependencyresolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8654B545-238F-4871-95E3-0F4C0CE3A27E}|Shared\\Shared.ServiceRegistry\\Shared.ServiceRegistry.csproj|solutionrelative:shared\\shared.serviceregistry\\dependencyresolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\wheel\\wheel.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\wheel\\wheel.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5C6A7F63-8901-4FB1-A197-4376C1A7DD6E}|Shared\\Shared.Infrastructure\\Shared.Infrastructure.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.infrastructure\\repositories\\prizehistoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5C6A7F63-8901-4FB1-A197-4376C1A7DD6E}|Shared\\Shared.Infrastructure\\Shared.Infrastructure.csproj|solutionrelative:shared\\shared.infrastructure\\repositories\\prizehistoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -47,105 +99,276 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "WeatherForecastController.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Api\\Controllers\\WeatherForecastController.cs",
-              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\Controllers\\WeatherForecastController.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Api\\Controllers\\WeatherForecastController.cs",
-              "RelativeToolTip": "Wheel\\Wheel.Api\\Controllers\\WeatherForecastController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-05T12:14:47.338Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "WheelConfigDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Infrastructure\\DataAccess\\WheelConfigDbContext.cs",
-              "RelativeDocumentMoniker": "Wheel\\Wheel.Infrastructure\\DataAccess\\WheelConfigDbContext.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Infrastructure\\DataAccess\\WheelConfigDbContext.cs",
-              "RelativeToolTip": "Wheel\\Wheel.Infrastructure\\DataAccess\\WheelConfigDbContext.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAsAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-05T12:14:29.644Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Prize.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Domain\\Entities\\Prize.cs",
-              "RelativeDocumentMoniker": "Wheel\\Wheel.Domain\\Entities\\Prize.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Domain\\Entities\\Prize.cs",
-              "RelativeToolTip": "Wheel\\Wheel.Domain\\Entities\\Prize.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-05T12:13:48.412Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Generator.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\Generator.cs",
-              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\Generator.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\Generator.cs",
-              "RelativeToolTip": "Shared\\Shared.Application\\Generators\\Generator.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-05T12:12:59.011Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "PrizeGenerationType.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
-              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
-              "RelativeToolTip": "Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAABAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-05T12:12:58.18Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "RNGPrizeGenerator.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\RNGPrizeGenerator.cs",
-              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\RNGPrizeGenerator.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\RNGPrizeGenerator.cs",
-              "RelativeToolTip": "Shared\\Shared.Application\\Generators\\RNGPrizeGenerator.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-05T12:12:46.555Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "SequencePrizeGenerator.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
-              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
-              "RelativeToolTip": "Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
-              "ViewState": "AQIAAAoAAAAAAAAAAAA1wAQAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-05T12:12:21.556Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "GeneratorHolder.cs",
               "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
               "RelativeDocumentMoniker": "Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
               "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
               "RelativeToolTip": "Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
-              "ViewState": "AQIAACkAAAAAAAAAAAAwwAkAAABJAAAA",
+              "ViewState": "AQIAABoAAAAAAAAAAAAMwCMAAAAMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-05T12:11:45.189Z",
+              "WhenOpened": "2024-08-05T14:44:10.232Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "UpdatePrizeGroupService.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Services\\UpdatePrizeGroupService.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Services\\UpdatePrizeGroupService.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Services\\UpdatePrizeGroupService.cs",
+              "RelativeToolTip": "Shared\\Shared.Application\\Services\\UpdatePrizeGroupService.cs",
+              "ViewState": "AQIAAAcAAAAAAAAAAAAqwA8AAABcAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T11:27:08.436Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Wheel.Infrastructure",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Infrastructure\\Wheel.Infrastructure.csproj",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Infrastructure\\Wheel.Infrastructure.csproj",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Infrastructure\\Wheel.Infrastructure.csproj",
+              "RelativeToolTip": "Wheel\\Wheel.Infrastructure\\Wheel.Infrastructure.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAABEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-08-06T15:21:37.55Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "WheelPrizeGroup.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Domain\\Entities\\WheelPrizeGroup.cs",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Domain\\Entities\\WheelPrizeGroup.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Domain\\Entities\\WheelPrizeGroup.cs",
+              "RelativeToolTip": "Wheel\\Wheel.Domain\\Entities\\WheelPrizeGroup.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T15:11:20.64Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "WheelPrize.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Domain\\Entities\\WheelPrize.cs",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Domain\\Entities\\WheelPrize.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Domain\\Entities\\WheelPrize.cs",
+              "RelativeToolTip": "Wheel\\Wheel.Domain\\Entities\\WheelPrize.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T15:11:17.526Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "WheelConfigDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Infrastructure\\DataAccess\\WheelConfigDbContext.cs",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Infrastructure\\DataAccess\\WheelConfigDbContext.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Infrastructure\\DataAccess\\WheelConfigDbContext.cs",
+              "RelativeToolTip": "Wheel\\Wheel.Infrastructure\\DataAccess\\WheelConfigDbContext.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAcAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T15:07:41.15Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "BasePrizeGroup.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Domain\\Abstractions\\BasePrizeGroup.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Domain\\Abstractions\\BasePrizeGroup.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Domain\\Abstractions\\BasePrizeGroup.cs",
+              "RelativeToolTip": "Shared\\Shared.Domain\\Abstractions\\BasePrizeGroup.cs",
+              "ViewState": "AQIAAAcAAAAAAAAAAAAgwBAAAAAkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T15:00:32.506Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "IPrizeGroupRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Domain\\Abstractions\\Repository\\IPrizeGroupRepository.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Domain\\Abstractions\\Repository\\IPrizeGroupRepository.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Domain\\Abstractions\\Repository\\IPrizeGroupRepository.cs",
+              "RelativeToolTip": "Shared\\Shared.Domain\\Abstractions\\Repository\\IPrizeGroupRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAIAAABFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T14:55:14.415Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "PrizeGroupRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Infrastructure\\Repositories\\PrizeGroupRepository.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Infrastructure\\Repositories\\PrizeGroupRepository.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Infrastructure\\Repositories\\PrizeGroupRepository.cs",
+              "RelativeToolTip": "Shared\\Shared.Infrastructure\\Repositories\\PrizeGroupRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T14:45:23.383Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "IBaseRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Domain\\Abstractions\\Repository\\IBaseRepository.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Domain\\Abstractions\\Repository\\IBaseRepository.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Domain\\Abstractions\\Repository\\IBaseRepository.cs",
+              "RelativeToolTip": "Shared\\Shared.Domain\\Abstractions\\Repository\\IBaseRepository.cs",
+              "ViewState": "AQIAAA4AAAAAAAAAAIA9wBcAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T14:44:21.919Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "PrizeGenerationType.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
+              "RelativeToolTip": "Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAHAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T13:45:35.324Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "DependencyResolver.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.ServiceRegistry\\DependencyResolver.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.ServiceRegistry\\DependencyResolver.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.ServiceRegistry\\DependencyResolver.cs",
+              "RelativeToolTip": "Shared\\Shared.ServiceRegistry\\DependencyResolver.cs",
+              "ViewState": "AQIAAA0AAAAAAAAAAAAgwAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T14:16:08.035Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Api\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Api\\appsettings.Development.json",
+              "RelativeToolTip": "Wheel\\Wheel.Api\\appsettings.Development.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-08-06T14:15:36.676Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Api\\appsettings.json",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\appsettings.json",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Api\\appsettings.json",
+              "RelativeToolTip": "Wheel\\Wheel.Api\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAmAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-08-06T14:14:11.399Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "SequencePrizeGenerator.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
+              "RelativeToolTip": "Shared\\Shared.Application\\Generators\\SequencePrizeGenerator.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T13:45:50.831Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "RNGPrizeGenerator.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\RNGPrizeGenerator.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\RNGPrizeGenerator.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\RNGPrizeGenerator.cs",
+              "RelativeToolTip": "Shared\\Shared.Application\\Generators\\RNGPrizeGenerator.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T13:45:36.009Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Generator.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\Generator.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\Generator.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\Generator.cs",
+              "RelativeToolTip": "Shared\\Shared.Application\\Generators\\Generator.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAUAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T13:06:20.244Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "BaseRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Infrastructure\\Repositories\\BaseRepository.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Infrastructure\\Repositories\\BaseRepository.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Infrastructure\\Repositories\\BaseRepository.cs",
+              "RelativeToolTip": "Shared\\Shared.Infrastructure\\Repositories\\BaseRepository.cs",
+              "ViewState": "AQIAAA0AAAAAAAAAAAA1wA8AAAAwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T12:45:29.269Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "PrizeHistoryRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Infrastructure\\Repositories\\PrizeHistoryRepository.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Infrastructure\\Repositories\\PrizeHistoryRepository.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Infrastructure\\Repositories\\PrizeHistoryRepository.cs",
+              "RelativeToolTip": "Shared\\Shared.Infrastructure\\Repositories\\PrizeHistoryRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T12:43:16.118Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Api\\Program.cs",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\Program.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Api\\Program.cs",
+              "RelativeToolTip": "Wheel\\Wheel.Api\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T12:18:31.276Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PrizeConfiguratorService.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Services\\PrizeConfiguratorService.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Services\\PrizeConfiguratorService.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Services\\PrizeConfiguratorService.cs",
+              "RelativeToolTip": "Shared\\Shared.Application\\Services\\PrizeConfiguratorService.cs",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAxwBAAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-06T11:41:55.04Z",
               "EditorCaption": ""
             }
           ]
