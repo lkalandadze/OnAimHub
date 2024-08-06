@@ -1,3 +1,4 @@
+using Consul;
 using Microsoft.EntityFrameworkCore;
 using Shared.Infrastructure.DataAccess;
 using Shared.ServiceRegistry;
@@ -10,6 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+{
+    var address = builder.Configuration["Consul:Host"];
+    consulConfig.Address = new Uri(address);
+}));
 
 builder.Services.AddDbContext<WheelConfigDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("GameConfig")));
@@ -31,6 +38,36 @@ builder.Services.Resolve(builder.Configuration, prizeGroupTypes);
 var app = builder.Build();
 
 // Create Database
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    var consulClient = app.Services.GetRequiredService<IConsulClient>();
+    var registration = new AgentServiceRegistration()
+    {
+        ID = Guid.NewGuid().ToString(),
+        Name = "Wheel.Api",
+        Address = "Wheel.Api",
+        Port = 8080
+    };
+
+    consulClient.Agent.ServiceDeregister(registration.ID).Wait();
+    consulClient.Agent.ServiceRegister(registration).Wait();
+});
+
+app.Lifetime.ApplicationStopped.Register(() =>
+{
+    var consulClient = app.Services.GetRequiredService<IConsulClient>();
+    var registration = new AgentServiceRegistration()
+    {
+        ID = Guid.NewGuid().ToString(),
+        Name = "Wheel.Api",
+        Address = "Wheel.Api",
+        Port = 8080
+    };
+
+    consulClient.Agent.ServiceDeregister(registration.ID).Wait();
+});
+
+
 using var serviceScope = app.Services.GetService<IServiceScopeFactory>()!.CreateScope();
 var context = serviceScope.ServiceProvider.GetService<WheelConfigDbContext>();
 context!.Database.EnsureCreated();
