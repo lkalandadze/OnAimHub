@@ -1,4 +1,4 @@
-﻿namespace Hub.Api;
+﻿namespace Wheel.Api;
 
 public class ConsulConfig
 {

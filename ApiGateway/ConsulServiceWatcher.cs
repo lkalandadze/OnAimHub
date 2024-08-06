@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using Ocelot.Configuration.File;
 using Ocelot.Configuration.Repository;
-using System.Text.Json;
 
 namespace ApiGateway;
 
@@ -30,6 +29,8 @@ public class ConsulServiceWatcher : BackgroundService
             try
             {
                 var services = await _consulClient.Agent.Services();
+
+                //Ocelot config of getting routes
                 var routes = services.Response.Values.Select(service => new FileRoute
                 {
                     DownstreamPathTemplate = $"/{service.Service}/{{everything}}",
@@ -65,7 +66,7 @@ public class ConsulServiceWatcher : BackgroundService
                 _logger.LogError(ex, "Error updating Ocelot configuration from Consul.");
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken); // Adjust the delay as needed
+            await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
         }
     }
 }

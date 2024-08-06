@@ -11,30 +11,6 @@
       ],
       "UpstreamPathTemplate": "/api/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/auth/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "hubapi",
-          "Port": 8080
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/auth/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/auth/Test",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "hubapi",
-          "Port": 8080
-        }
-      ],
-      "UpstreamPathTemplate": "/api/auth/Test",
-      "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {
