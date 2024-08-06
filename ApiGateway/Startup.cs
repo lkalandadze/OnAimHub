@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using ApiGateway;
+using Consul;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Provider.Consul;
 using System.Text;
 
 public class Startup
@@ -17,7 +20,17 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddOcelot(Configuration)
-            .AddDelegatingHandler<OcelotRequestHandler>(true);
+            .AddDelegatingHandler<OcelotRequestHandler>(true)
+            .AddConsul();
+
+        services.Configure<ConsulConfig>(Configuration.GetSection("Consul"));
+        services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+        {
+            consulConfig.Address = new Uri("http://localhost:8500");
+        }));
+
+        services.AddHostedService<ConsulServiceWatcher>();
+
 
         services.AddAuthentication(options =>
         {

@@ -1,4 +1,5 @@
 ﻿using Consul;
+using Hub.Api;
 using Hub.Api.Db;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -51,9 +52,10 @@ public class Startup
             };
         });
 
+        services.Configure<ConsulConfig>(Configuration.GetSection("Consul"));
         services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
         {
-            //consulConfig.Address = new Uri(Configuration["Consul:Host"]);
+            consulConfig.Address = new Uri(Configuration["Consul:Host"]);
         }));
 
         services.AddControllers();
