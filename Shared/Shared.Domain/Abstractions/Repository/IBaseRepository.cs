@@ -18,20 +18,3 @@ public interface IBaseRepository<TAggregateRoot> where TAggregateRoot : BaseEnti
 
     Task SaveAsync();
 }
-
-public interface IBaseRepository
-{
-    Task<BaseEntity?> OfIdAsync(int id);
-
-    IQueryable<BaseEntity> Query(Expression<Func<BaseEntity, bool>>? expression = default);
-
-    Task<List<BaseEntity>> QueryAsync(Expression<Func<BaseEntity, bool>>? expression = default);
-
-    void Delete(BaseEntity aggregateRoot);
-
-    Task InsertAsync(BaseEntity aggregateRoot);
-
-    void Update(BaseEntity aggregateRoot);
-
-    Task SaveAsync();
-}

@@ -33,41 +33,38 @@ builder.Services.AddSingleton(prizeGroupTypes);
 
 builder.Services.Resolve(builder.Configuration, prizeGroupTypes);
 
-
-
 var app = builder.Build();
 
+//app.Lifetime.ApplicationStarted.Register(() =>
+//{
+//    var consulClient = app.Services.GetRequiredService<IConsulClient>();
+//    var registration = new AgentServiceRegistration()
+//    {
+//        ID = Guid.NewGuid().ToString(),
+//        Name = "Wheel.Api",
+//        Address = "Wheel.Api",
+//        Port = 8080
+//    };
+
+//    consulClient.Agent.ServiceDeregister(registration.ID).Wait();
+//    consulClient.Agent.ServiceRegister(registration).Wait();
+//});
+
+//app.Lifetime.ApplicationStopped.Register(() =>
+//{
+//    var consulClient = app.Services.GetRequiredService<IConsulClient>();
+//    var registration = new AgentServiceRegistration()
+//    {
+//        ID = Guid.NewGuid().ToString(),
+//        Name = "Wheel.Api",
+//        Address = "Wheel.Api",
+//        Port = 8080
+//    };
+
+//    consulClient.Agent.ServiceDeregister(registration.ID).Wait();
+//});
+
 // Create Database
-app.Lifetime.ApplicationStarted.Register(() =>
-{
-    var consulClient = app.Services.GetRequiredService<IConsulClient>();
-    var registration = new AgentServiceRegistration()
-    {
-        ID = Guid.NewGuid().ToString(),
-        Name = "Wheel.Api",
-        Address = "Wheel.Api",
-        Port = 8080
-    };
-
-    consulClient.Agent.ServiceDeregister(registration.ID).Wait();
-    consulClient.Agent.ServiceRegister(registration).Wait();
-});
-
-app.Lifetime.ApplicationStopped.Register(() =>
-{
-    var consulClient = app.Services.GetRequiredService<IConsulClient>();
-    var registration = new AgentServiceRegistration()
-    {
-        ID = Guid.NewGuid().ToString(),
-        Name = "Wheel.Api",
-        Address = "Wheel.Api",
-        Port = 8080
-    };
-
-    consulClient.Agent.ServiceDeregister(registration.ID).Wait();
-});
-
-
 using var serviceScope = app.Services.GetService<IServiceScopeFactory>()!.CreateScope();
 var context = serviceScope.ServiceProvider.GetService<WheelConfigDbContext>();
 context!.Database.EnsureCreated();

@@ -38,6 +38,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\Ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{C1D514E6-8B2F-4866-946E-79C44AD3571C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wheel.Application", "..\Wheel\OnAimHub\Wheel.Application\Wheel.Application.csproj", "{011BD9B5-A427-4059-918E-13203CB45998}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,10 @@ Global
 		{C1D514E6-8B2F-4866-946E-79C44AD3571C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1D514E6-8B2F-4866-946E-79C44AD3571C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1D514E6-8B2F-4866-946E-79C44AD3571C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{011BD9B5-A427-4059-918E-13203CB45998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{011BD9B5-A427-4059-918E-13203CB45998}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{011BD9B5-A427-4059-918E-13203CB45998}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{011BD9B5-A427-4059-918E-13203CB45998}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +113,7 @@ Global
 		{C601018A-2CF9-4D59-9BF6-10C64E81CC67} = {A41788BA-A633-452E-B173-F2F8393FC2D3}
 		{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45} = {5B114121-70BA-495E-B484-1D580402C72C}
 		{11FA0E70-38DC-49A3-A762-88321BB81A87} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
+		{011BD9B5-A427-4059-918E-13203CB45998} = {A41788BA-A633-452E-B173-F2F8393FC2D3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2083D19C-3851-4364-95A9-449C10AD54E0}
