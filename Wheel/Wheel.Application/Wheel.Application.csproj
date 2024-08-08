@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\Shared.Application\Shared.Application.csproj" />
-    <ProjectReference Include="..\Wheel\Wheel.Domain\Wheel.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
+    <ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,12 +1,37 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{70BF865D-735E-4D08-9593-5D42A2ADC1F1}|Wheel\\Wheel.Application\\Wheel.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\wheel\\wheel.application\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{70BF865D-735E-4D08-9593-5D42A2ADC1F1}|Wheel\\Wheel.Application\\Wheel.Application.csproj|solutionrelative:wheel\\wheel.application\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GameManager.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Application\\GameManager.cs",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Application\\GameManager.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Application\\GameManager.cs",
+              "RelativeToolTip": "Wheel\\Wheel.Application\\GameManager.cs",
+              "ViewState": "AQIAABYAAAAAAAAAAAAgwAcAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-08T13:20:41.132Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
