@@ -1,37 +1,70 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\",
+  "WorkspaceRootPath": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{011BD9B5-A427-4059-918E-13203CB45998}|..\\Wheel\\OnAimHub\\Wheel.Application\\Wheel.Application.csproj|c:\\users\\foft\\source\\repos\\wheel\\onaimhub\\wheel.application\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\holders\\generatorholder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\holders\\generatorholder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\managers\\repositorymanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\managers\\repositorymanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\ocelot.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\ocelot.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\services\\updateprizegroupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\services\\updateprizegroupservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\services\\prizeconfiguratorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\services\\prizeconfiguratorservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\wheel\\wheel.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8654B545-238F-4871-95E3-0F4C0CE3A27E}|Shared\\Shared.ServiceRegistry\\Shared.ServiceRegistry.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.serviceregistry\\dependencyresolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8654B545-238F-4871-95E3-0F4C0CE3A27E}|Shared\\Shared.ServiceRegistry\\Shared.ServiceRegistry.csproj|solutionrelative:shared\\shared.serviceregistry\\dependencyresolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\consulservicewatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\consulservicewatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.application\\generators\\prizegenerationtype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1452B2BE-2768-4D5B-910A-350EC3E426BB}|Shared\\Shared.Application\\Shared.Application.csproj|solutionrelative:shared\\shared.application\\generators\\prizegenerationtype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\consulconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\consulconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\consulconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\consulconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\ocelotrequesthandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\ocelotrequesthandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -41,119 +74,200 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "RepositoryManager.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Managers\\RepositoryManager.cs",
-              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Managers\\RepositoryManager.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Managers\\RepositoryManager.cs",
-              "RelativeToolTip": "Shared\\Shared.Application\\Managers\\RepositoryManager.cs",
-              "ViewState": "AQIAAC8AAAAAAAAAAAApwBgAAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-07T09:16:02.707Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "UpdatePrizeGroupService.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Services\\UpdatePrizeGroupService.cs",
-              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Services\\UpdatePrizeGroupService.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Services\\UpdatePrizeGroupService.cs",
-              "RelativeToolTip": "Shared\\Shared.Application\\Services\\UpdatePrizeGroupService.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAAAkAAAAfAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-06T11:27:08.436Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "GameManager.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\Wheel\\OnAimHub\\Wheel.Application\\GameManager.cs",
-              "RelativeDocumentMoniker": "..\\Wheel\\OnAimHub\\Wheel.Application\\GameManager.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\Wheel\\OnAimHub\\Wheel.Application\\GameManager.cs",
-              "RelativeToolTip": "..\\Wheel\\OnAimHub\\Wheel.Application\\GameManager.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-07T14:20:22.469Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "GeneratorHolder.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
-              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
-              "RelativeToolTip": "Shared\\Shared.Application\\Holders\\GeneratorHolder.cs",
-              "ViewState": "AQIAACMAAAAAAAAAAAAmwDwAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-08T07:23:37.592Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+              "Title": "Dockerfile",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Dockerfile",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\Dockerfile",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Dockerfile",
+              "RelativeToolTip": "Wheel\\Wheel.Api\\Dockerfile",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAAmAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-08-08T10:33:31.863Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "PrizeConfiguratorService.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Services\\PrizeConfiguratorService.cs",
-              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Services\\PrizeConfiguratorService.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Services\\PrizeConfiguratorService.cs",
-              "RelativeToolTip": "Shared\\Shared.Application\\Services\\PrizeConfiguratorService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAqAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-07T11:32:57.357Z",
-              "EditorCaption": ""
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\appsettings.json",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\appsettings.json",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\appsettings.json",
+              "RelativeToolTip": "Wheel\\Wheel.Api\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-08-08T10:33:40.529Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "DependencyResolver.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.ServiceRegistry\\DependencyResolver.cs",
-              "RelativeDocumentMoniker": "Shared\\Shared.ServiceRegistry\\DependencyResolver.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.ServiceRegistry\\DependencyResolver.cs",
-              "RelativeToolTip": "Shared\\Shared.ServiceRegistry\\DependencyResolver.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAABCAAAA",
+              "DocumentIndex": 12,
+              "Title": "ConsulConfig.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\ConsulConfig.cs",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\ConsulConfig.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\ConsulConfig.cs",
+              "RelativeToolTip": "Wheel\\Wheel.Api\\ConsulConfig.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-07T11:12:54.423Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-08T10:33:25.596Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Api\\Program.cs",
-              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\Program.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Wheel\\Wheel.Api\\Program.cs",
-              "RelativeToolTip": "Wheel\\Wheel.Api\\Program.cs",
-              "ViewState": "AQIAAAsAAAAAAAAAAAArwCIAAAAAAAAA",
+              "DocumentIndex": 1,
+              "Title": "ConsulHostedService.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\ConsulHostedService.cs",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\ConsulHostedService.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\ConsulHostedService.cs",
+              "RelativeToolTip": "Wheel\\Wheel.Api\\ConsulHostedService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-07T09:36:49.686Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-08T10:32:43.371Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
-              "Title": "PrizeGenerationType.cs",
-              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
-              "RelativeDocumentMoniker": "Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
-              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
-              "RelativeToolTip": "Shared\\Shared.Application\\Generators\\PrizeGenerationType.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAANAAAA",
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\Program.cs",
+              "RelativeDocumentMoniker": "ApiGateway\\Program.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\Program.cs",
+              "RelativeToolTip": "ApiGateway\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABUAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-07T09:40:41.122Z",
+              "WhenOpened": "2024-08-08T10:22:46.829Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\appsettings.json",
+              "RelativeDocumentMoniker": "ApiGateway\\appsettings.json",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\appsettings.json",
+              "RelativeToolTip": "ApiGateway\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-08-08T10:15:14.717Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ConsulHostedService.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\ConsulHostedService.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\ConsulHostedService.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\ConsulHostedService.cs",
+              "RelativeToolTip": "Hub\\Hub.Api\\ConsulHostedService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-08T10:11:49.745Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\Startup.cs",
+              "RelativeDocumentMoniker": "ApiGateway\\Startup.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\Startup.cs",
+              "RelativeToolTip": "ApiGateway\\Startup.cs",
+              "ViewState": "AQIAAD0AAAAAAAAAAAAUwGAAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-08T10:10:23.352Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Hub\\Hub.Api\\Controllers\\AuthController.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-08T08:44:55.321Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ConsulServiceWatcher.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\ConsulServiceWatcher.cs",
+              "RelativeDocumentMoniker": "ApiGateway\\ConsulServiceWatcher.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\ConsulServiceWatcher.cs",
+              "RelativeToolTip": "ApiGateway\\ConsulServiceWatcher.cs",
+              "ViewState": "AQIAACUAAAAAAAAAAAAUwEgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-08T08:44:41.962Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ConsulConfig.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\ConsulConfig.cs",
+              "RelativeDocumentMoniker": "ApiGateway\\ConsulConfig.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\ConsulConfig.cs",
+              "RelativeToolTip": "ApiGateway\\ConsulConfig.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-08T08:44:40.984Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "OcelotRequestHandler.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\OcelotRequestHandler.cs",
+              "RelativeDocumentMoniker": "ApiGateway\\OcelotRequestHandler.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\OcelotRequestHandler.cs",
+              "RelativeToolTip": "ApiGateway\\OcelotRequestHandler.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-08T08:44:37.048Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ocelot.json",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\ocelot.json",
+              "RelativeDocumentMoniker": "ApiGateway\\ocelot.json",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\ocelot.json",
+              "RelativeToolTip": "ApiGateway\\ocelot.json",
+              "ViewState": "AQIAAAEAAAAAAAAAAAAAAAgAAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-08-08T08:44:01.589Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Dockerfile",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\Dockerfile",
+              "RelativeDocumentMoniker": "ApiGateway\\Dockerfile",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\Dockerfile",
+              "RelativeToolTip": "ApiGateway\\Dockerfile",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-08-08T08:43:56.903Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Program.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Program.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Program.cs",
+              "RelativeToolTip": "Hub\\Hub.Api\\Program.cs",
+              "ViewState": "AQIAABYAAAAAAAAAAADwvzgAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-08T08:41:01.017Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Startup.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Startup.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Startup.cs",
+              "RelativeToolTip": "Hub\\Hub.Api\\Startup.cs",
+              "ViewState": "AQIAAFIAAAAAAAAAAADwv3QAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-08T08:38:55.91Z"
             }
           ]
         }
