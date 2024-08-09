@@ -21,12 +21,13 @@ public class Startup
     {
         services.AddOcelot(Configuration)
             .AddDelegatingHandler<OcelotRequestHandler>(true)
-            .AddConsul();
+            .AddConsul()
+            .AddConfigStoredInConsul();
 
         services.Configure<ConsulConfig>(Configuration.GetSection("Consul"));
         services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
         {
-            consulConfig.Address = new Uri("http://localhost:8500");
+            consulConfig.Address = new Uri("http://consul:8500");
         }));
 
         services.AddHostedService<ConsulServiceWatcher>();

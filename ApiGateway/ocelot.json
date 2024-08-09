@@ -10,7 +10,12 @@
         }
       ],
       "UpstreamPathTemplate": "/api/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ]
     }
   ],
   "GlobalConfiguration": {
@@ -18,8 +23,8 @@
     "ServiceDiscoveryProvider": {
       "Type": "Consul",
       "Scheme": "http",
-      "Host": "consul",
-      "Port": 8500
+      "Host": null,
+      "Port": 0
     }
   }
 }

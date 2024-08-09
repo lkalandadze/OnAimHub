@@ -45,8 +45,8 @@ app.Lifetime.ApplicationStarted.Register(() =>
     var registration = new AgentServiceRegistration()
     {
         ID = Guid.NewGuid().ToString(),
-        Name = "Wheel.Api",
-        Address = "Wheel.Api",
+        Name = "wheelapi",
+        Address = "wheelapi",
         Port = 8080
     };
 
@@ -60,8 +60,8 @@ app.Lifetime.ApplicationStopped.Register(() =>
     var registration = new AgentServiceRegistration()
     {
         ID = Guid.NewGuid().ToString(),
-        Name = "Wheel.Api",
-        Address = "Wheel.Api",
+        Name = "wheelapi",
+        Address = "wheelapi",
         Port = 8080
     };
 
