@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Ocelot.Provider.Consul;
+using Ocelot.Values;
 using System.Text;
 
 public class Startup
@@ -21,18 +22,7 @@ public class Startup
     {
         if (IsRunningInDocker())
         {
-            services.AddOcelot(Configuration)
-                .AddDelegatingHandler<OcelotRequestHandler>(true)
-                .AddConsul()
-                .AddConfigStoredInConsul();
-
-            services.Configure<ConsulConfig>(Configuration.GetSection("Consul"));
-            services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
-            {
-                consulConfig.Address = new Uri("http://consul:8500");
-            }));
-
-            services.AddHostedService<ConsulServiceWatcher>();
+            ConfigureConsul(services);
         }
         else
         {
@@ -101,5 +91,21 @@ public class Startup
     {
         var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
         return !string.IsNullOrEmpty(isDocker) && isDocker == "true";
+    }
+    
+    private void ConfigureConsul(IServiceCollection services)
+    {
+        services.AddOcelot(Configuration)
+            .AddDelegatingHandler<OcelotRequestHandler>(true)
+            .AddConsul()
+            .AddConfigStoredInConsul();
+
+        services.Configure<ConsulConfig>(Configuration.GetSection("Consul"));
+        services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+        {
+            consulConfig.Address = new Uri("http://consul:8500");
+        }));
+
+        services.AddHostedService<ConsulServiceWatcher>();
     }
 }

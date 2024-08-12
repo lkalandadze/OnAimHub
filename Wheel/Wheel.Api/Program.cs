@@ -16,14 +16,7 @@ builder.Services.AddSwaggerGen();
 
 if (IsRunningInDocker())
 {
-    builder.Services.Configure<ConsulConfig>(builder.Configuration.GetSection("Consul"));
-    builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
-    {
-        var address = builder.Configuration["Consul:Host"];
-        consulConfig.Address = new Uri(address);
-    }));
-
-    builder.Services.AddHostedService<ConsulHostedService>();
+    ConfigureConsul();
 }
 
 builder.Services.AddDbContext<WheelConfigDbContext>(opt =>
@@ -44,6 +37,32 @@ builder.Services.Resolve(builder.Configuration, prizeGroupTypes);
 var app = builder.Build();
 
 if (IsRunningInDocker())
+{
+    ConfigureConsulLifetime();
+}
+
+// Create Database
+using var serviceScope = app.Services.GetService<IServiceScopeFactory>()!.CreateScope();
+var context = serviceScope.ServiceProvider.GetService<WheelConfigDbContext>();
+context!.Database.EnsureCreated();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
+
+void ConfigureConsulLifetime()
 {
     app.Lifetime.ApplicationStarted.Register(() =>
     {
@@ -75,25 +94,17 @@ if (IsRunningInDocker())
     });
 }
 
-// Create Database
-using var serviceScope = app.Services.GetService<IServiceScopeFactory>()!.CreateScope();
-var context = serviceScope.ServiceProvider.GetService<WheelConfigDbContext>();
-context!.Database.EnsureCreated();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+void ConfigureConsul()
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    builder.Services.Configure<ConsulConfig>(builder.Configuration.GetSection("Consul"));
+    builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+    {
+        var address = builder.Configuration["Consul:Host"];
+        consulConfig.Address = new Uri(address);
+    }));
+
+    builder.Services.AddHostedService<ConsulHostedService>();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
 
 bool IsRunningInDocker()
 {
