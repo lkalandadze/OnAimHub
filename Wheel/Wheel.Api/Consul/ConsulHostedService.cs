@@ -1,7 +1,7 @@
 ﻿using Consul;
 using Microsoft.Extensions.Options;
 
-namespace Wheel.Api;
+namespace Wheel.Api.Consul;
 
 public class ConsulHostedService : IHostedService
 {
@@ -49,7 +49,7 @@ public class ConsulHostedService : IHostedService
                 Name = _consulConfig.ServiceName,
                 Address = uri.Host,
                 Port = _consulConfig.ServicePort,
-                Tags = new[] { "hubapi" }
+                Tags = new[] { "wheelapi" }
             };
 
             _logger.LogInformation("Registering with Consul");

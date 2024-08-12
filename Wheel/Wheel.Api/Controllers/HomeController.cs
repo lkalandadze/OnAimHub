@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Wheel.Api.Controllers;
 
-[Route("api/[controller]")]
+[Route("wheelapi/[controller]")]
 [ApiController]
 public class HomeController : ControllerBase
 {

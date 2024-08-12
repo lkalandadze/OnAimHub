@@ -1,5 +1,6 @@
 ﻿using Consul;
 using Hub.Api;
+using Hub.Api.Consul;
 using Hub.Application.Configurations;
 using Hub.Application.Services;
 using Hub.Domain.Absractions;
@@ -41,13 +42,17 @@ public class Startup
 
         ConfigureSwagger(services);
         ConfgiureJwt(services);
-        ConfigureConsul(services);
+
+        if (IsRunningInDocker())
+        {
+            ConfigureConsul(services);
+        }
 
         services.AddControllers();
         services.AddAuthorization();
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
     {
         if (env.IsDevelopment())
         {
@@ -57,6 +62,11 @@ public class Startup
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
+
+        if (IsRunningInDocker())
+        {
+            ConfigureConsulLifetime(app, lifetime);
+        }
 
         app.UseSwagger();
 
@@ -152,6 +162,34 @@ public class Startup
         });
     }
 
+    private void ConfigureConsulLifetime(IApplicationBuilder app, IHostApplicationLifetime lifetime)
+    {
+        lifetime.ApplicationStarted.Register(() =>
+        {
+            var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
+            var registration = new AgentServiceRegistration()
+            {
+                ID = Guid.NewGuid().ToString(),
+                Name = "hubapi",
+                Address = "hubapi", // Docker service name or external IP address
+                Port = 8080 // The port your service is running on inside the container
+            };
+            consulClient.Agent.ServiceRegister(registration).Wait();
+        });
+
+        // Deregister the service from Consul when application stops
+        lifetime.ApplicationStopped.Register(() =>
+        {
+            var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
+            var registration = new AgentServiceRegistration()
+            {
+                ID = Guid.NewGuid().ToString(),
+                Name = "hubapi"
+            };
+            consulClient.Agent.ServiceDeregister(registration.ID).Wait();
+        });
+    }
+
     private void ConfigureConsul(IServiceCollection services)
     {
         services.Configure<ConsulConfig>(Configuration.GetSection("Consul"));
@@ -161,5 +199,11 @@ public class Startup
         }));
 
         services.AddHostedService<ConsulHostedService>();
+    }
+
+    private bool IsRunningInDocker()
+    {
+        var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
+        return !string.IsNullOrEmpty(isDocker) && isDocker == "true";
     }
 }

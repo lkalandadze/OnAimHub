@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Hub.Api.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("hubapi/[controller]")]
     [ApiController]
     public class BalanceController : ControllerBase
     {
