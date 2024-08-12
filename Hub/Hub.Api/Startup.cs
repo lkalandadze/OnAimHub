@@ -52,17 +52,20 @@ public class Startup
             };
         });
 
-        services.Configure<ConsulConfig>(Configuration.GetSection("Consul"));
-        services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+        if (IsRunningInDocker())
         {
-            consulConfig.Address = new Uri(Configuration["Consul:Host"]);
-        }));
+            services.Configure<ConsulConfig>(Configuration.GetSection("Consul"));
+            services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+            {
+                consulConfig.Address = new Uri(Configuration["Consul:Host"]);
+            }));
+
+            services.AddHostedService<ConsulHostedService>();
+        }
 
         services.AddControllers();
 
         services.AddAuthorization();
-
-        services.AddHostedService<ConsulHostedService>();
 
         services.AddSwaggerGen(c =>
         {
@@ -109,36 +112,45 @@ public class Startup
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
         });
 
-        lifetime.ApplicationStarted.Register(() =>
+        if (IsRunningInDocker())
         {
-            var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
-            var registration = new AgentServiceRegistration()
+
+            lifetime.ApplicationStarted.Register(() =>
             {
-                ID = Guid.NewGuid().ToString(),
-                Name = "hubapi",
-                Address = "hubapi", // Docker service name or external IP address
-                Port = 8080 // The port your service is running on inside the container
-            };
+                var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
+                var registration = new AgentServiceRegistration()
+                {
+                    ID = Guid.NewGuid().ToString(),
+                    Name = "hubapi",
+                    Address = "hubapi", // Docker service name or external IP address
+                    Port = 8080 // The port your service is running on inside the container
+                };
 
-            consulClient.Agent.ServiceRegister(registration).Wait();
-        });
+                consulClient.Agent.ServiceRegister(registration).Wait();
+            });
 
-        // Deregister the service from Consul when application stops
-        lifetime.ApplicationStopped.Register(() =>
-        {
-            var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
-            var registration = new AgentServiceRegistration()
+            // Deregister the service from Consul when application stops
+            lifetime.ApplicationStopped.Register(() =>
             {
-                ID = Guid.NewGuid().ToString(),
-                Name = "hubapi"
-            };
+                var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
+                var registration = new AgentServiceRegistration()
+                {
+                    ID = Guid.NewGuid().ToString(),
+                    Name = "hubapi"
+                };
 
-            consulClient.Agent.ServiceDeregister(registration.ID).Wait();
-        });
+                consulClient.Agent.ServiceDeregister(registration.ID).Wait();
+            });
+        }
 
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
         });
+    }
+    private bool IsRunningInDocker()
+    {
+        var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
+        return !string.IsNullOrEmpty(isDocker) && isDocker == "true";
     }
 }

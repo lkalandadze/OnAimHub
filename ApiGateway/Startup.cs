@@ -19,19 +19,26 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddOcelot(Configuration)
-            .AddDelegatingHandler<OcelotRequestHandler>(true)
-            .AddConsul()
-            .AddConfigStoredInConsul();
-
-        services.Configure<ConsulConfig>(Configuration.GetSection("Consul"));
-        services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+        if (IsRunningInDocker())
         {
-            consulConfig.Address = new Uri("http://consul:8500");
-        }));
+            services.AddOcelot(Configuration)
+                .AddDelegatingHandler<OcelotRequestHandler>(true)
+                .AddConsul()
+                .AddConfigStoredInConsul();
 
-        services.AddHostedService<ConsulServiceWatcher>();
+            services.Configure<ConsulConfig>(Configuration.GetSection("Consul"));
+            services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+            {
+                consulConfig.Address = new Uri("http://consul:8500");
+            }));
 
+            services.AddHostedService<ConsulServiceWatcher>();
+        }
+        else
+        {
+            services.AddOcelot(Configuration)
+                .AddDelegatingHandler<OcelotRequestHandler>(true);
+        }
 
         services.AddAuthentication(options =>
         {
@@ -41,10 +48,6 @@ public class Startup
 
         }).AddJwtBearer("Bearer", options =>
         {
-            //options.Authority = "https://localhost";
-            //options.RequireHttpsMetadata = false;
-            //options.Audience = "Players";
-
             options.SaveToken = true;
             options.RequireHttpsMetadata = false;
             options.TokenValidationParameters = new TokenValidationParameters()
@@ -83,16 +86,20 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
-        //app.UseSwaggerForOcelotUI(opt =>
-        //{
-        //    opt.PathToSwaggerGenerator = "/swagger/docs";
-        //});
-
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
         });
 
-        app.UseOcelot().Wait();
+        if (IsRunningInDocker())
+        {
+            app.UseOcelot().Wait();
+        }
+    }
+
+    private bool IsRunningInDocker()
+    {
+        var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
+        return !string.IsNullOrEmpty(isDocker) && isDocker == "true";
     }
 }
