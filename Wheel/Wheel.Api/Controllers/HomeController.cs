@@ -2,7 +2,7 @@
 
 namespace Wheel.Api.Controllers;
 
-[Route("api/[controller]")]
+[Route("wheelapi/[controller]")]
 [ApiController]
 public class HomeController : ControllerBase
 {

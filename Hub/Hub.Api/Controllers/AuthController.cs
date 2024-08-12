@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Hub.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("hubapi/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
