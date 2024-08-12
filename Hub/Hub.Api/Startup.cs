@@ -1,7 +1,11 @@
 ﻿using Consul;
 using Hub.Api;
 using Hub.Application.Configurations;
+using Hub.Application.Services;
+using Hub.Domain.Absractions;
+using Hub.Domain.Absractions.Repository;
 using Hub.Infrastructure.DataAccess;
+using Hub.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -23,6 +27,11 @@ public class Startup
     {
         services.AddDbContext<HubDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+        services.AddScoped<HttpClient>();
+        services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IAuthService, AuthService>();
 
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
         services.Configure<JwtTokenConfiguration>(Configuration.GetSection("Jwt"));

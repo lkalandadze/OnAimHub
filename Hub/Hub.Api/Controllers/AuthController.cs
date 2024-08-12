@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Hub.Application.Models.Auth;
+using Hub.Application.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.Api.Controllers;
 
@@ -6,9 +8,18 @@ namespace Hub.Api.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    [HttpGet("Test")]
-    public Task<string> Test()
+    private readonly IAuthService _authService;
+
+    public AuthController(IAuthService authService)
     {
-        return Task.FromResult("Test is successful");
+        _authService = authService;
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<AuthResultModel>> Auth(string token)
+    {
+        var result = await _authService.AuthAsync(token);
+
+        return !result.Success ? StatusCode(401) : StatusCode(200, result);
     }
 }

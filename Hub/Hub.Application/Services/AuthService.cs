@@ -1,5 +1,6 @@
 ﻿using Hub.Application.Configurations;
 using Hub.Application.Extensions;
+using Hub.Application.Models.Auth;
 using Hub.Application.Models.Player;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
@@ -12,7 +13,7 @@ using System.Text;
 
 namespace Hub.Application.Services;
 
-public class AuthService
+public class AuthService : IAuthService
 {
     private readonly IPlayerRepository _playerRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -29,9 +30,14 @@ public class AuthService
         _jwtTokenConfiguration = jwtTokenConfiguration.Value;
     }
 
-    public async Task<string> Auth(string casinoToken)
+    public async Task<AuthResultModel> AuthAsync(string casinoToken)
     {
-        var recievedPlayer = await _httpClient.GetAsync<PlayerGetModel>(_casinoApiConfiguration.GetPlayer, casinoToken);
+        var queryParams = new Dictionary<string, string>
+        { 
+            { "token", casinoToken }
+        };
+
+        var recievedPlayer = await _httpClient.GetAsync<PlayerGetModel>(_casinoApiConfiguration.GetPlayer, queryParams);
 
         if (recievedPlayer == null)
         {
@@ -52,7 +58,7 @@ public class AuthService
             await _unitOfWork.SaveAsync();
         }
 
-        return GenerateToken(player);
+        return new AuthResultModel() { Success = true, Token = GenerateToken(player) };
     }
 
     private string GenerateToken(Player player)
@@ -63,14 +69,14 @@ public class AuthService
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, player.Id.ToString()),
-            new(JwtRegisteredClaimNames.Sub, player.UserName.ToString()),
+            new(JwtRegisteredClaimNames.Sub, player.UserName),
         };
 
         var token = new JwtSecurityToken(
             issuer: _jwtTokenConfiguration.Issuer,
             audience: _jwtTokenConfiguration.Audience,
             claims: claims,
-            expires: DateTime.Now.AddMinutes(30),
+            expires: DateTime.Now.AddMinutes(double.Parse(_jwtTokenConfiguration.DurationInMinutes)),
             signingCredentials: creds
         );
 
