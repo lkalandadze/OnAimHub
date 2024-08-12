@@ -1,24 +1,17 @@
-﻿using Hub.Application.Models.Auth;
-using Hub.Application.Services;
+﻿using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.Api.Controllers;
 
 [Route("hubapi/[controller]")]
-[ApiController]
-public class AuthController : ControllerBase
+public class AuthController : BaseApiController
 {
-    private readonly IAuthService _authService;
-
-    public AuthController(IAuthService authService)
-    {
-        _authService = authService;
-    }
-
+    [AllowAnonymous]
     [HttpPost]
-    public async Task<ActionResult<AuthResultModel>> Auth(string token)
+    public async Task<ActionResult<CreateAuthenticationTokenResponse>> Auth(CreateAuthenticationTokenRequest request)
     {
-        var result = await _authService.AuthAsync(token);
+        var result = await Mediator.Send(request);
 
         return !result.Success ? StatusCode(401) : StatusCode(200, result);
     }

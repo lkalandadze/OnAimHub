@@ -1,7 +1,9 @@
-﻿namespace Hub.Application.Models.Balance;
+﻿using System.Text.Json.Serialization;
+
+namespace Hub.Application.Models.Balance;
 
 public class BalanceGetModel
 {
-    public int PlayerId { get; set; }
+    [JsonPropertyName("balances")]
     public Dictionary<string, double> Balances { get; set; }
 }

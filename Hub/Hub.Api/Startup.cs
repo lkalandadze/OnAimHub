@@ -1,18 +1,19 @@
 ﻿using Consul;
-using Hub.Api;
 using Hub.Api.Consul;
 using Hub.Application.Configurations;
-using Hub.Application.Services;
+using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Infrastructure.DataAccess;
 using Hub.Infrastructure.Repositories;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.PostgreSQL;
+using System.Reflection;
 using System.Text;
 
 public class Startup
@@ -32,10 +33,14 @@ public class Startup
         services.AddScoped<HttpClient>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IAuthService, AuthService>();
 
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
         services.Configure<JwtTokenConfiguration>(Configuration.GetSection("Jwt"));
+
+        services.AddMediatR(new[]
+        {
+            typeof(CreateAuthenticationTokenHandler).GetTypeInfo().Assembly,
+        });
 
         services.AddLogging();
         ConfigureLogging();

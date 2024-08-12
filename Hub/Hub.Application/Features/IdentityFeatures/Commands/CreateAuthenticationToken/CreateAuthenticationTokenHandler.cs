@@ -1,19 +1,19 @@
 ﻿using Hub.Application.Configurations;
 using Hub.Application.Extensions;
-using Hub.Application.Models.Auth;
 using Hub.Application.Models.Player;
+using Hub.Domain.Entities;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
-using Hub.Domain.Entities;
+using MediatR;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Hub.Application.Services;
+namespace Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 
-public class AuthService : IAuthService
+public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthenticationTokenRequest, CreateAuthenticationTokenResponse>
 {
     private readonly IPlayerRepository _playerRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -21,7 +21,7 @@ public class AuthService : IAuthService
     private readonly CasinoApiConfiguration _casinoApiConfiguration;
     private readonly JwtTokenConfiguration _jwtTokenConfiguration;
 
-    public AuthService(IPlayerRepository playerRepository, IUnitOfWork unitOfWork, HttpClient httpClient, IOptions<CasinoApiConfiguration> casinoApiConfiguration, IOptions<JwtTokenConfiguration> jwtTokenConfiguration)
+    public CreateAuthenticationTokenHandler(IPlayerRepository playerRepository, IUnitOfWork unitOfWork, HttpClient httpClient, IOptions<CasinoApiConfiguration> casinoApiConfiguration, IOptions<JwtTokenConfiguration> jwtTokenConfiguration)
     {
         _playerRepository = playerRepository;
         _unitOfWork = unitOfWork;
@@ -30,14 +30,11 @@ public class AuthService : IAuthService
         _jwtTokenConfiguration = jwtTokenConfiguration.Value;
     }
 
-    public async Task<AuthResultModel> AuthAsync(string casinoToken)
+    public async Task<CreateAuthenticationTokenResponse> Handle(CreateAuthenticationTokenRequest request, CancellationToken cancellationToken)
     {
-        var queryParams = new Dictionary<string, string>
-        { 
-            { "token", casinoToken }
-        };
+        var endpoint = string.Format(_casinoApiConfiguration.Endpoints.GetPlayer, request.CasinoToken);
 
-        var recievedPlayer = await _httpClient.GetAsync<PlayerGetModel>(_casinoApiConfiguration.GetPlayer, queryParams);
+        var recievedPlayer = await _httpClient.GetAsync<PlayerGetModel>(_casinoApiConfiguration.Host, endpoint);
 
         if (recievedPlayer == null)
         {
@@ -58,7 +55,7 @@ public class AuthService : IAuthService
             await _unitOfWork.SaveAsync();
         }
 
-        return new AuthResultModel() { Success = true, Token = GenerateToken(player) };
+        return new CreateAuthenticationTokenResponse(true, GenerateToken(player));
     }
 
     private string GenerateToken(Player player)

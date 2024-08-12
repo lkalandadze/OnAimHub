@@ -12,7 +12,7 @@ namespace Test.Api.Controllers;
 public class TestAuthController : ControllerBase
 {
     [HttpGet("player")]
-    public ActionResult<PlayerGetModel> GetPlayer(string token)
+    public ActionResult<PlayerModel> GetPlayer(string token)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("aVGh6J/J2eRt6N8yQgP5kE0ThKz+zR/G+gL4X1G+yKo="));
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -38,7 +38,7 @@ public class TestAuthController : ControllerBase
                 return Unauthorized();
             }
 
-            var player = new PlayerGetModel
+            var player = new PlayerModel
             {
                 Id = int.Parse(idClaim),
                 UserName = usernameClaim
@@ -55,9 +55,9 @@ public class TestAuthController : ControllerBase
     [HttpGet]
     public ActionResult<string> TestAuth()
     {
-        var player = new PlayerGetModel
+        var player = new PlayerModel
         {
-            Id = 67,
+            Id = Random.Shared.Next(1, 100),
             UserName = Random.Shared.Next(1000, 2000).ToString(),
         };
 
@@ -79,5 +79,19 @@ public class TestAuthController : ControllerBase
         );
 
         return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+    }
+
+    [HttpGet("{id}/balances")]
+    public ActionResult<BalanceModel> GetPlayerBalances([FromRoute] int id)
+    {
+        return new BalanceModel
+        {
+            Balances = new Dictionary<string, double>
+            {
+                { "SPN", 5 },
+                { "FRSPN", 15 },
+                { "USD", 2 },
+            },
+        };
     }
 }
