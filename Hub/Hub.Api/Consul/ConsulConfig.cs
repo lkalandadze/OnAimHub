@@ -1,4 +1,4 @@
-﻿namespace Hub.Api;
+﻿namespace Hub.Api.Consul;
 
 public class ConsulConfig
 {

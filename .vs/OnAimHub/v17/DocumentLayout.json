@@ -3,32 +3,52 @@
   "WorkspaceRootPath": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\controllers\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\controllers\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\consul\\consulservicewatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\consul\\consulservicewatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\ocelot.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\ocelot.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\consul\\consulconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\consul\\consulconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\consul\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\consul\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\consul\\consulconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\consul\\consulconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\consul\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\consul\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\consulservicewatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\consulservicewatcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\controllers\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\controllers\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\controllers\\balancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\controllers\\balancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\ocelot.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\ocelot.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|solutionrelative:apigateway\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -39,20 +59,12 @@
       "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\controllers\\balancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\controllers\\balancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\consulconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\consulconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\consul\\consulconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\consul\\consulconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1C296755-9E07-4311-BD31-B0F59D2433C4}|ApiGateway\\ApiGateway.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\apigateway\\ocelotrequesthandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -66,11 +78,50 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
+              "Title": "ConsulConfig.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\Consul\\ConsulConfig.cs",
+              "RelativeDocumentMoniker": "ApiGateway\\Consul\\ConsulConfig.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\Consul\\ConsulConfig.cs*",
+              "RelativeToolTip": "ApiGateway\\Consul\\ConsulConfig.cs*",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-12T08:34:51.507Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ConsulConfig.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Consul\\ConsulConfig.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Consul\\ConsulConfig.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Consul\\ConsulConfig.cs*",
+              "RelativeToolTip": "Hub\\Hub.Api\\Consul\\ConsulConfig.cs*",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-12T08:34:07.09Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "Wheel\\Wheel.Api\\Controllers\\HomeController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-12T08:29:21.464Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "GameController.cs",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\Controllers\\GameController.cs",
               "RelativeDocumentMoniker": "ApiGateway\\Controllers\\GameController.cs",
@@ -83,7 +134,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 11,
               "Title": "Dockerfile",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\Dockerfile",
               "RelativeDocumentMoniker": "ApiGateway\\Dockerfile",
@@ -96,7 +147,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 12,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\appsettings.json",
               "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\appsettings.json",
@@ -109,13 +160,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "ConsulServiceWatcher.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\ConsulServiceWatcher.cs",
-              "RelativeDocumentMoniker": "ApiGateway\\ConsulServiceWatcher.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\ConsulServiceWatcher.cs",
-              "RelativeToolTip": "ApiGateway\\ConsulServiceWatcher.cs",
-              "ViewState": "AQIAABEAAAAAAAAAAAAQwDAAAAAAAAAA",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\Consul\\ConsulServiceWatcher.cs",
+              "RelativeDocumentMoniker": "ApiGateway\\Consul\\ConsulServiceWatcher.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\Consul\\ConsulServiceWatcher.cs",
+              "RelativeToolTip": "ApiGateway\\Consul\\ConsulServiceWatcher.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAgwC4AAABcAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-12T07:05:10.196Z",
               "EditorCaption": ""
@@ -134,7 +185,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 16,
               "Title": "OcelotRequestHandler.cs",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\OcelotRequestHandler.cs",
               "RelativeDocumentMoniker": "ApiGateway\\OcelotRequestHandler.cs",
@@ -160,33 +211,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Hub\\Hub.Api\\Controllers\\AuthController.cs",
               "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Controllers\\AuthController.cs",
               "RelativeToolTip": "Hub\\Hub.Api\\Controllers\\AuthController.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAABsAAAAAAAAA",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABAAAABSAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-12T07:03:45.479Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 10,
               "Title": "ocelot.json",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\ocelot.json",
               "RelativeDocumentMoniker": "ApiGateway\\ocelot.json",
               "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\ocelot.json",
               "RelativeToolTip": "ApiGateway\\ocelot.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACMAAAAFAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACQAAAAEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2024-08-12T07:03:26.655Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 13,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Program.cs",
               "RelativeDocumentMoniker": "Hub\\Hub.Api\\Program.cs",
@@ -199,38 +250,38 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Startup.cs",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Startup.cs",
               "RelativeDocumentMoniker": "Hub\\Hub.Api\\Startup.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Startup.cs",
-              "RelativeToolTip": "Hub\\Hub.Api\\Startup.cs",
-              "ViewState": "AQIAAEYAAAAAAAAAAAAgwG8AAAAAAAAA",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Startup.cs*",
+              "RelativeToolTip": "Hub\\Hub.Api\\Startup.cs*",
+              "ViewState": "AQIAAEAAAAAAAAAAAAAAAFgAAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-12T06:41:27.189Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "ConsulHostedService.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\ConsulHostedService.cs",
-              "RelativeDocumentMoniker": "Hub\\Hub.Api\\ConsulHostedService.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\ConsulHostedService.cs",
-              "RelativeToolTip": "Hub\\Hub.Api\\ConsulHostedService.cs",
-              "ViewState": "AQIAACkAAAAAAAAAAAAgwFIAAAAAAAAA",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Consul\\ConsulHostedService.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Consul\\ConsulHostedService.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Consul\\ConsulHostedService.cs*",
+              "RelativeToolTip": "Hub\\Hub.Api\\Consul\\ConsulHostedService.cs*",
+              "ViewState": "AQIAACgAAAAAAAAAAAAowFIAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-12T06:39:37.158Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 2,
               "Title": "ConsulHostedService.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\ConsulHostedService.cs",
-              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\ConsulHostedService.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\ConsulHostedService.cs",
-              "RelativeToolTip": "Wheel\\Wheel.Api\\ConsulHostedService.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Consul\\ConsulHostedService.cs",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\Consul\\ConsulHostedService.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Consul\\ConsulHostedService.cs*",
+              "RelativeToolTip": "Wheel\\Wheel.Api\\Consul\\ConsulHostedService.cs*",
               "ViewState": "AQIAABYAAAAAAAAAAAAkwDcAAABYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-12T06:39:47.216Z",
@@ -238,12 +289,12 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 15,
               "Title": "ConsulConfig.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\ConsulConfig.cs",
-              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\ConsulConfig.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\ConsulConfig.cs",
-              "RelativeToolTip": "Wheel\\Wheel.Api\\ConsulConfig.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Consul\\ConsulConfig.cs",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\Consul\\ConsulConfig.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Consul\\ConsulConfig.cs*",
+              "RelativeToolTip": "Wheel\\Wheel.Api\\Consul\\ConsulConfig.cs*",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-09T14:26:11.065Z",
@@ -272,12 +323,12 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Program.cs",
               "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\Program.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Program.cs",
-              "RelativeToolTip": "Wheel\\Wheel.Api\\Program.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Program.cs*",
+              "RelativeToolTip": "Wheel\\Wheel.Api\\Program.cs*",
               "ViewState": "AQIAABUAAAAAAAAAAAAAACkAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-12T06:41:52.038Z",

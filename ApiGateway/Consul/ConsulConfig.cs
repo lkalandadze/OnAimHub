@@ -1,4 +1,4 @@
-﻿namespace ApiGateway;
+﻿namespace ApiGateway.Consul;
 
 public class ConsulConfig
 {

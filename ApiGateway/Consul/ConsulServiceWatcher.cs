@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using Ocelot.Configuration.File;
 using Ocelot.Configuration.Repository;
 
-namespace ApiGateway;
+namespace ApiGateway.Consul;
 
 public class ConsulServiceWatcher : BackgroundService
 {

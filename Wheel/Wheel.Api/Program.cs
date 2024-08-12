@@ -4,7 +4,7 @@ using Shared.Infrastructure.DataAccess;
 using Shared.ServiceRegistry;
 using Wheel.Infrastructure.DataAccess;
 using Wheel.Domain.Entities;
-using Wheel.Api;
+using Wheel.Api.Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 

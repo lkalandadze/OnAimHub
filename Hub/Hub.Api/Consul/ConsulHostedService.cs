@@ -1,7 +1,7 @@
 ﻿using Consul;
 using Microsoft.Extensions.Options;
 
-namespace Hub.Api;
+namespace Hub.Api.Consul;
 
 public class ConsulHostedService : IHostedService
 {

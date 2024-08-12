@@ -1,7 +1,7 @@
 ﻿using Consul;
 using Microsoft.Extensions.Options;
 
-namespace Wheel.Api;
+namespace Wheel.Api.Consul;
 
 public class ConsulHostedService : IHostedService
 {

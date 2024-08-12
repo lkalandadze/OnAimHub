@@ -1,4 +1,4 @@
-﻿using ApiGateway;
+﻿using ApiGateway.Consul;
 using Consul;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

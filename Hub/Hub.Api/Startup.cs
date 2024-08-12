@@ -1,5 +1,5 @@
 ﻿using Consul;
-using Hub.Api;
+using Hub.Api.Consul;
 using Hub.Api.Db;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

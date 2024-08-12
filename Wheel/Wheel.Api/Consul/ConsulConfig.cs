@@ -1,4 +1,4 @@
-﻿namespace Wheel.Api;
+﻿namespace Wheel.Api.Consul;
 
 public class ConsulConfig
 {
