@@ -37,13 +37,13 @@ public class ConsulServiceWatcher : BackgroundService
                 var routes = services.Response.Values.Select(service => new Route
                 {
                     //TODO ON MULTIPLE
-                    DownstreamPathTemplate = $"/api/{{everything}}",
+                    DownstreamPathTemplate = $"/{service.Service}/{{everything}}",
                     DownstreamScheme = "http",
                     DownstreamHostAndPorts = new List<HostAndPort>
                     {
                         new HostAndPort { Host = service.Address, Port = service.Port }
                     },
-                    UpstreamPathTemplate = $"/api/{{everything}}",
+                    UpstreamPathTemplate = $"/{service.Service}/{{everything}}",
                     UpstreamHttpMethod = new List<string> { "Get", "Post", "Put", "Delete" }
                 }).ToList();
 
@@ -54,8 +54,8 @@ public class ConsulServiceWatcher : BackgroundService
                     {
                         Type = "Consul",
                         Scheme = "http",
-                        Host = _consulConfig.Host,
-                        Port = _consulConfig.Port
+                        Host = "consul",
+                        Port = 8500
                     }
                 };
 

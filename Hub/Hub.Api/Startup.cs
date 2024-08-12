@@ -91,7 +91,7 @@ public class Startup
         });
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
     {
         if (env.IsDevelopment())
         {
@@ -107,6 +107,33 @@ public class Startup
         app.UseSwaggerUI(c =>
         {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
+        });
+
+        lifetime.ApplicationStarted.Register(() =>
+        {
+            var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
+            var registration = new AgentServiceRegistration()
+            {
+                ID = Guid.NewGuid().ToString(),
+                Name = "hubapi",
+                Address = "hubapi", // Docker service name or external IP address
+                Port = 8080 // The port your service is running on inside the container
+            };
+
+            consulClient.Agent.ServiceRegister(registration).Wait();
+        });
+
+        // Deregister the service from Consul when application stops
+        lifetime.ApplicationStopped.Register(() =>
+        {
+            var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
+            var registration = new AgentServiceRegistration()
+            {
+                ID = Guid.NewGuid().ToString(),
+                Name = "hubapi"
+            };
+
+            consulClient.Agent.ServiceDeregister(registration.ID).Wait();
         });
 
         app.UseEndpoints(endpoints =>

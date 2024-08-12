@@ -49,6 +49,7 @@ services:
     depends_on:
       - consul
     environment:
+      - CONSUL_ADDRESS=http://consul:8500
       - ASPNETCORE_ENVIRONMENT=Development
     volumes:
       - ./Hub/Hub.Api/appsettings.json:/app/appsettings.json
