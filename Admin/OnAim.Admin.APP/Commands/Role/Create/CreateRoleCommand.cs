@@ -1,0 +1,11 @@
+﻿using MediatR;
+using OnAim.Admin.APP.Models;
+using OnAim.Admin.Infrasturcture.Models.Request.Role;
+
+namespace OnAim.Admin.APP.Commands.Role.Create
+{
+    public class CreateRoleCommand : IRequest<ApplicationResult>
+    {
+        public CreateRoleRequest request { get; set; }
+    }
+}
