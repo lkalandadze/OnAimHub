@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿#nullable disable
+
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.Api.Controllers;

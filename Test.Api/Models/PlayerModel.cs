@@ -1,4 +1,6 @@
-﻿namespace Test.Api.Models;
+﻿#nullable disable
+
+namespace Test.Api.Models;
 
 public class PlayerModel
 {

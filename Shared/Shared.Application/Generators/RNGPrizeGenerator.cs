@@ -1,4 +1,5 @@
 ﻿using Shared.Domain.Abstractions;
+using Shared.Lib.RNG;
 
 namespace Shared.Application.Generators;
 
@@ -15,7 +16,7 @@ internal class RNGPrizeGenerator : Generator
 
     internal override BasePrize GetPrize()
     {
-        var randomNumber = RNG.RNG.Next(ProbabilitySum);
+        var randomNumber = RNG.Next(ProbabilitySum);
         var sum = 0;
 
         for (int i = 0; i < Prizes.Count; i++)

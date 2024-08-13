@@ -200,7 +200,7 @@ public class Startup
         services.Configure<ConsulConfig>(Configuration.GetSection("Consul"));
         services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
         {
-            consulConfig.Address = new Uri(Configuration["Consul:Host"]);
+            consulConfig.Address = new Uri(Configuration["Consul:Host"]!);
         }));
 
         services.AddHostedService<ConsulHostedService>();

@@ -19,7 +19,7 @@ public abstract class BasePrize : BaseEntity
 }
 
 public abstract class BasePrize<TPrizeGroup> : BasePrize
-where TPrizeGroup : BasePrizeGroup
+    where TPrizeGroup : BasePrizeGroup
 {
     public TPrizeGroup PrizeGroup { get; set; }
 }
