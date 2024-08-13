@@ -48,13 +48,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Api", "Test.Api\Test.A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Admin", "Admin", "{1D153E14-4B13-413B-ACA0-200CEE0D39E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnAim.Admin.API", "..\New folder (2)\OnAim-Admin\OnAim.Admin.API\OnAim.Admin.API.csproj", "{AC0B5C44-DC83-4188-B5EE-18A9B6BCF7F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnAim.Admin.API", "Admin\OnAim.Admin.API\OnAim.Admin.API.csproj", "{AC0B5C44-DC83-4188-B5EE-18A9B6BCF7F8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnAim.Admin.APP", "..\New folder (2)\OnAim-Admin\OnAim.Admin.APP\OnAim.Admin.APP.csproj", "{801D27FF-C270-4D00-A0C6-030CD99B3593}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnAim.Admin.APP", "Admin\OnAim.Admin.APP\OnAim.Admin.APP.csproj", "{801D27FF-C270-4D00-A0C6-030CD99B3593}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnAim.Admin.Infrasturcture", "..\New folder (2)\OnAim-Admin\OnAim.Admin.Infrasturcture\OnAim.Admin.Infrasturcture.csproj", "{CDEAE9BB-F44A-46F2-8B17-8FA2E1A66078}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnAim.Admin.Infrasturcture", "Admin\OnAim.Admin.Infrasturcture\OnAim.Admin.Infrasturcture.csproj", "{CDEAE9BB-F44A-46F2-8B17-8FA2E1A66078}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnAim.Admin.Shared", "..\New folder (2)\OnAim-Admin\OnAim.Admin.Shared\OnAim.Admin.Shared.csproj", "{3BAD8C0C-A22F-4448-B619-C99121670E1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnAim.Admin.Shared", "Admin\OnAim.Admin.Shared\OnAim.Admin.Shared.csproj", "{3BAD8C0C-A22F-4448-B619-C99121670E1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
