@@ -15,6 +15,7 @@
 
   <ItemGroup>
 	  <PackageReference Include="Consul" Version="1.7.14.4" />
+	  <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.4" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
@@ -25,6 +26,7 @@
 	  <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.0.0" />
 	  <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
 	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
+	  <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
 	  <PackageReference Include="Serilog" Version="4.0.0" />
 	  <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
 	  <PackageReference Include="Serilog.Sinks.PostgreSQL" Version="2.3.0" />
@@ -33,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Hub.IntegrationEvents\Hub.IntegrationEvents.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Lib\Shared.Lib.csproj" />
     <ProjectReference Include="..\Hub.Application\Hub.Application.csproj" />
     <ProjectReference Include="..\Hub.Domain\Hub.Domain.csproj" />

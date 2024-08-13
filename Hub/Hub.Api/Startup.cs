@@ -1,12 +1,13 @@
 ﻿using Consul;
-using Hub.Api;
-using Hub.Api.Consul;
+using Hub.Api.Common.Consul;
 using Hub.Application.Configurations;
 using Hub.Application.Services;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Infrastructure.DataAccess;
 using Hub.Infrastructure.Repositories;
+using Hub.Shared.Interfaces;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -26,6 +27,10 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        // Access Configuration and env directly from the properties
+        var configuration = Configuration;
+        var env = services.BuildServiceProvider().GetRequiredService<IWebHostEnvironment>();
+
         services.AddDbContext<HubDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -33,9 +38,13 @@ public class Startup
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IIntegrationEventService, IntegrationEventService>();
 
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
         services.Configure<JwtTokenConfiguration>(Configuration.GetSection("Jwt"));
+        ConfigureMassTransit(services, configuration, env);
+
+        services.AddMassTransitHostedService();
 
         services.AddLogging();
         ConfigureLogging();
@@ -205,5 +214,30 @@ public class Startup
     {
         var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
         return !string.IsNullOrEmpty(isDocker) && isDocker == "true";
+    }
+
+    private void ConfigureMassTransit(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
+    {
+        var test = configuration["RabbitMQSettings:Host"];
+        var test1 = configuration["RabbitMQSettings:User"];
+        var test2 = configuration["RabbitMQSettings:Password"];
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(configuration["RabbitMQSettings:Host"], h =>
+                {
+                    h.Username(configuration["RabbitMQSettings:User"]);
+                    h.Password(configuration["RabbitMQSettings:Password"]);
+                });
+
+                cfg.ReceiveEndpoint($"{configuration["RabbitMQSettings:QueueName"]}_{env.EnvironmentName}_TEMP", ep =>
+                {
+                    // ep.ConfigureConsumer<YourConsumer>(context);
+                });
+
+                cfg.ConfigureEndpoints(context);
+            });
+        });
     }
 }
