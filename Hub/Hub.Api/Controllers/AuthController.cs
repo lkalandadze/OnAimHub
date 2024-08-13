@@ -1,23 +1,19 @@
 ﻿using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
-using Microsoft.AspNetCore.Authorization;
-using Hub.Application.Models.Auth;
-using Hub.Application.Services;
 using Hub.IntegrationEvents;
 using Hub.Shared.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.Api.Controllers;
 
 [Route("hubapi/[controller]")]
 [ApiController]
-public class AuthController : ControllerBase
+public class AuthController : BaseApiController
 {
-    private readonly IAuthService _authService;
     private readonly IIntegrationEventService _integrationEventService;
 
-    public AuthController(IAuthService authService, IIntegrationEventService integrationEventService)
+    public AuthController(IIntegrationEventService integrationEventService)
     {
-        _authService = authService;
         _integrationEventService = integrationEventService;
     }
 

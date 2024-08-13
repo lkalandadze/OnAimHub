@@ -1,19 +1,19 @@
 ﻿using Consul;
 using Hub.Api.Common.Consul;
-using Hub.Api.Consul;
 using Hub.Application;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Helpers;
+using Hub.Application.Services;
 using Hub.Application.Services.Abstract;
 using Hub.Application.Services.Concrete;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Infrastructure.DataAccess;
 using Hub.Infrastructure.Repositories;
-using MediatR;
 using Hub.Shared.Interfaces;
 using MassTransit;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
@@ -63,11 +63,9 @@ public class Startup
         services.AddSingleton<ITokenService, TokenService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IIntegrationEventService, IntegrationEventService>();
 
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
-        services.Configure<JwtTokenConfiguration>(Configuration.GetSection("Jwt"));
         ConfigureMassTransit(services, configuration, env);
 
         services.AddMediatR(new[]
