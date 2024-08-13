@@ -1,12 +1,309 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.api\\controllers\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\controllers\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.application\\features\\playerfeatures\\queries\\getbalance\\getbalancehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|solutionrelative:hub\\hub.application\\features\\playerfeatures\\queries\\getbalance\\getbalancehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.application\\features\\playerfeatures\\queries\\getbalance\\getbalancerequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|solutionrelative:hub\\hub.application\\features\\playerfeatures\\queries\\getbalance\\getbalancerequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.application\\features\\identityfeatures\\commands\\createauthenticationtoken\\createauthenticationtokenhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|solutionrelative:hub\\hub.application\\features\\identityfeatures\\commands\\createauthenticationtoken\\createauthenticationtokenhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.application\\features\\playerfeatures\\dtos\\playerbasedtomodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|solutionrelative:hub\\hub.application\\features\\playerfeatures\\dtos\\playerbasedtomodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.api\\controllers\\baseapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\controllers\\baseapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.api\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.application\\helpers\\tokenhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|solutionrelative:hub\\hub.application\\helpers\\tokenhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.application\\services\\concrete\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|solutionrelative:hub\\hub.application\\services\\concrete\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{11FA0E70-38DC-49A3-A762-88321BB81A87}|Shared\\Shared.Lib\\Shared.Lib.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.lib\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{11FA0E70-38DC-49A3-A762-88321BB81A87}|Shared\\Shared.Lib\\Shared.Lib.csproj|solutionrelative:shared\\shared.lib\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{11FA0E70-38DC-49A3-A762-88321BB81A87}|Shared\\Shared.Lib\\Shared.Lib.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\shared\\shared.lib\\extensions\\httpclientextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{11FA0E70-38DC-49A3-A762-88321BB81A87}|Shared\\Shared.Lib\\Shared.Lib.csproj|solutionrelative:shared\\shared.lib\\extensions\\httpclientextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.application\\applicationcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|solutionrelative:hub\\hub.application\\applicationcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.application\\services\\abstract\\itokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|solutionrelative:hub\\hub.application\\services\\abstract\\itokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\foft\\source\\repos\\onaimhub\\hub\\hub.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "GetBalanceRequest.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Features\\PlayerFeatures\\Queries\\GetBalance\\GetBalanceRequest.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Application\\Features\\PlayerFeatures\\Queries\\GetBalance\\GetBalanceRequest.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Features\\PlayerFeatures\\Queries\\GetBalance\\GetBalanceRequest.cs",
+              "RelativeToolTip": "Hub\\Hub.Application\\Features\\PlayerFeatures\\Queries\\GetBalance\\GetBalanceRequest.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T12:35:55.008Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CreateAuthenticationTokenHandler.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Features\\IdentityFeatures\\Commands\\CreateAuthenticationToken\\CreateAuthenticationTokenHandler.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Application\\Features\\IdentityFeatures\\Commands\\CreateAuthenticationToken\\CreateAuthenticationTokenHandler.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Features\\IdentityFeatures\\Commands\\CreateAuthenticationToken\\CreateAuthenticationTokenHandler.cs",
+              "RelativeToolTip": "Hub\\Hub.Application\\Features\\IdentityFeatures\\Commands\\CreateAuthenticationToken\\CreateAuthenticationTokenHandler.cs",
+              "ViewState": "AQIAAA4AAAAAAAAAAAAxwCEAAABSAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T12:35:36.751Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PlayerBaseDtoModel.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Features\\PlayerFeatures\\Dtos\\PlayerBaseDtoModel.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Application\\Features\\PlayerFeatures\\Dtos\\PlayerBaseDtoModel.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Features\\PlayerFeatures\\Dtos\\PlayerBaseDtoModel.cs",
+              "RelativeToolTip": "Hub\\Hub.Application\\Features\\PlayerFeatures\\Dtos\\PlayerBaseDtoModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T12:13:34.935Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Hub\\Hub.Api\\Controllers\\AuthController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T12:12:51.296Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PlayerController.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\Controllers\\PlayerController.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Controllers\\PlayerController.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\Controllers\\PlayerController.cs",
+              "RelativeToolTip": "Hub\\Hub.Api\\Controllers\\PlayerController.cs",
+              "ViewState": "AQIAAAsAAAAAAAAAAADgvxYAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T12:12:10.624Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "BaseApiController.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\Controllers\\BaseApiController.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Controllers\\BaseApiController.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\Controllers\\BaseApiController.cs",
+              "RelativeToolTip": "Hub\\Hub.Api\\Controllers\\BaseApiController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAABmAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T12:11:26.449Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "TokenHelper.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Helpers\\TokenHelper.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Application\\Helpers\\TokenHelper.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Helpers\\TokenHelper.cs",
+              "RelativeToolTip": "Hub\\Hub.Application\\Helpers\\TokenHelper.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAsAAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T12:06:16.192Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ConsulHostedService.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Lib\\ConsulHostedService.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Lib\\ConsulHostedService.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Lib\\ConsulHostedService.cs",
+              "RelativeToolTip": "Shared\\Shared.Lib\\ConsulHostedService.cs",
+              "ViewState": "AQIAABsAAAAAAAAAAAAowAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T12:05:56.271Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "HttpClientExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Lib\\Extensions\\HttpClientExtensions.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Lib\\Extensions\\HttpClientExtensions.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Shared\\Shared.Lib\\Extensions\\HttpClientExtensions.cs",
+              "RelativeToolTip": "Shared\\Shared.Lib\\Extensions\\HttpClientExtensions.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T12:05:42.448Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "GetBalanceHandler.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Features\\PlayerFeatures\\Queries\\GetBalance\\GetBalanceHandler.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Application\\Features\\PlayerFeatures\\Queries\\GetBalance\\GetBalanceHandler.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Features\\PlayerFeatures\\Queries\\GetBalance\\GetBalanceHandler.cs",
+              "RelativeToolTip": "Hub\\Hub.Application\\Features\\PlayerFeatures\\Queries\\GetBalance\\GetBalanceHandler.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAABoAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T10:56:37.751Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\Startup.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Startup.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\Startup.cs",
+              "RelativeToolTip": "Hub\\Hub.Api\\Startup.cs",
+              "ViewState": "AQIAAHEAAAAAAAAAAAArwNgAAAAwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T10:33:56.802Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\Properties\\launchSettings.json",
+              "RelativeToolTip": "Hub\\Hub.Api\\Properties\\launchSettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-08-13T10:31:57.199Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\appsettings.json",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\appsettings.json",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\appsettings.json",
+              "RelativeToolTip": "Hub\\Hub.Api\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-08-13T09:00:20.43Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "TokenService.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Services\\Concrete\\TokenService.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Application\\Services\\Concrete\\TokenService.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Services\\Concrete\\TokenService.cs",
+              "RelativeToolTip": "Hub\\Hub.Application\\Services\\Concrete\\TokenService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAD0AAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T08:55:33.604Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "ITokenService.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Services\\Abstract\\ITokenService.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Application\\Services\\Abstract\\ITokenService.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\Services\\Abstract\\ITokenService.cs",
+              "RelativeToolTip": "Hub\\Hub.Application\\Services\\Abstract\\ITokenService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAsAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T08:54:46.131Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\Program.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Program.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Api\\Program.cs",
+              "RelativeToolTip": "Hub\\Hub.Api\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T08:48:03.288Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ApplicationContext.cs",
+              "DocumentMoniker": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\ApplicationContext.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Application\\ApplicationContext.cs",
+              "ToolTip": "C:\\Users\\Foft\\source\\repos\\OnAimHub\\Hub\\Hub.Application\\ApplicationContext.cs",
+              "RelativeToolTip": "Hub\\Hub.Application\\ApplicationContext.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T08:48:02.3Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

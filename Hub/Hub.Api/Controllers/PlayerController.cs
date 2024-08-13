@@ -20,10 +20,10 @@ namespace Hub.Api.Controllers
             return Ok(await Mediator.Send(new GetPlayerRequest { PlayerId = id }));
         }
 
-        [HttpGet("{id}/balances")]
-        public async Task<ActionResult<GetPlayerResponse>> GetBalancesAsync(int id)
+        [HttpGet("balances")]
+        public async Task<ActionResult<GetPlayerResponse>> GetBalancesAsync()
         {
-            return Ok(await Mediator.Send(new GetBalanceRequest { PlayerId = id }));
+            return Ok(await Mediator.Send(new GetBalanceRequest()));
         }
     }
 }

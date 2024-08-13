@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Hub.Application.Extensions;
+namespace Shared.Lib.Extensions;
 
 public static class HttpClientExtensions
 {
