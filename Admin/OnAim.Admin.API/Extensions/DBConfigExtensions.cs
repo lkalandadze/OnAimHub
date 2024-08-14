@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.API.Service;
+using OnAim.Admin.API.Service.Endpoint;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using System.Security.Cryptography;

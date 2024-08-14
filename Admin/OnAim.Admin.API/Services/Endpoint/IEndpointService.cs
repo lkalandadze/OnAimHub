@@ -1,4 +1,4 @@
-﻿namespace OnAim.Admin.API.Service
+﻿namespace OnAim.Admin.API.Service.Endpoint
 {
     public interface IEndpointService
     {

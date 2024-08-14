@@ -4,8 +4,9 @@ using System.Reflection;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Shared.Models;
+using Microsoft.OpenApi.Extensions;
 
-namespace OnAim.Admin.API.Service
+namespace OnAim.Admin.API.Service.Endpoint
 {
     public class EndpointService : IEndpointService
     {
@@ -22,41 +23,38 @@ namespace OnAim.Admin.API.Service
             var controllers = Assembly.GetExecutingAssembly()
                 .GetTypes()
                 .Where(type => typeof(ControllerBase).IsAssignableFrom(type) && !type.IsAbstract);
-
+           
             foreach (var controller in controllers)
             {
-                var actions = controller.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
-                    .Where(method => method.GetCustomAttributes<HttpMethodAttribute>().Any());
+                var controllerName = controller.Name.Replace("Controller", "");
+                var routePrefix = controller.GetCustomAttribute<RouteAttribute>()?.Template;
 
-                foreach (var action in actions)
+                foreach (var method in controller.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly))
                 {
-                    var routeAttributes = action.GetCustomAttributes<RouteAttribute>().ToList();
-                    var httpMethodAttributes = action.GetCustomAttributes<HttpMethodAttribute>().ToList();
+                    var httpMethodAttributes = method.GetCustomAttributes<HttpMethodAttribute>(inherit: false).ToList();
 
-                    var routeTemplate = routeAttributes.FirstOrDefault()?.Template ?? "No Route";
-                    var httpMethod = httpMethodAttributes.FirstOrDefault()?.HttpMethods.FirstOrDefault() ?? "No HTTP Method";
-
-                    if (routeAttributes.Count > 1)
+                    if (httpMethodAttributes.FirstOrDefault() is { } httpMethod)
                     {
-                        routeTemplate = string.Join(", ", routeAttributes.Select(attr => attr.Template));
+                        var methodName = method.Name;
+
+                        var route = httpMethod.Template;
+
+                        var fullRoute = string.IsNullOrEmpty(routePrefix)
+                            ? route
+                            : $"{routePrefix}/{route}".Trim('/').Replace("[controller]", controllerName);
+
+                        var httpMethodName = httpMethod.HttpMethods.FirstOrDefault();
+
+                        endpoints.Add(new EndpointInfo
+                        {
+                            Controller = controller.Name,
+                            Name = $"{controllerName}_{methodName}",
+                            HttpMethod = httpMethod.HttpMethods.First(),
+                            RouteTemplate = fullRoute!
+                        });
                     }
-                    else if (routeTemplate == "No Route")
-                    {
-                        routeTemplate = httpMethodAttributes
-                            .Select(attr => attr.HttpMethods.FirstOrDefault())
-                            .FirstOrDefault() ?? "No Route";
-                    }
-
-                    endpoints.Add(new EndpointInfo
-                    {
-                        Controller = controller.Name,
-                        Action = action.Name,
-                        HttpMethod = httpMethod,
-                        RouteTemplate = routeTemplate
-                    });
                 }
             }
-
 
             return endpoints;
         }
@@ -95,14 +93,14 @@ namespace OnAim.Admin.API.Service
                                  ? endpointInfo.Controller.Substring(0, endpointInfo.Controller.Length - "Controller".Length)
                                  : endpointInfo.Controller;
 
-            var formattedName = $"{controllerName}/{endpointInfo.Action}";
+            var formattedName = $"{controllerName}/{endpointInfo.Name}";
 
             return new Infrasturcture.Entities.Endpoint
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = formattedName,
                 Path = formattedName,
-                Description = $"Endpoint for {endpointInfo.Action} in {endpointInfo.Controller}",
+                Description = $"Endpoint for {endpointInfo.Name} in {endpointInfo.Controller}",
                 IsEnabled = true,
                 IsActive = true,
                 DateCreated = SystemDate.Now,
