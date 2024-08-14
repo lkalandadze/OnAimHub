@@ -1,14 +1,11 @@
 using Consul;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Shared.Infrastructure.DataAccess;
 using Shared.ServiceRegistry;
-using Wheel.Infrastructure.DataAccess;
-using Wheel.Domain.Entities;
 using Wheel.Api.Consul;
-using MassTransit;
-using Shared.Domain.Entities;
-using Wheel.Shared.Interfaces;
-using Wheel.Application.Services;
+using Wheel.Domain.Entities;
+using Wheel.Infrastructure.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +32,6 @@ builder.Services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
 var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup), typeof(JackpotPrizeGroup) };
 
 builder.Services.AddSingleton(prizeGroupTypes);
-builder.Services.AddScoped<IIntegrationEventService, IntegrationEventService>();
 
 builder.Services.AddMassTransitHostedService();
 
@@ -123,9 +119,6 @@ bool IsRunningInDocker()
 }
 void ConfigureMassTransit(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
 {
-    var test = configuration["RabbitMQSettings:Host"];
-    var test1 = configuration["RabbitMQSettings:User"];
-    var test2 = configuration["RabbitMQSettings:Password"];
     services.AddMassTransit(x =>
     {
         x.UsingRabbitMq((context, cfg) =>

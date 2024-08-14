@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared.Lib\Shared.Lib.csproj" />
-    <ProjectReference Include="..\..\Hub.Shared\Hub.Shared.csproj" />
     <ProjectReference Include="..\Hub.Domain\Hub.Domain.csproj" />
   </ItemGroup>
 

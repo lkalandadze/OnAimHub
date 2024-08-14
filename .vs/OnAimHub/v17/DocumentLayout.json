@@ -3,32 +3,44 @@
   "WorkspaceRootPath": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{11FA0E70-38DC-49A3-A762-88321BB81A87}|Shared\\Shared.Lib\\Shared.Lib.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\shared\\shared.lib\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{11FA0E70-38DC-49A3-A762-88321BB81A87}|Shared\\Shared.Lib\\Shared.Lib.csproj|solutionrelative:shared\\shared.lib\\consulhostedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{AC12048E-21C0-407F-ADAE-70932BBA896E}|Hub.IntegrationEvents\\Hub.IntegrationEvents.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub.integrationevents\\spinprocessedintegrationeventhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AC12048E-21C0-407F-ADAE-70932BBA896E}|Hub.IntegrationEvents\\Hub.IntegrationEvents.csproj|solutionrelative:hub.integrationevents\\spinprocessedintegrationeventhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\controllers\\baseapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\controllers\\baseapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}|Shared.IntegrationEvents\\Shared.IntegrationEvents.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\shared.integrationevents\\integrationevents\\spinprocessedintegrationevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}|Shared.IntegrationEvents\\Shared.IntegrationEvents.csproj|solutionrelative:shared.integrationevents\\integrationevents\\spinprocessedintegrationevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{08F87627-5903-41E1-8910-47E2CC16107A}|Wheel.IntegrationEvents\\Wheel.IntegrationEvents.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel.integrationevents\\spinrequestedintegrationeventhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{08F87627-5903-41E1-8910-47E2CC16107A}|Wheel.IntegrationEvents\\Wheel.IntegrationEvents.csproj|solutionrelative:wheel.integrationevents\\spinrequestedintegrationeventhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AC12048E-21C0-407F-ADAE-70932BBA896E}|Hub.IntegrationEvents\\Hub.IntegrationEvents.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub.integrationevents\\spinprocessedintegrationeventhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AC12048E-21C0-407F-ADAE-70932BBA896E}|Hub.IntegrationEvents\\Hub.IntegrationEvents.csproj|solutionrelative:hub.integrationevents\\spinprocessedintegrationeventhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}|Shared.IntegrationEvents\\Shared.IntegrationEvents.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\shared.integrationevents\\integrationevents\\spinprocessedintegrationevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}|Shared.IntegrationEvents\\Shared.IntegrationEvents.csproj|solutionrelative:shared.integrationevents\\integrationevents\\spinprocessedintegrationevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\controllers\\baseapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\controllers\\baseapicontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}|Shared.IntegrationEvents\\Shared.IntegrationEvents.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\shared.integrationevents\\integrationevents\\spinrequestedintegrationevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -47,18 +59,6 @@
       "RelativeMoniker": "D:0:0:{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}|Shared.IntegrationEvents\\Shared.IntegrationEvents.csproj|solutionrelative:shared.integrationevents\\shared.integrationevents.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{333E09AD-BB00-476B-9C59-EB34E8223463}|Hub.Shared\\Hub.Shared.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub.shared\\interfaces\\idomainevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{333E09AD-BB00-476B-9C59-EB34E8223463}|Hub.Shared\\Hub.Shared.csproj|solutionrelative:hub.shared\\interfaces\\idomainevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{333E09AD-BB00-476B-9C59-EB34E8223463}|Hub.Shared\\Hub.Shared.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub.shared\\interfaces\\idomaineventhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{333E09AD-BB00-476B-9C59-EB34E8223463}|Hub.Shared\\Hub.Shared.csproj|solutionrelative:hub.shared\\interfaces\\idomaineventhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{333E09AD-BB00-476B-9C59-EB34E8223463}|Hub.Shared\\Hub.Shared.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub.shared\\interfaces\\iintegrationevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{333E09AD-BB00-476B-9C59-EB34E8223463}|Hub.Shared\\Hub.Shared.csproj|solutionrelative:hub.shared\\interfaces\\iintegrationevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{AC12048E-21C0-407F-ADAE-70932BBA896E}|Hub.IntegrationEvents\\Hub.IntegrationEvents.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub.integrationevents\\hub.integrationevents.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{AC12048E-21C0-407F-ADAE-70932BBA896E}|Hub.IntegrationEvents\\Hub.IntegrationEvents.csproj|solutionrelative:hub.integrationevents\\hub.integrationevents.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
@@ -75,24 +75,12 @@
       "RelativeMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|solutionrelative:hub\\hub.application\\features\\identityfeatures\\commands\\createauthenticationtoken\\createauthenticationtokenrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\wheel\\wheel.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4426417E-7CE4-4A70-9066-60D9022800C2}|Wheel\\Wheel.Api\\Wheel.Api.csproj|solutionrelative:wheel\\wheel.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.application\\hub.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{01C68A2E-8F75-473B-B20A-9768B93F2DE8}|Hub\\Hub.Application\\Hub.Application.csproj|solutionrelative:hub\\hub.application\\hub.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{333E09AD-BB00-476B-9C59-EB34E8223463}|Hub.Shared\\Hub.Shared.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub.shared\\hub.shared.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{333E09AD-BB00-476B-9C59-EB34E8223463}|Hub.Shared\\Hub.Shared.csproj|solutionrelative:hub.shared\\hub.shared.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\hub.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\hub.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\hub\\hub.api\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AE73ACD9-B179-4BCD-9FCC-B8CCAE21BF45}|Hub\\Hub.Api\\Hub.Api.csproj|solutionrelative:hub\\hub.api\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AC0B5C44-DC83-4188-B5EE-18A9B6BCF7F8}|Admin\\OnAim.Admin.API\\OnAim.Admin.API.csproj|c:\\users\\akaki\\desktop\\onaim\\onaimhub\\admin\\onaim.admin.api\\extensions\\servicecollectionextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -113,6 +101,19 @@
           "SelectedChildIndex": 10,
           "Children": [
             {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ConsulHostedService.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Shared\\Shared.Lib\\ConsulHostedService.cs",
+              "RelativeDocumentMoniker": "Shared\\Shared.Lib\\ConsulHostedService.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Shared\\Shared.Lib\\ConsulHostedService.cs",
+              "RelativeToolTip": "Shared\\Shared.Lib\\ConsulHostedService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAADAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-14T12:33:04.488Z",
+              "EditorCaption": ""
+            },
+            {
               "$type": "Bookmark",
               "Name": "ST:132:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
@@ -126,7 +127,98 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 4,
+              "Title": "SpinProcessedIntegrationEventHandler.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub.IntegrationEvents\\SpinProcessedIntegrationEventHandler.cs",
+              "RelativeDocumentMoniker": "Hub.IntegrationEvents\\SpinProcessedIntegrationEventHandler.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub.IntegrationEvents\\SpinProcessedIntegrationEventHandler.cs",
+              "RelativeToolTip": "Hub.IntegrationEvents\\SpinProcessedIntegrationEventHandler.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-14T09:57:18.143Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Hub\\Hub.Api\\Controllers\\AuthController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACEAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-12T11:37:30.799Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "Wheel\\Wheel.Api\\Controllers\\HomeController.cs",
+              "ViewState": "AQIAABoAAAAAAAAAAAAwwCcAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T12:22:13.555Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SpinProcessedIntegrationEvent.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Shared.IntegrationEvents\\IntegrationEvents\\SpinProcessedIntegrationEvent.cs",
+              "RelativeDocumentMoniker": "Shared.IntegrationEvents\\IntegrationEvents\\SpinProcessedIntegrationEvent.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Shared.IntegrationEvents\\IntegrationEvents\\SpinProcessedIntegrationEvent.cs",
+              "RelativeToolTip": "Shared.IntegrationEvents\\IntegrationEvents\\SpinProcessedIntegrationEvent.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAwAAAALAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-14T08:38:00.6Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "SpinRequestedIntegrationEventHandler.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel.IntegrationEvents\\SpinRequestedIntegrationEventHandler.cs",
+              "RelativeDocumentMoniker": "Wheel.IntegrationEvents\\SpinRequestedIntegrationEventHandler.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel.IntegrationEvents\\SpinRequestedIntegrationEventHandler.cs",
+              "RelativeToolTip": "Wheel.IntegrationEvents\\SpinRequestedIntegrationEventHandler.cs",
+              "ViewState": "AQIAABYAAAAAAAAAAAAgwDkAAAA5AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-14T08:23:01.124Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Startup.cs",
+              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Startup.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Startup.cs",
+              "RelativeToolTip": "Hub\\Hub.Api\\Startup.cs",
+              "ViewState": "AQIAAC8BAAAAAAAAAAAWwEIBAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T12:22:18.207Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Program.cs",
+              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\Program.cs",
+              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Program.cs",
+              "RelativeToolTip": "Wheel\\Wheel.Api\\Program.cs",
+              "ViewState": "AQIAAGYAAAAAAAAAAAAWwIYAAAAPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T12:41:14.317Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "IIntegrationEventHandler.cs",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Shared.IntegrationEvents\\Interfaces\\IIntegrationEventHandler.cs",
               "RelativeDocumentMoniker": "Shared.IntegrationEvents\\Interfaces\\IIntegrationEventHandler.cs",
@@ -139,46 +231,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "SpinProcessedIntegrationEventHandler.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub.IntegrationEvents\\SpinProcessedIntegrationEventHandler.cs",
-              "RelativeDocumentMoniker": "Hub.IntegrationEvents\\SpinProcessedIntegrationEventHandler.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub.IntegrationEvents\\SpinProcessedIntegrationEventHandler.cs",
-              "RelativeToolTip": "Hub.IntegrationEvents\\SpinProcessedIntegrationEventHandler.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAABBAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-14T08:23:16.248Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "SpinRequestedIntegrationEventHandler.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel.IntegrationEvents\\SpinRequestedIntegrationEventHandler.cs",
-              "RelativeDocumentMoniker": "Wheel.IntegrationEvents\\SpinRequestedIntegrationEventHandler.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel.IntegrationEvents\\SpinRequestedIntegrationEventHandler.cs",
-              "RelativeToolTip": "Wheel.IntegrationEvents\\SpinRequestedIntegrationEventHandler.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAB4AAAA6AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-14T08:23:01.124Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "Hub\\Hub.Api\\Controllers\\AuthController.cs",
-              "ViewState": "AQIAAB0AAAAAAAAAAAAAACAAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-12T11:37:30.799Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "IIntegrationEvent.cs",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Shared.IntegrationEvents\\Interfaces\\IIntegrationEvent.cs",
               "RelativeDocumentMoniker": "Shared.IntegrationEvents\\Interfaces\\IIntegrationEvent.cs",
@@ -191,20 +244,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "HomeController.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Controllers\\HomeController.cs",
-              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\Controllers\\HomeController.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Controllers\\HomeController.cs",
-              "RelativeToolTip": "Wheel\\Wheel.Api\\Controllers\\HomeController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-13T12:22:13.555Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 9,
               "Title": "BaseApiController.cs",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Controllers\\BaseApiController.cs",
               "RelativeDocumentMoniker": "Hub\\Hub.Api\\Controllers\\BaseApiController.cs",
@@ -217,7 +257,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 8,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\appsettings.json",
               "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\appsettings.json",
@@ -230,7 +270,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "SpinRequestedIntegrationEvent.cs",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Shared.IntegrationEvents\\IntegrationEvents\\SpinRequestedIntegrationEvent.cs",
               "RelativeDocumentMoniker": "Shared.IntegrationEvents\\IntegrationEvents\\SpinRequestedIntegrationEvent.cs",
@@ -243,20 +283,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "SpinProcessedIntegrationEvent.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Shared.IntegrationEvents\\IntegrationEvents\\SpinProcessedIntegrationEvent.cs",
-              "RelativeDocumentMoniker": "Shared.IntegrationEvents\\IntegrationEvents\\SpinProcessedIntegrationEvent.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Shared.IntegrationEvents\\IntegrationEvents\\SpinProcessedIntegrationEvent.cs",
-              "RelativeToolTip": "Shared.IntegrationEvents\\IntegrationEvents\\SpinProcessedIntegrationEvent.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAuAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-14T08:38:00.6Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 13,
               "Title": "Shared.IntegrationEvents",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Shared.IntegrationEvents\\Shared.IntegrationEvents.csproj",
               "RelativeDocumentMoniker": "Shared.IntegrationEvents\\Shared.IntegrationEvents.csproj",
@@ -265,45 +292,6 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2024-08-14T08:35:27.365Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "IDomainEvent.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub.Shared\\Interfaces\\IDomainEvent.cs",
-              "RelativeDocumentMoniker": "Hub.Shared\\Interfaces\\IDomainEvent.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub.Shared\\Interfaces\\IDomainEvent.cs",
-              "RelativeToolTip": "Hub.Shared\\Interfaces\\IDomainEvent.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-14T08:25:16.064Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "IDomainEventHandler.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub.Shared\\Interfaces\\IDomainEventHandler.cs",
-              "RelativeDocumentMoniker": "Hub.Shared\\Interfaces\\IDomainEventHandler.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub.Shared\\Interfaces\\IDomainEventHandler.cs",
-              "RelativeToolTip": "Hub.Shared\\Interfaces\\IDomainEventHandler.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAABAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-13T13:42:24.251Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "IIntegrationEvent.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub.Shared\\Interfaces\\IIntegrationEvent.cs",
-              "RelativeDocumentMoniker": "Hub.Shared\\Interfaces\\IIntegrationEvent.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub.Shared\\Interfaces\\IIntegrationEvent.cs",
-              "RelativeToolTip": "Hub.Shared\\Interfaces\\IIntegrationEvent.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-14T08:25:04.609Z",
               "EditorCaption": ""
             },
             {
@@ -353,26 +341,14 @@
               "RelativeDocumentMoniker": "Wheel.IntegrationEvents\\Wheel.IntegrationEvents.csproj",
               "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel.IntegrationEvents\\Wheel.IntegrationEvents.csproj",
               "RelativeToolTip": "Wheel.IntegrationEvents\\Wheel.IntegrationEvents.csproj",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2024-08-13T13:42:32.253Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "Hub.Shared.csproj",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub.Shared\\Hub.Shared.csproj",
-              "RelativeDocumentMoniker": "Hub.Shared\\Hub.Shared.csproj",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub.Shared\\Hub.Shared.csproj",
-              "RelativeToolTip": "Hub.Shared\\Hub.Shared.csproj",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-08-13T13:41:58.483Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 19,
               "Title": "Hub.Api.csproj",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Hub.Api.csproj",
               "RelativeDocumentMoniker": "Hub\\Hub.Api\\Hub.Api.csproj",
@@ -384,7 +360,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 18,
               "Title": "Hub.Application.csproj",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Application\\Hub.Application.csproj",
               "RelativeDocumentMoniker": "Hub\\Hub.Application\\Hub.Application.csproj",
@@ -396,19 +372,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Program.cs",
-              "RelativeDocumentMoniker": "Wheel\\Wheel.Api\\Program.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Wheel\\Wheel.Api\\Program.cs",
-              "RelativeToolTip": "Wheel\\Wheel.Api\\Program.cs",
-              "ViewState": "AQIAACAAAAAAAAAAAAAgwDgAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-13T12:41:14.317Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 20,
               "Title": "ServiceCollectionExtensions.cs",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Admin\\OnAim.Admin.API\\Extensions\\ServiceCollectionExtensions.cs",
               "RelativeDocumentMoniker": "Admin\\OnAim.Admin.API\\Extensions\\ServiceCollectionExtensions.cs",
@@ -420,19 +384,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "Startup.cs",
-              "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Startup.cs",
-              "RelativeDocumentMoniker": "Hub\\Hub.Api\\Startup.cs",
-              "ToolTip": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\Hub\\Hub.Api\\Startup.cs",
-              "RelativeToolTip": "Hub\\Hub.Api\\Startup.cs",
-              "ViewState": "AQIAADIBAAAAAAAAAAAzwE0BAAARAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-13T12:22:18.207Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 21,
               "Title": "Startup.cs",
               "DocumentMoniker": "C:\\Users\\Akaki\\Desktop\\OnAim\\OnAimHub\\ApiGateway\\Startup.cs",
               "RelativeDocumentMoniker": "ApiGateway\\Startup.cs",

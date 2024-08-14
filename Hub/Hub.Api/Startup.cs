@@ -11,7 +11,6 @@ using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Infrastructure.DataAccess;
 using Hub.Infrastructure.Repositories;
-using Hub.Shared.Interfaces;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -63,7 +62,6 @@ public class Startup
         services.AddSingleton<ITokenService, TokenService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IIntegrationEventService, IntegrationEventService>();
 
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
         ConfigureMassTransit(services, configuration, env);
@@ -323,9 +321,6 @@ public class Startup
 
     private void ConfigureMassTransit(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
-        var test = configuration["RabbitMQSettings:Host"];
-        var test1 = configuration["RabbitMQSettings:User"];
-        var test2 = configuration["RabbitMQSettings:Password"];
         services.AddMassTransit(x =>
         {
             x.UsingRabbitMq((context, cfg) =>

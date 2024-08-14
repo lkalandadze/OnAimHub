@@ -1,12 +1,8 @@
 ﻿using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
-using Hub.IntegrationEvents;
-using Hub.Shared.Interfaces;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.IntegrationEvents.IntegrationEvents;
-using System.Net.Http;
-using System.Text;
 
 namespace Hub.Api.Controllers;
 
@@ -14,12 +10,10 @@ namespace Hub.Api.Controllers;
 [ApiController]
 public class AuthController : BaseApiController
 {
-    private readonly IIntegrationEventService _integrationEventService;
     private readonly IBus _bus;
 
-    public AuthController(IIntegrationEventService integrationEventService, IBus bus)
+    public AuthController(IBus bus)
     {
-        _integrationEventService = integrationEventService;
         _bus = bus;
     }
 
@@ -30,21 +24,6 @@ public class AuthController : BaseApiController
         var result = await Mediator.Send(request);
 
         return !result.Success ? StatusCode(401) : StatusCode(200, result);
-    }
-
-    [HttpPost("place-order")]
-    public async Task<IActionResult> PlaceOrder(Guid userId)
-    {
-        var correlationId = Guid.NewGuid();
-        var orderId = Guid.NewGuid();
-        var orderDate = DateTimeOffset.UtcNow;
-
-        var @event = new TestOrderIntegrationEvent(correlationId, orderId, userId, orderDate);
-
-        await _integrationEventService.AddAsync(@event);
-        await _integrationEventService.PublishAllAsync();
-
-        return Ok(new { Message = "Order placed successfully!", OrderId = orderId });
     }
 
     [HttpPost("spin-wheel")]

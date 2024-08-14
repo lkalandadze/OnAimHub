@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hub.IntegrationEvents\Hub.IntegrationEvents.csproj" />
-    <ProjectReference Include="..\Wheel.Shared\Wheel.Shared.csproj" />
   </ItemGroup>
 
 </Project>
