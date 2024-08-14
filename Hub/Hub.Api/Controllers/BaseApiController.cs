@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.Api.Controllers;
 
-[Authorize]
+//[Authorize]
 [ApiController]
 public abstract class BaseApiController : ControllerBase
 {
