@@ -1,9 +1,12 @@
 using Consul;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Shared.Domain.Abstractions.Repository;
 using Shared.Infrastructure.DataAccess;
+using Shared.Infrastructure.Repositories;
 using Shared.ServiceRegistry;
 using Wheel.Api.Consul;
+using Wheel.Application;
 using Wheel.Domain.Entities;
 using Wheel.Infrastructure.DataAccess;
 
@@ -32,6 +35,9 @@ builder.Services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
 var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup), typeof(JackpotPrizeGroup) };
 
 builder.Services.AddSingleton(prizeGroupTypes);
+
+builder.Services.AddScoped<GameManager>();
+builder.Services.AddScoped<IPriceRepository, PriceRepository>();
 
 builder.Services.AddMassTransitHostedService();
 

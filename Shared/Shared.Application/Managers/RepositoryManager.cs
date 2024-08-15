@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Shared.Domain.Abstractions.Repository;
 using Shared.Domain.Abstractions;
-using Microsoft.Extensions.Hosting;
+using Shared.Domain.Abstractions.Repository;
 
 namespace Shared.Application.Managers;
 
@@ -16,14 +15,13 @@ public class RepositoryManager
 
     internal static PrizeGroupRepositoryProxy GetPrizeGroupRepository(Type type)
     {
-        //recursion???
-        //if(t.BaseType != typeof(BasePrizeGroup))
-        //{
-
-        //}
-
         var genericType = _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService(typeof(IPrizeGroupRepository<>).MakeGenericType(type));
         return new PrizeGroupRepositoryProxy(genericType);
+    }
+
+    internal static IPriceRepository GetPriceRepository()
+    {
+        return _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IPriceRepository>();
     }
 }
 
