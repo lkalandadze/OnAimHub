@@ -1,20 +1,28 @@
 ﻿using Consul;
-using Hub.Api.Consul;
+using Hub.Api.Common.Consul;
+using Hub.Application;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
+using Hub.Application.Helpers;
+using Hub.Application.Services;
+using Hub.Application.Services.Abstract;
+using Hub.Application.Services.Concrete;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Infrastructure.DataAccess;
 using Hub.Infrastructure.Repositories;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.PostgreSQL;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
-using System.Text;
 
 public class Startup
 {
@@ -27,42 +35,88 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        var appsettings = new AppSettings();
+        Configuration.Bind(appsettings);
+        BindJwtConfigValidAudiences(Configuration, appsettings);
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy(
+                "AllowAnyOrigin",
+                builder => builder.AllowAnyOrigin()
+                                  .AllowAnyMethod()
+                                  .AllowAnyHeader());
+        });
+
+        services.AddSingleton(appsettings);
+        services.AddHttpContextAccessor();
+
+        // Access Configuration and env directly from the properties
+        var configuration = Configuration;
+        var env = services.BuildServiceProvider().GetRequiredService<IWebHostEnvironment>();
+
         services.AddDbContext<HubDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<HttpClient>();
+        services.AddSingleton<ITokenService, TokenService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
-        services.Configure<JwtTokenConfiguration>(Configuration.GetSection("Jwt"));
+        ConfigureMassTransit(services, configuration, env);
 
         services.AddMediatR(new[]
         {
             typeof(CreateAuthenticationTokenHandler).GetTypeInfo().Assembly,
         });
 
+        services.AddMassTransitHostedService();
+
         services.AddLogging();
         ConfigureLogging();
-
-        ConfigureSwagger(services);
-        ConfgiureJwt(services);
 
         if (IsRunningInDocker())
         {
             ConfigureConsul(services);
         }
 
+        ConfgiureJwt(services, appsettings);
+        ConfigureApplicationContext(services);
+
         services.AddControllers();
-        services.AddAuthorization();
+        services.AddEndpointsApiExplorer();
+
+        ConfigureSwagger(services);
+
+        services.AddSwaggerGen();
+
+        services.Configure<ForwardedHeadersOptions>(o =>
+        {
+            o.ForwardedHeaders =
+                ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            o.KnownNetworks.Clear();
+            o.KnownProxies.Clear();
+        });
+
+        services.AddHealthChecks();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
     {
+        app.UseCors("AllowAnyOrigin");
+        app.UseHttpsRedirection();
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
+
+        app.UseSwagger();
+        app.UseSwaggerUI(c => c.DefaultModelExpandDepth(-1));
+
+        app.UseForwardedHeaders();
+        app.UseCertificateForwarding();
 
         app.UseRouting();
         app.UseAuthentication();
@@ -72,13 +126,6 @@ public class Startup
         {
             ConfigureConsulLifetime(app, lifetime);
         }
-
-        app.UseSwagger();
-
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
-        });
 
         app.UseEndpoints(endpoints =>
         {
@@ -116,54 +163,114 @@ public class Startup
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "Hub Api",
+                Version = "v1",
+                Description = "Hub Api",
+                Contact = new OpenApiContact
+                {
+                    Name = "HubApi",
+                },
+            });
+            c.ResolveConflictingActions(apiDescription => apiDescription.First());
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                In = ParameterLocation.Header,
-                Description = "Please enter JWT with Bearer into field",
                 Name = "Authorization",
                 Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer"
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "JWT Authorization header using the bearer scheme.",
             });
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
-                    new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference
+                        new OpenApiSecurityScheme
                         {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer",
+                            },
+                        },
+                        Array.Empty<string>()
                     },
-                    new string[] { }
-                }
-            });
+                });
         });
     }
 
-    private void ConfgiureJwt(IServiceCollection services)
+    private static void BindJwtConfigValidAudiences(IConfiguration configuration, AppSettings appSettings)
     {
-        var jwtSettings = Configuration.GetSection("Jwt");
-        var key = Encoding.ASCII.GetBytes(jwtSettings.GetValue<string>("Key")!);
+        var section = configuration.GetSection("jwtconfig:ValidAudiences");
 
-        services.AddAuthentication(x =>
+        if (section != null && section.Value != null)
         {
-            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            var values = section.Get<string>()?.Split(',').ToList();
+            appSettings.JwtConfig.ValidAudiences = values;
+        }
+    }
+
+    public static void ConfgiureJwt(IServiceCollection services, AppSettings appSettings)
+    {
+        services.AddAuthentication(opt =>
+        {
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         })
-        .AddJwtBearer(x =>
+        .AddJwtBearer(options =>
         {
-            x.RequireHttpsMetadata = false;
-            x.SaveToken = true;
-            x.TokenValidationParameters = new TokenValidationParameters
+            options.Audience = appSettings.JwtConfig.ValidAudience;
+            options.TokenValidationParameters = TokenHelper.GetTokenValidationParameters(appSettings);
+            options.Events = new JwtBearerEvents
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtSettings.GetValue<string>("Issuer"),
-                ValidAudience = jwtSettings.GetValue<string>("Audience"),
-                IssuerSigningKey = new SymmetricSecurityKey(key)
+                OnAuthenticationFailed = context =>
+                {
+                    if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                    {
+                        context.Response.Headers.Append("IS-TOKEN-EXPIRED", "true");
+                    }
+
+                    return Task.CompletedTask;
+                }
             };
+        });
+    }
+
+    private void ConfigureApplicationContext(IServiceCollection services)
+    {
+        services.AddScoped(p =>
+        {
+            var applicationContext = new ApplicationContext();
+
+            var accessor = p.GetService<IHttpContextAccessor>();
+
+            if (accessor != null && accessor.HttpContext != null)
+            {
+                var authHeader = accessor.HttpContext.Request.Headers[HeaderNames.Authorization].ToString();
+
+                if (!string.IsNullOrEmpty(authHeader))
+                {
+                    var token = authHeader.Replace("Bearer ", string.Empty, StringComparison.OrdinalIgnoreCase);
+
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        var jwtSecurityToken = new JwtSecurityToken(jwtEncodedString: token);
+
+                        if (jwtSecurityToken != null)
+                        {
+                            var username = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "UserName")?.Value;
+                            var playerId = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "PlayerId")?.Value;
+
+                            applicationContext.PlayerId = int.Parse(playerId!);
+                            applicationContext.UserName = username;
+                        }
+                    }
+                }
+            }
+
+            return applicationContext;
         });
     }
 
@@ -210,5 +317,27 @@ public class Startup
     {
         var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
         return !string.IsNullOrEmpty(isDocker) && isDocker == "true";
+    }
+
+    private void ConfigureMassTransit(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
+    {
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(configuration["RabbitMQSettings:Host"], h =>
+                {
+                    h.Username(configuration["RabbitMQSettings:User"]);
+                    h.Password(configuration["RabbitMQSettings:Password"]);
+                });
+
+                cfg.ReceiveEndpoint($"{configuration["RabbitMQSettings:QueueName"]}_{env.EnvironmentName}_TEMP", ep =>
+                {
+                    // ep.ConfigureConsumer<YourConsumer>(context);
+                });
+
+                cfg.ConfigureEndpoints(context);
+            });
+        });
     }
 }

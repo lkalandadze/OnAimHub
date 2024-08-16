@@ -1,10 +1,11 @@
 using Consul;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Shared.Infrastructure.DataAccess;
 using Shared.ServiceRegistry;
-using Wheel.Infrastructure.DataAccess;
-using Wheel.Domain.Entities;
 using Wheel.Api.Consul;
+using Wheel.Domain.Entities;
+using Wheel.Infrastructure.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,11 @@ builder.Services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
 var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup), typeof(JackpotPrizeGroup) };
 
 builder.Services.AddSingleton(prizeGroupTypes);
+
+builder.Services.AddMassTransitHostedService();
+
+ConfigureMassTransit(builder.Services, builder.Configuration, builder.Environment);
+
 
 builder.Services.Resolve(builder.Configuration, prizeGroupTypes);
 
@@ -110,4 +116,25 @@ bool IsRunningInDocker()
 {
     var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
     return !string.IsNullOrEmpty(isDocker) && isDocker == "true";
+}
+void ConfigureMassTransit(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
+{
+    services.AddMassTransit(x =>
+    {
+        x.UsingRabbitMq((context, cfg) =>
+        {
+            cfg.Host(configuration["RabbitMQSettings:Host"], h =>
+            {
+                h.Username(configuration["RabbitMQSettings:User"]);
+                h.Password(configuration["RabbitMQSettings:Password"]);
+            });
+
+            cfg.ReceiveEndpoint($"{configuration["RabbitMQSettings:QueueName"]}_{env.EnvironmentName}_TEMP", ep =>
+            {
+                // ep.ConfigureConsumer<YourConsumer>(context);
+            });
+
+            cfg.ConfigureEndpoints(context);
+        });
+    });
 }

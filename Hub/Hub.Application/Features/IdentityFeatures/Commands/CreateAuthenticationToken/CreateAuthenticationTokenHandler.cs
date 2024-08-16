@@ -1,29 +1,30 @@
 ﻿using Hub.Application.Configurations;
-using Hub.Application.Extensions;
 using Hub.Application.Models.Player;
-using Hub.Domain.Entities;
+using Hub.Application.Services.Abstract;
+using Hub.Application.Services.Concrete;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
+using Hub.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
+using Shared.Lib.Extensions;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 
 public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthenticationTokenRequest, CreateAuthenticationTokenResponse>
 {
     private readonly IPlayerRepository _playerRepository;
+    private readonly ITokenService _tokenService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly HttpClient _httpClient;
     private readonly CasinoApiConfiguration _casinoApiConfiguration;
-    private readonly JwtTokenConfiguration _jwtTokenConfiguration;
+    private readonly JwtConfig _jwtTokenConfiguration;
 
-    public CreateAuthenticationTokenHandler(IPlayerRepository playerRepository, IUnitOfWork unitOfWork, HttpClient httpClient, IOptions<CasinoApiConfiguration> casinoApiConfiguration, IOptions<JwtTokenConfiguration> jwtTokenConfiguration)
+    public CreateAuthenticationTokenHandler(IPlayerRepository playerRepository, ITokenService tokenService, IUnitOfWork unitOfWork, HttpClient httpClient, IOptions<CasinoApiConfiguration> casinoApiConfiguration, IOptions<JwtConfig> jwtTokenConfiguration)
     {
         _playerRepository = playerRepository;
+        _tokenService = tokenService;
         _unitOfWork = unitOfWork;
         _httpClient = httpClient;
         _casinoApiConfiguration = casinoApiConfiguration.Value;
@@ -55,28 +56,11 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
             await _unitOfWork.SaveAsync();
         }
 
-        return new CreateAuthenticationTokenResponse(true, GenerateToken(player));
-    }
+        var signingCredentials = _tokenService.GetSigningCredentials();
+        var claims = _tokenService.GetClaims(player);
+        var tokenOptions = _tokenService.GenerateTokenOptions(signingCredentials, claims);
+        var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-    private string GenerateToken(Player player)
-    {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtTokenConfiguration.Key));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var claims = new List<Claim>
-        {
-            new(JwtRegisteredClaimNames.Sub, player.Id.ToString()),
-            new(JwtRegisteredClaimNames.Sub, player.UserName),
-        };
-
-        var token = new JwtSecurityToken(
-            issuer: _jwtTokenConfiguration.Issuer,
-            audience: _jwtTokenConfiguration.Audience,
-            claims: claims,
-            expires: DateTime.Now.AddMinutes(double.Parse(_jwtTokenConfiguration.DurationInMinutes)),
-            signingCredentials: creds
-        );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return new CreateAuthenticationTokenResponse(true, token);
     }
 }

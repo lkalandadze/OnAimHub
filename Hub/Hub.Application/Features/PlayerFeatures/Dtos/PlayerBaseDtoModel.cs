@@ -7,7 +7,7 @@ public class PlayerBaseDtoModel
     public int Id { get; set; }
     public string UserName { get; set; }
 
-    public static PlayerBaseDtoModel MapToDto(Player player)
+    public static PlayerBaseDtoModel MapFrom(Player player)
     {
         return new PlayerBaseDtoModel
         {

@@ -19,7 +19,7 @@ public class GetPlayersHandler : IRequestHandler<GetPlayersRequest, GetPlayersRe
 
         var response = new GetPlayersResponse
         {
-            Players = slotTransactions?.Select(x => PlayerBaseDtoModel.MapToDto(x)),
+            Players = slotTransactions?.Select(x => PlayerBaseDtoModel.MapFrom(x)),
         };
 
         return response;
