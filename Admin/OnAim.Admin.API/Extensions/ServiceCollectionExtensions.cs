@@ -32,8 +32,8 @@ using OnAim.Admin.APP.Queries.Role.GetById;
 using OnAim.Admin.APP.Commands.Role.Create;
 using OnAim.Admin.APP.Commands.Role.Update;
 using OnAim.Admin.APP.Commands.User.Update;
-using OnAim.Admin.API.Service;
 using OnAim.Admin.APP.Models.Response.User;
+using OnAim.Admin.API.Service.Endpoint;
 
 namespace OnAim.Admin.API.Extensions
 {

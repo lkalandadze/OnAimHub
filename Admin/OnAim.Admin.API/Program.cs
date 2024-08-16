@@ -1,4 +1,6 @@
 using OnAim.Admin.API.Extensions;
+using OnAim.Admin.API.Service.Endpoint;
+using System.Reflection;
 
 
 var builder = WebApplication.CreateBuilder(args);
