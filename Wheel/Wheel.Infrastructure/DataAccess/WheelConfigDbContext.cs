@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Shared.Domain.Abstractions;
 using Shared.Infrastructure.DataAccess;
 using Wheel.Domain.Entities;
 
@@ -22,14 +21,4 @@ public class WheelConfigDbContext : SharedGameConfigDbContext
     {
         base.OnModelCreating(modelBuilder);
     }
-}
-
-public class JackpotPrize : BasePrize
-{
-
-}
-
-public class JackpotPrizeGroup : BasePrizeGroup<JackpotPrize>
-{
-
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Consul;
+using Microsoft.Extensions.Options;
 using Shared.Application.Generators;
 using Shared.Application.Managers;
 using Shared.Application.Options;
@@ -18,8 +19,6 @@ public class GeneratorHolder
     {
         _settings = settings.Value;
         this.prizeGroupTypes = prizeGroupTypes;
-
-        SetGenerators();
     }
 
     public void SetGenerators()
@@ -30,6 +29,7 @@ public class GeneratorHolder
 
             foreach (var prizeGroup in prizeGroups)
             {
+                var genType = _settings.PrizeGenerationType;
                 var generator = Generator.Create(prizeGroup, _settings.PrizeGenerationType);
 
                 Generators.Add(prizeGroup, generator);
@@ -50,15 +50,8 @@ public class GeneratorHolder
     {
         lock (_sync)
         {
-            var aaa = Generators
-                .Where(x => x.Key.Prizes.First().GetType() == typeof(TPrize))
-                .Where(x => x.Key.SegmentId == segmentId)
-                .Where(x => x.Key.Configuration.GameVersionId == gameVersionId)
-                .First(x => predicate?.Invoke(x.Key) ?? true)
-                .Value!;
-
             return Generators
-                //.Where(x => x.Key.Prizes.GetType().GenericTypeArguments[0] == typeof(TPrize))
+                .Where(x => x.Key.Prizes.First().GetType() == typeof(TPrize))
                 .Where(x => x.Key.SegmentId == segmentId)
                 .Where(x => x.Key.Configuration.GameVersionId == gameVersionId)
                 .First(x => predicate?.Invoke(x.Key) ?? true)

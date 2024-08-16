@@ -1,7 +1,7 @@
 ﻿using Shared.Application.Holders;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Repository;
-using Shared.Domain.Entities;
+using Wheel.Application.Models;
 using Wheel.Domain.Entities;
 
 namespace Wheel.Application;
@@ -21,58 +21,28 @@ public class GameManager
         _prizeGroupRepository = prizeGroupRepository;
     }
 
-    public InitialDataResponse GetInitialData()
+    public InitialDataResponseModel GetInitialData()
     {
-        return new InitialDataResponse
+        return new InitialDataResponseModel
         {
             PrizeGroups = _configurationHolder.PrizeGroups,
             Prices = _configurationHolder.Prices,
         };
     }
 
-    public PlayResult Play(PlayCommand command)
+    public PlayResultModel Play(PlayRequestModel command)
     {
         // make bet transaction
 
-        var prize = GeneratorHolder.GetPrize<WheelPrize>(command.GameVersionId, command.SegmentId);
+        var prize = GeneratorHolder.GetPrize<JackpotPrize>(command.GameVersionId, command.SegmentId);
 
         // make win transaction
 
-        return new PlayResult
+        return new PlayResultModel
         {
             PrizeResults = new List<BasePrize> { prize },
             BetTransactionId = 0,
             Multiplier = 0,
         };
     }
-}
-
-public class Player
-{
-    public int Id { get; set; }
-    public string NickName { get; set; }
-    public Dictionary<string, double> Balances { get; set; }
-}
-
-public class PlayResult
-{
-    //public abstract SubGameTypes SubGameType { get; }
-    public List<BasePrize> PrizeResults { get; set; }
-    //public List<MissionsResultDto> MissionsResults { get; set; } = new();
-    //public List<Suits> CompletedChanceSymbols { get; set; } = new();
-    //public List<ChanceJackpotPrizeDto> WonChanceJackpotPrizes { get; set; } = new();
-    internal long BetTransactionId { get; set; }
-    public int Multiplier { get; set; }
-}
-
-public class PlayCommand
-{
-    public int GameVersionId { get; set; }
-    public int SegmentId { get; set; }
-}
-
-public class InitialDataResponse
-{
-    public Dictionary<string, List<BasePrizeGroup>> PrizeGroups { get; set; }
-    public IEnumerable<Price> Prices { get; set; }
 }

@@ -2,6 +2,6 @@
 
 namespace Wheel.Domain.Entities;
 
-public class WheelPrizeGroup : BasePrizeGroup<WheelPrize>
+public class JackpotPrizeGroup : BasePrizeGroup<JackpotPrize>
 {
 }

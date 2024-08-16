@@ -31,3 +31,5 @@ package-lock.json
 
 # Ignore DocumentLayout files
 DocumentLayout.json
+/.vs/OnAimHub/v17/.suo
+/.vs/OnAimHub/v17/DocumentLayout.json

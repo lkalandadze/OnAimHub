@@ -32,9 +32,7 @@ public static class DependencyResolver
         services.AddScoped<ISegmentRepository, SegmentRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
 
-        //TODO REMOVE
-        //services.AddHostedService<PrizeConfiguratorService>();
-        //services.AddHostedService<UpdatePrizeGroupService>();
+        services.AddHostedService<PrizeConfiguratorService>();
 
         services.Configure<PrizeGenerationSettings>(configuration.GetSection("PrizeGenerationSettings"));
 

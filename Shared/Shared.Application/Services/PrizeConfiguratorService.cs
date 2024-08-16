@@ -14,7 +14,7 @@ public class PrizeConfiguratorService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        //Holder.Initialize();
+        Holder.SetGenerators();
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

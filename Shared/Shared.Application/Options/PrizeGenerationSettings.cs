@@ -1,7 +1,6 @@
 ﻿#nullable disable
 
 using Shared.Application.Generators;
-using System;
 
 namespace Shared.Application.Options;
 
