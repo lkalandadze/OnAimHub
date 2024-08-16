@@ -8,6 +8,7 @@ namespace Wheel.Api.Controllers;
 public class HomeController : ControllerBase
 {
     private static readonly ConcurrentDictionary<Guid, decimal> UserBalances = new ConcurrentDictionary<Guid, decimal>();
+
     public HomeController()
     {
         // Initialize user balance for the example

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Shared.Application.Generators;
 using Shared.Application.Managers;
 using Shared.Application.Options;
@@ -19,9 +18,11 @@ public class GeneratorHolder
     {
         _settings = settings.Value;
         this.prizeGroupTypes = prizeGroupTypes;
+
+        SetGenerators();
     }
 
-    internal void Initialize()
+    public void SetGenerators()
     {
         prizeGroupTypes.ForEach(type =>
         {
@@ -29,8 +30,6 @@ public class GeneratorHolder
 
             foreach (var prizeGroup in prizeGroups)
             {
-                var prizeGroupType = prizeGroup.ToString()!.Split('.')[^1];
-
                 var generator = Generator.Create(prizeGroup, _settings.PrizeGenerationType);
 
                 Generators.Add(prizeGroup, generator);
@@ -38,23 +37,30 @@ public class GeneratorHolder
         });
     }
 
-    public static TPrize GetPrize<TPrize>(int configId, int segmentId, Predicate<BasePrizeGroup>? predicate = null)
+    public static TPrize GetPrize<TPrize>(int gameVersionId, int segmentId, Predicate<BasePrizeGroup>? predicate = null)
         where TPrize : BasePrize
     {
-        var generator = GetGenerator<TPrize>(configId, segmentId, predicate);
+        var generator = GetGenerator<TPrize>(gameVersionId, segmentId, predicate);
 
         return (TPrize)generator.GetPrize();
     }
 
-    internal static Generator GetGenerator<TPrize>(int configId, int segmentId, Predicate<BasePrizeGroup>? predicate)
+    internal static Generator GetGenerator<TPrize>(int gameVersionId, int segmentId, Predicate<BasePrizeGroup>? predicate)
         where TPrize : BasePrize
     {
         lock (_sync)
         {
+            var aaa = Generators
+                .Where(x => x.Key.Prizes.First().GetType() == typeof(TPrize))
+                .Where(x => x.Key.SegmentId == segmentId)
+                .Where(x => x.Key.Configuration.GameVersionId == gameVersionId)
+                .First(x => predicate?.Invoke(x.Key) ?? true)
+                .Value!;
+
             return Generators
-                .Where(x => x.Key.Prizes.GetType().GenericTypeArguments[0] == typeof(TPrize)
-                         && x.Key.SegmentId == segmentId
-                         && x.Key.ConfigurationId == configId)
+                //.Where(x => x.Key.Prizes.GetType().GenericTypeArguments[0] == typeof(TPrize))
+                .Where(x => x.Key.SegmentId == segmentId)
+                .Where(x => x.Key.Configuration.GameVersionId == gameVersionId)
                 .First(x => predicate?.Invoke(x.Key) ?? true)
                 .Value!;
         }

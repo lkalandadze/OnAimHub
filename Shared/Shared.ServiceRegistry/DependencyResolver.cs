@@ -14,6 +14,7 @@ public static class DependencyResolver
     public static IServiceCollection Resolve(this IServiceCollection services, IConfiguration configuration, List<Type> prigeGroupTypes)
     {
         services.AddSingleton<GeneratorHolder>();
+        services.AddSingleton<ConfigurationHolder>();
         services.AddSingleton<RepositoryManager>();
 
         foreach (var type in prigeGroupTypes)
@@ -31,8 +32,9 @@ public static class DependencyResolver
         services.AddScoped<ISegmentRepository, SegmentRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
 
-        services.AddHostedService<PrizeConfiguratorService>();
-        services.AddHostedService<UpdatePrizeGroupService>();
+        //TODO REMOVE
+        //services.AddHostedService<PrizeConfiguratorService>();
+        //services.AddHostedService<UpdatePrizeGroupService>();
 
         services.Configure<PrizeGenerationSettings>(configuration.GetSection("PrizeGenerationSettings"));
 

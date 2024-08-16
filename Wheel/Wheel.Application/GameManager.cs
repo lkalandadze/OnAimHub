@@ -1,64 +1,49 @@
 ﻿using Shared.Application.Holders;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Repository;
+using Shared.Domain.Entities;
 using Wheel.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Wheel.Application;
 
 public class GameManager
 {
-    private readonly Player _player;
-    private readonly GeneratorHolder _holder;
+    private readonly GeneratorHolder _generatorHolder;
+    private readonly ConfigurationHolder _configurationHolder;
     private readonly IConfigurationRepository _configurationRepository;
     private readonly IPrizeGroupRepository<WheelPrizeGroup> _prizeGroupRepository;
 
-    public GameManager(Player player, GeneratorHolder holder, IConfigurationRepository configurationRepository, IPrizeGroupRepository<WheelPrizeGroup> prizeGroupRepository)
+    public GameManager(GeneratorHolder generatorHolder, ConfigurationHolder configurationHolder, IConfigurationRepository configurationRepository, IPrizeGroupRepository<WheelPrizeGroup> prizeGroupRepository)
     {
-        _player = player;
-        _holder = holder;
+        _generatorHolder = generatorHolder;
+        _configurationHolder = configurationHolder;
         _configurationRepository = configurationRepository;
         _prizeGroupRepository = prizeGroupRepository;
     }
 
-    public GameManager Start()
+    public InitialDataResponse GetInitialData()
     {
-        if (_player == null)
+        return new InitialDataResponse
         {
-            throw new InvalidOperationException();
-        }
-
-        return this;
+            PrizeGroups = _configurationHolder.PrizeGroups,
+            Prices = _configurationHolder.Prices,
+        };
     }
 
-    public SpinResult Spin(decimal betAmount, int gameVersionId)
+    public PlayResult Play(PlayCommand command)
     {
-        // ask hub if player has enough balance
+        // make bet transaction
 
-        var configuration = _configurationRepository.Query(x => x.GameVersionId == gameVersionId && x.IsActive)
-                                                    .FirstOrDefault();
+        var prize = GeneratorHolder.GetPrize<WheelPrize>(command.GameVersionId, command.SegmentId);
 
-        if (configuration == null)
+        // make win transaction
+
+        return new PlayResult
         {
-            throw new ArgumentNullException();
-        }
-
-        var prizeGroup = _prizeGroupRepository.Query(x => x.ConfigurationId == configuration.Id)
-                                              .Include(x => x.Segment)
-                                              .FirstOrDefault();
-
-        if (prizeGroup == null)
-        {
-            throw new ArgumentNullException();
-        }
-
-        var prize = GeneratorHolder.GetPrize<WheelPrize>(configuration.Id, prizeGroup.SegmentId);
-
-        var result = new SpinResult()
-        {
-            WinAmount = prize.Value,
+            PrizeResults = new List<BasePrize> { prize },
+            BetTransactionId = 0,
+            Multiplier = 0,
         };
-
-        return result;
     }
 }
 
@@ -66,15 +51,28 @@ public class Player
 {
     public int Id { get; set; }
     public string NickName { get; set; }
-    public Balance Balance { get; set; }
+    public Dictionary<string, double> Balances { get; set; }
 }
 
-public class Balance
+public class PlayResult
 {
-    public decimal WheelBalance { get; set; }
+    //public abstract SubGameTypes SubGameType { get; }
+    public List<BasePrize> PrizeResults { get; set; }
+    //public List<MissionsResultDto> MissionsResults { get; set; } = new();
+    //public List<Suits> CompletedChanceSymbols { get; set; } = new();
+    //public List<ChanceJackpotPrizeDto> WonChanceJackpotPrizes { get; set; } = new();
+    internal long BetTransactionId { get; set; }
+    public int Multiplier { get; set; }
 }
 
-public class SpinResult
+public class PlayCommand
 {
-    public int WinAmount { get; set; }
+    public int GameVersionId { get; set; }
+    public int SegmentId { get; set; }
+}
+
+public class InitialDataResponse
+{
+    public Dictionary<string, List<BasePrizeGroup>> PrizeGroups { get; set; }
+    public IEnumerable<Price> Prices { get; set; }
 }
