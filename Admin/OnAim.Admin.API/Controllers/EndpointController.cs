@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Attributes;
 using OnAim.Admin.API.Service;
+using OnAim.Admin.API.Service.Endpoint;
 using OnAim.Admin.APP.Commands.EndPoint.Create;
 using OnAim.Admin.APP.Commands.EndPoint.Disable;
 using OnAim.Admin.APP.Commands.EndPoint.Enable;
