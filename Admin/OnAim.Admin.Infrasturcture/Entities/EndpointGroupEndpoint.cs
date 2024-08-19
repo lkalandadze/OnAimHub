@@ -2,9 +2,9 @@
 {
     public class EndpointGroupEndpoint
     {
-        public string EndpointGroupId { get; set; }
+        public int EndpointGroupId { get; set; }
         public EndpointGroup EndpointGroup { get; set; }
-        public string EndpointId { get; set; }
+        public int EndpointId { get; set; }
         public Endpoint Endpoint { get; set; }
     }
 }

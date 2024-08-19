@@ -6,6 +6,7 @@ namespace OnAim.Admin.Infrasturcture.Entities
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Username { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Email { get; set; }
         public string Salt { get; set; }
@@ -15,6 +16,6 @@ namespace OnAim.Admin.Infrasturcture.Entities
         public bool IsBanned { get; set; }
 
         //who created/updated/deleted this user
-        public string? UserId { get; set; }
+        public int? UserId { get; set; }
     }
 }

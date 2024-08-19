@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Identity;
 using OnAim.Admin.APP.Models.Response.User;
+using OnAim.Admin.Identity.Services;
 using OnAim.Admin.Infrasturcture.Configuration;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.Models;
 using System.Security.Claims;
 using System.Security.Cryptography;
 
@@ -12,20 +13,22 @@ namespace OnAim.Admin.APP.Commands.User.Login
 {
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, AuthResultDto>
     {
-        private readonly UserManager<Infrasturcture.Entities.User> _userManager;
         private readonly IUserRepository _userRepository;
         private readonly IJwtFactory _jwtFactory;
         private readonly IValidator<LoginUserCommand> _validator;
+        private readonly ApplicationUserManager _userManager;
 
         public LoginUserCommandHandler(
             IUserRepository userRepository,
             IJwtFactory jwtFactory,
-            IValidator<LoginUserCommand> validator
+            IValidator<LoginUserCommand> validator,
+            ApplicationUserManager userManager
             )
         {
             _userRepository = userRepository;
             _jwtFactory = jwtFactory;
             _validator = validator;
+            _userManager = userManager;
         }
         public async Task<AuthResultDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
@@ -45,20 +48,55 @@ namespace OnAim.Admin.APP.Commands.User.Login
 
             string hashed = EncryptPassword(model.Password, user.Salt);
 
-            if (hashed != user.Password)
+            if (hashed == user.Password)
             {
-                throw new Exception("Invalid credentials.");
-            }
-            var roles = await _userRepository.GetUserRolesAsync(user.Id);
-            var permissions = await _userRepository.GetUserPermissionsAsync(user.Id);
+                var roles = await _userRepository.GetUserRolesAsync(user.Id);
+                var permissions = await _userRepository.GetUserPermissionsAsync(user.Id);
 
-            var roleNames = roles.Select(r => r.Name).ToList();
-            var token = _jwtFactory.GenerateEncodedToken(user.Id, user.Email, new List<Claim>(), roleNames, permissions);
+                var roleNames = roles.Select(r => r.Name).ToList();
+                var token = _jwtFactory.GenerateEncodedToken(user.Id, user.Email, new List<Claim>(), roleNames);
+
+                var identityUser = await _userManager.FindByNameAsync(user.Username);
+                if (identityUser == null)
+                {
+                    try
+                    {
+                        var idp = await _userManager.CreateAsync(new Identity.Entities.User
+                        {
+                            Email = user.Email,
+                            UserName = user.Username,
+                            PhoneNumber = user.Phone,
+                            EmailConfirmed = true,
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = Guid.NewGuid().ToString("D"),
+                            CreateDate = SystemDate.Now,
+                        }, request.Model.Password);
+
+                        if (idp.Succeeded)
+                        {
+                            identityUser = await _userManager.FindByNameAsync(user.Username);
+
+                            foreach (var item in roles)
+                            {
+                                await _userManager.AddToRoleAsync(identityUser, item.Name);
+                                await _userManager.AddClaimAsync(identityUser, new Claim(ClaimTypes.Name, item.Name));
+                            }
+                        }
+                    }
+                    catch { }
+                }
+
+                return new AuthResultDto
+                {
+                    Token = token,
+                    StatusCode = 200
+                };
+            }
 
             return new AuthResultDto
             {
-                Token = token,
-                StatusCode = 200
+                Token = null,
+                StatusCode = 404
             };
         }
 

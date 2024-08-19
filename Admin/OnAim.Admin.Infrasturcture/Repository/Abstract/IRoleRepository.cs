@@ -7,12 +7,13 @@ namespace OnAim.Admin.Infrasturcture.Repository.Abstract
     public interface IRoleRepository
     {
         Task<List<RoleResponseModel>> GetAllRolesAsync();
-        Task<RoleResponseModel> GetRoleById(string roleId);
-        Task AssignRoleToUserAsync(string userId, string roleId);
-        Task RemoveRoleFromUserAsync(string userId, string roleId);
-        Task DeactivateRoleForUserAsync(string userId, string roleId);
-        Task<IEnumerable<Role>> GetRolesByIdsAsync(IEnumerable<string> roleIds);
+        Task<RoleResponseModel> GetRoleById(int roleId);
+        Task AssignRoleToUserAsync(int userId, int roleId);
+        Task RemoveRoleFromUserAsync(int userId, int roleId);
+        Task DeactivateRoleForUserAsync(int userId, int roleId);
+        Task<IEnumerable<Role>> GetRolesByIdsAsync(IEnumerable<int> roleIds);
+        Task<RoleResponseModel> GetRoleByName(string roleName);
         Task<Role> CreateRoleAsync(CreateRoleRequest request);
-        Task<Role> UpdateRoleAsync(string roleId, UpdateRoleRequest request);
+        Task<Role> UpdateRoleAsync(int roleId, UpdateRoleRequest request);
     }
 }

@@ -2,6 +2,7 @@
 using OnAim.Admin.APP.Models;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
 
 namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
@@ -23,7 +24,6 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
         {
             var endpointGroup = new Infrasturcture.Entities.EndpointGroup
             {
-                Id = Guid.NewGuid().ToString(),
                 Name = request.Name,
                 Description = request.Description,
                 IsEnabled = true,
@@ -36,23 +36,14 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
             foreach (var endpointId in request.EndpointIds)
             {
                 var endpoint = _endpointRepository.GetEndpointById(endpointId).Result;
-
-                var ep = new Endpoint
+                if (!endpoint.IsEnabled)
                 {
-                    Id = endpoint.Id,
-                    Name = endpoint.Name,
-                    Path = endpoint.Path,
-                    Description = endpoint.Description,
-                    IsActive = endpoint.IsActive,
-                    IsEnabled = endpoint.IsEnabled,
-                    UserId = endpoint.UserId,
-                    Type = endpoint.Type,
-                    DateCreated = endpoint.DateCreated,
-                };
+                    throw new Exception("Endpoint Is Disabled!");
+                }
 
                 var endpointGroupEndpoint = new EndpointGroupEndpoint
                 {
-                    Endpoint = ep,
+                    Endpoint = endpoint,
                     EndpointGroup = endpointGroup
                 };
 

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using OnAim.Admin.APP.Models;
+using OnAim.Admin.Shared.ApplicationInfrastructure;
 using System.ComponentModel.DataAnnotations;
 
 namespace OnAim.Admin.APP.Commands.User.Create
@@ -15,7 +16,7 @@ namespace OnAim.Admin.APP.Commands.User.Create
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
-        public string? UserId { get; set; }
+        public int? UserId { get; set; }
         public DateTime DateOfBirth { get; set; }
     }
 }

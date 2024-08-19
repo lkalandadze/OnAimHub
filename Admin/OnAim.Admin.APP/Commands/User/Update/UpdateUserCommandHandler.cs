@@ -1,7 +1,8 @@
-﻿using MediatR;
-using OnAim.Admin.APP.Models;
+﻿using FluentValidation;
+using MediatR;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Commands.User.Update
 {
@@ -9,14 +10,27 @@ namespace OnAim.Admin.APP.Commands.User.Update
     {
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IValidator<UpdateUserCommand> _validator;
 
-        public UpdateUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository)
+        public UpdateUserCommandHandler(
+            IUserRepository userRepository, 
+            IRoleRepository roleRepository,
+            IValidator<UpdateUserCommand> validator
+            )
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _validator = validator;
         }
         public async Task<ApplicationResult> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
             var user = await _userRepository.GetById(request.Id);
 
             if (user == null)

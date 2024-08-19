@@ -18,7 +18,6 @@ namespace OnAim.Admin.API.Extensions
             {
                 var endpointGroup = new EndpointGroup
                 {
-                    Id = Guid.NewGuid().ToString(),
                     Name = "SuperGroup",
                     Description = "All Permission for super admin",
                     IsEnabled = true,
@@ -26,6 +25,10 @@ namespace OnAim.Admin.API.Extensions
                     EndpointGroupEndpoints = new List<EndpointGroupEndpoint>(),
                     DateCreated = DateTime.UtcNow
                 };
+
+                dbContext.EndpointGroups.Add(endpointGroup);
+
+                await dbContext.SaveChangesAsync();
 
                 foreach (var item in dbContext.Endpoints)
                 {
@@ -36,9 +39,8 @@ namespace OnAim.Admin.API.Extensions
                     };
 
                     endpointGroup.EndpointGroupEndpoints.Add(endpointGroupEndpoint);
-                    await dbContext.SaveChangesAsync();
                 }
-                dbContext.EndpointGroups.Add(endpointGroup);
+
                 await dbContext.SaveChangesAsync();
             }
 
@@ -46,12 +48,14 @@ namespace OnAim.Admin.API.Extensions
             {
                 var rolee = new Role
                 {
-                    Id = Guid.NewGuid().ToString(),
                     Name = "SuperRole",
                     Description = "role for super admin",
                     RoleEndpointGroups = new List<RoleEndpointGroup>()
                 };
+
                 dbContext.Roles.Add(rolee);
+
+                await dbContext.SaveChangesAsync();
 
                 var endpointGroup = await dbContext.EndpointGroups.FirstOrDefaultAsync(x => x.Name == "SuperGroup");
                 if (endpointGroup != null)
@@ -81,9 +85,9 @@ namespace OnAim.Admin.API.Extensions
 
                 dbContext.Users.Add(new User
                 {
-                    Id = Guid.NewGuid().ToString(),
                     FirstName = "SuperAdmin",
                     LastName = "SuperAdmin",
+                    Username = "superadmin",
                     Email = "superadmin@test.com",
                     Password = hashedPassword,
                     Salt = salt,

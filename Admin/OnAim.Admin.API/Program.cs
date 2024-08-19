@@ -1,23 +1,37 @@
 using OnAim.Admin.API.Extensions;
+using OnAim.Admin.API.Factory;
+using OnAim.Admin.API.Middleware;
 using OnAim.Admin.API.Service.Endpoint;
-using System.Reflection;
+using OnAim.Admin.APP;
+using OnAim.Admin.Identity;
+using OnAim.Admin.Identity.Entities;
+using OnAim.Admin.Identity.Persistance;
+using OnAim.Admin.Identity.Services;
+using OnAim.Admin.Infrasturcture;
+using OnAim.Admin.Infrasturcture.Repository;
+using OnAim.Admin.Infrasturcture.Repository.Abstract;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Services.AddCustomDbContext(builder.Configuration)
+builder.Services
                 //.AddCustomIdentity()
                 .AddCustomJwtAuthentication(builder.Configuration)
                 .AddCustomAuthorization()
                 .AddCustomCors()
                 .AddCustomServices()
-                .AddCustomValidators()
-                .AddCustomMediatR()
                 .AddControllers()
                 .Services.AddCustomSwagger();
 
-builder.Services.AddControllers();
+builder.Services.AddIdentityServerAuthentication<ApplicationIdentityDbContext, User, ApplicationUserManager>(builder.Configuration);
+
+builder.Services.AddScoped<IEndpointService, EndpointService>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped(ApplicationContextFactory.Create);
+builder.Services.AddApp();
+builder.Services.AddInfrastructure(builder.Configuration);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -40,6 +54,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<PermissionMiddleware>();
+
 app.MapControllers();
 
 app.Run();

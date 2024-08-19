@@ -16,8 +16,10 @@ namespace OnAim.Admin.Infrasturcture.Persistance.Data
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<UserRole>()
-            .HasKey(ur => new { ur.UserId, ur.RoleId });
+                .HasKey(ur => new { ur.UserId, ur.RoleId });
             modelBuilder.Entity<UserRole>()
                 .HasOne(ur => ur.User)
                 .WithMany(u => u.UserRoles)

@@ -10,6 +10,6 @@ namespace OnAim.Admin.Infrasturcture.Entities
         public ICollection<UserRole> UserRoles { get; set; }
 
         //who created/updated/deleted role
-        public string? UserId { get; set; }
+        public int? UserId { get; set; }
     }
 }

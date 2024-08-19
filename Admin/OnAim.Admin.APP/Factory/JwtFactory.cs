@@ -13,18 +13,17 @@ namespace OnAim.Admin.APP.Factory
             _jwtConfiguration = jwtOptions.Value;
             ThrowIfInvalidOptions(_jwtConfiguration);
         }
-        public string GenerateEncodedToken(string userId, string email, IEnumerable<Claim> additionalClaims, IEnumerable<string> roles, IEnumerable<string> permissions)
+        public string GenerateEncodedToken(int userId, string email, IEnumerable<Claim> additionalClaims, IEnumerable<string> roles)
         {
             var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userId),
+            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, email),
             new Claim(JwtRegisteredClaimNames.Jti, _jwtConfiguration.JtiGenerator()),
             new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64)
         };
 
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-            claims.AddRange(permissions.Select(permission => new Claim("permission", permission)));
 
             claims.AddRange(additionalClaims);
 

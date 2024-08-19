@@ -17,15 +17,18 @@ namespace OnAim.Admin.Infrasturcture.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.Endpoint", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTimeOffset>("DateCreated")
                         .HasColumnType("timestamp with time zone");
@@ -57,8 +60,8 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.Property<int?>("Type")
                         .HasColumnType("integer");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -67,8 +70,11 @@ namespace OnAim.Admin.Infrasturcture.Migrations
 
             modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.EndpointGroup", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTimeOffset>("DateCreated")
                         .HasColumnType("timestamp with time zone");
@@ -93,8 +99,8 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -103,11 +109,11 @@ namespace OnAim.Admin.Infrasturcture.Migrations
 
             modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.EndpointGroupEndpoint", b =>
                 {
-                    b.Property<string>("EndpointGroupId")
-                        .HasColumnType("text");
+                    b.Property<int>("EndpointGroupId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("EndpointId")
-                        .HasColumnType("text");
+                    b.Property<int>("EndpointId")
+                        .HasColumnType("integer");
 
                     b.HasKey("EndpointGroupId", "EndpointId");
 
@@ -118,8 +124,11 @@ namespace OnAim.Admin.Infrasturcture.Migrations
 
             modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.Role", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTimeOffset>("DateCreated")
                         .HasColumnType("timestamp with time zone");
@@ -141,8 +150,8 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -151,11 +160,11 @@ namespace OnAim.Admin.Infrasturcture.Migrations
 
             modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.RoleEndpointGroup", b =>
                 {
-                    b.Property<string>("RoleId")
-                        .HasColumnType("text");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("EndpointGroupId")
-                        .HasColumnType("text");
+                    b.Property<int>("EndpointGroupId")
+                        .HasColumnType("integer");
 
                     b.HasKey("RoleId", "EndpointGroupId");
 
@@ -166,8 +175,11 @@ namespace OnAim.Admin.Infrasturcture.Migrations
 
             modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTimeOffset>("DateCreated")
                         .HasColumnType("timestamp with time zone");
@@ -211,7 +223,11 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("UserId")
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -221,11 +237,11 @@ namespace OnAim.Admin.Infrasturcture.Migrations
 
             modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.UserRole", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("text");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
 
                     b.HasKey("UserId", "RoleId");
 

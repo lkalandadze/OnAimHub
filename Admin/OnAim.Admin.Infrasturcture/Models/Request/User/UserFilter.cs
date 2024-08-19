@@ -6,7 +6,7 @@
         int PageNumber,
         int PageSize,
         string? Direction,
-        List<string>? RoleIds,
+        List<int>? RoleIds,
         bool? IsActive
         );
 }

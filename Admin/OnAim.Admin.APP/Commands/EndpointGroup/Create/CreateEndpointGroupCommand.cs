@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using OnAim.Admin.APP.Models;
+using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
 {
@@ -7,12 +8,12 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<string> EndpointIds { get; set; }
-        public string? UserId { get; set; }
+        public List<int> EndpointIds { get; set; }
+        public int? UserId { get; set; }
 
         public class CreateEndpointDto
         {
-            public string Id { get; set; }
+            public int Id { get; set; }
             public string Path { get; set; }
             public string Name { get; set; }
             public string Description { get; set; }

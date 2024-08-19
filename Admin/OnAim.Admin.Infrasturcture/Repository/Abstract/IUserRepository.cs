@@ -9,10 +9,11 @@ namespace OnAim.Admin.Infrasturcture.Repository.Abstract
     public interface IUserRepository
     {
         Task<User> Create(User user);
-        Task<UsersResponseModel> GetById(string id);
+        Task<UsersResponseModel> GetById(int id);
         Task<User> FindByEmailAsync(string email);
         Task<PaginatedResult<UsersResponseModel>> GetAllUser(UserFilter userFilter);
-        Task<List<RoleResponseModel>> GetUserRolesAsync(string userId);
-        Task<IEnumerable<string>> GetUserPermissionsAsync(string userId);
+        Task<List<RoleResponseModel>> GetUserRolesAsync(int userId);
+        Task<IEnumerable<string>> GetUserPermissionsAsync(int userId);
+        Task DeleteUser(int userId);
     }
 }

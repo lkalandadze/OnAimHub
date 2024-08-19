@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using OnAim.Admin.APP.Models;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
 using System.Data;
 using System.Security.Cryptography;
@@ -30,11 +31,10 @@ namespace OnAim.Admin.APP.Commands.User.Create
             var validationResult = await _validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
-                var errors = validationResult.Errors.Select(e => new Error(new List<string> { e.ErrorMessage }));
                 return new ApplicationResult
                 {
                     Success = false,
-                    Errors = errors.ToList()
+                    Errors = null
                 };
             }
 

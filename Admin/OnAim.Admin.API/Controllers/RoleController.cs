@@ -1,56 +1,33 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using OnAim.Admin.API.Attributes;
+﻿using Microsoft.AspNetCore.Mvc;
+using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP.Commands.Role.Create;
 using OnAim.Admin.APP.Commands.Role.Update;
-using OnAim.Admin.APP.Models;
 using OnAim.Admin.APP.Queries.Role.GetAll;
 using OnAim.Admin.APP.Queries.Role.GetById;
 using OnAim.Admin.Infrasturcture.Models.Request.Role;
+using OnAim.Admin.Shared.ApplicationInfrastructure;
 using System.Net;
 
 namespace OnAim.Admin.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class RoleController : ControllerBase
+    public class RoleController : ApiControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public RoleController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [HttpPost("Create")]
-        [Permission("Role/Create")]
         [ProducesResponseType(typeof(CreateRoleCommand), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateRoleCommand roleModel)
-        {
-            return Ok(_mediator.Send(roleModel));
-        }
+           => Ok(Mediator.Send(roleModel));
 
         [HttpGet("GetAll")]
-        [Permission("Role/GetAll")]
         public async Task<IActionResult> GetAll()
-        {
-            return Ok(_mediator.Send(new GetAllRolesQuery()));
-        }
+            => Ok(Mediator.Send(new GetAllRolesQuery()));
 
-        [Permission("Role/Get")]
         [HttpGet("Get/{id}")]
-        public async Task<IActionResult> Get([FromRoute] string id)
-        {
-            return Ok(await _mediator.Send(new GetRoleByIdQuery(id)));
-        }
+        public async Task<IActionResult> Get([FromRoute] int id)
+            => Ok(await Mediator.Send(new GetRoleByIdQuery(id)));
 
-        [Permission("Role/Update")]
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateRoleRequest model)
-        {
-            var command = new UpdateRoleCommand(id, model);
-            return Ok(_mediator.Send(command));
-        }
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRoleRequest model)
+            => Ok(await Mediator.Send(new UpdateRoleCommand(id, model)));
     }
 }

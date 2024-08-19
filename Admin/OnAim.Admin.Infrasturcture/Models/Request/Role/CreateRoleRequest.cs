@@ -7,6 +7,6 @@ namespace OnAim.Admin.Infrasturcture.Models.Request.Role
         public string Name {  get; set; }
         public string Description { get; set; }
         public List<EndpointGroupRequestModel> EndpointGroups { get; set; }
-        public string? ParentUserId { get; set; }
+        public int? ParentUserId { get; set; }
     }
 }

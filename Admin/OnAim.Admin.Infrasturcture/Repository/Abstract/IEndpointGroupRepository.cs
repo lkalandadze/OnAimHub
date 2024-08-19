@@ -5,13 +5,13 @@ namespace OnAim.Admin.Infrasturcture.Repository.Abstract
     public interface IEndpointGroupRepository
     {
         Task SaveChangesAsync();
-        Task DeleteAsync(string id);
+        Task DeleteAsync(int id);
         Task AddEndpoint(EndpointGroup endpointGroup, Endpoint endpoint);
         Task RemoveEndpoint(EndpointGroup endpointGroup, Endpoint endpoint);
         Task AddAsync(EndpointGroup endpointGroup);
-        Task<EndpointGroup> GetByIdAsync(string id);
+        Task<EndpointGroup> GetByIdAsync(int id);
         Task<IEnumerable<EndpointGroup>> GetAllAsync();
         Task UpdateAsync(EndpointGroup endpointGroup);
-        Task<EndpointGroup> GetEndpointGroupByRole(string roleId);
+        Task<EndpointGroup> GetEndpointGroupByRole(int roleId);
     }
 }

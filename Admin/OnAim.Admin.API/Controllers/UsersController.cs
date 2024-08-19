@@ -1,85 +1,89 @@
-﻿using MediatR;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OnAim.Admin.API.Attributes;
+using OnAim.Admin.API.Controllers.Abstract;
+using OnAim.Admin.API.Factory;
 using OnAim.Admin.APP.Commands.User.AssignRole;
 using OnAim.Admin.APP.Commands.User.Create;
+using OnAim.Admin.APP.Commands.User.Delete;
 using OnAim.Admin.APP.Commands.User.Login;
+using OnAim.Admin.APP.Commands.User.RemoveRole;
 using OnAim.Admin.APP.Commands.User.Update;
-using OnAim.Admin.APP.Models;
 using OnAim.Admin.APP.Models.Request.User;
 using OnAim.Admin.APP.Models.Response.User;
 using OnAim.Admin.APP.Queries.Role.GetUserRoles;
 using OnAim.Admin.APP.Queries.User.GetAllUser;
 using OnAim.Admin.APP.Queries.User.GetById;
 using OnAim.Admin.Infrasturcture.Models.Request.User;
+using OnAim.Admin.Shared.ApplicationInfrastructure;
 using System.Net;
 
 namespace OnAim.Admin.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : ApiControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly ApplicationContext _appContext;
 
-        public UsersController(IMediator mediator)
+        public UsersController(ApplicationContext appContext)
         {
-            _mediator = mediator;
+            _appContext = appContext;
+        }
+        [HttpGet("GetMe")]
+        public async Task<IActionResult> GetMe()
+        {
+            //var user = _appContext.UserId.Value;
+
+            //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            //if (string.IsNullOrEmpty(userId))
+            //{
+            //    return Unauthorized("User ID not found in token.");
+            //}
+
+            var userId = _appContext.UserId.Value;
+
+            return Ok(new GetUserByIdQuery(_appContext.UserId.Value));
         }
 
-        [Permission("Users/GetAll")]
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll([FromQuery] UserFilter model)
-        {
-            var query = new GetAllUserQuery(model);
-            return Ok(await _mediator.Send(query));
-        }
+            => Ok(await Mediator.Send(new GetAllUserQuery(model)));
 
-        [Permission("Users/Get")]
         [HttpGet("Get/{id}")]
-        public async Task<IActionResult> Get([FromRoute] string id)
-        {
-            return Ok(_mediator.Send(new GetUserByIdQuery(id)));
-        }
+        public async Task<IActionResult> Get([FromRoute] int id)
+            => Ok(Mediator.Send(new GetUserByIdQuery(id)));
 
-        [Permission("Users/GetUserRoles")]
         [HttpGet("GetUserRoles/{id}")]
-        public async Task<IActionResult> GetUserRoles([FromRoute] string id)
-        {
-            return Ok(await _mediator.Send(new GetUserRolesQuery(id)));
-        }
+        public async Task<IActionResult> GetUserRoles([FromRoute] int id)
+            => Ok(await Mediator.Send(new GetUserRolesQuery(id)));
 
         [HttpPost("Register")]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(CreateUserCommand), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
         public async Task<ApplicationResult> Register([FromBody] CreateUserCommand model)
-        {
-            return await _mediator.Send(model);
-        }
+            => await Mediator.Send(model);
 
         [HttpPost("Login")]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(AuthResultDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
         public async Task<AuthResultDto> Login([FromBody] LoginUserRequest model)
-        {
-            return await _mediator.Send(new LoginUserCommand(model));
-        }
+            => await Mediator.Send(new LoginUserCommand(model));
 
-        [Permission("Users/AssignRole")]
         [HttpPost("AssignRole/{id}")]
-        public async Task<IActionResult> AssignRole([FromRoute] string id, [FromBody] string roleId)
-        {
-            var command = new AssignRoleToUserCommand(id, roleId);
+        public async Task<IActionResult> AssignRole([FromRoute] int id, [FromBody] int roleId)
+            => Ok(await Mediator.Send(new AssignRoleToUserCommand(id, roleId)));
 
-            return Ok(await _mediator.Send(command));
-        }
+        [HttpPost("RemoveRole/{id}")]
+        public async Task<IActionResult> RemoveRole([FromRoute] int id, [FromBody] int roleId)
+            => Ok(await Mediator.Send(new RemoveRoleCommand(id, roleId)));
 
-        [Permission("Users/Update")]
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateUserDto model)
-        {
-            var command = new UpdateUserCommand(id, model);
-            return Ok(await _mediator.Send(command));
-        }
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserDto model)
+            => Ok(await Mediator.Send(new UpdateUserCommand(id, model)));
+
+        [HttpPost("Delete/{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+            => Ok(Mediator.Send(new DeleteUserCommand(id)));
     }
 }

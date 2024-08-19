@@ -1,7 +1,6 @@
 ﻿using MediatR;
-using OnAim.Admin.APP.Exceptions;
-using OnAim.Admin.APP.Models;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.ApplicationInfrastructure;
 using static OnAim.Admin.APP.Exceptions.Exceptions;
 
 namespace OnAim.Admin.APP.Queries.Role.GetById

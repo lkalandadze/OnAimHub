@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using OnAim.Admin.APP.Models;
 using OnAim.Admin.APP.Models.Response.Role;
+using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Commands.User.Update
 {
-    public sealed record UpdateUserCommand(string Id, UpdateUserDto Model) : IRequest<ApplicationResult>;
+    public sealed record UpdateUserCommand(int Id, UpdateUserDto Model) : IRequest<ApplicationResult>;
     public class UpdateUserDto
     {
         public List<RoleResponseModel> Roles { get; set; }

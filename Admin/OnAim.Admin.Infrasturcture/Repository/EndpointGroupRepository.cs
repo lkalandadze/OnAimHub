@@ -30,7 +30,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 {
                     EndpointGroupId = endpointGroup.Id,
                     EndpointId = endpoint.Id,
-                    Endpoint = endpoint, 
+                    Endpoint = endpoint,
                     EndpointGroup = endpointGroup
                 };
 
@@ -39,7 +39,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(int id)
         {
             var endpointGroup = await GetByIdAsync(id);
             if (endpointGroup != null)
@@ -57,7 +57,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
                                        .ToListAsync();
         }
 
-        public async Task<EndpointGroup> GetByIdAsync(string id)
+        public async Task<EndpointGroup> GetByIdAsync(int id)
         {
             return await _databaseContext.EndpointGroups
                                          .Include(x => x.EndpointGroupEndpoints)
@@ -65,7 +65,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
                                          .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<EndpointGroup> GetEndpointGroupByRole(string roleId)
+        public async Task<EndpointGroup> GetEndpointGroupByRole(int roleId)
         {
             throw new NotImplementedException();
         }

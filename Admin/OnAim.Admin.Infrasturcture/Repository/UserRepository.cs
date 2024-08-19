@@ -20,9 +20,10 @@ namespace OnAim.Admin.Infrasturcture.Repository
         {
             _databaseContext = databaseContext;
         }
+
         public async Task<User> Create(User user)
         {
-            if (user.Id != null)
+            if (user.Id != 0)
             {
                 var exist = GetById(user.Id).Result;
 
@@ -37,9 +38,9 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             var res = new User
             {
-                Id = Guid.NewGuid().ToString(),
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                Username = user.Username,
                 Email = user.Email,
                 Password = user.Password,
                 Salt = user.Salt,
@@ -63,7 +64,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task<UsersResponseModel> GetById(string id)
+        public async Task<UsersResponseModel> GetById(int id)
         {
             var user = await _databaseContext.Users
                 .Include(x => x.UserRoles)
@@ -94,14 +95,14 @@ namespace OnAim.Admin.Infrasturcture.Repository
                     EndpointGroupModels = x.Role.RoleEndpointGroups.Select(z => new EndpointGroupModel
                     {
                         Id = z.EndpointGroupId,
-                        Name = z.EndpointGroupId,
-                        Description = z.EndpointGroupId,
+                        Name = z.EndpointGroup.Name,
+                        Description = z.EndpointGroup.Description,
                         Endpoints = z.EndpointGroup.EndpointGroupEndpoints.Select(u => new Endpoint
                         {
                             Id = u.EndpointId,
                             Name = u.Endpoint.Name,
                             Path = u.Endpoint.Path,
-                            Description = u.EndpointGroupId,
+                            Description = u.Endpoint.Description,
                         }).ToList()
                     }).ToList(),
                 }).ToList()
@@ -110,7 +111,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
             return result;
         }
 
-        public async Task<List<RoleResponseModel>> GetUserRolesAsync(string userId)
+        public async Task<List<RoleResponseModel>> GetUserRolesAsync(int userId)
         {
             var result = await _databaseContext.UserRoles
                                           .Include(x => x.Role)
@@ -148,7 +149,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
             return roles;
         }
 
-        public async Task<IEnumerable<string>> GetUserPermissionsAsync(string userId)
+        public async Task<IEnumerable<string>> GetUserPermissionsAsync(int userId)
         {
             var roles = await _databaseContext.UserRoles
                                       .Where(ur => ur.UserId == userId)
@@ -271,6 +272,17 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 TotalCount = totalCount,
                 Items = result
             };
+        }
+
+        public async Task DeleteUser(int userId)
+        {
+            var user = await _databaseContext.FindAsync<User>(userId);
+
+            if (user != null)
+            {
+                user.IsActive = false;
+                await _databaseContext.SaveChangesAsync();
+            }
         }
     }
 }

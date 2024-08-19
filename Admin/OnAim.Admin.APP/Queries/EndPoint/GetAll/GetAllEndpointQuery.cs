@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using OnAim.Admin.APP.Models;
 using OnAim.Admin.Infrasturcture.Models.Request.Role;
+using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Queries.EndPoint.GetAll
 {

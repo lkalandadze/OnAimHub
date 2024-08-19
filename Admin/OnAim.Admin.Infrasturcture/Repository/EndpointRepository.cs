@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Models.Request.Role;
-using OnAim.Admin.Infrasturcture.Models.Request.User;
 using OnAim.Admin.Infrasturcture.Models.Response.Endpoint;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
@@ -23,7 +22,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<bool> DisableEndpointAsync(string endpointId)
+        public async Task<bool> DisableEndpointAsync(int endpointId)
         {
             var endpoint = await _databaseContext.Endpoints.FindAsync(endpointId);
             if (endpoint != null)
@@ -37,7 +36,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
             return false;
         }
 
-        public async Task<bool> EnableEndpointAsync(string endpointId)
+        public async Task<bool> EnableEndpointAsync(int endpointId)
         {
             var endpoint = await _databaseContext.Endpoints.FindAsync(endpointId);
             if (endpoint != null)
@@ -70,7 +69,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 query = query.Where(x => x.Type == roleFilter.Type.Value);
             }
 
-            var totalCount = query.CountAsync();
+            var totalCount = await query.CountAsync();
 
             var endpoints = await query
                 .OrderBy(x => x.Id)
@@ -86,7 +85,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 Description = ep.Description,
                 IsEnabled = ep.IsEnabled,
                 IsActive = ep.IsActive,
-                Type = ep.Type,
+                Type = ToHttpMethod(ep.Type),
                 UserId = ep.UserId,
                 DateCreated = ep.DateCreated,
                 DateUpdated = ep.DateUpdated,
@@ -95,7 +94,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
             return result;
         }
 
-        public async Task<EndpointResponseModel> GetEndpointById(string id)
+        public async Task<Endpoint> GetEndpointById(int id)
         {
             var endpoint = await _databaseContext.Endpoints.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -103,7 +102,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
             {
                 throw new Exception("Not Found");
             }
-            
+
             var result = new EndpointResponseModel
             {
                 Id = endpoint.Id,
@@ -112,20 +111,41 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 Description = endpoint.Description,
                 IsActive = endpoint.IsActive,
                 IsEnabled = endpoint.IsEnabled,
-                Type = endpoint.Type,
+                Type = ToHttpMethod(endpoint.Type),
                 UserId = endpoint.UserId,
                 DateCreated = endpoint.DateCreated,
                 DateUpdated = endpoint.DateUpdated,
             };
+            return endpoint;
+        }
+
+        public async Task<IEnumerable<EndpointResponseModel>> GetEndpointsByIdsAsync(IEnumerable<int> ids)
+        {
+            var endpoint = _databaseContext.Endpoints.Where(r => ids.Contains(r.Id)).AsQueryable();
+
+            var totalCount = await endpoint.CountAsync();
+
+            var eps = await endpoint
+                .OrderBy(x => x.Id).ToListAsync();
+
+            var result = eps.Select(x => new EndpointResponseModel
+            {
+                Name = x.Name,
+                Path = x.Path,
+                Description = x.Description,
+                IsActive = x.IsActive,
+                IsEnabled = x.IsEnabled,
+                Type = ToHttpMethod(x.Type),
+                UserId = x.UserId,
+                DateCreated = x.DateCreated,
+                DateUpdated = x.DateUpdated,
+                DateDeleted = x.DateDeleted,
+            }).ToList();
+
             return result;
         }
 
-        public async Task<IEnumerable<Endpoint>> GetEndpointsByIdsAsync(IEnumerable<string> ids)
-        {
-            return await _databaseContext.Endpoints.Where(r => ids.Contains(r.Id)).ToListAsync();
-        }
-
-        public async Task<Endpoint> CreateEndpointAsync(string path, string description = null, string? endpointType = null, string? userId = null)
+        public async Task<Endpoint> CreateEndpointAsync(string path, string description = null, string? endpointType = null, int? userId = null)
         {
             var endpoint = await _databaseContext.Endpoints.FirstOrDefaultAsync(e => e.Path == path);
 
@@ -139,7 +159,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
             {
                 endpoint = new Endpoint
                 {
-                    Id = Guid.NewGuid().ToString(),
                     Name = path,
                     Path = path,
                     Description = description ?? "Description needed",
@@ -160,6 +179,18 @@ namespace OnAim.Admin.Infrasturcture.Repository
             }
 
             return endpoint;
+        }
+
+        public static string ToHttpMethod(EndpointType? type)
+        {
+            return type switch
+            {
+                EndpointType.Get => "GET",
+                EndpointType.Create => "POST",
+                EndpointType.Update => "PUT",
+                EndpointType.Delete => "DELETE",
+                _ => "UNKNOWN"
+            };
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using MediatR;
 using OnAim.Admin.APP.Models;
 using OnAim.Admin.Infrasturcture.Models.Request.Role;
+using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Commands.Role.Update
 {
-    public record UpdateRoleCommand(string Id, UpdateRoleRequest Model) : IRequest<ApplicationResult>;
+    public record UpdateRoleCommand(int Id, UpdateRoleRequest Model) : IRequest<ApplicationResult>; 
 }

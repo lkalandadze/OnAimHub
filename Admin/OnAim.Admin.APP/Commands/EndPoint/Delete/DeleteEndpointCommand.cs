@@ -2,5 +2,5 @@
 
 namespace OnAim.Admin.APP.Commands.EndPoint.Delete
 {
-    public record DeleteEndpointCommand(string Id) : IRequest;
+    public record DeleteEndpointCommand(int Id) : IRequest;
 }

@@ -7,9 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\User\Delete\Handlers\" />
-    <Folder Include="Commands\User\Update\Handlers\" />
-    <Folder Include="Queries\Role\Handler\" />
+    <Compile Remove="Commands\User\Delete\Handlers\**" />
+    <Compile Remove="Commands\User\Update\Handlers\**" />
+    <Compile Remove="Queries\Role\Handler\**" />
+    <EmbeddedResource Remove="Commands\User\Delete\Handlers\**" />
+    <EmbeddedResource Remove="Commands\User\Update\Handlers\**" />
+    <EmbeddedResource Remove="Queries\Role\Handler\**" />
+    <None Remove="Commands\User\Delete\Handlers\**" />
+    <None Remove="Commands\User\Update\Handlers\**" />
+    <None Remove="Queries\Role\Handler\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\OnAim.Admin.Identity\OnAim.Admin.Identity.csproj" />
     <ProjectReference Include="..\OnAim.Admin.Infrasturcture\OnAim.Admin.Infrasturcture.csproj" />
   </ItemGroup>
 

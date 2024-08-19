@@ -8,10 +8,10 @@ namespace OnAim.Admin.Infrasturcture.Repository.Abstract
     {
         Task CheckEndpointHealth();
         Task<List<EndpointResponseModel>> GetAllEndpoints(RoleFilter roleFilter);
-        Task<EndpointResponseModel> GetEndpointById(string id);
-        Task<bool> EnableEndpointAsync(string endpointId);
-        Task<bool> DisableEndpointAsync(string endpointId);
-        Task<IEnumerable<Endpoint>> GetEndpointsByIdsAsync(IEnumerable<string> ids);
-        Task<Endpoint> CreateEndpointAsync(string path, string description = null, string? endpointType = null, string? userId = null);
+        Task<Endpoint> GetEndpointById(int id);
+        Task<bool> EnableEndpointAsync(int endpointId);
+        Task<bool> DisableEndpointAsync(int endpointId);
+        Task<IEnumerable<EndpointResponseModel>> GetEndpointsByIdsAsync(IEnumerable<int> ids);
+        Task<Endpoint> CreateEndpointAsync(string path, string description = null, string? endpointType = null, int? userId = null);
     }
 }

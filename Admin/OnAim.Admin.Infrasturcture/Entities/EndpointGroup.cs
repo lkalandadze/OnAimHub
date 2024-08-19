@@ -9,6 +9,6 @@ namespace OnAim.Admin.Infrasturcture.Entities
         public ICollection<EndpointGroupEndpoint> EndpointGroupEndpoints { get; set; }
         public ICollection<RoleEndpointGroup> RoleEndpointGroups { get; set; }
         public bool IsEnabled { get; set; }
-        public string? UserId { get; set; }
+        public int? UserId { get; set; }
     }
 }

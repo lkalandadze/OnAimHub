@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
-using OnAim.Admin.Infrasturcture.Persistance.Data;
 using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Shared.Models;
-using Microsoft.OpenApi.Extensions;
 
 namespace OnAim.Admin.API.Service.Endpoint
 {
@@ -23,7 +22,7 @@ namespace OnAim.Admin.API.Service.Endpoint
             var controllers = Assembly.GetExecutingAssembly()
                 .GetTypes()
                 .Where(type => typeof(ControllerBase).IsAssignableFrom(type) && !type.IsAbstract);
-           
+
             foreach (var controller in controllers)
             {
                 var controllerName = controller.Name.Replace("Controller", "");
@@ -48,7 +47,7 @@ namespace OnAim.Admin.API.Service.Endpoint
                         endpoints.Add(new EndpointInfo
                         {
                             Controller = controller.Name,
-                            Name = $"{controllerName}_{methodName}",
+                            Name = $"{methodName}",
                             HttpMethod = httpMethod.HttpMethods.First(),
                             RouteTemplate = fullRoute!
                         });
@@ -93,11 +92,10 @@ namespace OnAim.Admin.API.Service.Endpoint
                                  ? endpointInfo.Controller.Substring(0, endpointInfo.Controller.Length - "Controller".Length)
                                  : endpointInfo.Controller;
 
-            var formattedName = $"{controllerName}/{endpointInfo.Name}";
+            var formattedName = $"{controllerName}_{endpointInfo.Name}";
 
             return new Infrasturcture.Entities.Endpoint
             {
-                Id = Guid.NewGuid().ToString(),
                 Name = formattedName,
                 Path = formattedName,
                 Description = $"Endpoint for {endpointInfo.Name} in {endpointInfo.Controller}",
@@ -120,6 +118,7 @@ namespace OnAim.Admin.API.Service.Endpoint
                 _ => throw new ArgumentOutOfRangeException($"Unsupported HTTP method: {httpMethod}")
             };
         }
+
 
     }
 }
