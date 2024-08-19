@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\OnAim.Admin.Identity\OnAim.Admin.Identity.csproj" />
+    <ProjectReference Include="..\OnAim.Admin.Identity\OnAim.Admin.Identity.csproj" />
     <ProjectReference Include="..\OnAim.Admin.Infrasturcture\OnAim.Admin.Infrasturcture.csproj" />
   </ItemGroup>
 
