@@ -33,21 +33,21 @@ public class Startup
             ConfigureConsul(services);
         }
 
-        services.AddDbContext<WheelConfigDbContext>(opt =>
-             opt.UseNpgsql(Configuration.GetConnectionString("GameConfig")));
+        //services.AddDbContext<WheelConfigDbContext>(opt =>
+        //     opt.UseNpgsql(Configuration.GetConnectionString("GameConfig")));
 
-        services.AddDbContext<SharedGameHistoryDbContext>(opt =>
-            opt.UseNpgsql(Configuration.GetConnectionString("GameHistory")));
+        //services.AddDbContext<SharedGameHistoryDbContext>(opt =>
+        //    opt.UseNpgsql(Configuration.GetConnectionString("GameHistory")));
 
-        services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
+        //services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
 
-        var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup), typeof(JackpotPrizeGroup) };
-        services.Resolve(Configuration, prizeGroupTypes);
+        //var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup), typeof(JackpotPrizeGroup) };
+        //services.Resolve(Configuration, prizeGroupTypes);
 
-        services.AddSingleton(prizeGroupTypes);
+        //services.AddSingleton(prizeGroupTypes);
 
-        services.AddScoped<GameManager>();
-        services.AddScoped<IPriceRepository, PriceRepository>();
+        //services.AddScoped<GameManager>();
+        //services.AddScoped<IPriceRepository, PriceRepository>();
 
         ConfigureMassTransit(services);
         services.AddMassTransitHostedService();
@@ -72,11 +72,6 @@ public class Startup
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-
-        if (IsRunningInDocker())
-        {
-            ConfigureConsulLifetime(app, lifetime);
-        }
 
         app.UseEndpoints(endpoints =>
         {
