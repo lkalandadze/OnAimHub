@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.Api.Controllers;
 
-//[Authorize]
+[Authorize]
 [ApiController]
+[Route("hubapi/[controller]")]
 public abstract class BaseApiController : ControllerBase
 {
     private IMediator _mediator;

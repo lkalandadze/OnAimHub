@@ -1,13 +1,10 @@
 ﻿using Hub.Application.Features.PlayerFeatures.Queries.GetBalance;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayer;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayers;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.Api.Controllers;
 
-[Authorize]
-[Route("hubapi/[controller]")]
 public class PlayerController : BaseApiController
 {
     [HttpGet]

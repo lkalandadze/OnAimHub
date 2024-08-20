@@ -1,5 +1,6 @@
 ﻿using Consul;
 using Hub.Api.Common.Consul;
+using Hub.Application;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Domain.Absractions;
@@ -11,9 +12,11 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.PostgreSQL;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Security.Cryptography;
 
@@ -57,15 +60,16 @@ public class Startup
             ConfigureConsul(services);
         }
 
-        ConfigureJwt(services);
-
-        services.AddAuthorization();
+        services.AddHttpContextAccessor();
         services.AddControllers();
         services.AddEndpointsApiExplorer();
 
         ConfigureSwagger(services);
+        ConfigureJwt(services);
+        ConfigureApplicationContext(services);
 
-        services.AddSwaggerGen();
+        services.AddAuthorization();
+
         services.AddHealthChecks();
     }
 
@@ -124,6 +128,41 @@ public class Startup
                 columnOptions: columnWriters
             )
             .CreateLogger();
+    }
+
+    private static void ConfigureApplicationContext(IServiceCollection services)
+    {
+        services.AddScoped(p =>
+        {
+            var applicationContext = new ApplicationContext();
+            var accessor = p.GetService<IHttpContextAccessor>();
+
+            if (accessor != null && accessor.HttpContext != null)
+            {
+                var authHeader = accessor.HttpContext.Request.Headers[HeaderNames.Authorization].ToString();
+
+                if (!string.IsNullOrEmpty(authHeader))
+                {
+                    var token = authHeader.Replace("Bearer ", string.Empty, StringComparison.OrdinalIgnoreCase);
+
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        var jwtSecurityToken = new JwtSecurityToken(jwtEncodedString: token);
+
+                        if (jwtSecurityToken != null)
+                        {
+                            var playerId = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "PlayerId")?.Value;
+                            var userName = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "UserName")?.Value;
+
+                            applicationContext.PlayerId = int.Parse(playerId);
+                            applicationContext.UserName = userName;
+                        }
+                    }
+                }
+            }
+
+            return applicationContext;
+        });
     }
 
     private void ConfigureSwagger(IServiceCollection services)
