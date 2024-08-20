@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
+using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
+using OnAim.Admin.Infrasturcture.Models.Response;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 
@@ -48,21 +50,113 @@ namespace OnAim.Admin.Infrasturcture.Repository
             }
         }
 
-        public async Task<IEnumerable<EndpointGroup>> GetAllAsync()
+        public async Task<PaginatedResult<EndpointGroup>> GetAllAsync(EndpointFilter filter)
         {
-            return await _databaseContext.EndpointGroups
-                                       .AsNoTracking()
-                                       .Include(x => x.EndpointGroupEndpoints)
-                                       .ThenInclude(x => x.Endpoint)
-                                       .ToListAsync();
+            var query = _databaseContext.EndpointGroups
+                .AsNoTracking()
+                .Include(x => x.EndpointGroupEndpoints)
+                .ThenInclude(x => x.Endpoint).AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter.Name))
+            {
+                query = query.Where(x => x.Name.Contains(filter.Name));
+            }
+
+            if (filter.IsActive.HasValue)
+            {
+                query = query.Where(x => x.IsActive == filter.IsActive);
+            }
+
+            if (filter.IsEnable.HasValue)
+            {
+                query = query.Where(x => x.IsEnabled == filter.IsEnable);
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var endpointGroups = await query
+               .OrderBy(x => x.Id)
+               .Skip((filter.PageNumber - 1) * filter.PageSize)
+               .Take(filter.PageSize)
+               .ToListAsync();
+
+            var result = endpointGroups.Select(x => new EndpointGroup
+            {
+                Id = x.Id,
+                Name = x.Name,
+                IsActive = x.IsActive,
+                Description = x.Description,
+                IsEnabled = x.IsEnabled,
+                UserId = x.UserId,
+                DateCreated = x.DateCreated,
+                DateDeleted = x.DateDeleted,
+                DateUpdated = x.DateUpdated,
+                EndpointGroupEndpoints = x.EndpointGroupEndpoints.Select(ep => new EndpointGroupEndpoint
+                {
+                    EndpointId = ep.EndpointId,
+                    EndpointGroupId = ep.EndpointGroupId,
+                    Endpoint = new Endpoint
+                    {
+                        Id = ep.Endpoint.Id,
+                        Name = ep.Endpoint.Name,
+                        Path = ep.Endpoint.Path,
+                        Description = ep.Endpoint.Description,
+                        IsActive = ep.Endpoint.IsActive,
+                        IsEnabled = ep.Endpoint.IsEnabled,
+                        UserId = ep.Endpoint.UserId,
+                        DateCreated = ep.Endpoint.DateCreated,
+                        DateDeleted = ep.Endpoint.DateDeleted,
+                        DateUpdated = ep.Endpoint.DateUpdated
+                    }
+                }).ToList()
+            }).ToList();
+
+            return new PaginatedResult<EndpointGroup>
+            {
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = totalCount,
+                Items = result
+            };
         }
 
         public async Task<EndpointGroup> GetByIdAsync(int id)
         {
-            return await _databaseContext.EndpointGroups
+            var group = await _databaseContext.EndpointGroups
                                          .Include(x => x.EndpointGroupEndpoints)
                                          .ThenInclude(x => x.Endpoint)
                                          .FirstOrDefaultAsync(x => x.Id == id);
+
+            return new EndpointGroup
+            {
+                Id = group.Id,
+                Name = group.Name,
+                Description = group.Description,
+                IsActive = group.IsActive,
+                IsEnabled = group.IsActive,
+                UserId = group.UserId,
+                DateCreated = group.DateCreated,
+                DateDeleted = group.DateDeleted,
+                DateUpdated = group.DateUpdated,
+                EndpointGroupEndpoints = group.EndpointGroupEndpoints.Select(x => new EndpointGroupEndpoint
+                {
+                    EndpointId = x.EndpointId,
+                    EndpointGroupId = x.EndpointGroupId,
+                    Endpoint = new Endpoint
+                    {
+                        Id = x.Endpoint.Id,
+                        Name = x.Endpoint.Name,
+                        Path = x.Endpoint.Path,
+                        Description = x.Endpoint.Description,
+                        IsActive = x.Endpoint.IsActive,
+                        IsEnabled = x.Endpoint.IsEnabled,
+                        UserId = x.Endpoint.UserId,
+                        DateCreated = x.Endpoint.DateCreated,
+                        DateDeleted = x.Endpoint.DateDeleted,
+                        DateUpdated = x.Endpoint.DateUpdated
+                    }
+                }).ToList()
+            };
         }
 
         public async Task<EndpointGroup> GetEndpointGroupByRole(int roleId)

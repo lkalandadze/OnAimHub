@@ -24,8 +24,6 @@ namespace OnAim.Admin.APP.Queries.Role.GetById
                 throw new RoleNotFoundException("Role Doesn't Exist");
             }
 
-            //var endpointGroups = await _endpointGroupRepository.
-
             return new ApplicationResult
             {
                 Success = true,

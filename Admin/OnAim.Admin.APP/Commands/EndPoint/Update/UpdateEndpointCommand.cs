@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using OnAim.Admin.APP.Models;
 using OnAim.Admin.APP.Models.Response.EndpointModels;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
-using OnAim.Admin.API.Factory;
 using OnAim.Admin.APP.Commands.User.AssignRole;
 using OnAim.Admin.APP.Commands.User.Create;
 using OnAim.Admin.APP.Commands.User.Delete;
@@ -16,32 +15,27 @@ using OnAim.Admin.APP.Queries.User.GetById;
 using OnAim.Admin.Infrasturcture.Models.Request.User;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using System.Net;
+using System.Security.Claims;
 
 namespace OnAim.Admin.API.Controllers
 {
     public class UsersController : ApiControllerBase
     {
-        private readonly ApplicationContext _appContext;
-
-        public UsersController(ApplicationContext appContext)
-        {
-            _appContext = appContext;
-        }
         [HttpGet("GetMe")]
         public async Task<IActionResult> GetMe()
         {
             //var user = _appContext.UserId.Value;
 
-            //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            //if (string.IsNullOrEmpty(userId))
-            //{
-            //    return Unauthorized("User ID not found in token.");
-            //}
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not found.");
+            }
 
-            var userId = _appContext.UserId.Value;
+            //var userId = _appContext.UserId.Value;
 
-            return Ok(new GetUserByIdQuery(_appContext.UserId.Value));
+            return Ok(new GetUserByIdQuery(Convert.ToInt32(userId)));
         }
 
         [HttpGet("GetAll")]

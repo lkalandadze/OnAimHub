@@ -1,4 +1,6 @@
 ﻿using OnAim.Admin.Infrasturcture.Entities;
+using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
+using OnAim.Admin.Infrasturcture.Models.Response;
 
 namespace OnAim.Admin.Infrasturcture.Repository.Abstract
 {
@@ -10,7 +12,7 @@ namespace OnAim.Admin.Infrasturcture.Repository.Abstract
         Task RemoveEndpoint(EndpointGroup endpointGroup, Endpoint endpoint);
         Task AddAsync(EndpointGroup endpointGroup);
         Task<EndpointGroup> GetByIdAsync(int id);
-        Task<IEnumerable<EndpointGroup>> GetAllAsync();
+        Task<PaginatedResult<EndpointGroup>> GetAllAsync(EndpointFilter filter);
         Task UpdateAsync(EndpointGroup endpointGroup);
         Task<EndpointGroup> GetEndpointGroupByRole(int roleId);
     }

@@ -43,7 +43,11 @@ namespace OnAim.Admin.APP.Commands.User.Login
 
             if (user == null)
             {
-                throw new Exception("Invalid credentials.");
+                return new AuthResultDto
+                {
+                    Token = null,
+                    StatusCode = 401
+                };
             }
 
             string hashed = EncryptPassword(model.Password, user.Salt);

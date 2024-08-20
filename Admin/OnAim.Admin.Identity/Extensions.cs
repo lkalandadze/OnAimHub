@@ -1,4 +1,5 @@
 ﻿using IdentityModel;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using OnAim.Admin.Identity.Entities;
 using OnAim.Admin.Identity.Services;
 using OnAim.Admin.Shared.Configuration;
@@ -30,7 +32,7 @@ namespace OnAim.Admin.Identity
             configuration.GetSection(AuthenticationConfig.ToString()).Bind(authenticationConfig);
 
             //var connectionString = configuration.GetSection("DefaultConnectionString").Value;
-            var connectionString = "Host=localhost;Port=5432;Database=onaim;Username=postgres;Password=12345678;Include Error Detail=true";
+            var connectionString = "Host=localhost;Port=5432;Database=OnAimAdmin;Username=postgres;Password=12345678;Include Error Detail=true";
 
             services.AddDbContext<TContext>(options =>
                 options.UseNpgsql(connectionString));
@@ -50,54 +52,27 @@ namespace OnAim.Admin.Identity
             .AddDefaultTokenProviders();
 
             var migrationsAssembly = typeof(MigrationAssembly).GetTypeInfo().Assembly.GetName().Name;
-            //services.AddIdentityServer(options =>
-            //{
-            //    //options.EmitScopesAsSpaceDelimitedStringInJwt = true;
 
-            //    options.KeyManagement.RotationInterval = TimeSpan.FromDays(7);
-            //    options.KeyManagement.PropagationTime = TimeSpan.FromDays(1);
-            //    options.KeyManagement.RetentionDuration = TimeSpan.FromDays(3);
-            //})
-            //.AddJwtBearerClientAuthentication()
-            //.AddAspNetIdentity<TUser>()
-            //.AddPersistedGrantStore<PersistedGrantStore>()
-            //.AddResourceOwnerValidator<ResourceOwnerPasswordValidator<TUser>>()
-            //.AddDefaultSecretValidators()
-            //.AddConfigurationStore(options =>
-            //{
-            //    options.ConfigureDbContext = b =>
-            //        b.UseNpgsql(connectionString,
-            //            sql => sql.MigrationsAssembly(migrationsAssembly));
-            //    options.DefaultSchema = "idp";
-            //})
-            //.AddOperationalStore(options =>
-            //{
-            //    options.ConfigureDbContext = b =>
-            //        b.UseNpgsql(connectionString,
-            //            sql => sql.MigrationsAssembly(migrationsAssembly));
-            //    options.DefaultSchema = "idp";
-            //}).AddKeyManagement();
+            services.Configure<JwtBearerOptions>(options =>
+            {
+                //options.RequireHttpsMetadata = false;
+                options.MapInboundClaims = false;
+                options.Authority = authenticationConfig.Authority;
+                options.Audience = "on-aim";
+                options.TokenValidationParameters = new TokenValidationParameters();
+                options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+                options.ForwardDefaultSelector = (HttpContext context) =>
+                {
+                    var (scheme, credential) = GetSchemeAndCredential(context);
+                    if (scheme.Equals("Bearer", StringComparison.OrdinalIgnoreCase) &&
+                        !credential.Contains('.'))
+                    {
+                        return "introspection";
+                    }
 
-            //services.Configure<JwtBearerOptions>(options =>
-            //{
-            //    //options.RequireHttpsMetadata = false;
-            //    options.MapInboundClaims = false;
-            //    options.Authority = authenticationConfig.Authority;
-            //    options.Audience = "on-aim";
-            //    options.TokenValidationParameters = new TokenValidationParameters();
-            //    options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
-            //    options.ForwardDefaultSelector = (HttpContext context) =>
-            //    {
-            //        var (scheme, credential) = GetSchemeAndCredential(context);
-            //        if (scheme.Equals("Bearer", StringComparison.OrdinalIgnoreCase) &&
-            //            !credential.Contains('.'))
-            //        {
-            //            return "introspection";
-            //        }
-
-            //        return null;
-            //    };
-            //});
+                    return null;
+                };
+            });
 
             //services
             //    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -129,7 +104,7 @@ namespace OnAim.Admin.Identity
             //        options.ClientSecret = authenticationConfig.ClientSecret;
             //    });
 
-            //services.AddAccessTokenManagement();
+            services.AddAccessTokenManagement();
 
             return services;
         }

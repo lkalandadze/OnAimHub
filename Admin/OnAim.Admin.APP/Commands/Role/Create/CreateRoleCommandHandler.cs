@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MediatR;
-using OnAim.Admin.APP.Models;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 

@@ -1,5 +1,6 @@
 ﻿using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Models.Request.Role;
+using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
+using OnAim.Admin.Infrasturcture.Models.Response;
 using OnAim.Admin.Infrasturcture.Models.Response.Endpoint;
 
 namespace OnAim.Admin.Infrasturcture.Repository.Abstract
@@ -7,7 +8,7 @@ namespace OnAim.Admin.Infrasturcture.Repository.Abstract
     public interface IEndpointRepository
     {
         Task CheckEndpointHealth();
-        Task<List<EndpointResponseModel>> GetAllEndpoints(RoleFilter roleFilter);
+        Task<PaginatedResult<EndpointResponseModel>> GetAllEndpoints(EndpointFilter roleFilter);
         Task<Endpoint> GetEndpointById(int id);
         Task<bool> EnableEndpointAsync(int endpointId);
         Task<bool> DisableEndpointAsync(int endpointId);

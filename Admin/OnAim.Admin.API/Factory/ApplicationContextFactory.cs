@@ -26,9 +26,9 @@ namespace OnAim.Admin.API.Factory
 
             if (httpContext?.User?.Identity != null && httpContext.User.Identity.IsAuthenticated)
             {
-                var clientId = httpContext.User.FindFirstValue(IdentityModel.JwtClaimTypes.ClientId);
-                if (!string.IsNullOrEmpty(clientId))
-                {
+                //var clientId = httpContext.User.FindFirstValue(IdentityModel.JwtClaimTypes.ClientId);
+                //if (!string.IsNullOrEmpty(clientId))
+                //{
                     var identityUser = userManager.GetUserAsync(httpContext.User).GetAwaiter().GetResult();
                     if (identityUser != null)
                     {
@@ -36,13 +36,13 @@ namespace OnAim.Admin.API.Factory
                         var userClaims = userManager.GetClaimsAsync(identityUser).GetAwaiter().GetResult();
                         var userData = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.UserData);
 
-                        return new ApplicationContext(clientId, user.Id, user.UserRoles, JsonSerializer.Deserialize<UserData>(userData.Value), remoteIpAddress);
+                        return new ApplicationContext(user.Id, user.UserRoles, JsonSerializer.Deserialize<UserData>(userData.Value), remoteIpAddress);
                     }
                     else
                     {
 
                     }
-                }
+                //}
             }
 
             return new ApplicationContext(remoteIpAddress);

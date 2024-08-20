@@ -5,7 +5,7 @@ using OnAim.Admin.APP.Commands.EndPoint.Disable;
 using OnAim.Admin.APP.Commands.EndPoint.Enable;
 using OnAim.Admin.APP.Queries.EndPoint.GetAll;
 using OnAim.Admin.APP.Queries.EndPoint.GetById;
-using OnAim.Admin.Infrasturcture.Models.Request.Role;
+using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using System.Net;
 
@@ -28,7 +28,7 @@ namespace OnAim.Admin.API.Controllers
             => Ok(await Mediator.Send(new DisableEndpointCommand(endpointId)));
 
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll([FromQuery] RoleFilter roleFilter)
+        public async Task<IActionResult> GetAll([FromQuery] EndpointFilter roleFilter)
             => Ok(await Mediator.Send(new GetAllEndpointQuery(roleFilter)));
 
         [HttpGet("Get/{id}")]
