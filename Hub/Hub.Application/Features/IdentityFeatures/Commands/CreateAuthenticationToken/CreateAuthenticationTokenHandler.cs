@@ -1,34 +1,33 @@
 ﻿using Hub.Application.Configurations;
 using Hub.Application.Models.Player;
-using Hub.Application.Services.Abstract;
-using Hub.Application.Services.Concrete;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Shared.Lib.Extensions;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 
 public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthenticationTokenRequest, CreateAuthenticationTokenResponse>
 {
     private readonly IPlayerRepository _playerRepository;
-    private readonly ITokenService _tokenService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly HttpClient _httpClient;
+    private readonly JwtConfiguration _jwtConfiguration;
     private readonly CasinoApiConfiguration _casinoApiConfiguration;
-    private readonly JwtConfig _jwtTokenConfiguration;
 
-    public CreateAuthenticationTokenHandler(IPlayerRepository playerRepository, ITokenService tokenService, IUnitOfWork unitOfWork, HttpClient httpClient, IOptions<CasinoApiConfiguration> casinoApiConfiguration, IOptions<JwtConfig> jwtTokenConfiguration)
+    public CreateAuthenticationTokenHandler(IPlayerRepository playerRepository, IUnitOfWork unitOfWork, HttpClient httpClient, IOptions<JwtConfiguration> jwtConfiguration, IOptions<CasinoApiConfiguration> casinoApiConfiguration)
     {
         _playerRepository = playerRepository;
-        _tokenService = tokenService;
         _unitOfWork = unitOfWork;
         _httpClient = httpClient;
+        _jwtConfiguration = jwtConfiguration.Value;
         _casinoApiConfiguration = casinoApiConfiguration.Value;
-        _jwtTokenConfiguration = jwtTokenConfiguration.Value;
     }
 
     public async Task<CreateAuthenticationTokenResponse> Handle(CreateAuthenticationTokenRequest request, CancellationToken cancellationToken)
@@ -56,11 +55,37 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
             await _unitOfWork.SaveAsync();
         }
 
-        var signingCredentials = _tokenService.GetSigningCredentials();
-        var claims = _tokenService.GetClaims(player);
-        var tokenOptions = _tokenService.GenerateTokenOptions(signingCredentials, claims);
-        var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+        return new CreateAuthenticationTokenResponse(true, GenerateTokenString(player));
+    }
 
-        return new CreateAuthenticationTokenResponse(true, token);
+    private string GenerateTokenString(Player player)
+    {
+        var claims = new List<Claim>
+            {
+                new("PlayerId", player.Id.ToString()),
+                new("UserName", player.UserName),
+            };
+
+        RsaSecurityKey rsaSecurityKey = GetRsaKey();
+        var signingCred = new SigningCredentials(rsaSecurityKey, SecurityAlgorithms.RsaSha256);
+
+        var securityToken = new JwtSecurityToken(
+            claims: claims,
+            audience: _jwtConfiguration.Audience,
+            issuer: _jwtConfiguration.Issuer,
+            expires: DateTime.Now.AddMinutes(20),
+            signingCredentials: signingCred
+            );
+
+        return new JwtSecurityTokenHandler().WriteToken(securityToken);
+    }
+
+    private RsaSecurityKey GetRsaKey()
+    {
+        var rsaKey = RSA.Create();
+        string xmlKey = File.ReadAllText(_jwtConfiguration.PrivateKeyPath);
+        rsaKey.FromXmlString(xmlKey);
+        var rsaSecurityKey = new RsaSecurityKey(rsaKey);
+        return rsaSecurityKey;
     }
 }

@@ -3,10 +3,6 @@ using Hub.Api.Common.Consul;
 using Hub.Application;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
-using Hub.Application.Helpers;
-using Hub.Application.Services;
-using Hub.Application.Services.Abstract;
-using Hub.Application.Services.Concrete;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Infrastructure.DataAccess;
@@ -14,7 +10,6 @@ using Hub.Infrastructure.Repositories;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
@@ -23,6 +18,7 @@ using Serilog;
 using Serilog.Sinks.PostgreSQL;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
+using System.Security.Cryptography;
 
 public class Startup
 {
@@ -35,36 +31,19 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        var appsettings = new AppSettings();
-        Configuration.Bind(appsettings);
-        BindJwtConfigValidAudiences(Configuration, appsettings);
-
-        services.AddCors(options =>
-        {
-            options.AddPolicy(
-                "AllowAnyOrigin",
-                builder => builder.AllowAnyOrigin()
-                                  .AllowAnyMethod()
-                                  .AllowAnyHeader());
-        });
-
-        services.AddSingleton(appsettings);
-        services.AddHttpContextAccessor();
-
-        // Access Configuration and env directly from the properties
-        var configuration = Configuration;
         var env = services.BuildServiceProvider().GetRequiredService<IWebHostEnvironment>();
 
         services.AddDbContext<HubDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<HttpClient>();
-        services.AddSingleton<ITokenService, TokenService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
-        ConfigureMassTransit(services, configuration, env);
+
+        ConfigureMassTransit(services, Configuration, env);
 
         services.AddMediatR(new[]
         {
@@ -81,23 +60,15 @@ public class Startup
             ConfigureConsul(services);
         }
 
-        ConfgiureJwt(services, appsettings);
-        ConfigureApplicationContext(services);
-
+        services.AddHttpContextAccessor();
         services.AddControllers();
         services.AddEndpointsApiExplorer();
 
         ConfigureSwagger(services);
+        ConfigureJwt(services);
+        ConfigureApplicationContext(services);
 
-        services.AddSwaggerGen();
-
-        services.Configure<ForwardedHeadersOptions>(o =>
-        {
-            o.ForwardedHeaders =
-                ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            o.KnownNetworks.Clear();
-            o.KnownProxies.Clear();
-        });
+        services.AddAuthorization();
 
         services.AddHealthChecks();
     }
@@ -159,6 +130,41 @@ public class Startup
             .CreateLogger();
     }
 
+    private static void ConfigureApplicationContext(IServiceCollection services)
+    {
+        services.AddScoped(p =>
+        {
+            var applicationContext = new ApplicationContext();
+            var accessor = p.GetService<IHttpContextAccessor>();
+
+            if (accessor != null && accessor.HttpContext != null)
+            {
+                var authHeader = accessor.HttpContext.Request.Headers[HeaderNames.Authorization].ToString();
+
+                if (!string.IsNullOrEmpty(authHeader))
+                {
+                    var token = authHeader.Replace("Bearer ", string.Empty, StringComparison.OrdinalIgnoreCase);
+
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        var jwtSecurityToken = new JwtSecurityToken(jwtEncodedString: token);
+
+                        if (jwtSecurityToken != null)
+                        {
+                            var playerId = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "PlayerId")?.Value;
+                            var userName = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "UserName")?.Value;
+
+                            applicationContext.PlayerId = int.Parse(playerId);
+                            applicationContext.UserName = userName;
+                        }
+                    }
+                }
+            }
+
+            return applicationContext;
+        });
+    }
+
     private void ConfigureSwagger(IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
@@ -201,77 +207,28 @@ public class Startup
         });
     }
 
-    private static void BindJwtConfigValidAudiences(IConfiguration configuration, AppSettings appSettings)
+    private void ConfigureJwt(IServiceCollection services)
     {
-        var section = configuration.GetSection("jwtconfig:ValidAudiences");
+        var jwtConfig = Configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>()!;
 
-        if (section != null && section.Value != null)
-        {
-            var values = section.Get<string>()?.Split(',').ToList();
-            appSettings.JwtConfig.ValidAudiences = values;
-        }
-    }
+        RSA rsa = RSA.Create();
+        string xmlKey = File.ReadAllText(jwtConfig.PrivateKeyPath);
+        rsa.FromXmlString(xmlKey);
 
-    public static void ConfgiureJwt(IServiceCollection services, AppSettings appSettings)
-    {
-        services.AddAuthentication(opt =>
-        {
-            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(options =>
-        {
-            options.Audience = appSettings.JwtConfig.ValidAudience;
-            options.TokenValidationParameters = TokenHelper.GetTokenValidationParameters(appSettings);
-            options.Events = new JwtBearerEvents
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
             {
-                OnAuthenticationFailed = context =>
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                    {
-                        context.Response.Headers.Append("IS-TOKEN-EXPIRED", "true");
-                    }
-
-                    return Task.CompletedTask;
-                }
-            };
-        });
-    }
-
-    private void ConfigureApplicationContext(IServiceCollection services)
-    {
-        services.AddScoped(p =>
-        {
-            var applicationContext = new ApplicationContext();
-
-            var accessor = p.GetService<IHttpContextAccessor>();
-
-            if (accessor != null && accessor.HttpContext != null)
-            {
-                var authHeader = accessor.HttpContext.Request.Headers[HeaderNames.Authorization].ToString();
-
-                if (!string.IsNullOrEmpty(authHeader))
-                {
-                    var token = authHeader.Replace("Bearer ", string.Empty, StringComparison.OrdinalIgnoreCase);
-
-                    if (!string.IsNullOrEmpty(token))
-                    {
-                        var jwtSecurityToken = new JwtSecurityToken(jwtEncodedString: token);
-
-                        if (jwtSecurityToken != null)
-                        {
-                            var username = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "UserName")?.Value;
-                            var playerId = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "PlayerId")?.Value;
-
-                            applicationContext.PlayerId = int.Parse(playerId!);
-                            applicationContext.UserName = username;
-                        }
-                    }
-                }
-            }
-
-            return applicationContext;
-        });
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtConfig.Issuer,
+                    ValidAudience = jwtConfig.Audience,
+                    IssuerSigningKey = new RsaSecurityKey(rsa),
+                };
+            });
     }
 
     private void ConfigureConsulLifetime(IApplicationBuilder app, IHostApplicationLifetime lifetime)
