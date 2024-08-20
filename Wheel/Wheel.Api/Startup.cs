@@ -23,44 +23,45 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
-        services.AddEndpointsApiExplorer();
+        services.AddDbContext<WheelConfigDbContext>(opt =>
+             opt.UseNpgsql(Configuration.GetConnectionString("GameConfig")));
 
-        services.AddSwaggerGen();
+        services.AddDbContext<SharedGameHistoryDbContext>(opt =>
+            opt.UseNpgsql(Configuration.GetConnectionString("GameHistory")));
+
+        services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
+
+        var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup), typeof(JackpotPrizeGroup) };
+        services.Resolve(Configuration, prizeGroupTypes);
+
+        services.AddSingleton(prizeGroupTypes);
+
+        services.AddScoped<GameManager>();
+        services.AddScoped<IPriceRepository, PriceRepository>();
+
+        ConfigureMassTransit(services);
+        services.AddMassTransitHostedService();
 
         if (IsRunningInDocker())
         {
             ConfigureConsul(services);
         }
 
-        //services.AddDbContext<WheelConfigDbContext>(opt =>
-        //     opt.UseNpgsql(Configuration.GetConnectionString("GameConfig")));
-
-        //services.AddDbContext<SharedGameHistoryDbContext>(opt =>
-        //    opt.UseNpgsql(Configuration.GetConnectionString("GameHistory")));
-
-        //services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
-
-        //var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup), typeof(JackpotPrizeGroup) };
-        //services.Resolve(Configuration, prizeGroupTypes);
-
-        //services.AddSingleton(prizeGroupTypes);
-
-        //services.AddScoped<GameManager>();
-        //services.AddScoped<IPriceRepository, PriceRepository>();
-
-        ConfigureMassTransit(services);
-        services.AddMassTransitHostedService();
+        services.AddControllers();
+        services.AddEndpointsApiExplorer();
+        services.AddHealthChecks();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
     {
+        app.UseCors("AllowAnyOrigin");
+        app.UseHttpsRedirection();
+
         if (IsRunningInDocker())
         {
             ConfigureConsulLifetime(app, lifetime);
         }
 
-        // Configure the HTTP request pipeline.
         if (env.IsDevelopment())
         {
             app.UseSwagger();
@@ -72,6 +73,13 @@ public class Startup
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Wheel API V1");
+            c.RoutePrefix = string.Empty;
+        });
 
         app.UseEndpoints(endpoints =>
         {

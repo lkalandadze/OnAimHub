@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
 
 namespace Wheel.Api.Controllers;
@@ -16,6 +17,7 @@ public class HomeController : ControllerBase
         UserBalances.TryAdd(userId, 20.00m); // Each user starts with 20 GEL
     }
 
+    [Authorize]
     [HttpGet(nameof(HealthCheck))]
     public IActionResult HealthCheck()
     {
