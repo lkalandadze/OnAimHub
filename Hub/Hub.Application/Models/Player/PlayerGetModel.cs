@@ -9,4 +9,7 @@ public class PlayerGetModel
 
     [JsonPropertyName("userName")]
     public string UserName { get; set; }
+
+    [JsonPropertyName("segmentId")]
+    public int SegmentId { get; set; }
 }

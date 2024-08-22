@@ -32,8 +32,9 @@ public class TestAuthController : ControllerBase
 
             var usernameClaim = claimsPrincipal.FindFirst("username")?.Value;
             var idClaim = claimsPrincipal.FindFirst("Id")?.Value;
+            var segmentIdClaim = claimsPrincipal.FindFirst("SegmentId")?.Value;
 
-            if (usernameClaim == null || idClaim == null)
+            if (usernameClaim == null || idClaim == null || segmentIdClaim == null)
             {
                 return Unauthorized();
             }
@@ -41,7 +42,8 @@ public class TestAuthController : ControllerBase
             var player = new PlayerModel
             {
                 Id = int.Parse(idClaim),
-                UserName = usernameClaim
+                UserName = usernameClaim,
+                SegmentId = int.Parse(segmentIdClaim),
             };
 
             return Ok(player);
@@ -59,6 +61,7 @@ public class TestAuthController : ControllerBase
         {
             Id = Random.Shared.Next(1, 100),
             UserName = Random.Shared.Next(1000, 2000).ToString(),
+            SegmentId = 1
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("aVGh6J/J2eRt6N8yQgP5kE0ThKz+zR/G+gL4X1G+yKo="));
@@ -68,6 +71,7 @@ public class TestAuthController : ControllerBase
         {
             new("username", player.UserName),
             new("Id", player.Id.ToString()),
+            new("SegmentId", player.SegmentId.ToString()),
         };
 
         var token = new JwtSecurityToken(

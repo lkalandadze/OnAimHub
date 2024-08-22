@@ -88,4 +88,6 @@ services:
 
 volumes:
   gameconfigdb_data:
+    driver: local
   gamehistorydb_data:
+    driver: local

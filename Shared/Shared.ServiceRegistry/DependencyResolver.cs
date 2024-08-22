@@ -31,8 +31,6 @@ public static class DependencyResolver
             services.AddScoped(typeof(IPrizeGroupRepository<>).MakeGenericType(type), typeof(PrizeGroupRepository<>).MakeGenericType(type));
         }
 
-        services.BuildServiceProvider().GetRequiredService<RepositoryManager>();
-
         services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
         services.AddScoped<ICurrencyRepository, CurrencyRepository>();
         services.AddScoped<IGameVersionRepository, GameVersionRepository>();
@@ -40,6 +38,8 @@ public static class DependencyResolver
         services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
         services.AddScoped<ISegmentRepository, SegmentRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
+
+        services.BuildServiceProvider().GetRequiredService<RepositoryManager>();
 
         services.AddHostedService<PrizeConfiguratorService>();
 
@@ -90,11 +90,11 @@ public static class DependencyResolver
 
     private static void ConfigureJwt(IServiceCollection services, IConfiguration configuration)
     {
-        var jwtConfig = configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>();
+        var jwtConfig = configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>()!;
 
-        RSA rsa = RSA.Create();
-        string xmlKey = File.ReadAllText(jwtConfig.PublicKeyPath);
-        rsa.FromXmlString(xmlKey);
+        var ecdsa = ECDsa.Create();
+        var keyBytes = Convert.FromBase64String(jwtConfig.PublicKey);
+        ecdsa.ImportSubjectPublicKeyInfo(keyBytes, out _);
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -107,7 +107,7 @@ public static class DependencyResolver
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtConfig.Issuer,
                     ValidAudience = jwtConfig.Audience,
-                    IssuerSigningKey = new RsaSecurityKey(rsa),
+                    IssuerSigningKey = new ECDsaSecurityKey(ecdsa),
                     ClockSkew = TimeSpan.Zero
                 };
             });

@@ -3,6 +3,8 @@ using Hub.Api.Common.Consul;
 using Hub.Application;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
+using Hub.Application.Services.Abstract;
+using Hub.Application.Services.Concrete;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Infrastructure.DataAccess;
@@ -37,6 +39,7 @@ public class Startup
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<HttpClient>();
+        services.AddSingleton<ITokenService, TokenService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -75,6 +78,13 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
     {
+        //create database
+        using (var scope = app.ApplicationServices.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<HubDbContext>();
+            dbContext.Database.EnsureCreated();
+        }
+
         app.UseCors("AllowAnyOrigin");
         app.UseHttpsRedirection();
 
@@ -151,11 +161,13 @@ public class Startup
 
                         if (jwtSecurityToken != null)
                         {
-                            var playerId = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "PlayerId")?.Value;
-                            var userName = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "UserName")?.Value;
+                            var playerId = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "PlayerId")?.Value!;
+                            var userName = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "UserName")?.Value!;
+                            var SegmentId = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "SegmentId")?.Value!;
 
                             applicationContext.PlayerId = int.Parse(playerId);
                             applicationContext.UserName = userName;
+                            applicationContext.SegmentId = int.Parse(SegmentId);
                         }
                     }
                 }
@@ -211,9 +223,9 @@ public class Startup
     {
         var jwtConfig = Configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>()!;
 
-        RSA rsa = RSA.Create();
-        string xmlKey = File.ReadAllText(jwtConfig.PrivateKeyPath);
-        rsa.FromXmlString(xmlKey);
+        var ecdsa = ECDsa.Create();
+        var keyBytes = Convert.FromBase64String(jwtConfig.PrivateKey);
+        ecdsa.ImportECPrivateKey(keyBytes, out _);
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -226,7 +238,7 @@ public class Startup
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtConfig.Issuer,
                     ValidAudience = jwtConfig.Audience,
-                    IssuerSigningKey = new RsaSecurityKey(rsa),
+                    IssuerSigningKey = new ECDsaSecurityKey(ecdsa),
                 };
             });
     }
