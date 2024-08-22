@@ -1,6 +1,12 @@
-﻿namespace Shared.Application.Services.Abstract;
+﻿using Consul;
+
+namespace Shared.Application.Services.Abstract;
 
 public interface IAuthService
 {
-    AuthorizedPlayer GetAuthorizedPlayer();
+    int GetCurrentPlayerSegmentId();
+
+    string GetCurrentPlayerUserName();
+
+    int GetCurrentPlayerId();
 }

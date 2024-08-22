@@ -35,16 +35,9 @@ public class GameManager
 
     public PlayResultModel Play(PlayRequestModel command)
     {
-        var authorizedPlayer = _authService.GetAuthorizedPlayer();
-
-        if (authorizedPlayer == null)
-        {
-            throw new KeyNotFoundException();
-        }
-
         // make bet transaction
 
-        var prize = GeneratorHolder.GetPrize<JackpotPrize>(command.GameVersionId, authorizedPlayer.SegmentId);
+        var prize = GeneratorHolder.GetPrize<JackpotPrize>(command.GameVersionId, _authService.GetCurrentPlayerSegmentId());
 
         // make win transaction
 

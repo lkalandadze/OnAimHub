@@ -4,5 +4,11 @@ namespace Hub.Application.Services.Abstract;
 
 public interface IAuthService
 {
-    Player GetAuthorizedPlayer();
+    Player GetCurrentPlayer();
+
+    int GetCurrentPlayerSegmentId();
+
+    string GetCurrentPlayerUserName();
+
+    int GetCurrentPlayerId();
 }
