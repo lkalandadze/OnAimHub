@@ -78,6 +78,13 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
     {
+        //create database
+        using (var scope = app.ApplicationServices.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<HubDbContext>();
+            dbContext.Database.EnsureCreated();
+        }
+
         app.UseCors("AllowAnyOrigin");
         app.UseHttpsRedirection();
 
@@ -154,11 +161,13 @@ public class Startup
 
                         if (jwtSecurityToken != null)
                         {
-                            var playerId = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "PlayerId")?.Value;
-                            var userName = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "UserName")?.Value;
+                            var playerId = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "PlayerId")?.Value!;
+                            var userName = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "UserName")?.Value!;
+                            var SegmentId = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "SegmentId")?.Value!;
 
                             applicationContext.PlayerId = int.Parse(playerId);
                             applicationContext.UserName = userName;
+                            applicationContext.SegmentId = int.Parse(SegmentId);
                         }
                     }
                 }

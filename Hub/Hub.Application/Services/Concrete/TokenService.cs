@@ -24,6 +24,7 @@ public class TokenService : ITokenService
     {
         new("PlayerId", player.Id.ToString()),
         new("UserName", player.UserName),
+        new("SegmentId", player.SegmentId.ToString()),
     };
 
         var ecdsaSecurityKey = GetECDsaKeyFromPrivateKey(_jwtConfig.PrivateKey);
