@@ -35,9 +35,7 @@ public class Startup
         services.Resolve(Configuration, prizeGroupTypes);
 
         services.AddSingleton(prizeGroupTypes);
-
         services.AddScoped<GameManager>();
-        services.AddScoped<IPriceRepository, PriceRepository>();
 
         ConfigureMassTransit(services);
         services.AddMassTransitHostedService();

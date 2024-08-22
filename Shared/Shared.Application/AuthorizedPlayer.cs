@@ -1,8 +1,8 @@
 ﻿#nullable disable
 
-namespace Hub.Application;
+namespace Shared.Application;
 
-public class ApplicationContext
+public class AuthorizedPlayer
 {
     public int PlayerId { get; set; }
     public string UserName { get; set; }

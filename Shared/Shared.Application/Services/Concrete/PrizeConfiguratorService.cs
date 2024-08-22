@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Shared.Application.Holders;
 
-namespace Shared.Application.Services;
+namespace Shared.Application.Services.Concrete;
 
 public class PrizeConfiguratorService : IHostedService
 {

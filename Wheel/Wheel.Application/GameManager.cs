@@ -1,4 +1,5 @@
 ﻿using Shared.Application.Holders;
+using Shared.Application.Services.Abstract;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Repository;
 using Wheel.Application.Models;
@@ -10,13 +11,15 @@ public class GameManager
 {
     private readonly GeneratorHolder _generatorHolder;
     private readonly ConfigurationHolder _configurationHolder;
+    private readonly IAuthService _authService;
     private readonly IConfigurationRepository _configurationRepository;
     private readonly IPrizeGroupRepository<WheelPrizeGroup> _prizeGroupRepository;
 
-    public GameManager(GeneratorHolder generatorHolder, ConfigurationHolder configurationHolder, IConfigurationRepository configurationRepository, IPrizeGroupRepository<WheelPrizeGroup> prizeGroupRepository)
+    public GameManager(GeneratorHolder generatorHolder, ConfigurationHolder configurationHolder, IAuthService authService, IConfigurationRepository configurationRepository, IPrizeGroupRepository<WheelPrizeGroup> prizeGroupRepository)
     {
         _generatorHolder = generatorHolder;
         _configurationHolder = configurationHolder;
+        _authService = authService;
         _configurationRepository = configurationRepository;
         _prizeGroupRepository = prizeGroupRepository;
     }
@@ -32,9 +35,16 @@ public class GameManager
 
     public PlayResultModel Play(PlayRequestModel command)
     {
+        var authorizedPlayer = _authService.GetAuthorizedPlayer();
+
+        if (authorizedPlayer == null)
+        {
+            throw new KeyNotFoundException();
+        }
+
         // make bet transaction
 
-        var prize = GeneratorHolder.GetPrize<JackpotPrize>(command.GameVersionId, command.SegmentId);
+        var prize = GeneratorHolder.GetPrize<JackpotPrize>(command.GameVersionId, authorizedPlayer.SegmentId);
 
         // make win transaction
 
