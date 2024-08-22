@@ -3,6 +3,8 @@ using Hub.Api.Common.Consul;
 using Hub.Application;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
+using Hub.Application.Services.Abstract;
+using Hub.Application.Services.Concrete;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Infrastructure.DataAccess;
@@ -37,6 +39,7 @@ public class Startup
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<HttpClient>();
+        services.AddSingleton<ITokenService, TokenService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -211,9 +214,9 @@ public class Startup
     {
         var jwtConfig = Configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>()!;
 
-        RSA rsa = RSA.Create();
-        string xmlKey = File.ReadAllText(jwtConfig.PrivateKeyPath);
-        rsa.FromXmlString(xmlKey);
+        ECDsa ecdsa = ECDsa.Create();
+        var keyBytes = Convert.FromBase64String(jwtConfig.PrivateKey);
+        ecdsa.ImportECPrivateKey(keyBytes, out _);
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -226,7 +229,7 @@ public class Startup
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtConfig.Issuer,
                     ValidAudience = jwtConfig.Audience,
-                    IssuerSigningKey = new RsaSecurityKey(rsa),
+                    IssuerSigningKey = new ECDsaSecurityKey(ecdsa),
                 };
             });
     }
