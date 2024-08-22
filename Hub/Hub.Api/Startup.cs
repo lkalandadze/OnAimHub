@@ -214,7 +214,7 @@ public class Startup
     {
         var jwtConfig = Configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>()!;
 
-        ECDsa ecdsa = ECDsa.Create();
+        var ecdsa = ECDsa.Create();
         var keyBytes = Convert.FromBase64String(jwtConfig.PrivateKey);
         ecdsa.ImportECPrivateKey(keyBytes, out _);
 

@@ -92,7 +92,7 @@ public static class DependencyResolver
     {
         var jwtConfig = configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>()!;
 
-        ECDsa ecdsa = ECDsa.Create();
+        var ecdsa = ECDsa.Create();
         var keyBytes = Convert.FromBase64String(jwtConfig.PublicKey);
         ecdsa.ImportSubjectPublicKeyInfo(keyBytes, out _);
 

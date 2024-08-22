@@ -26,7 +26,7 @@ public class TokenService : ITokenService
         new("UserName", player.UserName),
     };
 
-        ECDsaSecurityKey ecdsaSecurityKey = GetECDsaKeyFromPrivateKey(_jwtConfig.PrivateKey);
+        var ecdsaSecurityKey = GetECDsaKeyFromPrivateKey(_jwtConfig.PrivateKey);
         var signingCred = new SigningCredentials(ecdsaSecurityKey, SecurityAlgorithms.EcdsaSha256);
 
         var securityToken = new JwtSecurityToken(
