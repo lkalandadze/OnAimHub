@@ -31,7 +31,7 @@ namespace OnAim.Admin.API.Controllers
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRoleRequest model)
             => Ok(await Mediator.Send(new UpdateRoleCommand(id, model)));
 
-        [HttpDelete("{id}")]
+        [HttpPost("Delete/{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
             => Ok(await Mediator.Send(new DeleteRoleCommand(id)));
     }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Controllers;
+using OnAim.Admin.API.Extensions;
 using OnAim.Admin.APP.Services.Abstract;
-using System.Security.Claims;
 
 namespace OnAim.Admin.API.Middleware
 {
@@ -42,17 +42,14 @@ namespace OnAim.Admin.API.Middleware
 
             if (user.Identity.IsAuthenticated)
             {
-                var roles = user.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
+                var roles = user.GetRoles();
 
-                foreach (var role in roles)
+                var hasPermission = await permissionService.RolesContainPermission(roles, dynamicRequiredPermission);
+
+                if (hasPermission)
                 {
-                    var hasPermission = await permissionService.HasPermissionForRoleAsync(role, dynamicRequiredPermission);
-
-                    if (hasPermission)
-                    {
-                        await _next(context);
-                        return;
-                    }
+                    await _next(context);
+                    return;
                 }
             }
 

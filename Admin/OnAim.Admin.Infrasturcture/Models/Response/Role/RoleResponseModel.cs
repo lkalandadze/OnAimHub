@@ -12,6 +12,5 @@ namespace OnAim.Admin.Infrasturcture.Models.Response.Role
         public DateTimeOffset DateUpdated { get; set; }
         public DateTimeOffset DateDeleted { get; set; }
         public bool IsActive { get; set; }
-        public bool IsDeleted { get; set; }
     }
 }

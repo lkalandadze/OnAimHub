@@ -20,11 +20,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
             _databaseContext = databaseContext;
         }
 
-        public Task CheckEndpointHealth()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> DisableEndpointAsync(int endpointId)
         {
             var endpoint = await _databaseContext.Endpoints.FindAsync(endpointId);
@@ -55,29 +50,23 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
         public async Task<PaginatedResult<EndpointResponseModel>> GetAllEndpoints(EndpointFilter filter)
         {
-            var query = _databaseContext.Endpoints.AsQueryable();
-
-            if (!string.IsNullOrEmpty(filter.Name))
-            {
-                query = query.Where(x => x.Name.Contains(filter.Name));
-            }
-
-            if (filter.IsActive.HasValue)
-            {
-                query = query.Where(x => x.IsActive == filter.IsActive);
-            }
-
-            if (filter.Type.HasValue)
-            {
-                query = query.Where(x => x.Type == filter.Type.Value);
-            }
+            var query = _databaseContext.Endpoints
+                    .AsNoTracking()
+                    .Where(x =>
+                        (string.IsNullOrEmpty(filter.Name) || x.Name.Contains(filter.Name)) &&
+                        (!filter.IsActive.HasValue || x.IsActive == filter.IsActive) &&
+                        (!filter.Type.HasValue || x.Type == filter.Type.Value)
+                    );
 
             var totalCount = await query.CountAsync();
 
+            var pageNumber = filter.PageNumber ?? 1;
+            var pageSize = filter.PageSize ?? 25;
+
             var endpoints = await query
                 .OrderBy(x => x.Id)
-                .Skip((filter.PageNumber - 1) * filter.PageSize)
-                .Take(filter.PageSize)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
             var result = endpoints.Select(ep => new EndpointResponseModel
@@ -96,8 +85,8 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             return new PaginatedResult<EndpointResponseModel>
             {
-                PageNumber = filter.PageNumber,
-                PageSize = filter.PageSize,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
                 TotalCount = totalCount,
                 Items = result
             };
@@ -112,19 +101,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 throw new EndpointNotFoundException("Endpoint Not Found");
             }
 
-            var result = new EndpointResponseModel
-            {
-                Id = endpoint.Id,
-                Name = endpoint.Name,
-                Path = endpoint.Path,
-                Description = endpoint.Description,
-                IsActive = endpoint.IsActive,
-                IsEnabled = endpoint.IsEnabled,
-                Type = ToHttpMethod(endpoint.Type),
-                UserId = endpoint.UserId,
-                DateCreated = endpoint.DateCreated,
-                DateUpdated = endpoint.DateUpdated,
-            };
             return endpoint;
         }
 
@@ -154,9 +130,9 @@ namespace OnAim.Admin.Infrasturcture.Repository
             return result;
         }
 
-        public async Task<Endpoint> CreateEndpointAsync(string path, string description = null, string? endpointType = null, int? userId = null)
+        public async Task<Endpoint> CreateEndpointAsync(string name, string description = null, string? endpointType = null)
         {
-            var endpoint = await _databaseContext.Endpoints.FirstOrDefaultAsync(e => e.Path == path);
+            var endpoint = await _databaseContext.Endpoints.FirstOrDefaultAsync(e => e.Name == name);
 
             EndpointType endpointTypeEnum = EndpointType.Get;
 
@@ -165,21 +141,21 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 endpointTypeEnum = parsedType;
             }
 
-            if (path == endpoint.Name)
+            if (endpoint != null)
             {
-                throw new EndpointAlreadyExistsException("Endpoint with that name already exists.");
+                throw new AlreadyExistsException("Endpoint with that name already exists.");
             }
 
             if (endpoint == null)
             {
                 endpoint = new Endpoint
                 {
-                    Name = path,
-                    Path = path,
+                    Name = name,
+                    Path = name,
                     Description = description ?? "Description needed",
                     IsEnabled = true,
                     DateCreated = SystemDate.Now,
-                    UserId = userId,
+                    //UserId = userId,
                     IsActive = true,
                     Type = endpointTypeEnum,
                 };
@@ -194,6 +170,35 @@ namespace OnAim.Admin.Infrasturcture.Repository
             }
 
             return endpoint;
+        }
+
+        public async Task DeleteEndpoint(int id)
+        {
+            var endpoint = await _databaseContext.Endpoints.FindAsync(id);
+
+            if (endpoint != null)
+            {
+                endpoint.IsActive = false;
+                endpoint.IsEnabled = false;
+                await _databaseContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateEndpoint(int id, EndpointRequestModel model)
+        {
+            var ep = await GetEndpointById(id);
+
+            if (ep != null)
+            {
+                ep.Name = model.Name;
+                ep.Description = model.Description;
+                ep.IsActive = model.IsActive ?? true;
+                ep.IsEnabled = model.IsEnabled ?? true;
+                ep.DateUpdated = SystemDate.Now;
+                //ep.UserId = model.UserId;
+
+                await _databaseContext.SaveChangesAsync();
+            }
         }
 
         public static string ToHttpMethod(EndpointType? type)

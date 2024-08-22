@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using OnAim.Admin.APP.Models.Response.User;
 using OnAim.Admin.Identity.Services;
 using OnAim.Admin.Infrasturcture.Configuration;
+using OnAim.Admin.Infrasturcture.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.Models;
 using System.Security.Claims;
@@ -41,13 +42,9 @@ namespace OnAim.Admin.APP.Commands.User.Login
             var model = request.Model;
             var user = await _userRepository.FindByEmailAsync(model.Email);
 
-            if (user == null)
+            if (!user.IsActive || user == null)
             {
-                return new AuthResultDto
-                {
-                    Token = null,
-                    StatusCode = 401
-                };
+                throw new UserNotFoundException("User Not Found");
             }
 
             string hashed = EncryptPassword(model.Password, user.Salt);

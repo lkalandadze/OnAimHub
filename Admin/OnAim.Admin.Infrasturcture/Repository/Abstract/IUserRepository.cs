@@ -8,14 +8,15 @@ namespace OnAim.Admin.Infrasturcture.Repository.Abstract
 {
     public interface IUserRepository
     {
+        Task CommitChanges();
+        Task DeleteUser(int userId);
         Task<User> Create(User user);
         Task<UsersResponseModel> GetById(int id);
         Task<User> FindByEmailAsync(string email);
-        Task<PaginatedResult<UsersResponseModel>> GetAllUser(UserFilter userFilter);
+        Task ResetPassword(int id, string password);
+        Task<User> UpdateUser(int id, UpdateUserRequest user);
         Task<List<RoleResponseModel>> GetUserRolesAsync(int userId);
         Task<IEnumerable<string>> GetUserPermissionsAsync(int userId);
-        Task DeleteUser(int userId);
-        Task<User> UpdateUser(User user);
-        Task CommitChanges();
+        Task<PaginatedResult<UsersResponseModel>> GetAllUser(UserFilter userFilter);
     }
 }

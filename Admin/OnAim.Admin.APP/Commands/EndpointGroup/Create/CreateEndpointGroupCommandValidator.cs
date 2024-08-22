@@ -6,7 +6,7 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
     {
         public CreateEndpointGroupCommandValidator()
         {
-            RuleFor(x => x.Name).NotEmpty();
+            RuleFor(x => x.Model.Name).NotEmpty();
         }
     }
 }

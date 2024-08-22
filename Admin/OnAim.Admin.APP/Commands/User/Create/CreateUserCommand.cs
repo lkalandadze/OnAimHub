@@ -15,7 +15,6 @@ namespace OnAim.Admin.APP.Commands.User.Create
         public string LastName { get; set; }
         public string UserName { get; set; }
         public string Phone { get; set; }
-        public int? UserId { get; set; }
         public DateTime DateOfBirth { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 using OnAim.Admin.API.Extensions;
 using OnAim.Admin.API.Factory;
 using OnAim.Admin.API.Middleware;
-using OnAim.Admin.API.Service.Endpoint;
 using OnAim.Admin.APP;
 using OnAim.Admin.Identity;
 using OnAim.Admin.Identity.Entities;
@@ -25,7 +24,6 @@ builder.Services
 
 builder.Services.AddIdentityServerAuthentication<ApplicationIdentityDbContext, User, ApplicationUserManager>(builder.Configuration);
 
-builder.Services.AddScoped<IEndpointService, EndpointService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped(ApplicationContextFactory.Create);
@@ -56,6 +54,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<PermissionMiddleware>();
+//app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.MapControllers();
 

@@ -1,11 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using OnAim.Admin.APP.Models;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
-using System.Data;
 using System.Security.Cryptography;
 
 namespace OnAim.Admin.APP.Commands.User.Create
@@ -14,27 +12,25 @@ namespace OnAim.Admin.APP.Commands.User.Create
     {
         private readonly IValidator<CreateUserCommand> _validator;
         private readonly IUserRepository _userRepository;
-        private readonly IRoleRepository _roleRepository;
 
         public CreateUserCommandHandler(
             IValidator<CreateUserCommand> validator,
-            IUserRepository userRepository,
-            IRoleRepository roleRepository
+            IUserRepository userRepository
             )
         {
             _validator = validator;
             _userRepository = userRepository;
-            _roleRepository = roleRepository;
         }
         public async Task<ApplicationResult> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+
             if (!validationResult.IsValid)
             {
                 return new ApplicationResult
                 {
                     Success = false,
-                    Errors = null
+                    Data = validationResult.Errors,
                 };
             }
 
@@ -57,22 +53,13 @@ namespace OnAim.Admin.APP.Commands.User.Create
                 Salt = salt,
                 Password = hashed,
                 Phone = request.Phone,
-                UserId = request.UserId,
                 DateOfBirth = request.DateOfBirth,
                 DateCreated = SystemDate.Now,
+                IsActive = true
             };
 
             var result = await _userRepository.Create(user);
 
-            //if (request.Roles != null && request.Roles.Any())
-            //{
-            //    var roleIds = request.Roles.Select(r => r.Id).ToList();
-            //    var roles = await _roleRepository.GetRolesByIdsAsync(roleIds);
-            //    foreach (var role in roles)
-            //    {
-            //        await _roleRepository.AssignRoleToUserAsync(role.UserId, role.Id);
-            //    }
-            //}
             return new ApplicationResult
             {
                 Success = true,

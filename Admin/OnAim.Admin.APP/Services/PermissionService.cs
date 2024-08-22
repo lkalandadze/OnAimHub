@@ -1,4 +1,5 @@
 ﻿using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.Infrasturcture.Models.Request.Role;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 
 namespace OnAim.Admin.APP.Services
@@ -6,47 +7,37 @@ namespace OnAim.Admin.APP.Services
     public class PermissionService : IPermissionService
     {
         private readonly IRoleRepository _roleRepository;
-        private readonly IEndpointGroupRepository _endpointGroupRepository;
-        private readonly IEndpointRepository _endpointRepository;
+        private static Dictionary<string, List<string>>? _endpointsByRoles;
 
-        public PermissionService(IRoleRepository roleRepository, IEndpointGroupRepository endpointGroupRepository, IEndpointRepository endpointRepository)
+        private async Task<Dictionary<string, List<string>>> GetEndpointsByRolesAsync()
         {
-            _roleRepository = roleRepository;
-            _endpointGroupRepository = endpointGroupRepository;
-            _endpointRepository = endpointRepository;
+            if (_endpointsByRoles == null)
+            {
+                var filter = new RoleFilter
+                {
+                    PageNumber = 1,
+                    PageSize = 100
+                };
+                var roles = await _roleRepository.GetAllRoles(filter);
+
+                _endpointsByRoles = roles.Items.ToDictionary(
+                    x => x.Name,
+                    x => x.EndpointGroupModels.SelectMany(xx => xx.Endpoints?.Select(xxx => xxx.Name!)!).ToList()
+                );
+            }
+
+            return _endpointsByRoles;
         }
 
-        public async Task<bool> HasPermissionForRoleAsync(string role, string permission)
+        public PermissionService(IRoleRepository roleRepository)
         {
-            var roleEntity = await _roleRepository.GetRoleByName(role);
+            _roleRepository = roleRepository;
+        }
 
-            if (roleEntity == null)
-            {
-                return false;
-            }
-
-            foreach (var endpointGroup in roleEntity.EndpointGroupModels)
-            {
-                var endpointGroups = await _endpointGroupRepository.GetByIdAsync(endpointGroup.Id);
-
-                if (endpointGroups == null)
-                {
-                    continue;
-                }
-
-                foreach (var ep in endpointGroups.EndpointGroupEndpoints)
-                {
-                    var endpoint = await _endpointRepository.GetEndpointById(ep.EndpointId);
-
-                    if (endpoint != null && endpoint.Name == permission)
-                    {
-                        return true;
-                    }
-                }
-
-            }
-
-            return false;
+        public async Task<bool> RolesContainPermission(List<string> roles, string permission)
+        {
+            var endpointsByRoles = await GetEndpointsByRolesAsync();
+            return roles.Any(x => endpointsByRoles.ContainsKey(x) && endpointsByRoles[x].Contains(permission));
         }
     }
 }

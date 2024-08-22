@@ -12,7 +12,7 @@ using OnAim.Admin.Infrasturcture.Persistance.Data;
 namespace OnAim.Admin.Infrasturcture.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240820125859_init")]
+    [Migration("20240822124117_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -205,9 +205,6 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsBanned")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LastName")

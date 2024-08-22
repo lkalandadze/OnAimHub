@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Exceptions;
 using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
@@ -10,21 +11,19 @@ using OnAim.Admin.Infrasturcture.Models.Response.User;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.Models;
+using System.Security.Cryptography;
 
 namespace OnAim.Admin.Infrasturcture.Repository
 {
     public class UserRepository : IUserRepository
     {
         private readonly DatabaseContext _databaseContext;
-        private readonly IRoleRepository _roleRepository;
 
         public UserRepository(
-            DatabaseContext databaseContext, 
-            IRoleRepository roleRepository
+            DatabaseContext databaseContext
             )
         {
             _databaseContext = databaseContext;
-            _roleRepository = roleRepository;
         }
 
         public async Task<User> Create(User user)
@@ -52,7 +51,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 Salt = user.Salt,
                 Phone = user.Phone,
                 DateOfBirth = user.DateOfBirth,
-                IsBanned = user.IsBanned,
                 IsActive = true,
                 UserId = user.UserId,
                 DateCreated = user.DateCreated,
@@ -60,10 +58,17 @@ namespace OnAim.Admin.Infrasturcture.Repository
             _databaseContext.Users.Add(res);
             await _databaseContext.SaveChangesAsync();
 
-            var role = await _roleRepository.GetRoleByName("DefaultRole");
-            await _roleRepository.AssignRoleToUserAsync(res.Id, role.Id);
+            var role = await _databaseContext.Roles.Where(x => x.Name == "DefaultRole").FirstOrDefaultAsync();
+            await AssignRoleToUserAsync(res.Id, role.Id);
 
             return res;
+        }
+
+        public async Task AssignRoleToUserAsync(int userId, int roleId)
+        {
+            var userRole = new UserRole { UserId = userId, RoleId = roleId };
+            _databaseContext.UserRoles.Add(userRole);
+            await _databaseContext.SaveChangesAsync();
         }
 
         public async Task<User> FindByEmailAsync(string email)
@@ -96,6 +101,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 LastName = user.LastName,
                 Email = user.Email,
                 Phone = user.Phone,
+                IsActive = user.IsActive,
                 Roles = user.UserRoles.Select(x => new RoleResponseModel
                 {
                     Id = x.RoleId,
@@ -210,10 +216,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
             var query = _databaseContext.Users
                           .Include(x => x.UserRoles)
                           .ThenInclude(x => x.Role)
-                          .ThenInclude(x => x.RoleEndpointGroups)
-                          .ThenInclude(x => x.EndpointGroup)
-                          .ThenInclude(x => x.EndpointGroupEndpoints)
-                          .ThenInclude(x => x.Endpoint)
                           .AsQueryable();
 
             if (!string.IsNullOrEmpty(userFilter.Name))
@@ -238,10 +240,13 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             var totalCount = await query.CountAsync();
 
+            var pageNumber = userFilter.PageNumber ?? 1;
+            var pageSize = userFilter.PageSize ?? 25;
+
             var users = await query
                 .OrderBy(x => x.Id)
-                .Skip((userFilter.PageNumber - 1) * userFilter.PageSize)
-                .Take(userFilter.PageSize)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
             var result = users
@@ -252,33 +257,21 @@ namespace OnAim.Admin.Infrasturcture.Repository
                     LastName = user.LastName,
                     Email = user.Email,
                     Phone = user.Phone,
+                    IsActive = user.IsActive,
                     Roles = user.UserRoles.Select(x => new RoleResponseModel
                     {
                         Id = x.RoleId,
                         Name = x.Role.Name,
                         Description = x.Role.Description,
-                        EndpointGroupModels = x.Role.RoleEndpointGroups.Select(z => new EndpointGroupModel
-                        {
-                            Id = z.EndpointGroupId,
-                            Name = z.EndpointGroup.Name,
-                            Description = z.EndpointGroup.Description,
-                            Endpoints = z.EndpointGroup.EndpointGroupEndpoints.Select(u => new EndpointRequestModel
-                            {
-                                Id = u.EndpointId,
-                                Name = u.Endpoint.Name,
-                                Type = ToHttpMethod(u.Endpoint.Type),
-                                Path = u.Endpoint.Path,
-                                Description = u.Endpoint.Description,
-                            }).ToList()
-                        }).ToList(),
+                        IsActive = x.Role.IsActive,
                     }).ToList()
                 })
                 .ToList();
 
             return new PaginatedResult<UsersResponseModel>
             {
-                PageNumber = userFilter.PageNumber,
-                PageSize = userFilter.PageSize,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
                 TotalCount = totalCount,
                 Items = result
             };
@@ -307,14 +300,9 @@ namespace OnAim.Admin.Infrasturcture.Repository
             };
         }
 
-        public async Task<User> UpdateUser(User user)
+        public async Task<User> UpdateUser(int id, UpdateUserRequest user)
         {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-
-            var existingUser = await _databaseContext.Users.FindAsync(user.Id);
+            var existingUser = await _databaseContext.Users.FindAsync(id);
 
             if (existingUser == null)
             {
@@ -323,16 +311,75 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             existingUser.FirstName = user.FirstName;
             existingUser.LastName = user.LastName;
-            existingUser.DateOfBirth = user.DateOfBirth;
-            existingUser.Salt = user.Salt;
-            existingUser.Password = user.Password; 
             existingUser.Phone = user.Phone;
-            existingUser.IsBanned = user.IsBanned;
-            existingUser.UserId = user.UserId; 
+            //existingUser.UserId = user.UserId;
+
+            var currentRoles = await _databaseContext.UserRoles
+                   .Where(ur => ur.UserId == id)
+                   .ToListAsync();
+
+            var currentRoleIds = currentRoles.Select(ur => ur.RoleId).ToHashSet();
+            var newRoleIds = user.RoleIds?.ToHashSet() ?? new HashSet<int>();
+
+            var rolesToAdd = newRoleIds.Except(currentRoleIds).ToList();
+            foreach (var roleId in rolesToAdd)
+            {
+                var userRole = new UserRole { UserId = id, RoleId = roleId };
+                _databaseContext.UserRoles.Add(userRole);
+            }
+
+            var rolesToRemove = currentRoleIds.Except(newRoleIds).ToList();
+            foreach (var roleId in rolesToRemove)
+            {
+                var userRole = await _databaseContext.UserRoles
+                    .FirstOrDefaultAsync(ur => ur.UserId == id && ur.RoleId == roleId);
+                if (userRole != null)
+                {
+                    _databaseContext.UserRoles.Remove(userRole);
+                }
+            }
 
             await _databaseContext.SaveChangesAsync();
 
             return existingUser;
+        }
+
+        public async Task ResetPassword(int id, string password)
+        {
+            var user = await GetById(id);
+
+            if (user != null && !user.IsBanned)
+            {
+                var salt = Salt();
+
+                string hashed = EncryptPassword(password, salt);
+
+                user.Password = hashed;
+                user.Salt = salt;
+
+                await _databaseContext.SaveChangesAsync();
+            }
+
+            throw new UserNotFoundException("User not found");
+        }
+
+        private string EncryptPassword(string password, string salt)
+        {
+            return Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                                                         password: password,
+                                                         salt: Convert.FromBase64String(salt),
+                                                         prf: KeyDerivationPrf.HMACSHA256,
+                                                         iterationCount: 100000,
+                                                         numBytesRequested: 256 / 8));
+        }
+
+        private string Salt()
+        {
+            byte[] salt = new byte[128 / 8];
+
+            RandomNumberGenerator.Fill(salt);
+
+            return Convert.ToBase64String(salt);
         }
 
         public async Task CommitChanges()
