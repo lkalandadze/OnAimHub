@@ -4,7 +4,6 @@ using Microsoft.IdentityModel.Tokens;
 using OnAim.Admin.Infrasturcture.Configuration;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using System.Text;
-using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.Identity;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.API.Service.Endpoint;
@@ -33,6 +32,7 @@ namespace OnAim.Admin.API.Extensions
             return services;
         }
 
+        [Obsolete("Use Identity Server Instead!")]
         public static IServiceCollection AddCustomJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var signingKey = new SymmetricSecurityKey(
@@ -111,13 +111,32 @@ namespace OnAim.Admin.API.Extensions
         {
             services.AddSwaggerGen(options =>
             {
-                options.AddSecurityDefinition("oauth2", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "OnAim", Description = "Docs OnAim API", Version = "3.0.0" });
+                options.CustomSchemaIds(x => x.FullName);
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                    In = ParameterLocation.Header,
                     Name = "Authorization",
-                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT"
                 });
-                options.OperationFilter<SecurityRequirementsOperationFilter>();
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = JwtBearerDefaults.AuthenticationScheme
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
 
             return services;

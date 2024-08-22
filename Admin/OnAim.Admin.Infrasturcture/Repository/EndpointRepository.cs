@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Models.Request.Role;
+using OnAim.Admin.Infrasturcture.Exceptions;
+using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
+using OnAim.Admin.Infrasturcture.Models.Response;
 using OnAim.Admin.Infrasturcture.Models.Response.Endpoint;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.Models;
+using System.Data;
 
 namespace OnAim.Admin.Infrasturcture.Repository
 {
@@ -50,31 +53,31 @@ namespace OnAim.Admin.Infrasturcture.Repository
             return false;
         }
 
-        public async Task<List<EndpointResponseModel>> GetAllEndpoints(RoleFilter roleFilter)
+        public async Task<PaginatedResult<EndpointResponseModel>> GetAllEndpoints(EndpointFilter filter)
         {
             var query = _databaseContext.Endpoints.AsQueryable();
 
-            if (!string.IsNullOrEmpty(roleFilter.Name))
+            if (!string.IsNullOrEmpty(filter.Name))
             {
-                query = query.Where(x => x.Name.Contains(roleFilter.Name));
+                query = query.Where(x => x.Name.Contains(filter.Name));
             }
 
-            if (roleFilter.IsActive.HasValue)
+            if (filter.IsActive.HasValue)
             {
-                query = query.Where(x => x.IsActive == roleFilter.IsActive);
+                query = query.Where(x => x.IsActive == filter.IsActive);
             }
 
-            if (roleFilter.Type.HasValue)
+            if (filter.Type.HasValue)
             {
-                query = query.Where(x => x.Type == roleFilter.Type.Value);
+                query = query.Where(x => x.Type == filter.Type.Value);
             }
 
             var totalCount = await query.CountAsync();
 
             var endpoints = await query
                 .OrderBy(x => x.Id)
-                .Skip((roleFilter.PageNumber - 1) * roleFilter.PageSize)
-                .Take(roleFilter.PageSize)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
                 .ToListAsync();
 
             var result = endpoints.Select(ep => new EndpointResponseModel
@@ -91,7 +94,13 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 DateUpdated = ep.DateUpdated,
             }).ToList();
 
-            return result;
+            return new PaginatedResult<EndpointResponseModel>
+            {
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = totalCount,
+                Items = result
+            };
         }
 
         public async Task<Endpoint> GetEndpointById(int id)
@@ -100,7 +109,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             if (endpoint == null)
             {
-                throw new Exception("Not Found");
+                throw new EndpointNotFoundException("Endpoint Not Found");
             }
 
             var result = new EndpointResponseModel
@@ -150,9 +159,15 @@ namespace OnAim.Admin.Infrasturcture.Repository
             var endpoint = await _databaseContext.Endpoints.FirstOrDefaultAsync(e => e.Path == path);
 
             EndpointType endpointTypeEnum = EndpointType.Get;
+
             if (endpointType != null && Enum.TryParse(endpointType, true, out EndpointType parsedType))
             {
                 endpointTypeEnum = parsedType;
+            }
+
+            if (path == endpoint.Name)
+            {
+                throw new EndpointAlreadyExistsException("Endpoint with that name already exists.");
             }
 
             if (endpoint == null)

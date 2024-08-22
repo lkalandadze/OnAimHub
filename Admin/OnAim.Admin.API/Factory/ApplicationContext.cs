@@ -23,9 +23,9 @@ namespace OnAim.Admin.API.Factory
             ClientIpAddress = clientIpAddress;
         }
 
-        public ApplicationContext(string clientId, int userId, ICollection<UserRole> roles, UserData? userData, string? clientIpAddress)
+        public ApplicationContext(int userId, ICollection<UserRole> roles, UserData? userData, string? clientIpAddress)
         {
-            ClientId = clientId;
+            //ClientId = clientId;
             UserId = userId;
             UserRoles = roles;
             UserData = userData;

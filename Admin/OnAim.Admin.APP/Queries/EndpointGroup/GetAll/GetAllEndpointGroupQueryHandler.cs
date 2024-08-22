@@ -14,7 +14,7 @@ namespace OnAim.Admin.APP.Queries.EndpointGroup.GetAll
         }
         public async Task<ApplicationResult> Handle(GetAllEndpointGroupQuery request, CancellationToken cancellationToken)
         {
-            var group = await _endpointGroupRepository.GetAllAsync();
+            var group = await _endpointGroupRepository.GetAllAsync(request.Filter);
 
             return new ApplicationResult
             {

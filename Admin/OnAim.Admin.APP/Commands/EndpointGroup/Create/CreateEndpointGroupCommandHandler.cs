@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using OnAim.Admin.APP.Models;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
@@ -56,7 +55,7 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
             return new ApplicationResult
             {
                 Success = true,
-                Data = endpointGroup,
+                Data = endpointGroup.Name,
                 Errors = null
             };
         }

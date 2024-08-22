@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using OnAim.Admin.APP.Models;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 
@@ -15,7 +14,7 @@ namespace OnAim.Admin.APP.Queries.Role.GetAll
         }
         public async Task<ApplicationResult> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
         {
-            var roles = _roleRepository.GetAllRolesAsync().Result;
+            var roles = _roleRepository.GetAllRolesAsync(request.Filter).Result;
             return new ApplicationResult
             {
                 Success = true,

@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
+using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
 using OnAim.Admin.Infrasturcture.Models.Request.Role;
+using OnAim.Admin.Infrasturcture.Models.Response;
 using OnAim.Admin.Infrasturcture.Models.Response.EndpointGroup;
 using OnAim.Admin.Infrasturcture.Models.Response.Role;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
@@ -32,15 +34,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
             var userRole = new UserRole { UserId = userId, RoleId = roleId };
             _databaseContext.UserRoles.Add(userRole);
             await _databaseContext.SaveChangesAsync();
-        }
-
-        public async Task DeactivateRoleForUserAsync(int userId, int roleId)
-        {
-            var userRole = await _databaseContext.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userId && ur.RoleId == roleId);
-            if (userRole != null)
-            {
-                await _databaseContext.SaveChangesAsync();
-            }
         }
 
         public async Task RemoveRoleFromUserAsync(int userId, int roleId)
@@ -218,6 +211,11 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 .ThenInclude(x => x.Endpoint)
                 .FirstOrDefaultAsync(x => x.Id == roleId);
 
+            if (role == null)
+            {
+                throw new RoleNotFoundException("Role Not Found.");
+            }
+
             var result = new RoleResponseModel
             {
                 Id = role.Id,
@@ -230,7 +228,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
                     Name = x.EndpointGroup.Name,
                     Description = x.EndpointGroup.Description,
                     DateCreated = x.EndpointGroup.DateCreated,
-                    Endpoints = x.EndpointGroup.EndpointGroupEndpoints.Select(x => new Endpoint
+                    Endpoints = x.EndpointGroup.EndpointGroupEndpoints.Select(x => new EndpointRequestModel
                     {
                         Id = x.EndpointId,
                         Name = x.Endpoint.Name,
@@ -265,7 +263,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
                     Name = x.EndpointGroup.Name,
                     Description = x.EndpointGroup.Description,
                     DateCreated = x.EndpointGroup.DateCreated,
-                    Endpoints = x.EndpointGroup.EndpointGroupEndpoints.Select(x => new Endpoint
+                    Endpoints = x.EndpointGroup.EndpointGroupEndpoints.Select(x => new EndpointRequestModel
                     {
                         Id = x.EndpointId,
                         Name = x.Endpoint.Name,
@@ -279,43 +277,83 @@ namespace OnAim.Admin.Infrasturcture.Repository
             return result;
         }
 
-        public async Task<List<RoleResponseModel>> GetAllRolesAsync()
+        public async Task<PaginatedResult<RoleResponseModel>> GetAllRolesAsync(RoleFilter filter)
         {
-            var result = await _databaseContext.Roles.Include(r => r.RoleEndpointGroups)
-                                  .ThenInclude(reg => reg.EndpointGroup)
-                                  .ThenInclude(x => x.EndpointGroupEndpoints)
-                                  .ThenInclude(x => x.Endpoint)
-                                  .ToListAsync();
+            var query = _databaseContext.Roles
+                .Include(r => r.RoleEndpointGroups)
+                    .ThenInclude(reg => reg.EndpointGroup)
+                        .ThenInclude(eg => eg.EndpointGroupEndpoints)
+                            .ThenInclude(ege => ege.Endpoint)
+                .AsQueryable();
 
-            var roles = result
-                        .OrderBy(x => x.Id)
-                        .Select(x => new RoleResponseModel
+            if (!string.IsNullOrEmpty(filter.Name))
+            {
+                query = query.Where(x => x.Name.Contains(filter.Name));
+            }
+
+            if (filter.IsActive.HasValue)
+            {
+                query = query.Where(x => x.IsActive == filter.IsActive);
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var roles = await query
+                .OrderBy(x => x.Id)
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .Select(x => new RoleResponseModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    IsActive = x.IsActive,
+                    EndpointGroupModels = x.RoleEndpointGroups.Select(z => new EndpointGroupModel
+                    {
+                        Id = z.EndpointGroupId,
+                        Name = z.EndpointGroup.Name,
+                        Description = z.EndpointGroup.Description,
+                        Endpoints = z.EndpointGroup.EndpointGroupEndpoints.Select(u => new EndpointRequestModel
                         {
-                            Id = x.Id,
-                            Name = x.Name,
-                            Description = x.Description,
-                            IsActive = x.IsActive,
-                            EndpointGroupModels = x.RoleEndpointGroups.Select(z => new EndpointGroupModel
-                            {
-                                Id = z.EndpointGroupId,
-                                Name = z.EndpointGroup.Name,
-                                Description = z.EndpointGroup.Description,
-                                Endpoints = z.EndpointGroup.EndpointGroupEndpoints.Select(u => new Endpoint
-                                {
-                                    Id = u.EndpointId,
-                                    Name = u.Endpoint.Name,
-                                    Path = u.Endpoint.Path,
-                                    Description = u.Endpoint.Description,
-                                }).ToList()
-                            }).ToList()
-                        }).ToList();
+                            Id = u.EndpointId,
+                            Name = u.Endpoint.Name,
+                            Path = u.Endpoint.Path,
+                            Description = u.Endpoint.Description,
+                        }).ToList()
+                    }).ToList()
+                }).ToListAsync();
 
-            return roles;
+            return new PaginatedResult<RoleResponseModel>
+            {
+                PageNumber = filter.PageNumber,
+                PageSize = filter.PageSize,
+                TotalCount = totalCount,
+                Items = roles
+            };
         }
 
         public async Task<IEnumerable<Role>> GetRolesByIdsAsync(IEnumerable<int> roleIds)
         {
             return await _databaseContext.Roles.Where(r => roleIds.Contains(r.Id)).ToListAsync();
+        }
+
+        public async Task DeleteRole(int roleId)
+        {
+            var role = await _databaseContext.Roles
+                .Include(r => r.UserRoles)
+                .Include(r => r.RoleEndpointGroups)
+                .FirstOrDefaultAsync(r => r.Id == roleId);
+
+            if (role != null)
+            {
+                _databaseContext.UserRoles.RemoveRange(role.UserRoles);
+
+                _databaseContext.RoleEndpointGroups.RemoveRange(role.RoleEndpointGroups);
+
+                _databaseContext.Roles.Remove(role);
+
+                await _databaseContext.SaveChangesAsync();
+            }
         }
     }
 }

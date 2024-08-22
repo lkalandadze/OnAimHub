@@ -52,6 +52,7 @@ namespace OnAim.Admin.APP.Commands.User.Create
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
+                Username = request.Email,
                 Email = request.Email,
                 Salt = salt,
                 Password = hashed,

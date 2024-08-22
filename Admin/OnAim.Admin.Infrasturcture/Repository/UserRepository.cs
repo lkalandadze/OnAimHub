@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Exceptions;
+using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
 using OnAim.Admin.Infrasturcture.Models.Request.User;
 using OnAim.Admin.Infrasturcture.Models.Response;
 using OnAim.Admin.Infrasturcture.Models.Response.EndpointGroup;
@@ -15,10 +16,15 @@ namespace OnAim.Admin.Infrasturcture.Repository
     public class UserRepository : IUserRepository
     {
         private readonly DatabaseContext _databaseContext;
+        private readonly IRoleRepository _roleRepository;
 
-        public UserRepository(DatabaseContext databaseContext)
+        public UserRepository(
+            DatabaseContext databaseContext, 
+            IRoleRepository roleRepository
+            )
         {
             _databaseContext = databaseContext;
+            _roleRepository = roleRepository;
         }
 
         public async Task<User> Create(User user)
@@ -40,7 +46,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Username = user.Username,
+                Username = user.Email,
                 Email = user.Email,
                 Password = user.Password,
                 Salt = user.Salt,
@@ -53,6 +59,9 @@ namespace OnAim.Admin.Infrasturcture.Repository
             };
             _databaseContext.Users.Add(res);
             await _databaseContext.SaveChangesAsync();
+
+            var role = await _roleRepository.GetRoleByName("DefaultRole");
+            await _roleRepository.AssignRoleToUserAsync(res.Id, role.Id);
 
             return res;
         }
@@ -97,7 +106,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
                         Id = z.EndpointGroupId,
                         Name = z.EndpointGroup.Name,
                         Description = z.EndpointGroup.Description,
-                        Endpoints = z.EndpointGroup.EndpointGroupEndpoints.Select(u => new Endpoint
+                        Endpoints = z.EndpointGroup.EndpointGroupEndpoints.Select(u => new EndpointRequestModel
                         {
                             Id = u.EndpointId,
                             Name = u.Endpoint.Name,
@@ -136,11 +145,11 @@ namespace OnAim.Admin.Infrasturcture.Repository
                         Id = z.EndpointGroupId,
                         Name = z.EndpointGroup.Name,
                         Description = z.EndpointGroup.Description,
-                        Endpoints = z.EndpointGroup.EndpointGroupEndpoints.Select(u => new Endpoint
+                        Endpoints = z.EndpointGroup.EndpointGroupEndpoints.Select(u => new EndpointRequestModel
                         {
-                            Id = u.EndpointGroupId,
-                            Name = u.EndpointGroup.Name,
-                            Description = u.EndpointGroup.Description,
+                            Id = u.Endpoint.Id,
+                            Name = u.Endpoint.Name,
+                            Description = u.Endpoint.Description,
 
                         }).ToList()
                     }).ToList()
@@ -243,7 +252,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
                     LastName = user.LastName,
                     Email = user.Email,
                     Phone = user.Phone,
-                    IsActive = user.IsActive,
                     Roles = user.UserRoles.Select(x => new RoleResponseModel
                     {
                         Id = x.RoleId,
@@ -254,14 +262,16 @@ namespace OnAim.Admin.Infrasturcture.Repository
                             Id = z.EndpointGroupId,
                             Name = z.EndpointGroup.Name,
                             Description = z.EndpointGroup.Description,
-                            Endpoints = z.EndpointGroup.EndpointGroupEndpoints.Select(u => new Endpoint
+                            Endpoints = z.EndpointGroup.EndpointGroupEndpoints.Select(u => new EndpointRequestModel
                             {
-                                Id = u.EndpointGroupId,
-                                Name = u.EndpointGroup.Name,
-                                Description = u.EndpointGroup.Description,
+                                Id = u.EndpointId,
+                                Name = u.Endpoint.Name,
+                                Type = ToHttpMethod(u.Endpoint.Type),
+                                Path = u.Endpoint.Path,
+                                Description = u.Endpoint.Description,
                             }).ToList()
-                        }).ToList()
-                    }).ToList(),
+                        }).ToList(),
+                    }).ToList()
                 })
                 .ToList();
 
@@ -283,6 +293,51 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 user.IsActive = false;
                 await _databaseContext.SaveChangesAsync();
             }
+        }
+
+        public static string ToHttpMethod(EndpointType? type)
+        {
+            return type switch
+            {
+                EndpointType.Get => "GET",
+                EndpointType.Create => "POST",
+                EndpointType.Update => "PUT",
+                EndpointType.Delete => "DELETE",
+                _ => "UNKNOWN"
+            };
+        }
+
+        public async Task<User> UpdateUser(User user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            var existingUser = await _databaseContext.Users.FindAsync(user.Id);
+
+            if (existingUser == null)
+            {
+                throw new UserNotFoundException("User not found");
+            }
+
+            existingUser.FirstName = user.FirstName;
+            existingUser.LastName = user.LastName;
+            existingUser.DateOfBirth = user.DateOfBirth;
+            existingUser.Salt = user.Salt;
+            existingUser.Password = user.Password; 
+            existingUser.Phone = user.Phone;
+            existingUser.IsBanned = user.IsBanned;
+            existingUser.UserId = user.UserId; 
+
+            await _databaseContext.SaveChangesAsync();
+
+            return existingUser;
+        }
+
+        public async Task CommitChanges()
+        {
+            await _databaseContext.SaveChangesAsync();
         }
     }
 }

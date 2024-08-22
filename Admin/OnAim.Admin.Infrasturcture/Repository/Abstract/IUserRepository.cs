@@ -15,5 +15,7 @@ namespace OnAim.Admin.Infrasturcture.Repository.Abstract
         Task<List<RoleResponseModel>> GetUserRolesAsync(int userId);
         Task<IEnumerable<string>> GetUserPermissionsAsync(int userId);
         Task DeleteUser(int userId);
+        Task<User> UpdateUser(User user);
+        Task CommitChanges();
     }
 }

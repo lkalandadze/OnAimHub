@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP.Commands.Role.Create;
+using OnAim.Admin.APP.Commands.Role.Delete;
 using OnAim.Admin.APP.Commands.Role.Update;
 using OnAim.Admin.APP.Queries.Role.GetAll;
 using OnAim.Admin.APP.Queries.Role.GetById;
@@ -19,8 +20,8 @@ namespace OnAim.Admin.API.Controllers
            => Ok(Mediator.Send(roleModel));
 
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll()
-            => Ok(Mediator.Send(new GetAllRolesQuery()));
+        public async Task<IActionResult> GetAll([FromQuery] RoleFilter filter)
+            => Ok(Mediator.Send(new GetAllRolesQuery(filter)));
 
         [HttpGet("Get/{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
@@ -29,5 +30,9 @@ namespace OnAim.Admin.API.Controllers
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRoleRequest model)
             => Ok(await Mediator.Send(new UpdateRoleCommand(id, model)));
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+            => Ok(await Mediator.Send(new DeleteRoleCommand(id)));
     }
 }
