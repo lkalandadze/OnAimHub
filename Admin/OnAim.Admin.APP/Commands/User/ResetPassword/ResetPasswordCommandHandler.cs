@@ -28,9 +28,9 @@ namespace OnAim.Admin.APP.Commands.User.ResetPassword
 
         public async Task<ApplicationResult> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetById(request.Id);
+            var user = await _userRepository.FindByEmailAsync(request.Email);
 
-            if (user != null)
+            if (user != null && !user.IsActive)
             {
                 var salt = Salt();
 

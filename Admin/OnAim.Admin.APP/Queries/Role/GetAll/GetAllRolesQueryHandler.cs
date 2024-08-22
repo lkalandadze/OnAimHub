@@ -15,11 +15,11 @@ namespace OnAim.Admin.APP.Queries.Role.GetAll
         public async Task<ApplicationResult> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
         {
             var roles = _roleRepository.GetAllRolesAsync(request.Filter).Result;
+
             return new ApplicationResult
             {
                 Success = true,
                 Data = roles,
-                Errors = null
             };
         }
     }

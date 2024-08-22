@@ -87,7 +87,6 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     Salt = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
                     Phone = table.Column<string>(type: "text", nullable: false),
-                    IsBanned = table.Column<bool>(type: "boolean", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     DateCreated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),

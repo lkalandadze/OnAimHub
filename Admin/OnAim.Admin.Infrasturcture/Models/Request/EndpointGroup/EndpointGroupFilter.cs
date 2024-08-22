@@ -1,14 +1,11 @@
 ﻿using OnAim.Admin.Infrasturcture.Attributes;
-using OnAim.Admin.Shared.Models;
 
-namespace OnAim.Admin.Infrasturcture.Models.Request.Endpoint
+namespace OnAim.Admin.Infrasturcture.Models.Request.EndpointGroup
 {
-    public class EndpointFilter
+    public class EndpointGroupFilter
     {
         public string? Name { get; set; }
         public bool? IsActive { get; set; }
-        public bool? IsEnable { get; set; }
-        public EndpointType? Type { get; set; }
         public int? PageNumber { get; set; }
         [PageSize(100)]
         public int? PageSize { get; set; }

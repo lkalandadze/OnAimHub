@@ -1,7 +1,21 @@
 ﻿using MediatR;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using System.ComponentModel.DataAnnotations;
 
 namespace OnAim.Admin.APP.Commands.User.ResetPassword
 {
-    public sealed record ResetPasswordCommand(int Id, string Password) : IRequest<ApplicationResult>;
+    public class ResetPasswordCommand : IRequest<ApplicationResult>
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+    }
 }

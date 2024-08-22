@@ -6,6 +6,7 @@ using OnAim.Admin.APP.Commands.User.Create;
 using OnAim.Admin.APP.Commands.User.Delete;
 using OnAim.Admin.APP.Commands.User.Login;
 using OnAim.Admin.APP.Commands.User.RemoveRole;
+using OnAim.Admin.APP.Commands.User.ResetPassword;
 using OnAim.Admin.APP.Commands.User.Update;
 using OnAim.Admin.APP.Models.Request.User;
 using OnAim.Admin.APP.Models.Response.User;
@@ -64,16 +65,21 @@ namespace OnAim.Admin.API.Controllers
         public async Task<AuthResultDto> Login([FromBody] LoginUserRequest model)
             => await Mediator.Send(new LoginUserCommand(model));
 
-        [HttpPost("AssignRole/{id}")]
-        public async Task<IActionResult> AssignRole([FromRoute] int id, [FromBody] int roleId)
-            => Ok(await Mediator.Send(new AssignRoleToUserCommand(id, roleId)));
+        [HttpPost("ResetPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
+            => Ok(await Mediator.Send(command));
 
-        [HttpPost("RemoveRole/{id}")]
-        public async Task<IActionResult> RemoveRole([FromRoute] int id, [FromBody] int roleId)
-            => Ok(await Mediator.Send(new RemoveRoleCommand(id, roleId)));
+        //[HttpPost("AssignRole/{id}")]
+        //public async Task<IActionResult> AssignRole([FromRoute] int id, [FromBody] int roleId)
+        //    => Ok(await Mediator.Send(new AssignRoleToUserCommand(id, roleId)));
+
+        //[HttpPost("RemoveRole/{id}")]
+        //public async Task<IActionResult> RemoveRole([FromRoute] int id, [FromBody] int roleId)
+        //    => Ok(await Mediator.Send(new RemoveRoleCommand(id, roleId)));
 
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserDto model)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserRequest model)
             => Ok(await Mediator.Send(new UpdateUserCommand(id, model)));
 
         [HttpPost("Delete/{id}")]

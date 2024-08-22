@@ -27,7 +27,7 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Create
                 throw new ValidationException(validationResult.Errors);
             }
 
-            var result = await _endpointRepository.CreateEndpointAsync(request.Name, request.Description, request.Type, request.UserId);
+            var result = await _endpointRepository.CreateEndpointAsync(request.Name, request.Description, request.Type);
 
             if (result == null) { }
 

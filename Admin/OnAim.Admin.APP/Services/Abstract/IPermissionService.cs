@@ -2,6 +2,6 @@
 {
     public interface IPermissionService
     {
-        Task<bool> HasPermissionForRoleAsync(string role, string permission);
+        Task<bool> RolesContainPermission(List<string> roles, string permission);
     }
 }

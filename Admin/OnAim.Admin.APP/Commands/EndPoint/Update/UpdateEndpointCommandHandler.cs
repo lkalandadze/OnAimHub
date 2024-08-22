@@ -20,6 +20,15 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Update
         }
         public async Task<ApplicationResult> Handle(UpdateEndpointCommand request, CancellationToken cancellationToken)
         {
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+            {
+                return new ApplicationResult { Success = false };
+            }
+
+            await _endpointRepository.UpdateEndpoint(request.Id, request.Endpoint);
+
             return new ApplicationResult
             {
                 Success = true,
