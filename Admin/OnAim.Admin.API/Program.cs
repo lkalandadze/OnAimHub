@@ -6,7 +6,7 @@ using OnAim.Admin.Identity;
 using OnAim.Admin.Identity.Entities;
 using OnAim.Admin.Identity.Persistance;
 using OnAim.Admin.Identity.Services;
-using OnAim.Admin.Infrasturcture;
+using OnAim.Admin.Infrasturcture.Extensions;
 using OnAim.Admin.Infrasturcture.Repository;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 
@@ -54,7 +54,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<PermissionMiddleware>();
-//app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.MapControllers();
 

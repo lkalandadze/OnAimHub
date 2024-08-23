@@ -7,6 +7,6 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Update
     public class UpdateEndpointCommand : IRequest<ApplicationResult>
     {
         public int Id { get; set; }
-        public EndpointRequestModel Endpoint { get; set; }
+        public UpdateEndpointDto Endpoint { get; set; }
     }
 }

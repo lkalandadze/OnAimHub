@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Exceptions;
+using OnAim.Admin.Infrasturcture.Extensions;
 using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
 using OnAim.Admin.Infrasturcture.Models.Response;
 using OnAim.Admin.Infrasturcture.Models.Response.Endpoint;
@@ -18,34 +19,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
         public EndpointRepository(DatabaseContext databaseContext)
         {
             _databaseContext = databaseContext;
-        }
-
-        public async Task<bool> DisableEndpointAsync(int endpointId)
-        {
-            var endpoint = await _databaseContext.Endpoints.FindAsync(endpointId);
-            if (endpoint != null)
-            {
-                endpoint.IsEnabled = false;
-                await _databaseContext.SaveChangesAsync();
-
-                return true;
-            }
-
-            return false;
-        }
-
-        public async Task<bool> EnableEndpointAsync(int endpointId)
-        {
-            var endpoint = await _databaseContext.Endpoints.FindAsync(endpointId);
-            if (endpoint != null)
-            {
-                endpoint.IsEnabled = true;
-                await _databaseContext.SaveChangesAsync();
-
-                return true;
-            }
-
-            return false;
         }
 
         public async Task<PaginatedResult<EndpointResponseModel>> GetAllEndpoints(EndpointFilter filter)
@@ -77,7 +50,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 Description = ep.Description,
                 IsEnabled = ep.IsEnabled,
                 IsActive = ep.IsActive,
-                Type = ToHttpMethod(ep.Type),
+                Type = ToHttpMethodExtension.ToHttpMethod(ep.Type),
                 UserId = ep.UserId,
                 DateCreated = ep.DateCreated,
                 DateUpdated = ep.DateUpdated,
@@ -120,7 +93,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 Description = x.Description,
                 IsActive = x.IsActive,
                 IsEnabled = x.IsEnabled,
-                Type = ToHttpMethod(x.Type),
+                Type = ToHttpMethodExtension.ToHttpMethod(x.Type),
                 UserId = x.UserId,
                 DateCreated = x.DateCreated,
                 DateUpdated = x.DateUpdated,
@@ -180,11 +153,12 @@ namespace OnAim.Admin.Infrasturcture.Repository
             {
                 endpoint.IsActive = false;
                 endpoint.IsEnabled = false;
+                endpoint.DateDeleted = SystemDate.Now;
                 await _databaseContext.SaveChangesAsync();
             }
         }
 
-        public async Task UpdateEndpoint(int id, EndpointRequestModel model)
+        public async Task UpdateEndpoint(int id, UpdateEndpointDto model)
         {
             var ep = await GetEndpointById(id);
 
@@ -195,22 +169,9 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 ep.IsActive = model.IsActive ?? true;
                 ep.IsEnabled = model.IsEnabled ?? true;
                 ep.DateUpdated = SystemDate.Now;
-                //ep.UserId = model.UserId;
 
                 await _databaseContext.SaveChangesAsync();
             }
-        }
-
-        public static string ToHttpMethod(EndpointType? type)
-        {
-            return type switch
-            {
-                EndpointType.Get => "GET",
-                EndpointType.Create => "POST",
-                EndpointType.Update => "PUT",
-                EndpointType.Delete => "DELETE",
-                _ => "UNKNOWN"
-            };
         }
     }
 }

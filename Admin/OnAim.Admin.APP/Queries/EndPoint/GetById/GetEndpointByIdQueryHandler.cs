@@ -30,7 +30,7 @@ namespace OnAim.Admin.APP.Queries.EndPoint.GetById
                 DateCreated = endpoint.DateCreated,
                 DateDeleted = endpoint.DateDeleted,
                 DateUpdated = endpoint.DateUpdated,
-                Type = ToHttpMethod(endpoint.Type),
+                Type = Infrasturcture.Extensions.ToHttpMethodExtension.ToHttpMethod(endpoint.Type),
             };
 
             return new ApplicationResult
@@ -38,18 +38,6 @@ namespace OnAim.Admin.APP.Queries.EndPoint.GetById
                 Success = true,
                 Data = result,
                 Errors = null
-            };
-        }
-
-        public static string ToHttpMethod(EndpointType? type)
-        {
-            return type switch
-            {
-                EndpointType.Get => "GET",
-                EndpointType.Create => "POST",
-                EndpointType.Update => "PUT",
-                EndpointType.Delete => "DELETE",
-                _ => "UNKNOWN"
             };
         }
     }

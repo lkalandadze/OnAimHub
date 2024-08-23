@@ -12,8 +12,8 @@ using OnAim.Admin.Identity.Persistance;
 namespace OnAim.Admin.Identity.Migrations
 {
     [DbContext(typeof(ApplicationIdentityDbContext))]
-    [Migration("20240822124213_init")]
-    partial class init
+    [Migration("20240823125637_identity")]
+    partial class identity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

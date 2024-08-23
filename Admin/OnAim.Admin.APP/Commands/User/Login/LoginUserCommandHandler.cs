@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using OnAim.Admin.APP.Models.Response.User;
 using OnAim.Admin.Identity.Services;
 using OnAim.Admin.Infrasturcture.Configuration;
@@ -8,7 +7,6 @@ using OnAim.Admin.Infrasturcture.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.Models;
 using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace OnAim.Admin.APP.Commands.User.Login
 {
@@ -47,7 +45,7 @@ namespace OnAim.Admin.APP.Commands.User.Login
                 throw new UserNotFoundException("User Not Found");
             }
 
-            string hashed = EncryptPassword(model.Password, user.Salt);
+            string hashed = Infrasturcture.Extensions.EncryptPasswordExtension.EncryptPassword(model.Password, user.Salt);
 
             if (hashed == user.Password)
             {
@@ -99,25 +97,6 @@ namespace OnAim.Admin.APP.Commands.User.Login
                 Token = null,
                 StatusCode = 404
             };
-        }
-
-        private string EncryptPassword(string password, string salt)
-        {
-            return Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                                                         password: password,
-                                                         salt: Convert.FromBase64String(salt),
-                                                         prf: KeyDerivationPrf.HMACSHA256,
-                                                         iterationCount: 100000,
-                                                         numBytesRequested: 256 / 8));
-        }
-
-        private string Salt()
-        {
-            byte[] salt = new byte[128 / 8];
-
-            RandomNumberGenerator.Fill(salt);
-
-            return Convert.ToBase64String(salt);
         }
     }
 

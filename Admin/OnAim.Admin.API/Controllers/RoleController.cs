@@ -17,11 +17,11 @@ namespace OnAim.Admin.API.Controllers
         [ProducesResponseType(typeof(CreateRoleCommand), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateRoleCommand roleModel)
-           => Ok(Mediator.Send(roleModel));
+           => Ok(await Mediator.Send(roleModel));
 
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll([FromQuery] RoleFilter filter)
-            => Ok(Mediator.Send(new GetAllRolesQuery(filter)));
+            => Ok(await Mediator.Send(new GetAllRolesQuery(filter)));
 
         [HttpGet("Get/{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)

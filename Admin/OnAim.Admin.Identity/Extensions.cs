@@ -32,7 +32,7 @@ namespace OnAim.Admin.Identity
             configuration.GetSection(AuthenticationConfig.ToString()).Bind(authenticationConfig);
 
             //var connectionString = configuration.GetSection("DefaultConnectionString").Value;
-            var connectionString = "Host=localhost;Port=5432;Database=Admin;Username=postgres;Password=12345678;Include Error Detail=true";
+            var connectionString = "Host=localhost;Port=5432;Database=OnAimAdmin;Username=postgres;Password=12345678;Include Error Detail=true";
 
             services.AddDbContext<TContext>(options =>
                 options.UseNpgsql(connectionString));

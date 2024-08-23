@@ -13,7 +13,7 @@ namespace OnAim.Admin.API.Attributes
             var allowAnonymous = context.ActionDescriptor.EndpointMetadata
                .OfType<Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute>()
                .Any();
-
+             
             if (allowAnonymous)
             {
                 return;

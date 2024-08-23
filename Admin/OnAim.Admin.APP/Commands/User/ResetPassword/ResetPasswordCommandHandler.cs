@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Http;
 using OnAim.Admin.Identity.Services;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
@@ -28,41 +27,54 @@ namespace OnAim.Admin.APP.Commands.User.ResetPassword
 
         public async Task<ApplicationResult> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.FindByEmailAsync(request.Email);
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-            if (user != null && !user.IsActive)
+            if (!validationResult.IsValid)
             {
-                var salt = Salt();
-
-                string hashed = EncryptPassword(request.Password, salt);
-
-                user.Password = hashed;
-                user.Salt = salt;
-
-                var identityUser = await _userManager.FindByEmailAsync(user.Email);
-                if (identityUser != null)
+                return new ApplicationResult
                 {
-                    var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(identityUser);
-                    var identityResult = await _userManager.ResetPasswordAsync(identityUser, passwordResetToken, request.Password);
-                    if (identityResult.Succeeded)
-                    {
-                        await _userRepository.CommitChanges();
-                    }
-                    else
-                    {
-                        var error = identityResult.Errors.FirstOrDefault();
-                        await Fail(new Error
-                        {
-                            Code = StatusCodes.Status400BadRequest,
-                            Message = error?.Description ?? string.Empty
-                        });
-                    }
-                }
-                else
-                {
-                    await _userRepository.CommitChanges();
-                }
+                    Success = false,
+                    Data = validationResult.Errors,
+                };
             }
+
+            await _userRepository.ResetPassword(request.Id, request.Password);
+
+            //if (user != null && user.IsActive)
+            //{
+            //    var salt = Salt();
+
+            //    string hashed = EncryptPassword(request.Password, salt);
+
+            //    user.Password = hashed;
+            //    user.Salt = salt;
+
+            //    await _userRepository.CommitChanges();
+
+            //    //var identityUser = await _userManager.FindByEmailAsync(user.Email);
+            //    //if (identityUser != null)
+            //    //{
+            //    //    var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(identityUser);
+            //    //    var identityResult = await _userManager.ResetPasswordAsync(identityUser, passwordResetToken, request.Password);
+            //    //    if (identityResult.Succeeded)
+            //    //    {
+            //    //        await _userRepository.CommitChanges();
+            //    //    }
+            //    //    else
+            //    //    {
+            //    //        var error = identityResult.Errors.FirstOrDefault();
+            //    //        await Fail(new Error
+            //    //        {
+            //    //            Code = StatusCodes.Status400BadRequest,
+            //    //            Message = error?.Description ?? string.Empty
+            //    //        });
+            //    //    }
+            //    //}
+            //    //else
+            //    //{
+            //    //    await _userRepository.CommitChanges();
+            //    //}
+            //}
 
             return new ApplicationResult
             {

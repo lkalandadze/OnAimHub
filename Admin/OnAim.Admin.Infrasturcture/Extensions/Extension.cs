@@ -3,9 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 
-namespace OnAim.Admin.Infrasturcture
+namespace OnAim.Admin.Infrasturcture.Extensions
 {
-    public static class Extensions
+    public static class Extension
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
