@@ -3,25 +3,26 @@ using Shared.Lib.Extensions;
 using Hub.Application.Models.Balance;
 using Hub.Application.Configurations;
 using Microsoft.Extensions.Options;
+using Hub.Application.Services.Abstract;
 
 namespace Hub.Application.Features.PlayerFeatures.Queries.GetBalance;
 
 public class GetBalanceHandler : IRequestHandler<GetBalanceRequest, GetBalanceResponse>
 {
+    private readonly IAuthService _authService;
     private readonly HttpClient _httpClient;
-    private readonly ApplicationContext _applicationContext;
     private readonly CasinoApiConfiguration _casinoApiConfiguration;
 
-    public GetBalanceHandler(HttpClient httpClient, ApplicationContext applicationContext, IOptions<CasinoApiConfiguration> casinoApiConfiguration)
+    public GetBalanceHandler(IAuthService authService, HttpClient httpClient, IOptions<CasinoApiConfiguration> casinoApiConfiguration)
     {
+        _authService = authService;
         _httpClient = httpClient;
-        _applicationContext = applicationContext;
         _casinoApiConfiguration = casinoApiConfiguration.Value;
     }
 
     public async Task<GetBalanceResponse> Handle(GetBalanceRequest request, CancellationToken cancellationToken)
     {
-        var endpoint = string.Format(_casinoApiConfiguration.Endpoints.GetBalance, _applicationContext.PlayerId);
+        var endpoint = string.Format(_casinoApiConfiguration.Endpoints.GetBalance, _authService.GetCurrentPlayerSegmentId());
 
         var result = await _httpClient.GetAsync<BalanceGetModel>(_casinoApiConfiguration.Host, endpoint);
 

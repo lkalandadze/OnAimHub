@@ -40,6 +40,7 @@ public class Startup
 
         services.AddScoped<HttpClient>();
         services.AddSingleton<ITokenService, TokenService>();
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -69,7 +70,6 @@ public class Startup
 
         ConfigureSwagger(services);
         ConfigureJwt(services);
-        ConfigureApplicationContext(services);
 
         services.AddAuthorization();
 
@@ -138,43 +138,6 @@ public class Startup
                 columnOptions: columnWriters
             )
             .CreateLogger();
-    }
-
-    private static void ConfigureApplicationContext(IServiceCollection services)
-    {
-        services.AddScoped(p =>
-        {
-            var applicationContext = new ApplicationContext();
-            var accessor = p.GetService<IHttpContextAccessor>();
-
-            if (accessor != null && accessor.HttpContext != null)
-            {
-                var authHeader = accessor.HttpContext.Request.Headers[HeaderNames.Authorization].ToString();
-
-                if (!string.IsNullOrEmpty(authHeader))
-                {
-                    var token = authHeader.Replace("Bearer ", string.Empty, StringComparison.OrdinalIgnoreCase);
-
-                    if (!string.IsNullOrEmpty(token))
-                    {
-                        var jwtSecurityToken = new JwtSecurityToken(jwtEncodedString: token);
-
-                        if (jwtSecurityToken != null)
-                        {
-                            var playerId = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "PlayerId")?.Value!;
-                            var userName = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "UserName")?.Value!;
-                            var SegmentId = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "SegmentId")?.Value!;
-
-                            applicationContext.PlayerId = int.Parse(playerId);
-                            applicationContext.UserName = userName;
-                            applicationContext.SegmentId = int.Parse(SegmentId);
-                        }
-                    }
-                }
-            }
-
-            return applicationContext;
-        });
     }
 
     private void ConfigureSwagger(IServiceCollection services)
