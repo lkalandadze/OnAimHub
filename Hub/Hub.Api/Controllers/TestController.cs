@@ -1,4 +1,5 @@
-﻿using Hub.Application.Models.Game;
+﻿using Hub.Application.Features.GameFeatures.Queries.GetActiveGames;
+using Hub.Application.Models.Game;
 using Hub.Application.Services.Abstract;
 using Hub.Application.Services.Concrete;
 using MassTransit;
@@ -30,10 +31,13 @@ public class TestController : BaseApiController
     }
 
     [AllowAnonymous]
-    [HttpGet("active-games")]
-    public IActionResult GetActiveGames()
+    [HttpGet("active-games-anonymous")]
+    public IActionResult GetActiveGamesAnonymous()
     {
         var activeGames = _activeGameService.GetActiveGames();
         return Ok(activeGames);
     }
+
+    [HttpGet(nameof(GetActiveGames))]
+    public async Task<List<GetActiveGamesQueryResponse>> GetActiveGames([FromQuery] GetActiveGamesQuery request) => await Mediator.Send(request);
 }
