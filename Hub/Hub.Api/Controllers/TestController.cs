@@ -29,22 +29,6 @@ public class TestController : BaseApiController
         return Ok(new { Message = "Spin request sent successfully!", CorrelationId = correlationId });
     }
 
-    //[AllowAnonymous]
-    //[HttpPost("activate")]
-    //public IActionResult ActivateGame([FromBody] ActiveGameModel gameStatus)
-    //{
-    //    _activeGameService.AddOrUpdateActiveGame(gameStatus);
-    //    return Ok();
-    //}
-
-    //[AllowAnonymous]
-    //[HttpPost("deactivate")]
-    //public IActionResult DeactivateGame([FromQuery] string GameId)
-    //{
-    //    _activeGameService.RemoveActiveGame(GameId);
-    //    return Ok();
-    //}
-
     [AllowAnonymous]
     [HttpGet("active-games")]
     public IActionResult GetActiveGames()
