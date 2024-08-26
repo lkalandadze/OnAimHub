@@ -21,11 +21,11 @@ public class TokenService : ITokenService
     public string GenerateTokenString(Player player)
     {
         var claims = new List<Claim>
-    {
-        new("PlayerId", player.Id.ToString()),
-        new("UserName", player.UserName),
-        new("SegmentId", player.SegmentId.ToString()),
-    };
+        {
+            new("PlayerId", player.Id.ToString()),
+            new("UserName", player.UserName),
+            new Claim("SegmentIds", string.Join(",", player.SegmentIds)),
+        };
 
         var ecdsaSecurityKey = GetECDsaKeyFromPrivateKey(_jwtConfig.PrivateKey);
         var signingCred = new SigningCredentials(ecdsaSecurityKey, SecurityAlgorithms.EcdsaSha256);

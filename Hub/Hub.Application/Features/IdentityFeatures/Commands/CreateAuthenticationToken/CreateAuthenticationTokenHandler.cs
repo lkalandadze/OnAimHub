@@ -46,7 +46,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
             {
                 Id = recievedPlayer.Id,
                 UserName = recievedPlayer.UserName,
-                SegmentId = recievedPlayer.SegmentId,
+                SegmentIds = recievedPlayer.SegmentIds ?? new List<int>()
             };
 
             await _playerRepository.InsertAsync(player);

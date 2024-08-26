@@ -1,4 +1,8 @@
-﻿using MassTransit;
+﻿using Hub.Application.Models.Game;
+using Hub.Application.Services.Abstract;
+using Hub.Application.Services.Concrete;
+using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.IntegrationEvents.IntegrationEvents;
 
@@ -7,10 +11,11 @@ namespace Hub.Api.Controllers;
 public class TestController : BaseApiController
 {
     private readonly IBus _bus;
-
-    public TestController(IBus bus)
+    private readonly IActiveGameService _activeGameService;
+    public TestController(IBus bus, IActiveGameService gameService)
     {
         _bus = bus;
+        _activeGameService = gameService;
     }
 
     [HttpPost("spin-wheel")]
@@ -22,5 +27,29 @@ public class TestController : BaseApiController
         await _bus.Publish(spinEvent);
 
         return Ok(new { Message = "Spin request sent successfully!", CorrelationId = correlationId });
+    }
+
+    //[AllowAnonymous]
+    //[HttpPost("activate")]
+    //public IActionResult ActivateGame([FromBody] ActiveGameModel gameStatus)
+    //{
+    //    _activeGameService.AddOrUpdateActiveGame(gameStatus);
+    //    return Ok();
+    //}
+
+    //[AllowAnonymous]
+    //[HttpPost("deactivate")]
+    //public IActionResult DeactivateGame([FromQuery] string GameId)
+    //{
+    //    _activeGameService.RemoveActiveGame(GameId);
+    //    return Ok();
+    //}
+
+    [AllowAnonymous]
+    [HttpGet("active-games")]
+    public IActionResult GetActiveGames()
+    {
+        var activeGames = _activeGameService.GetActiveGames();
+        return Ok(activeGames);
     }
 }
