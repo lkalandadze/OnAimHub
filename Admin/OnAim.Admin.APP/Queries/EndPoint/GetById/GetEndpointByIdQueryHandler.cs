@@ -1,22 +1,23 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Models.Response.Endpoint;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.Models;
 
 namespace OnAim.Admin.APP.Queries.EndPoint.GetById
 {
     public class GetEndpointByIdQueryHandler : IRequestHandler<GetEndpointByIdQuery, ApplicationResult>
     {
-        private readonly IEndpointRepository _endpointRepository;
+        private readonly IRepository<Endpoint> _repository;
 
-        public GetEndpointByIdQueryHandler(IEndpointRepository endpointRepository)
+        public GetEndpointByIdQueryHandler(IRepository<Endpoint> repository)
         {
-            _endpointRepository = endpointRepository;
+            _repository = repository;
         }
         public async Task<ApplicationResult> Handle(GetEndpointByIdQuery request, CancellationToken cancellationToken)
         {
-            var endpoint = await _endpointRepository.GetEndpointById(request.Id);
+            var endpoint = await _repository.Query(x => x.Id == request.Id).FirstOrDefaultAsync();
 
             var result = new EndpointResponseModel
             {

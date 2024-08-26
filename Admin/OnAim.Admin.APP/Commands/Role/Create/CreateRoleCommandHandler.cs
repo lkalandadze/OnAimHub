@@ -1,21 +1,30 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.Models;
 
 namespace OnAim.Admin.APP.Commands.Role.Create
 {
     public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommand, ApplicationResult>
     {
-        private readonly IRoleRepository _roleRepository;
+        private readonly IRepository<Infrasturcture.Entities.Role> _repository;
+        private readonly IRepository<Infrasturcture.Entities.EndpointGroup> _endpointGroupRepository;
+        private readonly IConfigurationRepository<RoleEndpointGroup> _configurationRepository;
         private readonly IValidator<CreateRoleCommand> _validator;
 
         public CreateRoleCommandHandler(
-            IRoleRepository roleRepository,
+            IRepository<Infrasturcture.Entities.Role> repository,
+            IRepository<Infrasturcture.Entities.EndpointGroup> EndpointGroupRepository,
+            IConfigurationRepository<RoleEndpointGroup> ConfigurationRepository,
             IValidator<CreateRoleCommand> validator
             )
         {
-            _roleRepository = roleRepository;
+            _repository = repository;
+            _endpointGroupRepository = EndpointGroupRepository;
+            _configurationRepository = ConfigurationRepository;
             _validator = validator;
         }
         public async Task<ApplicationResult> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
@@ -27,12 +36,42 @@ namespace OnAim.Admin.APP.Commands.Role.Create
                 throw new ValidationException(validationResult.Errors);
             }
 
-            var role = await _roleRepository.CreateRoleAsync(request.request);
-
-            if (role == null)
+            var existsName = _repository.Query(x => x.Name == request.request.Name).Any();
+            if (existsName)
             {
-                throw new Exception("Role Not Created");
+                throw new Exception("Role With That Name ALready Exists");
             }
+            var role = new Infrasturcture.Entities.Role
+            {
+                Name = request.request.Name,
+                Description = request.request.Description,
+                DateCreated = SystemDate.Now,
+                IsActive = true,
+                RoleEndpointGroups = new List<RoleEndpointGroup>(),
+                //UserId = request.ParentUserId,
+            };
+            await _repository.Store(role);
+            await _repository.CommitChanges();
+
+            foreach (var group in request.request.EndpointGroupIds)
+            {
+                var epgroup = await _endpointGroupRepository.Query(x => x.Id == group).FirstOrDefaultAsync();
+
+                if (!epgroup.IsEnabled)
+                {
+                    throw new Exception("EndpointGroup Is Disabled!");
+                }
+
+                var roleEndpointGroup = new RoleEndpointGroup
+                {
+                    EndpointGroupId = epgroup.Id,
+                    RoleId = role.Id
+                };
+
+                role.RoleEndpointGroups.Add(roleEndpointGroup);
+                await _configurationRepository.CommitChanges();
+            }
+            await _configurationRepository.CommitChanges();
 
             return new ApplicationResult
             {

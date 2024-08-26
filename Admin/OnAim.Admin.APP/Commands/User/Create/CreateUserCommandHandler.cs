@@ -1,25 +1,31 @@
 ﻿using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
-using System.Security.Cryptography;
 
 namespace OnAim.Admin.APP.Commands.User.Create
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, ApplicationResult>
     {
         private readonly IValidator<CreateUserCommand> _validator;
-        private readonly IUserRepository _userRepository;
+        private readonly IRepository<Infrasturcture.Entities.User> _repository;
+        private readonly IRepository<Infrasturcture.Entities.Role> _roleRepository;
+        private readonly IConfigurationRepository<UserRole> _configurationRepository;
 
         public CreateUserCommandHandler(
             IValidator<CreateUserCommand> validator,
-            IUserRepository userRepository
+            IRepository<Infrasturcture.Entities.User> repository,
+            IRepository<Infrasturcture.Entities.Role> roleRepository,
+            IConfigurationRepository<UserRole> configurationRepository
             )
         {
             _validator = validator;
-            _userRepository = userRepository;
+            _repository = repository;
+            _roleRepository = roleRepository;
+            _configurationRepository = configurationRepository;
         }
         public async Task<ApplicationResult> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
@@ -34,7 +40,7 @@ namespace OnAim.Admin.APP.Commands.User.Create
                 };
             }
 
-            var existingUser = await _userRepository.FindByEmailAsync(request.Email);
+            var existingUser = await _repository.Query(x => x.Email == request.Email).FirstOrDefaultAsync();
 
             if (existingUser != null)
             {
@@ -58,14 +64,23 @@ namespace OnAim.Admin.APP.Commands.User.Create
                 IsActive = true
             };
 
-            var result = await _userRepository.Create(user);
+            await _repository.Store(user);
+            await _repository.CommitChanges();
+
+            var role = await _roleRepository.Query(x => x.Name == "DefaultRole").FirstOrDefaultAsync();
+            await AssignRoleToUserAsync(user.Id, role.Id);
 
             return new ApplicationResult
             {
                 Success = true,
-                Data = result.Email,
-                Errors = null
             };
+        }
+
+        private async Task AssignRoleToUserAsync(int userId, int roleId)
+        {
+            var userRole = new UserRole { UserId = userId, RoleId = roleId };
+            await _configurationRepository.Store(userRole);
+            await _configurationRepository.CommitChanges();
         }
     }
 }

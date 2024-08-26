@@ -77,32 +77,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
             return endpoint;
         }
 
-        public async Task<IEnumerable<EndpointResponseModel>> GetEndpointsByIdsAsync(IEnumerable<int> ids)
-        {
-            var endpoint = _databaseContext.Endpoints.Where(r => ids.Contains(r.Id)).AsQueryable();
-
-            var totalCount = await endpoint.CountAsync();
-
-            var eps = await endpoint
-                .OrderBy(x => x.Id).ToListAsync();
-
-            var result = eps.Select(x => new EndpointResponseModel
-            {
-                Name = x.Name,
-                Path = x.Path,
-                Description = x.Description,
-                IsActive = x.IsActive,
-                IsEnabled = x.IsEnabled,
-                Type = ToHttpMethodExtension.ToHttpMethod(x.Type),
-                UserId = x.UserId,
-                DateCreated = x.DateCreated,
-                DateUpdated = x.DateUpdated,
-                DateDeleted = x.DateDeleted,
-            }).ToList();
-
-            return result;
-        }
-
         public async Task<Endpoint> CreateEndpointAsync(string name, string description = null, string? endpointType = null)
         {
             var endpoint = await _databaseContext.Endpoints.FirstOrDefaultAsync(e => e.Name == name);
@@ -143,19 +117,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
             }
 
             return endpoint;
-        }
-
-        public async Task DeleteEndpoint(int id)
-        {
-            var endpoint = await _databaseContext.Endpoints.FindAsync(id);
-
-            if (endpoint != null)
-            {
-                endpoint.IsActive = false;
-                endpoint.IsEnabled = false;
-                endpoint.DateDeleted = SystemDate.Now;
-                await _databaseContext.SaveChangesAsync();
-            }
         }
 
         public async Task UpdateEndpoint(int id, UpdateEndpointDto model)

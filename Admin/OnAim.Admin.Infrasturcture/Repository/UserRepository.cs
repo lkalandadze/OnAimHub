@@ -71,7 +71,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
         public async Task<User> FindByEmailAsync(string email)
         {
             return await _databaseContext.Users
-                .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
@@ -274,18 +273,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
             };
         }
 
-        public async Task DeleteUser(int userId)
-        {
-            var user = await _databaseContext.FindAsync<User>(userId);
-
-            if (user != null)
-            {
-                user.IsActive = false;
-                user.DateDeleted = SystemDate.Now;
-                await _databaseContext.SaveChangesAsync();
-            }
-        }
-
         public async Task<User> UpdateUser(int id, UpdateUserRequest user)
         {
             var existingUser = await _databaseContext.Users.FindAsync(id);
@@ -346,11 +333,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
                 await _databaseContext.SaveChangesAsync();
             }
-        }
-
-        public async Task CommitChanges()
-        {
-            await _databaseContext.SaveChangesAsync();
         }
     }
 }

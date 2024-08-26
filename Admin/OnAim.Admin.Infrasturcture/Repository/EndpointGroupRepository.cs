@@ -53,23 +53,11 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 }
 
                 await _databaseContext.EndpointGroups.AddAsync(endpointGroup);
-                await SaveChangesAsync();
+                await _databaseContext.SaveChangesAsync();
             }
             else
             {
                 throw new AlreadyExistsException("Group with that name already exists!");
-            }
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var endpointGroup = await GetByIdAsync(id);
-            if (endpointGroup != null)
-            {
-                endpointGroup.IsEnabled = false;
-                endpointGroup.IsActive = false;
-                endpointGroup.DateDeleted = SystemDate.Now;
-                await _databaseContext.SaveChangesAsync();
             }
         }
 
@@ -183,38 +171,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
             };
         }
 
-        public async Task AddEndpoint(EndpointGroup endpointGroup, Endpoint endpoint)
-        {
-            var exists = await _databaseContext.EndpointGroupEndpoints
-                                   .AnyAsync(ege => ege.EndpointGroupId == endpointGroup.Id && ege.EndpointId == endpoint.Id);
-
-            if (!exists)
-            {
-                var endpointGroupEndpoint = new EndpointGroupEndpoint
-                {
-                    EndpointGroupId = endpointGroup.Id,
-                    EndpointId = endpoint.Id,
-                    Endpoint = endpoint,
-                    EndpointGroup = endpointGroup
-                };
-
-                _databaseContext.EndpointGroupEndpoints.Add(endpointGroupEndpoint);
-            }
-
-        }
-
-        public async Task RemoveEndpoint(EndpointGroup endpointGroup, Endpoint endpoint)
-        {
-            var endpointGroupEndpoint = await _databaseContext.EndpointGroupEndpoints
-                                               .FirstOrDefaultAsync(ege => ege.EndpointGroupId == endpointGroup.Id && ege.EndpointId == endpoint.Id);
-
-            if (endpointGroupEndpoint != null)
-            {
-                _databaseContext.EndpointGroupEndpoints.Remove(endpointGroupEndpoint);
-            }
-
-        }
-
         public async Task UpdateAsync(int id, UpdateEndpointGroupRequest endpointGroup)
         {
             var group = await _databaseContext.EndpointGroups
@@ -286,11 +242,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 }
             }
 
-            await _databaseContext.SaveChangesAsync();
-        }
-
-        public async Task SaveChangesAsync()
-        {
             await _databaseContext.SaveChangesAsync();
         }
     }

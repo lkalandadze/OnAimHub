@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
+using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Infrasturcture.Repository;
 
 namespace OnAim.Admin.Infrasturcture.Extensions
 {
@@ -13,7 +15,6 @@ namespace OnAim.Admin.Infrasturcture.Extensions
             {
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnectionString"));
             });
-
             return services;
         }
     }

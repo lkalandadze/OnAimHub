@@ -25,6 +25,7 @@ builder.Services
 builder.Services.AddIdentityServerAuthentication<ApplicationIdentityDbContext, User, ApplicationUserManager>(builder.Configuration);
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+builder.Services.AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>));
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped(ApplicationContextFactory.Create);
 builder.Services.AddApp();

@@ -8,8 +8,6 @@ namespace OnAim.Admin.Infrasturcture.Repository.Abstract
 {
     public interface IUserRepository
     {
-        Task CommitChanges();
-        Task DeleteUser(int userId);
         Task<User> Create(User user);
         Task<UsersResponseModel> GetById(int id);
         Task<User> FindByEmailAsync(string email);

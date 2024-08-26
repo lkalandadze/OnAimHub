@@ -1,31 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Infrasturcture.Entities.Abstract;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using System.Linq.Expressions;
 
 namespace OnAim.Admin.Infrasturcture.Repository
 {
-    public class EfRepository<T> : IRepository<T>
-        where T : BaseEntity
+    public class ConfigurationRepository<T> : IConfigurationRepository<T> where T : class
     {
-        private DatabaseContext _db;
+        private DatabaseContext _configurationDbContext;
 
-        public EfRepository(DatabaseContext db)
+        public ConfigurationRepository(DatabaseContext configurationDbContext)
         {
-            _db = db;
+            _configurationDbContext = configurationDbContext;
         }
 
-        public virtual async Task<T?> Find(int uId)
+        public virtual async Task<T?> Find(Expression<Func<T, bool>> expression)
         {
-            return await _db.Set<T>().SingleOrDefaultAsync(x => x.Id == uId);
+            return await _configurationDbContext.Set<T>().SingleOrDefaultAsync(expression);
         }
 
         public virtual IQueryable<T> Query(
             Expression<Func<T, bool>> expression = null
-            )
+           )
         {
-            var baseQuery = _db.Set<T>();
+            var baseQuery = _configurationDbContext.Set<T>();
 
             if (expression == null)
                 return baseQuery.AsQueryable();
@@ -34,23 +32,24 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
         public virtual async Task Store(T document)
         {
-            await _db.Set<T>().AddAsync(document);
+            await _configurationDbContext.Set<T>().AddAsync(document);
         }
+
 
         public virtual async Task Remove(T document)
         {
-            _db.Set<T>().Remove(document);
+            _configurationDbContext.Set<T>().Remove(document);
             await Task.CompletedTask;
         }
 
         public void WithDbContext(DatabaseContext dbContext)
         {
-            _db = dbContext;
+            _configurationDbContext = dbContext;
         }
 
         public async Task CommitChanges()
         {
-            await _db.SaveChangesAsync();
+            await _configurationDbContext.SaveChangesAsync();
         }
     }
 }
