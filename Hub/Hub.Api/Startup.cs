@@ -1,6 +1,7 @@
 ﻿using Consul;
 using Hub.Api;
 using Hub.Api.Common.Consul;
+using Hub.Api.Middlewares;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Services.Abstract;
@@ -102,6 +103,8 @@ public class Startup
 
         app.UseForwardedHeaders();
         app.UseCertificateForwarding();
+
+        app.UseMiddleware<ErrorHandlerMiddleware>();
 
         app.UseRouting();
         app.UseAuthentication();
