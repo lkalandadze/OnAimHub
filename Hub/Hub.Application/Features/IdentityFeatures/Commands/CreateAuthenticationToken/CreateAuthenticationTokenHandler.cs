@@ -6,11 +6,12 @@ using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Options;
+using Shared.Domain.Wrappers;
 using Shared.Lib.Extensions;
 
 namespace Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 
-public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthenticationTokenRequest, CreateAuthenticationTokenResponse>
+public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthenticationTokenRequest, Response<CreateAuthenticationTokenResponse>>
 {
     private readonly IPlayerRepository _playerRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -27,7 +28,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
         _casinoApiConfiguration = casinoApiConfiguration.Value;
     }
 
-    public async Task<CreateAuthenticationTokenResponse> Handle(CreateAuthenticationTokenRequest request, CancellationToken cancellationToken)
+    public async Task<Response<CreateAuthenticationTokenResponse>> Handle(CreateAuthenticationTokenRequest request, CancellationToken cancellationToken)
     {
         var endpoint = string.Format(_casinoApiConfiguration.Endpoints.GetPlayer, request.CasinoToken);
 
@@ -53,6 +54,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
 
         var (token, refreshToken) = await _tokenService.GenerateTokenStringAsync(player);
 
-        return new CreateAuthenticationTokenResponse(true, token, refreshToken);
+        var response = new CreateAuthenticationTokenResponse(token, refreshToken);
+        return new Response<CreateAuthenticationTokenResponse>(response);
     }
 }
