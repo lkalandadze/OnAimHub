@@ -38,7 +38,7 @@ namespace OnAim.Admin.API.Controllers
 
         [HttpGet("Get/{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
-            => Ok(Mediator.Send(new GetUserByIdQuery(id)));
+            => Ok(await Mediator.Send(new GetUserByIdQuery(id)));
 
         [HttpPost("Register")]
         [AllowAnonymous]
@@ -60,7 +60,6 @@ namespace OnAim.Admin.API.Controllers
             => Ok(await Mediator.Send(command));
 
         [HttpPost("ResetPassword")]
-        [AllowAnonymous]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
             => Ok(await Mediator.Send(command));
 

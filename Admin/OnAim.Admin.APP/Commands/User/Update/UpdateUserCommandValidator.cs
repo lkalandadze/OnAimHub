@@ -10,9 +10,14 @@ namespace OnAim.Admin.APP.Commands.User.Update
                 .NotEmpty()
                 .NotNull()
                 .WithMessage("Valid Id is required.");
-            RuleFor(x => x.Model)
+            RuleFor(x => x.Model.FirstName)
                 .NotEmpty()
-                .WithMessage("Valid Model is required.");
+                .WithMessage("Valid Model is required.")
+                .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
+            RuleFor(x => x.Model.LastName)
+                .NotEmpty()
+                .WithMessage("Valid Model is required.")
+                .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace OnAim.Admin.Infrasturcture.Exceptions
+﻿namespace OnAim.Admin.APP.Exceptions
 {
     public class UserNotFoundException : Exception
     {

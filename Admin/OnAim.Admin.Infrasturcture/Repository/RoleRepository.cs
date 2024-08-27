@@ -8,7 +8,6 @@ using OnAim.Admin.Infrasturcture.Models.Response.Role;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.Models;
-using static OnAim.Admin.Infrasturcture.Exceptions.Exceptions;
 
 namespace OnAim.Admin.Infrasturcture.Repository
 {
@@ -73,7 +72,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             if (role == null)
             {
-                throw new RoleNotFoundException("Role not found");
+                throw new Exception("Role not found");
             }
 
             if (!request.IsActive)
@@ -124,7 +123,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             if (role == null)
             {
-                throw new RoleNotFoundException("Role Not Found.");
+                throw new Exception("Role Not Found.");
             }
 
             var result = new RoleResponseModel
@@ -148,41 +147,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
                         Path = x.Endpoint.Path,
                         DateCreated = x.Endpoint.DateCreated,
                     }).ToList(),
-                }).ToList(),
-            };
-
-            return result;
-        }
-
-        public async Task<RoleResponseModel> GetRoleByName(string roleName)
-        {
-            var role = await _databaseContext.Roles
-                .Include(x => x.RoleEndpointGroups)
-                .ThenInclude(x => x.EndpointGroup)
-                .ThenInclude(x => x.EndpointGroupEndpoints)
-                .ThenInclude(x => x.Endpoint)
-                .FirstOrDefaultAsync(x => x.Name == roleName);
-
-            var result = new RoleResponseModel
-            {
-                Id = role.Id,
-                Name = role.Name,
-                Description = role.Description,
-                DateCreated = role.DateCreated,
-                EndpointGroupModels = role.RoleEndpointGroups.Select(x => new EndpointGroupModel
-                {
-                    Id = x.EndpointGroupId,
-                    Name = x.EndpointGroup.Name,
-                    //Description = x.EndpointGroup.Description,
-                    //DateCreated = x.EndpointGroup.DateCreated,
-                    //Endpoints = x.EndpointGroup.EndpointGroupEndpoints.Select(x => new EndpointRequestModel
-                    //{
-                    //    Id = x.EndpointId,
-                    //    Name = x.Endpoint.Name,
-                    //    Description = x.Endpoint.Description,
-                    //    Path = x.Endpoint.Path,
-                    //    DateCreated = x.Endpoint.DateCreated,
-                    //}).ToList(),
                 }).ToList(),
             };
 
@@ -295,26 +259,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 TotalCount = totalCount,
                 Items = roles
             };
-        }
-
-        public async Task<IEnumerable<Role>> GetRolesByIdsAsync(IEnumerable<int> roleIds)
-        {
-            return await _databaseContext.Roles.Where(r => roleIds.Contains(r.Id)).ToListAsync();
-        }
-
-        public async Task DeleteRole(int roleId)
-        {
-            var role = await _databaseContext.Roles
-                .Include(r => r.UserRoles)
-                .Include(r => r.RoleEndpointGroups)
-                .FirstOrDefaultAsync(r => r.Id == roleId);
-
-            if (role != null)
-            {
-                role.IsActive = false;
-                role.DateDeleted = SystemDate.Now;
-                await _databaseContext.SaveChangesAsync();
-            }
         }
     }
 }

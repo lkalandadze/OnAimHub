@@ -6,7 +6,9 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Create
     {
         public CreateEndpointCommandValidator()
         {
-            RuleFor(x => x.Name).NotEmpty();
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
             RuleFor(x => x.Description).NotEmpty();
         }
     }

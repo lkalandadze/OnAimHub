@@ -103,6 +103,7 @@ namespace OnAim.Admin.API.Extensions
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
             services.AddScoped<IEndpointService, EndpointService>();
+            services.AddHttpContextAccessor();
 
             return services;
         }
