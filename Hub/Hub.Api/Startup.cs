@@ -37,9 +37,10 @@ public class Startup
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<HttpClient>();
-        services.AddSingleton<ITokenService, TokenService>();
+        services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddScoped<ITokenRecordRepository, TokenRecordRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddSingleton<IActiveGameService, ActiveGameService>();
 

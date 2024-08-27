@@ -4,5 +4,6 @@ namespace Hub.Application.Services.Abstract;
 
 public interface ITokenService
 {
-    string GenerateTokenString(Player player);
+    Task<(string AccessToken, string RefreshToken)> GenerateTokenStringAsync(Player player);
+    Task<(string AccessToken, string RefreshToken)> RefreshAccessTokenAsync(string accessToken, string refreshToken);
 }
