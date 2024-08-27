@@ -27,6 +27,8 @@ namespace OnAim.Admin.APP.Queries.Role.GetById
                 .ThenInclude(x => x.Endpoint)
                 .FirstOrDefaultAsync();
 
+            if (role == null) { return new ApplicationResult { Success = false, Data = $"Role Not Found!" }; }
+
             var result = new RoleResponseModel
             {
                 Id = role.Id,

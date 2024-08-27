@@ -22,6 +22,8 @@ namespace OnAim.Admin.APP.Queries.Role.GetAll
                 .Query(x =>
                          (string.IsNullOrEmpty(request.Filter.Name) || x.Name.Contains(request.Filter.Name)) &&
                          (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value)
+                          &&
+               x.Name != "SuperRole"
                      );
 
             var totalCount = await roleQuery.CountAsync(cancellationToken);

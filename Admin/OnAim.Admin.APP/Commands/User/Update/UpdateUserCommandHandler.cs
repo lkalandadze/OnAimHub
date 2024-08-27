@@ -1,10 +1,8 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Identity.Entities;
+using OnAim.Admin.APP.Exceptions;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Exceptions;
-using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
@@ -40,7 +38,7 @@ namespace OnAim.Admin.APP.Commands.User.Update
 
             if (existingUser == null)
             {
-                throw new UserNotFoundException("User not found");
+                return new ApplicationResult { Success = false, Data = $"User not found" };
             }
 
             existingUser.FirstName = request.Model.FirstName;
@@ -79,7 +77,7 @@ namespace OnAim.Admin.APP.Commands.User.Update
             return new ApplicationResult
             {
                 Success = true,
-                Errors = null
+                Data = $"User {existingUser.FirstName} {existingUser.LastName} Updated Successfully"
             };
         }
     }

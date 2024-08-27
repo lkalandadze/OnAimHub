@@ -19,6 +19,11 @@ namespace OnAim.Admin.APP.Queries.EndPoint.GetById
         {
             var endpoint = await _repository.Query(x => x.Id == request.Id).FirstOrDefaultAsync();
 
+            if (endpoint == null)
+            {
+                return new ApplicationResult { Success = false, Data = $"Permmission Not Found!" };
+            }
+
             var result = new EndpointResponseModel
             {
                 Id = request.Id,
@@ -38,7 +43,6 @@ namespace OnAim.Admin.APP.Queries.EndPoint.GetById
             {
                 Success = true,
                 Data = result,
-                Errors = null
             };
         }
     }

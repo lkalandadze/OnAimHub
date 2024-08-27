@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.APP.Extensions;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
+using static OnAim.Admin.APP.Extensions.Extension;
 
 namespace OnAim.Admin.APP.Commands.Role.Create
 {
@@ -39,7 +41,7 @@ namespace OnAim.Admin.APP.Commands.Role.Create
             var existsName = _repository.Query(x => x.Name == request.request.Name).Any();
             if (existsName)
             {
-                throw new Exception("Role With That Name ALready Exists");
+                return new ApplicationResult { Success = false, Data = $"Role With That Name ALready Exists" };
             }
             var role = new Infrasturcture.Entities.Role
             {
@@ -48,7 +50,7 @@ namespace OnAim.Admin.APP.Commands.Role.Create
                 DateCreated = SystemDate.Now,
                 IsActive = true,
                 RoleEndpointGroups = new List<RoleEndpointGroup>(),
-                //UserId = request.ParentUserId,
+                UserId = HttpContextAccessorProvider.HttpContextAccessor.GetUserId(),
             };
             await _repository.Store(role);
             await _repository.CommitChanges();
@@ -59,7 +61,7 @@ namespace OnAim.Admin.APP.Commands.Role.Create
 
                 if (!epgroup.IsEnabled)
                 {
-                    throw new Exception("EndpointGroup Is Disabled!");
+                    return new ApplicationResult { Success = false, Data = $"EndpointGroup Is Disabled!" };
                 }
 
                 var roleEndpointGroup = new RoleEndpointGroup
@@ -76,8 +78,7 @@ namespace OnAim.Admin.APP.Commands.Role.Create
             return new ApplicationResult
             {
                 Success = true,
-                Data = role,
-                Errors = null
+                Data = $"Role {role.Name} Successfully Created!",
             };
         }
     }

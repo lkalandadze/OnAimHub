@@ -32,6 +32,13 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Update
 
             var ep = await _repository.Query(x => x.Id == request.Id).FirstOrDefaultAsync();
 
+            var nameExists = await _repository.Query(x => x.Name == request.Endpoint.Name && x.Id != request.Id).AnyAsync();
+
+            if (nameExists)
+            {
+                return new ApplicationResult { Success = false, Data = "Permmission with this name already exists." };
+            }
+
             if (ep != null)
             {
                 ep.Name = request.Endpoint.Name;
@@ -46,6 +53,7 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Update
             return new ApplicationResult
             {
                 Success = true,
+                Data = $"Permmission {ep.Name} Successfully Updated"
             };
         }
     }

@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.APP.Exceptions;
 using OnAim.Admin.APP.Models.Response.User;
 using OnAim.Admin.Identity.Services;
 using OnAim.Admin.Infrasturcture.Configuration;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Exceptions;
 using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
 using OnAim.Admin.Infrasturcture.Models.Response.EndpointGroup;
 using OnAim.Admin.Infrasturcture.Models.Response.Role;
@@ -67,35 +67,35 @@ namespace OnAim.Admin.APP.Commands.User.Login
                 var roleNames = roles.Select(r => r.Name).ToList();
                 var token = _jwtFactory.GenerateEncodedToken(user.Id, user.Email, new List<Claim>(), roleNames);
 
-                var identityUser = await _userManager.FindByNameAsync(user.Username);
-                if (identityUser == null)
-                {
-                    try
-                    {
-                        var idp = await _userManager.CreateAsync(new Identity.Entities.User
-                        {
-                            Email = user.Email,
-                            UserName = user.Username,
-                            PhoneNumber = user.Phone,
-                            EmailConfirmed = true,
-                            PhoneNumberConfirmed = true,
-                            SecurityStamp = Guid.NewGuid().ToString("D"),
-                            CreateDate = SystemDate.Now,
-                        }, request.Model.Password);
+                //var identityUser = await _userManager.FindByNameAsync(user.Username);
+                //if (identityUser == null)
+                //{
+                //    try
+                //    {
+                //        var idp = await _userManager.CreateAsync(new Identity.Entities.User
+                //        {
+                //            Email = user.Email,
+                //            UserName = user.Username,
+                //            PhoneNumber = user.Phone,
+                //            EmailConfirmed = true,
+                //            PhoneNumberConfirmed = true,
+                //            SecurityStamp = Guid.NewGuid().ToString("D"),
+                //            CreateDate = SystemDate.Now,
+                //        }, request.Model.Password);
 
-                        if (idp.Succeeded)
-                        {
-                            identityUser = await _userManager.FindByNameAsync(user.Username);
+                //        if (idp.Succeeded)
+                //        {
+                //            identityUser = await _userManager.FindByNameAsync(user.Username);
 
-                            foreach (var item in roles)
-                            {
-                                await _userManager.AddToRoleAsync(identityUser, item.Name);
-                                await _userManager.AddClaimAsync(identityUser, new Claim(ClaimTypes.Name, item.Name));
-                            }
-                        }
-                    }
-                    catch { }
-                }
+                //            foreach (var item in roles)
+                //            {
+                //                await _userManager.AddToRoleAsync(identityUser, item.Name);
+                //                await _userManager.AddClaimAsync(identityUser, new Claim(ClaimTypes.Name, item.Name));
+                //            }
+                //        }
+                //    }
+                //    catch { }
+                //}
 
                 return new AuthResultDto
                 {

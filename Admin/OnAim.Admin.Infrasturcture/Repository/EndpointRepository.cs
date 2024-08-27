@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Exceptions;
 using OnAim.Admin.Infrasturcture.Extensions;
 using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
 using OnAim.Admin.Infrasturcture.Models.Response;
@@ -71,7 +70,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             if (endpoint == null)
             {
-                throw new EndpointNotFoundException("Endpoint Not Found");
+                throw new Exception("Endpoint Not Found");
             }
 
             return endpoint;
@@ -90,7 +89,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             if (endpoint != null)
             {
-                throw new AlreadyExistsException("Endpoint with that name already exists.");
+                throw new Exception("Endpoint with that name already exists.");
             }
 
             if (endpoint == null)

@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.APP.Extensions;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
+using static OnAim.Admin.APP.Extensions.Extension;
 
 namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
 {
@@ -46,6 +47,7 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
                     IsActive = true,
                     EndpointGroupEndpoints = new List<EndpointGroupEndpoint>(),
                     DateCreated = SystemDate.Now,
+                    UserId = HttpContextAccessorProvider.HttpContextAccessor.GetUserId()
                 };
 
                 foreach (var endpointId in request.Model.EndpointIds)
@@ -54,7 +56,7 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
 
                     if (!endpoint.IsEnabled)
                     {
-                        throw new Exception("Endpoint Is Disabled!");
+                        return new ApplicationResult { Success = false, Data = $"Permmission Is Disabled!" };
                     }
 
                     var endpointGroupEndpoint = new EndpointGroupEndpoint
@@ -71,13 +73,13 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
             }
             else
             {
-                throw new AlreadyExistsException("Group with that name already exists!");
+                return new ApplicationResult { Success = false, Data = $"Permmission Group with that name already exists!" };
             }
 
             return new ApplicationResult
             {
                 Success = true,
-                Data = request.Model.Name,
+                Data = $"Permmission Group {request.Model.Name} Successfully Created",
             };
         }
     }

@@ -2,11 +2,9 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
-using static OnAim.Admin.APP.Exceptions.Exceptions;
 
 namespace OnAim.Admin.APP.Commands.Role.Update
 {
@@ -47,7 +45,7 @@ namespace OnAim.Admin.APP.Commands.Role.Update
 
             if (role == null)
             {
-                throw new RoleNotFoundException("Role not found");
+                return new ApplicationResult { Success = false, Data = $"Role not found" };
             }
 
             if (!request.Model.IsActive)
@@ -71,7 +69,7 @@ namespace OnAim.Admin.APP.Commands.Role.Update
 
                     if (group == null)
                     {
-                        throw new Exception("Permission Group Not Found");
+                        return new ApplicationResult { Success = false, Data = $"Permission Group Not Found" };
                     }
 
                     if (!existingGroups.Contains(new { RoleId = role.Id, EndpointGroupId = group.Id }))
@@ -93,8 +91,7 @@ namespace OnAim.Admin.APP.Commands.Role.Update
             return new ApplicationResult
             {
                 Success = true,
-                Data = role,
-                Errors = null
+                Data = $"Role {role.Name} Successfully Updated!",
             };
         }
 

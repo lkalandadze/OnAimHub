@@ -20,6 +20,8 @@ namespace OnAim.Admin.APP.Queries.EndpointGroup.GetAll
             var query = _repository.Query(x =>
                          (string.IsNullOrEmpty(request.Filter.Name) || x.Name.Contains(request.Filter.Name)) &&
                          (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value)
+                         &&
+               x.Name != "SuperGroup"
                 );
 
             var totalCount = await query.CountAsync(cancellationToken);

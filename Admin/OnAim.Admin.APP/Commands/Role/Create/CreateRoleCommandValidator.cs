@@ -9,7 +9,8 @@ namespace OnAim.Admin.APP.Commands.Role.Create
             RuleFor(x => x.request.Name)
                 .NotEmpty()
                 .NotNull()
-                .WithMessage("Name is required.");
+                .WithMessage("Name is required.")
+                .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
         }
     }
 }

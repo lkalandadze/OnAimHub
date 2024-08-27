@@ -23,6 +23,11 @@ namespace OnAim.Admin.APP.Queries.EndpointGroup.GetById
                 .ThenInclude(x => x.Endpoint)
                 .FirstOrDefaultAsync();
 
+            if (group == null)
+            {
+                return new ApplicationResult { Success = false, Data = $"Permmission Group Not Found!" };
+            }
+
             var res = new EndpointGroupDto
             {
                 Id = group.Id,
@@ -46,7 +51,6 @@ namespace OnAim.Admin.APP.Queries.EndpointGroup.GetById
             {
                 Success = true,
                 Data = res,
-                Errors = null
             };
         }
     }

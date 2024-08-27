@@ -8,7 +8,6 @@ using OnAim.Admin.Infrasturcture.Models.Response.Role;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.Models;
-using static OnAim.Admin.Infrasturcture.Exceptions.Exceptions;
 
 namespace OnAim.Admin.Infrasturcture.Repository
 {
@@ -73,7 +72,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             if (role == null)
             {
-                throw new RoleNotFoundException("Role not found");
+                throw new Exception("Role not found");
             }
 
             if (!request.IsActive)
@@ -124,7 +123,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             if (role == null)
             {
-                throw new RoleNotFoundException("Role Not Found.");
+                throw new Exception("Role Not Found.");
             }
 
             var result = new RoleResponseModel

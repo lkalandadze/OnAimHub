@@ -11,9 +11,6 @@ namespace OnAim.Admin.APP.Models.Response.EndpointGroupResponseModels
         public List<EndpointModel> Endpoints { get; set; }
         public DateTimeOffset DateCreated { get; set; }
         public DateTimeOffset DateDeleted { get; set; }
-        public DateTimeOffset DateUpdated
-        {
-            get; set;
-        }
+        public DateTimeOffset DateUpdated{ get; set;}
     }
 }

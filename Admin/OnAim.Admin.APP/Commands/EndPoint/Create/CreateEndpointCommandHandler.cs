@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.APP.Extensions;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
+using static OnAim.Admin.APP.Extensions.Extension;
 
 namespace OnAim.Admin.APP.Commands.EndPoint.Create
 {
@@ -42,7 +43,7 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Create
 
             if (existedEndpoint != null)
             {
-                throw new AlreadyExistsException("Endpoint with that name already exists.");
+                return new ApplicationResult { Success = false, Data = "Permmission with that name already exists." };
             }
 
             var endpoint = new Endpoint
@@ -54,6 +55,7 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Create
                 DateCreated = SystemDate.Now,
                 IsActive = true,
                 Type = endpointTypeEnum,
+                UserId = HttpContextAccessorProvider.HttpContextAccessor.GetUserId()
             };
             await _repository.Store(endpoint);
             await _repository.CommitChanges();
@@ -61,7 +63,7 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Create
             return new ApplicationResult
             {
                 Success = true,
-                Data = endpoint.Name,
+                Data = $"Permmission {endpoint.Name} Created",
             };
 
         }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Exceptions;
 using OnAim.Admin.Infrasturcture.Extensions;
 using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
 using OnAim.Admin.Infrasturcture.Models.Request.User;
@@ -87,7 +86,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             if (user == null)
             {
-                throw new UserNotFoundException($"User with ID {id} not found.");
+                throw new Exception($"User with ID {id} not found.");
             }
 
             var result = new UsersResponseModel
@@ -279,7 +278,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             if (existingUser == null)
             {
-                throw new UserNotFoundException("User not found");
+                throw new Exception("User not found");
             }
 
             existingUser.FirstName = user.FirstName;

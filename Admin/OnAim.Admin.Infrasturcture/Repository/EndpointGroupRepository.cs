@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Exceptions;
 using OnAim.Admin.Infrasturcture.Models.Request.EndpointGroup;
 using OnAim.Admin.Infrasturcture.Models.Response;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
@@ -57,7 +56,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
             }
             else
             {
-                throw new AlreadyExistsException("Group with that name already exists!");
+                throw new Exception("Group with that name already exists!");
             }
         }
 
@@ -189,7 +188,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
                 if (nameExists)
                 {
-                    throw new AlreadyExistsException("An Endpoint Group with this name already exists.");
+                    throw new Exception("An Endpoint Group with this name already exists.");
                 }
 
                 group.Name = endpointGroup.Name;

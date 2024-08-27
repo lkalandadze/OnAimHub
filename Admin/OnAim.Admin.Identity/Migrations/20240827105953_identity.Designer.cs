@@ -12,7 +12,7 @@ using OnAim.Admin.Identity.Persistance;
 namespace OnAim.Admin.Identity.Migrations
 {
     [DbContext(typeof(ApplicationIdentityDbContext))]
-    [Migration("20240823125637_identity")]
+    [Migration("20240827105953_identity")]
     partial class identity
     {
         /// <inheritdoc />

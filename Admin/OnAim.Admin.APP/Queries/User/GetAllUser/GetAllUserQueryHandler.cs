@@ -37,37 +37,43 @@ namespace OnAim.Admin.APP.Queries.User.GetAllUser
 
             bool sortDescending = request.UserFilter.SortDescending.GetValueOrDefault();
 
-            if (request.UserFilter.SortBy == "Id")
+            if (request.UserFilter.SortBy == "Id" || request.UserFilter.SortBy == "id")
             {
                 query = sortDescending
                     ? query.OrderByDescending(x => x.Id)
                     : query.OrderBy(x => x.Id);
             }
-            else if (request.UserFilter.SortBy == "Name")
+            else if (request.UserFilter.SortBy == "Name" || request.UserFilter.SortBy == "name")
             {
                 query = sortDescending
                     ? query.OrderByDescending(x => x.FirstName)
                     : query.OrderBy(x => x.FirstName);
             }
+            else if (request.UserFilter.SortBy == "LastName" || request.UserFilter.SortBy == "lastName")
+            {
+                query = sortDescending
+                    ? query.OrderByDescending(x => x.LastName)
+                    : query.OrderBy(x => x.LastName);
+            }
 
             var res = query
                 .Select(x => new UsersModel
-            {
-                Id = x.Id,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                Email = x.Email,
-                IsActive = x.IsActive,
-                Phone = x.Phone,
-                DateCreated = x.DateCreated,
-                DateUpdated = x.DateUpdated,
-                Roles = x.UserRoles.Select(xx => new RoleDto
                 {
-                    Id = xx.RoleId,
-                    Name = xx.Role.Name,
-                    IsActive = xx.Role.IsActive,
-                }).ToList(),
-            })
+                    Id = x.Id,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Email = x.Email,
+                    IsActive = x.IsActive,
+                    Phone = x.Phone,
+                    DateCreated = x.DateCreated,
+                    DateUpdated = x.DateUpdated,
+                    Roles = x.UserRoles.Select(xx => new RoleDto
+                    {
+                        Id = xx.RoleId,
+                        Name = xx.Role.Name,
+                        IsActive = xx.Role.IsActive,
+                    }).ToList(),
+                })
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);
 
@@ -81,7 +87,6 @@ namespace OnAim.Admin.APP.Queries.User.GetAllUser
                     TotalCount = totalCount,
                     Items = await res.ToListAsync()
                 },
-                Errors = null
             };
         }
     }

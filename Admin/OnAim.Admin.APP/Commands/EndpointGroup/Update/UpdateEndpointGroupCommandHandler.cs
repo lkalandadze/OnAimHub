@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 
@@ -43,7 +42,7 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Update
 
             if (group == null)
             {
-                throw new Exception("Endpoint Group Not Found");
+                return new ApplicationResult { Success = false, Data = $"Permmission Group Not Found" };
             }
 
             if (!string.IsNullOrEmpty(request.model.Name))
@@ -53,7 +52,7 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Update
 
                 if (nameExists)
                 {
-                    throw new AlreadyExistsException("An Endpoint Group with this name already exists.");
+                    return new ApplicationResult { Success = false, Data = $"Permmission Group with this name already exists." };
                 }
 
                 group.Name = request.model.Name;
@@ -112,8 +111,7 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Update
             return new ApplicationResult
             {
                 Success = true,
-                Data = request.model.Name,
-                Errors = null
+                Data = $"Permmission Group {request.model.Name} Successfully Updated",
             };
         }
     }

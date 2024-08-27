@@ -28,6 +28,8 @@ namespace OnAim.Admin.APP.Queries.User.GetById
                 .ThenInclude(x => x.Endpoint)
                 .FirstOrDefaultAsync();
 
+            if (query == null) { return new ApplicationResult { Success = false, Data = $"User Not Found!" }; }
+
             var user = new GetUserModel
             {
                 Id = query.Id,

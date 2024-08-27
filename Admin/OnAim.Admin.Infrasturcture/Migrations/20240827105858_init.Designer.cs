@@ -12,7 +12,7 @@ using OnAim.Admin.Infrasturcture.Persistance.Data;
 namespace OnAim.Admin.Infrasturcture.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240823125554_init")]
+    [Migration("20240827105858_init")]
     partial class init
     {
         /// <inheritdoc />
