@@ -1,4 +1,4 @@
-﻿using Hub.Domain.Absractions;
+﻿using Shared.Lib.Entities;
 
 namespace Hub.Domain.Entities;
 

@@ -1,4 +1,4 @@
-﻿namespace Wheel.Application.Models;
+﻿namespace Wheel.Application.Models.Player;
 
 public class PlayRequestModel
 {

@@ -1,6 +1,6 @@
 ﻿using Shared.Domain.Abstractions;
 
-namespace Wheel.Application.Models;
+namespace Wheel.Application.Models.Player;
 
 public class PlayResultModel
 {

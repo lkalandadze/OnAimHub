@@ -1,6 +1,5 @@
 ﻿using Consul;
 using Hub.Api.Common.Consul;
-using Hub.Application;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Services.Abstract;
@@ -14,11 +13,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.PostgreSQL;
-using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Security.Cryptography;
 
@@ -36,12 +33,13 @@ public class Startup
         var env = services.BuildServiceProvider().GetRequiredService<IWebHostEnvironment>();
 
         services.AddDbContext<HubDbContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(Configuration.GetConnectionString("OnAimHub")));
 
         services.AddScoped<HttpClient>();
         services.AddSingleton<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddScoped<ITransactionRepository, TransactionRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
@@ -78,13 +76,6 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
     {
-        //create database
-        using (var scope = app.ApplicationServices.CreateScope())
-        {
-            var dbContext = scope.ServiceProvider.GetRequiredService<HubDbContext>();
-            dbContext.Database.EnsureCreated();
-        }
-
         app.UseCors("AllowAnyOrigin");
         app.UseHttpsRedirection();
 

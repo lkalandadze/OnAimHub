@@ -29,6 +29,7 @@ public static class DependencyResolver
         }
 
         services.AddSingleton<IAuthService, AuthService>();
+        services.AddScoped<IHubService, HubService>();
         services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
         services.AddScoped<ICurrencyRepository, CurrencyRepository>();
         services.AddScoped<IGameVersionRepository, GameVersionRepository>();
@@ -40,7 +41,9 @@ public static class DependencyResolver
         services.BuildServiceProvider().GetRequiredService<RepositoryManager>();
 
         services.AddHostedService<PrizeConfiguratorService>();
+        services.AddScoped<HttpClient>();
 
+        services.Configure<HubApiConfiguration>(configuration.GetSection("HubApiConfiguration"));
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
         services.Configure<PrizeGenerationSettings>(configuration.GetSection("PrizeGenerationSettings"));
 

@@ -31,7 +31,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
     {
         var endpoint = string.Format(_casinoApiConfiguration.Endpoints.GetPlayer, request.CasinoToken);
 
-        var recievedPlayer = await _httpClient.GetAsync<PlayerGetModel>(_casinoApiConfiguration.Host, endpoint);
+        var recievedPlayer = await _httpClient.CustomGetAsync<PlayerGetModel>(_casinoApiConfiguration.Host, endpoint);
 
         if (recievedPlayer == null)
         {

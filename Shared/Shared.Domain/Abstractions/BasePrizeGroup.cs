@@ -1,4 +1,5 @@
 ﻿using Shared.Domain.Entities;
+using Shared.Lib.Entities;
 
 namespace Shared.Domain.Abstractions;
 

@@ -24,7 +24,7 @@ public class GetBalanceHandler : IRequestHandler<GetBalanceRequest, GetBalanceRe
     {
         var endpoint = string.Format(_casinoApiConfiguration.Endpoints.GetBalance, _authService.GetCurrentPlayerSegmentId());
 
-        var result = await _httpClient.GetAsync<BalanceGetModel>(_casinoApiConfiguration.Host, endpoint);
+        var result = await _httpClient.CustomGetAsync<BalanceGetModel>(_casinoApiConfiguration.Host, endpoint);
 
         if (result == null || !result.Balances.Any())
         {

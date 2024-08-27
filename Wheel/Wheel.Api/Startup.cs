@@ -1,9 +1,7 @@
 ﻿using Consul;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using Shared.Domain.Abstractions.Repository;
 using Shared.Infrastructure.DataAccess;
-using Shared.Infrastructure.Repositories;
 using Shared.ServiceRegistry;
 using Wheel.Api.Consul;
 using Wheel.Application;
@@ -36,6 +34,15 @@ public class Startup
 
         services.AddSingleton(prizeGroupTypes);
         services.AddScoped<GameManager>();
+        
+        services.AddCors(options =>
+        {
+            options.AddPolicy(
+                "AllowAnyOrigin",
+                builder => builder.AllowAnyOrigin()
+                                  .AllowAnyMethod()
+                                  .AllowAnyHeader());
+        });
 
         ConfigureMassTransit(services);
         services.AddMassTransitHostedService();

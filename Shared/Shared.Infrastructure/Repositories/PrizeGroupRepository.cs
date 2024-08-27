@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Repository;
 using Shared.Infrastructure.DataAccess;
-using System.Collections;
-using System.Linq.Expressions;
 
 namespace Shared.Infrastructure.Repositories;
 

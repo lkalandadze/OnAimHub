@@ -1,6 +1,7 @@
 ﻿using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Microsoft.EntityFrameworkCore;
+using Shared.Lib.Entities;
 using System.Linq.Expressions;
 
 namespace Hub.Infrastructure.Repositories;
