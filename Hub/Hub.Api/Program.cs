@@ -1,3 +1,4 @@
+using Hub.Infrastructure.DataAccess;
 using Serilog;
 
 CreateHostBuilder(args).Build().Run();

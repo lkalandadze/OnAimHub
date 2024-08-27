@@ -1,6 +1,7 @@
 ﻿using Consul;
+using Hub.Api;
 using Hub.Api.Common.Consul;
-using Hub.Application;
+using Hub.Api.Middlewares;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Services.Abstract;
@@ -14,11 +15,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.PostgreSQL;
-using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Security.Cryptography;
 
@@ -39,10 +38,12 @@ public class Startup
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<HttpClient>();
-        services.AddSingleton<ITokenService, TokenService>();
+        services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddScoped<ITokenRecordRepository, TokenRecordRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddSingleton<IActiveGameService, ActiveGameService>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
@@ -94,10 +95,16 @@ public class Startup
         }
 
         app.UseSwagger();
-        app.UseSwaggerUI(c => c.DefaultModelExpandDepth(-1));
+        app.UseSwaggerUI(c =>
+        {
+            c.DefaultModelExpandDepth(-1);
+            c.DocumentTitle = "HubApi";
+        });
 
         app.UseForwardedHeaders();
         app.UseCertificateForwarding();
+
+        app.UseMiddleware<ErrorHandlerMiddleware>();
 
         app.UseRouting();
         app.UseAuthentication();
@@ -216,7 +223,8 @@ public class Startup
                 ID = Guid.NewGuid().ToString(),
                 Name = "hubapi",
                 Address = "hubapi", // Docker service name or external IP address
-                Port = 8080 // The port your service is running on inside the container
+                Port = 8080, // The port your service is running on inside the container
+                Tags = ["Hub"]
             };
             consulClient.Agent.ServiceRegister(registration).Wait();
         });
@@ -243,6 +251,7 @@ public class Startup
         }));
 
         services.AddHostedService<ConsulHostedService>();
+        services.AddHostedService<ConsulWatcherService>();
     }
 
     private bool IsRunningInDocker()

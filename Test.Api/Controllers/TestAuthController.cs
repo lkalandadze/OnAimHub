@@ -32,18 +32,23 @@ public class TestAuthController : ControllerBase
 
             var usernameClaim = claimsPrincipal.FindFirst("username")?.Value;
             var idClaim = claimsPrincipal.FindFirst("Id")?.Value;
-            var segmentIdClaim = claimsPrincipal.FindFirst("SegmentId")?.Value;
+            var segmentIdsClaim = claimsPrincipal.FindFirst("SegmentIds")?.Value;
 
-            if (usernameClaim == null || idClaim == null || segmentIdClaim == null)
+            if (usernameClaim == null || idClaim == null || segmentIdsClaim == null)
             {
                 return Unauthorized();
             }
+
+            var segmentIds = segmentIdsClaim
+                .Split(',')
+                .Select(int.Parse)
+                .ToList();
 
             var player = new PlayerModel
             {
                 Id = int.Parse(idClaim),
                 UserName = usernameClaim,
-                SegmentId = int.Parse(segmentIdClaim),
+                SegmentIds = segmentIds,
             };
 
             return Ok(player);
@@ -61,7 +66,7 @@ public class TestAuthController : ControllerBase
         {
             Id = Random.Shared.Next(1, 100),
             UserName = Random.Shared.Next(1000, 2000).ToString(),
-            SegmentId = 1
+            SegmentIds = new List<int> { 1, 2, 3 }
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("aVGh6J/J2eRt6N8yQgP5kE0ThKz+zR/G+gL4X1G+yKo="));
@@ -71,7 +76,7 @@ public class TestAuthController : ControllerBase
         {
             new("username", player.UserName),
             new("Id", player.Id.ToString()),
-            new("SegmentId", player.SegmentId.ToString()),
+            new("SegmentIds", string.Join(",", player.SegmentIds)),
         };
 
         var token = new JwtSecurityToken(

@@ -22,7 +22,7 @@ public class GetBalanceHandler : IRequestHandler<GetBalanceRequest, GetBalanceRe
 
     public async Task<GetBalanceResponse> Handle(GetBalanceRequest request, CancellationToken cancellationToken)
     {
-        var endpoint = string.Format(_casinoApiConfiguration.Endpoints.GetBalance, _authService.GetCurrentPlayerSegmentId());
+        var endpoint = string.Format(_casinoApiConfiguration.Endpoints.GetBalance, _authService.GetCurrentPlayerSegmentIds());
 
         var result = await _httpClient.GetAsync<BalanceGetModel>(_casinoApiConfiguration.Host, endpoint);
 

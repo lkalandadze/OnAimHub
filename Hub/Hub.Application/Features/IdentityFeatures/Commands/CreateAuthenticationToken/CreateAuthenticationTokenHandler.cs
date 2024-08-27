@@ -31,28 +31,28 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
     {
         var endpoint = string.Format(_casinoApiConfiguration.Endpoints.GetPlayer, request.CasinoToken);
 
-        var recievedPlayer = await _httpClient.GetAsync<PlayerGetModel>(_casinoApiConfiguration.Host, endpoint);
+        var receivedPlayer = await _httpClient.GetAsync<PlayerGetModel>(_casinoApiConfiguration.Host, endpoint);
 
-        if (recievedPlayer == null)
-        {
+        if (receivedPlayer == null)
             throw new ArgumentNullException();
-        }
 
-        var player = await _playerRepository.OfIdAsync(recievedPlayer.Id);
+        var player = await _playerRepository.OfIdAsync(receivedPlayer.Id);
 
         if (player == null)
         {
             player = new Player
             {
-                Id = recievedPlayer.Id,
-                UserName = recievedPlayer.UserName,
-                SegmentId = recievedPlayer.SegmentId,
+                Id = receivedPlayer.Id,
+                UserName = receivedPlayer.UserName,
+                SegmentIds = receivedPlayer.SegmentIds ?? new List<int>()
             };
 
             await _playerRepository.InsertAsync(player);
             await _unitOfWork.SaveAsync();
         }
 
-        return new CreateAuthenticationTokenResponse(true, _tokenService.GenerateTokenString(player));
+        var (token, refreshToken) = await _tokenService.GenerateTokenStringAsync(player);
+
+        return new CreateAuthenticationTokenResponse(true, token, refreshToken);
     }
 }
