@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Exceptions;
+using OnAim.Admin.Infrasturcture.Extensions;
 using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
 using OnAim.Admin.Infrasturcture.Models.Request.User;
 using OnAim.Admin.Infrasturcture.Models.Response;
@@ -11,7 +10,6 @@ using OnAim.Admin.Infrasturcture.Models.Response.User;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.Models;
-using System.Security.Cryptography;
 
 namespace OnAim.Admin.Infrasturcture.Repository
 {
@@ -19,9 +17,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
     {
         private readonly DatabaseContext _databaseContext;
 
-        public UserRepository(
-            DatabaseContext databaseContext
-            )
+        public UserRepository(DatabaseContext databaseContext)
         {
             _databaseContext = databaseContext;
         }
@@ -74,7 +70,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
         public async Task<User> FindByEmailAsync(string email)
         {
             return await _databaseContext.Users
-                .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
@@ -91,7 +86,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
 
             if (user == null)
             {
-                throw new UserNotFoundException($"User with ID {id} not found.");
+                throw new Exception($"User with ID {id} not found.");
             }
 
             var result = new UsersResponseModel
@@ -277,41 +272,19 @@ namespace OnAim.Admin.Infrasturcture.Repository
             };
         }
 
-        public async Task DeleteUser(int userId)
-        {
-            var user = await _databaseContext.FindAsync<User>(userId);
-
-            if (user != null)
-            {
-                user.IsActive = false;
-                await _databaseContext.SaveChangesAsync();
-            }
-        }
-
-        public static string ToHttpMethod(EndpointType? type)
-        {
-            return type switch
-            {
-                EndpointType.Get => "GET",
-                EndpointType.Create => "POST",
-                EndpointType.Update => "PUT",
-                EndpointType.Delete => "DELETE",
-                _ => "UNKNOWN"
-            };
-        }
-
         public async Task<User> UpdateUser(int id, UpdateUserRequest user)
         {
             var existingUser = await _databaseContext.Users.FindAsync(id);
 
             if (existingUser == null)
             {
-                throw new UserNotFoundException("User not found");
+                throw new Exception("User not found");
             }
 
             existingUser.FirstName = user.FirstName;
             existingUser.LastName = user.LastName;
             existingUser.Phone = user.Phone;
+            existingUser.DateUpdated = SystemDate.Now;
             //existingUser.UserId = user.UserId;
 
             var currentRoles = await _databaseContext.UserRoles
@@ -348,43 +321,17 @@ namespace OnAim.Admin.Infrasturcture.Repository
         {
             var user = await GetById(id);
 
-            if (user != null && !user.IsBanned)
+            if (user != null && user.IsActive)
             {
-                var salt = Salt();
+                var salt = EncryptPasswordExtension.Salt();
 
-                string hashed = EncryptPassword(password, salt);
+                string hashed = EncryptPasswordExtension.EncryptPassword(password, salt);
 
                 user.Password = hashed;
                 user.Salt = salt;
 
                 await _databaseContext.SaveChangesAsync();
             }
-
-            throw new UserNotFoundException("User not found");
-        }
-
-        private string EncryptPassword(string password, string salt)
-        {
-            return Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                                                         password: password,
-                                                         salt: Convert.FromBase64String(salt),
-                                                         prf: KeyDerivationPrf.HMACSHA256,
-                                                         iterationCount: 100000,
-                                                         numBytesRequested: 256 / 8));
-        }
-
-        private string Salt()
-        {
-            byte[] salt = new byte[128 / 8];
-
-            RandomNumberGenerator.Fill(salt);
-
-            return Convert.ToBase64String(salt);
-        }
-
-        public async Task CommitChanges()
-        {
-            await _databaseContext.SaveChangesAsync();
         }
     }
 }

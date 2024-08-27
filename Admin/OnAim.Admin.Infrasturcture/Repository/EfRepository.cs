@@ -16,18 +16,16 @@ namespace OnAim.Admin.Infrasturcture.Repository
             _db = db;
         }
 
-        public virtual async Task<T?> Find(int uId, bool onlyActive = true)
+        public virtual async Task<T?> Find(int uId)
         {
-            return await (onlyActive
-                ? _db.Set<T>().Where(x => x.IsActive == true).SingleOrDefaultAsync(x => x.Id == uId)
-                : _db.Set<T>().SingleOrDefaultAsync(x => x.Id == uId));
+            return await _db.Set<T>().SingleOrDefaultAsync(x => x.Id == uId);
         }
 
         public virtual IQueryable<T> Query(
-            Expression<Func<T, bool>> expression = null,
-            bool onlyActives = true)
+            Expression<Func<T, bool>> expression = null
+            )
         {
-            var baseQuery = onlyActives ? _db.Set<T>().Where(x => x.IsActive == true) : _db.Set<T>();
+            var baseQuery = _db.Set<T>();
 
             if (expression == null)
                 return baseQuery.AsQueryable();
@@ -37,6 +35,12 @@ namespace OnAim.Admin.Infrasturcture.Repository
         public virtual async Task Store(T document)
         {
             await _db.Set<T>().AddAsync(document);
+        }
+
+        public virtual async Task Remove(T document)
+        {
+            _db.Set<T>().Remove(document);
+            await Task.CompletedTask;
         }
 
         public void WithDbContext(DatabaseContext dbContext)

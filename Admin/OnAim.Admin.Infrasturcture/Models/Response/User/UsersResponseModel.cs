@@ -12,7 +12,6 @@ namespace OnAim.Admin.Infrasturcture.Models.Response.User
         public string Password { get; set; }
         public string Salt { get; set; }
         public bool IsActive { get; set; }
-        public bool IsBanned { get; set; }
         public List<RoleResponseModel> Roles { get; set; }
         public DateTimeOffset DateCreated { get; set; }
         public DateTimeOffset DateUpdated { get; set; }

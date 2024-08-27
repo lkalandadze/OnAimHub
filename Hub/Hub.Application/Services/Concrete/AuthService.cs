@@ -43,14 +43,19 @@ public class AuthService : IAuthService
         {
             Id = GetCurrentPlayerId(),
             UserName = GetCurrentPlayerUserName(),
-            SegmentId = GetCurrentPlayerSegmentId(),
+            SegmentIds = GetCurrentPlayerSegmentIds(),
         };
     }
 
-    public int GetCurrentPlayerSegmentId()
+    public List<int> GetCurrentPlayerSegmentIds()
     {
-        return int.Parse(Token.Claims.FirstOrDefault(x => x.Type == "SegmentId")?.Value!);
+        var segmentIds = Token.Claims.FirstOrDefault(x => x.Type == "SegmentIds")?.Value;
+        return segmentIds?.Split(',').Select(int.Parse).ToList() ?? new List<int>();
     }
+    //public int GetCurrentPlayerSegmentId()
+    //{
+    //    return int.Parse(Token.Claims.FirstOrDefault(x => x.Type == "SegmentId")?.Value!);
+    //}
 
     public string GetCurrentPlayerUserName()
     {

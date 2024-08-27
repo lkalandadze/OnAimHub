@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Attributes;
+using System.Security.Claims;
 
 namespace OnAim.Admin.API.Controllers.Abstract
 {
@@ -22,5 +23,16 @@ namespace OnAim.Admin.API.Controllers.Abstract
             }
         }
 
+        protected ClaimsPrincipal CurrentUser => User;
+
+        protected string GetUserClaimValue(string claimType)
+        {
+            return User.FindFirstValue(claimType) ?? string.Empty;
+        }
+
+        protected string GetUserId()
+        {
+            return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+        }
     }
 }

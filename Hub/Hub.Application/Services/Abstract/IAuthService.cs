@@ -6,7 +6,9 @@ public interface IAuthService
 {
     Player GetCurrentPlayer();
 
-    int GetCurrentPlayerSegmentId();
+    public List<int> GetCurrentPlayerSegmentIds();
+
+    //int GetCurrentPlayerSegmentIds();
 
     string GetCurrentPlayerUserName();
 

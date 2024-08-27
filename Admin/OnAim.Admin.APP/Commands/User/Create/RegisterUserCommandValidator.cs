@@ -10,6 +10,14 @@ namespace OnAim.Admin.APP.Commands.User.Create
                 .NotEmpty()
                 .EmailAddress()
                 .WithMessage("Valid email is required.");
+            RuleFor(x => x.FirstName)
+                .NotEmpty()
+                .NotNull()
+                .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
+            RuleFor(x => x.LastName)
+                .NotEmpty()
+                .NotNull()
+                .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
             RuleFor(x => x.Password)
                 .NotEmpty()
                 .MinimumLength(6)

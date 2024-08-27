@@ -1,16 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
-using OnAim.Admin.APP.Commands.User.AssignRole;
+using OnAim.Admin.APP.Commands.User.ChangePassword;
 using OnAim.Admin.APP.Commands.User.Create;
 using OnAim.Admin.APP.Commands.User.Delete;
 using OnAim.Admin.APP.Commands.User.Login;
-using OnAim.Admin.APP.Commands.User.RemoveRole;
 using OnAim.Admin.APP.Commands.User.ResetPassword;
 using OnAim.Admin.APP.Commands.User.Update;
 using OnAim.Admin.APP.Models.Request.User;
 using OnAim.Admin.APP.Models.Response.User;
-using OnAim.Admin.APP.Queries.Role.GetUserRoles;
 using OnAim.Admin.APP.Queries.User.GetAllUser;
 using OnAim.Admin.APP.Queries.User.GetById;
 using OnAim.Admin.Infrasturcture.Models.Request.User;
@@ -25,17 +23,12 @@ namespace OnAim.Admin.API.Controllers
         [HttpGet("GetMe")]
         public async Task<IActionResult> GetMe()
         {
-            //var user = _appContext.UserId.Value;
-
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized("User not found.");
             }
-
-            //var userId = _appContext.UserId.Value;
-
             return Ok(new GetUserByIdQuery(Convert.ToInt32(userId)));
         }
 
@@ -45,11 +38,7 @@ namespace OnAim.Admin.API.Controllers
 
         [HttpGet("Get/{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
-            => Ok(Mediator.Send(new GetUserByIdQuery(id)));
-
-        [HttpGet("GetUserRoles/{id}")]
-        public async Task<IActionResult> GetUserRoles([FromRoute] int id)
-            => Ok(await Mediator.Send(new GetUserRolesQuery(id)));
+            => Ok(await Mediator.Send(new GetUserByIdQuery(id)));
 
         [HttpPost("Register")]
         [AllowAnonymous]
@@ -65,18 +54,14 @@ namespace OnAim.Admin.API.Controllers
         public async Task<AuthResultDto> Login([FromBody] LoginUserRequest model)
             => await Mediator.Send(new LoginUserCommand(model));
 
-        [HttpPost("ResetPassword")]
+        [HttpPost("ChangePassword")]
         [AllowAnonymous]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
             => Ok(await Mediator.Send(command));
 
-        //[HttpPost("AssignRole/{id}")]
-        //public async Task<IActionResult> AssignRole([FromRoute] int id, [FromBody] int roleId)
-        //    => Ok(await Mediator.Send(new AssignRoleToUserCommand(id, roleId)));
-
-        //[HttpPost("RemoveRole/{id}")]
-        //public async Task<IActionResult> RemoveRole([FromRoute] int id, [FromBody] int roleId)
-        //    => Ok(await Mediator.Send(new RemoveRoleCommand(id, roleId)));
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
+            => Ok(await Mediator.Send(command));
 
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserRequest model)

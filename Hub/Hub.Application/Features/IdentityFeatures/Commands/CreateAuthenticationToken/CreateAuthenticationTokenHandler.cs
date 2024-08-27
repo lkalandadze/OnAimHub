@@ -6,11 +6,12 @@ using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Options;
+using Shared.Domain.Wrappers;
 using Shared.Lib.Extensions;
 
 namespace Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 
-public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthenticationTokenRequest, CreateAuthenticationTokenResponse>
+public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthenticationTokenRequest, Response<CreateAuthenticationTokenResponse>>
 {
     private readonly IPlayerRepository _playerRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -27,32 +28,33 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
         _casinoApiConfiguration = casinoApiConfiguration.Value;
     }
 
-    public async Task<CreateAuthenticationTokenResponse> Handle(CreateAuthenticationTokenRequest request, CancellationToken cancellationToken)
+    public async Task<Response<CreateAuthenticationTokenResponse>> Handle(CreateAuthenticationTokenRequest request, CancellationToken cancellationToken)
     {
         var endpoint = string.Format(_casinoApiConfiguration.Endpoints.GetPlayer, request.CasinoToken);
 
         var recievedPlayer = await _httpClient.CustomGetAsync<PlayerGetModel>(_casinoApiConfiguration.Host, endpoint);
 
-        if (recievedPlayer == null)
-        {
+        if (receivedPlayer == null)
             throw new ArgumentNullException();
-        }
 
-        var player = await _playerRepository.OfIdAsync(recievedPlayer.Id);
+        var player = await _playerRepository.OfIdAsync(receivedPlayer.Id);
 
         if (player == null)
         {
             player = new Player
             {
-                Id = recievedPlayer.Id,
-                UserName = recievedPlayer.UserName,
-                SegmentId = recievedPlayer.SegmentId,
+                Id = receivedPlayer.Id,
+                UserName = receivedPlayer.UserName,
+                SegmentIds = receivedPlayer.SegmentIds ?? new List<int>()
             };
 
             await _playerRepository.InsertAsync(player);
             await _unitOfWork.SaveAsync();
         }
 
-        return new CreateAuthenticationTokenResponse(true, _tokenService.GenerateTokenString(player));
+        var (token, refreshToken) = await _tokenService.GenerateTokenStringAsync(player);
+
+        var response = new CreateAuthenticationTokenResponse(token, refreshToken);
+        return new Response<CreateAuthenticationTokenResponse>(response);
     }
 }

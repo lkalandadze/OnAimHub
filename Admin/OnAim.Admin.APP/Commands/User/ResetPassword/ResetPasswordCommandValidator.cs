@@ -6,10 +6,7 @@ namespace OnAim.Admin.APP.Commands.User.ResetPassword
     {
         public ResetPasswordCommandValidator()
         {
-            RuleFor(x => x.Email)
-                .NotEmpty()
-                .EmailAddress()
-                .WithMessage("Valid email is required.");
+            RuleFor(x => x.Id).NotEmpty();
             RuleFor(x => x.Password)
                 .NotEmpty()
                 .MinimumLength(6)

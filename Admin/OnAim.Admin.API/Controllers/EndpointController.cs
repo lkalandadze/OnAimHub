@@ -2,8 +2,6 @@
 using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP.Commands.EndPoint.Create;
 using OnAim.Admin.APP.Commands.EndPoint.Delete;
-using OnAim.Admin.APP.Commands.EndPoint.Disable;
-using OnAim.Admin.APP.Commands.EndPoint.Enable;
 using OnAim.Admin.APP.Commands.EndPoint.Update;
 using OnAim.Admin.APP.Queries.EndPoint.GetAll;
 using OnAim.Admin.APP.Queries.EndPoint.GetById;
@@ -21,16 +19,8 @@ namespace OnAim.Admin.API.Controllers
         public async Task<IActionResult> Create([FromBody] CreateEndpointCommand command)
              => Ok(await Mediator.Send(command));
 
-        [HttpPut("Enable/{endpointId}")]
-        public async Task<IActionResult> Enable([FromRoute] int endpointId)
-            => Ok(await Mediator.Send(new EnableEndpointCommand(endpointId)));
-
-        [HttpPut("Disable/{endpointId}")]
-        public async Task<IActionResult> Disable([FromRoute] int endpointId)
-            => Ok(await Mediator.Send(new DisableEndpointCommand(endpointId)));
-
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] EndpointRequestModel model)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateEndpointDto model)
             => Ok(await Mediator.Send(new UpdateEndpointCommand { Id = id, Endpoint = model }));
 
         [HttpGet("GetAll")]

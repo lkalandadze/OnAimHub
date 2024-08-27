@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Exceptions;
 using OnAim.Admin.Infrasturcture.Models.Request.EndpointGroup;
 using OnAim.Admin.Infrasturcture.Models.Response;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
@@ -31,7 +30,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
                     IsEnabled = true,
                     IsActive = true,
                     EndpointGroupEndpoints = new List<EndpointGroupEndpoint>(),
-                    //UserId = ,
                     DateCreated = SystemDate.Now,
                 };
 
@@ -54,20 +52,11 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 }
 
                 await _databaseContext.EndpointGroups.AddAsync(endpointGroup);
-                await SaveChangesAsync();
+                await _databaseContext.SaveChangesAsync();
             }
             else
             {
-                throw new AlreadyExistsException("Group with that name already exists!");
-            }
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var endpointGroup = await GetByIdAsync(id);
-            if (endpointGroup != null)
-            {
-                _databaseContext.EndpointGroups.Remove(endpointGroup);
+                throw new Exception("Group with that name already exists!");
             }
         }
 
@@ -75,8 +64,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
         {
             var query = _databaseContext.EndpointGroups
                 .AsNoTracking()
-                .Include(x => x.EndpointGroupEndpoints)
-                .ThenInclude(x => x.Endpoint)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(filter.Name))
@@ -95,10 +82,27 @@ namespace OnAim.Admin.Infrasturcture.Repository
             var pageSize = filter.PageSize ?? 25;
 
             var endpointGroups = await query
-               .OrderBy(x => x.Id)
-               .Skip((pageNumber - 1) * pageSize)
-               .Take(pageSize)
-               .ToListAsync();
+                .OrderBy(x => x.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(x => new
+                {
+                    x.Id,
+                    x.Name,
+                    x.IsActive,
+                    x.Description,
+                    x.IsEnabled,
+                    x.UserId,
+                    x.DateCreated,
+                    x.DateDeleted,
+                    x.DateUpdated,
+                    EndpointGroupEndpoints = x.EndpointGroupEndpoints.Select(ep => new
+                    {
+                        ep.EndpointId,
+                        ep.EndpointGroupId
+                    }).ToList()
+                })
+                .ToListAsync();
 
             var result = endpointGroups.Select(x => new EndpointGroup
             {
@@ -114,7 +118,7 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 EndpointGroupEndpoints = x.EndpointGroupEndpoints.Select(ep => new EndpointGroupEndpoint
                 {
                     EndpointId = ep.EndpointId,
-                    EndpointGroupId = ep.EndpointGroupId,
+                    EndpointGroupId = ep.EndpointGroupId
                 }).ToList()
             }).ToList();
 
@@ -166,38 +170,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
             };
         }
 
-        public async Task AddEndpoint(EndpointGroup endpointGroup, Endpoint endpoint)
-        {
-            var exists = await _databaseContext.EndpointGroupEndpoints
-                                   .AnyAsync(ege => ege.EndpointGroupId == endpointGroup.Id && ege.EndpointId == endpoint.Id);
-
-            if (!exists)
-            {
-                var endpointGroupEndpoint = new EndpointGroupEndpoint
-                {
-                    EndpointGroupId = endpointGroup.Id,
-                    EndpointId = endpoint.Id,
-                    Endpoint = endpoint,
-                    EndpointGroup = endpointGroup
-                };
-
-                _databaseContext.EndpointGroupEndpoints.Add(endpointGroupEndpoint);
-            }
-
-        }
-
-        public async Task RemoveEndpoint(EndpointGroup endpointGroup, Endpoint endpoint)
-        {
-            var endpointGroupEndpoint = await _databaseContext.EndpointGroupEndpoints
-                                               .FirstOrDefaultAsync(ege => ege.EndpointGroupId == endpointGroup.Id && ege.EndpointId == endpoint.Id);
-
-            if (endpointGroupEndpoint != null)
-            {
-                _databaseContext.EndpointGroupEndpoints.Remove(endpointGroupEndpoint);
-            }
-
-        }
-
         public async Task UpdateAsync(int id, UpdateEndpointGroupRequest endpointGroup)
         {
             var group = await _databaseContext.EndpointGroups
@@ -207,6 +179,29 @@ namespace OnAim.Admin.Infrasturcture.Repository
             if (group == null)
             {
                 throw new Exception("Endpoint Group Not Found");
+            }
+
+            if (!string.IsNullOrEmpty(endpointGroup.Name))
+            {
+                bool nameExists = await _databaseContext.EndpointGroups
+                    .AnyAsync(g => g.Name == endpointGroup.Name && g.Id != id);
+
+                if (nameExists)
+                {
+                    throw new Exception("An Endpoint Group with this name already exists.");
+                }
+
+                group.Name = endpointGroup.Name;
+            }
+
+            if (endpointGroup.Description != null)
+            {
+                group.Description = endpointGroup.Description;
+            }
+
+            if (endpointGroup.IsActive.HasValue)
+            {
+                group.IsActive = endpointGroup.IsActive.Value;
             }
 
             var currentEndpointIds = group.EndpointGroupEndpoints.Select(ep => ep.EndpointId).ToList();
@@ -246,15 +241,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 }
             }
 
-            group.Name = endpointGroup.Name;
-            group.Description = endpointGroup.Description;
-            group.IsActive = endpointGroup.IsActive ?? true;
-
-            await _databaseContext.SaveChangesAsync();
-        }
-
-        public async Task SaveChangesAsync()
-        {
             await _databaseContext.SaveChangesAsync();
         }
     }

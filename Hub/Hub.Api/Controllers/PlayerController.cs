@@ -1,6 +1,8 @@
 ﻿using Hub.Application.Features.PlayerFeatures.Queries.GetBalance;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayer;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayers;
+using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.Api.Controllers;
@@ -24,4 +26,9 @@ public class PlayerController : BaseApiController
     {
         return Ok(await Mediator.Send(new GetBalanceRequest()));
     }
+
+    //[Authorize]
+    //[HttpGet]
+    //public async Task<Response<GetGamesBySegmentIdQueryResponse>> GetGames(GetGamesBySegmentIdQuery request) => await Mediator.Send(request);
+
 }

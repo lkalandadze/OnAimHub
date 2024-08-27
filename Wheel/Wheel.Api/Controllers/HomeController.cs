@@ -1,30 +1,38 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Wheel.Application;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Wheel.Application.Models;
+using Wheel.Infrastructure.Services.Abstract;
 using Wheel.Application.Models.Player;
 
 namespace Wheel.Api.Controllers;
 
 public class HomeController : BaseApiController
 {
-    private readonly GameManager _gameManager;
+    private readonly IGameService _gameService;
 
-    public HomeController(GameManager gameManager)
+    public HomeController(IGameService gameService)
     {
-        _gameManager = gameManager;
+        _gameService = gameService;
     }
 
     [HttpGet("initial-data")]
     public ActionResult<InitialDataResponseModel> GetInitialDataAsync()
     {
-        var result = _gameManager.GetInitialData();
+        var result = _gameService.GetInitialData();
         return Ok(result);
     }
-     
-    [HttpPost("wheel-play")]
-    public async Task<ActionResult<PlayResultModel>> WheelPlayAsync([FromBody] PlayRequestModel command)
+
+    [AllowAnonymous]
+    [HttpGet(nameof(GetGameVersion))]
+    public ActionResult<GameVersionResponseModel> GetGameVersion()
     {
-        var result = await _gameManager.WheelPlayAsync(command);
+        return Ok(_gameService.GetGame());
+    }
+     
+    [HttpPost("play")]
+    public ActionResult<PlayResultModel> PlayAsync([FromBody] PlayRequestModel command)
+    {
+        var result = _gameService.Play(command);
         return Ok(result);
     }
 }

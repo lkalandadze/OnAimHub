@@ -1,17 +1,28 @@
 using OnAim.Admin.API.Extensions;
 using OnAim.Admin.API.Factory;
 using OnAim.Admin.API.Middleware;
-using OnAim.Admin.APP;
+using OnAim.Admin.APP.Extensions;
 using OnAim.Admin.Identity;
 using OnAim.Admin.Identity.Entities;
 using OnAim.Admin.Identity.Persistance;
 using OnAim.Admin.Identity.Services;
-using OnAim.Admin.Infrasturcture;
+using OnAim.Admin.Infrasturcture.Extensions;
 using OnAim.Admin.Infrasturcture.Repository;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using Serilog;
+using Serilog.Events;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .WriteTo.Console()
+    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 builder.Services
                 //.AddCustomIdentity()
@@ -25,7 +36,7 @@ builder.Services
 builder.Services.AddIdentityServerAuthentication<ApplicationIdentityDbContext, User, ApplicationUserManager>(builder.Configuration);
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>));
 builder.Services.AddScoped(ApplicationContextFactory.Create);
 builder.Services.AddApp();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -39,6 +50,8 @@ builder.Services.AddControllersWithViews()
 );
 
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
 {

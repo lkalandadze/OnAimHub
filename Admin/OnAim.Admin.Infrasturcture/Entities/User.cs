@@ -13,7 +13,6 @@ namespace OnAim.Admin.Infrasturcture.Entities
         public string Password { get; set; }
         public string Phone { get; set; }
         public ICollection<UserRole> UserRoles { get; set; }
-        //public bool IsBanned { get; set; }
 
         //who created/updated/deleted this user
         public int? UserId { get; set; }

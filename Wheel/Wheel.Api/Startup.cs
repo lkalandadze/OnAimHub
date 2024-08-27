@@ -1,12 +1,15 @@
 ﻿using Consul;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Shared.Infrastructure.DataAccess;
 using Shared.ServiceRegistry;
 using Wheel.Api.Consul;
-using Wheel.Application;
+using Wheel.Application.Models;
 using Wheel.Domain.Entities;
 using Wheel.Infrastructure.DataAccess;
+using Wheel.Infrastructure.Services.Abstract;
+using Wheel.Infrastructure.Services.Concrete;
 
 namespace Wheel.Api;
 
@@ -33,16 +36,8 @@ public class Startup
         services.Resolve(Configuration, prizeGroupTypes);
 
         services.AddSingleton(prizeGroupTypes);
-        services.AddScoped<GameManager>();
-        
-        services.AddCors(options =>
-        {
-            options.AddPolicy(
-                "AllowAnyOrigin",
-                builder => builder.AllowAnyOrigin()
-                                  .AllowAnyMethod()
-                                  .AllowAnyHeader());
-        });
+        services.AddScoped<IGameService, GameService>();
+
 
         ConfigureMassTransit(services);
         services.AddMassTransitHostedService();
@@ -57,7 +52,7 @@ public class Startup
         services.AddHealthChecks();
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, IGameService gameService)
     {
         app.UseCors("AllowAnyOrigin");
         app.UseHttpsRedirection();
@@ -94,29 +89,41 @@ public class Startup
 
     private void ConfigureConsulLifetime(IApplicationBuilder app, IHostApplicationLifetime lifetime)
     {
+        var serviceId = Guid.NewGuid().ToString();
+
         lifetime.ApplicationStarted.Register(() =>
         {
             var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
+
+            GameVersionResponseModel activeGameModel;
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var gameService = scope.ServiceProvider.GetRequiredService<IGameService>();
+                activeGameModel = gameService.GetGame();
+            }
+
+            var serializedGameData = JsonConvert.SerializeObject(activeGameModel);
+
             var registration = new AgentServiceRegistration()
             {
-                ID = Guid.NewGuid().ToString(),
+                ID = serviceId,
                 Name = "wheelapi",
-                Address = "wheelapi", // Docker service name or external IP address
-                Port = 8080 // The port your service is running on inside the container
+                Address = "wheelapi",
+                Port = 8080,
+                Tags = new[] { "Game", "Back" },
+                Meta = new Dictionary<string, string>
+            {
+                { "GameData", serializedGameData }
+            }
             };
+
             consulClient.Agent.ServiceRegister(registration).Wait();
         });
 
-        // Deregister the service from Consul when application stops
         lifetime.ApplicationStopped.Register(() =>
         {
             var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
-            var registration = new AgentServiceRegistration()
-            {
-                ID = Guid.NewGuid().ToString(),
-                Name = "wheelapi"
-            };
-            consulClient.Agent.ServiceDeregister(registration.ID).Wait();
+            consulClient.Agent.ServiceDeregister(serviceId).Wait();
         });
     }
 

@@ -60,7 +60,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hub.IntegrationEvents", "Hu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wheel.IntegrationEvents", "Wheel.IntegrationEvents\Wheel.IntegrationEvents.csproj", "{08F87627-5903-41E1-8910-47E2CC16107A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.IntegrationEvents", "Shared.IntegrationEvents\Shared.IntegrationEvents.csproj", "{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.IntegrationEvents", "Shared.IntegrationEvents\Shared.IntegrationEvents.csproj", "{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,19 +133,15 @@ Global
 		{38AB5D0D-C5E9-4805-A1C7-1865212F65A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38AB5D0D-C5E9-4805-A1C7-1865212F65A9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC0B5C44-DC83-4188-B5EE-18A9B6BCF7F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC0B5C44-DC83-4188-B5EE-18A9B6BCF7F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC0B5C44-DC83-4188-B5EE-18A9B6BCF7F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC0B5C44-DC83-4188-B5EE-18A9B6BCF7F8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{801D27FF-C270-4D00-A0C6-030CD99B3593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{801D27FF-C270-4D00-A0C6-030CD99B3593}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{801D27FF-C270-4D00-A0C6-030CD99B3593}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{801D27FF-C270-4D00-A0C6-030CD99B3593}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CDEAE9BB-F44A-46F2-8B17-8FA2E1A66078}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDEAE9BB-F44A-46F2-8B17-8FA2E1A66078}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDEAE9BB-F44A-46F2-8B17-8FA2E1A66078}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDEAE9BB-F44A-46F2-8B17-8FA2E1A66078}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3BAD8C0C-A22F-4448-B619-C99121670E1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3BAD8C0C-A22F-4448-B619-C99121670E1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BAD8C0C-A22F-4448-B619-C99121670E1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BAD8C0C-A22F-4448-B619-C99121670E1D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC12048E-21C0-407F-ADAE-70932BBA896E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

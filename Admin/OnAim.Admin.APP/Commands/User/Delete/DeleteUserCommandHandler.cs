@@ -1,20 +1,22 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.Models;
 
 namespace OnAim.Admin.APP.Commands.User.Delete
 {
     public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IRepository<Infrasturcture.Entities.User> _repository;
         private readonly IValidator<DeleteUserCommand> _validator;
 
         public DeleteUserCommandHandler(
-            IUserRepository userRepository, 
+            IRepository<Infrasturcture.Entities.User> repository,
             IValidator<DeleteUserCommand> validator
             )
         {
-            _userRepository = userRepository;
+            _repository = repository;
             _validator = validator;
         }
         public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
@@ -26,7 +28,14 @@ namespace OnAim.Admin.APP.Commands.User.Delete
                 throw new ValidationException(validationResult.Errors);
             }
 
-            await _userRepository.DeleteUser(request.UserId);
+            var user = await _repository.Query(x => x.Id == request.UserId).FirstOrDefaultAsync();
+
+            if (user != null)
+            {
+                user.IsActive = false;
+                user.DateDeleted = SystemDate.Now;
+                await _repository.CommitChanges();
+            }
         }
     }
 }

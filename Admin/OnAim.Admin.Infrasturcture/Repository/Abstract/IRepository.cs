@@ -5,11 +5,13 @@ namespace OnAim.Admin.Infrasturcture.Repository.Abstract
 {
     public interface IRepository<T> where T : class
     {
-        Task<T?> Find(int uId, bool onlyActive = true);
+        Task<T?> Find(int uId);
 
-        IQueryable<T> Query(Expression<Func<T, bool>>? expression = null, bool onlyActives = true);
+        IQueryable<T> Query(Expression<Func<T, bool>>? expression = null);
 
         Task Store(T document);
+
+        Task Remove(T document);
 
         void WithDbContext(DatabaseContext dbContext);
 
