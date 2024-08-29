@@ -56,11 +56,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnAim.Admin.Infrasturcture"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnAim.Admin.Shared", "Admin\OnAim.Admin.Shared\OnAim.Admin.Shared.csproj", "{3BAD8C0C-A22F-4448-B619-C99121670E1D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hub.IntegrationEvents", "Hub.IntegrationEvents\Hub.IntegrationEvents.csproj", "{AC12048E-21C0-407F-ADAE-70932BBA896E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hub.IntegrationEvents", "Hub\Hub.IntegrationEvents\Hub.IntegrationEvents.csproj", "{AC12048E-21C0-407F-ADAE-70932BBA896E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wheel.IntegrationEvents", "Wheel.IntegrationEvents\Wheel.IntegrationEvents.csproj", "{08F87627-5903-41E1-8910-47E2CC16107A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wheel.IntegrationEvents", "Wheel\Wheel.IntegrationEvents\Wheel.IntegrationEvents.csproj", "{08F87627-5903-41E1-8910-47E2CC16107A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.IntegrationEvents", "Shared.IntegrationEvents\Shared.IntegrationEvents.csproj", "{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.IntegrationEvents", "Shared\Shared.IntegrationEvents\Shared.IntegrationEvents.csproj", "{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
