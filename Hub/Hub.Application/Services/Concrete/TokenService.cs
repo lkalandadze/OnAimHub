@@ -53,7 +53,7 @@ public class TokenService : ITokenService
             claims: claims,
             audience: _jwtConfig.Audience,
             issuer: _jwtConfig.Issuer,
-            expires: DateTime.Now.AddMinutes(20),
+            expires: DateTime.Now.AddMinutes(_jwtConfig.ExpiresInMinutes),
             signingCredentials: signingCred
         );
 
@@ -77,6 +77,7 @@ public class TokenService : ITokenService
 
         return (accessTokenString, refreshToken);
     }
+
     public async Task<(string AccessToken, string RefreshToken)> RefreshAccessTokenAsync(string accessToken, string refreshToken)
     {
         var tokenRecord = _tokenRecordRepository.Query()

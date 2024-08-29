@@ -6,7 +6,6 @@ using Microsoft.OpenApi.Models;
 using Shared.Application.Configurations;
 using Shared.Application.Holders;
 using Shared.Application.Managers;
-using Shared.Application.Options;
 using Shared.Application.Services.Abstract;
 using Shared.Application.Services.Concrete;
 using Shared.Domain.Abstractions.Repository;
@@ -28,6 +27,7 @@ public static class DependencyResolver
             services.AddScoped(typeof(IPrizeGroupRepository<>).MakeGenericType(type), typeof(PrizeGroupRepository<>).MakeGenericType(type));
         }
 
+        services.AddHttpClient();
         services.AddSingleton<IAuthService, AuthService>();
         services.AddScoped<IHubService, HubService>();
         services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
@@ -41,11 +41,10 @@ public static class DependencyResolver
         services.BuildServiceProvider().GetRequiredService<RepositoryManager>();
 
         services.AddHostedService<PrizeConfiguratorService>();
-        services.AddScoped<HttpClient>();
-
+        
         services.Configure<HubApiConfiguration>(configuration.GetSection("HubApiConfiguration"));
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
-        services.Configure<PrizeGenerationSettings>(configuration.GetSection("PrizeGenerationSettings"));
+        services.Configure<PrizeGenerationConfiguration>(configuration.GetSection("PrizeGenerationConfiguration"));
 
         ConfigureSwagger(services);
         ConfigureJwt(services, configuration);

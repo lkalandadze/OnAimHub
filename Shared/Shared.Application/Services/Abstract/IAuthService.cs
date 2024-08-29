@@ -4,7 +4,7 @@ namespace Shared.Application.Services.Abstract;
 
 public interface IAuthService
 {
-    int GetCurrentPlayerSegmentId();
+    IEnumerable<int> GetCurrentPlayerSegmentIds();
 
     string GetCurrentPlayerUserName();
 

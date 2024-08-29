@@ -52,7 +52,7 @@ public class Startup
         services.AddHealthChecks();
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, IGameService gameService)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
     {
         app.UseCors("AllowAnyOrigin");
         app.UseHttpsRedirection();

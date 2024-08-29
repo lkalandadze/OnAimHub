@@ -1,5 +1,4 @@
-﻿using Shared.Application.Exceptions;
-using Shared.Domain.Wrappers;
+﻿using Shared.Domain.Wrappers;
 using System.Net;
 using System.Text.Json;
 
@@ -66,4 +65,9 @@ public class ErrorHandlerMiddleware
             // Logging here
         }
     }
+}
+
+public class ApiException : Exception
+{
+
 }
