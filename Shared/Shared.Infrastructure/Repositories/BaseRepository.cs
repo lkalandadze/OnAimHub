@@ -1,6 +1,6 @@
-﻿using Shared.Domain.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Abstractions.Repository;
-using Microsoft.EntityFrameworkCore;
+using Shared.Lib.Entities;
 using System.Linq.Expressions;
 
 namespace Shared.Infrastructure.Repositories;

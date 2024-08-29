@@ -86,6 +86,5 @@ public class UnitOfWork(HubDbContext context) : IUnitOfWork, IDisposable
     public void Dispose()
     {
         _currentTransaction?.Dispose();
-        _context.Dispose();
     }
 }

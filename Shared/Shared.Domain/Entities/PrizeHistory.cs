@@ -1,4 +1,4 @@
-﻿using Shared.Domain.Abstractions;
+﻿using Shared.Lib.Entities;
 
 namespace Shared.Domain.Entities;
 

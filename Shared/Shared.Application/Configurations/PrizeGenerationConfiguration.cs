@@ -2,10 +2,9 @@
 
 using Shared.Application.Generators;
 
-namespace Shared.Application.Options;
+namespace Shared.Application.Configurations;
 
-public class PrizeGenerationSettings
+public class PrizeGenerationConfiguration
 {
     public PrizeGenerationType PrizeGenerationType { get; set; }
-
 }

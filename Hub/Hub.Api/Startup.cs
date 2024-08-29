@@ -35,13 +35,14 @@ public class Startup
         var env = services.BuildServiceProvider().GetRequiredService<IWebHostEnvironment>();
 
         services.AddDbContext<HubDbContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(Configuration.GetConnectionString("OnAimHub")));
 
-        services.AddScoped<HttpClient>();
+        services.AddHttpClient();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<ITokenRecordRepository, TokenRecordRepository>();
+        services.AddScoped<ITransactionRepository, TransactionRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddSingleton<IActiveGameService, ActiveGameService>();
 
@@ -79,13 +80,6 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
     {
-        //create database
-        using (var scope = app.ApplicationServices.CreateScope())
-        {
-            var dbContext = scope.ServiceProvider.GetRequiredService<HubDbContext>();
-            dbContext.Database.EnsureCreated();
-        }
-
         app.UseCors("AllowAnyOrigin");
         app.UseHttpsRedirection();
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Wheel.Application.Models;
 using Wheel.Infrastructure.Services.Abstract;
+using Wheel.Application.Models.Player;
 
 namespace Wheel.Api.Controllers;
 
@@ -28,10 +29,17 @@ public class HomeController : BaseApiController
         return Ok(_gameService.GetGame());
     }
      
-    [HttpPost("play")]
-    public ActionResult<PlayResultModel> PlayAsync([FromBody] PlayRequestModel command)
+    [HttpPost("play-jackpot")]
+    public async Task<ActionResult<PlayResultModel>> PlayJackpotAsync([FromBody] PlayRequestModel model)
     {
-        var result = _gameService.Play(command);
+        var result = await _gameService.PlayJackpotAsync(model);
+        return Ok(result);
+    }
+
+    [HttpPost("play-wheel")]
+    public async Task<ActionResult<PlayResultModel>> PlayWheelAsync([FromBody] PlayRequestModel model)
+    {
+        var result = await _gameService.PlayWheelAsync(model);
         return Ok(result);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Shared.Lib.Entities;
 
 namespace Shared.Domain.Abstractions.Repository;
 

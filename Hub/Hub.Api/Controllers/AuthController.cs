@@ -3,12 +3,9 @@ using Hub.Application.Features.IdentityFeatures.Commands.RefreshTokens;
 using Hub.Application.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Shared.Domain.Wrappers;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Hub.Api.Controllers;
-
 
 public class AuthController : BaseApiController
 {

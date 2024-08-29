@@ -1,5 +1,5 @@
 ﻿using Shared.Domain.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
+using Shared.Lib.Entities;
 
 namespace Shared.Domain.Abstractions;
 

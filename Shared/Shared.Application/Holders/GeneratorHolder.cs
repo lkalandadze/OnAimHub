@@ -1,8 +1,7 @@
-﻿using Consul;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
+using Shared.Application.Configurations;
 using Shared.Application.Generators;
 using Shared.Application.Managers;
-using Shared.Application.Options;
 using Shared.Domain.Abstractions;
 
 namespace Shared.Application.Holders;
@@ -12,12 +11,12 @@ public class GeneratorHolder
     internal static Dictionary<BasePrizeGroup, Generator> Generators = [];
     internal List<Type> prizeGroupTypes;
 
-    private readonly PrizeGenerationSettings _settings;
+    private readonly PrizeGenerationConfiguration _prizeGenerationConfig;
     private static object _sync = new();
 
-    public GeneratorHolder(IOptions<PrizeGenerationSettings> settings, List<Type> prizeGroupTypes)
+    public GeneratorHolder(IOptions<PrizeGenerationConfiguration> prizeGenerationConfig, List<Type> prizeGroupTypes)
     {
-        _settings = settings.Value;
+        _prizeGenerationConfig = prizeGenerationConfig.Value;
         this.prizeGroupTypes = prizeGroupTypes;
     }
 
@@ -29,8 +28,8 @@ public class GeneratorHolder
 
             foreach (var prizeGroup in prizeGroups)
             {
-                var genType = _settings.PrizeGenerationType;
-                var generator = Generator.Create(prizeGroup, _settings.PrizeGenerationType);
+                var genType = _prizeGenerationConfig.PrizeGenerationType;
+                var generator = Generator.Create(prizeGroup, _prizeGenerationConfig.PrizeGenerationType);
 
                 Generators.Add(prizeGroup, generator);
             }

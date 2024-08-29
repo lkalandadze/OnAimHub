@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Shared.Lib.Entities;
+using System.Linq.Expressions;
 
 namespace Hub.Domain.Absractions.Repository;
 

@@ -36,8 +36,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Hub.IntegrationEvents\Hub.IntegrationEvents.csproj" />
-    <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
-    <ProjectReference Include="..\..\Shared\Shared.Domain\Shared.Domain.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Lib\Shared.Lib.csproj" />
     <ProjectReference Include="..\Hub.Application\Hub.Application.csproj" />
     <ProjectReference Include="..\Hub.Domain\Hub.Domain.csproj" />

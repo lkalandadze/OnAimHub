@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Shared.Application.Holders;
+﻿using Shared.Application.Holders;
 using Shared.Application.Services.Abstract;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Repository;
 using Wheel.Application.Models;
+using Wheel.Application.Models.Player;
 using Wheel.Domain.Entities;
 using Wheel.Infrastructure.Services.Abstract;
 
@@ -14,27 +14,24 @@ public class GameService : IGameService
     private readonly GeneratorHolder _generatorHolder;
     private readonly ConfigurationHolder _configurationHolder;
     private readonly IAuthService _authService;
+    private readonly IHubService _hubService;
     private readonly IConfigurationRepository _configurationRepository;
-    private readonly IPrizeGroupRepository<WheelPrizeGroup> _prizeGroupRepository;
     private readonly IGameVersionRepository _gameVersionRepository;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public GameService(
         GeneratorHolder generatorHolder,
         ConfigurationHolder configurationHolder,
         IAuthService authService,
+        IHubService hubService,
         IConfigurationRepository configurationRepository,
-        IPrizeGroupRepository<WheelPrizeGroup> prizeGroupRepository,
-        IGameVersionRepository gameVersionRepository,
-        IHttpContextAccessor httpContextAccessor)
+        IGameVersionRepository gameVersionRepository)
     {
         _generatorHolder = generatorHolder;
         _configurationHolder = configurationHolder;
         _authService = authService;
+        _hubService = hubService;
         _configurationRepository = configurationRepository;
-        _prizeGroupRepository = prizeGroupRepository;
         _gameVersionRepository = gameVersionRepository;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     public InitialDataResponseModel GetInitialData()
@@ -49,7 +46,7 @@ public class GameService : IGameService
     public GameVersionResponseModel GetGame()
     {
         var gameVersion = _gameVersionRepository.Query()
-        .FirstOrDefault();
+                                                .FirstOrDefault();
 
         if (gameVersion == null)
         {
@@ -60,16 +57,40 @@ public class GameService : IGameService
         {
             Id = gameVersion.Id,
             Name = gameVersion.Name,
-            
             IsActive = gameVersion.IsActive,
             SegmentIds = gameVersion.SegmentIds.ToList(),
             ActivationTime = DateTime.UtcNow,
         };
     }
 
-    public PlayResultModel Play(PlayRequestModel command)
+    public async Task<PlayResultModel> PlayJackpotAsync(PlayRequestModel command)
     {
-        var prize = GeneratorHolder.GetPrize<JackpotPrize>(command.GameVersionId, _authService.GetCurrentPlayerSegmentId());
+        return await PlayAsync<JackpotPrize>(command);
+    }
+
+    public async Task<PlayResultModel> PlayWheelAsync(PlayRequestModel command)
+    {
+        return await PlayAsync<WheelPrize>(command);
+    }
+
+    private async Task<PlayResultModel> PlayAsync<TPrize>(PlayRequestModel command)
+        where TPrize : BasePrize
+    {
+        await _hubService.BetTransactionAsync(command.GameVersionId);
+
+        var ttt = _authService.GetCurrentPlayerSegmentIds().ToList()[0];
+
+        var prize = GeneratorHolder.GetPrize<TPrize>(command.GameVersionId, _authService.GetCurrentPlayerSegmentIds().ToList()[0]);
+
+        if (prize == null)
+        {
+            throw new ArgumentNullException(nameof(prize));
+        }
+
+        if (prize.Value > 0)
+        {
+            await _hubService.WinTransactionAsync(command.GameVersionId);
+        }
 
         return new PlayResultModel
         {

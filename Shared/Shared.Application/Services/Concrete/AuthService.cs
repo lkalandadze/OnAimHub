@@ -36,9 +36,10 @@ public class AuthService : IAuthService
         _accessor = accessor;
     }
 
-    public int GetCurrentPlayerSegmentId()
+    public IEnumerable<int> GetCurrentPlayerSegmentIds()
     {
-        return int.Parse(Token.Claims.FirstOrDefault(x => x.Type == "SegmentId")?.Value!);
+        var segmentIds = Token.Claims.FirstOrDefault(x => x.Type == "SegmentIds")?.Value;
+        return segmentIds?.Split(',').Select(int.Parse).ToList() ?? new List<int>();
     }
 
     public string GetCurrentPlayerUserName()

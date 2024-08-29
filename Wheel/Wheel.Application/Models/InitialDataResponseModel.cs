@@ -1,4 +1,6 @@
-﻿using Shared.Domain.Abstractions;
+﻿#nullable disable
+
+using Shared.Domain.Abstractions;
 using Shared.Domain.Entities;
 
 namespace Wheel.Application.Models;
