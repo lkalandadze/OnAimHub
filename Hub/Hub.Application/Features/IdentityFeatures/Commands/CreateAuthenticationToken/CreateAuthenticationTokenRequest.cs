@@ -1,5 +1,5 @@
-﻿using MediatR;
-using Shared.Domain.Wrappers;
+﻿using Hub.Domain.Wrappers;
+using MediatR;
 
 namespace Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 

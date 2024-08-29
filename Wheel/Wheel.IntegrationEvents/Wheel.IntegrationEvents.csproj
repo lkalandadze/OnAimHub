@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hub.IntegrationEvents\Hub.IntegrationEvents.csproj" />
+    <ProjectReference Include="..\..\Shared\Shared.IntegrationEvents\Shared.IntegrationEvents.csproj" />
   </ItemGroup>
 
 </Project>

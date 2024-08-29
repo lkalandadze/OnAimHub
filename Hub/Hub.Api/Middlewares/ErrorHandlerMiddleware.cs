@@ -1,4 +1,4 @@
-﻿using Shared.Domain.Wrappers;
+﻿using Hub.Domain.Wrappers;
 using System.Net;
 using System.Text.Json;
 

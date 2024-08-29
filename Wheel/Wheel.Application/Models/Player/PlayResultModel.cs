@@ -1,4 +1,4 @@
-﻿using Shared.Domain.Abstractions;
+﻿using GameLib.Domain.Abstractions;
 
 namespace Wheel.Application.Models.Player;
 

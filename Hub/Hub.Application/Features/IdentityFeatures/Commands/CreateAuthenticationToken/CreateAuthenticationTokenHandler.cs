@@ -4,9 +4,9 @@ using Hub.Application.Services.Abstract;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities;
+using Hub.Domain.Wrappers;
 using MediatR;
 using Microsoft.Extensions.Options;
-using Shared.Domain.Wrappers;
 using Shared.Lib.Extensions;
 
 namespace Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;

@@ -3,13 +3,14 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Shared.Infrastructure.DataAccess;
-using Shared.ServiceRegistry;
 using Wheel.Api.Consul;
 using Wheel.Application.Models;
 using Wheel.Domain.Entities;
 using Wheel.Infrastructure.DataAccess;
 using Wheel.Infrastructure.Services.Abstract;
 using Wheel.Infrastructure.Services.Concrete;
+using GameLib.ServiceRegistry;
+using GameLib.Infrastructure.DataAccess;
 
 namespace Wheel.Api;
 

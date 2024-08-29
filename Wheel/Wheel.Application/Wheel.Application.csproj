@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
+    <ProjectReference Include="..\..\GameLib\GameLib.Application\GameLib.Application.csproj" />
     <ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
   </ItemGroup>
 

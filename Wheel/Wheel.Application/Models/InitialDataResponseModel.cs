@@ -1,7 +1,7 @@
 ﻿#nullable disable
 
-using Shared.Domain.Abstractions;
-using Shared.Domain.Entities;
+using GameLib.Domain.Abstractions;
+using GameLib.Domain.Entities;
 
 namespace Wheel.Application.Models;
 

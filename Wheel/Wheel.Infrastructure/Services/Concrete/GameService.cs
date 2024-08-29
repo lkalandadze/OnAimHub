@@ -1,7 +1,7 @@
-﻿using Shared.Application.Holders;
-using Shared.Application.Services.Abstract;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Repository;
+﻿using GameLib.Application.Holders;
+using GameLib.Application.Services.Abstract;
+using GameLib.Domain.Abstractions;
+using GameLib.Domain.Abstractions.Repository;
 using Wheel.Application.Models;
 using Wheel.Application.Models.Player;
 using Wheel.Domain.Entities;

@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Shared.Infrastructure.DataAccess;
+﻿using GameLib.Infrastructure.DataAccess;
+using Microsoft.EntityFrameworkCore;
 using Wheel.Domain.Entities;
 
 namespace Wheel.Infrastructure.DataAccess;

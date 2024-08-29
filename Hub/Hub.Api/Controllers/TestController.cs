@@ -37,5 +37,5 @@ public class TestController : BaseApiController
     }
 
     [HttpGet(nameof(GetActiveGames))]
-    public async Task<List<Shared.Domain.Wrappers.Response<GetActiveGamesQueryResponse>>> GetActiveGames([FromQuery] GetActiveGamesQuery request) => await Mediator.Send(request);
+    public async Task<List<Domain.Wrappers.Response<GetActiveGamesQueryResponse>>> GetActiveGames([FromQuery] GetActiveGamesQuery request) => await Mediator.Send(request);
 }

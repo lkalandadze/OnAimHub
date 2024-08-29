@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\GameLib\GameLib.Infrastructure\GameLib.Infrastructure.csproj" />
 		<ProjectReference Include="..\Wheel.Application\Wheel.Application.csproj" />
 		<ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
