@@ -45,7 +45,6 @@ namespace OnAim.Admin.API.Middleware
                         await response.WriteAsync(result);
                         break;
                     default:
-                        // unhandled error
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }
