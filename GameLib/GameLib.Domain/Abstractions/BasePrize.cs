@@ -1,5 +1,5 @@
 ﻿using GameLib.Domain.Entities;
-using Shared.Lib.Entities;
+using Shared.Domain.Entities;
 
 namespace GameLib.Domain.Abstractions;
 

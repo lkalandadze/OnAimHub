@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace Shared.Lib.RNG;
+namespace RNG;
 
 public static class RNG
 {

@@ -1,4 +1,4 @@
-﻿using Shared.Lib.Entities;
+﻿using Shared.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace GameLib.Domain.Abstractions.Repository;

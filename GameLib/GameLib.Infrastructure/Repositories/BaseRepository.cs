@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using GameLib.Domain.Abstractions.Repository;
-using Shared.Lib.Entities;
+﻿using GameLib.Domain.Abstractions.Repository;
+using Microsoft.EntityFrameworkCore;
+using Shared.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace GameLib.Infrastructure.Repositories;

@@ -1,4 +1,4 @@
-﻿using Shared.Lib.Entities;
+﻿using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;
 

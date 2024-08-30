@@ -16,6 +16,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\Shared\RNG\RNG.csproj" />
+	  <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
 	  <ProjectReference Include="..\..\Shared\Shared.Lib\Shared.Lib.csproj" />
 	  <ProjectReference Include="..\GameLib.Domain\GameLib.Domain.csproj" />
 	</ItemGroup>

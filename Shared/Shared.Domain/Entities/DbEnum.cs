@@ -1,4 +1,6 @@
-﻿namespace Shared.Lib.Entities;
+﻿#nullable disable
+
+namespace Shared.Domain.Entities;
 
 public class DbEnum : BaseEntity
 {

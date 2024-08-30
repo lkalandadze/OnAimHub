@@ -64,9 +64,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.IntegrationEvents", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GameLib", "GameLib", "{84BAAD6A-FD44-49FC-9029-AA8C8C782937}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Domain", "Shared.Domain\Shared.Domain.csproj", "{8A409D7F-AB84-4D4C-8B2E-1BA3E3A06067}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Domain", "Shared\Shared.Domain\Shared.Domain.csproj", "{8A409D7F-AB84-4D4C-8B2E-1BA3E3A06067}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Application", "Shared.Application\Shared.Application.csproj", "{0DA1AB4C-9783-4E13-88FB-25E101E8DA74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Application", "Shared\Shared.Application\Shared.Application.csproj", "{0DA1AB4C-9783-4E13-88FB-25E101E8DA74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RNG", "Shared\RNG\RNG.csproj", "{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -170,6 +172,10 @@ Global
 		{0DA1AB4C-9783-4E13-88FB-25E101E8DA74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DA1AB4C-9783-4E13-88FB-25E101E8DA74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DA1AB4C-9783-4E13-88FB-25E101E8DA74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -197,6 +203,7 @@ Global
 		{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
 		{8A409D7F-AB84-4D4C-8B2E-1BA3E3A06067} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
 		{0DA1AB4C-9783-4E13-88FB-25E101E8DA74} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
+		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2083D19C-3851-4364-95A9-449C10AD54E0}
