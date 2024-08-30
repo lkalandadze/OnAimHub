@@ -1,6 +1,6 @@
 ﻿using Hub.Application.Services.Abstract;
-using Hub.Domain.Wrappers;
 using MediatR;
+using Shared.Domain.Wrappers;
 
 namespace Hub.Application.Features.IdentityFeatures.Commands.RefreshTokens;
 

@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared.Domain\Shared.Domain.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Lib\Shared.Lib.csproj" />
     <ProjectReference Include="..\Hub.Domain\Hub.Domain.csproj" />
   </ItemGroup>

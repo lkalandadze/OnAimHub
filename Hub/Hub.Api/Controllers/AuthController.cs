@@ -1,9 +1,9 @@
 ﻿using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Features.IdentityFeatures.Commands.RefreshTokens;
 using Hub.Application.Services.Abstract;
-using Hub.Domain.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Domain.Wrappers;
 
 namespace Hub.Api.Controllers;
 
