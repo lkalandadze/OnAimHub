@@ -1,16 +1,16 @@
 ﻿using Consul;
+using GameLib.Infrastructure.DataAccess;
+using GameLib.ServiceRegistry;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Shared.Infrastructure.DataAccess;
 using Wheel.Api.Consul;
-using Wheel.Application.Models;
+using Wheel.Application.Models.Game;
+using Wheel.Application.Services.Abstract;
+using Wheel.Application.Services.Concrete;
 using Wheel.Domain.Entities;
 using Wheel.Infrastructure.DataAccess;
-using Wheel.Infrastructure.Services.Abstract;
-using Wheel.Infrastructure.Services.Concrete;
-using GameLib.ServiceRegistry;
-using GameLib.Infrastructure.DataAccess;
 
 namespace Wheel.Api;
 
@@ -134,7 +134,7 @@ public class Startup
         services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
         {
             var address = Configuration["Consul:Host"];
-            consulConfig.Address = new Uri(address);
+            consulConfig.Address = new Uri(address!);
         }));
 
         services.AddHostedService<ConsulHostedService>();

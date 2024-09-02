@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Wheel.Application.Models;
-using Wheel.Infrastructure.Services.Abstract;
+using Wheel.Application.Models.Game;
 using Wheel.Application.Models.Player;
+using Wheel.Application.Services.Abstract;
 
 namespace Wheel.Api.Controllers;
 
@@ -30,14 +30,14 @@ public class HomeController : BaseApiController
     }
      
     [HttpPost("play-jackpot")]
-    public async Task<ActionResult<PlayResultModel>> PlayJackpotAsync([FromBody] PlayRequestModel model)
+    public async Task<ActionResult<PlayResponseModel>> PlayJackpotAsync([FromBody] PlayRequestModel model)
     {
         var result = await _gameService.PlayJackpotAsync(model);
         return Ok(result);
     }
 
     [HttpPost("play-wheel")]
-    public async Task<ActionResult<PlayResultModel>> PlayWheelAsync([FromBody] PlayRequestModel model)
+    public async Task<ActionResult<PlayResponseModel>> PlayWheelAsync([FromBody] PlayRequestModel model)
     {
         var result = await _gameService.PlayWheelAsync(model);
         return Ok(result);

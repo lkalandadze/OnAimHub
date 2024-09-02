@@ -6,10 +6,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\GameLib\GameLib.Infrastructure\GameLib.Infrastructure.csproj" />
-		<ProjectReference Include="..\Wheel.Application\Wheel.Application.csproj" />
-		<ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\GameLib\GameLib.Infrastructure\GameLib.Infrastructure.csproj" />
+	  <ProjectReference Include="..\..\..\Shared\Shared.Lib\Shared.Lib.csproj" />
+	  <ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
 	</ItemGroup>
 </Project>

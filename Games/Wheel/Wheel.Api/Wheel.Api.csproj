@@ -19,10 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\GameLib\GameLib.ServiceRegistry\GameLib.ServiceRegistry.csproj" />
+    <ProjectReference Include="..\..\..\GameLib\GameLib.ServiceRegistry\GameLib.ServiceRegistry.csproj" />
     <ProjectReference Include="..\Wheel.Application\Wheel.Application.csproj" />
     <ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
     <ProjectReference Include="..\Wheel.Infrastructure\Wheel.Infrastructure.csproj" />
   </ItemGroup>
-
+	
 </Project>

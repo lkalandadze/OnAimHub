@@ -2,12 +2,12 @@
 using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
-using Wheel.Application.Models;
+using Wheel.Application.Models.Game;
 using Wheel.Application.Models.Player;
+using Wheel.Application.Services.Abstract;
 using Wheel.Domain.Entities;
-using Wheel.Infrastructure.Services.Abstract;
 
-namespace Wheel.Infrastructure.Services.Concrete;
+namespace Wheel.Application.Services.Concrete;
 
 public class GameService : IGameService
 {
@@ -63,17 +63,17 @@ public class GameService : IGameService
         };
     }
 
-    public async Task<PlayResultModel> PlayJackpotAsync(PlayRequestModel command)
+    public async Task<PlayResponseModel> PlayJackpotAsync(PlayRequestModel command)
     {
         return await PlayAsync<JackpotPrize>(command);
     }
 
-    public async Task<PlayResultModel> PlayWheelAsync(PlayRequestModel command)
+    public async Task<PlayResponseModel> PlayWheelAsync(PlayRequestModel command)
     {
         return await PlayAsync<WheelPrize>(command);
     }
 
-    private async Task<PlayResultModel> PlayAsync<TPrize>(PlayRequestModel command)
+    private async Task<PlayResponseModel> PlayAsync<TPrize>(PlayRequestModel command)
         where TPrize : BasePrize
     {
         await _hubService.BetTransactionAsync(command.GameVersionId);
@@ -92,7 +92,7 @@ public class GameService : IGameService
             await _hubService.WinTransactionAsync(command.GameVersionId);
         }
 
-        return new PlayResultModel
+        return new PlayResponseModel
         {
             PrizeResults = new List<BasePrize> { prize },
             Multiplier = 0,

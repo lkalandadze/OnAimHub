@@ -1,4 +1,8 @@
-﻿namespace Wheel.Application.Models;
+﻿#nullable disable
+
+using Wheel;
+
+namespace Wheel.Application.Models.Game;
 
 public class GameStatusModel
 {

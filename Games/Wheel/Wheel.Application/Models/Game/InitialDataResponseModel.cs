@@ -3,7 +3,7 @@
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Entities;
 
-namespace Wheel.Application.Models;
+namespace Wheel.Application.Models.Game;
 
 public class InitialDataResponseModel
 {
