@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -35,11 +35,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Hub.IntegrationEvents\Hub.IntegrationEvents.csproj" />
+    <ProjectReference Include="..\..\Shared\Shared.IntegrationEvents\Shared.IntegrationEvents.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Lib\Shared.Lib.csproj" />
     <ProjectReference Include="..\Hub.Application\Hub.Application.csproj" />
     <ProjectReference Include="..\Hub.Domain\Hub.Domain.csproj" />
     <ProjectReference Include="..\Hub.Infrastructure\Hub.Infrastructure.csproj" />
+    <ProjectReference Include="..\Hub.IntegrationEvents\Hub.IntegrationEvents.csproj" />
   </ItemGroup>
 
 </Project>

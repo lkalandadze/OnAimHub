@@ -5,13 +5,13 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{A271747C-FD41-490A-8F8E-C36A19751AE0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Domain", "Shared\Shared.Domain\Shared.Domain.csproj", "{822314CA-D49F-4869-9508-DD47A80AE350}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameLib.Domain", "GameLib\GameLib.Domain\GameLib.Domain.csproj", "{822314CA-D49F-4869-9508-DD47A80AE350}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Application", "Shared\Shared.Application\Shared.Application.csproj", "{1452B2BE-2768-4D5B-910A-350EC3E426BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameLib.Application", "GameLib\GameLib.Application\GameLib.Application.csproj", "{1452B2BE-2768-4D5B-910A-350EC3E426BB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Infrastructure", "Shared\Shared.Infrastructure\Shared.Infrastructure.csproj", "{5C6A7F63-8901-4FB1-A197-4376C1A7DD6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameLib.Infrastructure", "GameLib\GameLib.Infrastructure\GameLib.Infrastructure.csproj", "{5C6A7F63-8901-4FB1-A197-4376C1A7DD6E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.ServiceRegistry", "Shared\Shared.ServiceRegistry\Shared.ServiceRegistry.csproj", "{8654B545-238F-4871-95E3-0F4C0CE3A27E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameLib.ServiceRegistry", "GameLib\GameLib.ServiceRegistry\GameLib.ServiceRegistry.csproj", "{8654B545-238F-4871-95E3-0F4C0CE3A27E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DA96FAEE-F16A-4C7D-993A-0273D82AE778}"
 	ProjectSection(SolutionItems) = preProject
@@ -20,11 +20,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Wheel", "Wheel", "{A41788BA-A633-452E-B173-F2F8393FC2D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wheel.Api", "Wheel\Wheel.Api\Wheel.Api.csproj", "{4426417E-7CE4-4A70-9066-60D9022800C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wheel.Api", "Games\Wheel\Wheel.Api\Wheel.Api.csproj", "{4426417E-7CE4-4A70-9066-60D9022800C2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wheel.Domain", "Wheel\Wheel.Domain\Wheel.Domain.csproj", "{A20AD3CC-90A6-487C-88FD-04F22ACB728A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wheel.Domain", "Games\Wheel\Wheel.Domain\Wheel.Domain.csproj", "{A20AD3CC-90A6-487C-88FD-04F22ACB728A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wheel.Infrastructure", "Wheel\Wheel.Infrastructure\Wheel.Infrastructure.csproj", "{C601018A-2CF9-4D59-9BF6-10C64E81CC67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wheel.Infrastructure", "Games\Wheel\Wheel.Infrastructure\Wheel.Infrastructure.csproj", "{C601018A-2CF9-4D59-9BF6-10C64E81CC67}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hub", "Hub", "{5B114121-70BA-495E-B484-1D580402C72C}"
 EndProject
@@ -36,7 +36,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{C1D514E6-8B2F-4866-946E-79C44AD3571C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wheel.Application", "Wheel\Wheel.Application\Wheel.Application.csproj", "{70BF865D-735E-4D08-9593-5D42A2ADC1F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wheel.Application", "Games\Wheel\Wheel.Application\Wheel.Application.csproj", "{70BF865D-735E-4D08-9593-5D42A2ADC1F1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hub.Domain", "Hub\Hub.Domain\Hub.Domain.csproj", "{A550794B-FABD-4D59-9C1A-BF5D987F6B3C}"
 EndProject
@@ -58,9 +58,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnAim.Admin.Shared", "Admin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hub.IntegrationEvents", "Hub\Hub.IntegrationEvents\Hub.IntegrationEvents.csproj", "{AC12048E-21C0-407F-ADAE-70932BBA896E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wheel.IntegrationEvents", "Wheel\Wheel.IntegrationEvents\Wheel.IntegrationEvents.csproj", "{08F87627-5903-41E1-8910-47E2CC16107A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wheel.IntegrationEvents", "Games\Wheel\Wheel.IntegrationEvents\Wheel.IntegrationEvents.csproj", "{08F87627-5903-41E1-8910-47E2CC16107A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.IntegrationEvents", "Shared\Shared.IntegrationEvents\Shared.IntegrationEvents.csproj", "{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GameLib", "GameLib", "{84BAAD6A-FD44-49FC-9029-AA8C8C782937}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Domain", "Shared\Shared.Domain\Shared.Domain.csproj", "{8A409D7F-AB84-4D4C-8B2E-1BA3E3A06067}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Application", "Shared\Shared.Application\Shared.Application.csproj", "{0DA1AB4C-9783-4E13-88FB-25E101E8DA74}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RNG", "Shared\RNG\RNG.csproj", "{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Games", "Games", "{7394F16F-EFEA-40CA-A016-A25DBE9A4502}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -156,15 +166,28 @@ Global
 		{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A409D7F-AB84-4D4C-8B2E-1BA3E3A06067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A409D7F-AB84-4D4C-8B2E-1BA3E3A06067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A409D7F-AB84-4D4C-8B2E-1BA3E3A06067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A409D7F-AB84-4D4C-8B2E-1BA3E3A06067}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DA1AB4C-9783-4E13-88FB-25E101E8DA74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DA1AB4C-9783-4E13-88FB-25E101E8DA74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DA1AB4C-9783-4E13-88FB-25E101E8DA74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DA1AB4C-9783-4E13-88FB-25E101E8DA74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{822314CA-D49F-4869-9508-DD47A80AE350} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
-		{1452B2BE-2768-4D5B-910A-350EC3E426BB} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
-		{5C6A7F63-8901-4FB1-A197-4376C1A7DD6E} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
-		{8654B545-238F-4871-95E3-0F4C0CE3A27E} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
+		{822314CA-D49F-4869-9508-DD47A80AE350} = {84BAAD6A-FD44-49FC-9029-AA8C8C782937}
+		{1452B2BE-2768-4D5B-910A-350EC3E426BB} = {84BAAD6A-FD44-49FC-9029-AA8C8C782937}
+		{5C6A7F63-8901-4FB1-A197-4376C1A7DD6E} = {84BAAD6A-FD44-49FC-9029-AA8C8C782937}
+		{8654B545-238F-4871-95E3-0F4C0CE3A27E} = {84BAAD6A-FD44-49FC-9029-AA8C8C782937}
+		{A41788BA-A633-452E-B173-F2F8393FC2D3} = {7394F16F-EFEA-40CA-A016-A25DBE9A4502}
 		{4426417E-7CE4-4A70-9066-60D9022800C2} = {A41788BA-A633-452E-B173-F2F8393FC2D3}
 		{A20AD3CC-90A6-487C-88FD-04F22ACB728A} = {A41788BA-A633-452E-B173-F2F8393FC2D3}
 		{C601018A-2CF9-4D59-9BF6-10C64E81CC67} = {A41788BA-A633-452E-B173-F2F8393FC2D3}
@@ -181,6 +204,9 @@ Global
 		{AC12048E-21C0-407F-ADAE-70932BBA896E} = {5B114121-70BA-495E-B484-1D580402C72C}
 		{08F87627-5903-41E1-8910-47E2CC16107A} = {A41788BA-A633-452E-B173-F2F8393FC2D3}
 		{B04E9BB8-352A-4C3B-BCE8-DFDBAD90803B} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
+		{8A409D7F-AB84-4D4C-8B2E-1BA3E3A06067} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
+		{0DA1AB4C-9783-4E13-88FB-25E101E8DA74} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
+		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2083D19C-3851-4364-95A9-449C10AD54E0}

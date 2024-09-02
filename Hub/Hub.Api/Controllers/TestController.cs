@@ -1,5 +1,6 @@
 ﻿using Hub.Application.Features.GameFeatures.Queries.GetActiveGames;
 using Hub.Application.Services.Abstract;
+using Shared.Domain.Wrappers;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

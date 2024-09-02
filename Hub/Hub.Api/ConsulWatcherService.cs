@@ -10,7 +10,7 @@ public class ConsulWatcherService : BackgroundService
 {
     private readonly IConsulClient _consulClient;
     private readonly IActiveGameService _activeGameService;
-    private readonly ConcurrentDictionary<string, string> _trackedGames; // Track by GameId
+    private readonly ConcurrentDictionary<string, string> _trackedGames;
 
     public ConsulWatcherService(IConsulClient consulClient, IActiveGameService activeGameService)
     {
@@ -37,13 +37,12 @@ public class ConsulWatcherService : BackgroundService
                     {
                         gameStatus.Address = service.Address;
                         _activeGameService.AddOrUpdateActiveGame(gameStatus);
-                        _trackedGames[gameStatus.Id.ToString()] = service.ID; // Track by GameId
+                        _trackedGames[gameStatus.Id.ToString()] = service.ID;
                         currentGameIds.Add(gameStatus.Id.ToString());
                     }
                 }
             }
 
-            // Remove games that are no longer registered
             var removedGameIds = _trackedGames.Keys.Except(currentGameIds).ToList();
             foreach (var gameId in removedGameIds)
             {
@@ -51,7 +50,6 @@ public class ConsulWatcherService : BackgroundService
                 _trackedGames.TryRemove(gameId, out _);
             }
 
-            // Wait for some time before querying Consul again
             await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
         }
     }
