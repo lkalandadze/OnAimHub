@@ -14,4 +14,12 @@ public class Configuration : BaseEntity
 
     //public ICollection<BasePrizeGroup> PrizeGroups { get; set; }
     //public ICollection<BasePrize> Prizes { get; set; }
+
+    public void Update(string name, bool isDefault, bool isActive, int gameVersionId)
+    {
+        Name = name;
+        IsDefault = isDefault;
+        IsActive = isActive;
+        GameVersionId = gameVersionId;
+    }
 }

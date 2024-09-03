@@ -12,4 +12,13 @@
     <ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Configuration\Queries\" />
+    <Folder Include="Features\GameVersion\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+  </ItemGroup>
+
 </Project>

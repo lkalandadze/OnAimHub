@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
+using Wheel.Application.Features.Configuration.Commands.Update;
+using Wheel.Application.Features.GameVersion.Commands.Update;
 
 namespace Wheel.Api.Controllers;
 
@@ -67,4 +70,12 @@ public class TestController : BaseApiController
 
         return Ok(new { Balance = UserBalances[userId] });
     }
+
+    [AllowAnonymous]
+    [HttpPost(nameof(UpdateGameVersion))]
+    public async Task UpdateGameVersion(UpdateGameVersionCommand request) => await Mediator.Send(request);
+
+    [AllowAnonymous]
+    [HttpPost(nameof(UpdateGameConfiguration))]
+    public async Task UpdateGameConfiguration(UpdateConfigurationCommand request) => await Mediator.Send(request);
 }

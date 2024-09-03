@@ -2,10 +2,14 @@
 using GameLib.Infrastructure.DataAccess;
 using GameLib.ServiceRegistry;
 using MassTransit;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Shared.Application.Models.Consul;
 using Shared.Infrastructure.DataAccess;
+using System.Reflection;
 using Wheel.Api.Consul;
+using Wheel.Application.Features.GameVersion.Commands.Update;
 using Wheel.Application.Models.Game;
 using Wheel.Application.Services.Abstract;
 using Wheel.Application.Services.Concrete;
@@ -39,6 +43,10 @@ public class Startup
         services.AddSingleton(prizeGroupTypes);
         services.AddScoped<IGameService, GameService>();
 
+        services.AddMediatR(new[]
+{
+            typeof(UpdateGameVersionCommandHandler).GetTypeInfo().Assembly,
+        });
 
         ConfigureMassTransit(services);
         services.AddMassTransitHostedService();
@@ -59,9 +67,7 @@ public class Startup
         app.UseHttpsRedirection();
 
         if (IsRunningInDocker())
-        {
             ConfigureConsulLifetime(app, lifetime);
-        }
 
         if (env.IsDevelopment())
         {
@@ -96,7 +102,7 @@ public class Startup
         {
             var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
 
-            GameVersionResponseModel activeGameModel;
+            List<GameRegisterResponseModel> activeGameModel;
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var gameService = scope.ServiceProvider.GetRequiredService<IGameService>();
@@ -107,15 +113,15 @@ public class Startup
 
             var registration = new AgentServiceRegistration()
             {
-                ID = serviceId,
+                ID = "wheelapi",
                 Name = "wheelapi",
                 Address = "wheelapi",
                 Port = 8080,
                 Tags = new[] { "Game", "Back" },
                 Meta = new Dictionary<string, string>
-            {
-                { "GameData", serializedGameData }
-            }
+                {
+                    { "GameData", serializedGameData }
+                }
             };
 
             consulClient.Agent.ServiceRegister(registration).Wait();

@@ -1,6 +1,7 @@
-﻿using Consul;
-using Hub.Application.Models.Game;
+﻿
+using Consul;
 using Hub.Application.Services.Abstract;
+using Shared.Application.Models.Consul;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
@@ -21,24 +22,43 @@ public class ConsulWatcherService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        ulong consulIndex = 0;
+
         while (!stoppingToken.IsCancellationRequested)
         {
-            var services = await _consulClient.Agent.Services(stoppingToken);
+            var queryResult = await _consulClient.Catalog.Services(new QueryOptions
+            {
+                WaitIndex = consulIndex,
+                WaitTime = TimeSpan.FromSeconds(5)
+            }, stoppingToken);
+
+            var services = queryResult.Response;
             var currentGameIds = new HashSet<string>();
 
-            // Update active games based on current services
-            foreach (var service in services.Response.Values)
+            foreach (var service in services.Keys)
             {
-                if (service.Tags.Contains("Game") && service.Meta.TryGetValue("GameData", out var gameDataJson))
+                var serviceData = await _consulClient.Catalog.Service(service, string.Empty, new QueryOptions
                 {
-                    var gameStatus = JsonSerializer.Deserialize<ActiveGameModel>(gameDataJson);
+                    WaitIndex = consulIndex,
+                    WaitTime = TimeSpan.FromSeconds(5)
+                }, stoppingToken);
 
-                    if (gameStatus != null)
+                foreach (var serviceEntry in serviceData.Response)
+                {
+                    if (serviceEntry.ServiceTags.Contains("Game") && serviceEntry.ServiceMeta.TryGetValue("GameData", out var gameDataJson))
                     {
-                        gameStatus.Address = service.Address;
-                        _activeGameService.AddOrUpdateActiveGame(gameStatus);
-                        _trackedGames[gameStatus.Id.ToString()] = service.ID;
-                        currentGameIds.Add(gameStatus.Id.ToString());
+                        var gameStatuses = JsonSerializer.Deserialize<List<GameRegisterResponseModel>>(gameDataJson);
+
+                        if (gameStatuses != null)
+                        {
+                            foreach(var gameStatus in gameStatuses)
+                            {
+                                gameStatus.Address = serviceEntry.ServiceAddress;
+                                _activeGameService.AddOrUpdateActiveGame(gameStatus);
+                                _trackedGames[gameStatus.GameVersionId.ToString()] = serviceEntry.ServiceID;
+                                currentGameIds.Add(gameStatus.GameVersionId.ToString());
+                            }
+                        }
                     }
                 }
             }
@@ -50,7 +70,7 @@ public class ConsulWatcherService : BackgroundService
                 _trackedGames.TryRemove(gameId, out _);
             }
 
-            await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+            consulIndex = queryResult.LastIndex;
         }
     }
 }

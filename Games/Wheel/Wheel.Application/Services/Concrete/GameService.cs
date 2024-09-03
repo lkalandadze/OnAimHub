@@ -1,7 +1,11 @@
-﻿using GameLib.Application.Holders;
+﻿using Consul;
+using GameLib.Application.Holders;
 using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
+using Microsoft.EntityFrameworkCore;
+using Shared.Application.Models.Consul;
+using System.Text.Json;
 using Wheel.Application.Models.Game;
 using Wheel.Application.Models.Player;
 using Wheel.Application.Services.Abstract;
@@ -17,6 +21,7 @@ public class GameService : IGameService
     private readonly IHubService _hubService;
     private readonly IConfigurationRepository _configurationRepository;
     private readonly IGameVersionRepository _gameVersionRepository;
+    private readonly IConsulClient _consulClient;
 
     public GameService(
         GeneratorHolder generatorHolder,
@@ -24,7 +29,8 @@ public class GameService : IGameService
         IAuthService authService,
         IHubService hubService,
         IConfigurationRepository configurationRepository,
-        IGameVersionRepository gameVersionRepository)
+        IGameVersionRepository gameVersionRepository,
+        IConsulClient consulClient)
     {
         _generatorHolder = generatorHolder;
         _configurationHolder = configurationHolder;
@@ -32,6 +38,7 @@ public class GameService : IGameService
         _hubService = hubService;
         _configurationRepository = configurationRepository;
         _gameVersionRepository = gameVersionRepository;
+        _consulClient = consulClient;
     }
 
     public InitialDataResponseModel GetInitialData()
@@ -43,24 +50,63 @@ public class GameService : IGameService
         };
     }
 
-    public GameVersionResponseModel GetGame()
+    public List<GameRegisterResponseModel> GetGame()
     {
-        var gameVersion = _gameVersionRepository.Query()
-                                                .FirstOrDefault();
+        var activeGames = _gameVersionRepository.Query()
+                                                .Include(x => x.Configurations)
+                                                .Where(x => x.IsActive)
+                                                .ToList();
 
-        if (gameVersion == null)
+        if (activeGames == null)
         {
             throw new InvalidOperationException("No active game version found for the provided SegmentIds.");
         }
 
-        return new GameVersionResponseModel
+        var responseList = activeGames.Select(gameVersion => new GameRegisterResponseModel
         {
-            Id = gameVersion.Id,
-            Name = gameVersion.Name,
-            IsActive = gameVersion.IsActive,
+            GameVersionId = gameVersion.Id,
+            GameVersionName = gameVersion.Name,
+            GameVersionIsActive = gameVersion.IsActive,
+            Address = "wheel",
             SegmentIds = gameVersion.SegmentIds.ToList(),
             ActivationTime = DateTime.UtcNow,
+            Configurations = gameVersion.Configurations
+                                         .Select(config => new ConfigurationResponseModel
+                                         {
+                                             Id = config.Id,
+                                             Name = config.Name,
+                                             IsDefault = config.IsDefault,
+                                             IsActive = config.IsActive
+                                         })
+                                         .ToList()
+        }).ToList();
+
+
+        return responseList;
+    }
+
+    public async Task UpdateMetadataAsync()
+    {
+        var activeGameModel = GetGame();
+
+        var serializedGameData = JsonSerializer.Serialize(activeGameModel);
+
+        var serviceId = "wheelapi";
+
+        var registration = new AgentServiceRegistration
+        {
+            ID = serviceId,
+            Name = "wheelapi",
+            Address = "wheelapi",
+            Port = 8080,
+            Tags = new[] { "Game", "Back" },
+            Meta = new Dictionary<string, string>
+            {
+                { "GameData", serializedGameData }
+            }
         };
+
+        await _consulClient.Agent.ServiceRegister(registration);
     }
 
     public async Task<PlayResponseModel> PlayJackpotAsync(PlayRequestModel command)

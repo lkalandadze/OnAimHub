@@ -72,6 +72,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RNG", "Shared\RNG\RNG.cspro
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Games", "Games", "{7394F16F-EFEA-40CA-A016-A25DBE9A4502}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnAim.Admin.Identity", "Admin\OnAim.Admin.Identity\OnAim.Admin.Identity.csproj", "{304F477E-C02E-4A67-B4CF-B1B859CDBB06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -178,6 +180,10 @@ Global
 		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{304F477E-C02E-4A67-B4CF-B1B859CDBB06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{304F477E-C02E-4A67-B4CF-B1B859CDBB06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{304F477E-C02E-4A67-B4CF-B1B859CDBB06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{304F477E-C02E-4A67-B4CF-B1B859CDBB06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -207,6 +213,7 @@ Global
 		{8A409D7F-AB84-4D4C-8B2E-1BA3E3A06067} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
 		{0DA1AB4C-9783-4E13-88FB-25E101E8DA74} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
 		{FC8B30B2-651A-4668-AE88-F0B3A55A7FC2} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
+		{304F477E-C02E-4A67-B4CF-B1B859CDBB06} = {1D153E14-4B13-413B-ACA0-200CEE0D39E2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2083D19C-3851-4364-95A9-449C10AD54E0}

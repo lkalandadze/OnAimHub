@@ -22,7 +22,7 @@ services:
       context: .
       dockerfile: ApiGateway/Dockerfile
     ports:
-      - "5000:8080"  # Map host port 5000 to container port 8080
+      - "5000:8080"
     depends_on:
       - consul
     environment:
@@ -35,9 +35,9 @@ services:
   wheelapi:
     build:
       context: .
-      dockerfile: Wheel/Wheel.Api/Dockerfile
+      dockerfile: Games/Wheel/Wheel.Api/Dockerfile
     ports:
-      - "5001:8080"  # Map host port 5001 to container port 8080
+      - "5001:8080"
     depends_on:
       - consul
       - gameconfigdb
@@ -48,14 +48,14 @@ services:
       - ConnectionStrings__GameConfig=Host=gameconfigdb;Port=5432;Database=WheelConfig;Username=postgres;Password=Test1234!
       - ConnectionStrings__GameHistory=Host=gamehistorydb;Port=5432;Database=WheelHistory;Username=postgres;Password=Test1234!
     volumes:
-      - ./Wheel/Wheel.Api/appsettings.json:/app/appsettings.json
+      - ./Games/Wheel/Wheel.Api/appsettings.json:/app/appsettings.json
       
   hubapi:
     build:
       context: .
       dockerfile: Hub/Hub.Api/Dockerfile
     ports:
-      - "5002:8080"  # Map host port 5002 to container port 8080
+      - "5002:8080"
     depends_on:
       - consul
     environment:

@@ -1,9 +1,9 @@
-﻿using Hub.Application.Models.Game;
+﻿using Shared.Application.Models.Consul;
 
 namespace Hub.Application.Services.Abstract;
 public interface IActiveGameService
 {
-    IEnumerable<ActiveGameModel> GetActiveGames();
+    IEnumerable<GameRegisterResponseModel> GetActiveGames();
     bool RemoveActiveGame(string gameId);
-    void AddOrUpdateActiveGame(ActiveGameModel gameStatus);
+    void AddOrUpdateActiveGame(GameRegisterResponseModel gameStatus);
 }
