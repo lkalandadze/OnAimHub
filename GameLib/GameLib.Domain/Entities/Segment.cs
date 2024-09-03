@@ -2,9 +2,8 @@
 
 namespace GameLib.Domain.Entities;
 
-public class Segment : BaseEntity
+public class Segment : BaseEntity<int>
 {
-    public override int Id { get; set; }
     public string Name { get; set; }
     public int Value { get; set; }
     public bool IsActive { get; set; }

@@ -54,22 +54,6 @@ internal class PrizeGroupRepositoryProxy(object repository)
         throw new InvalidCastException();
     }
 
-    //temporary
-    internal BasePrizeGroup OfId(int id)
-    {
-        var ofIdAsyncMethod = repository.GetType().GetMethod(nameof(IPrizeGroupRepository<BasePrizeGroup>.OfIdAsync));
-
-        if (ofIdAsyncMethod != null)
-        {
-            var task = ofIdAsyncMethod!.Invoke(repository, [id]) as Task;
-            var resultProperty = task!.GetType().GetProperty("Result");
-
-            return resultProperty!.GetValue(task) as BasePrizeGroup;
-        }
-
-        throw new InvalidCastException();
-    }
-
     internal void Update(BasePrizeGroup prizeGroup)
     {
         var updateMethod = repository.GetType().GetMethod(nameof(IPrizeGroupRepository<BasePrizeGroup>.Update));

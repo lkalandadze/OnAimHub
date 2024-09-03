@@ -1,7 +1,5 @@
 ﻿using Hub.Application.Models.Tansaction;
 using Hub.Application.Services.Abstract;
-using Hub.Domain.Absractions;
-using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities;
 using MediatR;
 
@@ -9,36 +7,16 @@ namespace Hub.Application.Features.TransactionFeatures.Commands.CreateBetTransac
 
 public class CreateBetTransactionHandler : IRequestHandler<CreateBetTransaction, TransactionResponseModel>
 {
-    public readonly ITransactionRepository _transactionRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IAuthService _authService;
+    private readonly ITransactionService _transactionService;
 
-    public CreateBetTransactionHandler(ITransactionRepository transactionRepository, IUnitOfWork unitOfWork, IAuthService authService)
+    public CreateBetTransactionHandler(ITransactionService transactionService)
     {
-        _transactionRepository = transactionRepository;
-        _unitOfWork = unitOfWork;
-        _authService = authService;
+        _transactionService = transactionService;
     }
 
     public async Task<TransactionResponseModel> Handle(CreateBetTransaction request, CancellationToken cancellationToken)
     {
-        var transaction = new Transaction
-        {
-            GameVersionId = request.GameVersionId,
-            CurrencyId = request.CurrencyId,
-            Amount = request.Amount,
-            PlayerId = _authService.GetCurrentPlayerId(),
-            StatusId = TransactionStatus.Created.Id,
-            TypeId = TransactionType.Bet.Id,
-        };
-
-        await _transactionRepository.InsertAsync(transaction);
-        await _unitOfWork.SaveAsync();
-
-        return new TransactionResponseModel
-        {
-            Id = transaction.Id,
-            Success = true,
-        };
+        return await _transactionService.CreateTransaction(request.GameId, request.CurrencyId, request.Amount,
+                                                           AccountType.Player, AccountType.Game, TransactionType.Bet);
     }
 }

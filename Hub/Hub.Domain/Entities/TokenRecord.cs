@@ -2,9 +2,8 @@
 
 namespace Hub.Domain.Entities;
 
-public class TokenRecord : BaseEntity
+public class TokenRecord : BaseEntity<int>
 {
-    public override int Id { get; set; }
     public string AccessToken { get; set; }
     public string RefreshToken { get; set; }
     public int PlayerId { get; set; }

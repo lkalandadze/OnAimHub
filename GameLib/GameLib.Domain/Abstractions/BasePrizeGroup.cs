@@ -3,9 +3,8 @@ using Shared.Domain.Entities;
 
 namespace GameLib.Domain.Abstractions;
 
-public abstract class BasePrizeGroup : BaseEntity
+public abstract class BasePrizeGroup : BaseEntity<int>
 {
-    public override int Id { get; set; }
     public List<int> Sequence { get; set; }
     public int? NextPrizeIndex { get; set; }
     public int SegmentId { get; set; }

@@ -2,9 +2,8 @@
 
 namespace GameLib.Domain.Entities;
 
-public class Configuration : BaseEntity
+public class Configuration : BaseEntity<int>
 {
-    public override int Id { get; set; }
     public string Name { get; set; }
     public bool IsDefault { get; set; }
     public bool IsActive { get; set; }

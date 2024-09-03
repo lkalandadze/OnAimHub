@@ -2,9 +2,8 @@
 
 namespace GameLib.Domain.Entities;
 
-public class PrizeType : BaseEntity
+public class PrizeType : BaseEntity<int>
 {
-    public override int Id { get; set; }
     public string Name { get; set; }
     public bool IsMultipled { get; set; }
 

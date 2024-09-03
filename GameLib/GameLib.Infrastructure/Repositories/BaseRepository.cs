@@ -11,7 +11,7 @@ public abstract class BaseRepository<TContext, TAggregateRoot>(TContext context)
 {
     protected readonly TContext _context = context;
 
-    public async Task<TAggregateRoot?> OfIdAsync(int id)
+    public async Task<TAggregateRoot?> OfIdAsync(dynamic id)
     {
         return await _context.Set<TAggregateRoot>().FindAsync(id);
     }
