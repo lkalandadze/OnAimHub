@@ -106,7 +106,7 @@ public class Startup
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var gameService = scope.ServiceProvider.GetRequiredService<IGameService>();
-                activeGameModel = gameService.GetGame();
+                activeGameModel = gameService.GetGames();
             }
 
             var serializedGameData = JsonConvert.SerializeObject(activeGameModel);

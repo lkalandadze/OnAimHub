@@ -7,7 +7,7 @@ namespace Wheel.Application.Services.Abstract;
 public interface IGameService
 {
     InitialDataResponseModel GetInitialData();
-    List<GameRegisterResponseModel> GetGame();
+    List<GameRegisterResponseModel> GetGames();
     Task UpdateMetadataAsync();
     Task<PlayResponseModel> PlayJackpotAsync(PlayRequestModel command);
     Task<PlayResponseModel> PlayWheelAsync(PlayRequestModel command);

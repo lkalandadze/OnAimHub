@@ -22,6 +22,7 @@ public class GameService : IGameService
     private readonly IConfigurationRepository _configurationRepository;
     private readonly IGameVersionRepository _gameVersionRepository;
     private readonly IConsulClient _consulClient;
+    private readonly IConsulGameService _consulGameService;
 
     public GameService(
         GeneratorHolder generatorHolder,
@@ -30,7 +31,8 @@ public class GameService : IGameService
         IHubService hubService,
         IConfigurationRepository configurationRepository,
         IGameVersionRepository gameVersionRepository,
-        IConsulClient consulClient)
+        IConsulClient consulClient,
+        IConsulGameService consulGameService)
     {
         _generatorHolder = generatorHolder;
         _configurationHolder = configurationHolder;
@@ -39,6 +41,7 @@ public class GameService : IGameService
         _configurationRepository = configurationRepository;
         _gameVersionRepository = gameVersionRepository;
         _consulClient = consulClient;
+        _consulGameService = consulGameService;
     }
 
     public InitialDataResponseModel GetInitialData()
@@ -50,7 +53,7 @@ public class GameService : IGameService
         };
     }
 
-    public List<GameRegisterResponseModel> GetGame()
+    public List<GameRegisterResponseModel> GetGames()
     {
         var activeGames = _gameVersionRepository.Query()
                                                 .Include(x => x.Configurations)
@@ -87,26 +90,13 @@ public class GameService : IGameService
 
     public async Task UpdateMetadataAsync()
     {
-        var activeGameModel = GetGame();
-
-        var serializedGameData = JsonSerializer.Serialize(activeGameModel);
-
-        var serviceId = "wheelapi";
-
-        var registration = new AgentServiceRegistration
-        {
-            ID = serviceId,
-            Name = "wheelapi",
-            Address = "wheelapi",
-            Port = 8080,
-            Tags = new[] { "Game", "Back" },
-            Meta = new Dictionary<string, string>
-            {
-                { "GameData", serializedGameData }
-            }
-        };
-
-        await _consulClient.Agent.ServiceRegister(registration);
+        await _consulGameService.UpdateMetadataAsync(
+            getDataFunc: GetGames,
+            serviceId: "wheelapi",
+            serviceName: "wheelapi",
+            port: 8080,
+            tags: new[] { "Game", "Back" }
+        );
     }
 
     public async Task<PlayResponseModel> PlayJackpotAsync(PlayRequestModel command)

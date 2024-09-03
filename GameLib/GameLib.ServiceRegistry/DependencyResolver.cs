@@ -37,6 +37,7 @@ public static class DependencyResolver
         services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
         services.AddScoped<ISegmentRepository, SegmentRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
+        services.AddScoped<IConsulGameService, ConsulGameService>();
 
         services.BuildServiceProvider().GetRequiredService<RepositoryManager>();
 

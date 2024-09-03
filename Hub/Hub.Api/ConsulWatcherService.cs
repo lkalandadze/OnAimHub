@@ -51,7 +51,7 @@ public class ConsulWatcherService : BackgroundService
 
                         if (gameStatuses != null)
                         {
-                            foreach(var gameStatus in gameStatuses)
+                            foreach (var gameStatus in gameStatuses)
                             {
                                 gameStatus.Address = serviceEntry.ServiceAddress;
                                 _activeGameService.AddOrUpdateActiveGame(gameStatus);
