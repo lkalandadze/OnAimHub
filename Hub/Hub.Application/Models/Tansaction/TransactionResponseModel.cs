@@ -1,4 +1,6 @@
-﻿namespace Hub.Application.Models.Tansaction;
+﻿using Hub.Domain.Entities;
+
+namespace Hub.Application.Models.Tansaction;
 
 public class TransactionResponseModel
 {

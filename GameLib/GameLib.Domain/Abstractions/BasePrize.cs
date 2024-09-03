@@ -3,9 +3,8 @@ using Shared.Domain.Entities;
 
 namespace GameLib.Domain.Abstractions;
 
-public abstract class BasePrize : BaseEntity
+public abstract class BasePrize : BaseEntity<int>
 {
-    public override int Id { get; set; }
     public int Value { get; set; }
     public int Probability { get; set; }
     public int PrizeTypeId { get; set; }

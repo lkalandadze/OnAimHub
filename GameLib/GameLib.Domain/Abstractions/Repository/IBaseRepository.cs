@@ -5,7 +5,7 @@ namespace GameLib.Domain.Abstractions.Repository;
 
 public interface IBaseRepository<TAggregateRoot> where TAggregateRoot : BaseEntity
 {
-    Task<TAggregateRoot?> OfIdAsync(int id);
+    Task<TAggregateRoot?> OfIdAsync(dynamic id);
 
     IQueryable<TAggregateRoot> Query(Expression<Func<TAggregateRoot, bool>>? expression = default);
 

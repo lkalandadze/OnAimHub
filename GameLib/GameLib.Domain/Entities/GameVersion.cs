@@ -2,7 +2,7 @@
 
 namespace GameLib.Domain.Entities;
 
-public class GameVersion : BaseEntity
+public class GameVersion : BaseEntity<int>
 {
     public GameVersion(string name, bool isActive, List<int> segmentIds)
     {
@@ -10,7 +10,6 @@ public class GameVersion : BaseEntity
         IsActive = isActive;
         SegmentIds = segmentIds;
     }
-    public override int Id { get; set; }
     public string Name { get; set; }
     public bool IsActive { get; set; }
     public List<int> SegmentIds { get; set; }

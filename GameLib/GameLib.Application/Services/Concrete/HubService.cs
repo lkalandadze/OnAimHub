@@ -28,9 +28,9 @@ public class HubService : IHubService
         Authorize();
         var transactionPost = new TransactionPostModel
         {
-            GameVersionId = gameVersionId,
-            CurrencyId = 1, //TODO
-            Amount = 50, //TODO
+            GameId = gameVersionId,
+            CurrencyId = "USD", //TODO
+            Amount = 1, //TODO
         };
 
         var betTransaction = await _httpClient.CustomPostAsync<TransactionResponseModel>(_hubApiConfig.Host, _hubApiConfig.Endpoints.BetTransaction, transactionPost);
@@ -46,8 +46,8 @@ public class HubService : IHubService
         Authorize();
         var transactionPost = new TransactionPostModel
         {
-            GameVersionId = gameVersionId,
-            CurrencyId = 1, //TODO
+            GameId = gameVersionId,
+            CurrencyId = "USD", //TODO
             Amount = 50, //TODO
         };
 

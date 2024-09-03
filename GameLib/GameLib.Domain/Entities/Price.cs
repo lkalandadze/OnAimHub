@@ -2,9 +2,8 @@
 
 namespace GameLib.Domain.Entities;
 
-public class Price : BaseEntity
+public class Price : BaseEntity<int>
 {
-    public override int Id { get; set; }
     public decimal Value { get; set; }
     public decimal Multiplier { get; set; }
 

@@ -38,9 +38,12 @@ public class Startup
             options.UseNpgsql(Configuration.GetConnectionString("OnAimHub")));
 
         services.AddHttpClient();
+        services.AddScoped<IPlayerBalanceService, PlayerBalanceService>();
+        services.AddScoped<ITransactionService, TransactionService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddScoped<IPlayerBalanceRepository, PlayerBalanceRepository>();
         services.AddScoped<ITokenRecordRepository, TokenRecordRepository>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
