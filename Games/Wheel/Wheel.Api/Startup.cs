@@ -49,12 +49,10 @@ public class Startup
         });
 
         ConfigureMassTransit(services);
+
         services.AddMassTransitHostedService();
 
-        if (IsRunningInDocker())
-        {
-            ConfigureConsul(services);
-        }
+        ConfigureConsul(services);
 
         services.AddControllers();
         services.AddEndpointsApiExplorer();
