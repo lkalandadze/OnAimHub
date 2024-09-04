@@ -1,5 +1,5 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.APP.Queries.Abstract;
 using OnAim.Admin.Infrasturcture.Extensions;
 using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
 using OnAim.Admin.Infrasturcture.Models.Response.EndpointGroup;
@@ -9,7 +9,7 @@ using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Queries.Role.GetById
 {
-    public class GetRoleByIdQueryHandler : IRequestHandler<GetRoleByIdQuery, ApplicationResult>
+    public class GetRoleByIdQueryHandler : IQueryHandler<GetRoleByIdQuery, ApplicationResult>
     {
         private readonly IRepository<Infrasturcture.Entities.Role> _repository;
 
@@ -21,11 +21,13 @@ namespace OnAim.Admin.APP.Queries.Role.GetById
         {
             var role = await _repository
                 .Query(x => x.Id == request.Id)
+                .Include(x => x.UserRoles)
+                .ThenInclude(x => x.User)
                 .Include(x => x.RoleEndpointGroups)
                 .ThenInclude(x => x.EndpointGroup)
                 .ThenInclude(x => x.EndpointGroupEndpoints)
                 .ThenInclude(x => x.Endpoint)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (role == null) { return new ApplicationResult { Success = false, Data = $"Role Not Found!" }; }
 
@@ -35,6 +37,13 @@ namespace OnAim.Admin.APP.Queries.Role.GetById
                 Name = role.Name,
                 Description = role.Description,
                 DateCreated = role.DateCreated,
+                UsersResponseModels = role.UserRoles.Select(z => new UserDto
+                {
+                    Id = z.UserId,
+                    FirstName = z.User.FirstName,
+                    LastName = z.User.LastName,
+                    Email = z.User.Email,
+                }).ToList(),
                 EndpointGroupModels = role.RoleEndpointGroups.Select(x => new EndpointGroupModel
                 {
                     Id = x.EndpointGroupId,
@@ -48,7 +57,7 @@ namespace OnAim.Admin.APP.Queries.Role.GetById
                         Name = x.Endpoint.Name,
                         Description = x.Endpoint.Description,
                         IsActive = x.Endpoint.IsActive,
-                        IsEnabled = x.Endpoint.IsEnabled,
+                        IsEnabled = x.Endpoint.IsDeleted,
                         Type = ToHttpMethodExtension.ToHttpMethod(x.Endpoint.Type),
                         Path = x.Endpoint.Path,
                         DateCreated = x.Endpoint.DateCreated,

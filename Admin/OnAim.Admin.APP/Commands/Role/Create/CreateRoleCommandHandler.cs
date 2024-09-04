@@ -1,33 +1,40 @@
 ﻿using FluentValidation;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Extensions;
+using OnAim.Admin.APP.Auth;
+using OnAim.Admin.APP.Commands.Abstract;
+using OnAim.Admin.APP.Exceptions;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
-using static OnAim.Admin.APP.Extensions.Extension;
 
 namespace OnAim.Admin.APP.Commands.Role.Create
 {
-    public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommand, ApplicationResult>
+    public class CreateRoleCommandHandler : ICommandHandler<CreateRoleCommand, ApplicationResult>
     {
         private readonly IRepository<Infrasturcture.Entities.Role> _repository;
         private readonly IRepository<Infrasturcture.Entities.EndpointGroup> _endpointGroupRepository;
         private readonly IConfigurationRepository<RoleEndpointGroup> _configurationRepository;
         private readonly IValidator<CreateRoleCommand> _validator;
+        private readonly IAuditLogService _auditLogService;
+        private readonly ISecurityContextAccessor _securityContextAccessor;
 
         public CreateRoleCommandHandler(
             IRepository<Infrasturcture.Entities.Role> repository,
             IRepository<Infrasturcture.Entities.EndpointGroup> EndpointGroupRepository,
             IConfigurationRepository<RoleEndpointGroup> ConfigurationRepository,
-            IValidator<CreateRoleCommand> validator
+            IValidator<CreateRoleCommand> validator,
+            IAuditLogService auditLogService,
+            ISecurityContextAccessor securityContextAccessor
             )
         {
             _repository = repository;
             _endpointGroupRepository = EndpointGroupRepository;
             _configurationRepository = ConfigurationRepository;
             _validator = validator;
+            _auditLogService = auditLogService;
+            _securityContextAccessor = securityContextAccessor;
         }
         public async Task<ApplicationResult> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
         {
@@ -35,33 +42,33 @@ namespace OnAim.Admin.APP.Commands.Role.Create
 
             if (!validationResult.IsValid)
             {
-                throw new ValidationException(validationResult.Errors);
+                throw new FluentValidation.ValidationException(validationResult.Errors);
             }
 
-            var existsName = _repository.Query(x => x.Name == request.request.Name).Any();
+            var existsName = _repository.Query(x => x.Name.ToLower() == request.Request.Name.ToLower()).Any();
             if (existsName)
             {
-                return new ApplicationResult { Success = false, Data = $"Role With That Name ALready Exists" };
+                throw new AlreadyExistsException("Role With That Name ALready Exists");
             }
             var role = new Infrasturcture.Entities.Role
             {
-                Name = request.request.Name,
-                Description = request.request.Description,
+                Name = request.Request.Name,
+                Description = request.Request.Description,
                 DateCreated = SystemDate.Now,
                 IsActive = true,
                 RoleEndpointGroups = new List<RoleEndpointGroup>(),
-                UserId = HttpContextAccessorProvider.HttpContextAccessor.GetUserId(),
+                UserId = _securityContextAccessor.UserId,
             };
             await _repository.Store(role);
             await _repository.CommitChanges();
 
-            foreach (var group in request.request.EndpointGroupIds)
+            foreach (var group in request.Request.EndpointGroupIds)
             {
                 var epgroup = await _endpointGroupRepository.Query(x => x.Id == group).FirstOrDefaultAsync();
 
-                if (!epgroup.IsEnabled)
+                if (epgroup.IsDeleted)
                 {
-                    return new ApplicationResult { Success = false, Data = $"EndpointGroup Is Disabled!" };
+                    throw new Exception("EndpointGroup Is Disabled!");
                 }
 
                 var roleEndpointGroup = new RoleEndpointGroup
@@ -73,7 +80,17 @@ namespace OnAim.Admin.APP.Commands.Role.Create
                 role.RoleEndpointGroups.Add(roleEndpointGroup);
                 await _configurationRepository.CommitChanges();
             }
+
             await _configurationRepository.CommitChanges();
+
+            await _auditLogService.LogEventAsync(
+                SystemDate.Now,
+                "Create",
+                nameof(Infrasturcture.Entities.Role),
+                role.Id,
+                _securityContextAccessor.UserId,
+                $"Role Created successfully with ID: {role.Id} by User ID: {_securityContextAccessor.UserId}");
+
 
             return new ApplicationResult
             {

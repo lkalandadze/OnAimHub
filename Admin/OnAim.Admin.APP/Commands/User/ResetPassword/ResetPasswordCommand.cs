@@ -1,10 +1,10 @@
-﻿using MediatR;
+﻿using OnAim.Admin.APP.Commands.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using System.ComponentModel.DataAnnotations;
 
 namespace OnAim.Admin.APP.Commands.User.ResetPassword
 {
-    public class ResetPasswordCommand : IRequest<ApplicationResult>
+    public class ResetPasswordCommand : ICommand<ApplicationResult>
     {
         [Required]
         public int Id { get; set; }

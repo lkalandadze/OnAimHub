@@ -1,6 +1,9 @@
 ﻿using FluentValidation;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.APP.Auth;
+using OnAim.Admin.APP.Commands.Abstract;
+using OnAim.Admin.APP.Exceptions;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Identity.Services;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
@@ -8,21 +11,27 @@ using OnAim.Admin.Shared.Models;
 
 namespace OnAim.Admin.APP.Commands.User.ChangePassword
 {
-    public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, ApplicationResult>
+    public class ChangePasswordCommandHandler : ICommandHandler<ChangePasswordCommand, ApplicationResult>
     {
         private readonly IRepository<Infrasturcture.Entities.User> _userRepository;
         private readonly IValidator<ChangePasswordCommand> _validator;
         private readonly ApplicationUserManager _userManager;
+        private readonly IAuditLogService _auditLogService;
+        private readonly ISecurityContextAccessor _securityContextAccessor;
 
         public ChangePasswordCommandHandler(
             IRepository<Infrasturcture.Entities.User> userRepository,
             IValidator<ChangePasswordCommand> validator,
-            ApplicationUserManager userManager
+            ApplicationUserManager userManager,
+            IAuditLogService auditLogService,
+            ISecurityContextAccessor securityContextAccessor
             )
         {
             _userRepository = userRepository;
             _validator = validator;
             _userManager = userManager;
+            _auditLogService = auditLogService;
+            _securityContextAccessor = securityContextAccessor;
         }
         public async Task<ApplicationResult> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
         {
@@ -30,33 +39,21 @@ namespace OnAim.Admin.APP.Commands.User.ChangePassword
 
             if (!validationResult.IsValid)
             {
-                return new ApplicationResult
-                {
-                    Success = false,
-                    Data = validationResult.Errors,
-                };
+                throw new FluentValidation.ValidationException(validationResult.Errors);
             }
 
             var user = await _userRepository.Query(x => x.Email == request.Email).FirstOrDefaultAsync();
 
             if (user == null || !user.IsActive)
             {
-                return new ApplicationResult
-                {
-                    Success = false,
-                    Data = new[] { "User Not Found!" }
-                };
+                throw new UserNotFoundException("User Not Found!");
             }
 
             string hashedOldPassword = Infrasturcture.Extensions.EncryptPasswordExtension.EncryptPassword(request.OldPassword, user.Salt);
 
             if (user.Password != hashedOldPassword)
             {
-                return new ApplicationResult
-                {
-                    Success = false,
-                    Data = new[] { "Old password is incorrect!" }
-                };
+                throw new BadRequestException("Old password is incorrect!");
             }
 
             var newSalt = Infrasturcture.Extensions.EncryptPasswordExtension.Salt();
@@ -72,13 +69,16 @@ namespace OnAim.Admin.APP.Commands.User.ChangePassword
             }
             catch (Exception ex)
             {
-                return new ApplicationResult
-                {
-                    Success = false,
-                    Data = new[] { "An error occurred while updating the password." }
-                };
+                throw new Exception("An error occurred while updating the password.");
             }
 
+            await _auditLogService.LogEventAsync(
+               SystemDate.Now,
+               "Password Change",
+               nameof(User),
+               user.Id,
+               _securityContextAccessor.UserId,
+               $"Password was Changed successfully with ID: {user.Id} by User ID: {_securityContextAccessor.UserId}");
 
             return new ApplicationResult
             {

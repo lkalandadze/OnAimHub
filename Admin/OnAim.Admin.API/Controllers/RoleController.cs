@@ -5,6 +5,7 @@ using OnAim.Admin.APP.Commands.Role.Delete;
 using OnAim.Admin.APP.Commands.Role.Update;
 using OnAim.Admin.APP.Queries.Role.GetAll;
 using OnAim.Admin.APP.Queries.Role.GetById;
+using OnAim.Admin.APP.Queries.Role.RolesExport;
 using OnAim.Admin.Infrasturcture.Models.Request.Role;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using System.Net;
@@ -26,6 +27,13 @@ namespace OnAim.Admin.API.Controllers
         [HttpGet("Get/{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
             => Ok(await Mediator.Send(new GetRoleByIdQuery(id)));
+
+        [HttpGet("Download")]
+        public async Task<IActionResult> Download([FromQuery] RolesExportQuery query)
+        {
+            var result = await Mediator.Send(query);
+            return result;
+        }
 
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRoleRequest model)

@@ -1,27 +1,34 @@
 ﻿using FluentValidation;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Extensions;
+using OnAim.Admin.APP.Auth;
+using OnAim.Admin.APP.Commands.Abstract;
+using OnAim.Admin.APP.Exceptions;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
-using static OnAim.Admin.APP.Extensions.Extension;
 
 namespace OnAim.Admin.APP.Commands.EndPoint.Create
 {
-    public class CreateEndpointCommandHandler : IRequestHandler<CreateEndpointCommand, ApplicationResult>
+    public class CreateEndpointCommandHandler : ICommandHandler<CreateEndpointCommand, ApplicationResult>
     {
         private readonly IValidator<CreateEndpointCommand> _validator;
         private readonly IRepository<Endpoint> _repository;
+        private readonly IAuditLogService _auditLogService;
+        private readonly ISecurityContextAccessor _securityContextAccessor;
 
         public CreateEndpointCommandHandler(
             IValidator<CreateEndpointCommand> validator,
-            IRepository<Endpoint> repository
+            IRepository<Endpoint> repository,
+            IAuditLogService auditLogService,
+            ISecurityContextAccessor securityContextAccessor
             )
         {
             _validator = validator;
             _repository = repository;
+            _auditLogService = auditLogService;
+            _securityContextAccessor = securityContextAccessor;
         }
         public async Task<ApplicationResult> Handle(CreateEndpointCommand request, CancellationToken cancellationToken)
         {
@@ -29,7 +36,7 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Create
 
             if (!validationResult.IsValid)
             {
-                throw new ValidationException(validationResult.Errors);
+                throw new FluentValidation.ValidationException(validationResult.Errors);
             }
 
             var existedEndpoint = await _repository.Query(x => x.Name == request.Name).FirstOrDefaultAsync();
@@ -43,7 +50,7 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Create
 
             if (existedEndpoint != null)
             {
-                return new ApplicationResult { Success = false, Data = "Permmission with that name already exists." };
+                throw new AlreadyExistsException("Permmission with that name already exists.");
             }
 
             var endpoint = new Endpoint
@@ -51,14 +58,22 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Create
                 Name = request.Name,
                 Path = request.Name,
                 Description = request.Description ?? "Description needed",
-                IsEnabled = true,
+                IsDeleted = false,
                 DateCreated = SystemDate.Now,
                 IsActive = true,
                 Type = endpointTypeEnum,
-                UserId = HttpContextAccessorProvider.HttpContextAccessor.GetUserId()
+                UserId = _securityContextAccessor.UserId
             };
             await _repository.Store(endpoint);
             await _repository.CommitChanges();
+
+            await _auditLogService.LogEventAsync(
+                  SystemDate.Now,
+                  "Endpoint Create",
+                  nameof(Endpoint),
+                  endpoint.Id,
+                  _securityContextAccessor.UserId,
+                  $"Endpoint Created successfully with ID: {endpoint.Id} by User ID: {_securityContextAccessor.UserId}");
 
             return new ApplicationResult
             {

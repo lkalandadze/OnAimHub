@@ -1,30 +1,40 @@
 ﻿using FluentValidation;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.APP.Auth;
+using OnAim.Admin.APP.Commands.Abstract;
+using OnAim.Admin.APP.Exceptions;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.Models;
 
 namespace OnAim.Admin.APP.Commands.EndpointGroup.Update
 {
-    public class UpdateEndpointGroupCommandHandler : IRequestHandler<UpdateEndpointGroupCommand, ApplicationResult>
+    public class UpdateEndpointGroupCommandHandler : ICommandHandler<UpdateEndpointGroupCommand, ApplicationResult>
     {
         private readonly IRepository<Infrasturcture.Entities.EndpointGroup> _repository;
-        private readonly IConfigurationRepository<Infrasturcture.Entities.EndpointGroupEndpoint> _endpointGroupEndpointRepository;
-        private readonly IRepository<Infrasturcture.Entities.Endpoint> _endpointRepository;
+        private readonly IConfigurationRepository<EndpointGroupEndpoint> _endpointGroupEndpointRepository;
+        private readonly IRepository<Endpoint> _endpointRepository;
         private readonly IValidator<UpdateEndpointGroupCommand> _validator;
+        private readonly IAuditLogService _auditLogService;
+        private readonly ISecurityContextAccessor _securityContextAccessor;
 
         public UpdateEndpointGroupCommandHandler(
             IRepository<Infrasturcture.Entities.EndpointGroup> repository,
-            IConfigurationRepository<Infrasturcture.Entities.EndpointGroupEndpoint> endpointGroupEndpointRepository,
-            IRepository<Infrasturcture.Entities.Endpoint> endpointRepository,
-            IValidator<UpdateEndpointGroupCommand> validator
+            IConfigurationRepository<EndpointGroupEndpoint> endpointGroupEndpointRepository,
+            IRepository<Endpoint> endpointRepository,
+            IValidator<UpdateEndpointGroupCommand> validator,
+            IAuditLogService auditLogService,
+            ISecurityContextAccessor securityContextAccessor
             )
         {
             _repository = repository;
             _endpointGroupEndpointRepository = endpointGroupEndpointRepository;
             _endpointRepository = endpointRepository;
             _validator = validator;
+            _auditLogService = auditLogService;
+            _securityContextAccessor = securityContextAccessor;
         }
         public async Task<ApplicationResult> Handle(UpdateEndpointGroupCommand request, CancellationToken cancellationToken)
         {
@@ -32,7 +42,7 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Update
 
             if (!validationResult.IsValid)
             {
-                throw new ValidationException(validationResult.Errors);
+                throw new FluentValidation.ValidationException(validationResult.Errors);
             }
 
             var group = await _repository
@@ -42,17 +52,24 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Update
 
             if (group == null)
             {
-                return new ApplicationResult { Success = false, Data = $"Permmission Group Not Found" };
+                throw new Exception("Permmission Group Not Found");
             }
 
             if (!string.IsNullOrEmpty(request.model.Name))
             {
-                bool nameExists = await _repository.Query(x => x.Name == request.model.Name && x.Id != request.Id) 
+                var super = await _repository.Query(x => x.Name == "SuperGroup").FirstOrDefaultAsync();
+
+                if (request.model.Name == super.Name)
+                {
+                    throw new Exception("You don't have permmission to update this group!");
+                }
+
+                bool nameExists = await _repository.Query(x => x.Name == request.model.Name && x.Id != request.Id)
                     .AnyAsync();
 
                 if (nameExists)
                 {
-                    return new ApplicationResult { Success = false, Data = $"Permmission Group with this name already exists." };
+                    throw new AlreadyExistsException("Permmission Group with this name already exists.");
                 }
 
                 group.Name = request.model.Name;
@@ -105,6 +122,14 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Update
                     await _endpointGroupEndpointRepository.Remove(endpointGroupEndpoint);
                 }
             }
+
+            await _auditLogService.LogEventAsync(
+              SystemDate.Now,
+              "EndpointGroup Update",
+              nameof(Infrasturcture.Entities.EndpointGroup),
+              group.Id,
+              _securityContextAccessor.UserId,
+              $"EndpointGroup Updated successfully with ID: {group.Id} by User ID: {_securityContextAccessor.UserId}");
 
             await _endpointGroupEndpointRepository.CommitChanges();
 

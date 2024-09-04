@@ -1,24 +1,33 @@
 ﻿using FluentValidation;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.APP.Auth;
+using OnAim.Admin.APP.Commands.Abstract;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
+using static OnAim.Admin.APP.Exceptions.Exceptions;
 
 namespace OnAim.Admin.APP.Commands.Role.Delete
 {
-    public class DeleteRoleCommandHandler : IRequestHandler<DeleteRoleCommand, ApplicationResult>
+    public class DeleteRoleCommandHandler : ICommandHandler<DeleteRoleCommand, ApplicationResult>
     {
         private readonly IRepository<Infrasturcture.Entities.Role> _repository;
         private readonly IValidator<DeleteRoleCommand> _validator;
+        private readonly IAuditLogService _auditLogService;
+        private readonly ISecurityContextAccessor _securityContextAccessor;
 
         public DeleteRoleCommandHandler(
             IRepository<Infrasturcture.Entities.Role> repository,
-            IValidator<DeleteRoleCommand> validator
+            IValidator<DeleteRoleCommand> validator,
+            IAuditLogService auditLogService,
+            ISecurityContextAccessor securityContextAccessor
             )
         {
             _repository = repository;
             _validator = validator;
+            _auditLogService = auditLogService;
+            _securityContextAccessor = securityContextAccessor;
         }
         public async Task<ApplicationResult> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
         {
@@ -34,12 +43,23 @@ namespace OnAim.Admin.APP.Commands.Role.Delete
                 .Include(r => r.RoleEndpointGroups)
                 .FirstOrDefaultAsync();
 
-            if (role != null)
+            if (role == null)
             {
-                role.IsActive = false;
-                role.DateDeleted = SystemDate.Now;
-                await _repository.CommitChanges();
+                throw new RoleNotFoundException("Role Not Found");
             }
+
+            role.IsActive = false;
+            role.DateDeleted = SystemDate.Now;
+
+            await _repository.CommitChanges();
+
+            await _auditLogService.LogEventAsync(
+                SystemDate.Now,
+                "Delete",
+                nameof(Infrasturcture.Entities.Role),
+                role.Id,
+                _securityContextAccessor.UserId,
+                $"Role Deleted successfully with ID: {role.Id} by User ID: {_securityContextAccessor.UserId}");
 
             return new ApplicationResult
             {

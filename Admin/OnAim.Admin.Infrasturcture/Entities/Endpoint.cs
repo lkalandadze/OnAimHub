@@ -7,7 +7,7 @@ namespace OnAim.Admin.Infrasturcture.Entities
     {
         public string Path { get; set; }
         public string Name { get; set; }
-        public bool IsEnabled { get; set; }
+        public bool IsDeleted { get; set; }
         public int? UserId { get; set; }
         public EndpointType? Type { get; set; }
         public string Description { get; set; }

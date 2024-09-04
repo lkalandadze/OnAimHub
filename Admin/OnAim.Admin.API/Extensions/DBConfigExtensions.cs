@@ -21,7 +21,7 @@ namespace OnAim.Admin.API.Extensions
                 {
                     Name = "SuperGroup",
                     Description = "All Permission for super admin",
-                    IsEnabled = true,
+                    IsDeleted = false,
                     IsActive = true,
                     EndpointGroupEndpoints = new List<EndpointGroupEndpoint>(),
                     DateCreated = DateTime.UtcNow
@@ -81,7 +81,7 @@ namespace OnAim.Admin.API.Extensions
                 {
                     Name = "DefaultGroup",
                     Description = "Default permission group",
-                    IsEnabled = true,
+                    IsDeleted = false,
                     IsActive = true,
                     EndpointGroupEndpoints = new List<EndpointGroupEndpoint>(),
                     DateCreated = DateTime.UtcNow
@@ -98,6 +98,14 @@ namespace OnAim.Admin.API.Extensions
                 };
 
                 defaultGroup.EndpointGroupEndpoints.Add(defaultendpointGroupEndpoint);
+
+                var usersProfileUpdateEndpoint = await dbContext.Endpoints.FirstOrDefaultAsync(x => x.Name == "Users_ProfileUpdate");
+                var defaultProfileUpdateEndpointGroupEndpoint = new EndpointGroupEndpoint
+                {
+                    EndpointId = usersProfileUpdateEndpoint.Id,
+                    EndpointGroupId = defaultGroup.Id
+                };
+                defaultGroup.EndpointGroupEndpoints.Add(defaultProfileUpdateEndpointGroupEndpoint);
 
                 await dbContext.SaveChangesAsync();
             }
@@ -116,7 +124,7 @@ namespace OnAim.Admin.API.Extensions
                 await dbContext.SaveChangesAsync();
 
                 var roleEndpointGroup = await dbContext.EndpointGroups.FirstOrDefaultAsync(x => x.Name == "DefaultGroup");
-                if (roleEndpointGroup != null) 
+                if (roleEndpointGroup != null)
                 {
                     var defaultRoleEndpointGroup = new RoleEndpointGroup
                     {
@@ -125,7 +133,7 @@ namespace OnAim.Admin.API.Extensions
                     };
                     dbContext.RoleEndpointGroups.Add(defaultRoleEndpointGroup);
                 }
-                await dbContext.SaveChangesAsync();             
+                await dbContext.SaveChangesAsync();
             }
 
             if (!await dbContext.Users.AnyAsync())
@@ -149,6 +157,8 @@ namespace OnAim.Admin.API.Extensions
                     Salt = salt,
                     Phone = "595999999",
                     IsActive = true,
+                    //ActivationToken = null,
+                    //ActivationTokenExpiration = null,
                     DateCreated = DateTime.UtcNow
                 });
 

@@ -8,8 +8,7 @@ namespace OnAim.Admin.Infrasturcture.Entities
         public string Description { get; set; }
         public ICollection<RoleEndpointGroup> RoleEndpointGroups { get; set; }
         public ICollection<UserRole> UserRoles { get; set; }
-
-        //who created/updated/deleted role
+        public bool IsDeleted { get; set; }
         public int? UserId { get; set; }
     }
 }

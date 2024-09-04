@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.APP.Auth;
+using OnAim.Admin.APP.Commands.Abstract;
 using OnAim.Admin.APP.Exceptions;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
@@ -9,21 +11,27 @@ using OnAim.Admin.Shared.Models;
 
 namespace OnAim.Admin.APP.Commands.User.Update
 {
-    public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, ApplicationResult>
+    public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand, ApplicationResult>
     {
         private readonly IRepository<Infrasturcture.Entities.User> _repository;
         private readonly IConfigurationRepository<UserRole> _userRoleRepository;
         private readonly IValidator<UpdateUserCommand> _validator;
+        private readonly IAuditLogService _auditLogService;
+        private readonly ISecurityContextAccessor _securityContextAccessor;
 
         public UpdateUserCommandHandler(
             IRepository<Infrasturcture.Entities.User> repository,
             IConfigurationRepository<UserRole> userRoleRepository,
-            IValidator<UpdateUserCommand> validator
+            IValidator<UpdateUserCommand> validator,
+            IAuditLogService auditLogService,
+            ISecurityContextAccessor securityContextAccessor
             )
         {
             _repository = repository;
             _userRoleRepository = userRoleRepository;
             _validator = validator;
+            _auditLogService = auditLogService;
+            _securityContextAccessor = securityContextAccessor;
         }
         public async Task<ApplicationResult> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
@@ -31,14 +39,14 @@ namespace OnAim.Admin.APP.Commands.User.Update
 
             if (!validationResult.IsValid)
             {
-                throw new ValidationException(validationResult.Errors);
+                throw new FluentValidation.ValidationException(validationResult.Errors);
             }
 
             var existingUser = await _repository.Query(x => x.Id == request.Id).FirstOrDefaultAsync();
 
             if (existingUser == null)
             {
-                return new ApplicationResult { Success = false, Data = $"User not found" };
+                throw new UserNotFoundException("User not found");
             }
 
             existingUser.FirstName = request.Model.FirstName;
@@ -73,6 +81,14 @@ namespace OnAim.Admin.APP.Commands.User.Update
 
             await _repository.CommitChanges();
             await _userRoleRepository.CommitChanges();
+
+            await _auditLogService.LogEventAsync(
+               SystemDate.Now,
+               "User Update",
+               nameof(User),
+               existingUser.Id,
+               _securityContextAccessor.UserId,
+               $"User Updated successfully with ID: {existingUser.Id} by User ID: {_securityContextAccessor.UserId}");
 
             return new ApplicationResult
             {

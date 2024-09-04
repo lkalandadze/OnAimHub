@@ -6,7 +6,7 @@ namespace OnAim.Admin.APP.Commands.Role.Create
     {
         public CreateRoleCommandValidator()
         {
-            RuleFor(x => x.request.Name)
+            RuleFor(x => x.Request.Name)
                 .NotEmpty()
                 .NotNull()
                 .WithMessage("Name is required.")

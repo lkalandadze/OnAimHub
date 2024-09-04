@@ -2,6 +2,7 @@
 using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP.Commands.EndpointGroup.Create;
 using OnAim.Admin.APP.Commands.EndpointGroup.Update;
+using OnAim.Admin.APP.Queries.EndpointGroup.EndpointGroupsExport;
 using OnAim.Admin.APP.Queries.EndpointGroup.GetAll;
 using OnAim.Admin.APP.Queries.EndpointGroup.GetById;
 using OnAim.Admin.Infrasturcture.Models.Request.EndpointGroup;
@@ -29,5 +30,12 @@ namespace OnAim.Admin.API.Controllers
         [HttpGet("Get/{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
             => Ok(await Mediator.Send(new GetEndpointGroupByIdQuery(id)));
+
+        [HttpGet("Download")]
+        public async Task<IActionResult> Download([FromQuery] EndpointGroupsExportQuery query)
+        {
+            var result = await Mediator.Send(query);
+            return result;
+        }
     }
 }

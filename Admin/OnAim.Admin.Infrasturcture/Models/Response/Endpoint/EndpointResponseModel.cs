@@ -1,6 +1,4 @@
-﻿using OnAim.Admin.Shared.Models;
-
-namespace OnAim.Admin.Infrasturcture.Models.Response.Endpoint
+﻿namespace OnAim.Admin.Infrasturcture.Models.Response.Endpoint
 {
     public class EndpointResponseModel
     {
@@ -15,5 +13,13 @@ namespace OnAim.Admin.Infrasturcture.Models.Response.Endpoint
         public DateTimeOffset DateCreated { get; set; }
         public DateTimeOffset DateUpdated { get; set; }
         public DateTimeOffset DateDeleted { get; set; }
+        public List<EndpointGroupDto> Groups { get; set; }
+    }
+
+    public class EndpointGroupDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool IsActive { get; set; }
     }
 }

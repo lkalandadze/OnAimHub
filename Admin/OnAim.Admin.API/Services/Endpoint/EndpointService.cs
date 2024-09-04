@@ -77,7 +77,7 @@ namespace OnAim.Admin.API.Service.Endpoint
                 {
                     existingEndpoint.Name = endpoint.Name;
                     existingEndpoint.Description = endpoint.Description;
-                    existingEndpoint.IsEnabled = endpoint.IsEnabled;
+                    existingEndpoint.IsDeleted = endpoint.IsDeleted;
                     existingEndpoint.Type = endpoint.Type;
                     context.Endpoints.Update(existingEndpoint);
                 }
@@ -99,7 +99,7 @@ namespace OnAim.Admin.API.Service.Endpoint
                 Name = formattedName,
                 Path = formattedName,
                 Description = $"Endpoint for {endpointInfo.Name} in {endpointInfo.Controller}",
-                IsEnabled = true,
+                IsDeleted = false,
                 IsActive = true,
                 DateCreated = SystemDate.Now,
                 Type = ParseHttpMethodToEndpointType(endpointInfo.HttpMethod),

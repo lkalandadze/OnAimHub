@@ -1,13 +1,13 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Models.Response.User;
+using OnAim.Admin.APP.Queries.Abstract;
 using OnAim.Admin.Infrasturcture.Models.Response;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Queries.User.GetAllUser
 {
-    public sealed class GetAllUserQueryHandler : IRequestHandler<GetAllUserQuery, ApplicationResult>
+    public sealed class GetAllUserQueryHandler : IQueryHandler<GetAllUserQuery, ApplicationResult>
     {
         private readonly IRepository<Infrasturcture.Entities.User> _repository;
 

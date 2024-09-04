@@ -11,5 +11,7 @@ namespace OnAim.Admin.Infrasturcture.Models.Request.EndpointGroup
         public int? PageNumber { get; set; }
         [PageSize(100)]
         public int? PageSize { get; set; }
+        public List<int>? RoleIds { get; set; }
+        public List<int>? EndpointIds { get; set; }
     }
 }

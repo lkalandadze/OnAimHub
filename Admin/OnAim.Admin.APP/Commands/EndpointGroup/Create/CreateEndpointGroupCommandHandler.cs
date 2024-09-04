@@ -1,30 +1,36 @@
 ﻿using FluentValidation;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Extensions;
+using OnAim.Admin.APP.Auth;
+using OnAim.Admin.APP.Commands.Abstract;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
-using static OnAim.Admin.APP.Extensions.Extension;
 
 namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
 {
-    public class CreateEndpointGroupCommandHandler : IRequestHandler<CreateEndpointGroupCommand, ApplicationResult>
+    public class CreateEndpointGroupCommandHandler : ICommandHandler<CreateEndpointGroupCommand, ApplicationResult>
     {
         private readonly IRepository<Infrasturcture.Entities.EndpointGroup> _repository;
         private readonly IRepository<Endpoint> _endpointRepository;
         private readonly IValidator<CreateEndpointGroupCommand> _validator;
+        private readonly IAuditLogService _auditLogService;
+        private readonly ISecurityContextAccessor _securityContextAccessor;
 
         public CreateEndpointGroupCommandHandler(
             IRepository<Infrasturcture.Entities.EndpointGroup> repository,
             IRepository<Endpoint> endpointRepository,
-            IValidator<CreateEndpointGroupCommand> validator
+            IValidator<CreateEndpointGroupCommand> validator,
+            IAuditLogService auditLogService,
+            ISecurityContextAccessor securityContextAccessor
             )
         {
             _repository = repository;
             _endpointRepository = endpointRepository;
             _validator = validator;
+            _auditLogService = auditLogService;
+            _securityContextAccessor = securityContextAccessor;
         }
         public async Task<ApplicationResult> Handle(CreateEndpointGroupCommand request, CancellationToken cancellationToken)
         {
@@ -43,20 +49,20 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
                 {
                     Name = request.Model.Name,
                     Description = request.Model.Description,
-                    IsEnabled = true,
+                    IsDeleted = false,
                     IsActive = true,
                     EndpointGroupEndpoints = new List<EndpointGroupEndpoint>(),
                     DateCreated = SystemDate.Now,
-                    UserId = HttpContextAccessorProvider.HttpContextAccessor.GetUserId()
+                    UserId = _securityContextAccessor.UserId
                 };
 
                 foreach (var endpointId in request.Model.EndpointIds)
                 {
                     var endpoint = await _endpointRepository.Query(x => x.Id == endpointId).FirstOrDefaultAsync();
 
-                    if (!endpoint.IsEnabled)
+                    if (endpoint.IsDeleted)
                     {
-                        return new ApplicationResult { Success = false, Data = $"Permmission Is Disabled!" };
+                        throw new Exception("Permmission Is Disabled!");
                     }
 
                     var endpointGroupEndpoint = new EndpointGroupEndpoint
@@ -70,10 +76,18 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
 
                 await _repository.Store(endpointGroup);
                 await _repository.CommitChanges();
+
+                await _auditLogService.LogEventAsync(
+                      SystemDate.Now,
+                      "Create",
+                      nameof(endpointGroup),
+                      endpointGroup.Id,
+                      _securityContextAccessor.UserId,
+                      $"EndpointGroup Created successfully with ID: {endpointGroup.Id} by User ID: {_securityContextAccessor.UserId}");
             }
             else
             {
-                return new ApplicationResult { Success = false, Data = $"Permmission Group with that name already exists!" };
+                throw new Exception("Permmission Group with that name already exists!");
             }
 
             return new ApplicationResult

@@ -1,5 +1,6 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.APP.Queries.Abstract;
+using OnAim.Admin.Infrasturcture.Extensions;
 using OnAim.Admin.Infrasturcture.Models.Response;
 using OnAim.Admin.Infrasturcture.Models.Response.EndpointGroup;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
@@ -7,7 +8,7 @@ using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Queries.EndpointGroup.GetAll
 {
-    public class GetAllEndpointGroupQueryHandler : IRequestHandler<GetAllEndpointGroupQuery, ApplicationResult>
+    public class GetAllEndpointGroupQueryHandler : IQueryHandler<GetAllEndpointGroupQuery, ApplicationResult>
     {
         private readonly IRepository<Infrasturcture.Entities.EndpointGroup> _repository;
 
@@ -20,9 +21,17 @@ namespace OnAim.Admin.APP.Queries.EndpointGroup.GetAll
             var query = _repository.Query(x =>
                          (string.IsNullOrEmpty(request.Filter.Name) || x.Name.Contains(request.Filter.Name)) &&
                          (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value)
-                         &&
-               x.Name != "SuperGroup"
                 );
+
+            if (request.Filter.RoleIds != null && request.Filter.RoleIds.Any())
+            {
+                query = query.Where(x => x.RoleEndpointGroups.Any(ur => request.Filter.RoleIds.Contains(ur.RoleId)));
+            }
+
+            if (request.Filter.EndpointIds != null && request.Filter.EndpointIds.Any())
+            {
+                query = query.Where(x => x.EndpointGroupEndpoints.Any(ur => request.Filter.EndpointIds.Contains(ur.EndpointId)));
+            }
 
             var totalCount = await query.CountAsync(cancellationToken);
 
@@ -31,13 +40,13 @@ namespace OnAim.Admin.APP.Queries.EndpointGroup.GetAll
 
             bool sortDescending = request.Filter.SortDescending.GetValueOrDefault();
 
-            if (request.Filter.SortBy == "Id")
+            if (request.Filter.SortBy == "Id" || request.Filter.SortBy == "id")
             {
                 query = sortDescending
                     ? query.OrderByDescending(x => x.Id)
                     : query.OrderBy(x => x.Id);
             }
-            else if (request.Filter.SortBy == "Name")
+            else if (request.Filter.SortBy == "Name" || request.Filter.SortBy == "name")
             {
                 query = sortDescending
                     ? query.OrderByDescending(x => x.Name)
@@ -46,18 +55,28 @@ namespace OnAim.Admin.APP.Queries.EndpointGroup.GetAll
 
             var result = query
                 .Select(x => new EndpointGroupModel
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Description = x.Description,
-                DateUpdated = x.DateUpdated,
-                DateCreated = x.DateCreated,
-                DateDeleted = x.DateDeleted,
-                EndpointsCount = x.EndpointGroupEndpoints.Count,
-                IsActive = x.IsActive,
-            })
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    DateUpdated = x.DateUpdated,
+                    DateCreated = x.DateCreated,
+                    DateDeleted = x.DateDeleted,
+                    EndpointsCount = x.EndpointGroupEndpoints.Count,
+                    Endpoints = x.EndpointGroupEndpoints.Select(xx => new Infrasturcture.Models.Request.Endpoint.EndpointRequestModel
+                    {
+                        Id = xx.Endpoint.Id,
+                        Name = xx.Endpoint.Name,
+                        Path = xx.Endpoint.Path,
+                        Description = xx.Endpoint.Description,
+                        Type = ToHttpMethodExtension.ToHttpMethod(xx.Endpoint.Type),
+                        IsActive = xx.Endpoint.IsActive,
+                        DateCreated = xx.Endpoint.DateCreated,
+                    }).ToList(),
+                    IsActive = x.IsActive,
+                })
                 .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize); ;
+                .Take(pageSize);
 
 
             return new ApplicationResult

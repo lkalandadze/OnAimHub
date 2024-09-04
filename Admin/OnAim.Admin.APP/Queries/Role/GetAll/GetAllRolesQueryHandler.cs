@@ -1,13 +1,13 @@
-﻿using MediatR;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Infrasturcture.Models.Response;
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Models.Response.Role;
+using OnAim.Admin.APP.Queries.Abstract;
 
 namespace OnAim.Admin.APP.Queries.Role.GetAll
 {
-    public class GetAllRolesQueryHandler : IRequestHandler<GetAllRolesQuery, ApplicationResult>
+    public class GetAllRolesQueryHandler : IQueryHandler<GetAllRolesQuery, ApplicationResult>
     {
         private readonly IRepository<Infrasturcture.Entities.Role> _repository;
 
@@ -22,9 +22,18 @@ namespace OnAim.Admin.APP.Queries.Role.GetAll
                 .Query(x =>
                          (string.IsNullOrEmpty(request.Filter.Name) || x.Name.Contains(request.Filter.Name)) &&
                          (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value)
-                          &&
-               x.Name != "SuperRole"
                      );
+
+
+            if (request.Filter.UserIds != null && request.Filter.UserIds.Any())
+            {
+                roleQuery = roleQuery.Where(x => x.UserRoles.Any(ur => request.Filter.UserIds.Contains(ur.UserId)));
+            }
+
+            if (request.Filter.GroupIds != null && request.Filter.GroupIds.Any())
+            {
+                roleQuery = roleQuery.Where(x => x.RoleEndpointGroups.Any(ur => request.Filter.GroupIds.Contains(ur.EndpointGroupId)));
+            }
 
             var totalCount = await roleQuery.CountAsync(cancellationToken);
 
@@ -33,13 +42,13 @@ namespace OnAim.Admin.APP.Queries.Role.GetAll
 
             bool sortDescending = request.Filter.SortDescending.GetValueOrDefault();
 
-            if (request.Filter.SortBy == "Id")
+            if (request.Filter.SortBy == "Id" || request.Filter.SortBy == "id")
             {
                 roleQuery = sortDescending
                     ? roleQuery.OrderByDescending(x => x.Id)
                     : roleQuery.OrderBy(x => x.Id);
             }
-            else if (request.Filter.SortBy == "Name")
+            else if (request.Filter.SortBy == "Name" || request.Filter.SortBy == "name")
             {
                 roleQuery = sortDescending
                     ? roleQuery.OrderByDescending(x => x.Name)

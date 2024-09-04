@@ -13,6 +13,10 @@ namespace OnAim.Admin.Infrasturcture.Persistance.Data
         public DbSet<RoleEndpointGroup> RoleEndpointGroups { get; set; } = null!;
         public DbSet<EndpointGroupEndpoint> EndpointGroupEndpoints { get; set; } = null!;
 
+        public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<RejectedLog> RejectedLogs { get; set; }
+        public DbSet<AllowedDomain> AllowedDomains { get; set; }
+
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -6,9 +6,9 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Update
     {
         public UpdateEndpointCommandValidator()
         {
-            RuleFor(x => x.Endpoint.Name)
-                .NotEmpty()
-                .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
+            //RuleFor(x => x.Endpoint.Name)
+            //    .NotEmpty()
+            //    .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
         }
     }
 }

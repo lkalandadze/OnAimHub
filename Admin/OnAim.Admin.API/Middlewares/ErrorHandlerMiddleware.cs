@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using OnAim.Admin.APP.Exceptions;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using System.Net;
 using System.Text.Json;
@@ -25,11 +26,13 @@ namespace OnAim.Admin.API.Middleware
                 var response = context.Response;
                 response.ContentType = "application/json";
 
+                ApplicationResult result;
+
                 switch (error)
                 {
-                    case ValidationException e:
-                        response.StatusCode = (int)HttpStatusCode.OK;
-                        var result = JsonSerializer.Serialize(new ApplicationResult
+                    case FluentValidation.ValidationException e:
+                        response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        result = new ApplicationResult
                         {
                             Success = false,
                             Data = null,
@@ -38,16 +41,56 @@ namespace OnAim.Admin.API.Middleware
                                 Code = (int)HttpStatusCode.BadRequest,
                                 Message = x.ErrorMessage
                             })
-                        }, new JsonSerializerOptions
+                        };
+                        break;
+                    case BadRequestException e:
+                        response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        result = new ApplicationResult
                         {
-                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                        });
-                        await response.WriteAsync(result);
+                            Success = false,
+                            Data = null,
+                            Errors = new[] { new Error
+                            {
+                                Code = (int)HttpStatusCode.BadRequest,
+                                Message = e.Message
+                            }}
+                        };
+                        break;
+                    case ForbiddenException e:
+                        response.StatusCode = (int)HttpStatusCode.Forbidden;
+                        result = new ApplicationResult
+                        {
+                            Success = false,
+                            Data = null,
+                            Errors = new[] { new Error
+                            {
+                                Code = (int)HttpStatusCode.Forbidden,
+                                Message = e.Message
+                            }}
+                        };
                         break;
                     default:
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        result = new ApplicationResult
+                        {
+                            Success = false,
+                            Data = null,
+                            Errors = new[] { new Error
+                            {
+                                Code = (int)HttpStatusCode.InternalServerError,
+                                Message = "An unexpected error occurred."
+                            }}
+                        };
                         break;
                 }
+
+                var json = JsonSerializer.Serialize(result, new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = true
+                });
+
+                await response.WriteAsync(json);
             }
         }
     }

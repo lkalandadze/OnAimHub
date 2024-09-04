@@ -1,6 +1,6 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Models.Response.UserResponseModels;
+using OnAim.Admin.APP.Queries.Abstract;
 using OnAim.Admin.Infrasturcture.Extensions;
 using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
@@ -8,7 +8,7 @@ using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Queries.User.GetById
 {
-    public sealed class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, ApplicationResult>
+    public sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, ApplicationResult>
     {
         private readonly IRepository<Infrasturcture.Entities.User> _repository;
 
@@ -56,7 +56,7 @@ namespace OnAim.Admin.APP.Queries.User.GetById
                             Description = xxx.Endpoint.Description,
                             Type = ToHttpMethodExtension.ToHttpMethod(xxx.Endpoint.Type),
                             IsActive = xxx.Endpoint.IsActive,
-                            IsEnabled = xxx.Endpoint.IsEnabled,
+                            IsEnabled = xxx.Endpoint.IsDeleted,
                             DateCreated = xxx.Endpoint.DateCreated,
                         }).ToList(),
                     }).ToList()

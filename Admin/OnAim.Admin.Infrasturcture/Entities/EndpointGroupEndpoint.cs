@@ -6,5 +6,6 @@
         public EndpointGroup EndpointGroup { get; set; }
         public int EndpointId { get; set; }
         public Endpoint Endpoint { get; set; }
+        public bool IsActive { get; set; }
     }
 }

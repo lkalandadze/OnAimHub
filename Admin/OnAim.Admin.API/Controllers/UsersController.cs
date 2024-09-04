@@ -4,13 +4,17 @@ using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP.Commands.User.ChangePassword;
 using OnAim.Admin.APP.Commands.User.Create;
 using OnAim.Admin.APP.Commands.User.Delete;
+using OnAim.Admin.APP.Commands.User.Domain;
 using OnAim.Admin.APP.Commands.User.Login;
+using OnAim.Admin.APP.Commands.User.ProfileUpdate;
+using OnAim.Admin.APP.Commands.User.Registration;
 using OnAim.Admin.APP.Commands.User.ResetPassword;
 using OnAim.Admin.APP.Commands.User.Update;
 using OnAim.Admin.APP.Models.Request.User;
 using OnAim.Admin.APP.Models.Response.User;
 using OnAim.Admin.APP.Queries.User.GetAllUser;
 using OnAim.Admin.APP.Queries.User.GetById;
+using OnAim.Admin.APP.Queries.User.UsersExport;
 using OnAim.Admin.Infrasturcture.Models.Request.User;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using System.Net;
@@ -24,12 +28,7 @@ namespace OnAim.Admin.API.Controllers
         public async Task<IActionResult> GetMe()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized("User not found.");
-            }
-            return Ok(new GetUserByIdQuery(Convert.ToInt32(userId)));
+            return Ok(await Mediator.Send(new GetUserByIdQuery(Convert.ToInt32(userId))));
         }
 
         [HttpGet("GetAll")]
@@ -40,12 +39,25 @@ namespace OnAim.Admin.API.Controllers
         public async Task<IActionResult> Get([FromRoute] int id)
             => Ok(await Mediator.Send(new GetUserByIdQuery(id)));
 
-        [HttpPost("Register")]
-        [AllowAnonymous]
+        [HttpGet("Download")]
+        public async Task<IActionResult> Download([FromQuery] UsersExportQuery query)
+        {
+            var result = await Mediator.Send(query);
+            return result;
+        }
+
+        [HttpPost("Create")]
         [ProducesResponseType(typeof(CreateUserCommand), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
-        public async Task<ApplicationResult> Register([FromBody] CreateUserCommand model)
+        public async Task<ApplicationResult> Create([FromBody] CreateUserCommand model)
             => await Mediator.Send(model);
+
+        [HttpPost("Register")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(RegistrationCommand), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Register([FromBody] RegistrationCommand command)
+            => Ok(await Mediator.Send(command));
 
         [HttpPost("Login")]
         [AllowAnonymous]
@@ -66,6 +78,14 @@ namespace OnAim.Admin.API.Controllers
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserRequest model)
             => Ok(await Mediator.Send(new UpdateUserCommand(id, model)));
+
+        [HttpPut("ProfileUpdate/{id}")]
+        public async Task<IActionResult> ProfileUpdate([FromRoute] int id, [FromBody] ProfileUpdateRequest profile)
+            => Ok(await Mediator.Send(new UserProfileUpdateCommand(id, profile)));
+
+        [HttpPost("InsertDomain")]
+        public async Task<IActionResult> InsertDomain([FromBody] CreateEmailDomainCommand command)
+            => Ok(await Mediator.Send(command));
 
         [HttpPost("Delete/{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
