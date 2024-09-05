@@ -3,7 +3,7 @@ using Shared.Domain.Wrappers;
 
 namespace Hub.Application.Features.PlayerFeatures.Queries.GetPlayers;
 
-public class GetPlayersResponse : PagedResponse<GetPlayersResponse>
+public class GetPlayersResponse
 {
     public IEnumerable<PlayerBaseDtoModel>? Players { get; set; }
 }
