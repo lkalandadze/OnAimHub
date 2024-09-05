@@ -43,6 +43,7 @@ public class Startup
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddScoped<IGameRegistrationLogRepository, GameRegistrationLogRepository>();
         services.AddScoped<IPlayerBalanceRepository, PlayerBalanceRepository>();
         services.AddScoped<ITokenRecordRepository, TokenRecordRepository>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();

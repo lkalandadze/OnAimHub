@@ -8,6 +8,7 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<AccountType> AccountTypes { get; set; }
     public DbSet<Currency> Currencies { get; set; }
     public DbSet<Game> Games { get; set; }
+    public DbSet<GameRegistrationLog> GameRegistrationLogs { get; set; }
     public DbSet<Player> Players { get; set; }
     public DbSet<PlayerBalance> PlayerBalances { get; set; }
     public DbSet<TokenRecord> TokenRecords { get; set; }

@@ -1,6 +1,9 @@
 ﻿
 using Consul;
 using Hub.Application.Services.Abstract;
+using Hub.Domain.Absractions;
+using Hub.Domain.Absractions.Repository;
+using Hub.Domain.Entities;
 using Shared.Application.Models.Consul;
 using System.Collections.Concurrent;
 using System.Text.Json;
@@ -11,13 +14,15 @@ public class ConsulWatcherService : BackgroundService
 {
     private readonly IConsulClient _consulClient;
     private readonly IActiveGameService _activeGameService;
-    private readonly ConcurrentDictionary<string, string> _trackedGames;
+    private readonly ConcurrentDictionary<string, GameRegisterResponseModel> _gameDataCache;
+    private readonly IServiceProvider _serviceProvider;
 
-    public ConsulWatcherService(IConsulClient consulClient, IActiveGameService activeGameService)
+    public ConsulWatcherService(IConsulClient consulClient, IActiveGameService activeGameService, IServiceProvider serviceProvider)
     {
         _consulClient = consulClient;
         _activeGameService = activeGameService;
-        _trackedGames = new ConcurrentDictionary<string, string>();
+        _gameDataCache = new ConcurrentDictionary<string, GameRegisterResponseModel>();
+        _serviceProvider = serviceProvider;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -54,23 +59,56 @@ public class ConsulWatcherService : BackgroundService
                             foreach (var gameStatus in gameStatuses)
                             {
                                 gameStatus.Address = serviceEntry.ServiceAddress;
-                                _activeGameService.AddOrUpdateActiveGame(gameStatus);
-                                _trackedGames[gameStatus.GameVersionId.ToString()] = serviceEntry.ServiceID;
                                 currentGameIds.Add(gameStatus.GameVersionId.ToString());
+
+                                if (IsNewOrUpdatedGame(gameStatus))
+                                {
+                                    _activeGameService.AddOrUpdateActiveGame(gameStatus);
+                                    _gameDataCache[gameStatus.GameVersionId.ToString()] = gameStatus;
+
+                                    using (var scope = _serviceProvider.CreateScope())
+                                    {
+                                        var gameRegistrationLogRepository = scope.ServiceProvider.GetRequiredService<IGameRegistrationLogRepository>();
+                                        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+                                        var gameRegistrationLog = new GameRegistrationLog(gameStatus.GameVersionId, "Registered", DateTime.Now, serviceEntry.ServiceID);
+                                        await gameRegistrationLogRepository.InsertAsync(gameRegistrationLog);
+                                        await unitOfWork.SaveAsync();
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
 
-            var removedGameIds = _trackedGames.Keys.Except(currentGameIds).ToList();
+            var removedGameIds = _gameDataCache.Keys.Except(currentGameIds).ToList();
             foreach (var gameId in removedGameIds)
             {
                 _activeGameService.RemoveActiveGame(gameId);
-                _trackedGames.TryRemove(gameId, out _);
+                _gameDataCache.TryRemove(gameId, out _);
+
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var gameRegistrationLogRepository = scope.ServiceProvider.GetRequiredService<IGameRegistrationLogRepository>();
+                    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+                    var gameRegistrationLog = new GameRegistrationLog(int.Parse(gameId), "DeRegistered", DateTime.Now, null);
+                    await gameRegistrationLogRepository.InsertAsync(gameRegistrationLog);
+                    await unitOfWork.SaveAsync();
+                }
             }
 
             consulIndex = queryResult.LastIndex;
         }
+    }
+
+    private bool IsNewOrUpdatedGame(GameRegisterResponseModel gameStatus)
+    {
+        if (!_gameDataCache.TryGetValue(gameStatus.GameVersionId.ToString(), out var cachedGame))
+        {
+            return true;
+        }
+        return !cachedGame.Equals(gameStatus);
     }
 }
