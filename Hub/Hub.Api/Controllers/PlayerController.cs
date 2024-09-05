@@ -1,9 +1,10 @@
-﻿using Hub.Application.Features.PlayerFeatures.Queries.GetBalance;
+﻿using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerBalance;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayer;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayers;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerProgress;
 
 namespace Hub.Api.Controllers;
 
@@ -12,23 +13,27 @@ public class PlayerController : BaseApiController
     [HttpGet]
     public async Task<ActionResult<GetPlayersResponse>> GetAllAsync()
     {
-        return Ok(await Mediator.Send(new GetPlayersRequest()));
+        return Ok(await Mediator.Send(new GetPlayersQuery()));
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<GetPlayerResponse>> GetAsync(int id)
     {
-        return Ok(await Mediator.Send(new GetPlayerRequest { PlayerId = id }));
+        return Ok(await Mediator.Send(new GetPlayerQuery { PlayerId = id }));
     }
 
     [HttpGet("balances")]
-    public async Task<ActionResult<GetPlayerResponse>> GetBalancesAsync()
+    public async Task<ActionResult<GetPlayerBalanceResponse>> GetPlayerBalancesAsync()
     {
-        return Ok(await Mediator.Send(new GetBalanceRequest()));
+        return Ok(await Mediator.Send(new GetPlayerBalanceQuery()));
     }
 
-    //[Authorize]
+    [HttpGet("progress")]
+    public async Task<ActionResult<GetPlayerProgressResponse>> GetPlayerProgressAsync()
+    {
+        return Ok(await Mediator.Send(new GetPlayerProgressQuery()));
+    }
+
     //[HttpGet]
     //public async Task<Response<GetGamesBySegmentIdQueryResponse>> GetGames(GetGamesBySegmentIdQuery request) => await Mediator.Send(request);
-
 }

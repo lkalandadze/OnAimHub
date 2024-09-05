@@ -23,7 +23,6 @@ public enum ApiExceptionCodeTypes
     ValidationFailed = 4500,
     DuplicateEntry = 4501,
 
-
     // 5xxx: Custom Business Logic Errors
     BusinessRuleViolation = 5500,
     OperationNotAllowed = 5501,

@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Hub.Application.Features.PlayerFeatures.Queries.GetPlayers;
 
-public class GetPlayersHandler : IRequestHandler<GetPlayersRequest, GetPlayersResponse>
+public class GetPlayersHandler : IRequestHandler<GetPlayersQuery, GetPlayersResponse>
 {
     private readonly IPlayerRepository _playerRepository;
 
@@ -13,13 +13,15 @@ public class GetPlayersHandler : IRequestHandler<GetPlayersRequest, GetPlayersRe
         _playerRepository = playerRepository;
     }
 
-    public async Task<GetPlayersResponse> Handle(GetPlayersRequest request, CancellationToken cancellationToken)
+    public async Task<GetPlayersResponse> Handle(GetPlayersQuery request, CancellationToken cancellationToken)
     {
-        var slotTransactions = await _playerRepository.QueryAsync();
+        var palyers = await _playerRepository.QueryAsync();
+
+        //TODO: pagination
 
         var response = new GetPlayersResponse
         {
-            Players = slotTransactions?.Select(x => PlayerBaseDtoModel.MapFrom(x)),
+            Players = palyers?.Select(x => PlayerBaseDtoModel.MapFrom(x)),
         };
 
         return response;

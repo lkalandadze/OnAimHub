@@ -90,12 +90,12 @@ public class TestAuthController : ControllerBase
         return Ok(new JwtSecurityTokenHandler().WriteToken(token));
     }
 
-    [HttpGet("{id}/balances")]
-    public ActionResult<BalanceModel> GetPlayerBalances([FromRoute] int id)
+    [HttpGet("{id}/progress")]
+    public ActionResult<ProgressModel> GetPlayerProgress([FromRoute] int id)
     {
-        return new BalanceModel
+        return new ProgressModel
         {
-            Balances = new Dictionary<string, double>
+            Progress = new Dictionary<string, double>
             {
                 { "SPN", 5 },
                 { "FRSPN", 15 },
