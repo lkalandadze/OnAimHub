@@ -24,7 +24,7 @@ public class GetPlayerHandler : IRequestHandler<GetPlayerQuery, GetPlayerRespons
 
         return new GetPlayerResponse()
         {
-            Player = PlayerBaseDtoModel.MapFrom(player),
+            Data = PlayerBaseDtoModel.MapFrom(player),
         };
     }
 }

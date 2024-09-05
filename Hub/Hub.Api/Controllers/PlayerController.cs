@@ -11,9 +11,15 @@ namespace Hub.Api.Controllers;
 public class PlayerController : BaseApiController
 {
     [HttpGet]
-    public async Task<ActionResult<GetPlayersResponse>> GetAllAsync()
+    public async Task<ActionResult<GetPlayersResponse>> GetAllAsync([FromQuery] int? page, int? pageSize)
     {
-        return Ok(await Mediator.Send(new GetPlayersQuery()));
+        var query = new GetPlayersQuery
+        {
+            PageNumber = page,
+            PageSize = pageSize,
+        };
+
+        return Ok(await Mediator.Send(query));
     }
 
     [HttpGet("{id}")]
