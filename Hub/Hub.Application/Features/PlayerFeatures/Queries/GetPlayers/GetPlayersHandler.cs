@@ -1,6 +1,8 @@
 ﻿using Hub.Application.Features.PlayerFeatures.Dtos;
 using Hub.Domain.Absractions.Repository;
+using Shared.Lib.Extensions;
 using MediatR;
+using Shared.Lib.Wrappers;
 
 namespace Hub.Application.Features.PlayerFeatures.Queries.GetPlayers;
 
@@ -15,13 +17,21 @@ public class GetPlayersHandler : IRequestHandler<GetPlayersQuery, GetPlayersResp
 
     public async Task<GetPlayersResponse> Handle(GetPlayersQuery request, CancellationToken cancellationToken)
     {
-        var palyers = await _playerRepository.QueryAsync();
+        var players = _playerRepository.Query();
 
-        //TODO: pagination
+        var total = players.Count();
+
+        var playerList = players.Pagination(request).ToList();
 
         var response = new GetPlayersResponse
         {
-            Players = palyers?.Select(x => PlayerBaseDtoModel.MapFrom(x)),
+            Data = new PagedResponse<PlayerBaseDtoModel>
+            (
+                playerList?.Select(x => PlayerBaseDtoModel.MapFrom(x)),
+                request.PageNumber,
+                request.PageSize,
+                total
+            ),
         };
 
         return response;

@@ -1,6 +1,5 @@
 ﻿using Hub.Application.Features.GameFeatures.Queries.GetActiveGames;
 using Hub.Application.Services.Abstract;
-using Shared.Domain.Wrappers;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,5 +37,5 @@ public class TestController : BaseApiController
     }
 
     [HttpGet(nameof(GetActiveGames))]
-    public async Task<List<Shared.Domain.Wrappers.Response<GetActiveGamesQueryResponse>>> GetActiveGames([FromQuery] GetActiveGamesQuery request) => await Mediator.Send(request);
+    public async Task<List<Shared.Lib.Wrappers.Response<GetActiveGamesQueryResponse>>> GetActiveGames([FromQuery] GetActiveGamesQuery request) => await Mediator.Send(request);
 }

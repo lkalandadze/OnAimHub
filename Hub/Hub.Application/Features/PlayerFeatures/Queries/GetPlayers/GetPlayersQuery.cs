@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Shared.Domain.Wrappers;
+using Shared.Lib.Wrappersl;
 
 namespace Hub.Application.Features.PlayerFeatures.Queries.GetPlayers;
 
