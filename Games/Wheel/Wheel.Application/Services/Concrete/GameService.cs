@@ -76,7 +76,7 @@ public class GameService : IGameService
     private async Task<PlayResponseModel> PlayAsync<TPrize>(PlayRequestModel command)
         where TPrize : BasePrize
     {
-        await _hubService.BetTransactionAsync(command.GameVersionId);
+        await _hubService.BetTransactionAsync(command.GameId);
 
         var ttt = _authService.GetCurrentPlayerSegmentIds().ToList()[0];
 
@@ -89,7 +89,7 @@ public class GameService : IGameService
 
         if (prize.Value > 0)
         {
-            await _hubService.WinTransactionAsync(command.GameVersionId);
+            await _hubService.WinTransactionAsync(command.GameId);
         }
 
         return new PlayResponseModel

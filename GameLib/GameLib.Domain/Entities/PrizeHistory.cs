@@ -2,9 +2,8 @@
 
 namespace GameLib.Domain.Entities;
 
-public class PrizeHistory : BaseEntity
+public class PrizeHistory : BaseEntity<int>
 {
-    public override int Id { get; set; }
     public int PlayerId { get; set; }
     public int PrizeId { get; set; }
     public int Value { get; set; }

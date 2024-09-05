@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Hub.Application.Features.PlayerFeatures.Queries.GetPlayer;
 
-public class GetPlayerHandler : IRequestHandler<GetPlayerRequest, GetPlayerResponse>
+public class GetPlayerHandler : IRequestHandler<GetPlayerQuery, GetPlayerResponse>
 {
     private readonly IPlayerRepository _playerRepository;
 
@@ -13,7 +13,7 @@ public class GetPlayerHandler : IRequestHandler<GetPlayerRequest, GetPlayerRespo
         _playerRepository = playerRepository;
     }
 
-    public async Task<GetPlayerResponse> Handle(GetPlayerRequest request, CancellationToken cancellationToken)
+    public async Task<GetPlayerResponse> Handle(GetPlayerQuery request, CancellationToken cancellationToken)
     {
         var player = await _playerRepository.OfIdAsync(request.PlayerId);
 

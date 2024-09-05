@@ -2,8 +2,7 @@
 
 namespace Hub.Domain.Entities;
 
-public class TransactionSource : BaseEntity
+public class Currency : BaseEntity<string>
 {
-    public override int Id { get; set; }
     public string Name { get; set; }
 }

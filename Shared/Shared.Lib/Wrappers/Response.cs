@@ -1,16 +1,18 @@
-﻿namespace Shared.Domain.Wrappers;
+﻿namespace Shared.Lib.Wrappers;
 
 public class Response<T>
 {
     public Response()
     {
     }
-    public Response(T? data, string message = null)
+
+    public Response(T? data, string? message = null)
     {
         Succeeded = true;
         Message = message;
         Data = data;
     }
+
     public Response(string message)
     {
         Succeeded = false;
@@ -18,7 +20,7 @@ public class Response<T>
     }
 
     public bool Succeeded { get; set; }
-    public string Message { get; set; }
+    public string? Message { get; set; }
     public string? Error { get; set; } = null;
     public Dictionary<string, string[]>? ValidationErrors { get; set; } = null;
     public T? Data { get; set; } = default;

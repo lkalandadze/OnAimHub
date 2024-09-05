@@ -2,7 +2,7 @@
 
 namespace Hub.Domain.Entities;
 
-public class TransactionStatus : DbEnum
+public class TransactionStatus : DbEnum<int>
 {
     public static TransactionStatus Created => FromId(1);
     public static TransactionStatus Delivered => FromId(2);

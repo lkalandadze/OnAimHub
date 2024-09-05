@@ -1,6 +1,6 @@
 ﻿using Hub.Application.Services.Abstract;
 using MediatR;
-using Shared.Domain.Wrappers;
+using Shared.Lib.Wrappers;
 
 namespace Hub.Application.Features.GameFeatures.Queries.GetActiveGames;
 

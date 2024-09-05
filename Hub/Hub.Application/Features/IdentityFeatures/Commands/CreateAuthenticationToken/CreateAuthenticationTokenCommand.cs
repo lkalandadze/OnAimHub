@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Shared.Domain.Wrappers;
+using Shared.Lib.Wrappers;
 
 namespace Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 
-public record CreateAuthenticationTokenRequest(string CasinoToken)
+public record CreateAuthenticationTokenCommand(string CasinoToken)
     : IRequest<Response<CreateAuthenticationTokenResponse>>;

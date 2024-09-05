@@ -2,7 +2,7 @@
 
 namespace Hub.Domain.Entities;
 
-public class TransactionType : DbEnum
+public class TransactionType : DbEnum<int>
 {
     public static TransactionType Bet => FromId(1);
     public static TransactionType Win => FromId(2);
