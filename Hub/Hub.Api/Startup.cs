@@ -1,11 +1,15 @@
 ﻿using Consul;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Hub.Api;
 using Hub.Api.Common.Consul;
 using Hub.Api.Middlewares;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Services.Abstract;
+using Hub.Application.Services.Abstract.BackgroundJobs;
 using Hub.Application.Services.Concrete;
+using Hub.Application.Services.Concrete.BackgroundJobs;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Infrastructure.DataAccess;
@@ -46,11 +50,20 @@ public class Startup
         services.AddScoped<IPlayerBalanceRepository, PlayerBalanceRepository>();
         services.AddScoped<ITokenRecordRepository, TokenRecordRepository>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
+        services.AddScoped<IJobRepository, JobRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddSingleton<IActiveGameService, ActiveGameService>();
+        services.AddScoped<IJobService, JobService>();
+        services.AddScoped<IBackgroundJobScheduler, HangfireJobScheduler>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
+
+        services.AddHangfire(config =>
+            config.UsePostgreSqlStorage(Configuration.GetConnectionString("OnAimHub")));
+        services.AddHangfireServer();
+
+        services.AddHostedService<JobSyncService>();
 
         ConfigureMassTransit(services, Configuration, env);
 
@@ -81,7 +94,7 @@ public class Startup
         services.AddHealthChecks();
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, IBackgroundJobClient backgroundJobs)
     {
         app.UseCors("AllowAnyOrigin");
         app.UseHttpsRedirection();
@@ -106,6 +119,9 @@ public class Startup
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UseHangfireDashboard();
+        backgroundJobs.Enqueue(() => Console.WriteLine("Hangfire initialized!"));
 
         if (IsRunningInDocker())
         {

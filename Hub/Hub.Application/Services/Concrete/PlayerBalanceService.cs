@@ -61,4 +61,16 @@ public class PlayerBalanceService : IPlayerBalanceService
         _playerBalanceRepository.Update(balance);
         await _unitOfWork.SaveAsync();
     }
+    public async Task ResetBalancesByCurrencyIdAsync(string currencyId)
+    {
+        var balances = _playerBalanceRepository.Query().Where(x => x.CurrencyId == currencyId);
+
+        foreach (var balance in balances)
+        {
+            balance.Amount = 0;
+        }
+
+        // Update all balances in the database
+        await _unitOfWork.SaveAsync();
+    }
 }

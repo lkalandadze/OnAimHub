@@ -1,0 +1,32 @@
+﻿using Hub.Application.Models.Job;
+using Hub.Application.Services.Abstract.BackgroundJobs;
+using Hub.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Hub.Api.Controllers;
+
+[AllowAnonymous]
+public class JobController : BaseApiController
+{
+    private readonly IJobService _jobService;
+
+    public JobController(IJobService jobService)
+    {
+        _jobService = jobService;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateJob([FromBody] CreateJobModel job)
+    {
+        await _jobService.CreateJobAsync(job);
+        return Ok();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetJobs()
+    {
+        var jobs = await _jobService.GetAllJobsAsync();
+        return Ok(jobs);
+    }
+}
