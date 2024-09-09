@@ -8,4 +8,5 @@ public interface IJobService
     Task SyncJobsWithHangfireAsync();
     Task<List<Job>> GetAllJobsAsync();
     Task CreateJobAsync(CreateJobModel job);
+    Task DeleteJobAsync(int jobId);
 }

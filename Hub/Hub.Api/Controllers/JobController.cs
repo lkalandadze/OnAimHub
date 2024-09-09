@@ -29,4 +29,18 @@ public class JobController : BaseApiController
         var jobs = await _jobService.GetAllJobsAsync();
         return Ok(jobs);
     }
+
+    [HttpPost(nameof(SyncJobs))]
+    public async Task<IActionResult> SyncJobs()
+    {
+        await _jobService.SyncJobsWithHangfireAsync();
+        return Ok();
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteJob([FromQuery] int id)
+    {
+        await _jobService.DeleteJobAsync(id);
+        return Ok();
+    }
 }
