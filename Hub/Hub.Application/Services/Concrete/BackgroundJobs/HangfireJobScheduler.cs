@@ -16,14 +16,15 @@ public class HangfireJobScheduler : IBackgroundJobScheduler
         _recurringJobManager = recurringJobManager;
         _serviceScopeFactory = serviceScopeFactory;
     }
-    public void ScheduleJob(Job job)
+    public void ScheduleJob(Job job, string cronExpression)
     {
         RecurringJob.AddOrUpdate(
             job.Id.ToString(),
             () => ExecuteJob(job.CurrencyId),
-            job.CronExpression,
+            cronExpression,
             TimeZoneInfo.Local);
     }
+
 
     public void RemoveScheduledJob(int jobId)
     {
@@ -37,5 +38,13 @@ public class HangfireJobScheduler : IBackgroundJobScheduler
             var playerBalanceService = scope.ServiceProvider.GetRequiredService<IPlayerBalanceService>();
             playerBalanceService.ResetBalancesByCurrencyIdAsync(currencyId).GetAwaiter().GetResult();
         }
+    }
+
+    private string GenerateCronExpression(TimeSpan executionTime, int intervalInDays)
+    {
+        int hour = executionTime.Hours;
+        int minute = executionTime.Minutes;
+
+        return $"0 {minute} {hour} */{intervalInDays} * ?";
     }
 }
