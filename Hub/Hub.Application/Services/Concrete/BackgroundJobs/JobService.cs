@@ -51,6 +51,20 @@ public class JobService : IJobService
             _jobScheduler.ScheduleJob(job, cronExpression);
         }
     }
+    public async Task DeleteJobAsync(int jobId)
+    {
+        var job = _jobRepository.Query().Where(x => x.Id == jobId).FirstOrDefault();
+        if (job == default)
+        {
+            throw new InvalidOperationException($"Job with ID {jobId} not found.");
+        }
+
+        _jobScheduler.RemoveScheduledJob(job.Id);
+
+        _jobRepository.Delete(job);
+        await _unitOfWork.SaveAsync();
+    }
+
 
     private string DetermineCronExpression(Job job)
     {
