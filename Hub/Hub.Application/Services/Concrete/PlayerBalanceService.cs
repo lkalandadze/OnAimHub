@@ -63,7 +63,7 @@ public class PlayerBalanceService : IPlayerBalanceService
 
         foreach (var balance in balances)
         {
-            balance.Amount = 0;
+            balance.SetAmount(0);
         }
 
         await _unitOfWork.SaveAsync();
