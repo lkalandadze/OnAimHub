@@ -14,4 +14,5 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<TransactionStatus> TransactionStatuses { get; set; }
     public DbSet<TransactionType> TransactionTypes { get; set; }
+    public DbSet<Job> Jobs { get; set; }
 }
