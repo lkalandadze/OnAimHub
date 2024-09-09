@@ -1,14 +1,33 @@
-﻿using Shared.Domain.Entities;
+﻿#nullable disable
+
+using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;
 
 public class PlayerBalance : BaseEntity<int>
 {
-    public decimal Amount { get; set; }
+    public PlayerBalance()
+    {
+        
+    }
 
-    public int PlayerId { get; set; }
-    public Player Player { get; set; }
+    public PlayerBalance(decimal amount, int playerId, string currencyId)
+    {
+        Amount = amount;
+        PlayerId = playerId;
+        CurrencyId = currencyId;
+    }
 
-    public string CurrencyId { get; set; }
-    public Currency Currency { get; set; }
+    public decimal Amount { get; private set; }
+
+    public int PlayerId { get; private set; }
+    public Player Player { get; private set; }
+
+    public string CurrencyId { get; private set; }
+    public Currency Currency { get; private set; }
+
+    public void SetAmount(decimal amount)
+    {
+        Amount = amount;
+    }
 }
