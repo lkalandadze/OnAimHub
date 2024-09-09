@@ -23,20 +23,12 @@ public class TransactionService : ITransactionService
 
     public async Task<TransactionResponseModel> CreateTransaction(int gameId, string currencyId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType)
     {
-        // check and apply player balances
-        await _playerBalanceService.ApplyPlayerBalanceOperationAsync(_authService.GetCurrentPlayerId(), currencyId, fromAccount, toAccount, amount);
+        var playerId = _authService.GetCurrentPlayerId();
 
-        var transaction = new Transaction
-        {
-            GameId = gameId,
-            FromAccountId = fromAccount.Id,
-            ToAccountId = toAccount.Id,
-            CurrencyId = currencyId,
-            Amount = amount,
-            PlayerId = _authService.GetCurrentPlayerId(),
-            StatusId = TransactionStatus.Created.Id,
-            TypeId = transactionType.Id,
-        };
+        // check and apply player balances
+        await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, currencyId, fromAccount, toAccount, amount);
+
+        var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, currencyId, TransactionStatus.Created, transactionType);
 
         await _transactionRepository.InsertAsync(transaction);
         await _unitOfWork.SaveAsync();

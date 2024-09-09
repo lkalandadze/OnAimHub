@@ -39,12 +39,7 @@ public class AuthService : IAuthService
 
     public Player GetCurrentPlayer()
     {
-        return new Player
-        {
-            Id = GetCurrentPlayerId(),
-            UserName = GetCurrentPlayerUserName(),
-            SegmentIds = GetCurrentPlayerSegmentIds(),
-        };
+        return new Player(GetCurrentPlayerId(), GetCurrentPlayerUserName(), GetCurrentPlayerSegmentIds());
     }
 
     public List<int> GetCurrentPlayerSegmentIds()

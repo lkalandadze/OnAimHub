@@ -26,12 +26,7 @@ public class PlayerBalanceService : IPlayerBalanceService
 
         if (playerBalance == null)
         {
-            playerBalance = new PlayerBalance
-            {
-                Amount = 0,
-                CurrencyId = currencyId,
-                PlayerId = playerId,
-            };
+            playerBalance = new PlayerBalance(0, playerId, currencyId);
 
             await _playerBalanceRepository.InsertAsync(playerBalance);
             await _unitOfWork.SaveAsync();
@@ -51,11 +46,11 @@ public class PlayerBalanceService : IPlayerBalanceService
                 throw new ApiException(ApiExceptionCodeTypes.InsufficientFunds, $"Player with ID {playerId} does not have enough balance to perform this operation.");
             }
 
-            balance.Amount -= amount;
+            balance.SetAmount(balance.Amount - amount);
         }
         else if (toAccount == AccountType.Player)
         {
-            balance.Amount += amount;
+            balance.SetAmount(balance.Amount + amount);
         }
 
         _playerBalanceRepository.Update(balance);

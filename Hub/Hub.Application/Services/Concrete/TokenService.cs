@@ -33,8 +33,7 @@ public class TokenService : ITokenService
 
         foreach (var token in existingTokens)
         {
-            token.IsRevoked = true;
-            token.RevokedDate = DateTime.UtcNow;
+            token.SetRevoked();
         }
 
         await _unitOfWork.SaveAsync();
@@ -61,16 +60,7 @@ public class TokenService : ITokenService
 
         var refreshToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
 
-        var tokenRecord = new TokenRecord
-        {
-            AccessToken = accessTokenString,
-            RefreshToken = refreshToken,
-            PlayerId = player.Id,
-            AccessTokenExpiryDate = accessToken.ValidTo,
-            RefreshTokenExpiryDate = DateTime.UtcNow.AddDays(1),
-            IsRevoked = false,
-            CreatedDate = DateTime.UtcNow
-        };
+        var tokenRecord = new TokenRecord(accessTokenString, refreshToken, player.Id, accessToken.ValidTo, DateTime.UtcNow.AddDays(1));
 
         await _tokenRecordRepository.InsertAsync(tokenRecord);
         await _unitOfWork.SaveAsync();
@@ -94,8 +84,7 @@ public class TokenService : ITokenService
         if (jwtToken == null || !jwtToken.Claims.Any() || tokenRecord.PlayerId != playerIdFromToken)
             throw new SecurityTokenException("Invalid access token.");
 
-        tokenRecord.IsRevoked = true;
-        tokenRecord.RevokedDate = DateTime.UtcNow;
+        tokenRecord.SetRevoked();
 
         await _unitOfWork.SaveAsync();
 
