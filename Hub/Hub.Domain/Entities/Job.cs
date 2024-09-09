@@ -22,5 +22,5 @@ public class Job : BaseEntity<int>
     public TimeSpan? ExecutionTime { get; set; }
     public int? IntervalInDays { get; set; }
     public JobType JobType { get; set; }
-    public DateTime? LastExecutedTime { get; set; }
+    public DateTimeOffset? LastExecutedTime { get; set; }
 }
