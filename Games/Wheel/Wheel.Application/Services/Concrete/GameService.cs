@@ -13,25 +13,22 @@ public class GameService : IGameService
 {
     private readonly GeneratorHolder _generatorHolder;
     private readonly ConfigurationHolder _configurationHolder;
+    private readonly ISegmentRepository _segmentRepository;
     private readonly IAuthService _authService;
     private readonly IHubService _hubService;
-    private readonly IConfigurationRepository _configurationRepository;
-    private readonly IGameVersionRepository _gameVersionRepository;
 
     public GameService(
         GeneratorHolder generatorHolder,
         ConfigurationHolder configurationHolder,
+        ISegmentRepository segmentRepository,
         IAuthService authService,
-        IHubService hubService,
-        IConfigurationRepository configurationRepository,
-        IGameVersionRepository gameVersionRepository)
+        IHubService hubService)
     {
         _generatorHolder = generatorHolder;
         _configurationHolder = configurationHolder;
+        _segmentRepository = segmentRepository;
         _authService = authService;
         _hubService = hubService;
-        _configurationRepository = configurationRepository;
-        _gameVersionRepository = gameVersionRepository;
     }
 
     public InitialDataResponseModel GetInitialData()
@@ -43,22 +40,14 @@ public class GameService : IGameService
         };
     }
 
-    public GameVersionResponseModel GetGame()
+    public GameResponseModel GetGame()
     {
-        var gameVersion = _gameVersionRepository.Query()
-                                                .FirstOrDefault();
+        var segments = _segmentRepository.Query();
 
-        if (gameVersion == null)
+        return new GameResponseModel
         {
-            throw new InvalidOperationException("No active game version found for the provided SegmentIds.");
-        }
-
-        return new GameVersionResponseModel
-        {
-            Id = gameVersion.Id,
-            Name = gameVersion.Name,
-            IsActive = gameVersion.IsActive,
-            SegmentIds = gameVersion.SegmentIds.ToList(),
+            Name = "Wheel",
+            SegmentIds = segments == null ? default : segments.Select(x => x.Value).ToList(),
             ActivationTime = DateTime.UtcNow,
         };
     }

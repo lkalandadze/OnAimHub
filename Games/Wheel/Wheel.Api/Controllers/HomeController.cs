@@ -24,7 +24,7 @@ public class HomeController : BaseApiController
 
     [AllowAnonymous]
     [HttpGet(nameof(GetGameVersion))]
-    public ActionResult<GameVersionResponseModel> GetGameVersion()
+    public ActionResult<GameResponseModel> GetGameVersion()
     {
         return Ok(_gameService.GetGame());
     }

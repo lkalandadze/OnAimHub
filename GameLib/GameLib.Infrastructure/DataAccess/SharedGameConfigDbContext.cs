@@ -6,8 +6,6 @@ namespace GameLib.Infrastructure.DataAccess;
 
 public abstract class SharedGameConfigDbContext(DbContextOptions options) : DbContext(options)
 {
-    public DbSet<GameVersion> GameVersions { get; set; }
-    public DbSet<Configuration> Configurations { get; set; }
     public DbSet<Currency> Curencies { get; set; }
     public DbSet<Segment> Segments { get; set; }
     public DbSet<Price> Prices { get; set; }

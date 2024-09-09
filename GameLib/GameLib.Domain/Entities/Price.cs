@@ -12,7 +12,4 @@ public class Price : BaseEntity<int>
 
     public int SegmentId { get; set; }
     public Segment Segment { get; set; }
-
-    public int ConfigurationId { get; set; }
-    public Configuration Configuration { get; set; }
 }

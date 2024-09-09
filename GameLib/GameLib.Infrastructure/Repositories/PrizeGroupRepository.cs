@@ -10,9 +10,7 @@ public class PrizeGroupRepository<TPrizeGroup>(SharedGameConfigDbContext context
 {
     public List<TPrizeGroup> QueryWithPrizes()
     {
-        return _context.Set<TPrizeGroup>().Where(x => x.Configuration.IsActive)
-                                          .Include(x => x.Prizes)
-                                          .Include(x => x.Configuration)
+        return _context.Set<TPrizeGroup>().Include(x => x.Prizes)
                                           .ToList();
     }
 }

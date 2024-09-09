@@ -52,7 +52,6 @@ public class GeneratorHolder
             return Generators
                 .Where(x => x.Key.Prizes.First().GetType() == typeof(TPrize))
                 .Where(x => x.Key.SegmentId == segmentId)
-                .Where(x => x.Key.Configuration.GameVersionId == gameVersionId)
                 .First(x => predicate?.Invoke(x.Key) ?? true)
                 .Value!;
         }

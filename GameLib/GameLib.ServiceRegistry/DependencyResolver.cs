@@ -30,9 +30,7 @@ public static class DependencyResolver
         services.AddHttpClient();
         services.AddSingleton<IAuthService, AuthService>();
         services.AddScoped<IHubService, HubService>();
-        services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
         services.AddScoped<ICurrencyRepository, CurrencyRepository>();
-        services.AddScoped<IGameVersionRepository, GameVersionRepository>();
         services.AddScoped<IPriceRepository, PriceRepository>();
         services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
         services.AddScoped<ISegmentRepository, SegmentRepository>();

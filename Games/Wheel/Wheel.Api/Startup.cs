@@ -96,7 +96,7 @@ public class Startup
         {
             var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
 
-            GameVersionResponseModel activeGameModel;
+            GameResponseModel activeGameModel;
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var gameService = scope.ServiceProvider.GetRequiredService<IGameService>();
