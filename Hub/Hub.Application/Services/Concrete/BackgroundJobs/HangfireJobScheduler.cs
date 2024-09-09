@@ -1,6 +1,8 @@
 ﻿using Hangfire;
 using Hub.Application.Services.Abstract;
 using Hub.Application.Services.Abstract.BackgroundJobs;
+using Hub.Domain.Absractions.Repository;
+using Hub.Domain.Absractions;
 using Hub.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -35,8 +37,21 @@ public class HangfireJobScheduler : IBackgroundJobScheduler
     {
         using (var scope = _serviceScopeFactory.CreateScope())
         {
+            var jobRepository = scope.ServiceProvider.GetRequiredService<IJobRepository>();
             var playerBalanceService = scope.ServiceProvider.GetRequiredService<IPlayerBalanceService>();
-            playerBalanceService.ResetBalancesByCurrencyIdAsync(currencyId).GetAwaiter().GetResult();
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+            var job = jobRepository.Query().FirstOrDefault(j => j.CurrencyId == currencyId);
+
+            if (job != null)
+            {
+                playerBalanceService.ResetBalancesByCurrencyIdAsync(currencyId).GetAwaiter().GetResult();
+
+                job.LastExecutedTime = DateTime.UtcNow;
+
+                jobRepository.Update(job);
+                unitOfWork.SaveAsync().GetAwaiter().GetResult();
+            }
         }
     }
 
