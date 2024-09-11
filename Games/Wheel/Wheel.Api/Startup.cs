@@ -113,9 +113,9 @@ public class Startup
                 Port = 8080,
                 Tags = new[] { "Game", "Back" },
                 Meta = new Dictionary<string, string>
-            {
-                { "GameData", serializedGameData }
-            }
+                {
+                    { "GameData", serializedGameData }
+                }
             };
 
             consulClient.Agent.ServiceRegister(registration).Wait();

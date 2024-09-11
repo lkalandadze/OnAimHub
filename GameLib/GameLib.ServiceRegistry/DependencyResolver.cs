@@ -1,4 +1,5 @@
-﻿using GameLib.Application.Configurations;
+﻿using Consul;
+using GameLib.Application.Configurations;
 using GameLib.Application.Holders;
 using GameLib.Application.Managers;
 using GameLib.Application.Services.Abstract;
@@ -35,6 +36,9 @@ public static class DependencyResolver
         services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
         services.AddScoped<ISegmentRepository, SegmentRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
+
+        services.AddScoped<IConsulClient, ConsulClient>();
+        services.AddScoped<IConsulGameService, ConsulGameService>();
 
         services.BuildServiceProvider().GetRequiredService<RepositoryManager>();
 
@@ -109,5 +113,10 @@ public static class DependencyResolver
                     ClockSkew = TimeSpan.Zero
                 };
             });
+    }
+    private static bool IsRunningInDocker()
+    {
+        var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
+        return !string.IsNullOrEmpty(isDocker) && isDocker == "true";
     }
 }

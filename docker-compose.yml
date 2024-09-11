@@ -35,7 +35,7 @@ services:
   wheelapi:
     build:
       context: .
-      dockerfile: Wheel/Wheel.Api/Dockerfile
+      dockerfile: Games/Wheel/Wheel.Api/Dockerfile
     ports:
       - "5001:8080"  # Map host port 5001 to container port 8080
     depends_on:
@@ -45,10 +45,10 @@ services:
     environment:
       - CONSUL_ADDRESS=http://consul:8500
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__GameConfig=Host=gameconfigdb;Port=5432;Database=WheelConfig;Username=postgres;Password=Test1234!
-      - ConnectionStrings__GameHistory=Host=gamehistorydb;Port=5432;Database=WheelHistory;Username=postgres;Password=Test1234!
+      - ConnectionStrings__GameConfig=Host=gameconfigdb;Port=5432;Database=WheelConfig;Username=postgres;Password=Asdasd123!
+      - ConnectionStrings__GameHistory=Host=gamehistorydb;Port=5432;Database=WheelHistory;Username=postgres;Password=Asdasd123!
     volumes:
-      - ./Wheel/Wheel.Api/appsettings.json:/app/appsettings.json
+      - ./Games/Wheel/Wheel.Api/appsettings.json:/app/appsettings.json
       
   hubapi:
     build:
@@ -69,7 +69,7 @@ services:
     environment:
       POSTGRES_DB: WheelConfig
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Test1234!
+      POSTGRES_PASSWORD: Asdasd123!
     ports:
       - "5432:5432"
     volumes:
@@ -80,7 +80,7 @@ services:
     environment:
       POSTGRES_DB: WheelHistory
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Test1234!
+      POSTGRES_PASSWORD: Asdasd123!
     ports:
       - "5433:5432"
     volumes:

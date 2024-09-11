@@ -37,8 +37,6 @@ public class ConsulWatcherService : BackgroundService
                     {
                         gameStatus.Address = service.Address;
                         _activeGameService.AddOrUpdateActiveGame(gameStatus);
-                        _trackedGames[gameStatus.Id.ToString()] = service.ID;
-                        currentGameIds.Add(gameStatus.Id.ToString());
                     }
                 }
             }

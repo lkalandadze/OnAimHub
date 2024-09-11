@@ -1,5 +1,6 @@
 ﻿using GameLib.Application.Holders;
 using GameLib.Application.Services.Abstract;
+using GameLib.Application.Services.Concrete;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
 using Wheel.Application.Models.Game;
@@ -11,24 +12,24 @@ namespace Wheel.Application.Services.Concrete;
 
 public class GameService : IGameService
 {
-    private readonly GeneratorHolder _generatorHolder;
     private readonly ConfigurationHolder _configurationHolder;
     private readonly ISegmentRepository _segmentRepository;
     private readonly IAuthService _authService;
     private readonly IHubService _hubService;
+    private readonly IConsulGameService _consulGameService;
 
     public GameService(
-        GeneratorHolder generatorHolder,
         ConfigurationHolder configurationHolder,
         ISegmentRepository segmentRepository,
         IAuthService authService,
-        IHubService hubService)
+        IHubService hubService,
+        IConsulGameService consulGameService)
     {
-        _generatorHolder = generatorHolder;
         _configurationHolder = configurationHolder;
         _segmentRepository = segmentRepository;
         _authService = authService;
         _hubService = hubService;
+        _consulGameService = consulGameService;
     }
 
     public InitialDataResponseModel GetInitialData()
@@ -50,6 +51,17 @@ public class GameService : IGameService
             SegmentIds = segments == null ? default : segments.Select(x => x.Value).ToList(),
             ActivationTime = DateTime.UtcNow,
         };
+    }
+
+    public async Task UpdateMetadataAsync()
+    {
+        await _consulGameService.UpdateMetadataAsync(
+            getDataFunc: GetGame,
+            serviceId: "wheelapi",
+            serviceName: "wheelapi",
+            port: 8080,
+            tags: new[] { "Game", "Back" }
+        );
     }
 
     public async Task<PlayResponseModel> PlayJackpotAsync(PlayRequestModel command)

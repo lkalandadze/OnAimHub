@@ -7,6 +7,7 @@ public interface IGameService
 {
     InitialDataResponseModel GetInitialData();
     GameResponseModel GetGame();
+    Task UpdateMetadataAsync();
     Task<PlayResponseModel> PlayJackpotAsync(PlayRequestModel command);
     Task<PlayResponseModel> PlayWheelAsync(PlayRequestModel command);
 }

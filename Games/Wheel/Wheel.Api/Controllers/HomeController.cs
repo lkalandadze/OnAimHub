@@ -26,7 +26,9 @@ public class HomeController : BaseApiController
     [HttpGet(nameof(GetGameVersion))]
     public ActionResult<GameResponseModel> GetGameVersion()
     {
-        return Ok(_gameService.GetGame());
+        var game = _gameService.GetGame();
+        _gameService.UpdateMetadataAsync();
+        return Ok(game);
     }
      
     [HttpPost("play-jackpot")]

@@ -21,11 +21,11 @@ public class HubService : IHubService
         _httpClient = httpClient;
         _hubApiConfig = hubApiConfig.Value;
 
-        Authorize();
     }
 
     public async Task BetTransactionAsync(int gameVersionId)
     {
+        Authorize();
         var transactionPost = new TransactionPostModel
         {
             GameId = gameVersionId,
@@ -43,6 +43,7 @@ public class HubService : IHubService
 
     public async Task WinTransactionAsync(int gameVersionId)
     {
+        Authorize();
         var transactionPost = new TransactionPostModel
         {
             GameId = gameVersionId,
