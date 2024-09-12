@@ -55,6 +55,7 @@ public class Startup
         services.AddSingleton<IActiveGameService, ActiveGameService>();
         services.AddScoped<IJobService, JobService>();
         services.AddScoped<IBackgroundJobScheduler, HangfireJobScheduler>();
+        services.AddScoped<IConsulLogRepository,  ConsulLogRepository>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
