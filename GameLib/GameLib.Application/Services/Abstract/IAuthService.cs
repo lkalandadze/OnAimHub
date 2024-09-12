@@ -2,7 +2,7 @@
 
 public interface IAuthService
 {
-    IEnumerable<int> GetCurrentPlayerSegmentIds();
+    IEnumerable<string> GetCurrentPlayerSegmentIds();
 
     string GetCurrentPlayerUserName();
 

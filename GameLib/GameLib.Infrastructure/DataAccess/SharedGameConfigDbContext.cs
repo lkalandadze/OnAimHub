@@ -8,6 +8,7 @@ public abstract class SharedGameConfigDbContext(DbContextOptions options) : DbCo
 {
     public DbSet<Currency> Curencies { get; set; }
     public DbSet<Segment> Segments { get; set; }
+    public DbSet<Configuration> Configurations { get; set; }
     public DbSet<Price> Prices { get; set; }
     public DbSet<PrizeType> PrizeTypes { get; set; }
 

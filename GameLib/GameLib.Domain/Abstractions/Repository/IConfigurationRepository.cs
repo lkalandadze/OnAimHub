@@ -2,6 +2,6 @@
 
 namespace GameLib.Domain.Abstractions.Repository;
 
-public interface ISegmentRepository : IBaseRepository<Segment>
+public interface IConfigurationRepository : IBaseRepository<Configuration>
 {
 }

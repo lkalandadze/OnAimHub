@@ -9,6 +9,4 @@ public class PrizeType : BaseEntity<int>
 
     public string CurrencyId { get; set; }
     public Currency Currency { get; set; }
-
-    //public ICollection<BasePrize> Prizes { get; set; }
 }

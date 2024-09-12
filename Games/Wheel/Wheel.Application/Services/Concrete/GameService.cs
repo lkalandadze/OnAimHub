@@ -1,6 +1,5 @@
 ﻿using GameLib.Application.Holders;
 using GameLib.Application.Services.Abstract;
-using GameLib.Application.Services.Concrete;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
 using Wheel.Application.Models.Game;
@@ -13,20 +12,20 @@ namespace Wheel.Application.Services.Concrete;
 public class GameService : IGameService
 {
     private readonly ConfigurationHolder _configurationHolder;
-    private readonly ISegmentRepository _segmentRepository;
+    private readonly IConfigurationRepository _configurationRepository;
     private readonly IAuthService _authService;
     private readonly IHubService _hubService;
     private readonly IConsulGameService _consulGameService;
 
     public GameService(
         ConfigurationHolder configurationHolder,
-        ISegmentRepository segmentRepository,
+        IConfigurationRepository segmentRepository,
         IAuthService authService,
         IHubService hubService,
         IConsulGameService consulGameService)
     {
         _configurationHolder = configurationHolder;
-        _segmentRepository = segmentRepository;
+        _configurationRepository = segmentRepository;
         _authService = authService;
         _hubService = hubService;
         _consulGameService = consulGameService;
@@ -43,7 +42,7 @@ public class GameService : IGameService
 
     public GameResponseModel GetGame()
     {
-        var segments = _segmentRepository.Query();
+        var segments = _configurationRepository.Query();
 
         return new GameResponseModel
         {
@@ -79,9 +78,8 @@ public class GameService : IGameService
     {
         await _hubService.BetTransactionAsync(command.GameId);
 
-        var ttt = _authService.GetCurrentPlayerSegmentIds().ToList()[0];
-
-        var prize = GeneratorHolder.GetPrize<TPrize>(command.GameVersionId, _authService.GetCurrentPlayerSegmentIds().ToList()[0]);
+        //TODO: prioritetis minicheba segmentistvis
+        var prize = GeneratorHolder.GetPrize<TPrize>(_authService.GetCurrentPlayerSegmentIds().ToList()[0]);
 
         if (prize == null)
         {
@@ -95,7 +93,7 @@ public class GameService : IGameService
 
         return new PlayResponseModel
         {
-            PrizeResults = new List<BasePrize> { prize },
+            PrizeResults = [prize],
             Multiplier = 0,
         };
     }

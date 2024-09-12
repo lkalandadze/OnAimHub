@@ -8,8 +8,8 @@ public abstract class BasePrizeGroup : BaseEntity<int>
     public List<int> Sequence { get; set; }
     public int? NextPrizeIndex { get; set; }
 
-    public int SegmentId { get; set; }
-    public Segment Segment { get; set; }
+    public int ConfigurationId { get; set; }
+    public Configuration Configuration { get; set; }
 
     public ICollection<BasePrize> Prizes { get; set; }
 }

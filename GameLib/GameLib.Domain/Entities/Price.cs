@@ -11,5 +11,5 @@ public class Price : BaseEntity<int>
     public Currency Currency { get; set; }
 
     public int SegmentId { get; set; }
-    public Segment Segment { get; set; }
+    public Configuration Configuration { get; set; }
 }

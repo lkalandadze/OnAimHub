@@ -4,6 +4,6 @@ using GameLib.Infrastructure.DataAccess;
 
 namespace GameLib.Infrastructure.Repositories;
 
-public class SegmentRepository(SharedGameConfigDbContext context) : BaseRepository<SharedGameConfigDbContext, Segment>(context), ISegmentRepository
+public class ConfigurationRepository(SharedGameConfigDbContext context) : BaseRepository<SharedGameConfigDbContext, Configuration>(context), IConfigurationRepository
 {
 }

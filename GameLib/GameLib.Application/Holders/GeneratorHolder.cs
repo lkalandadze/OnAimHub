@@ -36,22 +36,22 @@ public class GeneratorHolder
         });
     }
 
-    public static TPrize GetPrize<TPrize>(int gameVersionId, int segmentId, Predicate<BasePrizeGroup>? predicate = null)
+    public static TPrize GetPrize<TPrize>(string segmentId, Predicate<BasePrizeGroup>? predicate = null)
         where TPrize : BasePrize
     {
-        var generator = GetGenerator<TPrize>(gameVersionId, segmentId, predicate);
+        var generator = GetGenerator<TPrize>(segmentId, predicate);
 
         return (TPrize)generator.GetPrize();
     }
 
-    internal static Generator GetGenerator<TPrize>(int gameVersionId, int segmentId, Predicate<BasePrizeGroup>? predicate)
+    internal static Generator GetGenerator<TPrize>(string segmentId, Predicate<BasePrizeGroup>? predicate)
         where TPrize : BasePrize
     {
         lock (_sync)
         {
             return Generators
                 .Where(x => x.Key.Prizes.First().GetType() == typeof(TPrize))
-                .Where(x => x.Key.SegmentId == segmentId)
+                .Where(x => x.Key.Configuration.Segments.Any(s => s.Id == segmentId))
                 .First(x => predicate?.Invoke(x.Key) ?? true)
                 .Value!;
         }

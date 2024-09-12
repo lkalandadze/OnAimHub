@@ -34,7 +34,7 @@ public static class DependencyResolver
         services.AddScoped<ICurrencyRepository, CurrencyRepository>();
         services.AddScoped<IPriceRepository, PriceRepository>();
         services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
-        services.AddScoped<ISegmentRepository, SegmentRepository>();
+        services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
 
         services.AddScoped<IConsulClient, ConsulClient>();
