@@ -42,10 +42,10 @@ public class AuthService : IAuthService
         return new Player(GetCurrentPlayerId(), GetCurrentPlayerUserName(), GetCurrentPlayerSegmentIds());
     }
 
-    public List<int> GetCurrentPlayerSegmentIds()
+    public List<string> GetCurrentPlayerSegmentIds()
     {
         var segmentIds = Token.Claims.FirstOrDefault(x => x.Type == "SegmentIds")?.Value;
-        return segmentIds?.Split(',').Select(int.Parse).ToList() ?? new List<int>();
+        return segmentIds?.Split(',').ToList() ?? new List<string>();
     }
 
     public string GetCurrentPlayerUserName()

@@ -11,5 +11,5 @@ public class PlayerGetModel
     public string UserName { get; set; }
 
     [JsonPropertyName("segmentIds")]
-    public List<int> SegmentIds { get; set; }
+    public List<string> SegmentIds { get; set; }
 }

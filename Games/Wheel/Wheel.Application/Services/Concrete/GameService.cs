@@ -47,7 +47,7 @@ public class GameService : IGameService
         return new GameResponseModel
         {
             Name = "Wheel",
-            SegmentIds = segments == null ? default : segments.Select(x => x.Value).ToList(),
+            SegmentIds = segments == null ? default : segments.Select(x => x.Name).ToList(),
             ActivationTime = DateTime.UtcNow,
         };
     }
