@@ -19,7 +19,7 @@ public class TokenRecord : BaseEntity<int>
         AccessTokenExpiryDate = accessTokenExpiryDate;
         RefreshTokenExpiryDate = refreshTokenExpiryDate;
         IsRevoked = false;
-        CreatedDate = DateTime.Now;
+        CreatedDate = DateTime.UtcNow;
     }
 
     public string AccessToken { get; private set; }
@@ -33,7 +33,7 @@ public class TokenRecord : BaseEntity<int>
 
     public void SetRevoked()
     {
-        RevokedDate = DateTime.Now;
+        RevokedDate = DateTime.UtcNow;
         IsRevoked = true;
     }
 }
