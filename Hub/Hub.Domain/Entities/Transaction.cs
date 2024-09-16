@@ -11,16 +11,16 @@ public class Transaction : BaseEntity<int>
         
     }
 
-    public Transaction(decimal amount, int gameId, int playerId, AccountType fromAccountId, AccountType toAccountId, string currencyId, TransactionStatus status, TransactionType type)
+    public Transaction(decimal amount, int gameId, int playerId, AccountType fromAccount, AccountType toAccount, string currencyId, TransactionStatus status, TransactionType type)
     {
         Amount = amount;
         GameId = gameId;
         PlayerId = playerId;
-        FromAccount = fromAccountId;
-        ToAccount = toAccountId;
+        FromAccountId = fromAccount.Id;
+        ToAccountId = toAccount.Id;
         CurrencyId = currencyId;
-        Status = status;
-        Type = type;
+        StatusId = status.Id;
+        TypeId = type.Id;
     }
 
     public decimal Amount { get; private set; }
@@ -48,6 +48,6 @@ public class Transaction : BaseEntity<int>
 
     public void SetStatus(TransactionStatus status)
     {
-        Status = status;
+        StatusId = status.Id;
     }
 }

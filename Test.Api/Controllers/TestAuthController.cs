@@ -65,7 +65,7 @@ public class TestAuthController : ControllerBase
         {
             Id = Random.Shared.Next(1, 100),
             UserName = Random.Shared.Next(1000, 2000).ToString(),
-            SegmentIds = new List<string> { "1", "2", "3" }
+            SegmentIds = new List<string> { "Segment1", "2", "3" }
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("aVGh6J/J2eRt6N8yQgP5kE0ThKz+zR/G+gL4X1G+yKo="));
