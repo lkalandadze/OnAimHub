@@ -63,12 +63,6 @@ public class Startup
             ConfigureConsulLifetime(app, lifetime);
         }
 
-        if (env.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
         app.UseHttpsRedirection();
 
         app.UseRouting();
@@ -78,8 +72,8 @@ public class Startup
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Wheel API V1");
-            c.RoutePrefix = string.Empty;
+            c.DefaultModelExpandDepth(-1);
+            c.DocumentTitle = "Wheel.Api";
         });
 
         app.UseEndpoints(endpoints =>

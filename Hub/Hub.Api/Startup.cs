@@ -109,7 +109,7 @@ public class Startup
         app.UseSwaggerUI(c =>
         {
             c.DefaultModelExpandDepth(-1);
-            c.DocumentTitle = "HubApi";
+            c.DocumentTitle = "Hub.Api";
         });
 
         app.UseForwardedHeaders();
