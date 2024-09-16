@@ -1,10 +1,10 @@
-﻿using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerBalance;
+﻿using Hub.Application.Features.IdentityFeatures.Commands.ApplyReferralCode;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayer;
-using Hub.Application.Features.PlayerFeatures.Queries.GetPlayers;
-using MassTransit;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerBalance;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerProgress;
+using Hub.Application.Features.PlayerFeatures.Queries.GetPlayers;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.Api.Controllers;
 
@@ -40,6 +40,6 @@ public class PlayerController : BaseApiController
         return Ok(await Mediator.Send(new GetPlayerProgressQuery()));
     }
 
-    //[HttpGet]
-    //public async Task<Response<GetGamesBySegmentIdQueryResponse>> GetGames(GetGamesBySegmentIdQuery request) => await Mediator.Send(request);
+    [HttpPost(nameof(ApplyReferralCode))]
+    public async Task<Unit> ApplyReferralCode(ApplyReferralCodeCommand request) => await Mediator.Send(request);
 }

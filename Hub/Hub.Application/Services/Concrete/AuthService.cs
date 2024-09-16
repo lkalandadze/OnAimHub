@@ -55,6 +55,11 @@ public class AuthService : IAuthService
 
     public int GetCurrentPlayerId()
     {
-        return int.Parse(Token.Claims.FirstOrDefault(x => x.Type == "PlayerId")?.Value!);
+        var playerId = int.Parse(Token.Claims.FirstOrDefault(x => x.Type == "PlayerId")?.Value!);
+
+        if(playerId == default)
+            throw new Exception("Player Id not found");
+
+        return playerId;
     }
 }

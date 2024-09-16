@@ -39,9 +39,21 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
 
         var player = await _playerRepository.OfIdAsync(receivedPlayer.Id);
 
+        int? recommendedById = null;
+
+        if (!string.IsNullOrEmpty(request.ReferralCode))
+        {
+            var referringPlayer = _playerRepository.Query().FirstOrDefault(x => x.ReferralCode == request.ReferralCode);
+
+            if (referringPlayer == default)
+                throw new Exception("Invalid referral code provided.");
+
+            recommendedById = referringPlayer.Id;
+        }
+
         if (player == null)
         {
-            player = new Player(receivedPlayer.Id, receivedPlayer.UserName, receivedPlayer.SegmentIds);
+            player = new Player(receivedPlayer.Id, receivedPlayer.UserName, receivedPlayer.SegmentIds, recommendedById);
 
             await _playerRepository.InsertAsync(player);
             await _unitOfWork.SaveAsync();
