@@ -2,5 +2,5 @@
 
 public class ProgressModel
 {
-    public Dictionary<string, double>? Progress { get; set; }
+    public Dictionary<string, int>? Progress { get; set; }
 }

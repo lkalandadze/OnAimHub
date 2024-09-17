@@ -11,7 +11,7 @@ public class Transaction : BaseEntity<int>
         
     }
 
-    public Transaction(decimal amount, int gameId, int playerId, AccountType fromAccount, AccountType toAccount, string currencyId, TransactionStatus status, TransactionType type)
+    public Transaction(decimal amount, int? gameId, int playerId, AccountType fromAccount, AccountType toAccount, string currencyId, TransactionStatus status, TransactionType type)
     {
         Amount = amount;
         GameId = gameId;
@@ -25,7 +25,7 @@ public class Transaction : BaseEntity<int>
 
     public decimal Amount { get; private set; }
 
-    public int GameId { get; private set; }
+    public int? GameId { get; private set; }
     public Game Game { get; private set; }
 
     public int PlayerId { get; private set; }
