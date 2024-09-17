@@ -1,9 +1,6 @@
 ﻿using Hub.Application.Configurations;
 using Hub.Application.Models.Progress;
 using Hub.Application.Services.Abstract;
-using Hub.Domain.Absractions;
-using Hub.Domain.Absractions.Repository;
-using Hub.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Options;
 using Shared.Application.Exceptions;
