@@ -21,7 +21,7 @@ public class TransactionService : ITransactionService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<TransactionResponseModel> CreateTransaction(int gameId, string currencyId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType)
+    public async Task<TransactionResponseModel> CreateTransactionAndApplyBalanceAsync(int? gameId, string currencyId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType)
     {
         var playerId = _authService.GetCurrentPlayerId();
 

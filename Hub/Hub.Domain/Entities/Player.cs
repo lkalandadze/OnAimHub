@@ -22,7 +22,7 @@ public class Player : BaseEntity<int>
     public string UserName { get; private set; }
     public List<string> SegmentIds { get; private set; }
 
-    public ICollection<PlayerBalance>? PlayerBalances { get; set; }
+    public ICollection<PlayerBalance> PlayerBalances { get; set; }
 
     public void ChangeDetails(string userName, List<string> segmentIds = null, ICollection<PlayerBalance>? playerBalances = null)
     {

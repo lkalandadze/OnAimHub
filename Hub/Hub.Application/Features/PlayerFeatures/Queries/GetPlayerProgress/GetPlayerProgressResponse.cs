@@ -2,5 +2,5 @@
 
 public class GetPlayerProgressResponse
 {
-    public Dictionary<string, decimal>? Progress { get; set; }
+    public Dictionary<string, int>? Progress { get; set; }
 }

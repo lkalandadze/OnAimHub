@@ -42,20 +42,25 @@ public class Startup
             options.UseNpgsql(Configuration.GetConnectionString("OnAimHub")));
 
         services.AddHttpClient();
-        services.AddScoped<IPlayerBalanceService, PlayerBalanceService>();
-        services.AddScoped<ITransactionService, TransactionService>();
-        services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<IAuthService, AuthService>();
+
         services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddScoped<IPlayerBalanceRepository, PlayerBalanceRepository>();
         services.AddScoped<ITokenRecordRepository, TokenRecordRepository>();
         services.AddScoped<ITransactionRepository, TransactionRepository>();
         services.AddScoped<IJobRepository, JobRepository>();
+        services.AddScoped<IConsulLogRepository, ConsulLogRepository>();
+        services.AddScoped<IPlayerProgressRepository, PlayerProgressRepository>();
+        services.AddScoped<IPlayerProgressHistoryRepository, PlayerProgressHistoryRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<IPlayerBalanceService, PlayerBalanceService>();
+        services.AddScoped<IPlayerProgressService, PlayerProgressService>();
+        services.AddScoped<ITransactionService, TransactionService>();
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IAuthService, AuthService>();
         services.AddSingleton<IActiveGameService, ActiveGameService>();
         services.AddScoped<IJobService, JobService>();
         services.AddScoped<IBackgroundJobScheduler, HangfireJobScheduler>();
-        services.AddScoped<IConsulLogRepository,  ConsulLogRepository>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));

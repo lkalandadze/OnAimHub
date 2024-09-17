@@ -94,11 +94,11 @@ public class TestAuthController : ControllerBase
     {
         return new ProgressModel
         {
-            Progress = new Dictionary<string, double>
+            Progress = new Dictionary<string, int>
             {
-                { "SPN", 5 },
-                { "FRSPN", 15 },
-                { "USD", 2 },
+                { "SPN", 3 },
+                { "FRSPN", 6 },
+                { "USD", 12 },
             },
         };
     }
