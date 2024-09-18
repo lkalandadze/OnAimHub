@@ -19,6 +19,7 @@ public class Segment : DbEnum<string>
         CreatedByUserId = createdByUserId;
         PlayerSegments = playerSegments;
     }
+
     public static Segment Segment1 => FromId("Segment1");
     public static Segment Segment2 => FromId("Segment2");
     public static Segment Segment3 => FromId("Segment3");
