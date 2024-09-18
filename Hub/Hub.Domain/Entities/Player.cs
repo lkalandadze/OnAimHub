@@ -11,23 +11,25 @@ public class Player : BaseEntity<int>
 
     }
 
-    public Player(int id, string userName, List<string> segmentIds = null, ICollection<PlayerBalance>? playerBalances = null)
+    public Player(int id, string userName, ICollection<PlayerSegment> playerSegments = null, ICollection<PlayerBalance> playerBalances = null)
     {
         Id = id;
         UserName = userName;
-        SegmentIds = segmentIds;
+        PlayerSegments = playerSegments;
         PlayerBalances = playerBalances;
     }
 
     public string UserName { get; private set; }
-    public List<string> SegmentIds { get; private set; }
 
-    public ICollection<PlayerBalance> PlayerBalances { get; set; }
+    public ICollection<PlayerBalance> PlayerBalances { get; private set; }
+    public ICollection<PlayerSegment> PlayerSegments { get; private set; } 
 
-    public void ChangeDetails(string userName, List<string> segmentIds = null, ICollection<PlayerBalance>? playerBalances = null)
+    public void ChangeDetails(string userName)
     {
         UserName = userName;
-        SegmentIds = segmentIds;
-        PlayerBalances = playerBalances;
+    }
+
+    public void AddPlayerBalances(ICollection<PlayerSegment> playerSegments)
+    {
     }
 }

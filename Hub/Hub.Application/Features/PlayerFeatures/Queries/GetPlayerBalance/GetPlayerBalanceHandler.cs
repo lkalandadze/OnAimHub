@@ -26,6 +26,8 @@ public class GetPlayerBalanceHandler : IRequestHandler<GetPlayerBalanceQuery, Ge
 
     public async Task<GetPlayerBalanceResponse> Handle(GetPlayerBalanceQuery request, CancellationToken cancellationToken)
     {
+        var aaa = _authService.GetCurrentPlayer();
+
         if (_authService.GetCurrentPlayer() == null)
         {
             throw new ApiException(ApiExceptionCodeTypes.UnauthorizedAccessAttempt, "Unauthorized access attempt - player information is missing.");

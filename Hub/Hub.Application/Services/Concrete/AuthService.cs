@@ -14,7 +14,7 @@ public class AuthService : IAuthService
     {
         get
         {
-            var authHeader = _accessor.HttpContext.Request.Headers[HeaderNames.Authorization].ToString();
+            var authHeader = _accessor.HttpContext!.Request.Headers[HeaderNames.Authorization].ToString();
 
             if (string.IsNullOrEmpty(authHeader))
             {
@@ -39,13 +39,24 @@ public class AuthService : IAuthService
 
     public Player GetCurrentPlayer()
     {
-        return new Player(GetCurrentPlayerId(), GetCurrentPlayerUserName(), GetCurrentPlayerSegmentIds());
+        return new Player(GetCurrentPlayerId(), GetCurrentPlayerUserName(), GetCurrentPlayerSegments().ToList());
     }
 
-    public List<string> GetCurrentPlayerSegmentIds()
+    public IEnumerable<PlayerSegment> GetCurrentPlayerSegments()
     {
-        var segmentIds = Token.Claims.FirstOrDefault(x => x.Type == "SegmentIds")?.Value;
-        return segmentIds?.Split(',').ToList() ?? new List<string>();
+        var playerId = GetCurrentPlayerId();
+        var segments = Token.Claims.FirstOrDefault(x => x.Type == "SegmentIds")?.Value;
+        var segmentIds = segments?.Split(',').ToList();
+
+        if (segmentIds == null)
+        {
+            yield break;
+        }
+
+        foreach (var segmentId in segmentIds)
+        {
+            yield return new PlayerSegment(playerId, segmentId);
+        }
     }
 
     public string GetCurrentPlayerUserName()

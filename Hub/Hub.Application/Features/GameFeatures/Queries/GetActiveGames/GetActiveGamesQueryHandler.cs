@@ -16,7 +16,7 @@ public class GetActiveGamesQueryHandler : IRequestHandler<GetActiveGamesQuery, L
 
     public async Task<List<Response<GetActiveGamesQueryResponse>>> Handle(GetActiveGamesQuery query, CancellationToken cancellationToken)
     {
-        var userSegmentIds = _authService.GetCurrentPlayerSegmentIds();
+        var userSegmentIds = _authService.GetCurrentPlayerSegments().Select(x => x.SegmentId);
 
         var activeGames = _activeGameService.GetActiveGames();
 

@@ -14,14 +14,18 @@ namespace Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticatio
 public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthenticationTokenCommand, Response<CreateAuthenticationTokenResponse>>
 {
     private readonly IPlayerRepository _playerRepository;
+    private readonly ISegmentRepository _segmentRepository;
+    private readonly IPlayerSegmentRepository _playerSegmentRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
     private readonly HttpClient _httpClient;
     private readonly CasinoApiConfiguration _casinoApiConfiguration;
 
-    public CreateAuthenticationTokenHandler(IPlayerRepository playerRepository, IUnitOfWork unitOfWork, HttpClient httpClient, IOptions<CasinoApiConfiguration> casinoApiConfiguration, ITokenService tokenService)
+    public CreateAuthenticationTokenHandler(IPlayerRepository playerRepository, ISegmentRepository segmentRepository, IPlayerSegmentRepository playerSegmentRepository, IUnitOfWork unitOfWork, HttpClient httpClient, IOptions<CasinoApiConfiguration> casinoApiConfiguration, ITokenService tokenService)
     {
         _playerRepository = playerRepository;
+        _segmentRepository = segmentRepository;
+        _playerSegmentRepository = playerSegmentRepository;
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
         _httpClient = httpClient;
@@ -41,7 +45,15 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
 
         if (player == null)
         {
-            player = new Player(receivedPlayer.Id, receivedPlayer.UserName, receivedPlayer.SegmentIds);
+            var segments = _segmentRepository.Query(s => receivedPlayer.SegmentIds.Any(i => i == s.Id)).ToList();
+
+            player = new Player(receivedPlayer.Id, receivedPlayer.UserName, playerSegments: []);
+
+            foreach (var segment in segments)
+            {
+                var playerSegment = new PlayerSegment(receivedPlayer.Id, segment.Id);
+                player.PlayerSegments.Add(playerSegment);
+            }
 
             await _playerRepository.InsertAsync(player);
             await _unitOfWork.SaveAsync();
