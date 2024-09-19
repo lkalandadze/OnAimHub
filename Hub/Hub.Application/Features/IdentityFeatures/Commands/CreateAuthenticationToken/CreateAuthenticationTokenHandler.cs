@@ -45,6 +45,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
 
         if (player == null)
         {
+            //TODO: segmentebi kazinodan ar unda moyvebodes, unda gaeweros default segmenti ><
             var segments = _segmentRepository.Query(s => receivedPlayer.SegmentIds.Any(i => i == s.Id)).ToList();
 
             player = new Player(receivedPlayer.Id, receivedPlayer.UserName, playerSegments: []);
