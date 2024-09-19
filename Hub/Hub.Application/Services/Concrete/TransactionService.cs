@@ -11,13 +11,15 @@ public class TransactionService : ITransactionService
     private readonly IAuthService _authService;
     private readonly IPlayerBalanceService _playerBalanceService;
     private readonly ITransactionRepository _transactionRepository;
+    private readonly IPlayerRepository _playerRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public TransactionService(IAuthService authService, IPlayerBalanceService playerBalanceService, ITransactionRepository transactionRepository, IUnitOfWork unitOfWork)
+    public TransactionService(IAuthService authService, IPlayerBalanceService playerBalanceService, ITransactionRepository transactionRepository, IPlayerRepository playerRepository, IUnitOfWork unitOfWork)
     {
         _authService = authService;
         _playerBalanceService = playerBalanceService;
         _transactionRepository = transactionRepository;
+        _playerRepository = playerRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -27,6 +29,14 @@ public class TransactionService : ITransactionService
 
         // check and apply player balances
         await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, currencyId, fromAccount, toAccount, amount);
+
+        var player = await _playerRepository.OfIdAsync(playerId);
+
+        if (player == null)
+            throw new Exception("Player not found");
+
+        if (!player.HasPlayed)
+            player.UpdateHasPlayed();
 
         var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, currencyId, TransactionStatus.Created, transactionType);
 

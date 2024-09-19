@@ -1,5 +1,4 @@
-﻿using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerBalance;
-using MediatR;
+﻿using MediatR;
 
 namespace Hub.Application.Features.PlayerFeatures.Queries.GetPlayerProgress;
 
