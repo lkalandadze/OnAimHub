@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Hub.Application.Features.TransactionFeatures.Commands.CreateWinTransaction;
 
-public record CreateWinTransaction(int GameId, string CurrencyId, decimal Amount) : IRequest<TransactionResponseModel>;
+public record CreateWinTransactionCommand(int GameId, string CurrencyId, decimal Amount) : IRequest<TransactionResponseModel>;

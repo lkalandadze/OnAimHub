@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Hub.Application.Features.TransactionFeatures.Commands.CreateWinTransaction;
 
-public class CreateWinTransactionHandler : IRequestHandler<CreateWinTransaction, TransactionResponseModel>
+public class CreateWinTransactionHandler : IRequestHandler<CreateWinTransactionCommand, TransactionResponseModel>
 {
     private readonly ITransactionService _transactionService;
 
@@ -14,7 +14,7 @@ public class CreateWinTransactionHandler : IRequestHandler<CreateWinTransaction,
         _transactionService = transactionService;
     }
 
-    public async Task<TransactionResponseModel> Handle(CreateWinTransaction request, CancellationToken cancellationToken)
+    public async Task<TransactionResponseModel> Handle(CreateWinTransactionCommand request, CancellationToken cancellationToken)
     {
         return await _transactionService.CreateTransactionAndApplyBalanceAsync(request.GameId, request.CurrencyId, request.Amount,
                                                            AccountType.Game, AccountType.Player, TransactionType.Win);
