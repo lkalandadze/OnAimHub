@@ -4,7 +4,7 @@ using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;
 
-public class Segment : DbEnum<string>
+public class Segment : BaseEntity<string>
 {
     public Segment()
     {
@@ -20,18 +20,15 @@ public class Segment : DbEnum<string>
         PlayerSegments = playerSegments;
     }
 
-    public static Segment Segment1 => FromId("Segment1");
-    public static Segment Segment2 => FromId("Segment2");
-    public static Segment Segment3 => FromId("Segment3");
-
     public string Description { get; private set; }
     public int PriorityLevel { get; private set; }
     public int? CreatedByUserId { get; private set; }
 
     public ICollection<PlayerSegment> PlayerSegments { get; set; }
 
-    private static Segment FromId(string id)
+    public void ChangeDetails(string description, int priorityLevel)
     {
-        return new Segment { Id = id };
+        Description = description;
+        PriorityLevel = priorityLevel;
     }
 }

@@ -7,7 +7,7 @@ namespace Hub.Api.Controllers;
 public class TransactionController : BaseApiController
 {
     [HttpPost("win")]
-    public async Task<IActionResult> CreateWinTransactionAsync([FromBody] CreateWinTransaction command)
+    public async Task<IActionResult> CreateWinTransactionAsync([FromBody] CreateWinTransactionCommand command)
     {
         var result = await Mediator.Send(command);
 
@@ -15,7 +15,7 @@ public class TransactionController : BaseApiController
     }
 
     [HttpPost("bet")]
-    public async Task<IActionResult> CreateBetTransactionAsync([FromBody] CreateBetTransaction command)
+    public async Task<IActionResult> CreateBetTransactionAsync([FromBody] CreateBetTransactionCommand command)
     {
         var result = await Mediator.Send(command);
 

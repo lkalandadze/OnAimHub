@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Hub.Application.Features.TransactionFeatures.Commands.CreateBetTransaction;
 
-public class CreateBetTransactionHandler : IRequestHandler<CreateBetTransaction, TransactionResponseModel>
+public class CreateBetTransactionHandler : IRequestHandler<CreateBetTransactionCommand, TransactionResponseModel>
 {
     private readonly ITransactionService _transactionService;
 
@@ -14,7 +14,7 @@ public class CreateBetTransactionHandler : IRequestHandler<CreateBetTransaction,
         _transactionService = transactionService;
     }
 
-    public async Task<TransactionResponseModel> Handle(CreateBetTransaction request, CancellationToken cancellationToken)
+    public async Task<TransactionResponseModel> Handle(CreateBetTransactionCommand request, CancellationToken cancellationToken)
     {
         return await _transactionService.CreateTransactionAndApplyBalanceAsync(request.GameId, request.CurrencyId, request.Amount,
                                                            AccountType.Player, AccountType.Game, TransactionType.Bet);
