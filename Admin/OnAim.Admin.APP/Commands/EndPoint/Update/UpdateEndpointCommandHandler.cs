@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Auth;
 using OnAim.Admin.APP.Commands.Abstract;
-using OnAim.Admin.APP.Exceptions;
+using OnAim.Admin.Shared.Exceptions;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
@@ -48,18 +48,20 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Update
 
             ep.Description = request.Endpoint.Description;
             ep.IsActive = request.Endpoint.IsActive ?? true;
-            ep.IsDeleted = request.Endpoint.IsEnabled ?? true;
             ep.DateUpdated = SystemDate.Now;
 
             await _repository.CommitChanges();
 
-            await _auditLogService.LogEventAsync(
-                  SystemDate.Now,
-                  "Endpoint Update",
-                  nameof(Endpoint),
-                  ep.Id,
-                  _securityContextAccessor.UserId,
-                  $"Endpoint Updated successfully with ID: {ep.Id} by User ID: {_securityContextAccessor.UserId}");
+            var auditLog = new AuditLog
+            {
+                UserId = _securityContextAccessor.UserId,
+                Timestamp = SystemDate.Now,
+                Action = "UPDATE_ENDPOINT",
+                ObjectId = ep.Id,
+                Log = $"Endpoint Updated successfully with ID: {ep.Id} by User ID: {_securityContextAccessor.UserId}"
+            };
+
+            await _auditLogService.LogEventAsync(auditLog);
 
             return new ApplicationResult
             {

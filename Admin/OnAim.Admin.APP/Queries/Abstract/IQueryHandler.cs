@@ -8,4 +8,5 @@ namespace OnAim.Admin.APP.Queries.Abstract
     where TResponse : notnull
     {
     }
+
 }

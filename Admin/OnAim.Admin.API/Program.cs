@@ -1,14 +1,9 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using OnAim.Admin.API.Extensions;
-using OnAim.Admin.API.Factory;
 using OnAim.Admin.API.Middleware;
-using OnAim.Admin.APP.Extensions;
-using OnAim.Admin.Identity;
-using OnAim.Admin.Identity.Entities;
-using OnAim.Admin.Identity.Persistance;
-using OnAim.Admin.Identity.Services;
-using OnAim.Admin.Infrasturcture.Extensions;
+using OnAim.Admin.APP;
+using OnAim.Admin.Infrasturcture;
 using OnAim.Admin.Infrasturcture.Repository;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using Serilog;
@@ -24,21 +19,18 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog();
-
+builder.Services.AddCustomJwtAuthentication(builder.Configuration);
 builder.Services
                 //.AddCustomIdentity()
-                .AddCustomJwtAuthentication(builder.Configuration)
+                //.AddCustomJwtAuthentication(builder.Services,builder.Configuration)
                 .AddCustomAuthorization()
                 .AddCustomCors()
                 .AddCustomServices()
                 .AddControllers()
                 .Services.AddCustomSwagger();
 
-builder.Services.AddIdentityServerAuthentication<ApplicationIdentityDbContext, User, ApplicationUserManager>(builder.Configuration);
-
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>));
-builder.Services.AddScoped(ApplicationContextFactory.Create);
 builder.Services.AddApp(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 

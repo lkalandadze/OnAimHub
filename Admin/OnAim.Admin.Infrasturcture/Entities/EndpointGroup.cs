@@ -9,6 +9,6 @@ namespace OnAim.Admin.Infrasturcture.Entities
         public ICollection<EndpointGroupEndpoint> EndpointGroupEndpoints { get; set; }
         public ICollection<RoleEndpointGroup> RoleEndpointGroups { get; set; }
         public bool IsDeleted { get; set; }
-        public int? UserId { get; set; }
+        public int? CreatedBy { get; set; }
     }
 }

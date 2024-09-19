@@ -3,9 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Auth;
 using OnAim.Admin.APP.Commands.Abstract;
 using OnAim.Admin.APP.Services.Abstract;
-using OnAim.Admin.Infrasturcture.Extensions;
+using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.Helpers;
 using OnAim.Admin.Shared.Models;
 
 namespace OnAim.Admin.APP.Commands.User.ResetPassword
@@ -52,24 +53,21 @@ namespace OnAim.Admin.APP.Commands.User.ResetPassword
 
                 user.Password = hashed;
                 user.Salt = salt;
+                user.DateUpdated = SystemDate.Now;
 
                 await _userRepository.CommitChanges();
-
-                await _emailService.SendActivationEmailAsync(
-                      user.Email,
-                      "Your Account is Created",
-                request.Password,
-                      user.FirstName
-                );
             }
 
-            await _auditLogService.LogEventAsync(
-               SystemDate.Now,
-               "Password Reset",
-               nameof(User),
-               user.Id,
-               _securityContextAccessor.UserId,
-               $"User Password was Reseted successfully with ID: {user.Id} by User ID: {_securityContextAccessor.UserId}");
+            var auditLog = new AuditLog
+            {
+                UserId = _securityContextAccessor.UserId,
+                Timestamp = SystemDate.Now,
+                Action = "RESET_PASSWORD",
+                ObjectId = user.Id,
+                Log = $"User Password was Reseted successfully with ID: {user.Id} by User ID: {_securityContextAccessor.UserId}"
+            };
+
+            await _auditLogService.LogEventAsync(auditLog);
 
             return new ApplicationResult
             {

@@ -1,8 +1,10 @@
-﻿namespace OnAim.Admin.APP.Services.Abstract
+﻿using OnAim.Admin.Infrasturcture.Entities;
+
+namespace OnAim.Admin.APP.Services.Abstract
 {
     public interface IAuditLogService
     {
-        Task LogEventAsync(DateTimeOffset timestamp, string actionType, string entityType, int entityId, int userId, string description);
+        Task LogEventAsync(AuditLog audit);
         Task RetryRejectedLogsAsync();
     }
 }

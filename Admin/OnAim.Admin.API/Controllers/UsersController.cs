@@ -1,22 +1,22 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
+using OnAim.Admin.APP.Commands.Domain.Create;
+using OnAim.Admin.APP.Commands.User.Activate;
 using OnAim.Admin.APP.Commands.User.ChangePassword;
 using OnAim.Admin.APP.Commands.User.Create;
 using OnAim.Admin.APP.Commands.User.Delete;
-using OnAim.Admin.APP.Commands.User.Domain;
+using OnAim.Admin.APP.Commands.User.ForgotPassword;
 using OnAim.Admin.APP.Commands.User.Login;
 using OnAim.Admin.APP.Commands.User.ProfileUpdate;
 using OnAim.Admin.APP.Commands.User.Registration;
-using OnAim.Admin.APP.Commands.User.ResetPassword;
 using OnAim.Admin.APP.Commands.User.Update;
-using OnAim.Admin.APP.Models.Request.User;
-using OnAim.Admin.APP.Models.Response.User;
+using OnAim.Admin.APP.Features;
 using OnAim.Admin.APP.Queries.User.GetAllUser;
 using OnAim.Admin.APP.Queries.User.GetById;
-using OnAim.Admin.APP.Queries.User.UsersExport;
-using OnAim.Admin.Infrasturcture.Models.Request.User;
+using OnAim.Admin.APP.Queries.User.GetUserLogs;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.DTOs.User;
 using System.Net;
 using System.Security.Claims;
 
@@ -39,12 +39,16 @@ namespace OnAim.Admin.API.Controllers
         public async Task<IActionResult> Get([FromRoute] int id)
             => Ok(await Mediator.Send(new GetUserByIdQuery(id)));
 
-        [HttpGet("Download")]
-        public async Task<IActionResult> Download([FromQuery] UsersExportQuery query)
-        {
-            var result = await Mediator.Send(query);
-            return result;
-        }
+        [HttpGet("UserLogs/{id}")]
+        public async Task<IActionResult> UserLogs([FromRoute] int id, [FromQuery] AuditLogFilter filter)
+            => Ok(await Mediator.Send(new GetUserLogsQuery(id, filter)));
+
+        //[HttpGet("Download")]
+        //public async Task<IResult> Download([FromQuery] UsersExportQuery query)
+        //{
+        //    var result = await Mediator.Send(query);
+        //    return result;
+        //}
 
         [HttpPost("Create")]
         [ProducesResponseType(typeof(CreateUserCommand), (int)HttpStatusCode.Created)]
@@ -71,10 +75,6 @@ namespace OnAim.Admin.API.Controllers
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
             => Ok(await Mediator.Send(command));
 
-        [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
-            => Ok(await Mediator.Send(command));
-
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserRequest model)
             => Ok(await Mediator.Send(new UpdateUserCommand(id, model)));
@@ -89,6 +89,27 @@ namespace OnAim.Admin.API.Controllers
 
         [HttpPost("Delete/{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
-            => Ok(Mediator.Send(new DeleteUserCommand(id)));
+            => Ok(await Mediator.Send(new DeleteUserCommand(id)));
+
+        [HttpPost("refresh-token")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand request)
+            => Ok(await Mediator.Send(request));
+
+        [HttpPost("activate")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ActivateAccount([FromBody] ActivateAccountCommand command)
+            => Ok(await Mediator.Send(command));
+
+        [HttpPost("ForgotPasswordRequest")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPasswordRequest([FromBody] ForgotPasswordCommand command)
+            => Ok(await Mediator.Send(command));
+
+        [HttpPost("ForgotPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword([FromBody] ResetPassword command)
+            => Ok(await Mediator.Send(command));
+
     }
 }

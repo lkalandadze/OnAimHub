@@ -2,18 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Auth;
 using OnAim.Admin.APP.Commands.Abstract;
-using OnAim.Admin.APP.Exceptions;
-using OnAim.Admin.APP.Models.Response.User;
+using OnAim.Admin.Shared.Exceptions;
 using OnAim.Admin.APP.Services.Abstract;
-using OnAim.Admin.Identity.Services;
-using OnAim.Admin.Infrasturcture.Configuration;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
-using OnAim.Admin.Infrasturcture.Models.Response.EndpointGroup;
-using OnAim.Admin.Infrasturcture.Models.Response.Role;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.DTOs.Endpoint;
+using OnAim.Admin.Shared.DTOs.EndpointGroup;
+using OnAim.Admin.Shared.DTOs.Role;
+using OnAim.Admin.Shared.DTOs.User;
 using OnAim.Admin.Shared.Models;
 using System.Security.Claims;
+using OnAim.Admin.Shared.Helpers;
+using OnAim.Admin.Shared.Configuration;
 
 namespace OnAim.Admin.APP.Commands.User.Login
 {
@@ -24,7 +24,6 @@ namespace OnAim.Admin.APP.Commands.User.Login
         private readonly IConfigurationRepository<UserRole> _userConfigurationRepository;
         private readonly IJwtFactory _jwtFactory;
         private readonly IValidator<LoginUserCommand> _validator;
-        private readonly ApplicationUserManager _userManager;
         private readonly IAuditLogService _auditLogService;
         private readonly ISecurityContextAccessor _securityContextAccessor;
 
@@ -34,7 +33,6 @@ namespace OnAim.Admin.APP.Commands.User.Login
             IConfigurationRepository<UserRole> userConfigurationRepository,
             IJwtFactory jwtFactory,
             IValidator<LoginUserCommand> validator,
-            ApplicationUserManager userManager,
             IAuditLogService auditLogService,
             ISecurityContextAccessor securityContextAccessor
             )
@@ -44,7 +42,6 @@ namespace OnAim.Admin.APP.Commands.User.Login
             _userConfigurationRepository = userConfigurationRepository;
             _jwtFactory = jwtFactory;
             _validator = validator;
-            _userManager = userManager;
             _auditLogService = auditLogService;
             _securityContextAccessor = securityContextAccessor;
         }
@@ -61,10 +58,15 @@ namespace OnAim.Admin.APP.Commands.User.Login
 
             if (!user.IsActive || user == null)
             {
-                throw new UserNotFoundException("User Not Found");
+                throw new UserNotFoundException("User is not active Or Doesn't Exist");
             }
 
-            string hashed = Infrasturcture.Extensions.EncryptPasswordExtension.EncryptPassword(model.Password, user.Salt);
+            if (!user.IsVerified || user == null)
+            {
+                throw new UserNotFoundException("User Not Verified");
+            }
+
+            string hashed = EncryptPasswordExtension.EncryptPassword(model.Password, user.Salt);
 
             if (hashed == user.Password)
             {
@@ -74,25 +76,37 @@ namespace OnAim.Admin.APP.Commands.User.Login
 
                 var roleNames = roles.Select(r => r.Name).ToList();
                 var token = _jwtFactory.GenerateEncodedToken(user.Id, user.Email, new List<Claim>(), roleNames);
+                var refreshToken = await _jwtFactory.GenerateRefreshToken(user.Id);
+
+                await _jwtFactory.SaveAccessToken(user.Id, token, DateTime.UtcNow.AddDays(1));
+
+                user.LastLogin = SystemDate.Now;
+
+                await _userRepository.CommitChanges();
+
+                var auditLog = new AuditLog
+                {
+                    UserId = _securityContextAccessor.UserId,
+                    Timestamp = SystemDate.Now,
+                    Action = "LOGIN",
+                    ObjectId = user.Id,
+                    Log = $"User Logined successfully with ID: {user.Id}"
+                };
+
+                await _auditLogService.LogEventAsync(auditLog);
 
                 return new AuthResultDto
                 {
-                    Token = token,
+                    AccessToken = token,
+                    RefreshToken = refreshToken,
                     StatusCode = 200
                 };
             }
 
-            await _auditLogService.LogEventAsync(
-               SystemDate.Now,
-               "Login",
-               nameof(User),
-               user.Id,
-               _securityContextAccessor.UserId,
-               $"User Logined successfully with ID: {user.Id}");
-
             return new AuthResultDto
             {
-                Token = null,
+                AccessToken = null,
+                RefreshToken = null,
                 StatusCode = 404
             };
         }

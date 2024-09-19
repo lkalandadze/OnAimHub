@@ -3,11 +3,10 @@ using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP.Commands.EndPoint.Create;
 using OnAim.Admin.APP.Commands.EndPoint.Delete;
 using OnAim.Admin.APP.Commands.EndPoint.Update;
-using OnAim.Admin.APP.Queries.EndPoint.EndpointsExport;
 using OnAim.Admin.APP.Queries.EndPoint.GetAll;
 using OnAim.Admin.APP.Queries.EndPoint.GetById;
-using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.DTOs.Endpoint;
 using System.Net;
 
 namespace OnAim.Admin.API.Controllers
@@ -32,12 +31,12 @@ namespace OnAim.Admin.API.Controllers
         public async Task<IActionResult> Get([FromRoute] int id)
             => Ok(await Mediator.Send(new GetEndpointByIdQuery(id)));
 
-        [HttpGet("Download")]
-        public async Task<IActionResult> Download([FromQuery] EndpointsExportQuery query)
-        {
-            var result = await Mediator.Send(query);
-            return result;
-        }
+        //[HttpGet("Download")]
+        //public async Task<IResult> Download([FromQuery] EndpointsExportQuery query)
+        //{
+        //    var result = await Mediator.Send(query);
+        //    return result;
+        //}
 
         [HttpPost("Delete/{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)

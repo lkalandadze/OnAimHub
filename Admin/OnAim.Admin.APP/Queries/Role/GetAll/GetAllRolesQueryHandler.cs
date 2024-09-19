@@ -1,9 +1,10 @@
 ﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Infrasturcture.Models.Response;
 using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Models.Response.Role;
 using OnAim.Admin.APP.Queries.Abstract;
+using OnAim.Admin.Shared.Paging;
+using OnAim.Admin.Shared.DTOs.Role;
+using OnAim.Admin.Shared.DTOs.EndpointGroup;
 
 namespace OnAim.Admin.APP.Queries.Role.GetAll
 {
@@ -35,6 +36,16 @@ namespace OnAim.Admin.APP.Queries.Role.GetAll
                 roleQuery = roleQuery.Where(x => x.RoleEndpointGroups.Any(ur => request.Filter.GroupIds.Contains(ur.EndpointGroupId)));
             }
 
+            if (request.Filter.IsDeleted.HasValue)
+            {
+                roleQuery = roleQuery.Where(x => x.IsDeleted == request.Filter.IsDeleted);
+            }
+
+            if (!request.Filter.IsActive.HasValue && !request.Filter.IsDeleted.HasValue)
+            {
+                // No filtering on active/deleted status
+            }
+
             var totalCount = await roleQuery.CountAsync(cancellationToken);
 
             var pageNumber = request.Filter.PageNumber ?? 1;
@@ -56,12 +67,13 @@ namespace OnAim.Admin.APP.Queries.Role.GetAll
             }
 
             var roleResult = roleQuery
-                .Select(x => new RoleResponseModel
+                .Select(x => new RoleShortResponseModel
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Description = x.Description,
                     IsActive = x.IsActive,
+                    IsDeleted = x.IsDeleted,
                     EndpointGroupModels = x.RoleEndpointGroups
                         .Select(z => new EndpointGroupModeldTO
                         {
@@ -78,7 +90,7 @@ namespace OnAim.Admin.APP.Queries.Role.GetAll
             return new ApplicationResult
             {
                 Success = true,
-                Data = new PaginatedResult<RoleResponseModel>
+                Data = new PaginatedResult<RoleShortResponseModel>
                 {
                     PageNumber = pageNumber,
                     PageSize = pageSize,

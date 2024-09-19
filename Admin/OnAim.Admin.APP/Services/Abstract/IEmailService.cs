@@ -2,6 +2,6 @@
 {
     public interface IEmailService
     {
-        Task SendActivationEmailAsync(string recipientEmail, string subject, string temporaryPassword, string firstName);
+        Task SendActivationEmailAsync(string recipientEmail, string subject, string htmlBody);
     }
 }

@@ -1,25 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using OnAim.Admin.APP.Helpers;
-using OnAim.Admin.APP.Models.Response.Role;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Queries.Abstract;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.DTOs.Role;
+using Microsoft.AspNetCore.Http;
+using OnAim.Admin.Shared.Csv;
+using System.Dynamic;
+using System.Net.Mime;
 
 namespace OnAim.Admin.APP.Queries.Role.RolesExport
 {
-    public class RolesExportQueryHandler : IQueryHandler<RolesExportQuery, FileContentResult>
+    public class RolesExportQueryHandler : IQueryHandler<RolesExportQuery, IResult>
     {
         private readonly IRepository<Infrasturcture.Entities.Role> _repository;
+        private readonly ICsvWriter<dynamic> _csvWriter;
 
-        public RolesExportQueryHandler(IRepository<Infrasturcture.Entities.Role> repository)
+        public RolesExportQueryHandler(
+            IRepository<Infrasturcture.Entities.Role> repository,
+            ICsvWriter<dynamic> csvWriter
+            )
         {
             _repository = repository;
+            _csvWriter = csvWriter;
         }
-        public async Task<FileContentResult> Handle(RolesExportQuery request, CancellationToken cancellationToken)
+        public async Task<IResult> Handle(RolesExportQuery request, CancellationToken cancellationToken)
         {
             var roleQuery = _repository
                .Query(x =>
                         (string.IsNullOrEmpty(request.Filter.Name) || x.Name.Contains(request.Filter.Name)) &&
-                        (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value)
+                        (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value) &&
+                         !x.IsDeleted
                     );
 
             if (request.RoleIds != null && request.RoleIds.Any())
@@ -58,41 +67,51 @@ namespace OnAim.Admin.APP.Queries.Role.RolesExport
             }
 
             var roleResult = roleQuery
-                .Select(x => new RoleResponseModel
+                .Select(x => new ExportRoleShortResponseModel
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Description = x.Description,
                     IsActive = x.IsActive,
-                    EndpointGroupModels = x.RoleEndpointGroups
-                        .Select(z => new EndpointGroupModeldTO
-                        {
-                            Id = z.EndpointGroup.Id,
-                            Name = z.EndpointGroup.Name,
-                            IsActive = z.EndpointGroup.IsActive,
-                        }).ToList()
+                    EndpointGroups = string.Join(", ", x.RoleEndpointGroups.Select(xx => xx.EndpointGroup.Name)),
                 })
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);
 
             var items = await roleResult.ToListAsync(cancellationToken);
 
-            var excelFile = ExcelExportHelper
-                .ExportToExcel(items,
-                new[] {
-                    "Id",
-                    "Name",
-                    "Description",
-                    "EndpointGroupModels",
-                    "IsActive",
-                    "DateCreated",
-                    "DateUpdated"
-                });
-
-            return new FileContentResult(excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            var selectedRoles = items.Select(role =>
             {
-                FileDownloadName = "Roles.xlsx"
-            };
+                var expandoObj = new ExpandoObject() as IDictionary<string, Object>;
+
+                if (request.SelectedColumns == null || !request.SelectedColumns.Any())
+                {
+                    var defaultColumns = new List<string>
+                    {
+                        "Id", "Name", "Description", "EndpointGroupModels", "IsActive", "DateCreated", "DateUpdated"
+                    };
+
+                    foreach (var column in defaultColumns)
+                    {
+                        var propertyValue = typeof(ExportRoleShortResponseModel).GetProperty(column)?.GetValue(role);
+                        expandoObj[column] = propertyValue;
+                    }
+                }
+                else
+                {
+                    foreach (var column in request.SelectedColumns)
+                    {
+                        var propertyValue = typeof(ExportRoleShortResponseModel).GetProperty(column)?.GetValue(role);
+                        expandoObj[column] = propertyValue;
+                    }
+                }
+                return expandoObj;
+            }).ToList();
+
+            using var stream = new MemoryStream();
+            _csvWriter.Write(selectedRoles, stream);
+
+            return Results.File(stream.ToArray(), MediaTypeNames.Application.Octet, "Roles.csv");
         }
     }
 }

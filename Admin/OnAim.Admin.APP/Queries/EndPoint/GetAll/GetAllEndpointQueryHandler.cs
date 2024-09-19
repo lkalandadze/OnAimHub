@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Queries.Abstract;
 using OnAim.Admin.Infrasturcture.Entities;
-using OnAim.Admin.Infrasturcture.Extensions;
-using OnAim.Admin.Infrasturcture.Models.Response;
-using OnAim.Admin.Infrasturcture.Models.Response.Endpoint;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.DTOs.Endpoint;
+using OnAim.Admin.Shared.Helpers;
+using OnAim.Admin.Shared.Paging;
 
 namespace OnAim.Admin.APP.Queries.EndPoint.GetAll
 {
@@ -23,13 +23,22 @@ namespace OnAim.Admin.APP.Queries.EndPoint.GetAll
                 .Query(x =>
                          (string.IsNullOrEmpty(request.Filter.Name) || x.Name.Contains(request.Filter.Name)) &&
                          (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value) &&
-                         (!request.Filter.Type.HasValue || x.Type == request.Filter.Type.Value) &&
-                         (!request.Filter.IsEnable.HasValue || x.IsDeleted == request.Filter.IsEnable.Value)
+                         (!request.Filter.Type.HasValue || x.Type == request.Filter.Type.Value)
                      );
 
             if (request.Filter.EndpointGroupIds != null && request.Filter.EndpointGroupIds.Any())
             {
                 query = query.Where(x => x.EndpointGroupEndpoints.Any(ur => request.Filter.EndpointGroupIds.Contains(ur.EndpointGroupId)));
+            }
+
+            if (request.Filter.IsDeleted.HasValue)
+            {
+                query = query.Where(x => x.IsDeleted == request.Filter.IsDeleted);
+            }
+
+            if (!request.Filter.IsActive.HasValue && !request.Filter.IsDeleted.HasValue)
+            {
+                // No filtering on active/deleted status
             }
 
             var totalCount = await query.CountAsync(cancellationToken);
@@ -61,7 +70,7 @@ namespace OnAim.Admin.APP.Queries.EndPoint.GetAll
                     Description = x.Description,
                     Type = ToHttpMethodExtension.ToHttpMethod(x.Type),
                     IsActive = x.IsActive,
-                    IsEnabled = x.IsDeleted,
+                    IsDeleted = x.IsDeleted,
                     DateCreated = x.DateCreated,
                     DateUpdated = x.DateUpdated,
                 })

@@ -58,6 +58,7 @@ namespace OnAim.Admin.API.Service.Endpoint
             return endpoints;
         }
 
+
         public async Task SaveEndpointsAsync()
         {
             var endpoints = GetAllEndpoints();
@@ -92,7 +93,7 @@ namespace OnAim.Admin.API.Service.Endpoint
                                  ? endpointInfo.Controller.Substring(0, endpointInfo.Controller.Length - "Controller".Length)
                                  : endpointInfo.Controller;
 
-            var formattedName = $"{controllerName}_{endpointInfo.Name}";
+            var formattedName = $"{endpointInfo.Name}_{controllerName}";
 
             return new Infrasturcture.Entities.Endpoint
             {
@@ -103,7 +104,7 @@ namespace OnAim.Admin.API.Service.Endpoint
                 IsActive = true,
                 DateCreated = SystemDate.Now,
                 Type = ParseHttpMethodToEndpointType(endpointInfo.HttpMethod),
-                UserId = null
+                CreatedBy = null
             };
         }
 

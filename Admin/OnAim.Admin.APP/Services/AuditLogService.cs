@@ -2,81 +2,76 @@
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 
-namespace OnAim.Admin.APP.Services
+public class AuditLogService : IAuditLogService
 {
-    public class AuditLogService : IAuditLogService
+    private readonly IConfigurationRepository<AuditLog> _auditLogRepository;
+    private readonly IRejectedLogRepository _rejectedLogRepository;
+
+    public AuditLogService(IConfigurationRepository<AuditLog> auditLogRepository, IRejectedLogRepository rejectedLogRepository)
     {
-        private readonly IConfigurationRepository<Infrasturcture.Entities.AuditLog> _auditLogRepository;
-        private readonly IRejectedLogRepository _rejectedLogRepository;
+        _auditLogRepository = auditLogRepository;
+        _rejectedLogRepository = rejectedLogRepository;
+    }
 
-        public AuditLogService(IConfigurationRepository<Infrasturcture.Entities.AuditLog> auditLogRepository, IRejectedLogRepository rejectedLogRepository)
+    public async Task LogEventAsync(AuditLog audit)
+    {
+        try
         {
-            _auditLogRepository = auditLogRepository;
-            _rejectedLogRepository = rejectedLogRepository;
-        }
+            var auditLog = new AuditLog
+            {
+                Timestamp = audit.Timestamp,
+                Action = audit.Action,
+                ObjectId = audit.ObjectId,
+                Log = audit.Log,
+                UserId = audit.UserId,
+            };
+            await _auditLogRepository.Store(auditLog);
+            await _auditLogRepository.CommitChanges();
 
-        public async Task LogEventAsync(DateTimeOffset timestamp, string actionType, string entityType, int entityId, int userId, string description)
+            await _auditLogRepository.UnitOfWork.SaveChangesAsync();
+
+        }
+        catch (Exception ex)
+        {
+            await HandleRejectedLog(audit, ex.Message);
+        }
+    }
+
+    private async Task HandleRejectedLog(AuditLog auditLog, string errorMessage)
+    {
+        var rejectedLog = new RejectedLog
+        {
+            Action = auditLog.Action,
+            ObjectId = auditLog.ObjectId,
+            Log = auditLog.Log,
+            UserId = auditLog.UserId,
+            Timestamp = auditLog.Timestamp,
+            ErrorMessage = errorMessage
+        };
+
+        await _rejectedLogRepository.AddAsync(rejectedLog);
+    }
+
+    public async Task RetryRejectedLogsAsync()
+    {
+        var rejectedLogs = await _rejectedLogRepository.GetPendingLogsAsync();
+
+        foreach (var log in rejectedLogs)
         {
             try
             {
                 var auditLog = new AuditLog
                 {
-                    Timestamp = timestamp,
-                    ActionType = actionType,
-                    EntityType = entityType,
-                    EntityId = entityId,
-                    UserId = userId,
-                    Description = description
+                    UserId = log.UserId,
                 };
                 await _auditLogRepository.Store(auditLog);
                 await _auditLogRepository.CommitChanges();
+
+                await _rejectedLogRepository.MarkAsProcessedAsync(log.Id);
             }
-            catch (Exception ex)
+            catch
             {
-                await HandleRejectedLog(actionType, entityType, entityId, userId, description, ex.Message);
-            }
-        }
-
-        private async Task HandleRejectedLog(string actionType, string entityType, int entityId, int userId, string description, string errorMessage)
-        {
-            var rejectedLog = new RejectedLog
-            {
-                ActionType = actionType,
-                EntityType = entityType,
-                EntityId = entityId,
-                UserId = userId,
-                Description = description,
-                ErrorMessage = errorMessage
-            };
-
-            await _rejectedLogRepository.AddAsync(rejectedLog);
-        }
-
-        public async Task RetryRejectedLogsAsync()
-        {
-            var rejectedLogs = await _rejectedLogRepository.GetPendingLogsAsync();
-
-            foreach (var log in rejectedLogs)
-            {
-                try
-                {
-                    var auditLog = new AuditLog
-                    {
-                        ActionType = log.ActionType,
-                        EntityType = log.EntityType,
-                        EntityId = log.EntityId,
-                        UserId = log.UserId,
-                        Description = log.Description
-                    };
-                    await _auditLogRepository.Store(auditLog);
-                    await _auditLogRepository.CommitChanges();
-
-                    await _rejectedLogRepository.MarkAsProcessedAsync(log.Id);
-                }
-                catch
-                {
-                    await _rejectedLogRepository.IncrementRetryCountAsync(log.Id);
-                }
+                await _rejectedLogRepository.IncrementRetryCountAsync(log.Id);
             }
         }
     }

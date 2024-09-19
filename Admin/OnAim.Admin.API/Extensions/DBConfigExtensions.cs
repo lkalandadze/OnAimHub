@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.API.Service;
 using OnAim.Admin.API.Service.Endpoint;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
+using OnAim.Admin.Shared.DTOs.User;
 using System.Security.Cryptography;
 
 namespace OnAim.Admin.API.Extensions
@@ -90,7 +89,7 @@ namespace OnAim.Admin.API.Extensions
                 dbContext.EndpointGroups.Add(defaultGroup);
                 await dbContext.SaveChangesAsync();
 
-                var usersGetMeEndpoint = await dbContext.Endpoints.FirstOrDefaultAsync(x => x.Name == "Users_GetMe");
+                var usersGetMeEndpoint = await dbContext.Endpoints.FirstOrDefaultAsync(x => x.Name == "GetMe_Users");
                 var defaultendpointGroupEndpoint = new EndpointGroupEndpoint
                 {
                     EndpointId = usersGetMeEndpoint.Id,
@@ -99,7 +98,7 @@ namespace OnAim.Admin.API.Extensions
 
                 defaultGroup.EndpointGroupEndpoints.Add(defaultendpointGroupEndpoint);
 
-                var usersProfileUpdateEndpoint = await dbContext.Endpoints.FirstOrDefaultAsync(x => x.Name == "Users_ProfileUpdate");
+                var usersProfileUpdateEndpoint = await dbContext.Endpoints.FirstOrDefaultAsync(x => x.Name == "ProfileUpdate_Users");
                 var defaultProfileUpdateEndpointGroupEndpoint = new EndpointGroupEndpoint
                 {
                     EndpointId = usersProfileUpdateEndpoint.Id,
@@ -155,10 +154,11 @@ namespace OnAim.Admin.API.Extensions
                     Email = "superadmin@test.com",
                     Password = hashedPassword,
                     Salt = salt,
+                    IsSuperAdmin = true,
                     Phone = "595999999",
+                    IsVerified = true,
                     IsActive = true,
-                    //ActivationToken = null,
-                    //ActivationTokenExpiration = null,
+                    Preferences = new UserPreferences(),
                     DateCreated = DateTime.UtcNow
                 });
 

@@ -13,7 +13,7 @@ namespace OnAim.Admin.API.Attributes
             var allowAnonymous = context.ActionDescriptor.EndpointMetadata
                .OfType<Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute>()
                .Any();
-             
+
             if (allowAnonymous)
             {
                 return;
@@ -21,16 +21,24 @@ namespace OnAim.Admin.API.Attributes
 
             var controllerName = context.ActionDescriptor.RouteValues["controller"];
             var actionName = context.ActionDescriptor.RouteValues["action"];
-            var dynamicRequiredPermission = $"{controllerName}_{actionName}";
+            var dynamicRequiredPermission = $"{actionName}_{controllerName}";
 
             context.HttpContext.Items["RequiredPermission"] = dynamicRequiredPermission;
-
 
             var user = context.HttpContext.User;
 
             if (user.Identity.IsAuthenticated)
             {
                 var roles = user.GetRoles();
+
+                foreach (var role in roles)
+                {
+                    if (role == "SuperRole")
+                    {
+                        return;
+                    }
+                }
+
                 var permissionService = context.HttpContext.RequestServices.GetRequiredService<IPermissionService>();
 
                 var hasPermission = await permissionService.RolesContainPermission(roles, dynamicRequiredPermission);

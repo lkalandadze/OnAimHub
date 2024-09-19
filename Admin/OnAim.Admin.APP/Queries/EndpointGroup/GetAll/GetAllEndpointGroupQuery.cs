@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.APP.Queries.Abstract;
-using OnAim.Admin.Infrasturcture.Models.Request.EndpointGroup;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.DTOs.EndpointGroup;
 
 namespace OnAim.Admin.APP.Queries.EndpointGroup.GetAll
 {

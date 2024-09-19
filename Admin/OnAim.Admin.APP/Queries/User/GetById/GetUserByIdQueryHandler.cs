@@ -1,20 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Models.Response.UserResponseModels;
 using OnAim.Admin.APP.Queries.Abstract;
-using OnAim.Admin.Infrasturcture.Extensions;
-using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
+using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.DTOs.Endpoint;
+using OnAim.Admin.Shared.DTOs.EndpointGroup;
+using OnAim.Admin.Shared.DTOs.Role;
+using OnAim.Admin.Shared.DTOs.User;
+using OnAim.Admin.Shared.Helpers;
 
 namespace OnAim.Admin.APP.Queries.User.GetById
 {
     public sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, ApplicationResult>
     {
         private readonly IRepository<Infrasturcture.Entities.User> _repository;
+        private readonly IConfigurationRepository<AuditLog> _configurationRepository;
 
-        public GetUserByIdQueryHandler(IRepository<Infrasturcture.Entities.User> repository)
+        public GetUserByIdQueryHandler(
+            IRepository<Infrasturcture.Entities.User> repository,
+            IConfigurationRepository<Infrasturcture.Entities.AuditLog> configurationRepository
+            )
         {
             _repository = repository;
+            _configurationRepository = configurationRepository;
         }
         public async Task<ApplicationResult> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
@@ -30,6 +38,10 @@ namespace OnAim.Admin.APP.Queries.User.GetById
 
             if (query == null) { return new ApplicationResult { Success = false, Data = $"User Not Found!" }; }
 
+            var logs = await _configurationRepository.Query(x => x.UserId == query.Id).ToListAsync();
+
+            var usert = await _repository.Query(x => x.Id == query.CreatedBy).FirstOrDefaultAsync();
+
             var user = new GetUserModel
             {
                 Id = query.Id,
@@ -38,6 +50,7 @@ namespace OnAim.Admin.APP.Queries.User.GetById
                 Email = query.Email,
                 Phone = query.Phone,
                 IsActive = query.IsActive,
+                UserPreferences = query.Preferences ?? new UserPreferences(),
                 Roles = query.UserRoles.Select(x => new RoleModel
                 {
                     Id = x.RoleId,
@@ -53,6 +66,7 @@ namespace OnAim.Admin.APP.Queries.User.GetById
                         {
                             Id = xxx.Endpoint.Id,
                             Name = xxx.Endpoint.Name,
+                            Path = xxx.Endpoint.Path,
                             Description = xxx.Endpoint.Description,
                             Type = ToHttpMethodExtension.ToHttpMethod(xxx.Endpoint.Type),
                             IsActive = xxx.Endpoint.IsActive,
@@ -60,6 +74,19 @@ namespace OnAim.Admin.APP.Queries.User.GetById
                             DateCreated = xxx.Endpoint.DateCreated,
                         }).ToList(),
                     }).ToList()
+                }).ToList(),
+                CreatedBy = usert == null ? null : new UserDto
+                {
+                    Id = usert.Id,
+                    FirstName = usert.FirstName,
+                    LastName = usert.LastName,
+                    Email = usert.Email,
+                },
+                Logs = logs.Select(x => new LogDto
+                {
+                    Action = x.Action,
+                    Log = x.Log,
+                    DateCreated = x.Timestamp
                 }).ToList(),
             };
 

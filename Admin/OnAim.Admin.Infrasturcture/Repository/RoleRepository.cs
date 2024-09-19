@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
-using OnAim.Admin.Infrasturcture.Models.Response;
-using OnAim.Admin.Infrasturcture.Models.Response.EndpointGroup;
-using OnAim.Admin.Infrasturcture.Models.Response.Role;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.DTOs.Endpoint;
+using OnAim.Admin.Shared.DTOs.EndpointGroup;
+using OnAim.Admin.Shared.DTOs.Role;
+using OnAim.Admin.Shared.Paging;
 
 namespace OnAim.Admin.Infrasturcture.Repository
 {
@@ -16,7 +16,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
         {
             _databaseContext = databaseContext;
         }
-
         //For permission check
         public async Task<PaginatedResult<RoleResponseModel>> GetAllRoles()
         {

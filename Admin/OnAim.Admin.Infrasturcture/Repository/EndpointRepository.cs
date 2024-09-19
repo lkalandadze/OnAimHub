@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Infrasturcture.Extensions;
-using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
-using OnAim.Admin.Infrasturcture.Models.Response;
-using OnAim.Admin.Infrasturcture.Models.Response.Endpoint;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.DTOs.Endpoint;
+using OnAim.Admin.Shared.Helpers;
+using OnAim.Admin.Shared.Paging;
 using System.Data;
 
 namespace OnAim.Admin.Infrasturcture.Repository
@@ -45,10 +44,8 @@ namespace OnAim.Admin.Infrasturcture.Repository
                 Name = ep.Name,
                 Path = ep.Path,
                 Description = ep.Description,
-                IsEnabled = ep.IsDeleted,
                 IsActive = ep.IsActive,
                 Type = ToHttpMethodExtension.ToHttpMethod(ep.Type),
-                UserId = ep.UserId,
                 DateCreated = ep.DateCreated,
                 DateUpdated = ep.DateUpdated,
             }).ToList();

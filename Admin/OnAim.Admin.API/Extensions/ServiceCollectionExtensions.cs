@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
-using OnAim.Admin.Infrasturcture.Configuration;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
@@ -9,19 +8,18 @@ using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.API.Service.Endpoint;
 using Microsoft.OpenApi.Models;
 using OnAim.Admin.Shared.Configuration;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using SendGrid.Helpers.Errors.Model;
+using System.IdentityModel.Tokens.Jwt;
+using OnAim.Admin.APP.Factory;
+using Microsoft.Extensions.Options;
+using System.Reflection;
 
 namespace OnAim.Admin.API.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddCustomIdentity(this IServiceCollection services)
-        {
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<DatabaseContext>();
-
-            return services;
-        }
-
         public static IServiceCollection AddConfigs(this IServiceCollection services, ConfigurationManager config)
         {
             config.AddEnvironmentVariables();
@@ -32,47 +30,145 @@ namespace OnAim.Admin.API.Extensions
             return services;
         }
 
-        [Obsolete("Use Identity Server Instead!")]
-        public static IServiceCollection AddCustomJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+        //[Obsolete("Use Identity Server Instead!")]
+        //public static IServiceCollection AddCustomJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+        //{
+        //    var signingKey = new SymmetricSecurityKey(
+        //        Encoding.Default.GetBytes(configuration["JwtConfiguration:Secret"]));
+
+        //    var tokenValidationParameters = new TokenValidationParameters
+        //    {
+        //        ValidateIssuer = true,
+        //        ValidIssuer = configuration["JwtConfiguration:Issuer"],
+
+        //        ValidateAudience = true,
+        //        ValidAudience = configuration["JwtConfiguration:Audience"],
+
+        //        ValidateIssuerSigningKey = true,
+        //        IssuerSigningKey = signingKey,
+
+        //        RequireExpirationTime = false,
+        //        ValidateLifetime = true,
+        //        ClockSkew = TimeSpan.Zero
+        //    };
+
+        //    services.Configure<JwtConfiguration>(options =>
+        //    {
+        //        options.Issuer = configuration["JwtConfiguration:Issuer"];
+        //        options.Audience = configuration["JwtConfiguration:Audience"];
+        //    });
+
+        //    services.AddAuthentication(options =>
+        //    {
+        //        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        //    }).AddJwtBearer(configureOptions =>
+        //    {
+        //        configureOptions.ClaimsIssuer = configuration["JwtConfiguration:Issuer"];
+        //        configureOptions.TokenValidationParameters = tokenValidationParameters;
+        //        configureOptions.SaveToken = true;
+        //    });
+
+        //    return services;
+        //}
+
+        public static TOptions BindOptions<TOptions>(
+        this IConfiguration configuration,
+        Action<TOptions>? configurator = null
+        )
+         where TOptions : new()
         {
-            var signingKey = new SymmetricSecurityKey(
-                Encoding.Default.GetBytes(configuration["JwtConfiguration:Secret"]));
+            return BindOptions(configuration, typeof(TOptions).Name, configurator);
+        }
+        public static TOptions BindOptions<TOptions>(
+        this IConfiguration configuration,
+        string section,
+        Action<TOptions>? configurator = null
+        )
+        where TOptions : new()
+        {
+            var options = new TOptions();
 
-            var tokenValidationParameters = new TokenValidationParameters
+            var optionsSection = configuration.GetSection(section);
+            optionsSection.Bind(options);
+
+            configurator?.Invoke(options);
+
+            return options;
+        }
+
+        public static AuthenticationBuilder AddCustomJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+
+            // Bind JwtConfiguration from the configuration
+            var jwtOptions = configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>();
+
+            // Check if jwtOptions is null
+            if (jwtOptions == null)
             {
-                ValidateIssuer = true,
-                ValidIssuer = configuration["JwtConfiguration:Issuer"],
+                throw new ArgumentNullException(nameof(jwtOptions), "JWT configuration could not be loaded.");
+            }
 
-                ValidateAudience = true,
-                ValidAudience = configuration["JwtConfiguration:Audience"],
-
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = signingKey,
-
-                RequireExpirationTime = false,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
-            };
-
-            services.Configure<JwtConfiguration>(options =>
+            // Validate that SecretKey is not null or empty
+            if (string.IsNullOrWhiteSpace(jwtOptions.Secret))
             {
-                options.Issuer = configuration["JwtConfiguration:Issuer"];
-                options.Audience = configuration["JwtConfiguration:Audience"];
-                options.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
-            });
+                throw new ArgumentException("SecretKey cannot be null or empty.", nameof(jwtOptions.Secret));
+            }
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(configureOptions =>
-            {
-                configureOptions.ClaimsIssuer = configuration["JwtConfiguration:Issuer"];
-                configureOptions.TokenValidationParameters = tokenValidationParameters;
-                configureOptions.SaveToken = true;
-            });
+            services.TryAddTransient<IJwtFactory, JwtFactory>();
 
-            return services;
+            return services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.Audience = jwtOptions.Audience;
+                    options.SaveToken = true;
+                    options.RefreshOnIssuerKeyNotFound = false;
+                    options.RequireHttpsMetadata = false;
+                    options.IncludeErrorDetails = true;
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtOptions.Issuer,
+                        ValidAudience = jwtOptions.Audience,
+                        SaveSigninToken = true,
+                        ClockSkew = TimeSpan.Zero,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret))
+                    };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            if (context.Exception is SecurityTokenExpiredException)
+                            {
+                                context.Response.Headers.Add("Token-Expired", "true");
+                                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            }
+                            return Task.CompletedTask;
+                        },
+                        OnChallenge = context =>
+                        {
+                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            return Task.CompletedTask;
+                        },
+                        OnForbidden = context =>
+                        {
+                            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
         }
 
         public static IServiceCollection AddCustomAuthorization(this IServiceCollection services)
@@ -86,6 +182,7 @@ namespace OnAim.Admin.API.Extensions
                 options.DefaultPolicy = policyBuilder.Build();
             });
         }
+
 
         public static IServiceCollection AddCustomCors(this IServiceCollection services)
         {

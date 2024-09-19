@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities.Abstract;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
+using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using System.Linq.Expressions;
 
@@ -11,9 +12,18 @@ namespace OnAim.Admin.Infrasturcture.Repository
     {
         private DatabaseContext _db;
 
+
         public EfRepository(DatabaseContext db)
         {
             _db = db;
+        }
+
+        public IUnitOfWork UnitOfWork
+        {
+            get
+            {
+                return _db;
+            }
         }
 
         public virtual async Task<T?> Find(int uId)

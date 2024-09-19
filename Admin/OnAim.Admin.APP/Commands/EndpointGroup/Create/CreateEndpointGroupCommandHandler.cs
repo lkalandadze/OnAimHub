@@ -53,7 +53,7 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
                     IsActive = true,
                     EndpointGroupEndpoints = new List<EndpointGroupEndpoint>(),
                     DateCreated = SystemDate.Now,
-                    UserId = _securityContextAccessor.UserId
+                    CreatedBy = _securityContextAccessor.UserId
                 };
 
                 foreach (var endpointId in request.Model.EndpointIds)
@@ -77,13 +77,16 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
                 await _repository.Store(endpointGroup);
                 await _repository.CommitChanges();
 
-                await _auditLogService.LogEventAsync(
-                      SystemDate.Now,
-                      "Create",
-                      nameof(endpointGroup),
-                      endpointGroup.Id,
-                      _securityContextAccessor.UserId,
-                      $"EndpointGroup Created successfully with ID: {endpointGroup.Id} by User ID: {_securityContextAccessor.UserId}");
+                var auditLog = new AuditLog
+                {
+                    UserId = _securityContextAccessor.UserId,
+                    Timestamp = SystemDate.Now,
+                    Action = "CREATED_ENDPOINT_GROUP",
+                    ObjectId = endpointGroup.Id,
+                    Log = $"EndpointGroup Created successfully with ID: {endpointGroup.Id} by User ID: {_securityContextAccessor.UserId}"
+                };
+
+                await _auditLogService.LogEventAsync(auditLog);
             }
             else
             {

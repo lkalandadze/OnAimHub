@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Auth;
 using OnAim.Admin.APP.Commands.Abstract;
-using OnAim.Admin.APP.Exceptions;
+using OnAim.Admin.Shared.Exceptions;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
@@ -82,13 +82,16 @@ namespace OnAim.Admin.APP.Commands.User.Update
             await _repository.CommitChanges();
             await _userRoleRepository.CommitChanges();
 
-            await _auditLogService.LogEventAsync(
-               SystemDate.Now,
-               "User Update",
-               nameof(User),
-               existingUser.Id,
-               _securityContextAccessor.UserId,
-               $"User Updated successfully with ID: {existingUser.Id} by User ID: {_securityContextAccessor.UserId}");
+            var auditLog = new AuditLog
+            {
+                UserId = _securityContextAccessor.UserId,
+                Timestamp = SystemDate.Now,
+                Action = "UPDATE_USER",
+                ObjectId = existingUser.Id,
+                Log = $"User Updated successfully with ID: {existingUser.Id} by User ID: {_securityContextAccessor.UserId}"
+            };
+
+            await _auditLogService.LogEventAsync(auditLog);
 
             return new ApplicationResult
             {

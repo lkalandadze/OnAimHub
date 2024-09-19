@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.APP.Commands.Abstract;
-using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.DTOs.Endpoint;
 
 namespace OnAim.Admin.APP.Commands.EndPoint.Update
 {

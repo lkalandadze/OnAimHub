@@ -2,8 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Auth;
 using OnAim.Admin.APP.Commands.Abstract;
-using OnAim.Admin.APP.Exceptions;
+using OnAim.Admin.Shared.Exceptions;
 using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
@@ -48,16 +49,20 @@ namespace OnAim.Admin.APP.Commands.User.ProfileUpdate
             user.FirstName = request.profileUpdateRequest.FirstName;
             user.LastName = request.profileUpdateRequest.LastName;
             user.Phone = request.profileUpdateRequest.Phone;
+            user.DateUpdated = SystemDate.Now;
 
             await _repository.CommitChanges();
 
-            await _auditLogService.LogEventAsync(
-               SystemDate.Now,
-               "Profile Update",
-               nameof(User),
-               user.Id,
-               _securityContextAccessor.UserId,
-               $"User Profile Updated successfully with ID: {user.Id}");
+            var auditLog = new AuditLog
+            {
+                UserId = _securityContextAccessor.UserId,
+                Timestamp = SystemDate.Now,
+                Action = "UPDATE_PROFILE",
+                ObjectId = user.Id,
+                Log = $"User Profile Updated successfully with ID: {user.Id}"
+            };
+
+            await _auditLogService.LogEventAsync(auditLog);
 
             return new ApplicationResult { Success = true };
         }
