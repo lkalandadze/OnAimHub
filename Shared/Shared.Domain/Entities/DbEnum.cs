@@ -20,4 +20,9 @@ public class DbEnum<T> : BaseEntity<T>
     {
         return (obj as DbEnum<T>)?.Id.Equals(Id)??false;
     }
+
+    public static DbEnum<T> FromId(T id)
+    {
+        return new DbEnum<T> { Id = id };
+    } 
 }

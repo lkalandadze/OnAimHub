@@ -16,4 +16,6 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<TransactionType> TransactionTypes { get; set; }
     public DbSet<Job> Jobs { get; set; }
     public DbSet<ConsulLog> ConsulLogs { get; set; }
+    public DbSet<ReferralDistribution> ReferralDistributions { get; set; }
+    public DbSet<Setting> Settings { get; set; }
 }

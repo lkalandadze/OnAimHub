@@ -1,8 +1,9 @@
-﻿using Hub.Application.Features.IdentityFeatures.Commands.ApplyReferralCode;
+﻿using Hub.Application.Features.IdentityFeatures.Commands.ApplyPromoCode;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayer;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerBalance;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerProgress;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayers;
+using Hub.Application.Features.PlayerFeatures.Queries.GetPromoCode;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,6 +41,10 @@ public class PlayerController : BaseApiController
         return Ok(await Mediator.Send(new GetPlayerProgressQuery()));
     }
 
-    [HttpPost(nameof(ApplyReferralCode))]
-    public async Task<Unit> ApplyReferralCode(ApplyReferralCodeCommand request) => await Mediator.Send(request);
+    [HttpPost(nameof(ApplyPromoCode))]
+    public async Task<Unit> ApplyPromoCode(ApplyPromoCodeCommand request) => await Mediator.Send(request);
+    
+
+    [HttpGet(nameof(GetPromoCode))]
+    public async Task<string> GetPromoCode([FromQuery] GetPromoCodeQuery request) => await Mediator.Send(request);
 }

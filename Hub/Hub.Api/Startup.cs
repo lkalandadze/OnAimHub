@@ -4,6 +4,7 @@ using Hangfire.PostgreSql;
 using Hub.Api;
 using Hub.Api.Common.Consul;
 using Hub.Api.Middlewares;
+using Hub.Application;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Services.Abstract;
@@ -24,6 +25,7 @@ using Serilog;
 using Serilog.Sinks.PostgreSQL;
 using System.Reflection;
 using System.Security.Cryptography;
+using static Dapper.SqlMapper;
 
 public class Startup
 {
@@ -41,6 +43,7 @@ public class Startup
         services.AddDbContext<HubDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("OnAimHub")));
 
+
         services.AddHttpClient();
         services.AddScoped<IPlayerBalanceService, PlayerBalanceService>();
         services.AddScoped<ITransactionService, TransactionService>();
@@ -56,6 +59,8 @@ public class Startup
         services.AddScoped<IJobService, JobService>();
         services.AddScoped<IBackgroundJobScheduler, HangfireJobScheduler>();
         services.AddScoped<IConsulLogRepository,  ConsulLogRepository>();
+        services.AddScoped<IReferralDistributionRepository, ReferralDistributionRepository>();
+        services.AddScoped<ISettingRepository, SettingRepository>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
@@ -103,6 +108,12 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
+        }
+
+        using (var scope = app.ApplicationServices.CreateScope())
+        {
+            var settingRepository = scope.ServiceProvider.GetRequiredService<ISettingRepository>();
+            DbSettings.Init(settingRepository);
         }
 
         app.UseSwagger();

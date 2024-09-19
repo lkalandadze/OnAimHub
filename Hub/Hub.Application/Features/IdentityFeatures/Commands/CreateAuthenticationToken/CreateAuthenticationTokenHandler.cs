@@ -41,9 +41,11 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
 
         int? recommendedById = null;
 
-        if (!string.IsNullOrEmpty(request.ReferralCode))
+        if (!string.IsNullOrEmpty(request.PromoCode))
         {
-            var referringPlayer = _playerRepository.Query().FirstOrDefault(x => x.ReferralCode == request.ReferralCode);
+            int referrerId = Player.PromoToId(request.PromoCode);
+
+            var referringPlayer = _playerRepository.Query().FirstOrDefault(x => x.Id == referrerId);
 
             if (referringPlayer == default)
                 throw new Exception("Invalid referral code provided.");
@@ -54,6 +56,17 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
         if (player == null)
         {
             player = new Player(receivedPlayer.Id, receivedPlayer.UserName, receivedPlayer.SegmentIds, recommendedById);
+
+            var referralDistribution = new ReferralDistribution(
+                referrerId: recommendedById.GetValueOrDefault(),
+                referralId: player.Id,
+                referrerPrizeId: DbSettings.Instance.ReferrerPrizeCurrencyId,
+                referrerPrizeValue: DbSettings.Instance.ReferrerPrizeAmount,
+                referrerPrizeCurrency: Currency.FromId(DbSettings.Instance.ReferrerPrizeCurrencyId),
+                referralPrizeValue: DbSettings.Instance.ReferralPrizeAmount,
+                referralPrizeId: DbSettings.Instance.ReferralPrizeCurrencyId,
+                referralPrizeCurrency: Currency.FromId(DbSettings.Instance.ReferralPrizeCurrencyId)
+            );
 
             await _playerRepository.InsertAsync(player);
             await _unitOfWork.SaveAsync();
