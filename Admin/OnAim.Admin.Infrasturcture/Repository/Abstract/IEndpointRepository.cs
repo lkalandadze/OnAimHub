@@ -1,6 +1,5 @@
-﻿using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
-using OnAim.Admin.Infrasturcture.Models.Response;
-using OnAim.Admin.Infrasturcture.Models.Response.Endpoint;
+﻿using OnAim.Admin.Shared.DTOs.Endpoint;
+using OnAim.Admin.Shared.Paging;
 
 namespace OnAim.Admin.Infrasturcture.Repository.Abstract
 {

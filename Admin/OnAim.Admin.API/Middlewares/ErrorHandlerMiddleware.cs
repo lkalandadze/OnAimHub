@@ -1,6 +1,5 @@
-﻿using FluentValidation;
-using OnAim.Admin.APP.Exceptions;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.Exceptions;
 using System.Net;
 using System.Text.Json;
 

@@ -1,21 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Queries.Abstract;
-using OnAim.Admin.Infrasturcture.Extensions;
-using OnAim.Admin.Infrasturcture.Models.Request.Endpoint;
-using OnAim.Admin.Infrasturcture.Models.Response.EndpointGroup;
-using OnAim.Admin.Infrasturcture.Models.Response.Role;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.DTOs.Endpoint;
+using OnAim.Admin.Shared.DTOs.EndpointGroup;
+using OnAim.Admin.Shared.DTOs.Role;
+using OnAim.Admin.Shared.Helpers;
 
 namespace OnAim.Admin.APP.Queries.Role.GetById
 {
     public class GetRoleByIdQueryHandler : IQueryHandler<GetRoleByIdQuery, ApplicationResult>
     {
         private readonly IRepository<Infrasturcture.Entities.Role> _repository;
+        private readonly IRepository<Infrasturcture.Entities.User> _userRepository;
 
-        public GetRoleByIdQueryHandler(IRepository<Infrasturcture.Entities.Role> repository)
+        public GetRoleByIdQueryHandler(
+            IRepository<Infrasturcture.Entities.Role> repository,
+            IRepository<Infrasturcture.Entities.User> userRepository
+            )
         {
             _repository = repository;
+            _userRepository = userRepository;
         }
         public async Task<ApplicationResult> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)
         {
@@ -28,6 +33,8 @@ namespace OnAim.Admin.APP.Queries.Role.GetById
                 .ThenInclude(x => x.EndpointGroupEndpoints)
                 .ThenInclude(x => x.Endpoint)
                 .FirstOrDefaultAsync(cancellationToken);
+
+            var user = await _userRepository.Query(x => x.Id == role.CreatedBy).FirstOrDefaultAsync(cancellationToken);
 
             if (role == null) { return new ApplicationResult { Success = false, Data = $"Role Not Found!" }; }
 
@@ -51,6 +58,7 @@ namespace OnAim.Admin.APP.Queries.Role.GetById
                     IsActive = x.EndpointGroup.IsActive,
                     Description = x.EndpointGroup.Description,
                     DateCreated = x.EndpointGroup.DateCreated,
+                    EndpointsCount = x.EndpointGroup.EndpointGroupEndpoints.Count,
                     Endpoints = x.EndpointGroup.EndpointGroupEndpoints.Select(x => new EndpointRequestModel
                     {
                         Id = x.EndpointId,
@@ -63,6 +71,13 @@ namespace OnAim.Admin.APP.Queries.Role.GetById
                         DateCreated = x.Endpoint.DateCreated,
                     }).ToList(),
                 }).ToList(),
+                CreatedBy = user == null ? null : new UserDto
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                }
             };
 
             return new ApplicationResult

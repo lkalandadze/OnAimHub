@@ -1,29 +1,36 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using OnAim.Admin.APP.Helpers;
+﻿using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.Shared.Helpers;
 using OnAim.Admin.APP.Queries.Abstract;
-using OnAim.Admin.Infrasturcture.Extensions;
-using OnAim.Admin.Infrasturcture.Models.Response.Endpoint;
+using OnAim.Admin.Shared.DTOs.Endpoint;
+using Microsoft.AspNetCore.Http;
+using OnAim.Admin.Shared.Csv;
+using System.Dynamic;
+using System.Net.Mime;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 
 namespace OnAim.Admin.APP.Queries.EndPoint.EndpointsExport
 {
-    public class EndpointsExportQueryHandler : IQueryHandler<EndpointsExportQuery, FileContentResult>
+    public class EndpointsExportQueryHandler : IQueryHandler<EndpointsExportQuery, IResult>
     {
-        private readonly IRepository<Endpoint> _repository;
+        private readonly IRepository<Infrasturcture.Entities.Endpoint> _repository;
+        private readonly ICsvWriter<dynamic> _csvWriter;
 
-        public EndpointsExportQueryHandler(IRepository<Endpoint> repository)
+        public EndpointsExportQueryHandler(
+            IRepository<Infrasturcture.Entities.Endpoint> repository,
+            ICsvWriter<dynamic> csvWriter
+            )
         {
             _repository = repository;
+            _csvWriter = csvWriter;
         }
 
-        public async Task<FileContentResult> Handle(EndpointsExportQuery request, CancellationToken cancellationToken)
+        public async Task<IResult> Handle(EndpointsExportQuery request, CancellationToken cancellationToken)
         {
             var query = _repository
                  .Query(x =>
                           (string.IsNullOrEmpty(request.Filter.Name) || x.Name.Contains(request.Filter.Name)) &&
                           (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value) &&
-                          (!request.Filter.Type.HasValue || x.Type == request.Filter.Type.Value) &&
-                          (!request.Filter.IsEnable.HasValue || x.IsDeleted == request.Filter.IsEnable.Value)
+                          (!request.Filter.Type.HasValue || x.Type == request.Filter.Type.Value)
                       );
 
             if (request.EndpointIds != null && request.EndpointIds.Any())
@@ -64,7 +71,6 @@ namespace OnAim.Admin.APP.Queries.EndPoint.EndpointsExport
                     Description = x.Description,
                     Type = ToHttpMethodExtension.ToHttpMethod(x.Type),
                     IsActive = x.IsActive,
-                    IsEnabled = x.IsDeleted,
                     DateCreated = x.DateCreated,
                     DateUpdated = x.DateUpdated,
                 })
@@ -73,20 +79,38 @@ namespace OnAim.Admin.APP.Queries.EndPoint.EndpointsExport
 
             var items = await endpoints.ToListAsync();
 
-            var excelFile = ExcelExportHelper
-                .ExportToExcel(items,
-                new[] {
-                                "Id",
-                                "Name",
-                                "IsActive",
-                                "DateCreated",
-                                "DateUpdated"
-                });
-
-            return new FileContentResult(excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            var selectedUsers = items.Select(ep =>
             {
-                FileDownloadName = "Permissions.xlsx"
-            };
+                var expandoObj = new ExpandoObject() as IDictionary<string, Object>;
+
+                if (request.SelectedColumns == null || !request.SelectedColumns.Any())
+                {
+                    var defaultColumns = new List<string>
+                    {
+                        "Id", "Name", "Description", "IsActive", "DateCreated", "DateUpdated"
+                    };
+
+                    foreach (var column in defaultColumns)
+                    {
+                        var propertyValue = typeof(EndpointResponseModel).GetProperty(column)?.GetValue(ep);
+                        expandoObj[column] = propertyValue;
+                    }
+                }
+                else
+                {
+                    foreach (var column in request.SelectedColumns)
+                    {
+                        var propertyValue = typeof(EndpointResponseModel).GetProperty(column)?.GetValue(ep);
+                        expandoObj[column] = propertyValue;
+                    }
+                }
+                return expandoObj;
+            }).ToList();
+
+            using var stream = new MemoryStream();
+            _csvWriter.Write(selectedUsers, stream);
+
+            return Results.File(stream.ToArray(), MediaTypeNames.Application.Octet, "Permissions.csv");
         }
     }
 }

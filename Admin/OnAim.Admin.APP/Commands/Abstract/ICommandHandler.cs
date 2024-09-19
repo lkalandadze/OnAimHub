@@ -3,8 +3,8 @@
 namespace OnAim.Admin.APP.Commands.Abstract
 {
     public interface ICommandHandler<in TCommand>
-     : ICommandHandler<TCommand, Unit>
-     where TCommand : ICommand<Unit>
+    : ICommandHandler<TCommand, Unit>
+    where TCommand : ICommand<Unit>
     {
     }
 

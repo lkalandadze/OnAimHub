@@ -1,28 +1,37 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using OnAim.Admin.APP.Helpers;
-using OnAim.Admin.APP.Models.Response.User;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Queries.Abstract;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.Csv;
+using OnAim.Admin.Shared.DTOs.User;
+using System.Net.Mime;
+using System.Dynamic;
 
 namespace OnAim.Admin.APP.Queries.User.UsersExport
 {
-    public class UsersExportQueryHandler : IQueryHandler<UsersExportQuery, FileContentResult>
+    public class UsersExportQueryHandler : IQueryHandler<UsersExportQuery, IResult>
     {
         private readonly IRepository<Infrasturcture.Entities.User> _repository;
+        private readonly ICsvWriter<dynamic> _csvWriter;
 
-        public UsersExportQueryHandler(IRepository<Infrasturcture.Entities.User> repository)
+        public UsersExportQueryHandler(
+            IRepository<Infrasturcture.Entities.User> repository,
+            ICsvWriter<dynamic> csvWriter
+            )
         {
             _repository = repository;
+            _csvWriter = csvWriter;
         }
 
-        public async Task<FileContentResult> Handle(UsersExportQuery request, CancellationToken cancellationToken)
+        public async Task<IResult> Handle(UsersExportQuery request, CancellationToken cancellationToken)
         {
             var query = _repository
              .Query(x =>
                       (string.IsNullOrEmpty(request.UserFilter.Name) || x.FirstName.Contains(request.UserFilter.Name)) &&
-                      (!request.UserFilter.IsActive.HasValue || x.IsActive == request.UserFilter.IsActive.Value)
-                      && (string.IsNullOrEmpty(request.UserFilter.Email) || x.Email.Contains(request.UserFilter.Email)
-                      )
+                      (!request.UserFilter.IsActive.HasValue || x.IsActive == request.UserFilter.IsActive.Value) &&
+                      (string.IsNullOrEmpty(request.UserFilter.Email) || x.Email.Contains(request.UserFilter.Email)
+                      ) &&
+                         !x.IsDeleted
                   );
 
             if (request.UserIds != null && request.UserIds.Any())
@@ -62,7 +71,7 @@ namespace OnAim.Admin.APP.Queries.User.UsersExport
             }
 
             var users = query
-                .Select(x => new UsersModel
+                .Select(x => new ExportUsersModel
                 {
                     Id = x.Id,
                     FirstName = x.FirstName,
@@ -71,34 +80,45 @@ namespace OnAim.Admin.APP.Queries.User.UsersExport
                     IsActive = x.IsActive,
                     Phone = x.Phone,
                     DateCreated = x.DateCreated,
-                    Roles = x.UserRoles.Select(xx => new RoleDto
-                    {
-                        Name = xx.Role.Name,
-                    }).ToList(),
+                    Roles = string.Join(", ", x.UserRoles.Select(xx => xx.Role.Name))
                 })
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);
 
             var userList = await users.ToListAsync();
 
-            var excelFile = ExcelExportHelper
-                .ExportToExcel(userList,
-                new[] {
-                    "Id",
-                    "FirstName",
-                    "LastName",
-                    "Email",
-                    "Roles",
-                    "IsActive",
-                    "Phone",
-                    "DateCreated",
-                    "DateUpdated"
-                });
-
-            return new FileContentResult(excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            var selectedUsers = userList.Select(user =>
             {
-                FileDownloadName = "Users.xlsx"
-            };
+                var expandoObj = new ExpandoObject() as IDictionary<string, Object>;
+
+                if (request.SelectedColumns == null || !request.SelectedColumns.Any())
+                {
+                    var defaultColumns = new List<string>
+                    {
+                        "Id", "FirstName", "LastName", "Email", "DateCreated", "Roles", "IsActive", "Phone", "DateCreated", "DateUpdated"
+                    };
+
+                    foreach (var column in defaultColumns)
+                    {
+                        var propertyValue = typeof(ExportUsersModel).GetProperty(column)?.GetValue(user);
+                        expandoObj[column] = propertyValue;
+                    }
+                }
+                else
+                {
+                    foreach (var column in request.SelectedColumns)
+                    {
+                        var propertyValue = typeof(ExportUsersModel).GetProperty(column)?.GetValue(user);
+                        expandoObj[column] = propertyValue;
+                    }
+                }
+                return expandoObj;
+            }).ToList();
+
+            using var stream = new MemoryStream();
+            _csvWriter.Write(selectedUsers, stream);
+
+            return Results.File(stream.ToArray(), MediaTypeNames.Application.Octet, "Users.csv");
         }
     }
 }

@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OnAim.Admin.APP.Auth;
 using OnAim.Admin.APP.Commands.Abstract;
-using OnAim.Admin.APP.Exceptions;
+using OnAim.Admin.Shared.Exceptions;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
+using OnAim.Admin.Shared.Helpers;
 
 namespace OnAim.Admin.APP.Commands.User.Registration
 {
@@ -57,7 +58,7 @@ namespace OnAim.Admin.APP.Commands.User.Registration
                 throw new FluentValidation.ValidationException(validationResult.Errors);
             }
 
-            var existingUser = await _userRepository.Query(x => x.Email == request.Email).FirstOrDefaultAsync();
+            var existingUser = await _userRepository.Query(x => x.Email == request.Email && !x.IsDeleted).FirstOrDefaultAsync();
 
             if (existingUser != null)
             {
@@ -71,13 +72,14 @@ namespace OnAim.Admin.APP.Commands.User.Registration
                 throw new BadRequestException("Domain not allowed");
             }
 
-            var salt = Infrasturcture.Extensions.EncryptPasswordExtension.Salt();
-            string hashed = Infrasturcture.Extensions.EncryptPasswordExtension.EncryptPassword(request.Password, salt);
+            var salt = EncryptPasswordExtension.Salt();
+            string hashed = EncryptPasswordExtension.EncryptPassword(request.Password, salt);
 
-            var userId = _securityContextAccessor.UserId;
+            var activationCode = ActivationCodeHelper.ActivationCode();
+            var ActivationCodeExpiration = DateTime.UtcNow.AddMinutes(15);
 
-            var activationToken = Guid.NewGuid().ToString();
-            var tokenExpiration = DateTime.UtcNow.AddHours(24);
+            var localhostBaseUrl = "https://localhost:7126";
+            var verificationUrl = $"{localhostBaseUrl}/verify?code={activationCode}";
 
             var user = new Infrasturcture.Entities.User
             {
@@ -91,9 +93,10 @@ namespace OnAim.Admin.APP.Commands.User.Registration
                 DateOfBirth = request.DateOfBirth,
                 DateCreated = SystemDate.Now,
                 IsActive = true,
-                UserId = userId,
-                //ActivationToken = activationToken,
-                //ActivationTokenExpiration = tokenExpiration
+                CreatedBy = _securityContextAccessor.UserId,
+                ActivationCode = activationCode,
+                ActivationCodeExpiration = ActivationCodeExpiration,
+                IsVerified = false
             };
 
             _logger.LogInformation("Creating user with email: {Email}", request.Email);
@@ -105,13 +108,34 @@ namespace OnAim.Admin.APP.Commands.User.Registration
 
             _logger.LogInformation("User created successfully with ID: {UserId} by User ID: {CurrentUserId}", user.Id, _securityContextAccessor.UserId);
 
-            await _auditLogService.LogEventAsync(
-               SystemDate.Now,
-               "Registration",
-               nameof(User),
-               user.Id,
-               _securityContextAccessor.UserId,
-               $"User Created successfully with ID: {user.Id}");
+            var auditLog = new AuditLog
+            {
+                UserId = _securityContextAccessor.UserId,
+                Timestamp = SystemDate.Now,
+                Action = "REGISTRATION",
+                ObjectId = user.Id,
+                Log = $"User Created successfully with ID: {user.Id}"
+            };
+
+            await _auditLogService.LogEventAsync(auditLog);
+
+            var activationLink = $"activate?userId={user.Id}&code={activationCode}";
+
+            string htmlBody = "" +
+                "<!DOCTYPE html>\n<html>\n<head>\n    " +
+                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    " +
+                "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n   " +
+                " <title>Verify Your Account</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 20px;\">\n    " +
+                "<h1>Account Verification</h1>\n    <p>Hi {firstName},</p>\n    <p>Thank you for registering. Please click the link below to verify your email address:</p>\n   " +
+                " <p style=\"color: rgba(0, 167, 111, 1); font-size: 32px; font-weight: 800; line-height: 43.58px; margin: 16px 0 0;\">{code}</p>\n    <p><a href=\"{link}\">Verify your account</a></p>\n   " +
+                " <p>If you didn't request this, please ignore this email.</p>\n    <p>Best regards,<br>Your Company</p>\n</body>\n</html>\n";
+
+            htmlBody = htmlBody.Replace("{firstName}", user.FirstName)
+                               .Replace("{code}", activationCode.ToString())
+                               .Replace("{link}", activationLink);
+
+            await _emailService.SendActivationEmailAsync(user.Email, "Activation Code", htmlBody);
+
 
             return new ApplicationResult
             {

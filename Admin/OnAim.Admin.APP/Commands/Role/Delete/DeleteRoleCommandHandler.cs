@@ -3,10 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Auth;
 using OnAim.Admin.APP.Commands.Abstract;
 using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
-using static OnAim.Admin.APP.Exceptions.Exceptions;
+using static OnAim.Admin.Shared.Exceptions.Exceptions;
 
 namespace OnAim.Admin.APP.Commands.Role.Delete
 {
@@ -49,17 +50,21 @@ namespace OnAim.Admin.APP.Commands.Role.Delete
             }
 
             role.IsActive = false;
+            role.IsDeleted = true;
             role.DateDeleted = SystemDate.Now;
 
             await _repository.CommitChanges();
 
-            await _auditLogService.LogEventAsync(
-                SystemDate.Now,
-                "Delete",
-                nameof(Infrasturcture.Entities.Role),
-                role.Id,
-                _securityContextAccessor.UserId,
-                $"Role Deleted successfully with ID: {role.Id} by User ID: {_securityContextAccessor.UserId}");
+            var auditLog = new AuditLog
+            {
+                UserId = _securityContextAccessor.UserId,
+                Timestamp = SystemDate.Now,
+                Action = "DELETE_ROLE",
+                ObjectId = role.Id,
+                Log = $"Role Deleted successfully with ID: {role.Id} by User ID: {_securityContextAccessor.UserId}"
+            };
+
+            await _auditLogService.LogEventAsync(auditLog);
 
             return new ApplicationResult
             {

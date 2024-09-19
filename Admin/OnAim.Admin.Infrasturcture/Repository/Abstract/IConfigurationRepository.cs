@@ -1,10 +1,13 @@
 ﻿using OnAim.Admin.Infrasturcture.Persistance.Data;
+using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 using System.Linq.Expressions;
 
 namespace OnAim.Admin.Infrasturcture.Repository.Abstract
 {
     public interface IConfigurationRepository<T> where T : class
     {
+        IUnitOfWork UnitOfWork { get; }
+
         Task<T?> Find(Expression<Func<T, bool>> expression);
 
         IQueryable<T> Query(Expression<Func<T, bool>>? expression = null);

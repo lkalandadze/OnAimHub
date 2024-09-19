@@ -1,6 +1,5 @@
 ﻿using OnAim.Admin.APP.Commands.Abstract;
-using OnAim.Admin.APP.Models.Request.User;
-using OnAim.Admin.APP.Models.Response.User;
+using OnAim.Admin.Shared.DTOs.User;
 
 namespace OnAim.Admin.APP.Commands.User.Login
 {

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Auth;
 using OnAim.Admin.APP.Commands.Abstract;
-using OnAim.Admin.APP.Exceptions;
+using OnAim.Admin.Shared.Exceptions;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
@@ -123,13 +123,18 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Update
                 }
             }
 
-            await _auditLogService.LogEventAsync(
-              SystemDate.Now,
-              "EndpointGroup Update",
-              nameof(Infrasturcture.Entities.EndpointGroup),
-              group.Id,
-              _securityContextAccessor.UserId,
-              $"EndpointGroup Updated successfully with ID: {group.Id} by User ID: {_securityContextAccessor.UserId}");
+            group.DateUpdated = SystemDate.Now;
+
+            var auditLog = new AuditLog
+            {
+                UserId = _securityContextAccessor.UserId,
+                Timestamp = SystemDate.Now,
+                Action = "UPDATE",
+                ObjectId = group.Id,
+                Log = $"EndpointGroup Updated successfully with ID: {group.Id} by User ID: {_securityContextAccessor.UserId}"
+            };
+
+            await _auditLogService.LogEventAsync(auditLog);
 
             await _endpointGroupEndpointRepository.CommitChanges();
 

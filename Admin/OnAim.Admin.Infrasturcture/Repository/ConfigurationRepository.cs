@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
+using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using System.Linq.Expressions;
 
@@ -12,6 +13,14 @@ namespace OnAim.Admin.Infrasturcture.Repository
         public ConfigurationRepository(DatabaseContext configurationDbContext)
         {
             _configurationDbContext = configurationDbContext;
+        }
+
+        public IUnitOfWork UnitOfWork
+        {
+            get
+            {
+                return _configurationDbContext;
+            }
         }
 
         public virtual async Task<T?> Find(Expression<Func<T, bool>> expression)

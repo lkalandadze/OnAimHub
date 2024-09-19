@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OnAim.Admin.APP.Auth;
 using OnAim.Admin.APP.Commands.Abstract;
-using OnAim.Admin.APP.Exceptions;
-using OnAim.Admin.APP.Helpers;
+using OnAim.Admin.Shared.Exceptions;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
+using OnAim.Admin.Shared.Helpers;
 
 namespace OnAim.Admin.APP.Commands.User.Create
 {
@@ -55,7 +55,7 @@ namespace OnAim.Admin.APP.Commands.User.Create
                 throw new FluentValidation.ValidationException(validationResult.Errors);
             }
 
-            var existingUser = await _repository.Query(x => x.Email == request.Email).FirstOrDefaultAsync();
+            var existingUser = await _repository.Query(x => x.Email == request.Email && !x.IsDeleted).FirstOrDefaultAsync();
 
             if (existingUser != null)
             {
@@ -65,8 +65,8 @@ namespace OnAim.Admin.APP.Commands.User.Create
             }
 
             var temporaryPassword = PasswordHelper.GenerateTemporaryPassword();
-            var salt = Infrasturcture.Extensions.EncryptPasswordExtension.Salt();
-            string hashed = Infrasturcture.Extensions.EncryptPasswordExtension.EncryptPassword(temporaryPassword, salt);
+            var salt = EncryptPasswordExtension.Salt();
+            string hashed = EncryptPasswordExtension.EncryptPassword(temporaryPassword, salt);
 
             var userId = _securityContextAccessor.UserId;
 
@@ -85,9 +85,8 @@ namespace OnAim.Admin.APP.Commands.User.Create
                 DateOfBirth = request.DateOfBirth,
                 DateCreated = SystemDate.Now,
                 IsActive = true,
-                UserId = userId,
-                //ActivationToken = activationToken,
-                //ActivationTokenExpiration = tokenExpiration
+                IsVerified = true,
+                CreatedBy = userId,
             };
 
             _logger.LogInformation("Creating user with email: {Email}", request.Email);
@@ -99,27 +98,36 @@ namespace OnAim.Admin.APP.Commands.User.Create
 
             _logger.LogInformation("User created successfully with ID: {UserId} by User ID: {CurrentUserId}", user.Id, _securityContextAccessor.UserId);
 
-            await _emailService.SendActivationEmailAsync(
-               user.Email,
-               "Your Account is Created",
-               temporaryPassword,
-               user.FirstName
-           );
+            //string htmlBody = "<!DOCTYPE html>\r\n<html>\r\n<head>\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\r\n    <title>Email</title>\r\n    <style>\r\n        @media (prefers-color-scheme: dark) {\r\n            .background {\r\n                background-color: #EDEFF2 !important;\r\n            }\r\n\r\n            .container {\r\n                background-color: #ffffff !important;\r\n            }\r\n\r\n            .password-box {\r\n                background-color: rgba(0, 167, 111, 0.08) !important;\r\n            }\r\n        }\r\n    </style>\r\n</head>\r\n<body style=\"background-color: #EDEFF2; margin: 0; padding: 0; color: #000000; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;\">\r\n    <div class=\"background\" style=\"max-width: 558px; width: 100%; height: 80px; margin: 48px auto;\">\r\n        <img src=\"cid:logoImage\" alt=\"logo\" />\r\n    </div>\r\n\r\n    <div class=\"container\" style=\"max-width: 558px; width: 100%; padding: 48px; background-color: white; margin: auto;\">\r\n        <p style=\"font-size: 16px; font-weight: 600; line-height: 21.79px; color: rgba(28, 37, 46, 1);\">Dear, {firstName}</p>\r\n        <p style=\"font-size: 16px; font-weight: 600; line-height: 21.79px; color: rgba(28, 37, 46, 1);\">Your Account Has Been Successfully Activated!</p>\r\n        <p style=\"font-size: 14px; font-weight: 400; line-height: 20px; color: rgba(28, 37, 46, 1);\">Here is the temporary password you need to access your account!</p>\r\n        <p style=\"font-size: 14px; font-weight: 400; line-height: 20px; color: rgba(28, 37, 46, 1);\">For safety reasons, we recommend changing your password.</p>\r\n\r\n        <div class=\"password-box\" style=\"max-width: 366px; width: 100%; height: 124px; background-color: rgba(0, 167, 111, 0.08); margin: 48px auto 240px; padding: 24px 111px; text-align: center;\">\r\n            <p style=\"color: #637381; font-size: 12px; font-weight: 600; line-height: 16.34px; margin: 0;\">Temporary password</p>\r\n            <p style=\"color: rgba(0, 167, 111, 1); font-size: 32px; font-weight: 800; line-height: 43.58px; margin: 16px 0 0;\">{temporaryPassword}</p>\r\n        </div>\r\n    </div>\r\n</body>\r\n</html>\r\n";
 
-            await _auditLogService.LogEventAsync(
-               SystemDate.Now,
-               "Create",
-               nameof(User),
-               user.Id,
-               _securityContextAccessor.UserId,
-               $"User Created successfully with ID: {user.Id} by User ID: {_securityContextAccessor.UserId}");
+            string templatePath = Path.Combine("Templates", "Emails", "CreateUserEmail.html");
+            string htmlBody = await ReadEmailTemplateAsync(templatePath);
+
+            htmlBody = htmlBody.Replace("{firstName}", user.FirstName)
+                               .Replace("{temporaryPassword}", temporaryPassword);
+
+            await _emailService.SendActivationEmailAsync(user.Email, "Account Created", htmlBody);
+
+            var auditLog = new AuditLog
+            {
+                UserId = _securityContextAccessor.UserId,
+                Timestamp = SystemDate.Now,
+                Action = "CREATED_USER",
+                ObjectId = user.Id,
+                Log = $"User Created successfully with ID: {user.Id} by User ID: {_securityContextAccessor.UserId}"
+            };
+
+            await _auditLogService.LogEventAsync(auditLog);
 
             return new ApplicationResult
             {
                 Success = true,
             };
         }
-
+        private async Task<string> ReadEmailTemplateAsync(string path)
+        {
+            return await File.ReadAllTextAsync(path);
+        }
         private async Task AssignRoleToUserAsync(int userId, int roleId)
         {
             var userRole = new UserRole { UserId = userId, RoleId = roleId };

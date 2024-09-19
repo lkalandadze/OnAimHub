@@ -33,8 +33,7 @@ namespace OnAim.Admin.API.Middleware
             var controllerName = controllerActionDescriptor?.ControllerName;
             var actionName = controllerActionDescriptor?.ActionName;
 
-            var dynamicRequiredPermission = $"{controllerName}_{actionName}";
-
+            var dynamicRequiredPermission = $"{actionName}_{controllerName}";
 
             context.Items["RequiredPermission"] = dynamicRequiredPermission;
 
@@ -43,6 +42,15 @@ namespace OnAim.Admin.API.Middleware
             if (user.Identity.IsAuthenticated)
             {
                 var roles = user.GetRoles();
+
+                foreach (var role in roles)
+                {
+                    if (role == "SuperRole")
+                    {
+                        await _next(context);
+                        return;
+                    }
+                }
 
                 var hasPermission = await permissionService.RolesContainPermission(roles, dynamicRequiredPermission);
 

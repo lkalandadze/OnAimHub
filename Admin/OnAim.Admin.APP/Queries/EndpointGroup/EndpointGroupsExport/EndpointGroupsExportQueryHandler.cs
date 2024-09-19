@@ -1,25 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using OnAim.Admin.APP.Helpers;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Queries.Abstract;
-using OnAim.Admin.Infrasturcture.Models.Response.EndpointGroup;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.DTOs.EndpointGroup;
+using Microsoft.AspNetCore.Http;
+using OnAim.Admin.Shared.Csv;
+using System.Dynamic;
+using System.Net.Mime;
 
 namespace OnAim.Admin.APP.Queries.EndpointGroup.EndpointGroupsExport
 {
-    public class EndpointGroupsExportQueryHandler : IQueryHandler<EndpointGroupsExportQuery, FileContentResult>
+    public class EndpointGroupsExportQueryHandler : IQueryHandler<EndpointGroupsExportQuery, IResult>
     {
         private readonly IRepository<Infrasturcture.Entities.EndpointGroup> _repository;
+        private readonly ICsvWriter<dynamic> _csvWriter;
 
-        public EndpointGroupsExportQueryHandler(IRepository<Infrasturcture.Entities.EndpointGroup> repository)
+        public EndpointGroupsExportQueryHandler(
+            IRepository<Infrasturcture.Entities.EndpointGroup> repository,
+             ICsvWriter<dynamic> csvWriter
+            )
         {
             _repository = repository;
+            _csvWriter = csvWriter;
         }
 
-        public async Task<FileContentResult> Handle(EndpointGroupsExportQuery request, CancellationToken cancellationToken)
+        public async Task<IResult> Handle(EndpointGroupsExportQuery request, CancellationToken cancellationToken)
         {
             var query = _repository.Query(x =>
                         (string.IsNullOrEmpty(request.Filter.Name) || x.Name.Contains(request.Filter.Name)) &&
-                        (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value)
+                        (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value) &&
+                         !x.IsDeleted
                );
 
             if (request.GroupIds != null && request.GroupIds.Any())
@@ -58,7 +67,7 @@ namespace OnAim.Admin.APP.Queries.EndpointGroup.EndpointGroupsExport
             }
 
             var result = query
-                .Select(x => new EndpointGroupModel
+                .Select(x => new ExportEndpointGroupModel
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -66,10 +75,7 @@ namespace OnAim.Admin.APP.Queries.EndpointGroup.EndpointGroupsExport
                     DateUpdated = x.DateUpdated,
                     DateCreated = x.DateCreated,
                     DateDeleted = x.DateDeleted,
-                    Endpoints = x.EndpointGroupEndpoints.Select(xx => new Infrasturcture.Models.Request.Endpoint.EndpointRequestModel
-                    {
-                        Name = xx.Endpoint.Name
-                    }).ToList(),
+                    Endpoints = string.Join(", ", x.EndpointGroupEndpoints.Select(xx => xx.Endpoint.Name)),
                     IsActive = x.IsActive,
                 })
                 .Skip((pageNumber - 1) * pageSize)
@@ -77,21 +83,38 @@ namespace OnAim.Admin.APP.Queries.EndpointGroup.EndpointGroupsExport
 
             var items = await result.ToListAsync();
 
-            var excelFile = ExcelExportHelper
-                .ExportToExcel(items,
-                new[] {
-                    "Id",
-                    "Name",
-                    "Endpoints",
-                    "IsActive",
-                    "DateCreated",
-                    "DateUpdated"
-                });
-
-            return new FileContentResult(excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            var selectedGroups = items.Select(group =>
             {
-                FileDownloadName = "PermissionGroups.xlsx"
-            };
+                var expandoObj = new ExpandoObject() as IDictionary<string, object>;
+
+                if (request.SelectedColumns == null || !request.SelectedColumns.Any())
+                {
+                    var defaultColumns = new List<string>
+                    {
+                        "Id", "Name", "Endpoints", "IsActive", "DateCreated", "DateUpdated"
+                    };
+
+                    foreach (var column in defaultColumns)
+                    {
+                        var propertyValue = typeof(ExportEndpointGroupModel).GetProperty(column)?.GetValue(group);
+                        expandoObj[column] = propertyValue;
+                    }
+                }
+                else
+                {
+                    foreach (var column in request.SelectedColumns)
+                    {
+                        var propertyValue = typeof(ExportEndpointGroupModel).GetProperty(column)?.GetValue(group);
+                        expandoObj[column] = propertyValue;
+                    }
+                }
+                return expandoObj;
+            }).ToList();
+
+            using var stream = new MemoryStream();
+            _csvWriter.Write(selectedGroups, stream);
+
+            return Results.File(stream.ToArray(), MediaTypeNames.Application.Octet, "PermissionGroups.csv");
         }
     }
 }

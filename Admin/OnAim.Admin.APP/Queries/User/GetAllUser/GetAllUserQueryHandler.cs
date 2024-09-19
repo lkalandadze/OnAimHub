@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Models.Response.User;
 using OnAim.Admin.APP.Queries.Abstract;
-using OnAim.Admin.Infrasturcture.Models.Response;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.DTOs.Role;
+using OnAim.Admin.Shared.DTOs.User;
+using OnAim.Admin.Shared.Paging;
 
 namespace OnAim.Admin.APP.Queries.User.GetAllUser
 {
@@ -17,13 +18,23 @@ namespace OnAim.Admin.APP.Queries.User.GetAllUser
         }
         public async Task<ApplicationResult> Handle(GetAllUserQuery request, CancellationToken cancellationToken)
         {
-            var query = _repository
-                .Query(x =>
-                         (string.IsNullOrEmpty(request.UserFilter.Name) || x.FirstName.Contains(request.UserFilter.Name)) &&
-                         (!request.UserFilter.IsActive.HasValue || x.IsActive == request.UserFilter.IsActive.Value)
-                         && (string.IsNullOrEmpty(request.UserFilter.Email) || x.Email.Contains(request.UserFilter.Email)
-                         )
-                     );
+            var query = _repository.Query(x =>
+                            string.IsNullOrEmpty(request.UserFilter.Name) || x.FirstName.Contains(request.UserFilter.Name));
+
+            if (request.UserFilter.IsActive.HasValue)
+            {
+                query = query.Where(x => x.IsActive == request.UserFilter.IsActive.Value);
+            }
+
+            if (request.UserFilter.IsDeleted.HasValue)
+            {
+                query = query.Where(x => x.IsDeleted == request.UserFilter.IsDeleted);
+            }
+
+            if (!request.UserFilter.IsActive.HasValue && !request.UserFilter.IsDeleted.HasValue)
+            {
+                
+            }
 
             if (request.UserFilter.RoleIds != null && request.UserFilter.RoleIds.Any())
             {
@@ -39,21 +50,15 @@ namespace OnAim.Admin.APP.Queries.User.GetAllUser
 
             if (request.UserFilter.SortBy == "Id" || request.UserFilter.SortBy == "id")
             {
-                query = sortDescending
-                    ? query.OrderByDescending(x => x.Id)
-                    : query.OrderBy(x => x.Id);
+                query = sortDescending ? query.OrderByDescending(x => x.Id) : query.OrderBy(x => x.Id);
             }
             else if (request.UserFilter.SortBy == "Name" || request.UserFilter.SortBy == "name")
             {
-                query = sortDescending
-                    ? query.OrderByDescending(x => x.FirstName)
-                    : query.OrderBy(x => x.FirstName);
+                query = sortDescending ? query.OrderByDescending(x => x.FirstName) : query.OrderBy(x => x.FirstName);
             }
             else if (request.UserFilter.SortBy == "LastName" || request.UserFilter.SortBy == "lastName")
             {
-                query = sortDescending
-                    ? query.OrderByDescending(x => x.LastName)
-                    : query.OrderBy(x => x.LastName);
+                query = sortDescending ? query.OrderByDescending(x => x.LastName) : query.OrderBy(x => x.LastName);
             }
 
             var res = query
@@ -64,6 +69,7 @@ namespace OnAim.Admin.APP.Queries.User.GetAllUser
                     LastName = x.LastName,
                     Email = x.Email,
                     IsActive = x.IsActive,
+                    IsDeleted = x.IsDeleted,
                     Phone = x.Phone,
                     DateCreated = x.DateCreated,
                     DateUpdated = x.DateUpdated,
