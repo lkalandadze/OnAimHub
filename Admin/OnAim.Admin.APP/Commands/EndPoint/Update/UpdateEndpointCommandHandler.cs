@@ -56,8 +56,9 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Update
             {
                 UserId = _securityContextAccessor.UserId,
                 Timestamp = SystemDate.Now,
-                Action = "UPDATE_ENDPOINT",
+                Action = "UPDATE",
                 ObjectId = ep.Id,
+                Category = "Endpoint",
                 Log = $"Endpoint Updated successfully with ID: {ep.Id} by User ID: {_securityContextAccessor.UserId}"
             };
 

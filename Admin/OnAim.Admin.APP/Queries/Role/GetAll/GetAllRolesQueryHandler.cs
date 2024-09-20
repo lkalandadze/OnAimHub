@@ -5,6 +5,7 @@ using OnAim.Admin.APP.Queries.Abstract;
 using OnAim.Admin.Shared.Paging;
 using OnAim.Admin.Shared.DTOs.Role;
 using OnAim.Admin.Shared.DTOs.EndpointGroup;
+using System.Linq.Expressions;
 
 namespace OnAim.Admin.APP.Queries.Role.GetAll
 {
@@ -27,19 +28,14 @@ namespace OnAim.Admin.APP.Queries.Role.GetAll
 
 
             if (request.Filter.UserIds != null && request.Filter.UserIds.Any())
-            {
                 roleQuery = roleQuery.Where(x => x.UserRoles.Any(ur => request.Filter.UserIds.Contains(ur.UserId)));
-            }
+            
 
             if (request.Filter.GroupIds != null && request.Filter.GroupIds.Any())
-            {
                 roleQuery = roleQuery.Where(x => x.RoleEndpointGroups.Any(ur => request.Filter.GroupIds.Contains(ur.EndpointGroupId)));
-            }
 
             if (request.Filter.IsDeleted.HasValue)
-            {
                 roleQuery = roleQuery.Where(x => x.IsDeleted == request.Filter.IsDeleted);
-            }
 
             if (!request.Filter.IsActive.HasValue && !request.Filter.IsDeleted.HasValue)
             {
@@ -51,20 +47,17 @@ namespace OnAim.Admin.APP.Queries.Role.GetAll
             var pageNumber = request.Filter.PageNumber ?? 1;
             var pageSize = request.Filter.PageSize ?? 25;
 
-            bool sortDescending = request.Filter.SortDescending.GetValueOrDefault();
+            var sortDescending = request.Filter.SortDescending.GetValueOrDefault();
+            var sortBy = request.Filter.SortBy?.ToLower();
 
-            if (request.Filter.SortBy == "Id" || request.Filter.SortBy == "id")
+            Expression<Func<Infrasturcture.Entities.Role, object>> sortExpression = sortBy switch
             {
-                roleQuery = sortDescending
-                    ? roleQuery.OrderByDescending(x => x.Id)
-                    : roleQuery.OrderBy(x => x.Id);
-            }
-            else if (request.Filter.SortBy == "Name" || request.Filter.SortBy == "name")
-            {
-                roleQuery = sortDescending
-                    ? roleQuery.OrderByDescending(x => x.Name)
-                    : roleQuery.OrderBy(x => x.Name);
-            }
+                "id" => x => x.Id,
+                "name" => x => x.Name,
+                _ => x => x.Id
+            };
+
+            roleQuery = sortDescending ? roleQuery.OrderByDescending(sortExpression) : roleQuery.OrderBy(sortExpression);
 
             var roleResult = roleQuery
                 .Select(x => new RoleShortResponseModel

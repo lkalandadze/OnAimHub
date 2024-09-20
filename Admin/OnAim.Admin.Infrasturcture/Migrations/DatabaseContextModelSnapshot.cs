@@ -143,6 +143,10 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Log")
                         .IsRequired()
                         .HasColumnType("text");

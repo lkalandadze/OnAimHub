@@ -90,6 +90,7 @@ namespace OnAim.Admin.APP.Commands.User.Login
                     Timestamp = SystemDate.Now,
                     Action = "LOGIN",
                     ObjectId = user.Id,
+                    Category = "User",
                     Log = $"User Logined successfully with ID: {user.Id}"
                 };
 

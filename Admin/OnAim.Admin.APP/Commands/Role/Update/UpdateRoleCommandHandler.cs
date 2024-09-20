@@ -121,8 +121,9 @@ namespace OnAim.Admin.APP.Commands.Role.Update
             {
                 UserId = _securityContextAccessor.UserId,
                 Timestamp = SystemDate.Now,
-                Action = "UPDATE_ROLE",
+                Action = "UPDATE",
                 ObjectId = role.Id,
+                Category = "Role",
                 Log = $"Role Updated successfully with ID: {role.Id} by User ID: {_securityContextAccessor.UserId}"
             };
 

@@ -13,6 +13,10 @@ namespace OnAim.Admin.Shared.DTOs.User
         string? Direction,
         List<int>? RoleIds,
         bool? IsActive,
-        bool? IsDeleted
+        bool? IsDeleted,
+        DateTime? RegistrationDateFrom,
+        DateTime? RegistrationDateTo,
+        DateTime? LoginDateFrom,
+        DateTime? LoginDateTo
         );
 }

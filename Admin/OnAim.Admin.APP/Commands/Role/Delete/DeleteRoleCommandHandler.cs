@@ -59,8 +59,9 @@ namespace OnAim.Admin.APP.Commands.Role.Delete
             {
                 UserId = _securityContextAccessor.UserId,
                 Timestamp = SystemDate.Now,
-                Action = "DELETE_ROLE",
+                Action = "DELETE",
                 ObjectId = role.Id,
+                Category = "Role",
                 Log = $"Role Deleted successfully with ID: {role.Id} by User ID: {_securityContextAccessor.UserId}"
             };
 

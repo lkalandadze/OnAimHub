@@ -56,8 +56,9 @@ namespace OnAim.Admin.APP.Commands.User.Delete
             {
                 UserId = _securityContextAccessor.UserId,
                 Timestamp = SystemDate.Now,
-                Action = "DELETE_USER",
+                Action = "DELETE",
                 ObjectId = user.Id,
+                Category = "User",
                 Log = $"User was Deleted successfully with ID: {user.Id} by User ID: {_securityContextAccessor.UserId}"
             };
 

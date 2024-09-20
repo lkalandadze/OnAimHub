@@ -55,8 +55,9 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Delete
             {
                 UserId = _securityContextAccessor.UserId,
                 Timestamp = SystemDate.Now,
-                Action = "DELETE_ENDPOINT",
+                Action = "DELETE",
                 ObjectId = endpoint.Id,
+                Category = "Endpoint",
                 Log = $"Endpoint Deleted successfully with ID: {endpoint.Id} by User ID: {_securityContextAccessor.UserId}"
             };
 

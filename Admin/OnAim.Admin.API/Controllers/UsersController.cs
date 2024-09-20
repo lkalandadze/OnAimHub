@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
+using OnAim.Admin.API.Service.Endpoint;
 using OnAim.Admin.APP.Commands.Domain.Create;
 using OnAim.Admin.APP.Commands.User.Activate;
 using OnAim.Admin.APP.Commands.User.ChangePassword;
@@ -17,6 +18,7 @@ using OnAim.Admin.APP.Queries.User.GetById;
 using OnAim.Admin.APP.Queries.User.GetUserLogs;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.DTOs.User;
+using OnAim.Admin.Shared.Models;
 using System.Net;
 using System.Security.Claims;
 
@@ -39,9 +41,22 @@ namespace OnAim.Admin.API.Controllers
         public async Task<IActionResult> Get([FromRoute] int id)
             => Ok(await Mediator.Send(new GetUserByIdQuery(id)));
 
-        [HttpGet("UserLogs/{id}")]
+        [HttpGet("UserLogs /{id}")]
         public async Task<IActionResult> UserLogs([FromRoute] int id, [FromQuery] AuditLogFilter filter)
             => Ok(await Mediator.Send(new GetUserLogsQuery(id, filter)));
+
+        [HttpGet("GetActionTypes")]
+        [AllowAnonymous]
+        public IActionResult GetActionTypes()
+        {
+            return Ok(ActionTypes.All);
+        }
+        [HttpGet("GetEntityNames")]
+        [AllowAnonymous]
+        public IActionResult GetEntityNames()
+        {
+            return Ok(EntityNames.All);
+        }
 
         //[HttpGet("Download")]
         //public async Task<IResult> Download([FromQuery] UsersExportQuery query)

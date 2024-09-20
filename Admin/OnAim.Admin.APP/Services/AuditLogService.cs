@@ -24,6 +24,7 @@ public class AuditLogService : IAuditLogService
                 ObjectId = audit.ObjectId,
                 Log = audit.Log,
                 UserId = audit.UserId,
+                Category = audit.Category,
             };
             await _auditLogRepository.Store(auditLog);
             await _auditLogRepository.CommitChanges();

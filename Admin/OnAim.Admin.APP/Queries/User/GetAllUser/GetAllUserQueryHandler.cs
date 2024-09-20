@@ -5,6 +5,7 @@ using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.DTOs.Role;
 using OnAim.Admin.Shared.DTOs.User;
 using OnAim.Admin.Shared.Paging;
+using System.Linq.Expressions;
 
 namespace OnAim.Admin.APP.Queries.User.GetAllUser
 {
@@ -22,44 +23,50 @@ namespace OnAim.Admin.APP.Queries.User.GetAllUser
                             string.IsNullOrEmpty(request.UserFilter.Name) || x.FirstName.Contains(request.UserFilter.Name));
 
             if (request.UserFilter.IsActive.HasValue)
-            {
                 query = query.Where(x => x.IsActive == request.UserFilter.IsActive.Value);
-            }
 
             if (request.UserFilter.IsDeleted.HasValue)
-            {
                 query = query.Where(x => x.IsDeleted == request.UserFilter.IsDeleted);
-            }
-
+            
             if (!request.UserFilter.IsActive.HasValue && !request.UserFilter.IsDeleted.HasValue)
             {
                 
             }
 
-            if (request.UserFilter.RoleIds != null && request.UserFilter.RoleIds.Any())
-            {
+            if (request.UserFilter.RegistrationDateFrom.HasValue)
+                query = query.Where(x => x.DateCreated >= request.UserFilter.RegistrationDateFrom.Value);
+
+            if (request.UserFilter.RegistrationDateTo.HasValue)
+                query = query.Where(x => x.DateCreated <= request.UserFilter.RegistrationDateTo.Value);
+
+            if (request.UserFilter.LoginDateFrom.HasValue)
+                query = query.Where(x => x.LastLogin >= request.UserFilter.LoginDateFrom.Value);
+
+            if (request.UserFilter.LoginDateTo.HasValue)
+                query = query.Where(x => x.LastLogin <= request.UserFilter.LoginDateTo.Value);
+
+            if (request.UserFilter.RoleIds?.Any() == true)
                 query = query.Where(x => x.UserRoles.Any(ur => request.UserFilter.RoleIds.Contains(ur.RoleId)));
-            }
+
 
             var totalCount = await query.CountAsync(cancellationToken);
 
             var pageNumber = request.UserFilter.PageNumber ?? 1;
             var pageSize = request.UserFilter.PageSize ?? 25;
 
-            bool sortDescending = request.UserFilter.SortDescending.GetValueOrDefault();
+            var sortDescending = request.UserFilter.SortDescending.GetValueOrDefault();
+            var sortBy = request.UserFilter.SortBy?.ToLower();
 
-            if (request.UserFilter.SortBy == "Id" || request.UserFilter.SortBy == "id")
+            Expression<Func<Infrasturcture.Entities.User, object>> sortExpression = sortBy switch
             {
-                query = sortDescending ? query.OrderByDescending(x => x.Id) : query.OrderBy(x => x.Id);
-            }
-            else if (request.UserFilter.SortBy == "Name" || request.UserFilter.SortBy == "name")
-            {
-                query = sortDescending ? query.OrderByDescending(x => x.FirstName) : query.OrderBy(x => x.FirstName);
-            }
-            else if (request.UserFilter.SortBy == "LastName" || request.UserFilter.SortBy == "lastName")
-            {
-                query = sortDescending ? query.OrderByDescending(x => x.LastName) : query.OrderBy(x => x.LastName);
-            }
+                "id" => x => x.Id,
+                "name" => x => x.FirstName,
+                "lastname" => x => x.LastName,
+                _ => x => x.Id
+            };
+
+            query = sortDescending ? query.OrderByDescending(sortExpression) : query.OrderBy(sortExpression);
+
 
             var res = query
                 .Select(x => new UsersModel

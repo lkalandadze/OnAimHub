@@ -8,6 +8,6 @@
         public int ObjectId { get; set; }
         public int UserId { get; set; }
         public string Log { get; set; }
-        //public string Type { get; set; }
+        public string Category { get; set; }
     }
 }

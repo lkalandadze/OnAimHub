@@ -71,8 +71,9 @@ namespace OnAim.Admin.APP.Commands.EndPoint.Create
             {
                 UserId = _securityContextAccessor.UserId,
                 Timestamp = SystemDate.Now,
-                Action = "CREATE_ENDPOINT",
+                Action = "CREATE",
                 ObjectId = endpoint.Id,
+                Category = "Endpoint",
                 Log = $"Endpoint Created successfully with ID: {endpoint.Id} by User ID: {_securityContextAccessor.UserId}"
             };
 

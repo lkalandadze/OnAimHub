@@ -131,6 +131,7 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Update
                 Timestamp = SystemDate.Now,
                 Action = "UPDATE",
                 ObjectId = group.Id,
+                Category = "EndpointGroup",
                 Log = $"EndpointGroup Updated successfully with ID: {group.Id} by User ID: {_securityContextAccessor.UserId}"
             };
 

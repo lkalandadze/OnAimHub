@@ -76,6 +76,7 @@ namespace OnAim.Admin.APP.Commands.User.ChangePassword
                 Timestamp = SystemDate.Now,
                 Action = "PASSWORD_CHANGED",
                 ObjectId = user.Id,
+                Category = "User",
                 Log = $"Password was Changed successfully with ID: {user.Id} by User ID: {_securityContextAccessor.UserId}"
             };
 
