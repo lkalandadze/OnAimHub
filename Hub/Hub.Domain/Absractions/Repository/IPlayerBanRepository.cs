@@ -2,6 +2,6 @@
 
 namespace Hub.Domain.Absractions.Repository;
 
-public interface IJobRepository : IBaseRepository<Job>
+public interface IPlayerBanRepository : IBaseRepository<PlayerBan>
 {
 }
