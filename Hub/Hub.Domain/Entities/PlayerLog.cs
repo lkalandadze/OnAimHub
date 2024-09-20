@@ -6,8 +6,22 @@ namespace Hub.Domain.Entities;
 
 public class PlayerLog : BaseEntity<int>
 {
-    public DateTimeOffset Timestamp { get; set; }
+    public PlayerLog()
+    {
+        Timestamp = DateTimeOffset.UtcNow;
+        Log = string.Empty;
+    }
+
+    public PlayerLog(string log, int playerId, PlayerLogType playerLogType)
+    {
+        Log = log;
+        Timestamp = DateTimeOffset.UtcNow;
+        PlayerId = playerId;
+        PlayerLogTypeId = playerLogType.Id;
+    }
+
     public string Log { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
 
     public int PlayerId { get; set; }
     public Player Player { get; set; }

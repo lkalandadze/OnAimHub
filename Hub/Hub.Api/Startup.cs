@@ -56,6 +56,7 @@ public class Startup
         services.AddScoped<IPlayerProgressHistoryRepository, PlayerProgressHistoryRepository>();
         services.AddScoped<ISegmentRepository, SegmentRepository>();
         services.AddScoped<IPlayerSegmentRepository, PlayerSegmentRepository>();
+        services.AddScoped<IPlayerLogRepository, PlayerLogRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IPlayerBalanceService, PlayerBalanceService>();

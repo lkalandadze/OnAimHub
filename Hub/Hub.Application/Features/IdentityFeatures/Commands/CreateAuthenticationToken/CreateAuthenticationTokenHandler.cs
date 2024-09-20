@@ -17,15 +17,17 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
     private readonly IPlayerBanRepository _playerBanRepository;
     private readonly ISegmentRepository _segmentRepository;
     private readonly IPlayerSegmentRepository _playerSegmentRepository;
+    private readonly IPlayerLogRepository _playerLogRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
     private readonly HttpClient _httpClient;
     private readonly CasinoApiConfiguration _casinoApiConfiguration;
 
     public CreateAuthenticationTokenHandler(IPlayerRepository playerRepository,
-                                            IPlayerBanRepository playerBanRepository
+                                            IPlayerBanRepository playerBanRepository,
                                             ISegmentRepository segmentRepository,
                                             IPlayerSegmentRepository playerSegmentRepository,
+                                            IPlayerLogRepository playerLogRepository,
                                             IUnitOfWork unitOfWork, HttpClient httpClient,
                                             IOptions<CasinoApiConfiguration> casinoApiConfiguration,
                                             ITokenService tokenService)
@@ -35,6 +37,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
         _segmentRepository = segmentRepository;
         _playerSegmentRepository = playerSegmentRepository;
         _unitOfWork = unitOfWork;
+        _playerLogRepository = playerLogRepository;
         _tokenService = tokenService;
         _httpClient = httpClient;
         _casinoApiConfiguration = casinoApiConfiguration.Value;
@@ -93,12 +96,16 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
             }
 
             await _playerRepository.InsertAsync(player);
-            await _unitOfWork.SaveAsync();
         }
 
-        var (token, refreshToken) = await _tokenService.GenerateTokenStringAsync(player);
+        // Log player auth
+        var log = new PlayerLog($"Player {receivedPlayer.UserName} logged.", receivedPlayer.Id, PlayerLogType.Auth);
+        await _playerLogRepository.InsertAsync(log);
+        await _unitOfWork.SaveAsync();
 
+        var (token, refreshToken) = await _tokenService.GenerateTokenStringAsync(player);
         var response = new CreateAuthenticationTokenResponse(token, refreshToken);
+
         return new Response<CreateAuthenticationTokenResponse>(response);
     }
 }
