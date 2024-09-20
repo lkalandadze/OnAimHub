@@ -1,5 +1,6 @@
-﻿using Shared.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;
 

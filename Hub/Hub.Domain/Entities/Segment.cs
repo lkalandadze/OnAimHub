@@ -11,13 +11,12 @@ public class Segment : BaseEntity<string>
         
     }
 
-    public Segment(string id, string description, int priorityLevel, int? createdByUserId = null, ICollection<PlayerSegment> playerSegments = null)
+    public Segment(string id, string description, int priorityLevel, int? createdByUserId = null)
     {
         Id = id;
         Description = description;
         PriorityLevel = priorityLevel;
         CreatedByUserId = createdByUserId;
-        PlayerSegments = playerSegments;
     }
 
     public string Description { get; private set; }

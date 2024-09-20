@@ -39,7 +39,7 @@ public class AuthService : IAuthService
 
     public Player GetCurrentPlayer()
     {
-        return new Player(GetCurrentPlayerId(), GetCurrentPlayerUserName(), GetCurrentPlayerSegments().ToList());
+        return new Player(GetCurrentPlayerId(), GetCurrentPlayerUserName(), null, GetCurrentPlayerSegments().ToList());
     }
 
     public IEnumerable<PlayerSegment> GetCurrentPlayerSegments()

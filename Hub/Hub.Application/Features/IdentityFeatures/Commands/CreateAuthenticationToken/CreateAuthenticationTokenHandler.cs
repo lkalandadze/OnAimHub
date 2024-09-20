@@ -59,8 +59,8 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
 
         if (player == null)
         {
-            //TODO: segmentebi kazinodan ar unda moyvebodes, unda gaeweros default segmenti ><
-            player = new Player(receivedPlayer.Id, receivedPlayer.UserName, null, recommendedById);
+            var playerSegment = new PlayerSegment(receivedPlayer.Id, "Default");
+            player = new Player(receivedPlayer.Id, receivedPlayer.UserName, recommendedById, [playerSegment]);
 
             var referralDistribution = new ReferralDistribution(
                 referrerId: recommendedById.GetValueOrDefault(),

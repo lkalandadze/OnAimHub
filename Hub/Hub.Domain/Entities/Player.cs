@@ -11,14 +11,17 @@ public class Player : BaseEntity<int>
 
     }
 
-    public Player(int id, string userName, ICollection<PlayerSegment> playerSegments = null, int? referrerId = null, ICollection<PlayerBalance> playerBalances = null)
+    public Player(int id, string userName, int? referrerId = null, IEnumerable<PlayerSegment> playerSegments = null, IEnumerable<PlayerBalance> playerBalances = null)
     {
         Id = id;
         UserName = userName;
         ReferrerId = referrerId;
-        PlayerSegments = playerSegments;
-        PlayerBalances = playerBalances;
+        PlayerSegments = playerSegments?.ToList() ?? [];
+        PlayerBalances = playerBalances?.ToList() ?? [];
     }
+
+    public const string Base32Chars = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+    private static int ReferralCodeMargin = 10_000_000;
 
     public string UserName { get; private set; }
     public int? ReferrerId { get; private set; }
@@ -27,12 +30,10 @@ public class Player : BaseEntity<int>
     public ICollection<PlayerBalance> PlayerBalances { get; private set; }
     public ICollection<PlayerSegment> PlayerSegments { get; private set; } 
 
-    public const string Base32Chars = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
-    private static int ReferralCodeMargin = 10_000_000;
-
-    public void ChangeDetails(string userName, List<string> segmentIds = null, ICollection<PlayerBalance>? playerBalances = null)
+    public void ChangeDetails(string userName, List<string> segmentIds = null, IEnumerable<PlayerBalance>? playerBalances = null)
     {
         UserName = userName;
+        PlayerBalances = playerBalances?.ToList() ?? [];
     }
 
     public void AddPlayerBalances(ICollection<PlayerSegment> playerSegments)
