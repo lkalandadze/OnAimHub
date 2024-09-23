@@ -1,3 +1,4 @@
+using Hub.Infrastructure;
 using Hub.Infrastructure.DataAccess;
 using Serilog;
 
@@ -28,5 +29,7 @@ static void CreateDatabaseIfNotExists(IHost host)
         var services = scope.ServiceProvider;
         var dbContext = services.GetRequiredService<HubDbContext>();
         dbContext.Database.EnsureCreated();
+
+        EFDatabaseInitializer.Initialize(scope);
     }
 }

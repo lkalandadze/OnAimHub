@@ -43,7 +43,6 @@ public class Startup
         services.AddDbContext<HubDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("OnAimHub")));
 
-
         services.AddHttpClient();
 
         services.AddScoped<IPlayerRepository, PlayerRepository>();
