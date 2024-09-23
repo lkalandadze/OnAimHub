@@ -86,8 +86,9 @@ namespace OnAim.Admin.APP.Commands.User.Update
             {
                 UserId = _securityContextAccessor.UserId,
                 Timestamp = SystemDate.Now,
-                Action = "UPDATE_USER",
+                Action = "UPDATE",
                 ObjectId = existingUser.Id,
+                Category = "User",
                 Log = $"User Updated successfully with ID: {existingUser.Id} by User ID: {_securityContextAccessor.UserId}"
             };
 

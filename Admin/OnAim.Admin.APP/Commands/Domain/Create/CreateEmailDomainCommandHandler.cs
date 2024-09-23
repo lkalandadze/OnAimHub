@@ -56,6 +56,7 @@ namespace OnAim.Admin.APP.Commands.Domain.Create
             {
                 Domain = request.Domain,
                 DateCreated = SystemDate.Now,
+                IsActive = true,
                 CreatedBy = _securityContextAccessor.UserId
             };
 

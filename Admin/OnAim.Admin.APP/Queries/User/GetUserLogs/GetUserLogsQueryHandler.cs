@@ -27,23 +27,18 @@ namespace OnAim.Admin.APP.Queries.User.GetUserLogs
             var logs = _auditLogRepository.Query(x => x.UserId == request.Id);
 
             if (request.Filter.Actions != null && request.Filter.Actions.Any())
-            {
                 logs = logs.Where(x => x.Action == x.Action);
-            }
 
-            //if (request.Filter.Types != null && request.Filter.Types.Any())
-            //{
-            //    logs = logs.Where(x => x.Type == x.Type);
-            //}
+            if (request.Filter.Categories != null && request.Filter.Categories.Any())
+            {
+                logs = logs.Where(x => x.Category == x.Category);
+            }
 
             if (request.Filter.DateFrom.HasValue)
-            {
                 logs = logs.Where(x => x.Timestamp >= request.Filter.DateFrom.Value);
-            }
+
             if (request.Filter.DateTo.HasValue)
-            {
                 logs = logs.Where(x => x.Timestamp <= request.Filter.DateTo.Value);
-            }
 
             var totalCount = await logs.CountAsync(cancellationToken);
 

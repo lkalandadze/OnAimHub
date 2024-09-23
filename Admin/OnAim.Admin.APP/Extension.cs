@@ -34,7 +34,6 @@ namespace OnAim.Admin.APP
             services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
 
             services
-                .AddScoped<IEndpointRepository, EndpointRepository>()
                 .AddScoped<IRoleRepository, RoleRepository>()
                 .AddScoped<IPermissionService, PermissionService>()
                 .AddTransient<IJwtFactory, JwtFactory>();

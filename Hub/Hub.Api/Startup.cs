@@ -69,6 +69,7 @@ public class Startup
         services.AddScoped<IConsulLogRepository,  ConsulLogRepository>();
         services.AddScoped<IReferralDistributionRepository, ReferralDistributionRepository>();
         services.AddScoped<ISettingRepository, SettingRepository>();
+        services.AddScoped<IPlayerBanRepository, PlayerBanRepository>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));

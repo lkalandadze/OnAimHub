@@ -57,7 +57,14 @@ namespace OnAim.Admin.APP.Commands.User.Create
 
             var existingUser = await _repository.Query(x => x.Email == request.Email && !x.IsDeleted).FirstOrDefaultAsync();
 
-            if (existingUser != null)
+            if (existingUser != null || existingUser.IsActive == false)
+            {
+                _logger.LogError("User creation failed. A user already exists with email: {Email}", request.Email);
+
+                throw new AlreadyExistsException($"User creation failed. A user already exists with email: {request.Email}");
+            }
+
+            if (existingUser.IsActive == false)
             {
                 _logger.LogError("User creation failed. A user already exists with email: {Email}", request.Email);
 
@@ -75,8 +82,8 @@ namespace OnAim.Admin.APP.Commands.User.Create
 
             var user = new Infrasturcture.Entities.User
             {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
+                FirstName = request.FirstName.ToLower(),
+                LastName = request.LastName.ToLower(),
                 Username = request.Email,
                 Email = request.Email,
                 Salt = salt,
@@ -112,8 +119,9 @@ namespace OnAim.Admin.APP.Commands.User.Create
             {
                 UserId = _securityContextAccessor.UserId,
                 Timestamp = SystemDate.Now,
-                Action = "CREATED_USER",
+                Action = "CREATE",
                 ObjectId = user.Id,
+                Category = "User",
                 Log = $"User Created successfully with ID: {user.Id} by User ID: {_securityContextAccessor.UserId}"
             };
 

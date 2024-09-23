@@ -64,6 +64,7 @@ namespace OnAim.Admin.APP.Commands.User.ResetPassword
                 Timestamp = SystemDate.Now,
                 Action = "RESET_PASSWORD",
                 ObjectId = user.Id,
+                Category = "User",
                 Log = $"User Password was Reseted successfully with ID: {user.Id} by User ID: {_securityContextAccessor.UserId}"
             };
 

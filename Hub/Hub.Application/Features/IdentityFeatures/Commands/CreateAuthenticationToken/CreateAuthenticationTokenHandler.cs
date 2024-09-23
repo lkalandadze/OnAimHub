@@ -14,6 +14,7 @@ namespace Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticatio
 public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthenticationTokenCommand, Response<CreateAuthenticationTokenResponse>>
 {
     private readonly IPlayerRepository _playerRepository;
+    private readonly IPlayerBanRepository _playerBanRepository;
     private readonly ISegmentRepository _segmentRepository;
     private readonly IPlayerSegmentRepository _playerSegmentRepository;
     private readonly IPlayerLogRepository _playerLogRepository;
@@ -22,9 +23,17 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
     private readonly HttpClient _httpClient;
     private readonly CasinoApiConfiguration _casinoApiConfiguration;
 
-    public CreateAuthenticationTokenHandler(IPlayerRepository playerRepository, ISegmentRepository segmentRepository, IPlayerSegmentRepository playerSegmentRepository, IPlayerLogRepository playerLogRepository, IUnitOfWork unitOfWork, HttpClient httpClient, IOptions<CasinoApiConfiguration> casinoApiConfiguration, ITokenService tokenService)
+    public CreateAuthenticationTokenHandler(IPlayerRepository playerRepository,
+                                            IPlayerBanRepository playerBanRepository,
+                                            ISegmentRepository segmentRepository,
+                                            IPlayerSegmentRepository playerSegmentRepository,
+                                            IPlayerLogRepository playerLogRepository,
+                                            IUnitOfWork unitOfWork, HttpClient httpClient,
+                                            IOptions<CasinoApiConfiguration> casinoApiConfiguration,
+                                            ITokenService tokenService)
     {
         _playerRepository = playerRepository;
+        _playerBanRepository = playerBanRepository;
         _segmentRepository = segmentRepository;
         _playerSegmentRepository = playerSegmentRepository;
         _unitOfWork = unitOfWork;
@@ -45,6 +54,14 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
 
         var player = await _playerRepository.OfIdAsync(receivedPlayer.Id);
 
+        if(player != null)
+        {
+            var bannedPlayer = _playerBanRepository.Query().FirstOrDefault(x => x.PlayerId == player.Id && !x.IsRevoked && x.ExpireDate > DateTimeOffset.UtcNow && x.IsPermanent);
+
+            if (bannedPlayer != null)
+                throw new Exception("You have been banned");
+        }
+
         int? recommendedById = null;
 
         if (!string.IsNullOrEmpty(request.PromoCode))
@@ -64,16 +81,19 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
             var playerSegment = new PlayerSegment(receivedPlayer.Id, "Default");
             player = new Player(receivedPlayer.Id, receivedPlayer.UserName, recommendedById, [playerSegment]);
 
-            var referralDistribution = new ReferralDistribution(
-                referrerId: recommendedById.GetValueOrDefault(),
-                referralId: player.Id,
-                referrerPrizeId: DbSettings.Instance.ReferrerPrizeCurrencyId,
-                referrerPrizeValue: DbSettings.Instance.ReferrerPrizeAmount,
-                referrerPrizeCurrency: Currency.FromId(DbSettings.Instance.ReferrerPrizeCurrencyId),
-                referralPrizeValue: DbSettings.Instance.ReferralPrizeAmount,
-                referralPrizeId: DbSettings.Instance.ReferralPrizeCurrencyId,
-                referralPrizeCurrency: Currency.FromId(DbSettings.Instance.ReferralPrizeCurrencyId)
-            );
+            if (request.PromoCode != null) 
+            {
+                var referralDistribution = new ReferralDistribution(
+                    referrerId: recommendedById.GetValueOrDefault(),
+                    referralId: player.Id,
+                    referrerPrizeId: DbSettings.Instance.ReferrerPrizeCurrencyId,
+                    referrerPrizeValue: DbSettings.Instance.ReferrerPrizeAmount,
+                    referrerPrizeCurrency: Currency.FromId(DbSettings.Instance.ReferrerPrizeCurrencyId),
+                    referralPrizeValue: DbSettings.Instance.ReferralPrizeAmount,
+                    referralPrizeId: DbSettings.Instance.ReferralPrizeCurrencyId,
+                    referralPrizeCurrency: Currency.FromId(DbSettings.Instance.ReferralPrizeCurrencyId)
+                );
+            }
 
             await _playerRepository.InsertAsync(player);
         }

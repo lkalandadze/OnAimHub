@@ -81,8 +81,9 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Create
                 {
                     UserId = _securityContextAccessor.UserId,
                     Timestamp = SystemDate.Now,
-                    Action = "CREATED_ENDPOINT_GROUP",
+                    Action = "CREATE",
                     ObjectId = endpointGroup.Id,
+                    Category = "EndpointGroup",
                     Log = $"EndpointGroup Created successfully with ID: {endpointGroup.Id} by User ID: {_securityContextAccessor.UserId}"
                 };
 

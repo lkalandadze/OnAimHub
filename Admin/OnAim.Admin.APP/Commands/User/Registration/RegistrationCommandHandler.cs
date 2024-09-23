@@ -67,6 +67,13 @@ namespace OnAim.Admin.APP.Commands.User.Registration
                 throw new AlreadyExistsException($"User creation failed. A user already exists with email: {request.Email}");
             }
 
+            if (existingUser.IsActive == false)
+            {
+                _logger.LogError("User creation failed. A user already exists with email: {Email}", request.Email);
+
+                throw new AlreadyExistsException($"User creation failed. A user already exists with email: {request.Email}");
+            }
+
             if (!await _domainValidationService.IsDomainAllowedAsync(request.Email))
             {
                 throw new BadRequestException("Domain not allowed");
@@ -114,6 +121,7 @@ namespace OnAim.Admin.APP.Commands.User.Registration
                 Timestamp = SystemDate.Now,
                 Action = "REGISTRATION",
                 ObjectId = user.Id,
+                Category = "User",
                 Log = $"User Created successfully with ID: {user.Id}"
             };
 

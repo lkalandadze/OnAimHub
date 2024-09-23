@@ -6,6 +6,7 @@ using OnAim.Admin.Shared.DTOs.Endpoint;
 using OnAim.Admin.Shared.DTOs.EndpointGroup;
 using OnAim.Admin.Shared.Helpers;
 using OnAim.Admin.Shared.Paging;
+using System.Linq.Expressions;
 
 namespace OnAim.Admin.APP.Queries.EndpointGroup.GetAll
 {
@@ -25,19 +26,13 @@ namespace OnAim.Admin.APP.Queries.EndpointGroup.GetAll
                 );
 
             if (request.Filter.RoleIds != null && request.Filter.RoleIds.Any())
-            {
                 query = query.Where(x => x.RoleEndpointGroups.Any(ur => request.Filter.RoleIds.Contains(ur.RoleId)));
-            }
 
             if (request.Filter.EndpointIds != null && request.Filter.EndpointIds.Any())
-            {
                 query = query.Where(x => x.EndpointGroupEndpoints.Any(ur => request.Filter.EndpointIds.Contains(ur.EndpointId)));
-            }
 
             if (request.Filter.IsDeleted.HasValue)
-            {
                 query = query.Where(x => x.IsDeleted == request.Filter.IsDeleted);
-            }
 
             if (!request.Filter.IsActive.HasValue && !request.Filter.IsDeleted.HasValue)
             {
@@ -49,20 +44,17 @@ namespace OnAim.Admin.APP.Queries.EndpointGroup.GetAll
             var pageNumber = request.Filter.PageNumber ?? 1;
             var pageSize = request.Filter.PageSize ?? 25;
 
-            bool sortDescending = request.Filter.SortDescending.GetValueOrDefault();
+            var sortDescending = request.Filter.SortDescending.GetValueOrDefault();
+            var sortBy = request.Filter.SortBy?.ToLower();
 
-            if (request.Filter.SortBy == "Id" || request.Filter.SortBy == "id")
+            Expression<Func<Infrasturcture.Entities.EndpointGroup, object>> sortExpression = sortBy switch
             {
-                query = sortDescending
-                    ? query.OrderByDescending(x => x.Id)
-                    : query.OrderBy(x => x.Id);
-            }
-            else if (request.Filter.SortBy == "Name" || request.Filter.SortBy == "name")
-            {
-                query = sortDescending
-                    ? query.OrderByDescending(x => x.Name)
-                    : query.OrderBy(x => x.Name);
-            }
+                "id" => x => x.Id,
+                "name" => x => x.Name,
+                _ => x => x.Id
+            };
+
+            query = sortDescending ? query.OrderByDescending(sortExpression) : query.OrderBy(sortExpression);
 
             var result = query
                 .Select(x => new EndpointGroupModel

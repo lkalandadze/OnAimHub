@@ -1,14 +1,21 @@
 ﻿using Hub.Application.Features.IdentityFeatures.Commands.ApplyPromoCode;
+using Hub.Application.Features.PlayerBanFeatures.Commands.Create;
+using Hub.Application.Features.PlayerBanFeatures.Commands.Revoke;
+using Hub.Application.Features.PlayerBanFeatures.Commands.Update;
+using Hub.Application.Features.PlayerBanFeatures.Queries.Get;
+using Hub.Application.Features.PlayerBanFeatures.Queries.GetById;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayer;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerBalance;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerProgress;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayers;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPromoCode;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.Api.Controllers;
 
+[AllowAnonymous]
 public class PlayerController : BaseApiController
 {
     [HttpGet]
@@ -47,4 +54,23 @@ public class PlayerController : BaseApiController
 
     [HttpGet(nameof(GetPromoCode))]
     public async Task<string> GetPromoCode([FromQuery] GetPromoCodeQuery request) => await Mediator.Send(request);
+
+    #region Player Bans
+
+    [HttpGet(nameof(GetBannedPlayers))]
+    public async Task<ActionResult<GetBannedPlayersQueryResponse>> GetBannedPlayers([FromQuery] GetBannedPlayersQuery request) => await Mediator.Send(request);
+
+    [HttpGet(nameof(GetBannedPlayerById))]
+    public async Task<ActionResult<GetBannedPlayerByIdQueryResponse>> GetBannedPlayerById([FromQuery] GetBannedPlayerByIdQuery request) => await Mediator.Send(request);
+
+    [HttpPut(nameof(UpdateBannedPlayer))]
+    public async Task<Unit> UpdateBannedPlayer(UpdatePlayerBanCommand request) => await Mediator.Send(request);
+
+    [HttpPut(nameof(RevokePlayerBan))]
+    public async Task<Unit> RevokePlayerBan(RevokePlayerBanCommand request) => await Mediator.Send(request);
+
+    [HttpPost(nameof(BanPlayer))]
+    public async Task<Unit> BanPlayer(CreatePlayerBanCommand request) => await Mediator.Send(request);
+
+    #endregion
 }

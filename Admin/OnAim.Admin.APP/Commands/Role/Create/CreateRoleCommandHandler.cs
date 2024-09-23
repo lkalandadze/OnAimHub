@@ -87,8 +87,9 @@ namespace OnAim.Admin.APP.Commands.Role.Create
             {
                 UserId = _securityContextAccessor.UserId,
                 Timestamp = SystemDate.Now,
-                Action = "CREATE_ROLE",
+                Action = "CREATE",
                 ObjectId = role.Id,
+                Category = "Role",
                 Log = $"Role Created successfully with ID: {role.Id} by User ID: {_securityContextAccessor.UserId}"
             };
 

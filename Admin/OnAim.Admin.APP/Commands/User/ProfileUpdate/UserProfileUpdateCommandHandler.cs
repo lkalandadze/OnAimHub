@@ -57,8 +57,9 @@ namespace OnAim.Admin.APP.Commands.User.ProfileUpdate
             {
                 UserId = _securityContextAccessor.UserId,
                 Timestamp = SystemDate.Now,
-                Action = "UPDATE_PROFILE",
+                Action = "UPDATE",
                 ObjectId = user.Id,
+                Category = "User",
                 Log = $"User Profile Updated successfully with ID: {user.Id}"
             };
 
