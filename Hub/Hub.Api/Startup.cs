@@ -65,6 +65,7 @@ public class Startup
         services.AddScoped<IPlayerBanRepository, PlayerBanRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        services.AddScoped<IPlayerService, PlayerService>();
         services.AddScoped<IPlayerBalanceService, PlayerBalanceService>();
         services.AddScoped<IPlayerProgressService, PlayerProgressService>();
         services.AddScoped<ITransactionService, TransactionService>();
