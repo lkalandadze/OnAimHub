@@ -28,7 +28,8 @@ public class Player : BaseEntity<int>
     public bool HasPlayed { get; private set; }
 
     public ICollection<PlayerBalance> PlayerBalances { get; private set; }
-    public ICollection<PlayerSegment> PlayerSegments { get; private set; } 
+    public ICollection<PlayerSegment> PlayerSegments { get; private set; }
+    public ICollection<PlayerBlockedSegment> PlayerBlockedSegments { get; private set; } 
 
     public void ChangeDetails(string userName, List<string> segmentIds = null, IEnumerable<PlayerBalance>? playerBalances = null)
     {

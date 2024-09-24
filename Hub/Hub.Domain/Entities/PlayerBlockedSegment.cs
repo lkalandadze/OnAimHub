@@ -4,14 +4,14 @@ using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;
 
-public class PlayerSegment : BaseEntity<int>
+public class PlayerBlockedSegment : BaseEntity<int>
 {
-    public PlayerSegment()
+    public PlayerBlockedSegment()
     {
-        
+
     }
 
-    public PlayerSegment(int playerId, string segmentId)
+    public PlayerBlockedSegment(int playerId, string segmentId)
     {
         PlayerId = playerId;
         SegmentId = segmentId;
