@@ -40,20 +40,6 @@ namespace OnAim.Admin.APP.Services
 
         public async Task<bool> RolesContainPermission(List<string> roles, string permission)
         {
-            //var userId = HttpContextAccessorProvider.HttpContextAccessor.GetUserId();
-
-            //var activeRoleNames = await _userRoleRepository
-            //               .Query(ur => ur.UserId == userId && ur.IsActive)
-            //               .Join(_repository.Query(), ur => ur.RoleId, r => r.Id, (ur, r) => r.Name)
-            //               .ToListAsync();
-
-            //var endpointsByRoles = await GetEndpointsByRolesAsync();
-
-            //return roles
-            //    .Where(role => activeRoleNames.Contains(role))
-            //    .Any(role => endpointsByRoles.ContainsKey(role) && endpointsByRoles[role].Contains(permission));
-
-
             var endpointsByRoles = await GetEndpointsByRolesAsync();
             return roles.Any(x => endpointsByRoles.ContainsKey(x) && endpointsByRoles[x].Contains(permission));
         }

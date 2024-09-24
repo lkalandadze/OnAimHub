@@ -47,6 +47,7 @@ namespace OnAim.Admin.APP.Commands.EndpointGroup.Delete
             }
 
             group.IsDeleted = true;
+            group.IsActive = false;
             group.DateDeleted = SystemDate.Now;
 
             var auditLog = new AuditLog

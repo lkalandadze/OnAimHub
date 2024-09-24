@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.API.Service.Endpoint;
-using OnAim.Admin.APP.Commands.Domain.Create;
 using OnAim.Admin.APP.Commands.User.Activate;
 using OnAim.Admin.APP.Commands.User.ChangePassword;
 using OnAim.Admin.APP.Commands.User.Create;
@@ -97,10 +96,6 @@ namespace OnAim.Admin.API.Controllers
         [HttpPut("ProfileUpdate/{id}")]
         public async Task<IActionResult> ProfileUpdate([FromRoute] int id, [FromBody] ProfileUpdateRequest profile)
             => Ok(await Mediator.Send(new UserProfileUpdateCommand(id, profile)));
-
-        [HttpPost("InsertDomain")]
-        public async Task<IActionResult> InsertDomain([FromBody] CreateEmailDomainCommand command)
-            => Ok(await Mediator.Send(command));
 
         [HttpPost("Delete/{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)

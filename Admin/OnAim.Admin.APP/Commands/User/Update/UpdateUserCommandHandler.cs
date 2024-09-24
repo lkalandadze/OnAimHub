@@ -8,6 +8,7 @@ using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
+using OnAim.Admin.Shared.Helpers;
 
 namespace OnAim.Admin.APP.Commands.User.Update
 {
@@ -49,10 +50,19 @@ namespace OnAim.Admin.APP.Commands.User.Update
                 throw new UserNotFoundException("User not found");
             }
 
+            var userClone = new Infrasturcture.Entities.User
+            {
+                Id = existingUser.Id,
+                FirstName = existingUser.FirstName,
+                LastName = existingUser.LastName,
+                Phone = existingUser.Phone
+            };
+
             existingUser.FirstName = request.Model.FirstName;
             existingUser.LastName = request.Model.LastName;
             existingUser.Phone = request.Model.Phone;
             existingUser.DateUpdated = SystemDate.Now;
+            existingUser.IsActive = request.Model.IsActive ?? true;
 
             var currentRoles = await _userRoleRepository
             .Query(ur => ur.UserId == request.Id)
@@ -82,6 +92,8 @@ namespace OnAim.Admin.APP.Commands.User.Update
             await _repository.CommitChanges();
             await _userRoleRepository.CommitChanges();
 
+            var changeLog = AuditLogger.GenerateChangeLog(userClone, existingUser);
+
             var auditLog = new AuditLog
             {
                 UserId = _securityContextAccessor.UserId,
@@ -89,7 +101,7 @@ namespace OnAim.Admin.APP.Commands.User.Update
                 Action = "UPDATE",
                 ObjectId = existingUser.Id,
                 Category = "User",
-                Log = $"User Updated successfully with ID: {existingUser.Id} by User ID: {_securityContextAccessor.UserId}"
+                Log = $"User updated successfully with ID: {existingUser.Id} by User ID: {_securityContextAccessor.UserId}. Changes: {changeLog}"
             };
 
             await _auditLogService.LogEventAsync(auditLog);

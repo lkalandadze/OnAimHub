@@ -47,6 +47,19 @@ namespace OnAim.Admin.APP.Commands.Domain.Create
 
             var existed = await _repository.Query(x => x.Domain == request.Domain).FirstOrDefaultAsync();
 
+            if (existed.IsDeleted)
+            {
+                existed.IsDeleted = false;
+                existed.IsDeleted = true;
+                existed.DateUpdated = SystemDate.Now;
+                await _repository.CommitChanges();
+
+                return new ApplicationResult
+                {
+                    Success = true,
+                };
+            }
+
             if (existed != null)
             {
                 throw new AlreadyExistsException("Domain Already Exists");

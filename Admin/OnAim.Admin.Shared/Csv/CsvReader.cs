@@ -9,6 +9,6 @@ namespace OnAim.Admin.Shared.Csv
             using var reader = new StreamReader(stream);
             using var csv = new CsvHelper.CsvReader(reader, CultureInfo.InvariantCulture);
             return csv.GetRecords<T>().ToList();
-        }
+        } 
     }
 }

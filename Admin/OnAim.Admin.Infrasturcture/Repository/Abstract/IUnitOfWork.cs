@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace OnAim.Admin.Infrasturcture.Repositories.Abstract
+namespace OnAim.Admin.Infrasturcture.Repository.Abstract
 {
     public interface IUnitOfWork
     {

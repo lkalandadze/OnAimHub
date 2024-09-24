@@ -31,13 +31,13 @@ namespace OnAim.Admin.API.Attributes
             {
                 var roles = user.GetRoles();
 
-                foreach (var role in roles)
-                {
-                    if (role == "SuperRole")
-                    {
-                        return;
-                    }
-                }
+                //foreach (var role in roles)
+                //{
+                //    if (role == "SuperRole")
+                //    {
+                //        return;
+                //    }
+                //}
 
                 var permissionService = context.HttpContext.RequestServices.GetRequiredService<IPermissionService>();
 

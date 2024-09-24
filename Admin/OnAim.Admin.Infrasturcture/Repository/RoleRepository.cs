@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.DTOs.Endpoint;
@@ -20,16 +21,19 @@ namespace OnAim.Admin.Infrasturcture.Repository
         public async Task<PaginatedResult<RoleResponseModel>> GetAllRoles()
         {
             var query = _databaseContext.Roles
-                .Where(role => role.IsActive == true)
-                .Include(x => x.UserRoles)
-                    .ThenInclude(x => x.User)
-                    .Where(userRole => userRole.IsActive == true)
-                .Include(r => r.RoleEndpointGroups)
-                    .ThenInclude(reg => reg.EndpointGroup)
-                        .ThenInclude(eg => eg.EndpointGroupEndpoints)
-                            .ThenInclude(ege => ege.Endpoint)
-                            .Where(endpoint => endpoint.IsActive == true)
-                .AsQueryable();
+                    .Where(role => role.IsActive && !role.IsDeleted) 
+                    .Include(x => x.UserRoles)
+                        .ThenInclude(x => x.User)
+                        .Where(userRole => userRole.IsActive)
+                    .Include(r => r.RoleEndpointGroups)
+                        .ThenInclude(reg => reg.EndpointGroup)
+                            .ThenInclude(eg => eg.EndpointGroupEndpoints)
+                                .ThenInclude(ege => ege.Endpoint)
+                    .Where(role => role.RoleEndpointGroups
+                        .Any(reg => reg.EndpointGroup.EndpointGroupEndpoints
+                            .Any(ege => !ege.Endpoint.IsDeleted && ege.Endpoint.IsActive))
+                    )
+                    .AsQueryable();
 
             var roles = await query
                 .OrderBy(x => x.Id)

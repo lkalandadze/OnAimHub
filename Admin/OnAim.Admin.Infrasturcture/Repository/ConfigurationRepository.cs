@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
-using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using System.Linq.Expressions;
 

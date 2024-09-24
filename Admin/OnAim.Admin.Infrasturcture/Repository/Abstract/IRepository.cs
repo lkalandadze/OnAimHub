@@ -1,5 +1,4 @@
 ﻿using OnAim.Admin.Infrasturcture.Persistance.Data;
-using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 using System.Linq.Expressions;
 
 namespace OnAim.Admin.Infrasturcture.Repository.Abstract
@@ -14,7 +13,7 @@ namespace OnAim.Admin.Infrasturcture.Repository.Abstract
 
         Task Store(T document);
 
-        Task Remove(T document);
+        void Remove(T document);
 
         void WithDbContext(DatabaseContext dbContext);
 

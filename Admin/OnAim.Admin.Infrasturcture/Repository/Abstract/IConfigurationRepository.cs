@@ -1,5 +1,4 @@
 ﻿using OnAim.Admin.Infrasturcture.Persistance.Data;
-using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 using System.Linq.Expressions;
 
 namespace OnAim.Admin.Infrasturcture.Repository.Abstract
