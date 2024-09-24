@@ -33,9 +33,4 @@ public class PlayerService : IPlayerService
             await _unitOfWork.SaveAsync();
         }
     }
-
-    public async Task CreatePlayersIfNotExist(IEnumerable<Player> players)
-    {
-        await CreatePlayersIfNotExist(players.Select(x => x.Id));
-    }
 }

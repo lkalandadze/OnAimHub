@@ -14,6 +14,8 @@ public class Player : BaseEntity<int>
     public Player(int id)
     {
         Id = id;
+        RegistredOn = null;
+        LastVisitedOn = null;
     }
 
     public Player(int id, string userName, int? referrerId = null, IEnumerable<PlayerSegment> playerSegments = null, IEnumerable<PlayerBalance> playerBalances = null)
@@ -33,8 +35,8 @@ public class Player : BaseEntity<int>
     public string UserName { get; private set; }
     public int? ReferrerId { get; private set; }
     public bool HasPlayed { get; private set; }
-    public DateTimeOffset RegistredOn { get; private set; }
-    public DateTimeOffset LastVisitedOn { get; private set; }
+    public DateTimeOffset? RegistredOn { get; private set; }
+    public DateTimeOffset? LastVisitedOn { get; private set; }
 
     public ICollection<PlayerBalance> PlayerBalances { get; private set; }
     public ICollection<PlayerSegment> PlayerSegments { get; private set; }
@@ -43,6 +45,11 @@ public class Player : BaseEntity<int>
     public void ChangeDetails(string userName, List<string> segmentIds = null)
     {
         UserName = userName;
+    }
+
+    public void SetRegistrationDate()
+    {
+        RegistredOn = DateTimeOffset.UtcNow;
     }
 
     public void SetLastVisitDate()

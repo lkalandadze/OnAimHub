@@ -65,17 +65,18 @@ public class Startup
         services.AddScoped<IPlayerBanRepository, PlayerBanRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        services.AddSingleton<IActiveGameService, ActiveGameService>();
         services.AddScoped<IPlayerService, PlayerService>();
         services.AddScoped<IPlayerBalanceService, PlayerBalanceService>();
         services.AddScoped<IPlayerProgressService, PlayerProgressService>();
         services.AddScoped<ITransactionService, TransactionService>();
-        services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddSingleton<IActiveGameService, ActiveGameService>();
-        services.AddScoped<IJobService, JobService>();
         services.AddScoped<IPlayerSegmentService, PlayerSegmentService>();
         services.AddScoped<IPlayerSegmentActService, PlayerSegmentActService>();
         services.AddScoped<IPlayerBlockedSegmentService, PlayerBlockedSegmentService>();
+        services.AddScoped<IPlayerLogService, PlayerLogService>();
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IJobService, JobService>();
         services.AddScoped<IBackgroundJobScheduler, HangfireJobScheduler>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
