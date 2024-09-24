@@ -28,4 +28,9 @@ public class PlayerSegmentAct : BaseEntity<int>
 
     public string SegmentId { get; set; }  
     public Segment Segment { get; set; }
+
+    public void SetIsBulk()
+    {
+        IsBulk = true;
+    }
 }

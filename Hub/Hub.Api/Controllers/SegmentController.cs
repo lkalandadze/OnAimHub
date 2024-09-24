@@ -2,11 +2,13 @@
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentToPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentToPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.BlockSegmentForPlayer;
+using Hub.Application.Features.SegmentFeatures.Commands.BlockSegmentForPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.CreateSegment;
 using Hub.Application.Features.SegmentFeatures.Commands.DeleteSegment;
 using Hub.Application.Features.SegmentFeatures.Commands.UnassignSegmentToPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.UnassignSegmentToPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentForPlayer;
+using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentForPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.UpdateSegment;
 using Microsoft.AspNetCore.Mvc;
 
@@ -71,6 +73,24 @@ public class SegmentController : BaseApiController
     public async Task<IActionResult> UnblockPlayer(string id, int playerId, [FromForm] PlayerSegmentRequestModel request)
     {
         var command = new UnblockSegmentForPlayerCommand(id, playerId, request.ByUserId);
+        var result = await Mediator.Send(command);
+
+        return StatusCode(200, result);
+    }
+
+    [HttpPost("{id}/BlockPlayers")]
+    public async Task<IActionResult> BlockPlayersAsync(string id, [FromForm] PlayersSegmentRequestModel request)
+    {
+        var command = new BlockSegmentForPlayersCommand(id, request.File, request.ByUserId);
+        var result = await Mediator.Send(command);
+
+        return StatusCode(200, result);
+    }
+
+    [HttpPost("{id}/UnblockPlayers")]
+    public async Task<IActionResult> UnblockPlayersAsync(string id, [FromForm] PlayersSegmentRequestModel request)
+    {
+        var command = new UnblockSegmentForPlayersCommand(id, request.File, request.ByUserId);
         var result = await Mediator.Send(command);
 
         return StatusCode(200, result);

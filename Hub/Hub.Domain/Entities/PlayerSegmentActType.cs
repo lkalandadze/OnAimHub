@@ -5,7 +5,7 @@ namespace Hub.Domain.Entities;
 public class PlayerSegmentActType : DbEnum<int>
 {
     public static PlayerSegmentActType Assign => FromId(1);
-    public static PlayerSegmentActType Unasssign => FromId(2);
+    public static PlayerSegmentActType Unassign => FromId(2);
     public static PlayerSegmentActType Block => FromId(3);
     public static PlayerSegmentActType Unblock => FromId(4);
 

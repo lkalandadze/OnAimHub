@@ -1,5 +1,4 @@
-﻿using Consul;
-using Hub.Application.Services.Abstract;
+﻿using Hub.Application.Services.Abstract;
 using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities;
 
@@ -29,6 +28,12 @@ public class PlayerSegmentActService : IPlayerSegmentActService
     public async Task CreateActWithHistoryAsync(PlayerSegmentActType action, IEnumerable<int> playerIds, string segmentId, int? byUserId = null)
     {
         var act = new PlayerSegmentAct(action, playerIds.Count(), segmentId, byUserId);
+
+        if (playerIds.Count() > 1)
+        {
+            act.SetIsBulk();
+        }
+
         await CreatePlayerSegmentActAsync(act);
 
         foreach (var playerId in playerIds)
