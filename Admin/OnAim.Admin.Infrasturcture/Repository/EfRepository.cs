@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Entities.Abstract;
 using OnAim.Admin.Infrasturcture.Persistance.Data;
-using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using System.Linq.Expressions;
 
@@ -47,12 +46,6 @@ namespace OnAim.Admin.Infrasturcture.Repository
             await _db.Set<T>().AddAsync(document);
         }
 
-        public virtual async Task Remove(T document)
-        {
-            _db.Set<T>().Remove(document);
-            await Task.CompletedTask;
-        }
-
         public void WithDbContext(DatabaseContext dbContext)
         {
             _db = dbContext;
@@ -62,5 +55,12 @@ namespace OnAim.Admin.Infrasturcture.Repository
         {
             await _db.SaveChangesAsync();
         }
+
+        public async void Remove(T document)
+        {
+            _db.Set<T>().Remove(document);
+            await Task.CompletedTask;
+        }
+
     }
 }

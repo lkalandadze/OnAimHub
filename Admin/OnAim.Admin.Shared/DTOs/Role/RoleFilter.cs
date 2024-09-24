@@ -1,18 +1,11 @@
-﻿using OnAim.Admin.Shared.Attributes;
+﻿using OnAim.Admin.Shared.DTOs.Base;
 
 namespace OnAim.Admin.Shared.DTOs.Role
 {
-    public class RoleFilter
-    {
-        public string? Name { get; set; }
-        public bool? IsActive { get; set; }
-        public string? SortBy { get; set; }
-        public bool? SortDescending { get; set; }
-        public int? PageNumber { get; set; }
-        [PageSize(100)]
-        public int? PageSize { get; set; }
-        public List<int>? UserIds { get; set; }
-        public List<int>? GroupIds { get; set; }
-        public bool? IsDeleted { get; set; }
-    }
+    public record RoleFilter(
+        string? Name, 
+        bool? IsActive,
+        List<int>? UserIds,
+        List<int>? GroupIds, 
+        bool? IsDeleted) : BaseFilter;
 }

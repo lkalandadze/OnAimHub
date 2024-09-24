@@ -13,6 +13,11 @@ namespace OnAim.Admin.Infrasturcture
             {
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnectionString"));
             });
+
+            services.AddDbContext<ReadOnlyDataContext>(options =>
+            {
+                options.UseNpgsql(configuration.GetConnectionString("HubDefaultConnectionString"));
+            });
             return services;
         }
     }

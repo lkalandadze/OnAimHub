@@ -1,20 +1,8 @@
-﻿using System.Linq.Expressions;
-
-namespace OnAim.Admin.Shared.Specification
+﻿namespace OnAim.Admin.Shared.Specification
 {
-    public interface ISpecification<T> : IRootSpecification
+    internal interface ISpecification<in T>
     {
-        Expression<Func<T, bool>> Criteria { get; }
-        List<Expression<Func<T, object>>> Includes { get; }
-        List<string> IncludeStrings { get; }
-        Expression<Func<T, object>> OrderBy { get; }
-        Expression<Func<T, object>> OrderByDescending { get; }
-        Expression<Func<T, object>> GroupBy { get; }
-
-        int Take { get; }
-        int Skip { get; }
-        bool IsPagingEnabled { get; }
-
-        bool IsSatisfiedBy(T obj);
+        bool IsSatisfiedBy(T entity);
     }
 }
+

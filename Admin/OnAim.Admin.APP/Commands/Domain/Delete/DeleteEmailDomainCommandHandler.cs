@@ -36,6 +36,7 @@ namespace OnAim.Admin.APP.Commands.Domain.Delete
             }
 
             domain.IsDeleted = true;
+            domain.IsActive = false;
             domain.DateDeleted = SystemDate.Now;
 
             await _repository.CommitChanges();

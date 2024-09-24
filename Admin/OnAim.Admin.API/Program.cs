@@ -31,6 +31,7 @@ builder.Services
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>));
+builder.Services.AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>));
 builder.Services.AddApp(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 

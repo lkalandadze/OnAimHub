@@ -43,14 +43,14 @@ namespace OnAim.Admin.API.Middleware
             {
                 var roles = user.GetRoles();
 
-                foreach (var role in roles)
-                {
-                    if (role == "SuperRole")
-                    {
-                        await _next(context);
-                        return;
-                    }
-                }
+                //foreach (var role in roles)
+                //{
+                //    if (role == "SuperRole")
+                //    {
+                //        await _next(context);
+                //        return;
+                //    }
+                //}
 
                 var hasPermission = await permissionService.RolesContainPermission(roles, dynamicRequiredPermission);
 
