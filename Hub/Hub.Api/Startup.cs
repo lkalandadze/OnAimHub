@@ -11,6 +11,7 @@ using Hub.Application.Services.Abstract;
 using Hub.Application.Services.Abstract.BackgroundJobs;
 using Hub.Application.Services.Concrete;
 using Hub.Application.Services.Concrete.BackgroundJobs;
+using Hub.Application.Services.Concretel;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Infrastructure.DataAccess;
@@ -25,7 +26,6 @@ using Serilog;
 using Serilog.Sinks.PostgreSQL;
 using System.Reflection;
 using System.Security.Cryptography;
-using static Dapper.SqlMapper;
 
 public class Startup
 {
@@ -56,6 +56,13 @@ public class Startup
         services.AddScoped<ISegmentRepository, SegmentRepository>();
         services.AddScoped<IPlayerSegmentRepository, PlayerSegmentRepository>();
         services.AddScoped<IPlayerLogRepository, PlayerLogRepository>();
+        services.AddScoped<IPlayerSegmentActRepository, PlayerSegmentActRepository>();
+        services.AddScoped<IPlayerSegmentActHistoryRepository, PlayerSegmentActHistoryRepository>();
+        services.AddScoped<IPlayerBlockedSegmentRepository, PlayerBlockedSegmentRepository>();
+        services.AddScoped<IConsulLogRepository, ConsulLogRepository>();
+        services.AddScoped<IReferralDistributionRepository, ReferralDistributionRepository>();
+        services.AddScoped<ISettingRepository, SettingRepository>();
+        services.AddScoped<IPlayerBanRepository, PlayerBanRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IPlayerBalanceService, PlayerBalanceService>();
@@ -65,11 +72,10 @@ public class Startup
         services.AddScoped<IAuthService, AuthService>();
         services.AddSingleton<IActiveGameService, ActiveGameService>();
         services.AddScoped<IJobService, JobService>();
+        services.AddScoped<IPlayerSegmentService, PlayerSegmentService>();
+        services.AddScoped<IPlayerSegmentActService, PlayerSegmentActService>();
+        services.AddScoped<IPlayerBlockedSegmentService, PlayerBlockedSegmentService>();
         services.AddScoped<IBackgroundJobScheduler, HangfireJobScheduler>();
-        services.AddScoped<IConsulLogRepository,  ConsulLogRepository>();
-        services.AddScoped<IReferralDistributionRepository, ReferralDistributionRepository>();
-        services.AddScoped<ISettingRepository, SettingRepository>();
-        services.AddScoped<IPlayerBanRepository, PlayerBanRepository>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));

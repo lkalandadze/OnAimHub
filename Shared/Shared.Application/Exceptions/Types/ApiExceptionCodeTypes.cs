@@ -22,6 +22,8 @@ public enum ApiExceptionCodeTypes
     // 4xxx: Custom Validation Errors
     ValidationFailed = 4500,
     DuplicateEntry = 4501,
+    MissingRequiredColumn = 4502,
+    InvalidDataFormat = 4503,
 
     // 5xxx: Custom Business Logic Errors
     BusinessRuleViolation = 5500,
