@@ -16,8 +16,11 @@ public class PlayerRepository(HubDbContext context) : BaseRepository<HubDbContex
     {
         string valuesClause = string.Join(", ", playerIds.Select(id => $"({id})"));
 
-        string script = $@"SELECT value AS ""Id"" FROM (VALUES {valuesClause}) AS numbers(value)
-                           WHERE value NOT IN (SELECT ""{nameof(Player.Id)}"" FROM ""{nameof(HubDbContext.Players)}"")";
+        string script = $@"SELECT numbers.value AS ""Id""
+                           FROM (VALUES {valuesClause}) AS numbers(value)
+                           LEFT JOIN ""{nameof(HubDbContext.Players)}"" AS players
+                           ON numbers.value = players.""{nameof(Player.Id)}""
+                           WHERE players.""{nameof(Player.Id)}"" IS NULL";
 
         return await _context.Players
             .FromSqlRaw(script)
