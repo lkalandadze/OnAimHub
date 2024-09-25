@@ -12,16 +12,16 @@ public class PlayerRepository(HubDbContext context) : BaseRepository<HubDbContex
         return await Query(p => p.Id == id).Include(x => x.PlayerSegments).FirstOrDefaultAsync();
     }
 
-    //TODO: should be fix
     public async Task<IEnumerable<int>> GetMissingPlayerIdsAsync(IEnumerable<int> playerIds)
     {
         string valuesClause = string.Join(", ", playerIds.Select(id => $"({id})"));
 
-        string script = $@"SELECT value FROM (VALUES {valuesClause}) AS numbers(value)
+        string script = $@"SELECT value AS ""Id"" FROM (VALUES {valuesClause}) AS numbers(value)
                            WHERE value NOT IN (SELECT ""{nameof(Player.Id)}"" FROM ""{nameof(HubDbContext.Players)}"")";
 
-        var missingPlayerIds = await _context.Database.ExecuteSqlRawAsync(script);
-
-        return [];
+        return await _context.Players
+            .FromSqlRaw(script)
+            .Select(p => p.Id)
+            .ToListAsync();
     }
 }

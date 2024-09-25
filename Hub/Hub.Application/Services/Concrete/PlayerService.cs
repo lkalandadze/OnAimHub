@@ -18,18 +18,13 @@ public class PlayerService : IPlayerService
 
     public async Task CreatePlayersIfNotExist(IEnumerable<int> playerIds)
     {
-        //TODO: optimizing player getting
-        foreach (var playerId in playerIds)
+        var missingPlayerIds = await _playerRepository.GetMissingPlayerIdsAsync(playerIds);
+
+        foreach (var playerId in missingPlayerIds)
         {
-            var player = await _playerRepository.OfIdAsync(playerId);
+            var player = new Player(playerId);
 
-            if (player == null)
-            {
-                player = new Player(playerId);
-
-                await _playerRepository.InsertAsync(player);
-            }
-
+            await _playerRepository.InsertAsync(player);
             await _unitOfWork.SaveAsync();
         }
     }
