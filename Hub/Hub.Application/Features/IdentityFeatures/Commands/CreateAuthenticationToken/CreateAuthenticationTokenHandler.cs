@@ -92,7 +92,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
 
         if (player == null)
         {
-            var playerSegment = new PlayerSegment(receivedPlayer.Id, "Default");
+            var playerSegment = new PlayerSegment(receivedPlayer.Id, "default");
             player = new Player(receivedPlayer.Id, receivedPlayer.UserName, recommendedById, [playerSegment]);
 
             if (request.PromoCode != null)

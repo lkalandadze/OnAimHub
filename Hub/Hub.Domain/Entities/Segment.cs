@@ -13,7 +13,7 @@ public class Segment : BaseEntity<string>
 
     public Segment(string id, string description, int priorityLevel, int? createdByUserId = null)
     {
-        Id = id;
+        Id = id.ToLower();
         Description = description;
         PriorityLevel = priorityLevel;
         CreatedByUserId = createdByUserId;

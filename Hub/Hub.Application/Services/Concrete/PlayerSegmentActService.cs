@@ -25,11 +25,11 @@ public class PlayerSegmentActService : IPlayerSegmentActService
         await _playerSegmentActHistoryRepository.InsertAsync(actHistory);
     }
 
-    public async Task CreateActWithHistoryAsync(PlayerSegmentActType action, IEnumerable<int> playerIds, string segmentId, int? byUserId = null)
+    public async Task CreateActWithHistoryAsync(PlayerSegmentActType action, IEnumerable<int> playerIds, string segmentId, int? byUserId, bool isBulk = default)
     {
-        var act = new PlayerSegmentAct(action, playerIds.Count(), segmentId, byUserId);
+        var act = new PlayerSegmentAct(action, playerIds.Count(), segmentId.ToLower(), byUserId);
 
-        if (playerIds.Count() > 1)
+        if (isBulk)
         {
             act.SetIsBulk();
         }

@@ -33,7 +33,7 @@ public class UnassignSegmentToPlayersHandler : IRequestHandler<UnassignSegmentTo
         }
 
         await _playerService.CreatePlayersIfNotExist(playerIds);
-        await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Unassign, playerIds, request.SegmentId, request.ByUserId);
+        await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Unassign, playerIds, request.SegmentId, request.ByUserId, true);
         _playerSegmentService.UnassignPlayersToSegment(playerIds, request.SegmentId);
 
         await _unitOfWork.SaveAsync();

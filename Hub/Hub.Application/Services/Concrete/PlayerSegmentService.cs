@@ -17,7 +17,7 @@ public class PlayerSegmentService : IPlayerSegmentService
     {
         foreach (var playerId in playerIds)
         {
-            var playerSegment = new PlayerSegment(playerId, segmentId);
+            var playerSegment = new PlayerSegment(playerId, segmentId.ToLower());
             await _playerSegmentRepository.InsertAsync(playerSegment);
         }
     }
@@ -26,7 +26,7 @@ public class PlayerSegmentService : IPlayerSegmentService
     {
         foreach (var playerId in playerIds)
         {
-            var playerSegment = new PlayerSegment(playerId, segmentId);
+            var playerSegment = new PlayerSegment(playerId, segmentId.ToLower());
             _playerSegmentRepository.Delete(playerSegment);
         }
     }

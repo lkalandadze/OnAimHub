@@ -3,9 +3,9 @@ using Hub.Domain.Enum;
 using Hub.Infrastructure.DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Domain.Entities;
+using Shared.Lib.Helpers;
 using System.Linq.Expressions;
 using System.Reflection;
-
 namespace Hub.Infrastructure;
 
 public class EFDatabaseInitializer
@@ -31,10 +31,10 @@ public class EFDatabaseInitializer
 
     protected static async Task SeedDbEnums(HubDbContext dbContext)
     {
-        var assembly = Assembly.Load("Hub.Domain");
+        var assembly = Assembly.GetAssembly(typeof(Player))!;
 
         var dbEnumTypes = assembly.GetTypes()
-            .Where(t => t.BaseType != null && t.BaseType.IsGenericType && t.BaseType.GetGenericTypeDefinition() == typeof(DbEnum<>));
+            .Where(t => t.BaseType != null && t.BaseType.IsGenericType && t.BaseType.GetGenericTypeDefinition() == typeof(DbEnum<,>));
 
         foreach (var enumType in dbEnumTypes)
         {
@@ -70,18 +70,27 @@ public class EFDatabaseInitializer
                         var condition = Expression.Equal(nameProperty, Expression.Constant(enumInstanceName));
                         var lambda = Expression.Lambda(condition, parameter);
 
-                        var exists = (bool)anyExistsMethod.Invoke(null, new object[] { dbSet, lambda })!;
+                        var exists = (bool)anyExistsMethod.Invoke(null, [dbSet, lambda])!;
 
                         if (exists)
                         {
                             continue;
                         }
 
-                        var dbEnumInstance = Activator.CreateInstance(enumType) as DbEnum<int>;
-                        dbEnumInstance!.Name = enumInstanceName;
+                        if (Activator.CreateInstance(enumType) is { } dbEnumInstance)
+                        {
+                            var idProperty = dbEnumInstance.GetType().GetProperties().First(x => x.Name == nameof(DbEnum<object>.Id));
 
-                        var addMethod = dbSet.GetType().GetMethod("Add");
-                        addMethod!.Invoke(dbSet, [dbEnumInstance]);
+                            if (idProperty != null && idProperty.PropertyType == typeof(string))
+                            {
+                                ObjectHelper.SetProperty(dbEnumInstance, idProperty, enumInstanceName);
+                            }
+
+                            ObjectHelper.SetProperty(dbEnumInstance, nameof(DbEnum<object>.Name), enumInstanceName);
+
+                            var addMethod = dbSet.GetType().GetMethod("Add");
+                            addMethod!.Invoke(dbSet, new[] { dbEnumInstance });
+                        }
                     }
                 }
 

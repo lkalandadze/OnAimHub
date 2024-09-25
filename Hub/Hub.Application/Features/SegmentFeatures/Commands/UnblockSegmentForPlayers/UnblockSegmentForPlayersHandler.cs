@@ -33,7 +33,7 @@ public class UnblockSegmentForPlayersHandler : IRequestHandler<UnblockSegmentFor
         }
 
         await _playerService.CreatePlayersIfNotExist(playerIds);
-        await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Unblock, playerIds, request.SegmentId, request.ByUserId);
+        await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Unblock, playerIds, request.SegmentId, request.ByUserId, true);
         _playerBlockedSegmentService.UnblockPlayerSegment(playerIds, request.SegmentId);
 
         await _unitOfWork.SaveAsync();

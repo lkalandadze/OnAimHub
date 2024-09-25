@@ -8,5 +8,5 @@ public interface IPlayerSegmentActService
 
     Task CreatePlayerSegmentActHistoryAsync(PlayerSegmentActHistory actHistory);
 
-    Task CreateActWithHistoryAsync(PlayerSegmentActType action, IEnumerable<int> playerIds, string segmentId, int? byUserId = null);
+    Task CreateActWithHistoryAsync(PlayerSegmentActType action, IEnumerable<int> playerIds, string segmentId, int? byUserId, bool isBulk = default);
 }
