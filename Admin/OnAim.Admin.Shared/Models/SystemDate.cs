@@ -1,14 +1,13 @@
-﻿namespace OnAim.Admin.Shared.Models
+﻿namespace OnAim.Admin.Shared.Models;
+
+public class SystemDate
 {
-    public class SystemDate
+    public static DateTimeOffset Now
     {
-        public static DateTimeOffset Now
+        get
         {
-            get
-            {
-                var date = DateTimeOffset.Now.ToUniversalTime();
-                return date;
-            }
+            var date = DateTimeOffset.Now.ToUniversalTime();
+            return date;
         }
     }
 }

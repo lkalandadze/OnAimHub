@@ -1,9 +1,8 @@
-﻿namespace OnAim.Admin.Shared.DTOs.Role
+﻿namespace OnAim.Admin.Shared.DTOs.Role;
+
+public class CreateRoleRequest
 {
-    public class CreateRoleRequest
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public List<int>? EndpointGroupIds { get; set; }
-    }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public List<int>? EndpointGroupIds { get; set; }
 }

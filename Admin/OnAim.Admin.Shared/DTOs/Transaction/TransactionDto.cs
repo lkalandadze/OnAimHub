@@ -1,9 +1,8 @@
-﻿namespace OnAim.Admin.Shared.DTOs.Transaction
+﻿namespace OnAim.Admin.Shared.DTOs.Transaction;
+
+public class TransactionDto
 {
-    public class TransactionDto
-    {
-        public int Id { get; set; }
-        public decimal Amount { get; set; }
-        public string Status { get; set; }
-    }
+    public int Id { get; set; }
+    public decimal Amount { get; set; }
+    public string Status { get; set; }
 }

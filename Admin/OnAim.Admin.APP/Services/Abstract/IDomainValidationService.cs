@@ -1,8 +1,7 @@
-﻿namespace OnAim.Admin.APP.Services.Abstract
+﻿namespace OnAim.Admin.APP.Services.Abstract;
+
+public interface IDomainValidationService
 {
-    public interface IDomainValidationService
-    {
-        Task<HashSet<string>> GetAllowedDomainsAsync();
-        Task<bool> IsDomainAllowedAsync(string email);
-    }
+    Task<HashSet<string>> GetAllowedDomainsAsync();
+    Task<bool> IsDomainAllowedAsync(string email);
 }

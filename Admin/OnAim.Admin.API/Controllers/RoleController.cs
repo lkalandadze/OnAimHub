@@ -1,46 +1,44 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
-using OnAim.Admin.APP.Commands.Role.Create;
-using OnAim.Admin.APP.Commands.Role.Delete;
-using OnAim.Admin.APP.Commands.Role.Update;
-using OnAim.Admin.APP.Queries.Role.GetAll;
-using OnAim.Admin.APP.Queries.Role.GetById;
-using OnAim.Admin.APP.Queries.Role.RolesExport;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.APP.Features.RoleFeatures.Commands.Create;
+using OnAim.Admin.APP.Features.RoleFeatures.Commands.Delete;
+using OnAim.Admin.APP.Features.RoleFeatures.Commands.Update;
+using OnAim.Admin.APP.Features.RoleFeatures.Queries.GetAll;
+using OnAim.Admin.APP.Features.RoleFeatures.Queries.GetById;
+using OnAim.Admin.Shared.ApplicationInfrastructure.Validation;
 using OnAim.Admin.Shared.DTOs.Role;
 using System.Net;
 
-namespace OnAim.Admin.API.Controllers
+namespace OnAim.Admin.API.Controllers;
+
+public class RoleController : ApiControllerBase
 {
-    public class RoleController : ApiControllerBase
-    {
-        [HttpPost("Create")]
-        [ProducesResponseType(typeof(CreateRoleCommand), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Create([FromBody] CreateRoleCommand roleModel)
-           => Ok(await Mediator.Send(roleModel));
+    [HttpPost("Create")]
+    [ProducesResponseType(typeof(CreateRoleCommand), (int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> Create([FromBody] CreateRoleCommand roleModel)
+       => Ok(await Mediator.Send(roleModel));
 
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll([FromQuery] RoleFilter filter)
-            => Ok(await Mediator.Send(new GetAllRolesQuery(filter)));
+    [HttpGet("GetAll")]
+    public async Task<IActionResult> GetAll([FromQuery] RoleFilter filter)
+        => Ok(await Mediator.Send(new GetAllRolesQuery(filter)));
 
-        [HttpGet("Get/{id}")]
-        public async Task<IActionResult> Get([FromRoute] int id)
-            => Ok(await Mediator.Send(new GetRoleByIdQuery(id)));
+    [HttpGet("Get/{id}")]
+    public async Task<IActionResult> Get([FromRoute] int id)
+        => Ok(await Mediator.Send(new GetRoleByIdQuery(id)));
 
-        //[HttpGet("Download")]
-        //public async Task<IResult> Download([FromQuery] RolesExportQuery query)
-        //{
-        //    var result = await Mediator.Send(query);
-        //    return result;
-        //}
+    //[HttpGet("Download")]
+    //public async Task<IResult> Download([FromQuery] RolesExportQuery query)
+    //{
+    //    var result = await Mediator.Send(query);
+    //    return result;
+    //}
 
-        [HttpPut("Update/{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRoleRequest model)
-            => Ok(await Mediator.Send(new UpdateRoleCommand(id, model)));
+    [HttpPut("Update/{id}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRoleRequest model)
+        => Ok(await Mediator.Send(new UpdateRoleCommand(id, model)));
 
-        [HttpPost("Delete/{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
-            => Ok(await Mediator.Send(new DeleteRoleCommand(id)));
-    }
+    [HttpPost("Delete/{id}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
+        => Ok(await Mediator.Send(new DeleteRoleCommand(id)));
 }

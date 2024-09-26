@@ -1,9 +1,8 @@
-﻿namespace OnAim.Admin.Shared.DTOs.Player.Balance
+﻿namespace OnAim.Admin.Shared.DTOs.Player.Balance;
+
+public class PlayerBalanceDto
 {
-    public class PlayerBalanceDto
-    {
-        public int Id { get; set; }
-        public decimal Amount { get; set; }
-        public string Currency { get; set; }
-    }
+    public int Id { get; set; }
+    public decimal Amount { get; set; }
+    public string Currency { get; set; }
 }

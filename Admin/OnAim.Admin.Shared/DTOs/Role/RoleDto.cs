@@ -1,9 +1,8 @@
-﻿namespace OnAim.Admin.Shared.DTOs.Role
+﻿namespace OnAim.Admin.Shared.DTOs.Role;
+
+public class RoleDto
 {
-    public class RoleDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public bool? IsActive { get; set; }
-    }
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public bool? IsActive { get; set; }
 }
