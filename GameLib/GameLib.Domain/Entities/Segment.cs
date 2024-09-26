@@ -11,7 +11,7 @@ public class Segment : BaseEntity<string>
         
     }
 
-    public Segment(string id, int configurationId)
+    public Segment(string id, int? configurationId = null)
     {
         Id = id.ToLower();
         ConfigurationId = configurationId;
@@ -19,7 +19,7 @@ public class Segment : BaseEntity<string>
     
     public bool IsDeleted { get; private set; }
 
-    public int ConfigurationId { get; private set; }
+    public int? ConfigurationId { get; private set; }
     public Configuration Configuration { get; private set; }
 
     public void Delete()

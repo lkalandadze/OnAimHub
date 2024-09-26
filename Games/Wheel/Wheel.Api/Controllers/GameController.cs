@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GameLib.Application.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wheel.Application.Models.Game;
 using Wheel.Application.Models.Player;
@@ -6,16 +7,16 @@ using Wheel.Application.Services.Abstract;
 
 namespace Wheel.Api.Controllers;
 
-public class HomeController : BaseApiController
+public class GameController : BaseApiController
 {
     private readonly IGameService _gameService;
 
-    public HomeController(IGameService gameService)
+    public GameController(IGameService gameService)
     {
         _gameService = gameService;
     }
 
-    [HttpGet("initial-data")]
+    [HttpGet("InitialData")]
     public ActionResult<InitialDataResponseModel> GetInitialDataAsync()
     {
         var result = _gameService.GetInitialData();
@@ -31,14 +32,14 @@ public class HomeController : BaseApiController
         return Ok(game);
     }
      
-    [HttpPost("play-jackpot")]
+    [HttpPost("PlayJackpot")]
     public async Task<ActionResult<PlayResponseModel>> PlayJackpotAsync([FromBody] PlayRequestModel model)
     {
         var result = await _gameService.PlayJackpotAsync(model);
         return Ok(result);
     }
 
-    [HttpPost("play-wheel")]
+    [HttpPost("PlayWheel")]
     public async Task<ActionResult<PlayResponseModel>> PlayWheelAsync([FromBody] PlayRequestModel model)
     {
         var result = await _gameService.PlayWheelAsync(model);

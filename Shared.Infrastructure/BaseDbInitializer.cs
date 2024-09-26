@@ -28,9 +28,9 @@ public abstract class BaseDbInitializer
                     continue;
                 }
 
-                var staticProperties = enumType.GetProperties(BindingFlags.Public | BindingFlags.Static);
+                var ownTypeStaticProperties = enumType.GetProperties(BindingFlags.Public | BindingFlags.Static);
 
-                foreach (var property in staticProperties)
+                foreach (var property in ownTypeStaticProperties)
                 {
                     var enumValue = property.GetValue(null);
 

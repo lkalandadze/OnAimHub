@@ -26,11 +26,25 @@ public class Configuration : BaseEntity<int>
     public ICollection<Price> Prices { get; private set; }
     public ICollection<Segment> Segments { get; private set; }
 
-    public void AddSegments(IEnumerable<Segment> segments)
+    public void ChangeDetails(string name, int value)
+    {
+        Name = name;
+        Value = value;
+    }
+
+    public void AssignSegments(IEnumerable<Segment> segments)
     {
         foreach (var segment in segments)
         {
             Segments.Add(segment);
+        }
+    }
+
+    public void UnassignSegments(IEnumerable<Segment> segments)
+    {
+        foreach (var segment in segments)
+        {
+            Segments.Remove(segment);
         }
     }
 
