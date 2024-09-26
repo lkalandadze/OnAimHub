@@ -60,7 +60,7 @@ namespace Leaderboard.Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    LeaderboardTemplateId = table.Column<int>(type: "integer", nullable: false),
+                    LeaderboardTemplateId = table.Column<int>(type: "integer", nullable: true),
                     AnnouncementDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     StartDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     EndDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
@@ -74,20 +74,18 @@ namespace Leaderboard.Infrastructure.Migrations
                         name: "FK_LeaderboardRecords_LeaderboardTemplate_LeaderboardTemplateId",
                         column: x => x.LeaderboardTemplateId,
                         principalTable: "LeaderboardTemplate",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "LeaderboardPrizes",
+                name: "LeaderboardTemplatePrize",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    LeaderboardTemplateId = table.Column<int>(type: "integer", nullable: false),
                     StartRank = table.Column<int>(type: "integer", nullable: false),
                     EndRank = table.Column<int>(type: "integer", nullable: false),
-                    LeaderboardRecordId = table.Column<int>(type: "integer", nullable: true),
-                    LeaderboardTemplateId = table.Column<int>(type: "integer", nullable: true),
                     PrizeId = table.Column<string>(type: "text", nullable: false),
                     Amount = table.Column<int>(type: "integer", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
@@ -95,19 +93,46 @@ namespace Leaderboard.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LeaderboardPrizes", x => x.Id);
+                    table.PrimaryKey("PK_LeaderboardTemplatePrize", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LeaderboardPrizes_LeaderboardRecords_LeaderboardRecordId",
-                        column: x => x.LeaderboardRecordId,
-                        principalTable: "LeaderboardRecords",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_LeaderboardPrizes_LeaderboardTemplate_LeaderboardTemplateId",
+                        name: "FK_LeaderboardTemplatePrize_LeaderboardTemplate_LeaderboardTem~",
                         column: x => x.LeaderboardTemplateId,
                         principalTable: "LeaderboardTemplate",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_LeaderboardPrizes_Prize_PrizeId",
+                        name: "FK_LeaderboardTemplatePrize_Prize_PrizeId",
+                        column: x => x.PrizeId,
+                        principalTable: "Prize",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LeaderboardRecordPrizes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    LeaderboardRecordId = table.Column<int>(type: "integer", nullable: false),
+                    StartRank = table.Column<int>(type: "integer", nullable: false),
+                    EndRank = table.Column<int>(type: "integer", nullable: false),
+                    PrizeId = table.Column<string>(type: "text", nullable: false),
+                    Amount = table.Column<int>(type: "integer", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DateDeleted = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LeaderboardRecordPrizes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LeaderboardRecordPrizes_LeaderboardRecords_LeaderboardRecor~",
+                        column: x => x.LeaderboardRecordId,
+                        principalTable: "LeaderboardRecords",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LeaderboardRecordPrizes_Prize_PrizeId",
                         column: x => x.PrizeId,
                         principalTable: "Prize",
                         principalColumn: "Id",
@@ -115,24 +140,29 @@ namespace Leaderboard.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_LeaderboardPrizes_LeaderboardRecordId",
-                table: "LeaderboardPrizes",
+                name: "IX_LeaderboardRecordPrizes_LeaderboardRecordId",
+                table: "LeaderboardRecordPrizes",
                 column: "LeaderboardRecordId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LeaderboardPrizes_LeaderboardTemplateId",
-                table: "LeaderboardPrizes",
-                column: "LeaderboardTemplateId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LeaderboardPrizes_PrizeId",
-                table: "LeaderboardPrizes",
+                name: "IX_LeaderboardRecordPrizes_PrizeId",
+                table: "LeaderboardRecordPrizes",
                 column: "PrizeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LeaderboardRecords_LeaderboardTemplateId",
                 table: "LeaderboardRecords",
                 column: "LeaderboardTemplateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LeaderboardTemplatePrize_LeaderboardTemplateId",
+                table: "LeaderboardTemplatePrize",
+                column: "LeaderboardTemplateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LeaderboardTemplatePrize_PrizeId",
+                table: "LeaderboardTemplatePrize",
+                column: "PrizeId");
         }
 
         /// <inheritdoc />
@@ -142,7 +172,10 @@ namespace Leaderboard.Infrastructure.Migrations
                 name: "Currencies");
 
             migrationBuilder.DropTable(
-                name: "LeaderboardPrizes");
+                name: "LeaderboardRecordPrizes");
+
+            migrationBuilder.DropTable(
+                name: "LeaderboardTemplatePrize");
 
             migrationBuilder.DropTable(
                 name: "LeaderboardRecords");

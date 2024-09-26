@@ -19,11 +19,12 @@ public class CreateLeaderboardTemplateCommandHandler : IRequestHandler<CreateLea
             request.JobType,
             request.StartTime,
             request.DurationInDays,
-            request.AnnouncementLeadTimeInDays);
+            request.AnnouncementLeadTimeInDays,
+            request.CreationLeadTimeInDays);
 
         foreach (var prize in request.LeaderboardPrizes)
         {
-            leaderboard.AddLeaderboardPrizes(prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
+            leaderboard.AddLeaderboardTemplatePrizes(prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
         }
 
         await _leaderboardTemplateRepository.InsertAsync(leaderboard);

@@ -15,7 +15,7 @@ public class GetLeaderboardRecordByIdQueryHandler : IRequestHandler<GetLeaderboa
 
     public async Task<GetLeaderboardRecordByIdQueryResponse> Handle(GetLeaderboardRecordByIdQuery request, CancellationToken cancellationToken)
     {
-        var leaderboardRecord = await _leaderboardRecordRepository.Query().Include(x => x.LeaderboardPrizes).FirstOrDefaultAsync(x => x.Id == request.Id);
+        var leaderboardRecord = await _leaderboardRecordRepository.Query().Include(x => x.LeaderboardRecordPrizes).FirstOrDefaultAsync(x => x.Id == request.Id);
 
         if (leaderboardRecord == default)
             throw new Exception("Leaderboard record not found");

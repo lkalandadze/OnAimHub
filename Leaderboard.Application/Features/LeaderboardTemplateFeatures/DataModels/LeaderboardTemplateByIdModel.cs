@@ -12,6 +12,7 @@ public sealed record LeaderboardTemplateByIdModel
     public TimeSpan StartTime { get; set; }
     public int DurationInDays { get; set; }
     public int AnnouncementLeadTimeInDays { get; set; }
+    public int CreationLeadTimeInDays { get; set; }
     public List<LeaderboardPrizeModel> Prizes { get; set; } = new();
 
     public static LeaderboardTemplateByIdModel MapFrom(LeaderboardTemplate leaderboardTemplate)
@@ -22,9 +23,10 @@ public sealed record LeaderboardTemplateByIdModel
             Name = leaderboardTemplate.Name,
             JobType = leaderboardTemplate.JobType,
             StartTime = leaderboardTemplate.StartTime,
-            DurationInDays = leaderboardTemplate.
+            DurationInDays = leaderboardTemplate.DurationInDays,
             AnnouncementLeadTimeInDays = leaderboardTemplate.AnnouncementLeadTimeInDays,
-            Prizes = leaderboardTemplate.LeaderboardPrizes?.Select(prize => new LeaderboardPrizeModel
+            CreationLeadTimeInDays = leaderboardTemplate.CreationLeadTimeInDays,
+            Prizes = leaderboardTemplate.LeaderboardTemplatePrizes?.Select(prize => new LeaderboardPrizeModel
             {
                 Id = prize.Id,
                 StartRank = prize.StartRank,

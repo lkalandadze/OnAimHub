@@ -15,7 +15,7 @@ public class GetLeaderboardTemplateByIdQueryHandler : IRequestHandler<GetLeaderb
 
     public async Task<GetLeaderboardTemplateByIdQueryResponse> Handle(GetLeaderboardTemplateByIdQuery request, CancellationToken cancellationToken)
     {
-        var leaderboardTemplate = await _leaderboardTemplateRepository.Query().Include(x => x.LeaderboardPrizes).FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var leaderboardTemplate = await _leaderboardTemplateRepository.Query().Include(x => x.LeaderboardTemplatePrizes).FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (leaderboardTemplate == default)
             throw new Exception("Leaderboard template not found");

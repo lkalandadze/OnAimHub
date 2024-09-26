@@ -25,7 +25,8 @@ public class LeaderboardDbContext : DbContext
 
     public DbSet<LeaderboardTemplate> LeaderboardTemplate { get; set; }
     public DbSet<LeaderboardRecord> LeaderboardRecords { get; set; }
-    public DbSet<LeaderboardPrize> LeaderboardPrizes { get; set; }
+    public DbSet<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; }
+    public DbSet<LeaderboardTemplatePrize> LeaderboardTemplatePrize { get; set; }
     public DbSet<Currency> Currencies { get; set; }
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken)

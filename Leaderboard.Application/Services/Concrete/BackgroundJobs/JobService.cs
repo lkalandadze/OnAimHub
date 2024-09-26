@@ -35,13 +35,14 @@ public class JobService : IJobService
         var leaderboardTemplate = response.Data;
 
         var now = DateTimeOffset.UtcNow;
-        DateTimeOffset announcementDate, startDate, endDate;
+        DateTimeOffset creationDate, announcementDate, startDate, endDate;
 
         switch (leaderboardTemplate.JobType)
         {
             case JobTypeEnum.Daily:
                 startDate = now.Date.Add(leaderboardTemplate.StartTime).ToUniversalTime();
                 endDate = startDate.AddDays(leaderboardTemplate.DurationInDays);
+                creationDate = startDate.AddDays(-leaderboardTemplate.CreationLeadTimeInDays);
                 announcementDate = startDate.AddDays(-leaderboardTemplate.AnnouncementLeadTimeInDays);
                 break;
 
@@ -50,6 +51,7 @@ public class JobService : IJobService
                 int daysUntilMonday = ((int)DayOfWeek.Monday - (int)now.DayOfWeek + 7) % 7;
                 startDate = now.Date.AddDays(daysUntilMonday).Add(leaderboardTemplate.StartTime).ToUniversalTime();
                 endDate = startDate.AddDays(leaderboardTemplate.DurationInDays);
+                creationDate = startDate.AddDays(-leaderboardTemplate.CreationLeadTimeInDays);
                 announcementDate = startDate.AddDays(-leaderboardTemplate.AnnouncementLeadTimeInDays);
                 break;
 
@@ -58,6 +60,7 @@ public class JobService : IJobService
                 var firstOfNextMonth = new DateTime(now.Year, now.Month, 1).AddMonths(1);
                 startDate = new DateTimeOffset(firstOfNextMonth.Add(leaderboardTemplate.StartTime), TimeSpan.Zero).ToUniversalTime();
                 endDate = startDate.AddDays(leaderboardTemplate.DurationInDays);
+                creationDate = startDate.AddDays(-leaderboardTemplate.CreationLeadTimeInDays);
                 announcementDate = startDate.AddDays(-leaderboardTemplate.AnnouncementLeadTimeInDays);
                 break;
 
@@ -65,6 +68,7 @@ public class JobService : IJobService
                 // Custom logic for start, end, and announcement dates
                 startDate = now.Date.Add(leaderboardTemplate.StartTime).ToUniversalTime();
                 endDate = startDate.AddDays(leaderboardTemplate.DurationInDays);
+                creationDate = startDate.AddDays(-leaderboardTemplate.CreationLeadTimeInDays);
                 announcementDate = startDate.AddDays(-leaderboardTemplate.AnnouncementLeadTimeInDays);
                 break;
 
@@ -74,6 +78,7 @@ public class JobService : IJobService
 
         var newRecord = new LeaderboardRecord(
             leaderboardTemplate.Name,
+            creationDate.ToUniversalTime(),
             announcementDate.ToUniversalTime(),
             startDate.ToUniversalTime(),
             endDate.ToUniversalTime(),
@@ -84,7 +89,7 @@ public class JobService : IJobService
 
         foreach (var prize in leaderboardTemplate.Prizes)
         {
-            newRecord.AddLeaderboardPrizes(prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
+            newRecord.AddLeaderboardRecordPrizes(prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
         }
 
         await _leaderboardRecordRepository.InsertAsync(newRecord);

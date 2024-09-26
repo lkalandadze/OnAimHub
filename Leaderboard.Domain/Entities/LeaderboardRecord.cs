@@ -10,9 +10,10 @@ public class LeaderboardRecord : BaseEntity<int>
         
     }
 
-    public LeaderboardRecord(string name, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate, LeaderboardType leaderboardType, JobTypeEnum jobType, int? leaderboardTemplateId)
+    public LeaderboardRecord(string name, DateTimeOffset creationDate, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate, LeaderboardType leaderboardType, JobTypeEnum jobType, int? leaderboardTemplateId)
     {
         Name = name;
+        CreationDate = creationDate;
         AnnouncementDate = announcementDate;
         StartDate = startDate;
         EndDate = endDate;
@@ -24,16 +25,18 @@ public class LeaderboardRecord : BaseEntity<int>
     public string Name { get; set; }
     public int? LeaderboardTemplateId { get; set; }
     public LeaderboardTemplate LeaderboardTemplate { get; set; }
+    public DateTimeOffset CreationDate { get; set; }
     public DateTimeOffset AnnouncementDate { get; set; }
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
     public LeaderboardType LeaderboardType { get; set; }
     public JobTypeEnum JobType { get; set; }
-    public ICollection<LeaderboardPrize> LeaderboardPrizes { get; set; } = new List<LeaderboardPrize>();
+    public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; } = new List<LeaderboardRecordPrize>();
 
-    public void Update(string name, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate, LeaderboardType leaderboardType, JobTypeEnum jobType)
+    public void Update(string name, DateTimeOffset creationDate, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate, LeaderboardType leaderboardType, JobTypeEnum jobType)
     {
         Name = name;
+        CreationDate = creationDate;
         AnnouncementDate = announcementDate;
         StartDate = startDate;
         EndDate = endDate;
@@ -41,15 +44,15 @@ public class LeaderboardRecord : BaseEntity<int>
         JobType = jobType;
     }
 
-    public void AddLeaderboardPrizes(int startRank, int endRank, string prizeId, int amount)
+    public void AddLeaderboardRecordPrizes(int startRank, int endRank, string prizeId, int amount)
     {
-        var prize = new LeaderboardPrize(startRank, endRank, prizeId, amount);
-        LeaderboardPrizes.Add(prize);
+        var prize = new LeaderboardRecordPrize(startRank, endRank, prizeId, amount);
+        LeaderboardRecordPrizes.Add(prize);
     }
 
     public void UpdateLeaderboardPrizes(int id, int startRank, int endRank, string prizeId, int amount)
     {
-        var prize = LeaderboardPrizes.FirstOrDefault(x => x.Id == id);
+        var prize = LeaderboardRecordPrizes.FirstOrDefault(x => x.Id == id);
 
         if (prize != null) return;
 

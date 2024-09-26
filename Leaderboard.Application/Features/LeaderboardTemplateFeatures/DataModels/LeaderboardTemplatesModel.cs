@@ -11,6 +11,7 @@ public sealed record LeaderboardTemplatesModel
     public TimeSpan StartTime { get; set; }
     public int DurationInDays { get; set; }
     public int AnnouncementLeadTimeInDays { get; set; }
+    public int CreationLeadTimeInDays { get; set; }
     public static LeaderboardTemplatesModel MapFrom(LeaderboardTemplate leaderboardTemplate)
     {
         return new LeaderboardTemplatesModel
@@ -21,6 +22,7 @@ public sealed record LeaderboardTemplatesModel
             StartTime = leaderboardTemplate.StartTime,
             DurationInDays = leaderboardTemplate.DurationInDays,
             AnnouncementLeadTimeInDays = leaderboardTemplate.AnnouncementLeadTimeInDays,
+            CreationLeadTimeInDays = leaderboardTemplate.CreationLeadTimeInDays
         };
     }
 }

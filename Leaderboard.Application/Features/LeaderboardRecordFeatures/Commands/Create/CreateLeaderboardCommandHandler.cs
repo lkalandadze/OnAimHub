@@ -17,6 +17,7 @@ public class CreateLeaderboardCommandHandler : IRequestHandler<CreateLeaderboard
     {
         var leaderboard = new LeaderboardRecord(
             request.Name,
+            request.CreationDate,
             request.AnnouncementDate,
             request.StartDate,
             request.EndDate,
@@ -26,7 +27,7 @@ public class CreateLeaderboardCommandHandler : IRequestHandler<CreateLeaderboard
 
         foreach (var prize in request.LeaderboardPrizes)
         {
-            leaderboard.AddLeaderboardPrizes(prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
+            leaderboard.AddLeaderboardRecordPrizes(prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
         }
 
         await _leaderboardRecordRepository.InsertAsync(leaderboard);

@@ -10,6 +10,7 @@ public sealed class CreateLeaderboardTemplateCommand : IRequest
     public TimeSpan StartTime { get; set; }
     public int DurationInDays { get; set; }
     public int AnnouncementLeadTimeInDays { get; set; }
+    public int CreationLeadTimeInDays { get; set; }
     public List<CreateLeaderboardTemplatePrizeCommandItem> LeaderboardPrizes { get; set; }
 }
 

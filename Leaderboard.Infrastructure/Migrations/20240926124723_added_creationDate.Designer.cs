@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Leaderboard.Infrastructure.Migrations
 {
     [DbContext(typeof(LeaderboardDbContext))]
-    [Migration("20240926070305_init")]
-    partial class init
+    [Migration("20240926124723_added_creationDate")]
+    partial class added_creationDate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,7 +40,48 @@ namespace Leaderboard.Infrastructure.Migrations
                     b.ToTable("Currencies");
                 });
 
-            modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardPrize", b =>
+            modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnOrder(1);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("AnnouncementDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("JobType")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("LeaderboardTemplateId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LeaderboardType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LeaderboardTemplateId");
+
+                    b.ToTable("LeaderboardRecords");
+                });
+
+            modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardRecordPrize", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,10 +102,7 @@ namespace Leaderboard.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("LeaderboardRecordId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("LeaderboardTemplateId")
+                    b.Property<int>("LeaderboardRecordId")
                         .HasColumnType("integer");
 
                     b.Property<string>("PrizeId")
@@ -78,49 +116,9 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasIndex("LeaderboardRecordId");
 
-                    b.HasIndex("LeaderboardTemplateId");
-
                     b.HasIndex("PrizeId");
 
-                    b.ToTable("LeaderboardPrizes");
-                });
-
-            modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardRecord", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnOrder(1);
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTimeOffset>("AnnouncementDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("EndDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("JobType")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("LeaderboardTemplateId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("LeaderboardType")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTimeOffset>("StartDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LeaderboardTemplateId");
-
-                    b.ToTable("LeaderboardRecords");
+                    b.ToTable("LeaderboardRecordPrizes");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardTemplate", b =>
@@ -133,6 +131,9 @@ namespace Leaderboard.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AnnouncementLeadTimeInDays")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CreationLeadTimeInDays")
                         .HasColumnType("integer");
 
                     b.Property<int>("DurationInDays")
@@ -153,6 +154,46 @@ namespace Leaderboard.Infrastructure.Migrations
                     b.ToTable("LeaderboardTemplate");
                 });
 
+            modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardTemplatePrize", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnOrder(1);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("DateDeleted")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("EndRank")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("LeaderboardTemplateId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("PrizeId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("StartRank")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LeaderboardTemplateId");
+
+                    b.HasIndex("PrizeId");
+
+                    b.ToTable("LeaderboardTemplatePrize");
+                });
+
             modelBuilder.Entity("Leaderboard.Domain.Entities.Prize", b =>
                 {
                     b.Property<string>("Id")
@@ -168,15 +209,22 @@ namespace Leaderboard.Infrastructure.Migrations
                     b.ToTable("Prize");
                 });
 
-            modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardPrize", b =>
+            modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardRecord", b =>
+                {
+                    b.HasOne("Leaderboard.Domain.Entities.LeaderboardTemplate", "LeaderboardTemplate")
+                        .WithMany()
+                        .HasForeignKey("LeaderboardTemplateId");
+
+                    b.Navigation("LeaderboardTemplate");
+                });
+
+            modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardRecordPrize", b =>
                 {
                     b.HasOne("Leaderboard.Domain.Entities.LeaderboardRecord", "LeaderboardRecord")
-                        .WithMany("LeaderboardPrizes")
-                        .HasForeignKey("LeaderboardRecordId");
-
-                    b.HasOne("Leaderboard.Domain.Entities.LeaderboardTemplate", "LeaderboardTemplate")
-                        .WithMany("LeaderboardPrizes")
-                        .HasForeignKey("LeaderboardTemplateId");
+                        .WithMany("LeaderboardRecordPrizes")
+                        .HasForeignKey("LeaderboardRecordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Leaderboard.Domain.Entities.Prize", "Prize")
                         .WithMany()
@@ -186,6 +234,23 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.Navigation("LeaderboardRecord");
 
+                    b.Navigation("Prize");
+                });
+
+            modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardTemplatePrize", b =>
+                {
+                    b.HasOne("Leaderboard.Domain.Entities.LeaderboardTemplate", "LeaderboardTemplate")
+                        .WithMany("LeaderboardTemplatePrizes")
+                        .HasForeignKey("LeaderboardTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Leaderboard.Domain.Entities.Prize", "Prize")
+                        .WithMany()
+                        .HasForeignKey("PrizeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("LeaderboardTemplate");
 
                     b.Navigation("Prize");
@@ -193,23 +258,12 @@ namespace Leaderboard.Infrastructure.Migrations
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardRecord", b =>
                 {
-                    b.HasOne("Leaderboard.Domain.Entities.LeaderboardTemplate", "LeaderboardTemplate")
-                        .WithMany()
-                        .HasForeignKey("LeaderboardTemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LeaderboardTemplate");
-                });
-
-            modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardRecord", b =>
-                {
-                    b.Navigation("LeaderboardPrizes");
+                    b.Navigation("LeaderboardRecordPrizes");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardTemplate", b =>
                 {
-                    b.Navigation("LeaderboardPrizes");
+                    b.Navigation("LeaderboardTemplatePrizes");
                 });
 #pragma warning restore 612, 618
         }

@@ -7,6 +7,7 @@ public sealed class CreateLeaderboardCommand : IRequest
 {
     public int? LeaderboardTemplateId { get; set; }
     public string Name { get; set; }
+    public DateTimeOffset CreationDate { get; set; }
     public DateTimeOffset AnnouncementDate { get; set; }
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
