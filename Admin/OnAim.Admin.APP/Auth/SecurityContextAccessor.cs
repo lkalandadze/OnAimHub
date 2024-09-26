@@ -2,59 +2,58 @@
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
-namespace OnAim.Admin.APP.Auth
+namespace OnAim.Admin.APP.Auth;
+
+public class SecurityContextAccessor : ISecurityContextAccessor
 {
-    public class SecurityContextAccessor : ISecurityContextAccessor
+    private readonly ILogger<SecurityContextAccessor> _logger;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public SecurityContextAccessor(IHttpContextAccessor httpContextAccessor,
+        ILogger<SecurityContextAccessor> logger)
     {
-        private readonly ILogger<SecurityContextAccessor> _logger;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
 
-        public SecurityContextAccessor(IHttpContextAccessor httpContextAccessor,
-            ILogger<SecurityContextAccessor> logger)
+    public int UserId
+    {
+        get
         {
-            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
+            var user = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        public int UserId
-        {
-            get
+            if (int.TryParse(user, out int userId))
             {
-                var user = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-                if (int.TryParse(user, out int userId))
-                {
-                    return userId;
-                }
-
                 return userId;
             }
-        }
 
-        public string JwtToken
-        {
-            get
-            {
-                return _httpContextAccessor.HttpContext?.Request?.Headers["Authorization"];
-            }
+            return userId;
         }
+    }
 
-        public bool IsAuthenticated
+    public string JwtToken
+    {
+        get
         {
-            get
-            {
-                var isAuthenticated = _httpContextAccessor.HttpContext?.User?.Identities?.FirstOrDefault()?.IsAuthenticated;
-                return isAuthenticated.HasValue && isAuthenticated.Value;
-            }
+            return _httpContextAccessor.HttpContext?.Request?.Headers["Authorization"];
         }
+    }
 
-        public string Role
+    public bool IsAuthenticated
+    {
+        get
         {
-            get
-            {
-                var role = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
-                return role;
-            }
+            var isAuthenticated = _httpContextAccessor.HttpContext?.User?.Identities?.FirstOrDefault()?.IsAuthenticated;
+            return isAuthenticated.HasValue && isAuthenticated.Value;
+        }
+    }
+
+    public string Role
+    {
+        get
+        {
+            var role = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
+            return role;
         }
     }
 }

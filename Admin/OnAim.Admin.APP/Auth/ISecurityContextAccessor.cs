@@ -1,10 +1,9 @@
-﻿namespace OnAim.Admin.APP.Auth
+﻿namespace OnAim.Admin.APP.Auth;
+
+public interface ISecurityContextAccessor
 {
-    public interface ISecurityContextAccessor
-    {
-        int UserId { get; }
-        string Role { get; }
-        string JwtToken { get; }
-        bool IsAuthenticated { get; }
-    }
+    int UserId { get; }
+    string Role { get; }
+    string JwtToken { get; }
+    bool IsAuthenticated { get; }
 }

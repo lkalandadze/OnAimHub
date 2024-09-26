@@ -7,15 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Commands\User\Delete\Handlers\**" />
-    <Compile Remove="Commands\User\Update\Handlers\**" />
-    <Compile Remove="Queries\Role\Handler\**" />
-    <EmbeddedResource Remove="Commands\User\Delete\Handlers\**" />
-    <EmbeddedResource Remove="Commands\User\Update\Handlers\**" />
-    <EmbeddedResource Remove="Queries\Role\Handler\**" />
-    <None Remove="Commands\User\Delete\Handlers\**" />
-    <None Remove="Commands\User\Update\Handlers\**" />
-    <None Remove="Queries\Role\Handler\**" />
+    <Compile Remove="Features\UserFeatures\Commands\Delete\Handlers\**" />
+    <Compile Remove="Features\UserFeatures\Commands\Update\Handlers\**" />
+    <EmbeddedResource Remove="Features\UserFeatures\Commands\Delete\Handlers\**" />
+    <EmbeddedResource Remove="Features\UserFeatures\Commands\Update\Handlers\**" />
+    <None Remove="Features\UserFeatures\Commands\Delete\Handlers\**" />
+    <None Remove="Features\UserFeatures\Commands\Update\Handlers\**" />
   </ItemGroup>
 
   <ItemGroup>

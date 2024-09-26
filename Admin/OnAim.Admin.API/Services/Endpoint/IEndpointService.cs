@@ -1,8 +1,7 @@
-﻿namespace OnAim.Admin.API.Service.Endpoint
+﻿namespace OnAim.Admin.API.Service.Endpoint;
+
+public interface IEndpointService
 {
-    public interface IEndpointService
-    {
-        List<EndpointInfo> GetAllEndpoints();
-        Task SaveEndpointsAsync();
-    }
+    List<EndpointInfo> GetAllEndpoints();
+    Task SaveEndpointsAsync();
 }

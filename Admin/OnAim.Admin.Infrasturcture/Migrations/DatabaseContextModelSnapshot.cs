@@ -22,7 +22,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.AccessToken", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.AccessToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,7 +62,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.ToTable("AccessTokens");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.AllowedEmailDomain", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.AllowedEmailDomain", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,7 +97,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.ToTable("AllowedDomains");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.AppSetting", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.AppSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -131,41 +131,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.ToTable("AppSettings", (string)null);
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.AuditLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Log")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("ObjectId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset>("Timestamp")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AuditLogs");
-                });
-
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.Endpoint", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.Endpoint", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -211,7 +177,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.ToTable("Endpoints");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.EndpointGroup", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.EndpointGroup", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -250,7 +216,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.ToTable("EndpointGroups");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.EndpointGroupEndpoint", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.EndpointGroupEndpoint", b =>
                 {
                     b.Property<int>("EndpointGroupId")
                         .HasColumnType("integer");
@@ -268,7 +234,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.ToTable("EndpointGroupEndpoints");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.RefreshToken", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -311,44 +277,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.RejectedLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ErrorMessage")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Log")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("ObjectId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RetryCount")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset>("Timestamp")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RejectedLogs");
-                });
-
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.Role", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -387,7 +316,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.RoleEndpointGroup", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.RoleEndpointGroup", b =>
                 {
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");
@@ -405,7 +334,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.ToTable("RoleEndpointGroups");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.User", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -428,7 +357,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.Property<DateTimeOffset>("DateDeleted")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset>("DateUpdated")
@@ -492,7 +421,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.UserRole", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.UserRole", b =>
                 {
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
@@ -510,9 +439,9 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.AccessToken", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.AccessToken", b =>
                 {
-                    b.HasOne("OnAim.Admin.Infrasturcture.Entities.User", "User")
+                    b.HasOne("OnAim.Admin.Domain.Entities.User", "User")
                         .WithMany("AccessTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -521,15 +450,15 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.EndpointGroupEndpoint", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.EndpointGroupEndpoint", b =>
                 {
-                    b.HasOne("OnAim.Admin.Infrasturcture.Entities.EndpointGroup", "EndpointGroup")
+                    b.HasOne("OnAim.Admin.Domain.Entities.EndpointGroup", "EndpointGroup")
                         .WithMany("EndpointGroupEndpoints")
                         .HasForeignKey("EndpointGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OnAim.Admin.Infrasturcture.Entities.Endpoint", "Endpoint")
+                    b.HasOne("OnAim.Admin.Domain.Entities.Endpoint", "Endpoint")
                         .WithMany("EndpointGroupEndpoints")
                         .HasForeignKey("EndpointId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -540,9 +469,9 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.Navigation("EndpointGroup");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.RefreshToken", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("OnAim.Admin.Infrasturcture.Entities.User", "User")
+                    b.HasOne("OnAim.Admin.Domain.Entities.User", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -551,15 +480,15 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.RoleEndpointGroup", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.RoleEndpointGroup", b =>
                 {
-                    b.HasOne("OnAim.Admin.Infrasturcture.Entities.EndpointGroup", "EndpointGroup")
+                    b.HasOne("OnAim.Admin.Domain.Entities.EndpointGroup", "EndpointGroup")
                         .WithMany("RoleEndpointGroups")
                         .HasForeignKey("EndpointGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OnAim.Admin.Infrasturcture.Entities.Role", "Role")
+                    b.HasOne("OnAim.Admin.Domain.Entities.Role", "Role")
                         .WithMany("RoleEndpointGroups")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -570,15 +499,15 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.UserRole", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.UserRole", b =>
                 {
-                    b.HasOne("OnAim.Admin.Infrasturcture.Entities.Role", "Role")
+                    b.HasOne("OnAim.Admin.Domain.Entities.Role", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OnAim.Admin.Infrasturcture.Entities.User", "User")
+                    b.HasOne("OnAim.Admin.Domain.Entities.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -589,26 +518,26 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.Endpoint", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.Endpoint", b =>
                 {
                     b.Navigation("EndpointGroupEndpoints");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.EndpointGroup", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.EndpointGroup", b =>
                 {
                     b.Navigation("EndpointGroupEndpoints");
 
                     b.Navigation("RoleEndpointGroups");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.Role", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.Role", b =>
                 {
                     b.Navigation("RoleEndpointGroups");
 
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("OnAim.Admin.Infrasturcture.Entities.User", b =>
+            modelBuilder.Entity("OnAim.Admin.Domain.Entities.User", b =>
                 {
                     b.Navigation("AccessTokens");
 

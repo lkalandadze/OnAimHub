@@ -1,8 +1,7 @@
-﻿namespace OnAim.Admin.Shared.Specification
+﻿namespace OnAim.Admin.Shared.Specification;
+
+internal interface ISpecification<in T>
 {
-    internal interface ISpecification<in T>
-    {
-        bool IsSatisfiedBy(T entity);
-    }
+    bool IsSatisfiedBy(T entity);
 }
 

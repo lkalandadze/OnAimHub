@@ -1,17 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Infrasturcture.Entities;
+using OnAim.Admin.Domain.Entities;
 
-namespace OnAim.Admin.Infrasturcture.Persistance.Data.DbConfiguration
+namespace OnAim.Admin.Infrasturcture.Persistance.Data.DbConfiguration;
+
+public class UserEntityConfiguration : IEntityTypeConfiguration<User>
 {
-    public class UserEntityConfiguration : IEntityTypeConfiguration<User>
+    public void Configure(EntityTypeBuilder<User> builder)
     {
-        public void Configure(EntityTypeBuilder<User> builder)
-        {
-            builder.HasKey(p => p.Id);
-            builder.Property(p => p.Id).ValueGeneratedNever();
+        builder.HasMany(u => u.AccessTokens)
+               .WithOne(at => at.User)
+               .HasForeignKey(at => at.UserId);
 
-            builder.Property(p => p.Email).HasMaxLength(255);
-        }
+        builder.HasMany(u => u.RefreshTokens)
+               .WithOne(rt => rt.User)
+               .HasForeignKey(rt => rt.UserId);
     }
 }

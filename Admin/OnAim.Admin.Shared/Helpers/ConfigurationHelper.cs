@@ -1,19 +1,18 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace OnAim.Admin.Shared.Helpers
-{
-    public static class ConfigurationHelper
-    {
-        public static IConfiguration GetConfiguration(string basePath = null)
-        {
-            basePath ??= Directory.GetCurrentDirectory();
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(basePath)
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", true)
-                .AddEnvironmentVariables();
+namespace OnAim.Admin.Shared.Helpers;
 
-            return builder.Build();
-        }
+public static class ConfigurationHelper
+{
+    public static IConfiguration GetConfiguration(string basePath = null)
+    {
+        basePath ??= Directory.GetCurrentDirectory();
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(basePath)
+            .AddJsonFile("appsettings.json")
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", true)
+            .AddEnvironmentVariables();
+
+        return builder.Build();
     }
 }
