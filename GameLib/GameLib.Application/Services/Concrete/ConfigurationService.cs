@@ -50,7 +50,7 @@ public class ConfigurationService : IConfigurationService
         };
     }
 
-    public async Task CreateConfigurationAsync(ConfigurationCreateModel model)
+    public async Task CreateAsync(ConfigurationCreateModel model)
     {
         var configuration = new Configuration(model.Name, model.Value);
 
@@ -58,7 +58,7 @@ public class ConfigurationService : IConfigurationService
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task UpdateConfigurationAsync(int id, ConfigurationUpdateModel model)
+    public async Task UpdateAsync(int id, ConfigurationUpdateModel model)
     {
         var configuration = await _configurationRepository.OfIdAsync(id);
 

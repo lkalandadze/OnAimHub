@@ -26,4 +26,9 @@ public class Segment : BaseEntity<string>
     {
         IsDeleted = true;
     }
+
+    public void SetConfiguration(int configurationId)
+    {
+        ConfigurationId = configurationId;
+    }
 }

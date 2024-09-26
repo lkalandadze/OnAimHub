@@ -38,7 +38,7 @@ public class ConfigurationController : BaseApiController
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> CreateAsync([FromBody] ConfigurationCreateModel model)
     {
-        await _configurationService.CreateConfigurationAsync(model);
+        await _configurationService.CreateAsync(model);
         return StatusCode(201);
     }
 
@@ -48,7 +48,7 @@ public class ConfigurationController : BaseApiController
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> UpdateAsync([FromRoute] int id, [FromBody] ConfigurationUpdateModel model)
     {
-        await _configurationService.UpdateConfigurationAsync(id, model);
+        await _configurationService.UpdateAsync(id, model);
         return StatusCode(200);
     }
 

@@ -8,9 +8,9 @@ public interface IConfigurationService
 
     Task<ConfigurationGetModel> GetByIdAsync(int id);
 
-    Task CreateConfigurationAsync(ConfigurationCreateModel model);
+    Task CreateAsync(ConfigurationCreateModel model);
 
-    Task UpdateConfigurationAsync(int id, ConfigurationUpdateModel model);
+    Task UpdateAsync(int id, ConfigurationUpdateModel model);
 
     Task ActivateAsync(int id);
 
