@@ -20,7 +20,6 @@ public class HubService : IHubService
         _accessor = accessor;
         _httpClient = httpClient;
         _hubApiConfig = hubApiConfig.Value;
-
     }
 
     public async Task BetTransactionAsync(int gameVersionId)
@@ -29,7 +28,7 @@ public class HubService : IHubService
         var transactionPost = new TransactionPostModel
         {
             GameId = gameVersionId,
-            CurrencyId = "USD", //TODO
+            CurrencyId = "OnAimCoin", //TODO
             Amount = 1, //TODO
         };
 
@@ -47,7 +46,7 @@ public class HubService : IHubService
         var transactionPost = new TransactionPostModel
         {
             GameId = gameVersionId,
-            CurrencyId = "USD", //TODO
+            CurrencyId = "OnAimCoin", //TODO
             Amount = 50, //TODO
         };
 

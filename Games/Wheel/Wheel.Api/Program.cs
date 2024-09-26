@@ -1,3 +1,4 @@
+using GameLib.Infrastructure;
 using Wheel.Api;
 using Wheel.Infrastructure.DataAccess;
 
@@ -23,5 +24,7 @@ static void CreateDatabaseIfNotExists(IHost host)
         var services = scope.ServiceProvider;
         var dbContext = services.GetRequiredService<WheelConfigDbContext>();
         dbContext.Database.EnsureCreated();
+
+        _ = new DbInitializer(scope);
     }
 }

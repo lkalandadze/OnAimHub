@@ -4,7 +4,9 @@ using GameLib.Application.Holders;
 using GameLib.Application.Managers;
 using GameLib.Application.Services.Abstract;
 using GameLib.Application.Services.Concrete;
+using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
+using GameLib.Infrastructure.DataAccess;
 using GameLib.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -36,9 +38,12 @@ public static class DependencyResolver
         services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
         services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
+        services.AddScoped<ISegmentRepository, SegmentRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IConsulClient, ConsulClient>();
         services.AddScoped<IConsulGameService, ConsulGameService>();
+        services.AddScoped<IConfigurationService, ConfigurationService>();
 
         services.BuildServiceProvider().GetRequiredService<RepositoryManager>();
 
