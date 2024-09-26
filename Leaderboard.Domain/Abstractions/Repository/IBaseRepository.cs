@@ -16,5 +16,7 @@ public interface IBaseRepository<TAggregateRoot>
 
     Task InsertAsync(TAggregateRoot aggregateRoot);
 
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+
     void Update(TAggregateRoot aggregateRoot);
 }

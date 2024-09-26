@@ -3,6 +3,7 @@ using System;
 using Leaderboard.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Leaderboard.Infrastructure.Migrations
 {
     [DbContext(typeof(LeaderboardDbContext))]
-    partial class LeaderboardDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240926070305_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currencies", (string)null);
+                    b.ToTable("Currencies");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardPrize", b =>
@@ -79,7 +82,7 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasIndex("PrizeId");
 
-                    b.ToTable("LeaderboardPrizes", (string)null);
+                    b.ToTable("LeaderboardPrizes");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardRecord", b =>
@@ -117,7 +120,7 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasIndex("LeaderboardTemplateId");
 
-                    b.ToTable("LeaderboardRecords", (string)null);
+                    b.ToTable("LeaderboardRecords");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardTemplate", b =>
@@ -147,7 +150,7 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LeaderboardTemplate", (string)null);
+                    b.ToTable("LeaderboardTemplate");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.Prize", b =>
@@ -162,7 +165,7 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Prize", (string)null);
+                    b.ToTable("Prize");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardPrize", b =>

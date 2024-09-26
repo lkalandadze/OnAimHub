@@ -1,5 +1,4 @@
-﻿using Leaderboard.Domain.Abstractions;
-using Leaderboard.Domain.Abstractions.Repository;
+﻿using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Infrastructure.DataAccess;
 using Leaderboard.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +28,8 @@ public static class ServiceRegistration
     public static IServiceCollection AddCustomServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ILeaderboardTemplateRepository, LeaderboardTemplateRepository>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ILeaderboardRecordRepository, LeaderboardRecordRepository>();
+        services.AddScoped<ILeaderboardPrizeRepository, LeaderboardPrizeRepository>();
 
         return services;
     }
