@@ -1,65 +1,79 @@
 ﻿using Hangfire;
 using Hub.Application.Services.Abstract;
 using Hub.Application.Services.Abstract.BackgroundJobs;
-using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Absractions;
+using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities;
-using Microsoft.Extensions.DependencyInjection;
+using Hub.Domain.Enum;
 
 namespace Hub.Application.Services.Concrete.BackgroundJobs;
 
 public class HangfireJobScheduler : IBackgroundJobScheduler
 {
     private readonly IRecurringJobManager _recurringJobManager;
-    private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly IJobRepository _jobRepository;
+    private readonly IPlayerBalanceService _playerBalanceService;
+    private readonly IPlayerProgressService _playerProgressService;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public HangfireJobScheduler(IRecurringJobManager recurringJobManager, IServiceScopeFactory serviceScopeFactory)
+    public HangfireJobScheduler(IRecurringJobManager recurringJobManager, IJobRepository jobRepository, IPlayerBalanceService playerBalanceService, IPlayerProgressService playerProgressService, IUnitOfWork unitOfWork)
     {
         _recurringJobManager = recurringJobManager;
-        _serviceScopeFactory = serviceScopeFactory;
-    }
-    public void ScheduleJob(Job job, string cronExpression)
-    {
-        RecurringJob.AddOrUpdate(
-            job.Id.ToString(),
-            () => ExecuteJob(job.CurrencyId),
-            cronExpression,
-            TimeZoneInfo.Local);
+        _jobRepository = jobRepository;
+        _playerBalanceService = playerBalanceService;
+        _playerProgressService = playerProgressService;
+        _unitOfWork = unitOfWork;
     }
 
+    public void ScheduleJob(Job job, string cronExpression)
+    {
+        RecurringJob.AddOrUpdate(job.Id.ToString(), () => ExecuteJobs(job), cronExpression);
+    }
 
     public void RemoveScheduledJob(int jobId)
     {
         RecurringJob.RemoveIfExists(jobId.ToString());
     }
 
-    public void ExecuteJob(string currencyId)
+    public async Task ExecuteJobs(Job job)
     {
-        using (var scope = _serviceScopeFactory.CreateScope())
+        var currentJob = _jobRepository.Query(x => x.Id == job.Id)
+                                       .FirstOrDefault();
+
+        if (currentJob != null)
         {
-            var jobRepository = scope.ServiceProvider.GetRequiredService<IJobRepository>();
-            var playerBalanceService = scope.ServiceProvider.GetRequiredService<IPlayerBalanceService>();
-            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-
-            var job = jobRepository.Query().FirstOrDefault(j => j.CurrencyId == currencyId);
-
-            if (job != null)
+            switch (currentJob.Category)
             {
-                playerBalanceService.ResetBalancesByCurrencyIdAsync(currencyId).GetAwaiter().GetResult();
-
-                job.LastExecutedTime = DateTime.UtcNow;
-
-                jobRepository.Update(job);
-                unitOfWork.SaveAsync().GetAwaiter().GetResult();
+                case JobCategory.CurrencyBalanceReset:
+                    if (!string.IsNullOrEmpty(currentJob.CurrencyId))
+                    {
+                        await ResetBalancesByCurrencyIdAsync(currentJob);
+                    }
+                    break;
+                case JobCategory.DailyProgressReset:
+                    await ResetProgressesDailyAsync(currentJob);
+                    break;
             }
         }
     }
 
-    private string GenerateCronExpression(TimeSpan executionTime, int intervalInDays)
+    private async Task ResetBalancesByCurrencyIdAsync(Job job)
     {
-        int hour = executionTime.Hours;
-        int minute = executionTime.Minutes;
+        await _playerBalanceService.ResetBalancesByCurrencyIdAsync(job.CurrencyId);
 
-        return $"0 {minute} {hour} */{intervalInDays} * ?";
+        job.SetLastExecutedTime();
+
+        _jobRepository.Update(job);
+        await _unitOfWork.SaveAsync();
+    }
+
+    private async Task ResetProgressesDailyAsync(Job job)
+    {
+        await _playerProgressService.ResetPlayerProgressesAndSaveHistoryAsync();
+
+        job.SetLastExecutedTime();
+
+        _jobRepository.Update(job);
+        await _unitOfWork.SaveAsync();
     }
 }

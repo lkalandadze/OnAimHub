@@ -16,5 +16,7 @@ public interface IBaseRepository<TAggregateRoot>
 
     Task InsertAsync(TAggregateRoot aggregateRoot);
 
+    Task InsertRangeAsync(IEnumerable<TAggregateRoot> aggregateRoots);
+
     void Update(TAggregateRoot aggregateRoot);
 }

@@ -1,6 +1,6 @@
 ﻿using Shared.Domain.Entities;
 
-namespace Hub.Domain.Entities;
+namespace Hub.Domain.Entities.DbEnums;
 
 public class Currency : DbEnum<string, Currency>
 {

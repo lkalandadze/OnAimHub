@@ -4,6 +4,7 @@ using Hub.Infrastructure.DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Infrastructure;
 using System.Reflection;
+
 namespace Hub.Infrastructure;
 
 public class DbInitializer : BaseDbInitializer
@@ -48,9 +49,9 @@ public class DbInitializer : BaseDbInitializer
 
     protected static async Task SeedJobs(HubDbContext dbContext)
     {
-        if (!dbContext.Jobs.Any(x => x.Name == "Reset Daily Progress"))
+        if (!dbContext.Jobs.Any(j => j.Category == JobCategory.DailyProgressReset))
         {
-            var job = new Job("Reset Daily Progress", "Clear player progress table daily", "OnAimCoin", true, null, null, JobType.Daily);
+            var job = new Job("Daily Progress Reset", "Clears player progresses table daily.", true, JobType.Daily, JobCategory.DailyProgressReset);
 
             await dbContext.Jobs.AddAsync(job);
             await dbContext.SaveChangesAsync();

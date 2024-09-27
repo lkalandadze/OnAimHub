@@ -38,6 +38,11 @@ public class BaseRepository<TContext, TAggregateRoot>(TContext context) : IBaseR
         await _context.Set<TAggregateRoot>().AddAsync(aggregateRoot);
     }
 
+    public virtual async Task InsertRangeAsync(IEnumerable<TAggregateRoot> aggregateRoots)
+    {
+        await _context.Set<TAggregateRoot>().AddRangeAsync(aggregateRoots);
+    }
+
     public virtual void Update(TAggregateRoot aggregateRoot)
     {
         _context.Entry(aggregateRoot).State = EntityState.Modified;

@@ -1,6 +1,6 @@
 ﻿using Hub.Application.Services.Abstract;
 using Hub.Domain.Absractions;
-using Hub.Domain.Entities;
+using Hub.Domain.Entities.DbEnums;
 using MediatR;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;

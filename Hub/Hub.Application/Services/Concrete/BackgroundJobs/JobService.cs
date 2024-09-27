@@ -39,7 +39,17 @@ public class JobService : IJobService
 
     public async Task CreateJobAsync(CreateJobModel request)
     {
-        var job = new Job(request.Name, request.Description, request.CurrencyId, request.IsActive, request.ExecutionTime, request.IntervalInDays, request.JobType);
+        if (request.JobCategory == JobCategory.DailyProgressReset)
+        {
+            var jobs = _jobRepository.Query(j => j.Category == JobCategory.DailyProgressReset);
+
+            if (jobs.Any())
+            {
+                throw new ArgumentException("A job with the category 'DailyProgressReset' already exists.");
+            }
+        }
+
+        var job = new Job(request.Name, request.Description, request.IsActive, request.JobType, request.JobCategory, request.ExecutionTime, request.CurrencyId, request.IntervalInDays);
 
         await _jobRepository.InsertAsync(job);
         await _unitOfWork.SaveAsync();
@@ -51,9 +61,11 @@ public class JobService : IJobService
             _jobScheduler.ScheduleJob(job, cronExpression);
         }
     }
+
     public async Task DeleteJobAsync(int jobId)
     {
         var job = _jobRepository.Query().Where(x => x.Id == jobId).FirstOrDefault();
+
         if (job == default)
         {
             throw new InvalidOperationException($"Job with ID {jobId} not found.");
@@ -65,10 +77,9 @@ public class JobService : IJobService
         await _unitOfWork.SaveAsync();
     }
 
-
     private string DetermineCronExpression(Job job)
     {
-        switch (job.JobType)
+        switch (job.Type)
         {
             case JobType.Daily:
                 return "0 0 0 * * ?"; // Every day at 12 AM
@@ -89,6 +100,7 @@ public class JobService : IJobService
                 throw new InvalidOperationException("Unsupported job type");
             }
     }
+
     private string GenerateCustomCronExpression(TimeSpan executionTime, int intervalInDays)
     {
         int hour = executionTime.Hours;
