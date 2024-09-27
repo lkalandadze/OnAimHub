@@ -34,7 +34,8 @@ namespace Leaderboard.Infrastructure.Migrations
                     JobType = table.Column<int>(type: "integer", nullable: false),
                     StartTime = table.Column<TimeSpan>(type: "interval", nullable: false),
                     DurationInDays = table.Column<int>(type: "integer", nullable: false),
-                    AnnouncementLeadTimeInDays = table.Column<int>(type: "integer", nullable: false)
+                    AnnouncementLeadTimeInDays = table.Column<int>(type: "integer", nullable: false),
+                    CreationLeadTimeInDays = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,11 +62,14 @@ namespace Leaderboard.Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     LeaderboardTemplateId = table.Column<int>(type: "integer", nullable: true),
+                    CreationDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     AnnouncementDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     StartDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     EndDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     LeaderboardType = table.Column<int>(type: "integer", nullable: false),
-                    JobType = table.Column<int>(type: "integer", nullable: false)
+                    JobType = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    IsGenerated = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

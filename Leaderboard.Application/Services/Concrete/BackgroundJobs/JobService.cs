@@ -84,7 +84,9 @@ public class JobService : IJobService
             endDate.ToUniversalTime(),
             LeaderboardType.Transaction, // needs to be dynamic
             leaderboardTemplate.JobType,
-            templateId
+            templateId,
+            LeaderboardRecordStatus.Created,
+            true
         );
 
         foreach (var prize in leaderboardTemplate.Prizes)
@@ -93,6 +95,62 @@ public class JobService : IJobService
         }
 
         await _leaderboardRecordRepository.InsertAsync(newRecord);
+        await _leaderboardRecordRepository.SaveChangesAsync();
+    }
+
+    public async Task UpdateLeaderboardRecordStatusAsync()
+    {
+        var records = await _leaderboardRecordRepository.QueryAsync();
+        var now = DateTimeOffset.UtcNow;
+
+        foreach (var record in records)
+        {
+            if (now >= record.StartDate && now < record.EndDate && record.Status != LeaderboardRecordStatus.InProgress)
+            {
+                record.Status = LeaderboardRecordStatus.InProgress;
+            }
+            else if (now >= record.EndDate && record.Status != LeaderboardRecordStatus.Finished)
+            {
+                record.Status = LeaderboardRecordStatus.Finished;
+            }
+            else if (now >= record.AnnouncementDate && now < record.StartDate && record.Status != LeaderboardRecordStatus.Announced)
+            {
+                record.Status = LeaderboardRecordStatus.Announced;
+            }
+            else if (now < record.AnnouncementDate && record.Status != LeaderboardRecordStatus.Created)
+            {
+                record.Status = LeaderboardRecordStatus.Created;
+            }
+        }
+
+        await _leaderboardRecordRepository.SaveChangesAsync();
+    }
+
+    public async Task ExecuteLeaderboardJob(int leaderboardRecordId)
+    {
+        // Fetch the LeaderboardRecord
+        var leaderboardRecord = _leaderboardRecordRepository.Query().FirstOrDefault(x => x.Id == leaderboardRecordId);
+
+        if (leaderboardRecord == null)
+        {
+            throw new Exception($"Leaderboard record with ID {leaderboardRecordId} not found.");
+        }
+
+        // Update status or perform necessary logic
+        if (leaderboardRecord.Status == LeaderboardRecordStatus.Created)
+        {
+            leaderboardRecord.Status = LeaderboardRecordStatus.InProgress;
+            // Additional logic to handle InProgress state (e.g., calculate scores, process events)
+        }
+
+        if (leaderboardRecord.Status == LeaderboardRecordStatus.InProgress && leaderboardRecord.EndDate <= DateTimeOffset.UtcNow)
+        {
+            leaderboardRecord.Status = LeaderboardRecordStatus.Finished;
+            // Additional logic to handle Finished state (e.g., award prizes)
+        }
+
+        // Save the updated record
+        _leaderboardRecordRepository.Update(leaderboardRecord);
         await _leaderboardRecordRepository.SaveChangesAsync();
     }
 }

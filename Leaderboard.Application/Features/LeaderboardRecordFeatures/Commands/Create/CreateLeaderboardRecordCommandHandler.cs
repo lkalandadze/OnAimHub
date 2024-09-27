@@ -1,19 +1,24 @@
-﻿using Leaderboard.Domain.Abstractions.Repository;
+﻿using Hangfire;
+using Leaderboard.Application.Services.Abstract.BackgroundJobs;
+using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Domain.Entities;
-using Leaderboard.Infrastructure.DataAccess;
 using MediatR;
 
 namespace Leaderboard.Application.Features.LeaderboardRecordFeatures.Commands.Create;
 
-public class CreateLeaderboardCommandHandler : IRequestHandler<CreateLeaderboardCommand>
+public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeaderboardRecordCommand>
 {
     private readonly ILeaderboardRecordRepository _leaderboardRecordRepository;
-    public CreateLeaderboardCommandHandler(ILeaderboardRecordRepository leaderboardRecordRepository)
+    private readonly IBackgroundJobScheduler _backgroundJobScheduler;
+    private readonly IJobService _jobService;
+    public CreateLeaderboardRecordCommandHandler(ILeaderboardRecordRepository leaderboardRecordRepository, IBackgroundJobScheduler backgroundJobScheduler, IJobService jobService)
     {
         _leaderboardRecordRepository = leaderboardRecordRepository;
+        _backgroundJobScheduler = backgroundJobScheduler;
+        _jobService = jobService;
     }
 
-    public async Task Handle(CreateLeaderboardCommand request, CancellationToken cancellationToken)
+    public async Task Handle(CreateLeaderboardRecordCommand request, CancellationToken cancellationToken)
     {
         var leaderboard = new LeaderboardRecord(
             request.Name,
@@ -23,7 +28,10 @@ public class CreateLeaderboardCommandHandler : IRequestHandler<CreateLeaderboard
             request.EndDate,
             request.LeaderboardType,
             request.JobType,
-            request.LeaderboardTemplateId);
+            request.LeaderboardTemplateId,
+            request.Status,
+            false
+            );
 
         foreach (var prize in request.LeaderboardPrizes)
         {
@@ -32,5 +40,7 @@ public class CreateLeaderboardCommandHandler : IRequestHandler<CreateLeaderboard
 
         await _leaderboardRecordRepository.InsertAsync(leaderboard);
         await _leaderboardRecordRepository.SaveChangesAsync(cancellationToken);
+
+        _backgroundJobScheduler.ScheduleRecordJob(leaderboard);
     }
 }

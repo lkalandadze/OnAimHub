@@ -26,17 +26,17 @@ public class LeaderboardController : BaseApiController
 
     #region LeaderboardRecord
 
-    [HttpPost(nameof(CreateLeaderboard))]
-    public async Task CreateLeaderboard(CreateLeaderboardCommand request) => await Mediator.Send(request);
+    [HttpPost(nameof(CreateLeaderboardRecord))]
+    public async Task CreateLeaderboardRecord(CreateLeaderboardRecordCommand request) => await Mediator.Send(request);
 
-    [HttpPut(nameof(UpdateLeaderboards))]
-    public async Task UpdateLeaderboards(UpdateLeaderboardRecordCommand request) => await Mediator.Send(request);
+    [HttpPut(nameof(UpdateLeaderboardRecord))]
+    public async Task UpdateLeaderboardRecord(UpdateLeaderboardRecordCommand request) => await Mediator.Send(request);
 
-    [HttpGet(nameof(GetLeaderboards))]
-    public async Task<ActionResult<GetLeaderboardRecordsQueryResponse>> GetLeaderboards([FromQuery] GetLeaderboardRecordsQuery request) => await Mediator.Send(request);
+    [HttpGet(nameof(GetLeaderboardRecords))]
+    public async Task<ActionResult<GetLeaderboardRecordsQueryResponse>> GetLeaderboardRecords([FromQuery] GetLeaderboardRecordsQuery request) => await Mediator.Send(request);
 
-    [HttpGet(nameof(GetLeaderboardById))]
-    public async Task<ActionResult<GetLeaderboardRecordByIdQueryResponse>> GetLeaderboardById([FromQuery] GetLeaderboardRecordByIdQuery request) => await Mediator.Send(request);
+    [HttpGet(nameof(GetLeaderboardRecordById))]
+    public async Task<ActionResult<GetLeaderboardRecordByIdQueryResponse>> GetLeaderboardRecordById([FromQuery] GetLeaderboardRecordByIdQuery request) => await Mediator.Send(request);
 
     #endregion
 

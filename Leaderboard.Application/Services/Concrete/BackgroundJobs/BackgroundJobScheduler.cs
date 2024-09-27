@@ -26,6 +26,24 @@ public class BackgroundJobScheduler : IBackgroundJobScheduler
             cronExpression,
             TimeZoneInfo.Local
         );
+
+        _recurringJobManager.AddOrUpdate(
+            "UpdateLeaderboardStatuses",
+            () => UpdateLeaderboardStatuses(),
+            Cron.Hourly(), // This job runs hourly to check for status updates
+            TimeZoneInfo.Local
+        );
+    }
+
+    public void ScheduleRecordJob(LeaderboardRecord job)
+    {
+        var cronExpression = GenerateCronExpression(job.JobType); // Automatically generate cron expression
+        _recurringJobManager.AddOrUpdate(
+            job.Id.ToString(),
+            () => ExecuteRecordJob(job.Id), // Use .Value if it's not null
+            cronExpression,
+            TimeZoneInfo.Local
+        );
     }
 
     public void RemoveScheduledJob(int jobId)
@@ -49,6 +67,44 @@ public class BackgroundJobScheduler : IBackgroundJobScheduler
             {
                 // Log the error (optional)
                 Console.WriteLine($"Error executing job for template ID {leaderboardTemplateId}: {ex.Message}");
+                throw;
+            }
+        }
+    }
+
+public void ExecuteRecordJob(int id)
+{
+    // Create a new scope for each job execution
+    using (var scope = _serviceScopeFactory.CreateScope())
+    {
+        try
+        {
+            var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
+
+            // Execute the leaderboard record generation logic
+            jobService.ExecuteLeaderboardJob(id).GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            // Log the error (optional)
+            Console.WriteLine($"Error executing job for record ID {id}: {ex.Message}");
+            throw;
+        }
+    }
+}
+
+    public void UpdateLeaderboardStatuses()
+    {
+        using (var scope = _serviceScopeFactory.CreateScope())
+        {
+            try
+            {
+                var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
+                jobService.UpdateLeaderboardRecordStatusAsync().GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating leaderboard record statuses: {ex.Message}");
                 throw;
             }
         }

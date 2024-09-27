@@ -55,6 +55,9 @@ namespace Leaderboard.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsGenerated")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("JobType")
                         .HasColumnType("integer");
 
@@ -70,6 +73,9 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.Property<DateTimeOffset>("StartDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

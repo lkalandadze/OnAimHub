@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Leaderboard.Infrastructure.Migrations
 {
     [DbContext(typeof(LeaderboardDbContext))]
-    [Migration("20240926124723_added_creationDate")]
-    partial class added_creationDate
+    [Migration("20240927065550_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,6 +58,9 @@ namespace Leaderboard.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsGenerated")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("JobType")
                         .HasColumnType("integer");
 
@@ -73,6 +76,9 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.Property<DateTimeOffset>("StartDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

@@ -10,7 +10,16 @@ public class LeaderboardRecord : BaseEntity<int>
         
     }
 
-    public LeaderboardRecord(string name, DateTimeOffset creationDate, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate, LeaderboardType leaderboardType, JobTypeEnum jobType, int? leaderboardTemplateId)
+    public LeaderboardRecord(string name,
+                             DateTimeOffset creationDate,
+                             DateTimeOffset announcementDate,
+                             DateTimeOffset startDate,
+                             DateTimeOffset endDate,
+                             LeaderboardType leaderboardType,
+                             JobTypeEnum jobType,
+                             int? leaderboardTemplateId,
+                             LeaderboardRecordStatus status,
+                             bool isGenerated)
     {
         Name = name;
         CreationDate = creationDate;
@@ -20,6 +29,8 @@ public class LeaderboardRecord : BaseEntity<int>
         LeaderboardType = leaderboardType;
         JobType = jobType;
         LeaderboardTemplateId = leaderboardTemplateId;
+        Status = status;
+        IsGenerated = isGenerated;
     }
 
     public string Name { get; set; }
@@ -31,6 +42,8 @@ public class LeaderboardRecord : BaseEntity<int>
     public DateTimeOffset EndDate { get; set; }
     public LeaderboardType LeaderboardType { get; set; }
     public JobTypeEnum JobType { get; set; }
+    public LeaderboardRecordStatus Status { get; set; }
+    public bool IsGenerated { get; set; }
     public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; } = new List<LeaderboardRecordPrize>();
 
     public void Update(string name, DateTimeOffset creationDate, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate, LeaderboardType leaderboardType, JobTypeEnum jobType)

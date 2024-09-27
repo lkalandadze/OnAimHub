@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Leaderboard.Application.Features.LeaderboardRecordFeatures.Commands.Create;
 
-public sealed class CreateLeaderboardCommand : IRequest
+public sealed class CreateLeaderboardRecordCommand : IRequest
 {
     public int? LeaderboardTemplateId { get; set; }
     public string Name { get; set; }
@@ -13,10 +13,11 @@ public sealed class CreateLeaderboardCommand : IRequest
     public DateTimeOffset EndDate { get; set; }
     public LeaderboardType LeaderboardType { get; set; }
     public JobTypeEnum JobType { get; set; }
-    public List<CreateLeaderboardPrizeCommandItem> LeaderboardPrizes { get; set; }
+    public LeaderboardRecordStatus Status { get; set; }
+    public List<CreateLeaderboardRecordPrizeCommandItem> LeaderboardPrizes { get; set; }
 }
 
-public class CreateLeaderboardPrizeCommandItem
+public class CreateLeaderboardRecordPrizeCommandItem
 {
     public int StartRank { get; set; }
     public int EndRank { get; set; }
