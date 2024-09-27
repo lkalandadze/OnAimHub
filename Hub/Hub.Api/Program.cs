@@ -30,6 +30,6 @@ static void CreateDatabaseIfNotExists(IHost host)
         var dbContext = services.GetRequiredService<HubDbContext>();
         dbContext.Database.EnsureCreated();
 
-        EFDatabaseInitializer.Initialize(scope);
+        _ = new DbInitializer(scope);
     }
 }

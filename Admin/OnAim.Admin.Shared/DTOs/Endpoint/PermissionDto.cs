@@ -1,10 +1,9 @@
-﻿namespace OnAim.Admin.Shared.DTOs.Endpoint
+﻿namespace OnAim.Admin.Shared.DTOs.Endpoint;
+
+public class PermissionDto
 {
-    public class PermissionDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public bool IsActive { get; set; }
-    }
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public bool IsActive { get; set; }
 }

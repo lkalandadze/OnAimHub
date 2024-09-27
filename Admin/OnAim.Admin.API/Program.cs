@@ -1,11 +1,13 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.API.Extensions;
 using OnAim.Admin.API.Middleware;
 using OnAim.Admin.APP;
+using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture;
-using OnAim.Admin.Infrasturcture.Repository;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Infrasturcture.Repository;
 using Serilog;
 using Serilog.Events;
 
@@ -21,19 +23,18 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 builder.Services.AddCustomJwtAuthentication(builder.Configuration);
 builder.Services
-                //.AddCustomIdentity()
-                //.AddCustomJwtAuthentication(builder.Services,builder.Configuration)
                 .AddCustomAuthorization()
                 .AddCustomCors()
                 .AddCustomServices()
                 .AddControllers()
-                .Services.AddCustomSwagger();
+                .Services.AddCustomSwagger()
+                .AddApp(builder.Configuration)
+                .AddInfrastructure(builder.Configuration);
+
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>));
-builder.Services.AddApp(builder.Configuration);
-builder.Services.AddInfrastructure(builder.Configuration);
-
+builder.Services.AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -42,6 +43,7 @@ builder.Services.AddControllersWithViews()
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
+//??????
 builder.Services.AddHealthChecks()
     .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnectionString")!);
 
@@ -63,7 +65,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<PermissionMiddleware>();
-//app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseMiddleware<RequestHandlerMiddleware>();
 
 app.MapControllers();
 

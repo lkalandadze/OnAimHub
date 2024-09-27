@@ -1,10 +1,13 @@
 ﻿using Consul;
 using GameLib.Application.Configurations;
+using GameLib.Application.Controllers;
 using GameLib.Application.Holders;
 using GameLib.Application.Managers;
 using GameLib.Application.Services.Abstract;
 using GameLib.Application.Services.Concrete;
+using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
+using GameLib.Infrastructure.DataAccess;
 using GameLib.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +20,7 @@ namespace GameLib.ServiceRegistry;
 
 public static class DependencyResolver
 {
-    public static IServiceCollection Resolve(this IServiceCollection services, IConfiguration configuration, List<Type> prigeGroupTypes)
+    public static IServiceCollection Resolve(this IServiceCollection services, IConfiguration configuration, List<Type> prigeGroupTypes, string routePrefix)
     {
         services.AddSingleton<GeneratorHolder>();
         services.AddSingleton<ConfigurationHolder>();
@@ -36,9 +39,13 @@ public static class DependencyResolver
         services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
         services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
+        services.AddScoped<ISegmentRepository, SegmentRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IConsulClient, ConsulClient>();
         services.AddScoped<IConsulGameService, ConsulGameService>();
+        services.AddScoped<IConfigurationService, ConfigurationService>();
+        services.AddScoped<ISegmentService, SegmentService>();
 
         services.BuildServiceProvider().GetRequiredService<RepositoryManager>();
 
@@ -53,6 +60,15 @@ public static class DependencyResolver
 
         services.AddHttpContextAccessor();
         services.AddAuthorization();
+
+        services.AddControllers(options =>
+        {
+            options.Conventions.Add(new RoutePrefixConvention(routePrefix));
+        })
+            .AddApplicationPart(typeof(ConfigurationController).Assembly);
+
+        services.AddEndpointsApiExplorer();
+        services.AddHealthChecks();
 
         return services;
     }
@@ -113,10 +129,5 @@ public static class DependencyResolver
                     ClockSkew = TimeSpan.Zero
                 };
             });
-    }
-    private static bool IsRunningInDocker()
-    {
-        var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
-        return !string.IsNullOrEmpty(isDocker) && isDocker == "true";
     }
 }

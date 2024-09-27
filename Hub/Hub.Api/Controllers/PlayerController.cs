@@ -36,13 +36,13 @@ public class PlayerController : BaseApiController
         return Ok(await Mediator.Send(new GetPlayerQuery { PlayerId = id }));
     }
 
-    [HttpGet("balances")]
+    [HttpGet("Balances")]
     public async Task<ActionResult<GetPlayerBalanceResponse>> GetPlayerBalancesAsync()
     {
         return Ok(await Mediator.Send(new GetPlayerBalanceQuery()));
     }
 
-    [HttpGet("progress")]
+    [HttpGet("Progress")]
     public async Task<ActionResult<GetPlayerProgressResponse>> GetPlayerProgressAsync()
     {
         return Ok(await Mediator.Send(new GetPlayerProgressQuery()));
@@ -51,7 +51,6 @@ public class PlayerController : BaseApiController
     [HttpPost(nameof(ApplyPromoCode))]
     public async Task<Unit> ApplyPromoCode(ApplyPromoCodeCommand request) => await Mediator.Send(request);
     
-
     [HttpGet(nameof(GetPromoCode))]
     public async Task<string> GetPromoCode([FromQuery] GetPromoCodeQuery request) => await Mediator.Send(request);
 

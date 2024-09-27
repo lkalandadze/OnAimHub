@@ -34,7 +34,7 @@ public class Startup
         services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
 
         var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup), typeof(JackpotPrizeGroup) };
-        services.Resolve(Configuration, prizeGroupTypes);
+        services.Resolve(Configuration, prizeGroupTypes, "WheelApi");
 
         services.AddSingleton(prizeGroupTypes);
         services.AddScoped<IGameService, GameService>();
@@ -47,10 +47,6 @@ public class Startup
         {
             ConfigureConsul(services);
         }
-
-        services.AddControllers();
-        services.AddEndpointsApiExplorer();
-        services.AddHealthChecks();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)

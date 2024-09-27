@@ -2,7 +2,7 @@
 
 public interface IHubService
 {
-    Task BetTransactionAsync(int gameVersionId);
+    Task BetTransactionAsync(int gameVersionId, string currencyId, int amount);
 
-    Task WinTransactionAsync(int gameVersionId);
+    Task WinTransactionAsync(int gameVersionId, string currencyId, int amount);
 }

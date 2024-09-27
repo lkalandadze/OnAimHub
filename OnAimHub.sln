@@ -74,15 +74,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Games", "Games", "{7394F16F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Leaderboard", "Leaderboard", "{B24D12B4-8046-42D7-917F-BEA0A34BDAE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leaderboard.Api", "LeaderBoard.Api\Leaderboard.Api.csproj", "{69314E95-6E28-455D-AFD8-9D478E0217D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leaderboard.Api", "LeaderBoard.Api\Leaderboard.Api.csproj", "{69314E95-6E28-455D-AFD8-9D478E0217D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leaderboard.Application", "Leaderboard.Application\Leaderboard.Application.csproj", "{25C16A1C-4D52-4819-8F8C-511E8C93886E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leaderboard.Application", "Leaderboard.Application\Leaderboard.Application.csproj", "{25C16A1C-4D52-4819-8F8C-511E8C93886E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leaderboard.Domain", "Leaderboard.Domain\Leaderboard.Domain.csproj", "{F005CDB6-819E-40C9-80C1-169602121479}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leaderboard.Domain", "Leaderboard.Domain\Leaderboard.Domain.csproj", "{F005CDB6-819E-40C9-80C1-169602121479}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leaderboard.Infrastructure", "Leaderboard.Infrastructure\Leaderboard.Infrastructure.csproj", "{A0AFFFB3-F3B9-405B-A2D4-3BE86D953848}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leaderboard.Infrastructure", "Leaderboard.Infrastructure\Leaderboard.Infrastructure.csproj", "{A0AFFFB3-F3B9-405B-A2D4-3BE86D953848}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leaderboard.IntegrationEvents", "Leaderboard.IntegrationEvents\Leaderboard.IntegrationEvents.csproj", "{1A17D5FF-170A-4B69-97EB-1FE95CB7AAD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leaderboard.IntegrationEvents", "Leaderboard.IntegrationEvents\Leaderboard.IntegrationEvents.csproj", "{1A17D5FF-170A-4B69-97EB-1FE95CB7AAD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnAim.Admin.Domain", "Admin\OnAim.Admin.Domain\OnAim.Admin.Domain.csproj", "{FF6A95D3-2090-4950-BA6D-4820730EAFEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Infrastructure", "Shared.Infrastructure\Shared.Infrastructure.csproj", "{76A27BFF-7A9F-484A-A662-0E47A5FA503F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -210,6 +214,14 @@ Global
 		{1A17D5FF-170A-4B69-97EB-1FE95CB7AAD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A17D5FF-170A-4B69-97EB-1FE95CB7AAD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A17D5FF-170A-4B69-97EB-1FE95CB7AAD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF6A95D3-2090-4950-BA6D-4820730EAFEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF6A95D3-2090-4950-BA6D-4820730EAFEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF6A95D3-2090-4950-BA6D-4820730EAFEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF6A95D3-2090-4950-BA6D-4820730EAFEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76A27BFF-7A9F-484A-A662-0E47A5FA503F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76A27BFF-7A9F-484A-A662-0E47A5FA503F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76A27BFF-7A9F-484A-A662-0E47A5FA503F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76A27BFF-7A9F-484A-A662-0E47A5FA503F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -244,6 +256,8 @@ Global
 		{F005CDB6-819E-40C9-80C1-169602121479} = {B24D12B4-8046-42D7-917F-BEA0A34BDAE6}
 		{A0AFFFB3-F3B9-405B-A2D4-3BE86D953848} = {B24D12B4-8046-42D7-917F-BEA0A34BDAE6}
 		{1A17D5FF-170A-4B69-97EB-1FE95CB7AAD7} = {B24D12B4-8046-42D7-917F-BEA0A34BDAE6}
+		{FF6A95D3-2090-4950-BA6D-4820730EAFEF} = {1D153E14-4B13-413B-ACA0-200CEE0D39E2}
+		{76A27BFF-7A9F-484A-A662-0E47A5FA503F} = {A271747C-FD41-490A-8F8E-C36A19751AE0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2083D19C-3851-4364-95A9-449C10AD54E0}
