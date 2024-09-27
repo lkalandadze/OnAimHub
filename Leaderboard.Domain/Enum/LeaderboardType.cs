@@ -2,5 +2,5 @@
 
 public enum LeaderboardType
 {
-    Transaction = 0
+    Win = 0
 }

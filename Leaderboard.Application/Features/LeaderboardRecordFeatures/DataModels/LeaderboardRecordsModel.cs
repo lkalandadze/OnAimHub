@@ -11,6 +11,7 @@ public sealed record LeaderboardRecordsModel
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
     public LeaderboardType LeaderboardType { get; set; }
+    public LeaderboardRecordStatus Status { get; set; }
 
 
     public static LeaderboardRecordsModel MapFrom(LeaderboardRecord leaderboardRecord)
@@ -22,7 +23,8 @@ public sealed record LeaderboardRecordsModel
             AnnouncementDate = leaderboardRecord.AnnouncementDate,
             StartDate = leaderboardRecord.StartDate,
             EndDate = leaderboardRecord.EndDate,
-            LeaderboardType = leaderboardRecord.LeaderboardType
+            LeaderboardType = leaderboardRecord.LeaderboardType,
+            Status = leaderboardRecord.Status
         };
     }
 }

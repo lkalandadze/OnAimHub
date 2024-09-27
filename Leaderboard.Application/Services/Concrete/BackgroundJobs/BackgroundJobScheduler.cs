@@ -17,12 +17,12 @@ public class BackgroundJobScheduler : IBackgroundJobScheduler
         _serviceScopeFactory = serviceScopeFactory;
     }
 
-    public void ScheduleJob(LeaderboardRecord job)
+    public void ScheduleJob(LeaderboardTemplate job)
     {
         var cronExpression = GenerateCronExpression(job.JobType); // Automatically generate cron expression
         _recurringJobManager.AddOrUpdate(
             job.Id.ToString(),
-            () => ExecuteJob(job.LeaderboardTemplateId.Value), // Use .Value if it's not null
+            () => ExecuteJob(job.Id), // Use .Value if it's not null
             cronExpression,
             TimeZoneInfo.Local
         );

@@ -22,7 +22,7 @@ public class JobSyncService : BackgroundService
                 var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
                 var backgroundJobScheduler = scope.ServiceProvider.GetRequiredService<IBackgroundJobScheduler>();
 
-                var jobs = await jobService.GetAllJobsAsync();
+                var jobs = await jobService.GetAllTemplateJobsAsync();
 
                 foreach (var job in jobs)
                 {

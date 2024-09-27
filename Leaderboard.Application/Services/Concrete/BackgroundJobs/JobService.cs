@@ -10,16 +10,23 @@ namespace Leaderboard.Application.Services.Concrete.BackgroundJobs;
 public class JobService : IJobService
 {
     private readonly ILeaderboardRecordRepository _leaderboardRecordRepository;
+    private readonly ILeaderboardTemplateRepository _leaderboardTemplateRepository;
     private readonly IMediator _mediator;
-    public JobService(ILeaderboardRecordRepository leaderboardRecordRepository, IMediator mediator)
+    public JobService(ILeaderboardRecordRepository leaderboardRecordRepository, ILeaderboardTemplateRepository leaderboardTemplateRepository, IMediator mediator)
     {
         _leaderboardRecordRepository = leaderboardRecordRepository;
+        _leaderboardTemplateRepository = leaderboardTemplateRepository;
         _mediator = mediator;
     }
 
     public async Task<List<LeaderboardRecord>> GetAllJobsAsync()
     {
         return await _leaderboardRecordRepository.QueryAsync();
+    }
+
+    public async Task<List<LeaderboardTemplate>> GetAllTemplateJobsAsync()
+    {
+        return await _leaderboardTemplateRepository.QueryAsync();
     }
 
     public async Task ExecuteLeaderboardRecordGeneration(int templateId)
@@ -82,7 +89,7 @@ public class JobService : IJobService
             announcementDate.ToUniversalTime(),
             startDate.ToUniversalTime(),
             endDate.ToUniversalTime(),
-            LeaderboardType.Transaction, // needs to be dynamic
+            LeaderboardType.Win, // needs to be dynamic
             leaderboardTemplate.JobType,
             templateId,
             LeaderboardRecordStatus.Created,

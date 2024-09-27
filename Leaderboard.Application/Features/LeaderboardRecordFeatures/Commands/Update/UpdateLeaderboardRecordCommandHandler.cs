@@ -19,7 +19,12 @@ public class UpdateLeaderboardRecordCommandHandler : IRequestHandler<UpdateLeade
         if (leaderboard == default)
             throw new Exception("Leaderboard not found");
 
-        leaderboard.Update(request.Name, request.CreationDate, request.AnnouncementDate, request.StartDate, request.EndDate, request.LeaderboardType, request.JobType);
+        leaderboard.Update(request.Name, 
+                           request.CreationDate.ToUniversalTime(), 
+                           request.AnnouncementDate.ToUniversalTime(), 
+                           request.StartDate.ToUniversalTime(),
+                           request.EndDate.ToUniversalTime(),
+                           request.LeaderboardType, request.JobType);
 
         foreach(var prize in request.Prizes)
         {

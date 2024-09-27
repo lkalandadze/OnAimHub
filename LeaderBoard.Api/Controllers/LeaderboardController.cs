@@ -2,6 +2,7 @@
 using Leaderboard.Application.Features.LeaderboardRecordFeatures.Commands.Update;
 using Leaderboard.Application.Features.LeaderboardRecordFeatures.Queries.Get;
 using Leaderboard.Application.Features.LeaderboardRecordFeatures.Queries.GetById;
+using Leaderboard.Application.Features.LeaderboardRecordFeatures.Queries.GetCalendar;
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.Create;
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.Update;
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Queries.Get;
@@ -53,10 +54,13 @@ public class LeaderboardController : BaseApiController
     [HttpGet(nameof(GetLeaderboardTemplates))]
     public async Task<ActionResult<GetLeaderboardTemplatesQueryResponse>> GetLeaderboardTemplates([FromQuery] GetLeaderboardTemplatesQuery request) => await Mediator.Send(request);
 
+    [HttpGet(nameof(GetCalendar))]
+    public async Task<ActionResult<GetCalendarQueryResponse>> GetCalendar([FromQuery] GetCalendarQuery request) => await Mediator.Send(request);
+
     [HttpGet(nameof(GetLeaderboardTemplateById))]
     public async Task<ActionResult<GetLeaderboardTemplateByIdQueryResponse>> GetLeaderboardTemplateById([FromQuery] GetLeaderboardTemplateByIdQuery request) => await Mediator.Send(request);
 
-    #endregion
+    #endregion Test
 
     [HttpPost("schedule/{templateId}")]
     public async Task<IActionResult> ScheduleJob(int templateId)
@@ -72,7 +76,7 @@ public class LeaderboardController : BaseApiController
             }
 
             // Schedule the job with the template ID
-            _backgroundJobScheduler.ScheduleJob(job);
+            _backgroundJobScheduler.ScheduleJob(job.LeaderboardTemplate);
             return Ok($"Job for template ID {templateId} has been scheduled.");
         }
         catch (Exception ex)

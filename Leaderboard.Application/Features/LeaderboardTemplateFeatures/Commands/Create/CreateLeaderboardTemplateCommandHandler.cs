@@ -1,4 +1,5 @@
-﻿using Leaderboard.Domain.Abstractions.Repository;
+﻿using Leaderboard.Application.Services.Abstract.BackgroundJobs;
+using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Domain.Entities;
 using MediatR;
 
@@ -7,14 +8,18 @@ namespace Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.
 public class CreateLeaderboardTemplateCommandHandler : IRequestHandler<CreateLeaderboardTemplateCommand>
 {
     private readonly ILeaderboardTemplateRepository _leaderboardTemplateRepository;
-    public CreateLeaderboardTemplateCommandHandler(ILeaderboardTemplateRepository leaderboardTemplateRepository)
+    private readonly IBackgroundJobScheduler _backgroundJobScheduler;
+    private readonly IJobService _jobService;
+    public CreateLeaderboardTemplateCommandHandler(ILeaderboardTemplateRepository leaderboardTemplateRepository, IBackgroundJobScheduler backgroundJobScheduler, IJobService jobService)
     {
         _leaderboardTemplateRepository = leaderboardTemplateRepository;
+        _backgroundJobScheduler = backgroundJobScheduler;
+        _jobService = jobService;
     }
 
     public async Task Handle(CreateLeaderboardTemplateCommand request, CancellationToken cancellationToken)
     {
-        var leaderboard = new LeaderboardTemplate(
+        var leaderboardTemplate = new LeaderboardTemplate(
             request.Name,
             request.JobType,
             request.StartTime,
@@ -24,10 +29,15 @@ public class CreateLeaderboardTemplateCommandHandler : IRequestHandler<CreateLea
 
         foreach (var prize in request.LeaderboardPrizes)
         {
-            leaderboard.AddLeaderboardTemplatePrizes(prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
+            leaderboardTemplate.AddLeaderboardTemplatePrizes(prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
         }
 
-        await _leaderboardTemplateRepository.InsertAsync(leaderboard);
+        await _leaderboardTemplateRepository.InsertAsync(leaderboardTemplate);
         await _leaderboardTemplateRepository.SaveChangesAsync(cancellationToken);
+
+        await _jobService.ExecuteLeaderboardRecordGeneration(leaderboardTemplate.Id);
+
+        // Optionally, schedule the job for future recurrence (if needed)
+        _backgroundJobScheduler.ScheduleJob(leaderboardTemplate);
     }
 }

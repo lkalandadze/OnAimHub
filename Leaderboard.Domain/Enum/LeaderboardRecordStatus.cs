@@ -2,8 +2,9 @@
 
 public enum LeaderboardRecordStatus
 {
-    Created = 0,
-    Announced = 1,
-    InProgress = 2,
-    Finished = 3,
+    Future = 0,
+    Created = 1,
+    Announced = 2,
+    InProgress = 3,
+    Finished = 4,
 }

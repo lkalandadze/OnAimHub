@@ -22,10 +22,10 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
     {
         var leaderboard = new LeaderboardRecord(
             request.Name,
-            request.CreationDate,
-            request.AnnouncementDate,
-            request.StartDate,
-            request.EndDate,
+            request.CreationDate.ToUniversalTime(),
+            request.AnnouncementDate.ToUniversalTime(),
+            request.StartDate.ToUniversalTime(),
+            request.EndDate.ToUniversalTime(),
             request.LeaderboardType,
             request.JobType,
             request.LeaderboardTemplateId,

@@ -5,7 +5,7 @@ namespace Leaderboard.Application.Services.Abstract.BackgroundJobs;
 
 public interface IBackgroundJobScheduler
 {
-    void ScheduleJob(LeaderboardRecord leaderboardRecord);
+    void ScheduleJob(LeaderboardTemplate leaderboardTemplate);
     void ScheduleRecordJob(LeaderboardRecord job);
     void RemoveScheduledJob(int jobId);
     void ExecuteJob(int leaderboardTemplateId);
