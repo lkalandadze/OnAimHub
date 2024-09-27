@@ -8,7 +8,6 @@ using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.Upda
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Queries.Get;
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Queries.GetById;
 using Leaderboard.Application.Services.Abstract.BackgroundJobs;
-using Leaderboard.Domain.Abstractions.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Leaderboard.Api.Controllers;

@@ -1,5 +1,4 @@
-﻿using Hangfire;
-using Leaderboard.Application.Services.Abstract.BackgroundJobs;
+﻿using Leaderboard.Application.Services.Abstract.BackgroundJobs;
 using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Domain.Entities;
 using MediatR;

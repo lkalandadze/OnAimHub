@@ -37,7 +37,6 @@ public class CreateLeaderboardTemplateCommandHandler : IRequestHandler<CreateLea
 
         await _jobService.ExecuteLeaderboardRecordGeneration(leaderboardTemplate.Id);
 
-        // Optionally, schedule the job for future recurrence (if needed)
         _backgroundJobScheduler.ScheduleJob(leaderboardTemplate);
     }
 }

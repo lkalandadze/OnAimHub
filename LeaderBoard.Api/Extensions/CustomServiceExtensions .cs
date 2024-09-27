@@ -1,5 +1,4 @@
-﻿using GameLib.Application.Configurations;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Cryptography;
@@ -65,4 +64,13 @@ public static class CustomServiceExtensions
                 };
             });
     }
+    public class JwtConfiguration
+    {
+        public string PublicKey { get; set; }
+
+        public string Issuer { get; set; }
+
+        public string Audience { get; set; }
+    }
+
 }

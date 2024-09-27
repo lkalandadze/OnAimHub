@@ -4,6 +4,7 @@ using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Domain.Entities;
 using Leaderboard.Domain.Enum;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Leaderboard.Application.Services.Concrete.BackgroundJobs;
 
@@ -11,11 +12,19 @@ public class JobService : IJobService
 {
     private readonly ILeaderboardRecordRepository _leaderboardRecordRepository;
     private readonly ILeaderboardTemplateRepository _leaderboardTemplateRepository;
+    private readonly ILeaderboardProgressRepository _leaderboardProgressRepository;
+    private readonly ILeaderboardResultRepository _leaderboardResultRepository;
     private readonly IMediator _mediator;
-    public JobService(ILeaderboardRecordRepository leaderboardRecordRepository, ILeaderboardTemplateRepository leaderboardTemplateRepository, IMediator mediator)
+    public JobService(ILeaderboardRecordRepository leaderboardRecordRepository,
+                     ILeaderboardTemplateRepository leaderboardTemplateRepository,
+                     ILeaderboardProgressRepository leaderboardProgressRepository,
+                     ILeaderboardResultRepository leaderboardResultRepository,
+                     IMediator mediator)
     {
         _leaderboardRecordRepository = leaderboardRecordRepository;
         _leaderboardTemplateRepository = leaderboardTemplateRepository;
+        _leaderboardProgressRepository = leaderboardProgressRepository;
+        _leaderboardResultRepository = leaderboardResultRepository;
         _mediator = mediator;
     }
 
@@ -119,6 +128,9 @@ public class JobService : IJobService
             else if (now >= record.EndDate && record.Status != LeaderboardRecordStatus.Finished)
             {
                 record.Status = LeaderboardRecordStatus.Finished;
+
+                // Schedule processing of leaderboard results when the leaderboard finishes
+                await ProcessLeaderboardResults(record.Id);
             }
             else if (now >= record.AnnouncementDate && now < record.StartDate && record.Status != LeaderboardRecordStatus.Announced)
             {
@@ -159,5 +171,52 @@ public class JobService : IJobService
         // Save the updated record
         _leaderboardRecordRepository.Update(leaderboardRecord);
         await _leaderboardRecordRepository.SaveChangesAsync();
+    }
+
+    public async Task ProcessLeaderboardResults(int leaderboardRecordId)
+    {
+        var leaderboardRecord = await _leaderboardRecordRepository.Query()
+            .FirstOrDefaultAsync(x => x.Id == leaderboardRecordId);
+
+        if (leaderboardRecord == null || leaderboardRecord.Status != LeaderboardRecordStatus.Finished)
+        {
+            throw new Exception($"Leaderboard record with ID {leaderboardRecordId} is not finished.");
+        }
+
+        var leaderboardProgress = await _leaderboardProgressRepository.Query()
+            .Where(x => x.LeaderboardRecordId == leaderboardRecordId)
+            .ToListAsync();
+
+        if (!leaderboardProgress.Any())
+        {
+            throw new Exception("No progress found for this leaderboard.");
+        }
+
+        var sortedProgress = leaderboardProgress
+            .OrderByDescending(x => x.Amount)
+            .ToList();
+
+        int placement = 1;
+        foreach (var progress in sortedProgress)
+        {
+            var leaderboardResult = new LeaderboardResult(
+                leaderboardRecordId,
+                progress.PlayerId,
+                progress.PlayerUsername,
+                placement++,
+                progress.Amount
+            );
+
+            await _leaderboardResultRepository.InsertAsync(leaderboardResult);
+        }
+
+        await _leaderboardResultRepository.SaveChangesAsync();
+
+        foreach (var progress in leaderboardProgress)
+        {
+            _leaderboardProgressRepository.Delete(progress);
+        }
+
+        await _leaderboardProgressRepository.SaveChangesAsync();
     }
 }

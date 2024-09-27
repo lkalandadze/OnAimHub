@@ -7,7 +7,7 @@ public class LeaderboardRecord : BaseEntity<int>
 {
     public LeaderboardRecord()
     {
-        
+
     }
 
     public LeaderboardRecord(string name,
@@ -44,6 +44,7 @@ public class LeaderboardRecord : BaseEntity<int>
     public JobTypeEnum JobType { get; set; }
     public LeaderboardRecordStatus Status { get; set; }
     public bool IsGenerated { get; set; }
+    public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; } = new List<LeaderboardProgress>();
     public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; } = new List<LeaderboardRecordPrize>();
 
     public void Update(string name, DateTimeOffset creationDate, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate, LeaderboardType leaderboardType, JobTypeEnum jobType)
@@ -70,5 +71,11 @@ public class LeaderboardRecord : BaseEntity<int>
         if (prize != null) return;
 
         prize.Update(startRank, endRank, prizeId, amount);
+    }
+
+    public void InsertProgress(int playerId, string playerUsername, int amount)
+    {
+        var progress = new LeaderboardProgress(playerId, playerUsername, amount);
+        LeaderboardProgresses.Add(progress);
     }
 }

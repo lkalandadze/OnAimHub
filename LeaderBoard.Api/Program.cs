@@ -24,6 +24,8 @@ builder.Services.AddFluentValidation(fv =>
     fv.LocalizationEnabled = true;
 });
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services
             .AddLocalization()
             .AddEndpointsApiExplorer();
@@ -44,9 +46,13 @@ builder.Services.AddHangfire(config =>
 builder.Services.AddHangfireServer();
 
 builder.Services.AddHostedService<JobSyncService>();
+builder.Services.AddHostedService<LeaderboardStatusUpdaterService>();
 
 CustomServiceExtensions.ConfigureJwt(builder.Services, configuration);
 CustomServiceExtensions.ConfigureSwagger(builder.Services);
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication();
 
 var origins = builder.Configuration.GetValue<string>("OriginsToAllow");
 
@@ -61,6 +67,8 @@ var app = builder.Build();
     }
 
     app.UseHttpsRedirection();
+
+    app.UseAuthentication();
 
     app.UseAuthorization();
 

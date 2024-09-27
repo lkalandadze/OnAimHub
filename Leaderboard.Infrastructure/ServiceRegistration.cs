@@ -30,6 +30,8 @@ public static class ServiceRegistration
         services.AddScoped<ILeaderboardTemplateRepository, LeaderboardTemplateRepository>();
         services.AddScoped<ILeaderboardRecordRepository, LeaderboardRecordRepository>();
         services.AddScoped<ILeaderboardPrizeRepository, LeaderboardPrizeRepository>();
+        services.AddScoped<ILeaderboardProgressRepository, LeaderboardProgressRepository>();
+        services.AddScoped<ILeaderboardResultRepository, LeaderboardResultRepository>();
 
         return services;
     }

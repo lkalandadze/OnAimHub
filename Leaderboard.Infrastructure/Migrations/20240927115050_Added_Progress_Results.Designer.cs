@@ -3,6 +3,7 @@ using System;
 using Leaderboard.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Leaderboard.Infrastructure.Migrations
 {
     [DbContext(typeof(LeaderboardDbContext))]
-    partial class LeaderboardDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240927115050_Added_Progress_Results")]
+    partial class Added_Progress_Results
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currencies", (string)null);
+                    b.ToTable("Currencies");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardProgress", b =>
@@ -63,7 +66,7 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasIndex("LeaderboardRecordId");
 
-                    b.ToTable("LeaderboardProgresses", (string)null);
+                    b.ToTable("LeaderboardProgresses");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardRecord", b =>
@@ -110,7 +113,7 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasIndex("LeaderboardTemplateId");
 
-                    b.ToTable("LeaderboardRecords", (string)null);
+                    b.ToTable("LeaderboardRecords");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardRecordPrize", b =>
@@ -150,7 +153,7 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasIndex("PrizeId");
 
-                    b.ToTable("LeaderboardRecordPrizes", (string)null);
+                    b.ToTable("LeaderboardRecordPrizes");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardResult", b =>
@@ -161,9 +164,6 @@ namespace Leaderboard.Infrastructure.Migrations
                         .HasColumnOrder(1);
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Amount")
-                        .HasColumnType("integer");
 
                     b.Property<int>("LeaderboardRecordId")
                         .HasColumnType("integer");
@@ -182,7 +182,7 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasIndex("LeaderboardRecordId");
 
-                    b.ToTable("LeaderboardResults", (string)null);
+                    b.ToTable("LeaderboardResults");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardTemplate", b =>
@@ -215,7 +215,7 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LeaderboardTemplate", (string)null);
+                    b.ToTable("LeaderboardTemplate");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardTemplatePrize", b =>
@@ -255,7 +255,7 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasIndex("PrizeId");
 
-                    b.ToTable("LeaderboardTemplatePrize", (string)null);
+                    b.ToTable("LeaderboardTemplatePrize");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.Prize", b =>
@@ -270,7 +270,7 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Prize", (string)null);
+                    b.ToTable("Prize");
                 });
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardProgress", b =>

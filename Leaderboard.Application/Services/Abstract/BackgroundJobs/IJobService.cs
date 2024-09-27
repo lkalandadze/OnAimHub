@@ -9,4 +9,5 @@ public interface IJobService
     Task ExecuteLeaderboardRecordGeneration(int templateId);
     Task UpdateLeaderboardRecordStatusAsync();
     Task ExecuteLeaderboardJob(int leaderboardRecordId);
+    Task ProcessLeaderboardResults(int leaderboardRecordId);
 }
