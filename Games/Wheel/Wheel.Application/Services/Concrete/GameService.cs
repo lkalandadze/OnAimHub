@@ -56,27 +56,27 @@ public class GameService : IGameService
     {
         await _consulGameService.UpdateMetadataAsync(
             getDataFunc: GetGame,
-            serviceId: "wheelapi",
-            serviceName: "wheelapi",
+            serviceId: "WheelApi",
+            serviceName: "WheelApi",
             port: 8080,
-            tags: new[] { "Game", "Back" }
+            tags: ["Game", "Back"]
         );
     }
 
-    public async Task<PlayResponseModel> PlayJackpotAsync(PlayRequestModel command)
+    public async Task<PlayResponseModel> PlayJackpotAsync(PlayRequestModel model)
     {
-        return await PlayAsync<JackpotPrize>(command);
+        return await PlayAsync<JackpotPrize>(model);
     }
 
-    public async Task<PlayResponseModel> PlayWheelAsync(PlayRequestModel command)
+    public async Task<PlayResponseModel> PlayWheelAsync(PlayRequestModel model)
     {
-        return await PlayAsync<WheelPrize>(command);
+        return await PlayAsync<WheelPrize>(model);
     }
 
-    private async Task<PlayResponseModel> PlayAsync<TPrize>(PlayRequestModel command)
+    private async Task<PlayResponseModel> PlayAsync<TPrize>(PlayRequestModel model)
         where TPrize : BasePrize
     {
-        await _hubService.BetTransactionAsync(command.GameId);
+        await _hubService.BetTransactionAsync(model.GameId, model.CurrencyId, model.Amount);
 
         //TODO: prioritetis minicheba segmentistvis
         var prize = GeneratorHolder.GetPrize<TPrize>(_authService.GetCurrentPlayerSegmentIds().ToList()[0]);
@@ -88,7 +88,7 @@ public class GameService : IGameService
 
         if (prize.Value > 0)
         {
-            await _hubService.WinTransactionAsync(command.GameId);
+            await _hubService.WinTransactionAsync(model.GameId, model.CurrencyId, model.Amount);
         }
 
         return new PlayResponseModel
