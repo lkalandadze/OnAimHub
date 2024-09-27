@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using Hub.Domain.Entities.DbEnums;
 using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;

@@ -1,4 +1,4 @@
-﻿using Hub.Domain.Entities;
+﻿using Hub.Domain.Entities.DbEnums;
 
 namespace Hub.Application.Services.Abstract;
 

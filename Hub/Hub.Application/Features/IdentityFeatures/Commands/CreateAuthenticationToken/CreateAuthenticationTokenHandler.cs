@@ -4,6 +4,7 @@ using Hub.Application.Services.Abstract;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities;
+using Hub.Domain.Entities.DbEnums;
 using MediatR;
 using Microsoft.Extensions.Options;
 using Shared.Lib.Extensions;

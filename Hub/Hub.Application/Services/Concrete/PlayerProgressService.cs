@@ -3,18 +3,21 @@ using Hub.Application.Services.Abstract;
 using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Absractions;
 using Hub.Domain.Entities;
+using Hub.Domain.Entities.DbEnums;
 
 namespace Hub.Application.Services.Concrete;
 
 public class PlayerProgressService : IPlayerProgressService
 {
     private readonly IPlayerProgressRepository _playerProgressRepository;
+    private readonly IPlayerProgressHistoryRepository _playerProgressHistoryRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITransactionService _transactionService;
 
-    public PlayerProgressService(IPlayerProgressRepository playerProgressRepository, IUnitOfWork unitOfWork, ITransactionService transactionService)
+    public PlayerProgressService(IPlayerProgressRepository playerProgressRepository, IPlayerProgressHistoryRepository playerProgressHistoryRepository, IUnitOfWork unitOfWork, ITransactionService transactionService)
     {
         _playerProgressRepository = playerProgressRepository;
+        _playerProgressHistoryRepository = playerProgressHistoryRepository;
         _unitOfWork = unitOfWork;
         _transactionService = transactionService;
     }
@@ -48,6 +51,20 @@ public class PlayerProgressService : IPlayerProgressService
             }
         }
 
+        await _unitOfWork.SaveAsync();
+    }
+
+    public async Task ResetPlayerProgressesAndSaveHistoryAsync()
+    {
+        //TODO: performance
+
+        var playerProgresses = await _playerProgressRepository.QueryAsync();
+
+        _playerProgressRepository.DeleteAll();
+
+        var playerProgressHistories = playerProgresses.Select(pp => new PlayerProgressHistory(pp.Progress, pp.PlayerId, pp.CurrencyId));
+
+        await _playerProgressHistoryRepository.InsertRangeAsync(playerProgressHistories);
         await _unitOfWork.SaveAsync();
     }
 }

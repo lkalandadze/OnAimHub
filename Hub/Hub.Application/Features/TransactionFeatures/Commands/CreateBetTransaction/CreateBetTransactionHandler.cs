@@ -1,6 +1,6 @@
 ﻿using Hub.Application.Models.Tansaction;
 using Hub.Application.Services.Abstract;
-using Hub.Domain.Entities;
+using Hub.Domain.Entities.DbEnums;
 using MediatR;
 
 namespace Hub.Application.Features.TransactionFeatures.Commands.CreateBetTransaction;

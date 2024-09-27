@@ -1,4 +1,5 @@
 ﻿using Hub.Domain.Entities;
+using Hub.Domain.Entities.DbEnums;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -17,7 +18,7 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<PlayerBlockedSegment> PlayerBlockedSegments { get; set; }
     public DbSet<PlayerSegmentAct> PlayerSegmentActs { get; set; }
     public DbSet<PlayerSegmentActHistory> PlayerSegmentActHistories { get; set; }
-    public DbSet<Domain.Entities.PlayerSegmentActType> PlayerSegmentActTypes { get; set; }
+    public DbSet<PlayerSegmentActType> PlayerSegmentActTypes { get; set; }
     public DbSet<PlayerLog> PlayerLogs { get; set; }
     public DbSet<PlayerLogType> PlayerLogTypes { get; set; }
     public DbSet<Transaction> Transactions { get; set; }

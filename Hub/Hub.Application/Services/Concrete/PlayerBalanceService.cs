@@ -2,6 +2,7 @@
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities;
+using Hub.Domain.Entities.DbEnums;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
 
@@ -29,7 +30,16 @@ public class PlayerBalanceService : IPlayerBalanceService
             playerBalance = new PlayerBalance(0, playerId, currencyId);
 
             await _playerBalanceRepository.InsertAsync(playerBalance);
-            await _unitOfWork.SaveAsync();
+
+            try
+            {
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine();
+            }
+            
         }
 
         return playerBalance;

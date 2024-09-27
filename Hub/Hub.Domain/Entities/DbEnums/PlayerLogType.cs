@@ -1,8 +1,9 @@
 ﻿#nullable disable
 
+using Hub;
 using Shared.Domain.Entities;
 
-namespace Hub.Domain.Entities;
+namespace Hub.Domain.Entities.DbEnums;
 
 public class PlayerLogType : DbEnum<int, PlayerLogType>
 {
