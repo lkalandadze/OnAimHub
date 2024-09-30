@@ -15,6 +15,6 @@ public class LeaderboardResultController : BaseApiController
     [HttpGet(nameof(GetLeaderboardByPlayerIdResults))]
     public async Task<ActionResult<GetLeaderboardResultsByPlayerIdQueryResponse>> GetLeaderboardByPlayerIdResults([FromQuery] GetLeaderboardResultsByPlayerIdQuery request) => await Mediator.Send(request);
 
-    [HttpGet(nameof(GetPlaterLeaderboardResults))]
-    public async Task<ActionResult<GetPlayerResultsQueryResponse>> GetPlaterLeaderboardResults([FromQuery] GetPlayerResultsQuery request) => await Mediator.Send(request);
+    [HttpGet(nameof(GetPlateyLeaderboardResults))]
+    public async Task<ActionResult<GetPlayerResultsQueryResponse>> GetPlateyLeaderboardResults([FromQuery] GetPlayerResultsQuery request) => await Mediator.Send(request);
 }
