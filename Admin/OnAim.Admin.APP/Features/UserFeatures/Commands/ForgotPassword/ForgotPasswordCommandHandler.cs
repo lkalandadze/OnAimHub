@@ -1,7 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using OnAim.Admin.APP.CQRS;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
@@ -10,31 +7,24 @@ using OnAim.Admin.Shared.Helpers;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.ForgotPassword;
 
-public class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordCommand, ApplicationResult>
+public class ForgotPasswordCommandHandler : BaseCommandHandler<ForgotPasswordCommand, ApplicationResult>
 {
     private readonly IRepository<Domain.Entities.User> _userRepository;
     private readonly IEmailService _emailService;
-    private readonly IValidator<ForgotPasswordCommand> _validator;
-    private readonly ILogger<ForgotPasswordCommand> _logger;
 
     public ForgotPasswordCommandHandler(
+        CommandContext<ForgotPasswordCommand> context,
         IRepository<Domain.Entities.User> userRepository,
-        IEmailService emailService,
-        IValidator<ForgotPasswordCommand> validator,
-        ILogger<ForgotPasswordCommand> logger
-        )
+        IEmailService emailService
+        ) : base( context )
     {
         _userRepository = userRepository;
         _emailService = emailService;
-        _validator = validator;
-        _logger = logger;
     }
-    public async Task<ApplicationResult> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
-    {
-        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        if (!validationResult.IsValid)
-            throw new FluentValidation.ValidationException(validationResult.Errors);           
+    protected override async Task<ApplicationResult> ExecuteAsync(ForgotPasswordCommand request, CancellationToken cancellationToken)
+    {
+        await ValidateAsync(request, cancellationToken);
 
         var user = await _userRepository.Query(x => x.Email == request.Email).FirstOrDefaultAsync();
 

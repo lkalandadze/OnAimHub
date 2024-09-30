@@ -43,8 +43,4 @@
     <ProjectReference Include="..\OnAim.Admin.Shared\OnAim.Admin.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Attributes\" />
-  </ItemGroup>
-
 </Project>

@@ -4,8 +4,8 @@ using OnAim.Admin.Shared.DTOs.EndpointGroup;
 using Microsoft.AspNetCore.Http;
 using System.Dynamic;
 using System.Net.Mime;
-using OnAim.Admin.APP.CQRS;
 using OnAim.Admin.Shared.Helpers.Csv;
+using OnAim.Admin.APP.CQRS.Query;
 
 namespace OnAim.Admin.APP.Features.EndpointGroupFeatures.Queries.EndpointGroupsExport;
 
@@ -32,19 +32,13 @@ public class EndpointGroupsExportQueryHandler : IQueryHandler<EndpointGroupsExpo
            );
 
         if (request.GroupIds != null && request.GroupIds.Any())
-        {
             query = query.Where(x => request.GroupIds.Contains(x.Id));
-        }
 
         if (request.Filter.RoleIds != null && request.Filter.RoleIds.Any())
-        {
             query = query.Where(x => x.RoleEndpointGroups.Any(ur => request.Filter.RoleIds.Contains(ur.RoleId)));
-        }
 
         if (request.Filter.EndpointIds != null && request.Filter.EndpointIds.Any())
-        {
             query = query.Where(x => x.EndpointGroupEndpoints.Any(ur => request.Filter.EndpointIds.Contains(ur.EndpointId)));
-        }
 
         var totalCount = await query.CountAsync(cancellationToken);
 

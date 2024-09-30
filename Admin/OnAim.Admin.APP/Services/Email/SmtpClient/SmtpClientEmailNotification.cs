@@ -42,20 +42,13 @@ public class SmtpClientEmailNotification : IEmailNotification
         var smtpClient = new System.Net.Mail.SmtpClient(_options.Host);
 
         if (_options.Port.HasValue)
-        {
             smtpClient.Port = _options.Port.Value;
-        }
 
         if (!string.IsNullOrWhiteSpace(_options.UserName) && !string.IsNullOrWhiteSpace(_options.Password))
-        {
             smtpClient.Credentials = new System.Net.NetworkCredential(_options.UserName, _options.Password);
 
-        }
-
         if (_options.EnableSsl.HasValue)
-        {
             smtpClient.EnableSsl = _options.EnableSsl.Value;
-        }
 
         await smtpClient.SendMailAsync(mail, cancellationToken);
     }

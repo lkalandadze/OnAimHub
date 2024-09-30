@@ -5,7 +5,6 @@ using OnAim.Admin.Infrasturcture.Repository;
 using System.Reflection;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
-using OnAim.Admin.APP.Auth;
 using OnAim.Admin.Shared.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -19,6 +18,12 @@ using OnAim.Admin.APP.Services.AuthServices;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories;
 using OnAim.Admin.APP.Services.SettingServices;
+using OnAim.Admin.APP.Services.AuthServices.Auth;
+using Microsoft.AspNetCore.Http;
+using OnAim.Admin.APP.Shared.Clients;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 
 namespace OnAim.Admin.APP;
@@ -46,6 +51,7 @@ public static class Extension
             .AddScoped<IDomainValidationService, DomainValidationService>()
             .AddScoped<IAppSettingsService, AppSettingsService>()
             .AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>))
+            .AddScoped(typeof(CommandContext<>), typeof(CommandContext<>))
             .AddHtmlGenerator();
 
         if (configureOptions is { })
@@ -72,9 +78,120 @@ public static class Extension
     }
     public static IEnumerable<T> OrEmptyIfNull<T>(this IEnumerable<T> src)
     => src ?? Enumerable.Empty<T>();
+
+    
 }
 
+public static partial class WebApplicationBuilderExtensions
+{
+    public static WebApplicationBuilder AddCustomHttpClients(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddValidatedOptions<PolicyOptions>();
 
+        AddHubApiClient(builder);
+
+        return builder;
+    }
+
+    private static void AddHubApiClient(WebApplicationBuilder builder)
+    {
+        builder.Services.AddValidatedOptions<HubApiClientOptions>();
+        builder.Services.AddHttpClient<IHubApiClient, HubApiClient>(
+            (client, sp) =>
+            {
+                var catalogApiOptions = sp.GetRequiredService<IOptions<HubApiClientOptions>>();
+                var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
+                catalogApiOptions.Value.NotBeNull();
+
+                var baseAddress = catalogApiOptions.Value.BaseApiAddress;
+                client.BaseAddress = new Uri(baseAddress);
+                return new HubApiClient(client, catalogApiOptions, policyOptions);
+            }
+        );
+    }
+
+    public static IServiceCollection AddValidatedOptions<T>(
+        this IServiceCollection services,
+        string? key = null,
+        Func<T, bool>? validator = null,
+        Action<T>? configurator = null
+    )
+        where T : class
+    {
+        validator ??= RequiredConfigurationValidator.Validate;
+
+        var optionBuilder = services.AddOptions<T>().BindConfiguration(key ?? typeof(T).Name);
+
+        if (configurator is not null)
+        {
+            optionBuilder = optionBuilder.Configure(configurator);
+        }
+
+        optionBuilder.Validate(validator);
+
+        services.TryAddSingleton(x => x.GetRequiredService<IOptions<T>>().Value);
+
+        return services;
+    }
+    public static class RequiredConfigurationValidator
+    {
+        public static bool Validate<T>(T arg)
+            where T : class
+        {
+            var requiredProperties = typeof(T)
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(x => Attribute.IsDefined(x, typeof(RequiredMemberAttribute)));
+
+            foreach (var requiredProperty in requiredProperties)
+            {
+                var propertyValue = requiredProperty.GetValue(arg);
+                if (propertyValue is null)
+                {
+                    throw new System.Exception($"Required property '{requiredProperty.Name}' was null");
+                }
+            }
+
+            return true;
+        }
+    }
+}
+
+    public static class HttpResponseMessageExtensions
+{
+    public static async Task EnsureSuccessStatusCodeWithDetailAsync(this HttpResponseMessage response)
+    {
+        if (response.IsSuccessStatusCode)
+        {
+            return;
+        }
+
+        var content = await response.Content.ReadAsStringAsync();
+
+        throw new HttpResponseException(content, (int)response.StatusCode);
+    }
+}
+public class HttpResponseException : System.Exception
+{
+    public string? ResponseContent { get; }
+
+    public IReadOnlyDictionary<string, IEnumerable<string>>? Headers { get; }
+
+    public HttpResponseException(
+        string responseContent,
+        int statusCode = StatusCodes.Status500InternalServerError,
+        IReadOnlyDictionary<string, IEnumerable<string>>? headers = null,
+        System.Exception? inner = null
+    )
+    {
+        ResponseContent = responseContent;
+        Headers = headers;
+    }
+
+    public override string ToString()
+    {
+        return $"HTTP Response: \n\n{ResponseContent}\n\n{base.ToString()}";
+    }
+}
 public static class ValidationExtensions
 {
 

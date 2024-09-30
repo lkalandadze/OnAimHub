@@ -5,10 +5,9 @@ using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.DTOs.Endpoint;
 using OnAim.Admin.Shared.DTOs.EndpointGroup;
-using OnAim.Admin.Shared.DTOs.Role;
 using OnAim.Admin.Shared.Helpers;
-using OnAim.Admin.APP.CQRS;
 using OnAim.Admin.Shared.DTOs.User;
+using OnAim.Admin.APP.CQRS.Query;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Queries.GetById;
 
@@ -34,9 +33,7 @@ public class GetEndpointByIdQueryHandler : IQueryHandler<GetEndpointByIdQuery, A
             .FirstOrDefaultAsync(cancellationToken);
 
         if (endpoint == null)
-        {
             throw new NotFoundException("Permmission Not Found!");
-        }
 
         var user = await _userRepository.Query(x => x.Id == endpoint.CreatedBy).FirstOrDefaultAsync();
 

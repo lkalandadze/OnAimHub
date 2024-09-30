@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.CQRS;
 using OnAim.Admin.Domain.HubEntities;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
@@ -10,6 +9,7 @@ using OnAim.Admin.Shared.DTOs.Refer;
 using OnAim.Admin.Shared.DTOs.Segment;
 using OnAim.Admin.Shared.DTOs.Transaction;
 using OnAim.Admin.Domain.Exceptions;
+using OnAim.Admin.APP.CQRS.Query;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetById;
 
@@ -73,10 +73,9 @@ public class GetPlayerByIdQueryHandler : IQueryHandler<GetPlayerByIdQuery, Appli
             .ToListAsync(cancellationToken);
 
         Player refPlayer = null;
+
         if (referee != null)
-        {
             refPlayer = await _playerRepository.Query(x => x.ReferrerId == referee.ReferrerId).FirstOrDefaultAsync(cancellationToken);
-        }
 
         var balance = await _playerBalanaceRepository.Query(x => x.PlayerId == player.Id).ToListAsync(cancellationToken);
         var logs = await _playerLogRepository.Query(x => x.PlayerId == player.Id).ToListAsync(cancellationToken);
@@ -85,7 +84,7 @@ public class GetPlayerByIdQueryHandler : IQueryHandler<GetPlayerByIdQuery, Appli
         {
             Id = player.Id,
             PlayerName = player.UserName,
-            Segments = player.PlayerSegments.Select(x => new SegmentDto
+            Segments = player.PlayerSegments.Select(x => new SegmentListDto
             {
                 Id = x.Segment.Id,
                 Description = x.Segment.Description,

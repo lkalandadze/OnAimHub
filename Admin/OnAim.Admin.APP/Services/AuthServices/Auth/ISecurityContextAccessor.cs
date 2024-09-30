@@ -1,4 +1,4 @@
-﻿namespace OnAim.Admin.APP.Auth;
+﻿namespace OnAim.Admin.APP.Services.AuthServices.Auth;
 
 public interface ISecurityContextAccessor
 {

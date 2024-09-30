@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.CQRS;
+﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
@@ -28,24 +27,16 @@ public class GetUserLogsQueryHandler : IQueryHandler<GetUserLogsQuery, Applicati
         var logs = await _logRepository.GetUserLogs(request.Id);
 
         if (request.Filter.Actions != null && request.Filter.Actions.Any())
-        {
             logs = logs.Where(x => request.Filter.Actions.Contains(x.Action)).ToList();
-        }
 
         if (request.Filter.Categories != null && request.Filter.Categories.Any())
-        {
             logs = logs.Where(x => request.Filter.Categories.Contains(x.Category)).ToList();
-        }
 
         if (request.Filter.DateFrom.HasValue)
-        {
             logs = logs.Where(x => x.Timestamp >= request.Filter.DateFrom.Value).ToList();
-        }
 
         if (request.Filter.DateTo.HasValue)
-        {
             logs = logs.Where(x => x.Timestamp <= request.Filter.DateTo.Value).ToList();
-        }
 
         var totalCount = logs.Count;
 

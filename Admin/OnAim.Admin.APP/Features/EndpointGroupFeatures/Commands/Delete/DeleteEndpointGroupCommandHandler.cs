@@ -1,51 +1,33 @@
-﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Auth;
-using OnAim.Admin.APP.CQRS;
-using OnAim.Admin.APP.Services.Abstract;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Domain.Exceptions;
-using OnAim.Admin.Shared.Models;
 
 namespace OnAim.Admin.APP.Features.EndpointGroupFeatures.Commands.Delete;
 
-public class DeleteEndpointGroupCommandHandler : ICommandHandler<DeleteEndpointGroupCommand, ApplicationResult>
+public class DeleteEndpointGroupCommandHandler : BaseCommandHandler<DeleteEndpointGroupCommand, ApplicationResult>
 {
     private readonly IRepository<EndpointGroup> _repository;
-    private readonly IValidator<DeleteEndpointGroupCommand> _validator;
-    private readonly ISecurityContextAccessor _securityContextAccessor;
 
-    public DeleteEndpointGroupCommandHandler(
-        IRepository<EndpointGroup> repository,
-        IValidator<DeleteEndpointGroupCommand> validator,
-        ISecurityContextAccessor securityContextAccessor
-        )
+    public DeleteEndpointGroupCommandHandler(CommandContext<DeleteEndpointGroupCommand> context,IRepository<EndpointGroup> repository) : base( context )
     {
         _repository = repository;
-        _validator = validator;
-        _securityContextAccessor = securityContextAccessor;
     }
-    public async Task<ApplicationResult> Handle(DeleteEndpointGroupCommand request, CancellationToken cancellationToken)
+    protected override async Task<ApplicationResult> ExecuteAsync(DeleteEndpointGroupCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+        await ValidateAsync(request, cancellationToken);
 
-        if (!validationResult.IsValid)
-        {
-            throw new FluentValidation.ValidationException(validationResult.Errors);
-        }
+        var groups = await _repository.Query(x => request.GroupIds.Contains(x.Id)).ToListAsync();
 
-        var group = await _repository.Query(x => x.Id == request.GroupId).FirstOrDefaultAsync();
-
-        if (group == null)
-        {
+        if (!groups.Any())
             throw new NotFoundException("Permission Group Not Found");
-        }
 
-        group.IsDeleted = true;
-        group.IsActive = false;
-        group.DateDeleted = SystemDate.Now;
+        foreach ( var group in groups)
+        {
+            group.IsActive = false;
+            group.MarkAsDeleted();
+        }
 
         await _repository.CommitChanges();
 

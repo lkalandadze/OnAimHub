@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using OnAim.Admin.APP.CQRS;
+using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.Shared.DTOs.EndpointGroup;
 
 namespace OnAim.Admin.APP.Features.EndpointGroupFeatures.Queries.EndpointGroupsExport;

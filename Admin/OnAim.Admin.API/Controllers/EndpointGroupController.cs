@@ -31,9 +31,9 @@ public class EndpointGroupController : ApiControllerBase
     public async Task<IActionResult> Get([FromRoute] int id)
         => Ok(await Mediator.Send(new GetEndpointGroupByIdQuery(id)));
 
-    [HttpPost("Delete/{id}")]
-    public async Task<IActionResult> Delete([FromRoute] int id)
-        => Ok(await Mediator.Send(new DeleteEndpointGroupCommand(id)));
+    [HttpPost("Delete")]
+    public async Task<IActionResult> Delete([FromBody] List<int> ids)
+        => Ok(await Mediator.Send(new DeleteEndpointGroupCommand(ids)));
 
     //[HttpGet("Download")]
     //public async Task<IResult> Download([FromQuery] EndpointGroupsExportQuery query)

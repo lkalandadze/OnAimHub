@@ -12,7 +12,7 @@ using OnAim.Admin.Infrasturcture.Persistance.Data;
 namespace OnAim.Admin.Infrasturcture.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240926112704_InitialMigration")]
+    [Migration("20240930102344_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -46,6 +46,9 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Token")
@@ -118,6 +121,9 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Key")
@@ -258,6 +264,9 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsRevoked")

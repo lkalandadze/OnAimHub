@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OnAim.Admin.Domain.Entities.Abstract;
 using OnAim.Admin.Shared.DTOs.User;
+using OnAim.Admin.Shared.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnAim.Admin.Domain.Entities;
@@ -39,5 +40,52 @@ public class User : BaseEntity
             ? new UserPreferences()
             : JsonConvert.DeserializeObject<UserPreferences>(PreferencesJson);
         set => PreferencesJson = JsonConvert.SerializeObject(value ?? new UserPreferences());
+    }
+
+    public User(
+        string firstName, 
+        string lastName, 
+        string username, 
+        string email, 
+        string password, 
+        string salt, 
+        string phone, 
+        int? createdBy,
+        bool isVerified, 
+        bool isActive, 
+        int? activationCode,
+        DateTime? activationCodeExpiration,
+        bool isSuperAdmin = false)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Username = username;
+        Email = email;
+        Phone = phone;
+        Password = password;
+        Salt = salt;
+        IsSuperAdmin = isSuperAdmin;
+        IsDeleted = false;
+        IsVerified = isVerified;
+        IsActive = isActive;
+        ActivationCode = activationCode;
+        ActivationCodeExpiration = activationCodeExpiration;
+        CreatedBy = createdBy;
+        DateCreated = SystemDate.Now;
+    }
+
+    public void UpdateUserDetails(string firstName, string lastName, string phone, bool? isActive)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Phone = phone;
+        IsActive = isActive ?? true;
+        DateUpdated = SystemDate.Now;
+    }
+
+    public void AddUserRole(UserRole userRole)
+    {
+        UserRoles.Add(userRole);
+        DateUpdated = DateTimeOffset.Now;
     }
 }

@@ -1,4 +1,4 @@
-﻿using OnAim.Admin.APP.CQRS;
+﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;

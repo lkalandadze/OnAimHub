@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Auth;
-using OnAim.Admin.APP.CQRS;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
@@ -8,21 +6,22 @@ using OnAim.Admin.Domain.Exceptions;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Activate;
 
-public class ActivateAccountCommandHandler : ICommandHandler<ActivateAccountCommand, ApplicationResult>
+public class ActivateAccountCommandHandler : BaseCommandHandler<ActivateAccountCommand, ApplicationResult>
 {
     private readonly IRepository<User> _repository;
-    private readonly ISecurityContextAccessor _securityContextAccessor;
 
     public ActivateAccountCommandHandler(
-        IRepository<User> repository,
-        ISecurityContextAccessor securityContextAccessor
-        )
+        CommandContext<ActivateAccountCommand> context,
+        IRepository<User> repository
+        ) : base( context )
     {
         _repository = repository;
-        _securityContextAccessor = securityContextAccessor;
     }
-    public async Task<ApplicationResult> Handle(ActivateAccountCommand request, CancellationToken cancellationToken)
+
+    protected override async Task<ApplicationResult> ExecuteAsync(ActivateAccountCommand request, CancellationToken cancellationToken)
     {
+        await ValidateAsync(request, cancellationToken);
+
         var user = await _repository.Query(x => x.Email == request.Email && !x.IsDeleted).FirstOrDefaultAsync();
 
         if (user == null || user.ActivationCode != request.Code)

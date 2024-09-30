@@ -54,9 +54,7 @@ public class DomainValidationService : IDomainValidationService
     public async Task<bool> IsDomainAllowedAsync(string email)
     {
         if (!await AreDomainRestrictionsEnabledAsync())
-        {
             return true;
-        }
 
         await EnsureAllowedDomainsLoadedAsync();
         var emailDomain = email.Split('@').Last();

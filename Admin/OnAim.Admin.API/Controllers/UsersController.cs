@@ -83,9 +83,9 @@ public class UsersController : ApiControllerBase
     public async Task<IActionResult> ProfileUpdate([FromRoute] int id, [FromBody] ProfileUpdateRequest profile)
         => Ok(await Mediator.Send(new UserProfileUpdateCommand(id, profile)));
 
-    [HttpPost("Delete/{id}")]
-    public async Task<IActionResult> Delete([FromRoute] int id)
-        => Ok(await Mediator.Send(new DeleteUserCommand(id)));
+    [HttpPost("Delete")]
+    public async Task<IActionResult> Delete([FromBody] List<int> ids)
+        => Ok(await Mediator.Send(new DeleteUserCommand(ids)));
 
     [HttpPost("refresh-token")]
     [AllowAnonymous]

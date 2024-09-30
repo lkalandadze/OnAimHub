@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="DTOs\EmailDomain\" />
-    <Folder Include="Helpers\Excel\ClosedXML\" />
   </ItemGroup>
 
   <ItemGroup>

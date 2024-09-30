@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.CQRS;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.DTOs.Endpoint;
@@ -7,6 +6,7 @@ using OnAim.Admin.Shared.DTOs.EndpointGroup;
 using OnAim.Admin.Shared.DTOs.Role;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Shared.DTOs.User;
+using OnAim.Admin.APP.CQRS.Query;
 namespace OnAim.Admin.APP.Features.EndpointGroupFeatures.Queries.GetById;
 
 public class GetEndpointGroupByIdQueryHandler : IQueryHandler<GetEndpointGroupByIdQuery, ApplicationResult>
@@ -35,9 +35,7 @@ public class GetEndpointGroupByIdQueryHandler : IQueryHandler<GetEndpointGroupBy
         var user = await _userRepo.Query(x => x.Id == group.CreatedBy).FirstOrDefaultAsync();
 
         if (group == null)
-        {
             throw new NotFoundException("Permmission Group Not Found!");
-        }
 
         var res = new EndpointGroupResponseDto
         {

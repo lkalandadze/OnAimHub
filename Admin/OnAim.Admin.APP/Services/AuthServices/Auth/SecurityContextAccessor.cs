@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
-namespace OnAim.Admin.APP.Auth;
+namespace OnAim.Admin.APP.Services.AuthServices.Auth;
 
 public class SecurityContextAccessor : ISecurityContextAccessor
 {

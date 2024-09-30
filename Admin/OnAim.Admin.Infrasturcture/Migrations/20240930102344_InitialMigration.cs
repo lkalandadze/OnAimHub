@@ -40,6 +40,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     Key = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Value = table.Column<string>(type: "text", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     DateCreated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     DateUpdated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     DateDeleted = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
@@ -99,9 +100,9 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedBy = table.Column<int>(type: "integer", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     DateCreated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     DateUpdated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     DateDeleted = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
@@ -205,6 +206,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     Token = table.Column<string>(type: "text", nullable: false),
                     Expiration = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     DateCreated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     DateUpdated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     DateDeleted = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
@@ -231,6 +233,7 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     Expiration = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsRevoked = table.Column<bool>(type: "boolean", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     DateCreated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     DateUpdated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     DateDeleted = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)

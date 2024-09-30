@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
+using OnAim.Admin.APP.Features.PlayerFeatures.Commands;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetById;
 using OnAim.Admin.Shared.DTOs.Player;
@@ -15,4 +16,8 @@ public class PlayerController : ApiControllerBase
     [HttpGet("GetById/{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
         => Ok(await Mediator.Send(new GetPlayerByIdQuery(id)));
+
+    [HttpPost("BanPlayer")]
+    public async Task<IActionResult> BanPlayer([FromBody] BanPlayerCommand command)
+        => Ok(await Mediator.Send(command));
 }

@@ -32,6 +32,7 @@ public static class ServiceCollectionExtensions
     {
         return BindOptions(configuration, typeof(TOptions).Name, configurator);
     }
+
     public static TOptions BindOptions<TOptions>(
     this IConfiguration configuration,
     string section,
@@ -131,7 +132,6 @@ public static class ServiceCollectionExtensions
             options.DefaultPolicy = policyBuilder.Build();
         });
     }
-
 
     public static IServiceCollection AddCustomCors(this IServiceCollection services)
     {

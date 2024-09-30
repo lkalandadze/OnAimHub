@@ -1,38 +1,27 @@
-﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Auth;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
-using OnAim.Admin.APP.CQRS;
 using OnAim.Admin.Shared.Helpers.Password;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.ChangePassword;
 
-public class ChangePasswordCommandHandler : ICommandHandler<ChangePasswordCommand, ApplicationResult>
+public class ChangePasswordCommandHandler : BaseCommandHandler<ChangePasswordCommand, ApplicationResult>
 {
     private readonly IRepository<User> _userRepository;
-    private readonly IValidator<ChangePasswordCommand> _validator;
-    private readonly ISecurityContextAccessor _securityContextAccessor;
 
     public ChangePasswordCommandHandler(
-        IRepository<User> userRepository,
-        IValidator<ChangePasswordCommand> validator,
-        ISecurityContextAccessor securityContextAccessor
-        )
+        CommandContext<ChangePasswordCommand> context,
+        IRepository<User> userRepository
+        ) : base( context )
     {
         _userRepository = userRepository;
-        _validator = validator;
-        _securityContextAccessor = securityContextAccessor;
     }
-    public async Task<ApplicationResult> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+    protected override async Task<ApplicationResult> ExecuteAsync(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-
-        if (!validationResult.IsValid)
-            throw new FluentValidation.ValidationException(validationResult.Errors);
+        await ValidateAsync(request, cancellationToken);
 
         var user = await _userRepository.Query(x => x.Email == request.Email).FirstOrDefaultAsync();
 

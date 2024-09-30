@@ -1,60 +1,38 @@
-﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Auth;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.Models;
-using OnAim.Admin.APP.CQRS;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Commands.Create;
 
-public class CreateRoleCommandHandler : ICommandHandler<CreateRoleCommand, ApplicationResult>
+public class CreateRoleCommandHandler : BaseCommandHandler<CreateRoleCommand, ApplicationResult>
 {
     private readonly IRepository<Role> _repository;
     private readonly IRepository<EndpointGroup> _endpointGroupRepository;
     private readonly IConfigurationRepository<RoleEndpointGroup> _configurationRepository;
-    private readonly IValidator<CreateRoleCommand> _validator;
-    private readonly ISecurityContextAccessor _securityContextAccessor;
 
     public CreateRoleCommandHandler(
+        CommandContext<CreateRoleCommand> context,
         IRepository<Role> repository,
         IRepository<EndpointGroup> EndpointGroupRepository,
-        IConfigurationRepository<RoleEndpointGroup> ConfigurationRepository,
-        IValidator<CreateRoleCommand> validator,
-        ISecurityContextAccessor securityContextAccessor
-        )
+        IConfigurationRepository<RoleEndpointGroup> ConfigurationRepository
+        ) : base( context )
     {
         _repository = repository;
         _endpointGroupRepository = EndpointGroupRepository;
         _configurationRepository = ConfigurationRepository;
-        _validator = validator;
-        _securityContextAccessor = securityContextAccessor;
     }
-    public async Task<ApplicationResult> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
+    protected override async Task<ApplicationResult> ExecuteAsync(CreateRoleCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-
-        if (!validationResult.IsValid)
-        {
-            throw new FluentValidation.ValidationException(validationResult.Errors);
-        }
+        await ValidateAsync(request, cancellationToken);
 
         var existsName = _repository.Query(x => x.Name.ToLower() == request.Request.Name.ToLower()).Any();
         if (existsName)
-        {
             throw new AlreadyExistsException("Role With That Name ALready Exists");
-        }
-        var role = new Role
-        {
-            Name = request.Request.Name,
-            Description = request.Request.Description,
-            DateCreated = SystemDate.Now,
-            IsActive = true,
-            RoleEndpointGroups = new List<RoleEndpointGroup>(),
-            CreatedBy = _securityContextAccessor.UserId,
-        };
+
+        var role = new Role(request.Request.Name, request.Request.Description, _context.SecurityContextAccessor.UserId);
+
         await _repository.Store(role);
         await _repository.CommitChanges();
 
@@ -62,16 +40,10 @@ public class CreateRoleCommandHandler : ICommandHandler<CreateRoleCommand, Appli
         {
             var epgroup = await _endpointGroupRepository.Query(x => x.Id == group).FirstOrDefaultAsync();
 
-            if (epgroup.IsDeleted)
-            {
+            if (epgroup?.IsDeleted == true)
                 throw new Exception("EndpointGroup Is Disabled!");
-            }
 
-            var roleEndpointGroup = new RoleEndpointGroup
-            {
-                EndpointGroupId = epgroup.Id,
-                RoleId = role.Id
-            };
+            var roleEndpointGroup = new RoleEndpointGroup(role.Id, epgroup.Id);
 
             role.RoleEndpointGroups.Add(roleEndpointGroup);
             await _configurationRepository.CommitChanges();

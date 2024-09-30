@@ -3,7 +3,7 @@ using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.APP.CQRS;
+using OnAim.Admin.APP.CQRS.Command;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.UserBondToRole;
 
@@ -26,9 +26,7 @@ public class UserBondToRoleCommandHandler
                                         .FirstOrDefaultAsync();
 
             if (userRole == null)
-            {
                 throw new NotFoundException("User Role not found.");
-            }
 
             userRole.IsActive = item.IsActive ?? true;
 
