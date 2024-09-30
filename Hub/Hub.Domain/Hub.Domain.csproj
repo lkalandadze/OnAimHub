@@ -7,7 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Lib\OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing\OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Domain\Shared.Domain.csproj" />
   </ItemGroup>
 
+	<!--<Target Name="RunGVGenerator" AfterTargets="Build">
+		<PropertyGroup>
+			 --><!--Path to the Generator in the solution folder--><!-- 
+			<GeneratorPath>$(SolutionDir)Tools\GloballyVisibleClassGenerator.exe</GeneratorPath>
+
+			 --><!--The current project's output path (the .dll)--><!-- 
+			<DllPath>$(TargetDir)$(TargetName).dll</DllPath>
+
+			 --><!--Path to the referenced SecondaryModels project's output folder--><!-- 
+			<OutputFolder>$(SolutionDir)Admin\OnAim.Admin.Infrasturcture\HubEntities</OutputFolder>
+			<JsonFilePath>$(ProjectDir)generator.json</JsonFilePath>
+		</PropertyGroup>
+
+		<ReadLinesFromFile File="$(JsonFilePath)">
+			<Output TaskParameter="Lines" ItemName="JsonContent" />
+		</ReadLinesFromFile>
+
+		<Exec Command="&quot;$(GeneratorPath)&quot; &quot;$(DllPath)&quot; &quot;$(OutputFolder)&quot; %(JsonContent.Identity)" />
+	</Target>-->
 </Project>

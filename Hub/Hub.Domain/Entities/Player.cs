@@ -1,9 +1,11 @@
 ﻿#nullable disable
 
+using OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing.Attributes;
 using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;
 
+[GloballyVisible]
 public class Player : BaseEntity<int>
 {
     public Player()
@@ -22,7 +24,7 @@ public class Player : BaseEntity<int>
 
     public const string Base32Chars = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
     private static int ReferralCodeMargin = 10_000_000;
-
+    
     public string UserName { get; private set; }
     public int? ReferrerId { get; private set; }
     public bool HasPlayed { get; private set; }
