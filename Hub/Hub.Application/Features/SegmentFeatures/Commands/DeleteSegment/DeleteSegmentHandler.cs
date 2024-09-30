@@ -24,7 +24,7 @@ public class DeleteSegmentHandler : IRequestHandler<DeleteSegmentCommand>
             throw new KeyNotFoundException($"Segment not fount for Id: {request.Id}");
         }
 
-        _segmentRepository.Delete(segment);
+        segment.Delete();
         await _unitOfWork.SaveAsync();
 
         return Unit.Value;

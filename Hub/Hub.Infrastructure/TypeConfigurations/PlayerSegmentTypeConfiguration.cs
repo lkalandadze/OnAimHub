@@ -1,7 +1,6 @@
 ﻿using Hub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection.Emit;
 
 namespace Hub.Infrastructure.TypeConfigurations;
 
@@ -9,10 +8,9 @@ public class PlayerSegmentTypeConfiguration : IEntityTypeConfiguration<PlayerSeg
 {
     public void Configure(EntityTypeBuilder<PlayerSegment> builder)
     {
-        builder.HasKey(ps => ps.Id);
+        builder.Ignore(e => e.Id);
 
-        builder.Property(s => s.AddedByUserId)
-               .IsRequired(false);
+        builder.HasKey(ps => new { ps.PlayerId, ps.SegmentId });
 
         builder.HasOne(ps => ps.Player)
                .WithMany(p => p.PlayerSegments)

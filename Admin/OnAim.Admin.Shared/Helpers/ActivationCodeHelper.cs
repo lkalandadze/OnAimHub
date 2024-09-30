@@ -1,14 +1,13 @@
-﻿namespace OnAim.Admin.Shared.Helpers
+﻿namespace OnAim.Admin.Shared.Helpers;
+
+public static class ActivationCodeHelper
 {
-    public static class ActivationCodeHelper
+    public static int ActivationCode()
     {
-        public static int ActivationCode()
-        {
-            var random = new Random();
+        var random = new Random();
 
-            var activationCode = random.Next(100000, 999999);
+        var activationCode = random.Next(100000, 999999);
 
-            return activationCode;
-        }
+        return activationCode;
     }
 }

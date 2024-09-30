@@ -20,17 +20,16 @@ public class HubService : IHubService
         _accessor = accessor;
         _httpClient = httpClient;
         _hubApiConfig = hubApiConfig.Value;
-
     }
 
-    public async Task BetTransactionAsync(int gameVersionId)
+    public async Task BetTransactionAsync(int gameVersionId, string currencyId, int amount)
     {
         Authorize();
         var transactionPost = new TransactionPostModel
         {
             GameId = gameVersionId,
-            CurrencyId = "USD", //TODO
-            Amount = 1, //TODO
+            CurrencyId = currencyId,
+            Amount = amount,
         };
 
         var betTransaction = await _httpClient.CustomPostAsync<TransactionResponseModel>(_hubApiConfig.Host, _hubApiConfig.Endpoints.BetTransaction, transactionPost);
@@ -41,14 +40,14 @@ public class HubService : IHubService
         }
     }
 
-    public async Task WinTransactionAsync(int gameVersionId)
+    public async Task WinTransactionAsync(int gameVersionId, string currencyId, int amount)
     {
         Authorize();
         var transactionPost = new TransactionPostModel
         {
             GameId = gameVersionId,
-            CurrencyId = "USD", //TODO
-            Amount = 50, //TODO
+            CurrencyId = currencyId,
+            Amount = amount,
         };
 
         var winTransaction = await _httpClient.CustomPostAsync<TransactionResponseModel>(_hubApiConfig.Host, _hubApiConfig.Endpoints.WinTransaction, transactionPost);

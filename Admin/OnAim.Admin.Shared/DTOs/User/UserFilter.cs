@@ -1,22 +1,17 @@
-﻿using OnAim.Admin.Shared.Attributes;
+﻿using OnAim.Admin.Shared.DTOs.Base;
+using OnAim.Admin.Shared.Enums;
 
-namespace OnAim.Admin.Shared.DTOs.User
-{
-    public record UserFilter(
-        string? Name,
-        string? Email,
-        string? SortBy,
-        bool? SortDescending,
-        int? PageNumber,
-        [PageSize(100)]
-        int? PageSize,
-        string? Direction,
-        List<int>? RoleIds,
-        bool? IsActive,
-        bool? IsDeleted,
-        DateTime? RegistrationDateFrom,
-        DateTime? RegistrationDateTo,
-        DateTime? LoginDateFrom,
-        DateTime? LoginDateTo
-        );
-}
+namespace OnAim.Admin.Shared.DTOs.User;
+
+public record UserFilter(
+    string? Name,
+    string? Email,
+    string? Direction,
+    List<int>? RoleIds,
+    bool? IsActive,
+    HistoryStatus? HistoryStatus,
+    DateTime? RegistrationDateFrom,
+    DateTime? RegistrationDateTo,
+    DateTime? LoginDateFrom,
+    DateTime? LoginDateTo
+    ) : BaseFilter;

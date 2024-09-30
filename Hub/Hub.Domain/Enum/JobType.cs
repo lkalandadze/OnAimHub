@@ -2,8 +2,8 @@
 
 public enum JobType
 {
-    Daily,
+    Daily = 1,
     Weekly,
     Monthly,
-    Custom
+    Custom,
 }

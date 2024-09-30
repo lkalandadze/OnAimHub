@@ -1,10 +1,9 @@
-﻿namespace OnAim.Admin.Shared.Models
+﻿namespace OnAim.Admin.Shared.Models;
+
+public enum EndpointType
 {
-    public enum EndpointType
-    {
-        Get,
-        Create,
-        Update,
-        Delete
-    }
+    Get,
+    Create,
+    Update,
+    Delete
 }

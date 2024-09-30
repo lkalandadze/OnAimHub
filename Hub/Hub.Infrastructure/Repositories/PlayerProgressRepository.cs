@@ -6,4 +6,8 @@ namespace Hub.Infrastructure.Repositories;
 
 public class PlayerProgressRepository(HubDbContext context) : BaseRepository<HubDbContext, PlayerProgress>(context), IPlayerProgressRepository
 {
+    public void DeleteAll()
+    {
+        _context.PlayerProgresses.RemoveRange(_context.PlayerProgresses);
+    }
 }

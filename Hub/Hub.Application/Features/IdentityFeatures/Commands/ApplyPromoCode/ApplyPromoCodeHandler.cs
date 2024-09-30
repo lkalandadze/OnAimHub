@@ -2,6 +2,7 @@
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities;
+using Hub.Domain.Entities.DbEnums;
 using MediatR;
 
 namespace Hub.Application.Features.IdentityFeatures.Commands.ApplyPromoCode;

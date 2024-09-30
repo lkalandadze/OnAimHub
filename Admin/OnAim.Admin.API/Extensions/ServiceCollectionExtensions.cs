@@ -1,243 +1,191 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
-using OnAim.Admin.Infrasturcture.Persistance.Data;
 using System.Text;
-using Microsoft.AspNetCore.Identity;
-using OnAim.Admin.Infrasturcture.Entities;
 using OnAim.Admin.API.Service.Endpoint;
 using Microsoft.OpenApi.Models;
-using OnAim.Admin.Shared.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using SendGrid.Helpers.Errors.Model;
 using System.IdentityModel.Tokens.Jwt;
-using OnAim.Admin.APP.Factory;
-using Microsoft.Extensions.Options;
-using System.Reflection;
+using OnAim.Admin.APP.Feature.Identity;
+using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
 
-namespace OnAim.Admin.API.Extensions
+namespace OnAim.Admin.API.Extensions;
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    public static IServiceCollection AddConfigs(this IServiceCollection services, ConfigurationManager config)
     {
-        public static IServiceCollection AddConfigs(this IServiceCollection services, ConfigurationManager config)
+        config.AddEnvironmentVariables();
+
+        services.Configure<AuthenticationConfig>(
+            config.GetSection(AuthenticationConfig.ToString()));
+
+        return services;
+    }
+
+    public static TOptions BindOptions<TOptions>(
+    this IConfiguration configuration,
+    Action<TOptions>? configurator = null
+    )
+     where TOptions : new()
+    {
+        return BindOptions(configuration, typeof(TOptions).Name, configurator);
+    }
+
+    public static TOptions BindOptions<TOptions>(
+    this IConfiguration configuration,
+    string section,
+    Action<TOptions>? configurator = null
+    )
+    where TOptions : new()
+    {
+        var options = new TOptions();
+
+        var optionsSection = configuration.GetSection(section);
+        optionsSection.Bind(options);
+
+        configurator?.Invoke(options);
+
+        return options;
+    }
+
+    public static AuthenticationBuilder AddCustomJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+        JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+
+        var jwtOptions = configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>();
+
+        if (jwtOptions == null)
         {
-            config.AddEnvironmentVariables();
-
-            services.Configure<AuthenticationConfig>(
-                config.GetSection(AuthenticationConfig.ToString()));
-
-            return services;
+            throw new ArgumentNullException(nameof(jwtOptions), "JWT configuration could not be loaded.");
         }
 
-        //[Obsolete("Use Identity Server Instead!")]
-        //public static IServiceCollection AddCustomJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
-        //{
-        //    var signingKey = new SymmetricSecurityKey(
-        //        Encoding.Default.GetBytes(configuration["JwtConfiguration:Secret"]));
-
-        //    var tokenValidationParameters = new TokenValidationParameters
-        //    {
-        //        ValidateIssuer = true,
-        //        ValidIssuer = configuration["JwtConfiguration:Issuer"],
-
-        //        ValidateAudience = true,
-        //        ValidAudience = configuration["JwtConfiguration:Audience"],
-
-        //        ValidateIssuerSigningKey = true,
-        //        IssuerSigningKey = signingKey,
-
-        //        RequireExpirationTime = false,
-        //        ValidateLifetime = true,
-        //        ClockSkew = TimeSpan.Zero
-        //    };
-
-        //    services.Configure<JwtConfiguration>(options =>
-        //    {
-        //        options.Issuer = configuration["JwtConfiguration:Issuer"];
-        //        options.Audience = configuration["JwtConfiguration:Audience"];
-        //    });
-
-        //    services.AddAuthentication(options =>
-        //    {
-        //        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    }).AddJwtBearer(configureOptions =>
-        //    {
-        //        configureOptions.ClaimsIssuer = configuration["JwtConfiguration:Issuer"];
-        //        configureOptions.TokenValidationParameters = tokenValidationParameters;
-        //        configureOptions.SaveToken = true;
-        //    });
-
-        //    return services;
-        //}
-
-        public static TOptions BindOptions<TOptions>(
-        this IConfiguration configuration,
-        Action<TOptions>? configurator = null
-        )
-         where TOptions : new()
+        if (string.IsNullOrWhiteSpace(jwtOptions.Secret))
         {
-            return BindOptions(configuration, typeof(TOptions).Name, configurator);
-        }
-        public static TOptions BindOptions<TOptions>(
-        this IConfiguration configuration,
-        string section,
-        Action<TOptions>? configurator = null
-        )
-        where TOptions : new()
-        {
-            var options = new TOptions();
-
-            var optionsSection = configuration.GetSection(section);
-            optionsSection.Bind(options);
-
-            configurator?.Invoke(options);
-
-            return options;
+            throw new ArgumentException("SecretKey cannot be null or empty.", nameof(jwtOptions.Secret));
         }
 
-        public static AuthenticationBuilder AddCustomJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
-        {
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+        services.TryAddTransient<IJwtFactory, JwtFactory>();
 
-            // Bind JwtConfiguration from the configuration
-            var jwtOptions = configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>();
-
-            // Check if jwtOptions is null
-            if (jwtOptions == null)
+        return services
+            .AddAuthentication(options =>
             {
-                throw new ArgumentNullException(nameof(jwtOptions), "JWT configuration could not be loaded.");
-            }
-
-            // Validate that SecretKey is not null or empty
-            if (string.IsNullOrWhiteSpace(jwtOptions.Secret))
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
             {
-                throw new ArgumentException("SecretKey cannot be null or empty.", nameof(jwtOptions.Secret));
-            }
+                options.Audience = jwtOptions.Audience;
+                options.SaveToken = true;
+                options.RefreshOnIssuerKeyNotFound = false;
+                options.RequireHttpsMetadata = false;
+                options.IncludeErrorDetails = true;
 
-            services.TryAddTransient<IJwtFactory, JwtFactory>();
-
-            return services
-                .AddAuthentication(options =>
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(options =>
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidAudience = jwtOptions.Audience,
+                    SaveSigninToken = true,
+                    ClockSkew = TimeSpan.Zero,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret))
+                };
+
+                options.Events = new JwtBearerEvents
                 {
-                    options.Audience = jwtOptions.Audience;
-                    options.SaveToken = true;
-                    options.RefreshOnIssuerKeyNotFound = false;
-                    options.RequireHttpsMetadata = false;
-                    options.IncludeErrorDetails = true;
-
-                    options.TokenValidationParameters = new TokenValidationParameters
+                    OnAuthenticationFailed = context =>
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = jwtOptions.Issuer,
-                        ValidAudience = jwtOptions.Audience,
-                        SaveSigninToken = true,
-                        ClockSkew = TimeSpan.Zero,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret))
-                    };
-
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnAuthenticationFailed = context =>
+                        if (context.Exception is SecurityTokenExpiredException)
                         {
-                            if (context.Exception is SecurityTokenExpiredException)
-                            {
-                                context.Response.Headers.Add("Token-Expired", "true");
-                                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                            }
-                            return Task.CompletedTask;
-                        },
-                        OnChallenge = context =>
-                        {
+                            context.Response.Headers.Add("Token-Expired", "true");
                             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                            return Task.CompletedTask;
-                        },
-                        OnForbidden = context =>
-                        {
-                            context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                            return Task.CompletedTask;
                         }
-                    };
-                });
-        }
-
-        public static IServiceCollection AddCustomAuthorization(this IServiceCollection services)
-        {
-            return services.AddAuthorization(options =>
-            {
-                var policyBuilder = new AuthorizationPolicyBuilder();
-                policyBuilder.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
-                policyBuilder.RequireAuthenticatedUser();
-
-                options.DefaultPolicy = policyBuilder.Build();
-            });
-        }
-
-
-        public static IServiceCollection AddCustomCors(this IServiceCollection services)
-        {
-            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
-            {
-                builder
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-            }));
-
-            return services;
-        }
-
-        public static IServiceCollection AddCustomServices(this IServiceCollection services)
-        {
-            services.AddScoped<IEndpointService, EndpointService>();
-            services.AddHttpContextAccessor();
-
-            return services;
-        }
-
-        public static IServiceCollection AddCustomSwagger(this IServiceCollection services)
-        {
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "OnAim", Description = "Docs OnAim API", Version = "3.0.0" });
-                options.CustomSchemaIds(x => x.FullName);
-
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    In = ParameterLocation.Header,
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "bearer",
-                    BearerFormat = "JWT"
-                });
-
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
+                        return Task.CompletedTask;
+                    },
+                    OnChallenge = context =>
                     {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = JwtBearerDefaults.AuthenticationScheme
-                            }
-                        },
-                        Array.Empty<string>()
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        return Task.CompletedTask;
+                    },
+                    OnForbidden = context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                        return Task.CompletedTask;
                     }
-                });
+                };
+            });
+    }
+
+    public static IServiceCollection AddCustomAuthorization(this IServiceCollection services)
+    {
+        return services.AddAuthorization(options =>
+        {
+            var policyBuilder = new AuthorizationPolicyBuilder();
+            policyBuilder.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+            policyBuilder.RequireAuthenticatedUser();
+
+            options.DefaultPolicy = policyBuilder.Build();
+        });
+    }
+
+    public static IServiceCollection AddCustomCors(this IServiceCollection services)
+    {
+        services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+        {
+            builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        }));
+
+        return services;
+    }
+
+    public static IServiceCollection AddCustomServices(this IServiceCollection services)
+    {
+        services.AddScoped<IEndpointService, EndpointService>();
+        services.AddHttpContextAccessor();
+
+        return services;
+    }
+
+    public static IServiceCollection AddCustomSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "OnAim", Description = "Docs OnAim API", Version = "3.0.0" });
+            options.CustomSchemaIds(x => x.FullName);
+
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
             });
 
-            return services;
-        }
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = JwtBearerDefaults.AuthenticationScheme
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
+
+        return services;
     }
 }

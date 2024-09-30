@@ -1,5 +1,6 @@
 ﻿using Hub.Domain.Absractions;
 using Hub.Domain.Entities;
+using Hub.Domain.Entities.DbEnums;
 using System.Reflection;
 
 namespace Hub.Application

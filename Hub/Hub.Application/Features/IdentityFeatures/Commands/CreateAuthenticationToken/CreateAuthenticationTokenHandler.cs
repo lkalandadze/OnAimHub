@@ -4,6 +4,7 @@ using Hub.Application.Services.Abstract;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities;
+using Hub.Domain.Entities.DbEnums;
 using MediatR;
 using Microsoft.Extensions.Options;
 using Shared.Lib.Extensions;
@@ -17,8 +18,8 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
     private readonly IPlayerBanRepository _playerBanRepository;
     private readonly ISegmentRepository _segmentRepository;
     private readonly IPlayerSegmentRepository _playerSegmentRepository;
-    private readonly IPlayerLogRepository _playerLogRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IPlayerLogService _playerLogService;
     private readonly ITokenService _tokenService;
     private readonly HttpClient _httpClient;
     private readonly CasinoApiConfiguration _casinoApiConfiguration;
@@ -27,18 +28,19 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
                                             IPlayerBanRepository playerBanRepository,
                                             ISegmentRepository segmentRepository,
                                             IPlayerSegmentRepository playerSegmentRepository,
-                                            IPlayerLogRepository playerLogRepository,
-                                            IUnitOfWork unitOfWork, HttpClient httpClient,
-                                            IOptions<CasinoApiConfiguration> casinoApiConfiguration,
-                                            ITokenService tokenService)
+                                            IUnitOfWork unitOfWork,
+                                            ITokenService tokenService,
+                                            IPlayerLogService playerLogService,
+                                            HttpClient httpClient,
+                                            IOptions<CasinoApiConfiguration> casinoApiConfiguration)
     {
         _playerRepository = playerRepository;
         _playerBanRepository = playerBanRepository;
         _segmentRepository = segmentRepository;
         _playerSegmentRepository = playerSegmentRepository;
         _unitOfWork = unitOfWork;
-        _playerLogRepository = playerLogRepository;
         _tokenService = tokenService;
+        _playerLogService = playerLogService;
         _httpClient = httpClient;
         _casinoApiConfiguration = casinoApiConfiguration.Value;
     }
@@ -52,10 +54,23 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
         if (receivedPlayer == null)
             throw new ArgumentNullException();
 
-        var player = await _playerRepository.OfIdAsync(receivedPlayer.Id);
+        var player = await _playerRepository.GetPlayerWithSegmentsAsync(receivedPlayer.Id);
 
-        if(player != null)
+        if (player != null)
         {
+            if (string.IsNullOrEmpty(player.UserName))
+            {
+                player.ChangeDetails(receivedPlayer.UserName);
+            }
+            if (player.RegistredOn == default)
+            {
+                player.SetRegistrationDate();
+            }
+            if (player.LastVisitedOn == default)
+            {
+                player.SetLastVisitDate();
+            }
+
             var bannedPlayer = _playerBanRepository.Query().FirstOrDefault(x => x.PlayerId == player.Id && !x.IsRevoked && x.ExpireDate > DateTimeOffset.UtcNow && x.IsPermanent);
 
             if (bannedPlayer != null)
@@ -78,10 +93,10 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
 
         if (player == null)
         {
-            var playerSegment = new PlayerSegment(receivedPlayer.Id, "Default");
+            var playerSegment = new PlayerSegment(receivedPlayer.Id, "default");
             player = new Player(receivedPlayer.Id, receivedPlayer.UserName, recommendedById, [playerSegment]);
 
-            if (request.PromoCode != null) 
+            if (request.PromoCode != null)
             {
                 var referralDistribution = new ReferralDistribution(
                     referrerId: recommendedById.GetValueOrDefault(),
@@ -98,9 +113,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
             await _playerRepository.InsertAsync(player);
         }
 
-        // Log player auth
-        var log = new PlayerLog($"Player {receivedPlayer.UserName} logged.", receivedPlayer.Id, PlayerLogType.Auth);
-        await _playerLogRepository.InsertAsync(log);
+        await _playerLogService.CreatePlayerLogAsync($"Player {receivedPlayer.UserName} logged.", receivedPlayer.Id, PlayerLogType.Auth);
         await _unitOfWork.SaveAsync();
 
         var (token, refreshToken) = await _tokenService.GenerateTokenStringAsync(player);

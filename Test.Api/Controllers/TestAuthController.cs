@@ -96,9 +96,8 @@ public class TestAuthController : ControllerBase
         {
             Progress = new Dictionary<string, int>
             {
-                { "SPN", 3 },
-                { "FRSPN", 6 },
-                { "USD", 12 },
+                { "FreeSpin", 15 },
+                { "OnAimCoin", 22 },
             },
         };
     }

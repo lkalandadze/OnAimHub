@@ -25,6 +25,11 @@ public class CreatePlayerBanCommandHandler : IRequestHandler<CreatePlayerBanComm
         if (player == default)
             throw new Exception("Player not found");
 
+        var isPlayerBanned = _playerBanRepository.Query().FirstOrDefault(x => x.PlayerId == request.PlayerId && !x.IsRevoked);
+
+        if (isPlayerBanned != default)
+            throw new Exception("Player already banned");
+
         var playerBan = new PlayerBan(request.PlayerId, request.ExpireDate, request.IsPermanent, request.Description);
 
         await _playerBanRepository.InsertAsync(playerBan);

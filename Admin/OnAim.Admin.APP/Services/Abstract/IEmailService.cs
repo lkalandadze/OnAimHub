@@ -1,7 +1,6 @@
-﻿namespace OnAim.Admin.APP.Services.Abstract
+﻿namespace OnAim.Admin.APP.Services.Abstract;
+
+public interface IEmailService
 {
-    public interface IEmailService
-    {
-        Task SendActivationEmailAsync(string recipientEmail, string subject, string htmlBody);
-    }
+    Task SendActivationEmailAsync(string recipientEmail, string subject, string htmlBody);
 }
