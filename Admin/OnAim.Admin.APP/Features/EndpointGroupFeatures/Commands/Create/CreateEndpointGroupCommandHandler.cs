@@ -1,71 +1,44 @@
-﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Auth;
-using OnAim.Admin.APP.CQRS;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.Models;
 
 namespace OnAim.Admin.APP.Features.EndpointGroupFeatures.Commands.Create;
 
-public class CreateEndpointGroupCommandHandler : ICommandHandler<CreateEndpointGroupCommand, ApplicationResult>
+public class CreateEndpointGroupCommandHandler : BaseCommandHandler<CreateEndpointGroupCommand, ApplicationResult>
 {
     private readonly IRepository<EndpointGroup> _repository;
     private readonly IRepository<Endpoint> _endpointRepository;
-    private readonly IValidator<CreateEndpointGroupCommand> _validator;
-    private readonly ISecurityContextAccessor _securityContextAccessor;
 
     public CreateEndpointGroupCommandHandler(
+        CommandContext<CreateEndpointGroupCommand> context,
         IRepository<EndpointGroup> repository,
-        IRepository<Endpoint> endpointRepository,
-        IValidator<CreateEndpointGroupCommand> validator,
-        ISecurityContextAccessor securityContextAccessor
-        )
+        IRepository<Endpoint> endpointRepository
+        ) : base( context )
     {
         _repository = repository;
         _endpointRepository = endpointRepository;
-        _validator = validator;
-        _securityContextAccessor = securityContextAccessor;
     }
-    public async Task<ApplicationResult> Handle(CreateEndpointGroupCommand request, CancellationToken cancellationToken)
+    protected override async Task<ApplicationResult> ExecuteAsync(CreateEndpointGroupCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-
-        if (!validationResult.IsValid)
-        {
-            throw new ValidationException(validationResult.Errors);
-        }
+        await ValidateAsync(request, cancellationToken);
 
         var existedGroupName = await _repository.Query(x => x.Name == request.Model.Name).FirstOrDefaultAsync();
 
         if (existedGroupName == null)
         {
-            var endpointGroup = new EndpointGroup
-            {
-                Name = request.Model.Name,
-                Description = request.Model.Description,
-                IsDeleted = false,
-                IsActive = true,
-                EndpointGroupEndpoints = new List<EndpointGroupEndpoint>(),
-                DateCreated = SystemDate.Now,
-                CreatedBy = _securityContextAccessor.UserId
-            };
+            var endpointGroup = EndpointGroup.Create(request.Model.Name, request.Model.Description, _context.SecurityContextAccessor.UserId, new List<EndpointGroupEndpoint>());
 
             foreach (var endpointId in request.Model.EndpointIds)
             {
                 var endpoint = await _endpointRepository.Query(x => x.Id == endpointId).FirstOrDefaultAsync();
 
-                if (endpoint.IsDeleted)
+                if (endpoint?.IsDeleted == true)
                 {
                     throw new Exception("Permmission Is Disabled!");
                 }
 
-                var endpointGroupEndpoint = new EndpointGroupEndpoint
-                {
-                    Endpoint = endpoint,
-                    EndpointGroup = endpointGroup
-                };
+                var endpointGroupEndpoint = new EndpointGroupEndpoint(endpointGroup.Id, endpoint.Id);
 
                 endpointGroup.EndpointGroupEndpoints.Add(endpointGroupEndpoint);
             }

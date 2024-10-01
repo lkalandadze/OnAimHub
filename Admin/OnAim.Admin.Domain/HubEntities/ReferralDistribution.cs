@@ -1,4 +1,5 @@
-﻿
+﻿using OnAim.Admin.Domain.HubEntities.DbEnums;
+
 namespace OnAim.Admin.Domain.HubEntities;
 
 public class ReferralDistribution : BaseEntity<int>

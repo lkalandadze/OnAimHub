@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using OnAim.Admin.Shared.Models;
 
 namespace OnAim.Admin.Domain.Entities;
 
@@ -14,4 +15,15 @@ public class AuditLog
     public int UserId { get; set; }
     public string Log { get; set; }
     public string Category { get; set; }
+
+    public AuditLog(string action, int? objectId, string? objectt, int userId, string log, string category)
+    {
+        Action = action;
+        ObjectId = objectId;
+        Object = objectt;
+        UserId = userId;
+        Log = log;
+        Category = category;
+        Timestamp = SystemDate.Now;
+    }
 }

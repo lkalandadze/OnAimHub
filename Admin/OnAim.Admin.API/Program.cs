@@ -31,7 +31,7 @@ builder.Services
                 .AddApp(builder.Configuration)
                 .AddInfrastructure(builder.Configuration);
 
-
+builder.AddCustomHttpClients();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>));
 builder.Services.AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>));
@@ -64,8 +64,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<PermissionMiddleware>();
-app.UseMiddleware<RequestHandlerMiddleware>();
+//app.UseMiddleware<PermissionMiddleware>();
+//app.UseMiddleware<RequestHandlerMiddleware>();
 
 app.MapControllers();
 

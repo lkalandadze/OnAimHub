@@ -75,21 +75,14 @@ public class JwtFactory : IJwtFactory
         JwtSecurityToken? jwtSecurityToken = securityToken as JwtSecurityToken;
 
         if (jwtSecurityToken == null)
-        {
             throw new SecurityTokenException("Invalid access token.");
-        }
 
         return principal;
     }
 
     public async Task SaveAccessToken(int userId, string token, DateTime expiration)
     {
-        var accessToken = new AccessToken
-        {
-            UserId = userId,
-            Token = token,
-            Expiration = expiration
-        };
+        var accessToken = new AccessToken(userId, token, expiration);
 
         _context.AccessTokens.Add(accessToken);
         await _context.SaveChangesAsync();
@@ -111,13 +104,7 @@ public class JwtFactory : IJwtFactory
 
     public async Task<string> GenerateRefreshToken(int userId)
     {
-        var refreshToken = new RefreshToken
-        {
-            UserId = userId,
-            Token = Guid.NewGuid().ToString(),
-            Expiration = DateTime.UtcNow.AddMonths(1),
-            IsRevoked = false
-        };
+        var refreshToken = new RefreshToken(userId, Guid.NewGuid().ToString(), DateTime.UtcNow.AddMonths(1), false);
 
         _context.RefreshTokens.Add(refreshToken);
         await _context.SaveChangesAsync();
@@ -147,23 +134,15 @@ public class JwtFactory : IJwtFactory
     private static void ThrowIfInvalidOptions(JwtConfiguration options)
     {
         if (options == null)
-        {
             throw new ArgumentNullException(nameof(options));
-        }
 
         if (options.ValidFor <= TimeSpan.Zero)
-        {
             throw new ArgumentException("Must be a non-zero TimeSpan.");
-        }
 
         if (options.SigningCredentials == null)
-        {
             throw new ArgumentException(nameof(JwtConfiguration.SigningCredentials));
-        }
 
         if (options.JtiGenerator == null)
-        {
             throw new ArgumentException(nameof(JwtConfiguration.JtiGenerator));
-        }
     }
 }

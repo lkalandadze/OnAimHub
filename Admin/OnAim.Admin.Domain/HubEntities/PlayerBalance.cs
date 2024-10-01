@@ -1,12 +1,14 @@
 ﻿#nullable disable
 
+using OnAim.Admin.Domain.HubEntities.DbEnums;
+
 namespace OnAim.Admin.Domain.HubEntities;
 
 public class PlayerBalance : BaseEntity<int>
 {
     public PlayerBalance()
     {
-
+        
     }
 
     public PlayerBalance(decimal amount, int playerId, string currencyId)

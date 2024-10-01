@@ -1,4 +1,4 @@
-﻿using OnAim.Admin.APP.Auth;
+﻿using OnAim.Admin.APP.Services.AuthServices.Auth;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
@@ -105,17 +105,7 @@ public class RequestHandlerMiddleware
         }
         finally
         {
-            var rejectedLog = new RejectedLog
-            {
-                Timestamp = SystemDate.Now,
-                Action = method,
-                UserId = securityContextAccessor.UserId,
-                ObjectId = null,
-                Object = requestBody,
-                ErrorMessage = caughtError?.Message,
-                Log = $"{method} {path} failed",
-                RetryCount = 0
-            };
+            var rejectedLog = new RejectedLog(method, securityContextAccessor.UserId, null, requestBody, $"{method} {path} failed", caughtError?.Message, 0);
 
             if (caughtError != null)
             {
@@ -123,16 +113,7 @@ public class RequestHandlerMiddleware
             }
             else
             {
-                var successfulLog = new AuditLog
-                {
-                    Timestamp = SystemDate.Now,
-                    Action = method,
-                    UserId = securityContextAccessor.UserId,
-                    ObjectId = null,
-                    Object = requestBody,
-                    Log = $"{method} {path} succeeded",
-                    Category = entityName
-                };
+                var successfulLog = new AuditLog(method, null, requestBody, securityContextAccessor.UserId, $"{method} {path} succeeded", entityName);
 
                 await auditLogService.AddAuditLogAsync(successfulLog);
             }

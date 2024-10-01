@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using OnAim.Admin.Shared.DTOs.User;
-using OnAim.Admin.APP.CQRS;
+using OnAim.Admin.APP.CQRS.Query;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Queries.UsersExport;
 

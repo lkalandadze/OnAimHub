@@ -38,7 +38,7 @@ public class RoleController : ApiControllerBase
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRoleRequest model)
         => Ok(await Mediator.Send(new UpdateRoleCommand(id, model)));
 
-    [HttpPost("Delete/{id}")]
-    public async Task<IActionResult> Delete([FromRoute] int id)
-        => Ok(await Mediator.Send(new DeleteRoleCommand(id)));
+    [HttpPost("Delete")]
+    public async Task<IActionResult> Delete([FromBody] List<int> ids)
+        => Ok(await Mediator.Send(new DeleteRoleCommand(ids)));
 }

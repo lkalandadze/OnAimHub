@@ -3,7 +3,7 @@ using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.APP.CQRS;
+using OnAim.Admin.APP.CQRS.Command;
 
 namespace OnAim.Admin.APP.Features.EndpointGroupFeatures.Commands.GroupBondToEndpoint;
 

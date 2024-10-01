@@ -1,6 +1,4 @@
-﻿#nullable disable
-
-namespace OnAim.Admin.Domain.HubEntities;
+﻿namespace OnAim.Admin.Domain.HubEntities;
 
 public class Game : BaseEntity<int>
 {

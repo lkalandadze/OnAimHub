@@ -6,6 +6,6 @@ public class DeleteEndpointCommandValidator : AbstractValidator<DeleteEndpointCo
 {
     public DeleteEndpointCommandValidator()
     {
-        RuleFor(x => x.Id).NotEmpty();
+        RuleFor(x => x.Ids).NotEmpty();
     }
 }

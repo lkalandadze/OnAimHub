@@ -4,8 +4,8 @@ using OnAim.Admin.Shared.DTOs.Role;
 using Microsoft.AspNetCore.Http;
 using System.Dynamic;
 using System.Net.Mime;
-using OnAim.Admin.APP.CQRS;
 using OnAim.Admin.Shared.Helpers.Csv;
+using OnAim.Admin.APP.CQRS.Query;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Queries.RolesExport;
 
@@ -32,19 +32,13 @@ public class RolesExportQueryHandler : IQueryHandler<RolesExportQuery, IResult>
                 );
 
         if (request.RoleIds != null && request.RoleIds.Any())
-        {
             roleQuery = roleQuery.Where(x => request.RoleIds.Contains(x.Id));
-        }
 
         if (request.Filter.UserIds != null && request.Filter.UserIds.Any())
-        {
             roleQuery = roleQuery.Where(x => x.UserRoles.Any(ur => request.Filter.UserIds.Contains(ur.UserId)));
-        }
 
         if (request.Filter.GroupIds != null && request.Filter.GroupIds.Any())
-        {
             roleQuery = roleQuery.Where(x => x.RoleEndpointGroups.Any(ur => request.Filter.GroupIds.Contains(ur.EndpointGroupId)));
-        }
 
         var totalCount = await roleQuery.CountAsync(cancellationToken);
 

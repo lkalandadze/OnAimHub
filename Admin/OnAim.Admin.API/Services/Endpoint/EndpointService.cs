@@ -77,6 +77,7 @@ public class EndpointService : IEndpointService
             else
             {
                 existingEndpoint.Name = endpoint.Name;
+                existingEndpoint.Path = endpoint.Path;
                 existingEndpoint.Description = endpoint.Description;
                 existingEndpoint.IsDeleted = endpoint.IsDeleted;
                 existingEndpoint.Type = endpoint.Type;
@@ -95,17 +96,13 @@ public class EndpointService : IEndpointService
 
         var formattedName = $"{endpointInfo.Name}_{controllerName}";
 
-        return new Domain.Entities.Endpoint
-        {
-            Name = formattedName,
-            Path = formattedName,
-            Description = $"Endpoint for {endpointInfo.Name} in {endpointInfo.Controller}",
-            IsDeleted = false,
-            IsActive = true,
-            DateCreated = SystemDate.Now,
-            Type = ParseHttpMethodToEndpointType(endpointInfo.HttpMethod),
-            CreatedBy = null
-        };
+        return new Domain.Entities.Endpoint(
+            formattedName, 
+            formattedName, 
+            null, 
+            ParseHttpMethodToEndpointType(endpointInfo.HttpMethod),
+            $"Endpoint for {endpointInfo.Name} in {endpointInfo.Controller}"
+            );
     }
 
     private EndpointType ParseHttpMethodToEndpointType(string httpMethod)

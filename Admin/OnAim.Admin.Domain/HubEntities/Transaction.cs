@@ -1,12 +1,14 @@
 ﻿#nullable disable
 
+using OnAim.Admin.Domain.HubEntities.DbEnums;
+
 namespace OnAim.Admin.Domain.HubEntities;
 
 public class Transaction : BaseEntity<int>
 {
     public Transaction()
     {
-
+        
     }
 
     public Transaction(decimal amount, int? gameId, int playerId, AccountType fromAccount, AccountType toAccount, string currencyId, TransactionStatus status, TransactionType type)

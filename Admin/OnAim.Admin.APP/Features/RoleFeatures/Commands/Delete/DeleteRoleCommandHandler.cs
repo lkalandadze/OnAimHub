@@ -1,59 +1,36 @@
-﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Auth;
-using OnAim.Admin.APP.CQRS;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.Models;
 using OnAim.Admin.Domain.Exceptions;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Commands.Delete;
 
-public class DeleteRoleCommandHandler : ICommandHandler<DeleteRoleCommand, ApplicationResult>
+public class DeleteRoleCommandHandler : BaseCommandHandler<DeleteRoleCommand, ApplicationResult>
 {
     private readonly IRepository<Role> _repository;
-    private readonly IValidator<DeleteRoleCommand> _validator;
-    private readonly ISecurityContextAccessor _securityContextAccessor;
 
-    public DeleteRoleCommandHandler(
-        IRepository<Role> repository,
-        IValidator<DeleteRoleCommand> validator,
-        ISecurityContextAccessor securityContextAccessor
-        )
+    public DeleteRoleCommandHandler(CommandContext<DeleteRoleCommand> context,IRepository<Role> repository) : base( context )
     {
         _repository = repository;
-        _validator = validator;
-        _securityContextAccessor = securityContextAccessor;
     }
-    public async Task<ApplicationResult> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
+    protected override async Task<ApplicationResult> ExecuteAsync(DeleteRoleCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+        await ValidateAsync(request, cancellationToken);
 
-        if (!validationResult.IsValid)
-        {
-            throw new FluentValidation.ValidationException(validationResult.Errors);
-        }
+        var roles = await _repository.Query(x => request.Ids.Contains(x.Id)).ToListAsync();
 
-        var role = await _repository.Query(x => x.Id == request.Id)
-            .Include(r => r.UserRoles)
-            .Include(r => r.RoleEndpointGroups)
-            .FirstOrDefaultAsync();
-
-        if (role == null)
-        {
+        if (!roles.Any())
             throw new NotFoundException("Role Not Found");
-        }
 
-        role.IsActive = false;
-        role.IsDeleted = true;
-        role.DateDeleted = SystemDate.Now;
+        foreach ( var role in roles)
+        {
+            role.IsActive = false;
+            role.MarkAsDeleted();
+        }
 
         await _repository.CommitChanges();
 
-        return new ApplicationResult
-        {
-            Success = true,
-        };
+        return new ApplicationResult { Success = true };
     }
 }

@@ -4,8 +4,8 @@ using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.DTOs.User;
 using System.Net.Mime;
 using System.Dynamic;
-using OnAim.Admin.APP.CQRS;
 using OnAim.Admin.Shared.Helpers.Csv;
+using OnAim.Admin.APP.CQRS.Query;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Queries.UsersExport;
 
@@ -35,14 +35,10 @@ public class UsersExportQueryHandler : IQueryHandler<UsersExportQuery, IResult>
               );
 
         if (request.UserIds != null && request.UserIds.Any())
-        {
             query = query.Where(x => request.UserIds.Contains(x.Id));
-        }
 
         if (request.UserFilter.RoleIds != null && request.UserFilter.RoleIds.Any())
-        {
             query = query.Where(x => x.UserRoles.Any(ur => request.UserFilter.RoleIds.Contains(ur.RoleId)));
-        }
 
         var totalCount = await query.CountAsync(cancellationToken);
 

@@ -4,8 +4,8 @@ using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.DTOs.User;
 using System.Security.Claims;
-using OnAim.Admin.APP.CQRS;
 using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
+using OnAim.Admin.APP.CQRS.Command;
 
 namespace OnAim.Admin.APP.Feature.Identity;
 
@@ -37,15 +37,11 @@ public class RefreshTokenHandler : ICommandHandler<RefreshTokenCommand, AuthResu
                                  .FirstOrDefaultAsync();
 
         if (refreshToken == null || refreshToken.Expiration <= DateTime.UtcNow)
-        {
             throw new BadRequestException("Invalid refresh token.");
-        }
 
         var user = await _userRepository.Query(x => x.Id == refreshToken.UserId).FirstOrDefaultAsync();
         if (user == null)
-        {
             throw new BadRequestException("User not found.");
-        }
 
         await _jwtFactory.RevokeRefreshToken(request.RefreshToken);
 
@@ -53,10 +49,7 @@ public class RefreshTokenHandler : ICommandHandler<RefreshTokenCommand, AuthResu
                                .FirstOrDefaultAsync();
 
         if (oldAccessToken != null)
-        {
             await _jwtFactory.RevokeAccessToken(oldAccessToken.Token);
-        }
-
 
         var newAccessToken = _jwtFactory.GenerateEncodedToken(user.Id, user.Email, new List<Claim>(), user.UserRoles.Select(x => x.Role.Name));
         var newRefreshToken = await _jwtFactory.GenerateRefreshToken(user.Id);

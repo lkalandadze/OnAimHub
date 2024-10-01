@@ -6,6 +6,6 @@ public class DeleteEndpointGroupCommandValidator : AbstractValidator<DeleteEndpo
 {
     public DeleteEndpointGroupCommandValidator()
     {
-        RuleFor(x => x.GroupId).NotEmpty().NotNull();
+        RuleFor(x => x.GroupIds).NotEmpty().NotNull();
     }
 }

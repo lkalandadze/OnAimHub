@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.CQRS;
+using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.DTOs.Player;
@@ -26,11 +26,11 @@ public class GetAllPlayerQueryHandler : IQueryHandler<GetAllPlayerQuery, Applica
         if (request.Filter.SegmentIds?.Any() == true)
             palyers = palyers.Where(x => x.PlayerSegments.Any(ur => request.Filter.SegmentIds.Contains(ur.SegmentId)));
 
-        //if (request.Filter.DateFrom.HasValue)
-        //    palyers = palyers.Where(x => x.LastLogin >= request.Filter.DateFrom.Value);
+        if (request.Filter.DateFrom.HasValue)
+            palyers = palyers.Where(x => x.LastVisitedOn >= request.Filter.DateFrom.Value);
 
-        //if (request.Filter.DateFrom.HasValue)
-        //    palyers = palyers.Where(x => x.LastLogin <= request.Filter.DateTo.Value);
+        if (request.Filter.DateFrom.HasValue)
+            palyers = palyers.Where(x => x.LastVisitedOn <= request.Filter.DateTo.Value);
 
         var totalCount = await palyers.CountAsync(cancellationToken);
 

@@ -1,4 +1,5 @@
-﻿namespace OnAim.Admin.Domain.HubEntities;
+﻿
+namespace OnAim.Admin.Domain.HubEntities;
 
 public class PlayerBan : BaseEntity<int>
 {

@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Http;
 using System.Dynamic;
 using System.Net.Mime;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.APP.CQRS;
 using OnAim.Admin.Shared.Helpers.Csv;
+using OnAim.Admin.APP.CQRS.Query;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Queries.EndpointsExport;
 
@@ -34,14 +34,10 @@ public class EndpointsExportQueryHandler : IQueryHandler<EndpointsExportQuery, I
                   );
 
         if (request.EndpointIds != null && request.EndpointIds.Any())
-        {
             query = query.Where(x => request.EndpointIds.Contains(x.Id));
-        }
 
         if (request.Filter.GroupIds != null && request.Filter.GroupIds.Any())
-        {
             query = query.Where(x => x.EndpointGroupEndpoints.Any(ur => request.Filter.GroupIds.Contains(ur.EndpointGroupId)));
-        }
 
         var totalCount = await query.CountAsync(cancellationToken);
 

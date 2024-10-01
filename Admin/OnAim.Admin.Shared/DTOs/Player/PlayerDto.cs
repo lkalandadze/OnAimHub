@@ -10,7 +10,7 @@ public class PlayerDto
 {
     public int Id { get; set; }
     public string? PlayerName { get; set; }
-    public List<SegmentDto>? Segments { get; set; }
+    public List<SegmentListDto>? Segments { get; set; }
     public List<TransactionDto>? Transactions { get; set; }
     public DateTimeOffset? RegistrationDate { get; set; }
     public DateTimeOffset? LastVisit { get; set; }

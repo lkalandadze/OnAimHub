@@ -3,8 +3,8 @@ using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.Paging;
 using OnAim.Admin.Shared.DTOs.Role;
 using OnAim.Admin.Shared.DTOs.EndpointGroup;
-using OnAim.Admin.APP.CQRS;
 using OnAim.Admin.Shared.Enums;
+using OnAim.Admin.APP.CQRS.Query;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Queries.GetAll;
 

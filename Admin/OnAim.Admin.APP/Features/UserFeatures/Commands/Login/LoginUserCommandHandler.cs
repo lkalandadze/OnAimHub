@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Auth;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
@@ -10,43 +8,34 @@ using OnAim.Admin.Shared.DTOs.Role;
 using OnAim.Admin.Shared.DTOs.User;
 using OnAim.Admin.Shared.Models;
 using System.Security.Claims;
-using OnAim.Admin.APP.CQRS;
 using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
 using OnAim.Admin.Shared.Helpers.Password;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Login;
 
-public class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, AuthResultDto>
+public class LoginUserCommandHandler : BaseCommandHandler<LoginUserCommand, AuthResultDto>
 {
     private readonly IRepository<User> _userRepository;
     private readonly IRepository<Role> _roleRepository;
     private readonly IConfigurationRepository<UserRole> _userConfigurationRepository;
     private readonly IJwtFactory _jwtFactory;
-    private readonly IValidator<LoginUserCommand> _validator;
-    private readonly ISecurityContextAccessor _securityContextAccessor;
 
     public LoginUserCommandHandler(
+        CommandContext<LoginUserCommand> context,
         IRepository<User> userRepository,
         IRepository<Role> roleRepository,
         IConfigurationRepository<UserRole> userConfigurationRepository,
-        IJwtFactory jwtFactory,
-        IValidator<LoginUserCommand> validator,
-        ISecurityContextAccessor securityContextAccessor
-        )
+        IJwtFactory jwtFactory
+        ) : base( context )
     {
         _userRepository = userRepository;
         _roleRepository = roleRepository;
         _userConfigurationRepository = userConfigurationRepository;
         _jwtFactory = jwtFactory;
-        _validator = validator;
-        _securityContextAccessor = securityContextAccessor;
     }
-    public async Task<AuthResultDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+    protected override async Task<AuthResultDto> ExecuteAsync(LoginUserCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-        if (!validationResult.IsValid)
-            throw new FluentValidation.ValidationException(validationResult.Errors);
-        
+        await ValidateAsync(request, cancellationToken);
 
         var model = request.Model;
         var user = await _userRepository.Query(x => x.Email == model.Email).FirstOrDefaultAsync();

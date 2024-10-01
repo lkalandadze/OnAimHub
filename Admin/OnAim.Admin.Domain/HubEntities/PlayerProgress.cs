@@ -1,12 +1,14 @@
 ﻿#nullable disable
 
+using OnAim.Admin.Domain.HubEntities.DbEnums;
+
 namespace OnAim.Admin.Domain.HubEntities;
 
 public class PlayerProgress : BaseEntity<int>
 {
     public PlayerProgress()
     {
-
+        
     }
 
     public PlayerProgress(int progress, int playerId, string currencyId)

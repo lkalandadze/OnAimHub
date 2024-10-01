@@ -1,56 +1,40 @@
-﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using OnAim.Admin.APP.Auth;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.Models;
 using OnAim.Admin.Shared.Helpers;
-using OnAim.Admin.APP.CQRS;
 using OnAim.Admin.Shared.Helpers.Password;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Registration;
 
-public class RegistrationCommandHandler : ICommandHandler<RegistrationCommand, ApplicationResult>
+public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand, ApplicationResult>
 {
     private readonly IRepository<User> _userRepository;
     private readonly IRepository<Role> _roleRepository;
     private readonly IConfigurationRepository<UserRole> _configurationRepository;
     private readonly IEmailService _emailService;
-    private readonly ILogger<RegistrationCommand> _logger;
-    private readonly IValidator<RegistrationCommand> _validator;
     private readonly IDomainValidationService _domainValidationService;
-    private readonly ISecurityContextAccessor _securityContextAccessor;
 
     public RegistrationCommandHandler(
+        CommandContext<RegistrationCommand> context,
         IRepository<User> userRepository,
         IRepository<Role> roleRepository,
         IConfigurationRepository<UserRole> configurationRepository,
         IEmailService emailService,
-        ILogger<RegistrationCommand> logger,
-        IValidator<RegistrationCommand> validator,
-        IDomainValidationService domainValidationService,
-        ISecurityContextAccessor securityContextAccessor
-        )
+        IDomainValidationService domainValidationService
+        ) : base( context )
     {
         _userRepository = userRepository;
         _roleRepository = roleRepository;
         _configurationRepository = configurationRepository;
         _emailService = emailService;
-        _logger = logger;
-        _validator = validator;
         _domainValidationService = domainValidationService;
-        _securityContextAccessor = securityContextAccessor;
     }
-    public async Task<ApplicationResult> Handle(RegistrationCommand request, CancellationToken cancellationToken)
+    protected override async Task<ApplicationResult> ExecuteAsync(RegistrationCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-
-        if (!validationResult.IsValid)
-            throw new FluentValidation.ValidationException(validationResult.Errors);          
+        await ValidateAsync(request, cancellationToken);
 
         var existingUser = await _userRepository.Query(x => x.Email == request.Email && !x.IsDeleted).FirstOrDefaultAsync();
 
@@ -72,30 +56,27 @@ public class RegistrationCommandHandler : ICommandHandler<RegistrationCommand, A
         var localhostBaseUrl = "https://localhost:7126";
         var verificationUrl = $"{localhostBaseUrl}/verify?code={activationCode}";
 
-        var user = new User
-        {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Username = request.Email,
-            Email = request.Email,
-            Salt = salt,
-            Password = hashed,
-            Phone = request.Phone,
-            DateOfBirth = request.DateOfBirth,
-            DateCreated = SystemDate.Now,
-            IsActive = true,
-            CreatedBy = _securityContextAccessor.UserId,
-            ActivationCode = activationCode,
-            ActivationCodeExpiration = ActivationCodeExpiration,
-            IsVerified = false
-        };
+        var user = new User(
+            request.FirstName,
+            request.LastName,
+            request.Email,
+            request.Email,
+            hashed,
+            salt,
+            request.Phone,
+            _context.SecurityContextAccessor.UserId,
+            false,
+            false,
+            activationCode,
+            ActivationCodeExpiration,
+            false
+            );
 
-        _logger.LogInformation("Creating user with email: {Email}", request.Email);
         await _userRepository.Store(user);
         await _userRepository.CommitChanges();
 
         var role = await _roleRepository.Query(x => x.Name == "DefaultRole").FirstOrDefaultAsync();
-        await AssignRoleToUserAsync(user.Id, role.Id);
+        await AssignRoleToUserAsync(user.Id, user, role.Id, role);
 
         var activationLink = $"activate?userId={user.Id}&code={activationCode}";
 
@@ -118,10 +99,7 @@ public class RegistrationCommandHandler : ICommandHandler<RegistrationCommand, A
         await _emailService.SendActivationEmailAsync(user.Email, "Activation Code", htmlBody);
 
 
-        return new ApplicationResult
-        {
-            Success = true,
-        };
+        return new ApplicationResult{ Success = true };
     }
 
     private async Task<string> ReadEmailTemplateAsync(string path)
@@ -129,12 +107,10 @@ public class RegistrationCommandHandler : ICommandHandler<RegistrationCommand, A
         return await File.ReadAllTextAsync(path);
     }
 
-    private async Task AssignRoleToUserAsync(int userId, int roleId)
+    private async Task AssignRoleToUserAsync(int userId, Domain.Entities.User user, int roleId, Role role)
     {
-        var userRole = new UserRole { UserId = userId, RoleId = roleId };
+        var userRole = new UserRole(userId, roleId);
         await _configurationRepository.Store(userRole);
         await _configurationRepository.CommitChanges();
-
-        _logger.LogInformation("Role assigned successfully.");
     }
 }
