@@ -1,4 +1,6 @@
-﻿using GameLib.Domain.Abstractions;
+﻿using Consul;
+using GameLib.Domain.Abstractions;
+using Shared.Domain.Entities;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -11,7 +13,7 @@ public class EntityGenerator
         var entityMetadata = new EntityMetadata
         {
             Name = type.Name,
-            Description = GetClassDescription(type) // This could be filled with custom logic or annotations
+            Description = GetClassDescription(type)
         };
 
         foreach (var property in type.GetProperties())
@@ -19,11 +21,11 @@ public class EntityGenerator
             var propertyMetadata = new PropertyMetadata
             {
                 Name = property.Name,
-                Type = GetPropertyDataType(property), // Use the GetPropertyDataType method here
-                Description = GetPropertyDescription(property) // Optionally fetch description
+                Type = IsDbEnum(property.PropertyType) ? "enum" : GetPropertyDataType(property),
+                Description = GetPropertyDescription(property),
+                Id = $"{type.Name}.{property.Name}" // Generate a unique ID for each property
             };
 
-            // Check if the property is a generic type and a collection
             if (IsCollection(property))
             {
                 var genericType = property.PropertyType.GetGenericArguments().FirstOrDefault();
@@ -50,6 +52,8 @@ public class EntityGenerator
     {
         var type = property.PropertyType;
 
+        if (IsDbEnum(type))
+            return "enum";  // Treat DbEnum as an enum in the frontend
         // Determine frontend data type
         if (type == typeof(string))
             return "text";
@@ -82,6 +86,10 @@ public class EntityGenerator
 
         return property.GetCustomAttribute<DescriptionAttribute>()?.Description ?? "";
     }
+    private bool IsDbEnum(Type type)
+    {
+        return type.BaseType != null && type.BaseType.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(DbEnum<,>);
+    }
 }
 public class EntityMetadata
 {
@@ -95,6 +103,7 @@ public class PropertyMetadata
     public string Name { get; set; }
     public string Type { get; set; }
     public string Description { get; set; } // Could be filled with annotations or custom logic
+    public string Id { get; set; }  // Unique identifier for each property
     public EntityMetadata? GenericTypeMetadata { get; set; }
 }
 
@@ -122,3 +131,38 @@ public class TestPrize : BasePrize<Round>
     public int RoundId { get; set; }
     public Round Round { get; set; }
 }
+
+class GameConfiguration : GameLib.Domain.Entities.Configuration
+{
+    public List<Round> Rounds { get; set; }
+}
+
+//class T
+//{
+//    public T()
+//    {
+
+//        var conf = new GameConfiguration
+//        {
+//            Rounds =
+//            new List<Round>(){
+//                        new Round()
+//                        {
+//                            Id = 1,
+//                            NextPrizeIndex = 0,
+//                            Sequence    = [],
+//                        },
+//                        new Round()
+//                        {
+//                            Id = 1,
+//                            NextPrizeIndex = 0,
+//                            Sequence    = [],
+//                            Prizes = [new(){PrizeGroup}]
+//                        },
+
+//        }
+//        };
+
+
+//    }
+//}

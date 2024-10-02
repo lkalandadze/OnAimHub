@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Security.Cryptography;
 
 namespace GameLib.ServiceRegistry;
@@ -23,6 +24,8 @@ public static class DependencyResolver
 {
     public static IServiceCollection Resolve(this IServiceCollection services, IConfiguration configuration, List<Type> prigeGroupTypes, string routePrefix)
     {
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
         services.AddSingleton<GeneratorHolder>();
         services.AddSingleton<ConfigurationHolder>();
         services.AddSingleton<RepositoryManager>();

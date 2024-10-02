@@ -21,10 +21,5 @@ public class WheelConfigDbContext : SharedGameConfigDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Round>()
-            .HasOne(r => r.WheelPrize)
-            .WithOne(wp => wp.Round)
-            .HasForeignKey<WheelPrize>(wp => wp.RoundId);
     }
 }

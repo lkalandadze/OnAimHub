@@ -1,6 +1,7 @@
 ﻿#nullable disable
 
 using Shared.Domain.Entities;
+using System.Text.Json.Serialization;
 
 namespace GameLib.Domain.Entities;
 
@@ -11,12 +12,12 @@ public class Price : BaseEntity<int>
         
     }
 
-    public Price(decimal value, decimal multiplier, string currencyId, int segmentId)
+    public Price(decimal value, decimal multiplier, string currencyId, int configurationId)
     {
         Value = value;
         Multiplier = multiplier;
         CurrencyId = currencyId;
-        SegmentId = segmentId;
+        ConfigurationId = configurationId;
     }
 
     public decimal Value { get; private set; }
@@ -25,6 +26,7 @@ public class Price : BaseEntity<int>
     public string CurrencyId { get; private set; }
     public Currency Currency { get; private set; }
 
-    public int SegmentId { get; private set; }
+    public int ConfigurationId { get; private set; }
+    [JsonIgnore]
     public Configuration Configuration { get; private set; }
 }

@@ -1,6 +1,7 @@
 ﻿#nullable disable
 
 using Shared.Domain.Entities;
+using System.Text.Json.Serialization;
 
 namespace GameLib.Domain.Entities;
 
@@ -20,6 +21,7 @@ public class Segment : BaseEntity<string>
     public bool IsDeleted { get; private set; }
 
     public int? ConfigurationId { get; private set; }
+    [JsonIgnore]
     public Configuration Configuration { get; private set; }
 
     public void Delete()

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Shared.Infrastructure.DataAccess;
 using Wheel.Api.Consul;
+using Wheel.Application.Features.ConfigurationFeatures.Queries.GetById;
 using Wheel.Application.Models.Game;
 using Wheel.Application.Services.Abstract;
 using Wheel.Application.Services.Concrete;
@@ -27,6 +28,7 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetConfigurationByIdQueryHandler).Assembly));
         services.AddDbContext<WheelConfigDbContext>(opt =>
              opt.UseNpgsql(Configuration.GetConnectionString("GameConfig")));
 

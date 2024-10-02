@@ -20,7 +20,6 @@ public class Configuration : BaseEntity<int>
         Segments = segments?.ToList() ?? [];
     }
 
-    public string Rule { get; set; }
     [MetaDescription("Name of the configuration")]
     public string Name { get; private set; }
     [MetaDescription("Value of the configuration")]
