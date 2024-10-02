@@ -16,9 +16,15 @@ public class WheelConfigDbContext : SharedGameConfigDbContext
 
     public DbSet<JackpotPrizeGroup> JackpotPrizeGroups { get; set; }
     public DbSet<JackpotPrize> JackpotPrizes { get; set; }
+    public DbSet<Round> Rounds { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Round>()
+            .HasOne(r => r.WheelPrize)
+            .WithOne(wp => wp.Round)
+            .HasForeignKey<WheelPrize>(wp => wp.RoundId);
     }
 }

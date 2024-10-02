@@ -9,8 +9,10 @@ using Wheel.Api.Consul;
 using Wheel.Application.Models.Game;
 using Wheel.Application.Services.Abstract;
 using Wheel.Application.Services.Concrete;
+using Wheel.Domain.Abstractions.Repository;
 using Wheel.Domain.Entities;
 using Wheel.Infrastructure.DataAccess;
+using Wheel.Infrastructure.Repositories;
 
 namespace Wheel.Api;
 
@@ -32,6 +34,9 @@ public class Startup
             opt.UseNpgsql(Configuration.GetConnectionString("GameHistory")));
 
         services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
+
+        services.AddScoped<IRoundRepository, RoundRepository>();
+        services.AddScoped<IWheelPrizeRepository, WheelPrizeRepository>();
 
         var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup), typeof(JackpotPrizeGroup) };
         services.Resolve(Configuration, prizeGroupTypes, "WheelApi");
