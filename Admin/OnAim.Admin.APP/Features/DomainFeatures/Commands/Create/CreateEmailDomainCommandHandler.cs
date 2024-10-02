@@ -43,7 +43,7 @@ public class CreateEmailDomainCommandHandler : BaseCommandHandler<CreateEmailDom
                 return new ApplicationResult { Success = true };
             }
 
-            throw new AlreadyExistsException("Domain Already Exists");
+            throw new BadRequestException("Domain Already Exists");
         }
 
         var domain = new AllowedEmailDomain(request.Domain, _context.SecurityContextAccessor.UserId);

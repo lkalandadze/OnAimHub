@@ -1,6 +1,4 @@
-﻿using OnAim.Admin.Shared.DTOs.Player.Balance;
-using OnAim.Admin.Shared.DTOs.Player.Log;
-using OnAim.Admin.Shared.DTOs.Refer;
+﻿using OnAim.Admin.Shared.DTOs.Refer;
 using OnAim.Admin.Shared.DTOs.Segment;
 using OnAim.Admin.Shared.DTOs.Transaction;
 

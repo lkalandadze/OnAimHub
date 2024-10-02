@@ -21,13 +21,16 @@ public class DeleteEmailDomainCommandHandler : BaseCommandHandler<DeleteEmailDom
     {
         await ValidateAsync(request, cancellationToken);
 
-        var domain = await _repository.Query(x => x.Id == request.Id).FirstOrDefaultAsync();
+        var domains = await _repository.Query(x => request.Ids.Contains(x.Id)).ToListAsync();
 
-        if (domain == null)
+        if (!domains.Any())
             throw new NotFoundException("Domain Not Found!");
 
-        domain.IsActive = false;
-        domain.MarkAsDeleted();
+        foreach (var domain in domains)
+        {
+            domain.IsActive = false;
+            domain.MarkAsDeleted();
+        }
 
         await _repository.CommitChanges();
 

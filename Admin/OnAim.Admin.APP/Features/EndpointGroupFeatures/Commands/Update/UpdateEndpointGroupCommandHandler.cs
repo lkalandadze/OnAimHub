@@ -34,20 +34,20 @@ public class UpdateEndpointGroupCommandHandler : BaseCommandHandler<UpdateEndpoi
             .FirstOrDefaultAsync();
 
         if (group == null)
-            throw new Exception("Permmission Group Not Found");
+            throw new BadRequestException("Permmission Group Not Found");
 
         if (!string.IsNullOrEmpty(request.model.Name))
         {
             var super = await _repository.Query(x => x.Name == "SuperGroup").FirstOrDefaultAsync();
 
             if (request.model.Name == super.Name)
-                throw new Exception("You don't have permmission to update this group!");
+                throw new BadRequestException("You don't have permmission to update this group!");
 
             bool nameExists = await _repository.Query(x => x.Name == request.model.Name && x.Id != request.Id)
                 .AnyAsync();
 
             if (nameExists)
-                throw new AlreadyExistsException("Permmission Group with this name already exists.");
+                throw new BadRequestException("Permmission Group with this name already exists.");
 
             group.Name = request.model.Name;
         }

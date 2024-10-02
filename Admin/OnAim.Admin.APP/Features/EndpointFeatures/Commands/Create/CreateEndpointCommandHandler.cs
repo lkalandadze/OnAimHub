@@ -21,33 +21,40 @@ public class CreateEndpointCommandHandler : BaseCommandHandler<CreateEndpointCom
 
     protected override async Task<ApplicationResult> ExecuteAsync(CreateEndpointCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var results = new List<Endpoint>();
 
-        var existedEndpoint = await _repository.Query(x => x.Name == request.Name).FirstOrDefaultAsync();
+        foreach (var endpointDto in request.Endpoints)
+        {
+            await ValidateAsync(request, cancellationToken);
 
-        EndpointType endpointTypeEnum = EndpointType.Get;
+            var existedEndpoint = await _repository.Query(x => x.Name == endpointDto.Name).FirstOrDefaultAsync(cancellationToken);
 
-        if (request.Type != null && Enum.TryParse(request.Type, true, out EndpointType parsedType))
-            endpointTypeEnum = parsedType;
+            EndpointType endpointTypeEnum = EndpointType.Get;
 
-        if (existedEndpoint != null)
-            throw new AlreadyExistsException("Permission with that name already exists.");
+            if (endpointDto.Type != null && Enum.TryParse(endpointDto.Type, true, out EndpointType parsedType))
+                endpointTypeEnum = parsedType;
 
-        var endpoint = new Endpoint(
-            request.Name,
-            request.Name,
-            _context.SecurityContextAccessor.UserId,
-            endpointTypeEnum,
-            request.Description ?? "Description needed"
-        );
+            if (existedEndpoint != null)
+                throw new BadRequestException($"Endpoint with name '{endpointDto.Name}' already exists.");
 
-        await _repository.Store(endpoint);
+            var endpoint = new Endpoint(
+                endpointDto.Name,
+                endpointDto.Name,
+                _context.SecurityContextAccessor.UserId,
+                endpointTypeEnum,
+                endpointDto.Description ?? "Description needed"
+            );
+
+            await _repository.Store(endpoint);
+            results.Add(endpoint);
+        }
+
         await _repository.CommitChanges();
 
         return new ApplicationResult
         {
             Success = true,
-            Data = $"Permission {endpoint.Name} Created",
+            Data = string.Join(", ", results),
         };
     }
 }

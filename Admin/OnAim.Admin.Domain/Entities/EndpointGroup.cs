@@ -5,6 +5,17 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class EndpointGroup : BaseEntity
 {
+    public EndpointGroup()
+    {
+
+    }
+
+    public EndpointGroup(string name, string description, int? createdBy)
+    {
+        Name = name;
+        Description = description;
+        CreatedBy = createdBy;
+    }
     public string Name { get; set; }
     public string Description { get; set; }
     public ICollection<EndpointGroupEndpoint> EndpointGroupEndpoints { get; set; }
@@ -12,10 +23,7 @@ public class EndpointGroup : BaseEntity
     public bool IsDeleted { get; set; }
     public int? CreatedBy { get; set; }
 
-    public EndpointGroup()
-    {
-        
-    }
+
     public static EndpointGroup Create(string name, string description, int? createdBy, ICollection<EndpointGroupEndpoint>? endpointGroupEndpoint)
     {
         var endpointGroup = new EndpointGroup

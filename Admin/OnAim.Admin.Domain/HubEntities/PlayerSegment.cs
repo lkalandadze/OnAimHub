@@ -1,23 +1,11 @@
-﻿#nullable disable
-
-namespace OnAim.Admin.Domain.HubEntities;
-
-public class PlayerSegment : BaseEntity<int>
+namespace OnAim.Admin.Domain.HubEntities
 {
-    public PlayerSegment()
-    {
-        
-    }
+	// Generated Code
 
-    public PlayerSegment(int playerId, string segmentId)
-    {
-        PlayerId = playerId;
-        SegmentId = segmentId;
-    }
-
-    public int PlayerId { get; private set; }
-    public Player Player { get; private set; }
-
-    public string SegmentId { get; private set; }
-    public Segment Segment { get; private set; }
+	public class PlayerSegment : BaseEntity<Int32>	{
+		public Int32 PlayerId { get; set; }
+		public Player Player { get; set; }
+		public String SegmentId { get; set; }
+		public Segment Segment { get; set; }
+	}
 }

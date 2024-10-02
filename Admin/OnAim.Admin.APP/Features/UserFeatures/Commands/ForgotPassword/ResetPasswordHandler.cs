@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.Entities;
+using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Helpers.Password;
@@ -29,7 +30,7 @@ public class ResetPasswordHandler : BaseCommandHandler<ResetPassword, Applicatio
              !x.IsDeleted).FirstOrDefaultAsync(cancellationToken);
 
         if (user == null)
-            throw new Exception("Invalid or expired reset token.");
+            throw new BadRequestException("Invalid or expired reset token.");
 
         var salt = EncryptPasswordExtension.Salt();
         var hashedPassword = EncryptPasswordExtension.EncryptPassword(request.Password, salt);

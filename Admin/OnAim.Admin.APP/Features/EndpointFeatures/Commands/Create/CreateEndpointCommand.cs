@@ -1,11 +1,7 @@
 ﻿using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.DTOs.Endpoint;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Commands.Create;
 
-public class CreateEndpointCommand : ICommand<ApplicationResult>
-{
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public string? Type { get; set; }
-}
+public record CreateEndpointCommand(List<CreateEndpointDto> Endpoints) : ICommand<ApplicationResult>;

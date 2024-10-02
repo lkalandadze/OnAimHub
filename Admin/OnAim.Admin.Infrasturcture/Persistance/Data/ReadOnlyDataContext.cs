@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Domain.HubEntities.DbEnums;
 
 namespace OnAim.Admin.Infrasturcture.Persistance.Data;
 
@@ -29,15 +28,40 @@ public class ReadOnlyDataContext : DbContext
     public DbSet<TransactionStatus> TransactionStatuses { get; set; }
     public DbSet<TransactionType> TransactionTypes { get; set; }
     public DbSet<AccountType> AccountTypes { get; set; }
-    public DbSet<TokenRecord> TokenRecords { get; set; }
-    public DbSet<Job> Jobs { get; set; }
-    public DbSet<ConsulLog> ConsulLogs { get; set; }
     public DbSet<ReferralDistribution> ReferralDistributions { get; set; }
-    public DbSet<Setting> Settings { get; set; }
     public DbSet<PlayerBan> PlayerBans { get; set; }
 
     public IQueryable<TEntity> Set<TEntity>() where TEntity : class
     {
         return base.Set<TEntity>().AsNoTracking();
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<PlayerSegment>().Ignore(e => e.Id);
+
+        modelBuilder.Entity<PlayerSegment>().HasKey(ps => new { ps.PlayerId, ps.SegmentId });
+
+        modelBuilder.Entity<PlayerSegment>().HasOne(ps => ps.Player)
+               .WithMany(p => p.PlayerSegments)
+               .HasForeignKey(ps => ps.PlayerId);
+
+        modelBuilder.Entity<PlayerSegment>().HasOne(ps => ps.Segment)
+               .WithMany(s => s.PlayerSegments)
+               .HasForeignKey(ps => ps.SegmentId);
+
+        modelBuilder.Entity<PlayerBlockedSegment>().Ignore(e => e.Id);
+
+        modelBuilder.Entity<PlayerBlockedSegment>().HasKey(ps => new { ps.PlayerId, ps.SegmentId });
+
+        modelBuilder.Entity<PlayerBlockedSegment>().HasOne(ps => ps.Player)
+               .WithMany(p => p.PlayerBlockedSegments)
+               .HasForeignKey(ps => ps.PlayerId);
+
+        modelBuilder.Entity<PlayerBlockedSegment>().HasOne(ps => ps.Segment)
+               .WithMany(s => s.PlayerBlockedSegments)
+               .HasForeignKey(ps => ps.SegmentId);
+
+        base.OnModelCreating(modelBuilder);
     }
 }

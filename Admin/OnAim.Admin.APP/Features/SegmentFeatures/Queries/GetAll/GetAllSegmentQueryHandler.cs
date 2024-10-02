@@ -30,6 +30,7 @@ namespace OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetAll
            {
                Id = x.Id,
                Name = x.Id,
+               Description = x.Description,
                Priority = x.PriorityLevel,
                TotalPlayers = x.PlayerSegments.Count(),
                LastUpdate = null,

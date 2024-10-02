@@ -1,21 +1,8 @@
-﻿namespace OnAim.Admin.Domain.HubEntities;
-
-public class Game : BaseEntity<int>
+namespace OnAim.Admin.Domain.HubEntities
 {
-    public Game()
-    {
+	// Generated Code
 
-    }
-
-    public Game(string name)
-    {
-        Name = name;
-    }
-
-    public string Name { get; private set; }
-
-    public void ChangeDetails(string name)
-    {
-        Name = name;
-    }
+	public class Game : BaseEntity<Int32>	{
+		public String Name { get; set; }
+	}
 }

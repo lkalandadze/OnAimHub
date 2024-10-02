@@ -1,7 +1,9 @@
-﻿using Shared.Domain.Entities;
+﻿using OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing.Attributes;
+using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;
 
+[GloballyVisible]
 public class PlayerBan : BaseEntity<int>
 {
     public PlayerBan(int playerId, DateTimeOffset? expireDate, bool isPermanent, string description)

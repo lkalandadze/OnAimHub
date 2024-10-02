@@ -1,36 +1,14 @@
-﻿#nullable disable
-
-using OnAim.Admin.Domain.HubEntities.DbEnums;
-
-namespace OnAim.Admin.Domain.HubEntities;
-
-public class PlayerSegmentAct : BaseEntity<int>
+namespace OnAim.Admin.Domain.HubEntities
 {
-    public PlayerSegmentAct()
-    {
-        
-    }
+	// Generated Code
 
-    public PlayerSegmentAct(PlayerSegmentActType action, int totalPlayers, string segmentId, int? addedByUserId = null)
-    {
-        ActionId = action.Id;
-        TotalPlayers = totalPlayers;
-        ByUserId = addedByUserId;
-        SegmentId = segmentId;
-    }
-
-    public int TotalPlayers { get; set; }
-    public int? ByUserId { get; set; }
-    public bool IsBulk { get; private set; }
-
-    public int? ActionId { get; set; }
-    public PlayerSegmentActType Action { get; set; }
-
-    public string SegmentId { get; set; }  
-    public Segment Segment { get; set; }
-
-    public void SetIsBulk()
-    {
-        IsBulk = true;
-    }
+	public class PlayerSegmentAct : BaseEntity<Int32>	{
+		public Int32 TotalPlayers { get; set; }
+		public Nullable<Int32> ByUserId { get; set; }
+		public Boolean IsBulk { get; set; }
+		public Nullable<Int32> ActionId { get; set; }
+		public PlayerSegmentActType Action { get; set; }
+		public String SegmentId { get; set; }
+		public Segment Segment { get; set; }
+	}
 }

@@ -15,12 +15,4 @@ public class GetUserModel
     public DateTimeOffset DateCreated { get; set; }
     public UserPreferences UserPreferences { get; set; }
     public UserDto? CreatedBy { get; set; }
-    public List<LogDto> Logs { get; set; }
-}
-
-public class LogDto
-{
-    public string Action { get; set; }
-    public string Log {  get; set; }
-    public DateTimeOffset DateCreated { get; set; }
 }

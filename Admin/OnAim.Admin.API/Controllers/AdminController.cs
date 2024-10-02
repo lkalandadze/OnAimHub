@@ -5,6 +5,7 @@ using OnAim.Admin.APP.Features.DomainFeatures.Commands.Create;
 using OnAim.Admin.APP.Features.DomainFeatures.Commands.Delete;
 using OnAim.Admin.APP.Features.DomainFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.Shared.DTOs.EmailDomain;
 using OnAim.Admin.Shared.Models;
 
 namespace OnAim.Admin.API.Controllers;
@@ -18,14 +19,14 @@ public class AdminController : ApiControllerBase
         _appSettingsService = appSettingsService;
     }
 
-    [HttpGet("Settings")]
+    [HttpGet(nameof(GetSettings))]
     public IActionResult GetSettings()
     {
         var domainRestrictionsEnabled = _appSettingsService.GetSetting("DomainRestrictionsEnabled") != "false";
         return Ok(new { DomainRestrictionsEnabled = domainRestrictionsEnabled });
     }
 
-    [HttpPost("DomainRestrictions")]
+    [HttpPost(nameof(SetDomainRestrictions))]
     public IActionResult SetDomainRestrictions([FromBody] bool enableRestrictions)
     {
         var settingValue = enableRestrictions ? "true" : "false";
@@ -33,26 +34,26 @@ public class AdminController : ApiControllerBase
         return NoContent();
     }
 
-    [HttpGet("GetAllDomain")]
-    public async Task<IActionResult> GetAllDomain()
-        => Ok(await Mediator.Send(new GetAllDomainQuery()));
+    [HttpGet(nameof(GetAllDomain))]
+    public async Task<IActionResult> GetAllDomain([FromRoute] DomainFilter filter)
+        => Ok(await Mediator.Send(new GetAllDomainQuery(filter)));
 
-    [HttpPost("InsertDomain")]
+    [HttpPost(nameof(InsertDomain))]
     public async Task<IActionResult> InsertDomain([FromBody] CreateEmailDomainCommand command)
         => Ok(await Mediator.Send(command));
 
-    [HttpPost("DeleteEmailDomain")]
+    [HttpPost(nameof(DeleteEmailDomain))]
     public async Task<IActionResult> DeleteEmailDomain([FromBody] DeleteEmailDomainCommand command)
         => Ok(await Mediator.Send(command));
 
-    [HttpGet("GetActionTypes")]
+    [HttpGet(nameof(GetActionTypes))]
     [AllowAnonymous]
     public IActionResult GetActionTypes()
     {
         return Ok(ActionTypes.All);
     }
 
-    [HttpGet("GetEntityNames")]
+    [HttpGet(nameof(GetEntityNames))]
     [AllowAnonymous]
     public IActionResult GetEntityNames()
     {

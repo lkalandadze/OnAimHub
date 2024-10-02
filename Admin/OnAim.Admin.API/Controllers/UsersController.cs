@@ -24,85 +24,78 @@ namespace OnAim.Admin.API.Controllers;
 
 public class UsersController : ApiControllerBase
 {
-    [HttpGet("GetMe")]
+    [HttpGet(nameof(GetMe))]
     public async Task<IActionResult> GetMe()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return Ok(await Mediator.Send(new GetUserByIdQuery(Convert.ToInt32(userId))));
     }
 
-    [HttpGet("GetAll")]
+    [HttpGet(nameof(GetAll))]
     public async Task<IActionResult> GetAll([FromQuery] UserFilter model)
         => Ok(await Mediator.Send(new GetAllUserQuery(model)));
 
-    [HttpGet("Get/{id}")]
+    [HttpGet(nameof(Get) + "/{id}")]
     public async Task<IActionResult> Get([FromRoute] int id)
         => Ok(await Mediator.Send(new GetUserByIdQuery(id)));
 
-    [HttpGet("UserLogs/{id}")]
+    [HttpGet(nameof(UserLogs) + "/{id}")]
     public async Task<IActionResult> UserLogs([FromRoute] int id, [FromQuery] AuditLogFilter filter)
         => Ok(await Mediator.Send(new GetUserLogsQuery(id, filter)));
 
-    //[HttpGet("Download")]
-    //public async Task<IResult> Download([FromQuery] UsersExportQuery query)
-    //{
-    //    var result = await Mediator.Send(query);
-    //    return result;
-    //}
-
-    [HttpPost("Create")]
+    [HttpPost(nameof(Create))]
     [ProducesResponseType(typeof(CreateUserCommand), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
     public async Task<ApplicationResult> Create([FromBody] CreateUserCommand model)
         => await Mediator.Send(model);
 
-    [HttpPost("Register")]
+    [HttpPost(nameof(Register))]
     [AllowAnonymous]
     [ProducesResponseType(typeof(RegistrationCommand), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Register([FromBody] RegistrationCommand command)
         => Ok(await Mediator.Send(command));
 
-    [HttpPost("Login")]
+    [HttpPost(nameof(Login))]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AuthResultDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
     public async Task<AuthResultDto> Login([FromBody] LoginUserRequest model)
         => await Mediator.Send(new LoginUserCommand(model));
 
-    [HttpPost("ChangePassword")]
+    [HttpPost(nameof(ChangePassword))]
     [AllowAnonymous]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
         => Ok(await Mediator.Send(command));
 
-    [HttpPut("Update/{id}")]
+    [HttpPut(nameof(Update) + "/{id}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserRequest model)
         => Ok(await Mediator.Send(new UpdateUserCommand(id, model)));
 
-    [HttpPut("ProfileUpdate/{id}")]
+    [HttpPut(nameof(ProfileUpdate) + "/{id}")]
     public async Task<IActionResult> ProfileUpdate([FromRoute] int id, [FromBody] ProfileUpdateRequest profile)
         => Ok(await Mediator.Send(new UserProfileUpdateCommand(id, profile)));
 
-    [HttpPost("Delete")]
+    [HttpPost(nameof(Delete))]
     public async Task<IActionResult> Delete([FromBody] List<int> ids)
         => Ok(await Mediator.Send(new DeleteUserCommand(ids)));
 
-    [HttpPost("refresh-token")]
+    [HttpPost(nameof(RefreshToken))]
     [AllowAnonymous]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand request)
         => Ok(await Mediator.Send(request));
 
-    [HttpPost("activate")]
+    [HttpPost(nameof(ActivateAccount))]
     [AllowAnonymous]
     public async Task<IActionResult> ActivateAccount([FromBody] ActivateAccountCommand command)
         => Ok(await Mediator.Send(command));
 
-    [HttpPost("ForgotPasswordRequest")]
+    [HttpPost(nameof(ForgotPasswordRequest))]
     [AllowAnonymous]
     public async Task<IActionResult> ForgotPasswordRequest([FromBody] ForgotPasswordCommand command)
         => Ok(await Mediator.Send(command));
 
-    [HttpPost("ForgotPassword")]
+    [HttpPost(nameof(ForgotPassword))]
     [AllowAnonymous]
     public async Task<IActionResult> ForgotPassword([FromBody] ResetPassword command)
         => Ok(await Mediator.Send(command));

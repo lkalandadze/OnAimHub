@@ -29,7 +29,7 @@ public class CreateRoleCommandHandler : BaseCommandHandler<CreateRoleCommand, Ap
 
         var existsName = _repository.Query(x => x.Name.ToLower() == request.Request.Name.ToLower()).Any();
         if (existsName)
-            throw new AlreadyExistsException("Role With That Name ALready Exists");
+            throw new BadRequestException("Role With That Name ALready Exists");
 
         var role = new Role(request.Request.Name, request.Request.Description, _context.SecurityContextAccessor.UserId);
 
@@ -41,7 +41,7 @@ public class CreateRoleCommandHandler : BaseCommandHandler<CreateRoleCommand, Ap
             var epgroup = await _endpointGroupRepository.Query(x => x.Id == group).FirstOrDefaultAsync();
 
             if (epgroup?.IsDeleted == true)
-                throw new Exception("EndpointGroup Is Disabled!");
+                throw new BadRequestException("EndpointGroup Is Disabled!");
 
             var roleEndpointGroup = new RoleEndpointGroup(role.Id, epgroup.Id);
 

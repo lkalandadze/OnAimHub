@@ -6,9 +6,14 @@ public class CreateEndpointCommandValidator : AbstractValidator<CreateEndpointCo
 {
     public CreateEndpointCommandValidator()
     {
-        RuleFor(x => x.Name)
-            .NotEmpty()
-            .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
-        RuleFor(x => x.Description).NotEmpty();
+        RuleForEach(x => x.Endpoints).ChildRules(endpoint =>
+        {
+            endpoint.RuleFor(x => x.Name)
+                .NotEmpty()
+                .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
+
+            endpoint.RuleFor(x => x.Description)
+                .NotEmpty();
+        });
     }
 }

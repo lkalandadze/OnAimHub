@@ -1,24 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace OnAim.Admin.Domain.HubEntities;
-
-public abstract class BaseEntity<T> : BaseEntity
+namespace OnAim.Admin.Domain.HubEntities
 {
-    private T _id;
+	// Generated Code
 
-    [Column(Order = 1)]
-    public new T Id
-    {
-        get => _id;
-        set
-        {
-            _id = value;
-            base.Id = value;
-        }
-    }
-}
-
-public abstract class BaseEntity
-{
-    public dynamic Id { get; set; } = null!;
+	public class BaseEntity : Object	{
+		public Object Id { get; set; }
+	}
 }

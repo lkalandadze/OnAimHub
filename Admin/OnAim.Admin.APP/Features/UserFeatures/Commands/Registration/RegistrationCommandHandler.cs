@@ -39,10 +39,10 @@ public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand
         var existingUser = await _userRepository.Query(x => x.Email == request.Email && !x.IsDeleted).FirstOrDefaultAsync();
 
         if (existingUser != null)
-            throw new AlreadyExistsException($"User creation failed. A user already exists with email: {request.Email}");           
+            throw new BadRequestException($"User creation failed. A user already exists with email: {request.Email}");           
 
         if (existingUser?.IsActive == false)
-            throw new AlreadyExistsException($"User creation failed. A user already exists or is not active with email: {request.Email}");          
+            throw new BadRequestException($"User creation failed. A user already exists or is not active with email: {request.Email}");          
 
         if (!await _domainValidationService.IsDomainAllowedAsync(request.Email))
             throw new BadRequestException("Domain not allowed");           

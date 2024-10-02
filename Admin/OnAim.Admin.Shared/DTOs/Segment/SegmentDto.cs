@@ -9,9 +9,7 @@ namespace OnAim.Admin.Shared.DTOs.Segment
         public int PriorityLevel { get; set; }
         public int TotalActivePlayers { get; set; }
         public int TotalBlackListedPlayers { get; set; }
-        public List<PlayerDto> ActivePlayers { get; set; }
-        public List<PlayerDto> BlackListedPlayers { get; set; }
-        public List<ActsDto> Acts { get; set; }
-        public List<ActsDto> History { get; set; }
+        public List<SegmentPlayerDto> ActivePlayers { get; set; }
+        public List<SegmentPlayerDto> BlackListedPlayers { get; set; }
     }
 }

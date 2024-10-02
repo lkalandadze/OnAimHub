@@ -2,11 +2,11 @@
 using Polly.Timeout;
 using Polly.Wrap;
 using Polly;
-using System.Net.Http.Json;
 using System.Text;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using OnAim.Admin.Domain.Exceptions;
+using System.Net.Http.Headers;
 
 namespace OnAim.Admin.APP.Shared.Clients;
 
@@ -20,6 +20,7 @@ public class HubApiClient : IHubApiClient
     {
         _httpClient = httpClient.NotBeNull();
         _options = options.Value;
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJQbGF5ZXJJZCI6IjI3IiwiVXNlck5hbWUiOiIxOTEzIiwiU2VnbWVudElkcyI6ImRlZmF1bHQiLCJleHAiOjIzMjc3ODY0ODUsImlzcyI6IkhVQiIsImF1ZCI6IkhVQi1BVURJRU5DRSJ9.wXw5FHhnnr_a1CM_QicKNlQqKf7_Y6WlHUHAJeL8GVCKDL8JFLn7Tp9NboDuXs7ztoZPritBVOixSgXNQ8J3Iw");
 
         var retryPolicy = Polly.Policy
        .Handle<HttpRequestException>()
@@ -98,21 +99,33 @@ public class HubApiClient : IHubApiClient
         if (obj is null)
             throw new ArgumentNullException(nameof(obj));
 
-        var res = await _httpClient.PostAsync(
-            uri,
-            new StringContent(
-                Serialize(obj),
-                Encoding.UTF8,
-                "application/json"
-            ),
-            ct
+        var content = new StringContent(
+            Serialize(obj),
+            Encoding.UTF8,
+            "application/json"
         );
 
+        var res = await _httpClient.PostAsync(uri, content, ct);
+
         if (!res.IsSuccessStatusCode)
-            throw new HubAPIRequestFailedException(res);
+        {
+            var errorContent = await res.Content.ReadAsStringAsync();
+            throw new HubAPIRequestFailedException($"Request failed with status code {res.StatusCode}. Response content: {errorContent}");
+        }
 
-        return JsonConvert.DeserializeObject<T>(await res.Content.ReadAsStringAsync());
+        var responseContent = await res.Content.ReadAsStringAsync();
 
+        if (string.IsNullOrWhiteSpace(responseContent))
+            throw new Exception("The response is empty or not in valid JSON format");
+
+        try
+        {
+            return JsonConvert.DeserializeObject<T>(responseContent);
+        }
+        catch (JsonReaderException ex)
+        {
+            throw new Exception($"Failed to deserialize JSON response: {responseContent}", ex);
+        }
     }
 
     public async Task<HttpResponseMessage> PutAsJson(string uri, object obj, CancellationToken ct = default)
@@ -136,6 +149,24 @@ public class HubApiClient : IHubApiClient
         return res;
 
     }
+
+    public async Task<HttpResponseMessage> Delete(
+            string uri,
+            CancellationToken ct = default
+        )
+    {
+        var res = await _httpClient.DeleteAsync(
+            uri,
+            ct
+        );
+
+        if (!res.IsSuccessStatusCode)
+            throw new HubAPIRequestFailedException(res);
+
+        return res;
+    }
+
+
 
     private string Serialize(object obj)
         => JsonConvert.SerializeObject(

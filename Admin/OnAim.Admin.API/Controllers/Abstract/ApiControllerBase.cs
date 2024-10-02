@@ -1,11 +1,11 @@
-﻿ using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Attributes;
 
 namespace OnAim.Admin.API.Controllers.Abstract;
 
 [CheckEndpointStatusAttribute]
-//[Permission]
+[Permission]
 [ApiController]
 [Route("api/[controller]")]
 public class ApiControllerBase : ControllerBase

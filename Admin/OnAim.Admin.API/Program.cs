@@ -43,7 +43,6 @@ builder.Services.AddControllersWithViews()
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
-//??????
 builder.Services.AddHealthChecks()
     .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnectionString")!);
 
@@ -64,7 +63,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-//app.UseMiddleware<PermissionMiddleware>();
+app.UseMiddleware<PermissionMiddleware>();
 //app.UseMiddleware<RequestHandlerMiddleware>();
 
 app.MapControllers();

@@ -49,7 +49,7 @@ public class ChangePasswordCommandHandler : BaseCommandHandler<ChangePasswordCom
         }
         catch (Exception ex)
         {
-            throw new Exception("An error occurred while updating the password.");
+            throw new BadRequestException("An error occurred while updating the password.");
         }
 
         return new ApplicationResult

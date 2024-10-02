@@ -38,8 +38,6 @@ public sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, Ap
 
         if (query == null) { return new ApplicationResult { Success = false, Data = $"User Not Found!" }; }
 
-        var logs = await _configurationRepository.Query(x => x.UserId == query.Id).ToListAsync();
-
         var usert = await _repository.Query(x => x.Id == query.CreatedBy).FirstOrDefaultAsync();
 
         var user = new GetUserModel
@@ -81,13 +79,7 @@ public sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, Ap
                 FirstName = usert.FirstName,
                 LastName = usert.LastName,
                 Email = usert.Email,
-            },
-            Logs = logs.Select(x => new LogDto
-            {
-                Action = x.Action,
-                Log = x.Log,
-                DateCreated = x.Timestamp
-            }).ToList(),
+            },        
         };
 
         return new ApplicationResult

@@ -1,9 +1,11 @@
 ﻿#nullable disable
 
+using OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing.Attributes;
 using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;
 
+[GloballyVisible]
 public class PlayerBlockedSegment : BaseEntity<int>
 {
     public PlayerBlockedSegment()

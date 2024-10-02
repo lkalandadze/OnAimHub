@@ -26,5 +26,10 @@
             CancellationToken ct = default
         );
 
+        Task<HttpResponseMessage> Delete(
+            string uri,
+            CancellationToken ct = default
+        );
+
     }
 }

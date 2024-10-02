@@ -35,10 +35,10 @@ public class CreateUserCommandHandler : BaseCommandHandler<CreateUserCommand, Ap
         var existingUser = await _repository.Query(x => x.Email == request.Email && !x.IsDeleted).FirstOrDefaultAsync();
 
         if (existingUser != null)
-            throw new AlreadyExistsException($"User creation failed. A user already exists with email: {request.Email}");
+            throw new BadRequestException($"User creation failed. A user already exists with email: {request.Email}");
 
         if (existingUser?.IsActive == false)
-            throw new AlreadyExistsException($"User creation failed. A user already exists with email: {request.Email}");
+            throw new BadRequestException($"User creation failed. A user already exists with email: {request.Email}");
 
         var temporaryPassword = PasswordHelper.GenerateTemporaryPassword();
         var salt = EncryptPasswordExtension.Salt();

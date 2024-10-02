@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.Entities;
+using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 
@@ -35,7 +36,7 @@ public class CreateEndpointGroupCommandHandler : BaseCommandHandler<CreateEndpoi
 
                 if (endpoint?.IsDeleted == true)
                 {
-                    throw new Exception("Permmission Is Disabled!");
+                    throw new BadRequestException("Permmission Is Disabled!");
                 }
 
                 var endpointGroupEndpoint = new EndpointGroupEndpoint(endpointGroup.Id, endpoint.Id);
@@ -48,7 +49,7 @@ public class CreateEndpointGroupCommandHandler : BaseCommandHandler<CreateEndpoi
         }
         else
         {
-            throw new Exception("Permmission Group with that name already exists!");
+            throw new BadRequestException("Permmission Group with that name already exists!");
         }
 
         return new ApplicationResult
