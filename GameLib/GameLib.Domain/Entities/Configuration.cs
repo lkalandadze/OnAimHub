@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using GameLib.Domain.Generators;
 using Shared.Domain.Entities;
 
 namespace GameLib.Domain.Entities;
@@ -19,8 +20,12 @@ public class Configuration : BaseEntity<int>
         Segments = segments?.ToList() ?? [];
     }
 
+    public string Rule { get; set; }
+    [MetaDescription("Name of the configuration")]
     public string Name { get; private set; }
+    [MetaDescription("Value of the configuration")]
     public int Value { get; private set; }
+    [MetaDescription("IsActive of the configuration")]
     public bool IsActive { get; private set; }
 
     public ICollection<Price> Prices { get; private set; }

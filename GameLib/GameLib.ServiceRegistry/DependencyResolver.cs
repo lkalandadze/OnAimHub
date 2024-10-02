@@ -8,6 +8,7 @@ using GameLib.Application.Services.Abstract;
 using GameLib.Application.Services.Concrete;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
+using GameLib.Domain.Generators;
 using GameLib.Infrastructure.DataAccess;
 using GameLib.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -28,6 +29,7 @@ public static class DependencyResolver
         services.AddSingleton<GeneratorHolder>();
         services.AddSingleton<ConfigurationHolder>();
         services.AddSingleton<RepositoryManager>();
+        services.AddSingleton<EntityGenerator>();
 
         services.AddSingleton(prizeGroupTypes);
         foreach (var type in prizeGroupTypes)
