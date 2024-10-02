@@ -18,9 +18,10 @@ public class GeneratorHolder
     {
         _prizeGenerationConfig = prizeGenerationConfig.Value;
         this.prizeGroupTypes = prizeGroupTypes;
+        SetGenerators();
     }
 
-    public void SetGenerators()
+    private void SetGenerators()
     {
         prizeGroupTypes.ForEach(type =>
         {

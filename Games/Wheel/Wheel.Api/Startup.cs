@@ -36,7 +36,6 @@ public class Startup
         var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup), typeof(JackpotPrizeGroup) };
         services.Resolve(Configuration, prizeGroupTypes, "WheelApi");
 
-        services.AddSingleton(prizeGroupTypes);
         services.AddScoped<IGameService, GameService>();
 
 

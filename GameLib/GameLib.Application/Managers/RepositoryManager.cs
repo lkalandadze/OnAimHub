@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿#nullable disable
+
+using Microsoft.Extensions.DependencyInjection;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
+using Shared.Domain.Abstractions.Repository;
 
 namespace GameLib.Application.Managers;
 
@@ -22,6 +25,11 @@ public class RepositoryManager
     internal static IPriceRepository GetPriceRepository()
     {
         return _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IPriceRepository>();
+    }
+
+    internal static ISettingRepository GetGameSettingRepository()
+    {
+        return _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<ISettingRepository>();
     }
 }
 
