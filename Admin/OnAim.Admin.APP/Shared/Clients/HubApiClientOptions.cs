@@ -1,8 +1,7 @@
-﻿namespace OnAim.Admin.APP.Shared.Clients
+﻿namespace OnAim.Admin.APP.Shared.Clients;
+
+public class HubApiClientOptions
 {
-    public class HubApiClientOptions
-    {
-        public string BaseApiAddress { get; set; } = default!;
-        public string Endpoint { get; set; } = default!;
-    }
+    public string BaseApiAddress { get; set; } = default!;
+    public string Endpoint { get; set; } = default!;
 }

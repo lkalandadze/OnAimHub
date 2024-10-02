@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 
-namespace OnAim.Admin.APP.Features.PlayerFeatures.Commands.RevokePlayerBan
+namespace OnAim.Admin.APP.Features.PlayerFeatures.Commands.RevokePlayerBan;
+
+public class RevokePlayerBanCommandValidator : AbstractValidator<RevokePlayerBanCommand>
 {
-    public class RevokePlayerBanCommandValidator : AbstractValidator<RevokePlayerBanCommand>
+    public RevokePlayerBanCommandValidator()
     {
-        public RevokePlayerBanCommandValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty().NotNull();
-        }
+        RuleFor(x => x.Id).NotEmpty().NotNull();
     }
 }

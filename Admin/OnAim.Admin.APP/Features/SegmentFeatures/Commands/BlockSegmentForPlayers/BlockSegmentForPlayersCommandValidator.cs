@@ -1,13 +1,12 @@
 ﻿using FluentValidation; 
 
-namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.BlockSegmentForPlayers
+namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.BlockSegmentForPlayers;
+
+public class BlockSegmentForPlayersCommandValidator : AbstractValidator<BlockSegmentForPlayersCommand>
 {
-    public class BlockSegmentForPlayersCommandValidator : AbstractValidator<BlockSegmentForPlayersCommand>
+    public BlockSegmentForPlayersCommandValidator()
     {
-        public BlockSegmentForPlayersCommandValidator()
-        {
-            RuleFor(x => x.SegmentId).NotEmpty();
-            RuleFor(x => x.File).NotEmpty();
-        }
+        RuleFor(x => x.SegmentId).NotEmpty();
+        RuleFor(x => x.File).NotEmpty();
     }
 }

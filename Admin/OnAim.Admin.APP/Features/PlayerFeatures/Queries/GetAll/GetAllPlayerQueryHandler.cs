@@ -41,7 +41,7 @@ public class GetAllPlayerQueryHandler : IQueryHandler<GetAllPlayerQuery, Applica
             .Select(x => new PlayerListDto
             {
                 Id = x.Id,
-                PlayerName = x.UserName,
+                PlayerName = x.UserName ?? null,
                 RegistrationDate = null,
                 LastVisit = null,
                 Segment = x.PlayerSegments.Select(x => x.Segment.Description).FirstOrDefault(),

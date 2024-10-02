@@ -1,13 +1,12 @@
 ﻿using FluentValidation;
 
-namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.AssignPlayer
+namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.AssignPlayer;
+
+public class AssignPlayerCommandValidator : AbstractValidator<AssignPlayerCommand>
 {
-    public class AssignPlayerCommandValidator : AbstractValidator<AssignPlayerCommand>
+    public AssignPlayerCommandValidator()
     {
-        public AssignPlayerCommandValidator()
-        {
-            RuleFor(x => x.PlayerId).NotEmpty();
-            RuleFor(x => x.SegmentId).NotEmpty();
-        }
+        RuleFor(x => x.PlayerId).NotEmpty();
+        RuleFor(x => x.SegmentId).NotEmpty();
     }
 }

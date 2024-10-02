@@ -1,13 +1,12 @@
 ﻿using FluentValidation;
 
-namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnAssignPlayersToSegment
+namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnAssignPlayersToSegment;
+
+public class UnAssignPlayersToSegmentCommandValidator : AbstractValidator<UnAssignPlayersToSegmentCommand>
 {
-    public class UnAssignPlayersToSegmentCommandValidator : AbstractValidator<UnAssignPlayersToSegmentCommand>
+    public UnAssignPlayersToSegmentCommandValidator()
     {
-        public UnAssignPlayersToSegmentCommandValidator()
-        {
-            RuleFor(x => x.SegmentId).NotEmpty();   
-            RuleFor(x => x.File).NotEmpty();
-        }
+        RuleFor(x => x.SegmentId).NotEmpty();   
+        RuleFor(x => x.File).NotEmpty();
     }
 }

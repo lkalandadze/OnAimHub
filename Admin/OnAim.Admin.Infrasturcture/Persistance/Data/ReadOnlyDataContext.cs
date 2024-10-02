@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.HubEntities;
+using OnAim.Admin.Domain.LeaderBoradEntities;
 
 namespace OnAim.Admin.Infrasturcture.Persistance.Data;
 
@@ -30,6 +31,14 @@ public class ReadOnlyDataContext : DbContext
     public DbSet<AccountType> AccountTypes { get; set; }
     public DbSet<ReferralDistribution> ReferralDistributions { get; set; }
     public DbSet<PlayerBan> PlayerBans { get; set; }
+
+    public DbSet<LeaderboardTemplate> LeaderboardTemplate { get; set; }
+    public DbSet<LeaderboardRecord> LeaderboardRecords { get; set; }
+    public DbSet<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; }
+    public DbSet<LeaderboardTemplatePrize> LeaderboardTemplatePrize { get; set; }
+    public DbSet<LeaderboardProgress> LeaderboardProgresses { get; set; }
+    public DbSet<LeaderboardResult> LeaderboardResults { get; set; }
+    //public DbSet<Currency> Currencies { get; set; }
 
     public IQueryable<TEntity> Set<TEntity>() where TEntity : class
     {

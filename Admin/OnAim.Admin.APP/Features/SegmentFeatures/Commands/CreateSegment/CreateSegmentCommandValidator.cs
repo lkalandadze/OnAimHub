@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 
-namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.Create
+namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.Create;
+
+public class CreateSegmentCommandValidator : AbstractValidator<CreateSegmentCommand>
 {
-    public class CreateSegmentCommandValidator : AbstractValidator<CreateSegmentCommand>
+    public CreateSegmentCommandValidator()
     {
-        public CreateSegmentCommandValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty();
-        }
+        RuleFor(x => x.Id).NotEmpty();
     }
 }

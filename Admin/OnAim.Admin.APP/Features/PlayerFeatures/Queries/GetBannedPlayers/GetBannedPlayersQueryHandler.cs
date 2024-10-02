@@ -5,38 +5,37 @@ using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.DTOs.Player;
 
-namespace OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBannedPlayers
+namespace OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBannedPlayers;
+
+public class GetBannedPlayersQueryHandler : IQueryHandler<GetBannedPlayersQuery, ApplicationResult>
 {
-    public class GetBannedPlayersQueryHandler : IQueryHandler<GetBannedPlayersQuery, ApplicationResult>
+    private readonly IReadOnlyRepository<PlayerBan> _readOnlyRepository;
+
+    public GetBannedPlayersQueryHandler(IReadOnlyRepository<PlayerBan> readOnlyRepository)
     {
-        private readonly IReadOnlyRepository<PlayerBan> _readOnlyRepository;
+        _readOnlyRepository = readOnlyRepository;
+    }
+    public async Task<ApplicationResult> Handle(GetBannedPlayersQuery request, CancellationToken cancellationToken)
+    {
+        var banned = _readOnlyRepository.Query();
 
-        public GetBannedPlayersQueryHandler(IReadOnlyRepository<PlayerBan> readOnlyRepository)
+        var result = banned.Select(x => new BannedPlayerListDto
         {
-            _readOnlyRepository = readOnlyRepository;
-        }
-        public async Task<ApplicationResult> Handle(GetBannedPlayersQuery request, CancellationToken cancellationToken)
+            PlayerId = x.PlayerId,
+            PlayerName = x.Player.UserName,
+            Description = x.Description,
+            DateBanned = x.DateBanned,
+            ExpireDate = x.ExpireDate,
+            IsPermanent = x.IsPermanent,
+            IsRevoked = x.IsRevoked,
+            RevokeDate = x.RevokeDate,
+        });
+
+
+        return new ApplicationResult
         {
-            var banned = _readOnlyRepository.Query();
-
-            var result = banned.Select(x => new BannedPlayerListDto
-            {
-                PlayerId = x.PlayerId,
-                PlayerName = x.Player.UserName,
-                Description = x.Description,
-                DateBanned = x.DateBanned,
-                ExpireDate = x.ExpireDate,
-                IsPermanent = x.IsPermanent,
-                IsRevoked = x.IsRevoked,
-                RevokeDate = x.RevokeDate,
-            });
-
-
-            return new ApplicationResult
-            {
-                Success = true,
-                Data = await result.ToListAsync(cancellationToken)
-            };
-        }
+            Success = true,
+            Data = await result.ToListAsync(cancellationToken)
+        };
     }
 }

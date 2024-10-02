@@ -5,31 +5,30 @@ using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.DTOs.Player;
 
-namespace OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetProgress
+namespace OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetProgress;
+
+public class GetPlayerProgressQueryHandler : IQueryHandler<GetPlayerProgressQuery, ApplicationResult>
 {
-    public class GetPlayerProgressQueryHandler : IQueryHandler<GetPlayerProgressQuery, ApplicationResult>
+    private readonly IReadOnlyRepository<PlayerProgress> _readOnlyRepository;
+
+    public GetPlayerProgressQueryHandler(IReadOnlyRepository<PlayerProgress> readOnlyRepository)
     {
-        private readonly IReadOnlyRepository<PlayerProgress> _readOnlyRepository;
+        _readOnlyRepository = readOnlyRepository;
+    }
+    public async Task<ApplicationResult> Handle(GetPlayerProgressQuery request, CancellationToken cancellationToken)
+    {
+        var progress = await _readOnlyRepository.Query(x => x.PlayerId == request.Id).FirstOrDefaultAsync();
 
-        public GetPlayerProgressQueryHandler(IReadOnlyRepository<PlayerProgress> readOnlyRepository)
+        var result = new PlayerProgressDto
         {
-            _readOnlyRepository = readOnlyRepository;
-        }
-        public async Task<ApplicationResult> Handle(GetPlayerProgressQuery request, CancellationToken cancellationToken)
+            DailyProgress = progress.Progress,
+            TotalProgress = progress.Progress
+        };
+
+        return new ApplicationResult
         {
-            var progress = await _readOnlyRepository.Query(x => x.PlayerId == request.Id).FirstOrDefaultAsync();
-
-            var result = new PlayerProgressDto
-            {
-                DailyProgress = progress.Progress,
-                TotalProgress = progress.Progress
-            };
-
-            return new ApplicationResult
-            {
-                Success = true,
-                Data = result
-            };
-        }
+            Success = true,
+            Data = result
+        };
     }
 }

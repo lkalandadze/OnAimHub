@@ -1,12 +1,11 @@
 ﻿using FluentValidation;
 
-namespace OnAim.Admin.APP.Features.PlayerFeatures.Commands.BanPlayer
+namespace OnAim.Admin.APP.Features.PlayerFeatures.Commands.BanPlayer;
+
+public class BanPlayerCommandValidator : AbstractValidator<BanPlayerCommand>
 {
-    public class BanPlayerCommandValidator : AbstractValidator<BanPlayerCommand>
+    public BanPlayerCommandValidator()
     {
-        public BanPlayerCommandValidator()
-        {
-            RuleFor(x => x.PlayerId).NotEmpty().NotNull();
-        }
+        RuleFor(x => x.PlayerId).NotEmpty().NotNull();
     }
 }
