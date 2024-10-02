@@ -12,11 +12,18 @@ namespace OnAim.Admin.Domain.HubEntities
 		public AccountType FromAccount { get; set; }
 		public Int32 ToAccountId { get; set; }
 		public AccountType ToAccount { get; set; }
-		public String CurrencyId { get; set; }
+		public string CurrencyId { get; set; }
 		public Currency Currency { get; set; }
 		public Int32 StatusId { get; set; }
 		public TransactionStatus Status { get; set; }
 		public Int32 TypeId { get; set; }
 		public TransactionType Type { get; set; }
 	}
+    public class AccountType : DbEnum<int, AccountType>
+    {
+        public static AccountType Player => FromId(1);
+        public static AccountType Game => FromId(2);
+        public static AccountType Casino => FromId(3);
+        public static AccountType Reset => FromId(4);
+    }
 }

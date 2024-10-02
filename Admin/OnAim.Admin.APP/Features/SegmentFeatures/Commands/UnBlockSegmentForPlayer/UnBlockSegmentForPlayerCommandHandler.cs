@@ -26,7 +26,7 @@ public class UnBlockSegmentForPlayerCommandHandler : BaseCommandHandler<UnBlockS
             ByUserId = _context.SecurityContextAccessor.UserId
         };
 
-        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}/Segment/{request.SegmentId}/UnblockPlayer/{request.PlayerId}", req);
+        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Segment/{request.SegmentId}/UnblockPlayer/{request.PlayerId}", req);
 
         if (result.IsSuccessStatusCode)
         {

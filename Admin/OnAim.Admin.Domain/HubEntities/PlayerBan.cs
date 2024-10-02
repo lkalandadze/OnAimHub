@@ -10,6 +10,6 @@ namespace OnAim.Admin.Domain.HubEntities
 		public Boolean IsPermanent { get; set; }
 		public Boolean IsRevoked { get; set; }
 		public Nullable<DateTimeOffset> RevokeDate { get; set; }
-		public String Description { get; set; }
+		public string Description { get; set; }
 	}
 }

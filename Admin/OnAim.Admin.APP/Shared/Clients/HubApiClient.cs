@@ -166,6 +166,19 @@ public class HubApiClient : IHubApiClient
         return res;
     }
 
+    public async Task<HttpResponseMessage> PostMultipartAsync(string uri, MultipartFormDataContent content, CancellationToken ct = default)
+    {
+        var response = await _httpClient.PostAsync(uri, content, ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            throw new HubAPIRequestFailedException($"Request failed with status code {response.StatusCode}. Response content: {errorContent}");
+        }
+
+        return response;
+    }
+
 
 
     private string Serialize(object obj)

@@ -2,6 +2,7 @@
 using OnAim.Admin.APP.Shared.Clients;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using System.Net.Http.Headers;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.BlockSegmentForPlayers
 {
@@ -20,21 +21,43 @@ namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.BlockSegmentForPlaye
         {
             await ValidateAsync(request, cancellationToken);
 
-            var req = new
-            {
-                SegmentId = request.SegmentId,
-                File = request.File,
-                ByUserId = _context.SecurityContextAccessor.UserId
-            };
+            //var req = new
+            //{
+            //    SegmentId = request.SegmentId,
+            //    File = request.File,
+            //    ByUserId = _context.SecurityContextAccessor.UserId
+            //};
 
-            var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}/Segment/{request.SegmentId}/AssignPlayers", req);
+            //var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Segment/{request.SegmentId}/BlockPlayers", req);
 
-            if (result.IsSuccessStatusCode)
+            using var multipartContent = new MultipartFormDataContent();
+
+            // Add the file to the request
+            if (request.File != null)
             {
-                return new ApplicationResult { Success = true };
+                var fileContent = new StreamContent(request.File.OpenReadStream());
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(request.File.ContentType);
+                multipartContent.Add(fileContent, "file", request.File.FileName);
             }
 
-            throw new BadRequestException("Failed to block segment for players");
+            // Add other fields to the request
+            multipartContent.Add(new StringContent(request.SegmentId), "SegmentId");
+            multipartContent.Add(new StringContent(_context.SecurityContextAccessor.UserId.ToString()), "ByUserId");
+
+            // Send the multipart/form-data request
+            var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Segment/{request.SegmentId}/BlockPlayers", multipartContent);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HubAPIRequestFailedException($"Failed to Block Players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
+            }
+
+            return new ApplicationResult
+            {
+                Success = true,
+                Data = await response.Content.ReadAsStringAsync(), // Optionally deserialize if needed
+            };
         }
     }
 }

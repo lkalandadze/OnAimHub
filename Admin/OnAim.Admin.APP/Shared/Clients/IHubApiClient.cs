@@ -31,5 +31,7 @@
             CancellationToken ct = default
         );
 
+        Task<HttpResponseMessage> PostMultipartAsync(string uri, MultipartFormDataContent content, CancellationToken ct = default);
+
     }
 }

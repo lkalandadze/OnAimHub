@@ -17,14 +17,14 @@ namespace OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.ActsAndHistor
         }
         public async Task<ApplicationResult> Handle(GetSegmentActsByIdQuery request, CancellationToken cancellationToken)
         {
-            var playerSegmentActs = await _playerSegmentActRepository.Query(x => x.SegmentId == request.SegmentId).ToListAsync();
+            var playerSegmentActs = await _playerSegmentActRepository.Query(x => x.SegmentId == request.SegmentId).Include(x => x.Action).ToListAsync();
 
             var res = playerSegmentActs.Select(x => new ActsDto
             {
                 Id = x.Id,
                 UploadedBy = x.ByUserId,
                 Quantity = x.TotalPlayers,
-                Type = x.Action.ToString(),
+                Type = x.Action?.Name,
             });
 
             return new ApplicationResult

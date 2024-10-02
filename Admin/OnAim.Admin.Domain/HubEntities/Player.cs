@@ -3,7 +3,7 @@ namespace OnAim.Admin.Domain.HubEntities
 	// Generated Code
 
 	public class Player : BaseEntity<Int32>	{
-		public String UserName { get; set; }
+		public string UserName { get; set; }
 		public Nullable<Int32> ReferrerId { get; set; }
 		public Boolean HasPlayed { get; set; }
 		public Nullable<DateTimeOffset> RegistredOn { get; set; }

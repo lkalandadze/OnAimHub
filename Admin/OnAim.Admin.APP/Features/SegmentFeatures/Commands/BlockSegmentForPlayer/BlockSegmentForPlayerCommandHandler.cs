@@ -26,7 +26,7 @@ namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.BlockPlayer
                 ByUserId = _context.SecurityContextAccessor.UserId
             };
 
-            var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}/Segment/{request.SegmentId}/BlockPlayer/{request.PlayerId}", req);
+            var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Segment/{request.SegmentId}/BlockPlayer/{request.PlayerId}", req);
 
             if (result.IsSuccessStatusCode)
             {

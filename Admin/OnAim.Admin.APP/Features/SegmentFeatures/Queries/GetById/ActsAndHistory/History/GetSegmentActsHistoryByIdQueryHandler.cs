@@ -17,7 +17,11 @@ public class GetSegmentActsHistoryByIdQueryHandler : IQueryHandler<GetSegmentAct
     }
     public async Task<ApplicationResult> Handle(GetSegmentActsHistoryByIdQuery request, CancellationToken cancellationToken)
     {
-        var history = await _playerSegmentActHistoryRepository.Query(x => x.PlayerSegmentActId == request.PlayerSegmentActId).ToListAsync();
+        var history = await _playerSegmentActHistoryRepository
+            .Query(x => x.PlayerSegmentActId == request.PlayerSegmentActId)
+            .Include(x => x.Player)
+            .Include(x => x.PlayerSegmentAct)
+            .ToListAsync();
 
         var res = history.Select(x => new ActsHistoryDto
         {
@@ -26,9 +30,9 @@ public class GetSegmentActsHistoryByIdQueryHandler : IQueryHandler<GetSegmentAct
             PlayerName = x.Player.UserName,
             PlayerId = x.PlayerId,
             Quantity = 1,
-            UploadedBy = x.PlayerSegmentAct.ByUserId,
+            UploadedBy = x.PlayerSegmentAct?.ByUserId,
             UploadedOn = null,
-            Type = x.PlayerSegmentAct.Action.Name,
+            Type = x.PlayerSegmentAct?.Action?.Name,
         });
 
         return new ApplicationResult

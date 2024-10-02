@@ -2,6 +2,9 @@
 using OnAim.Admin.APP.Shared.Clients;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using System.Net.Http;
+using System;
+using System.Net.Http.Headers;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.AssignPlayersToSegment
 {
@@ -20,21 +23,35 @@ namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.AssignPlayersToSegme
         {
             await ValidateAsync(request, cancellationToken);
 
-            var req = new
-            {
-                SegmentId = request.SegmentId,
-                File = request.File,
-                ByUserId = _context.SecurityContextAccessor.UserId
-            };
+            using var multipartContent = new MultipartFormDataContent();
 
-            var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}/Segment/{request.SegmentId}/AssignPlayers", req);
-
-            if (result.IsSuccessStatusCode)
+            // Add the file to the request
+            if (request.File != null)
             {
-                return new ApplicationResult { Success = true };
+                var fileContent = new StreamContent(request.File.OpenReadStream());
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(request.File.ContentType);
+                multipartContent.Add(fileContent, "file", request.File.FileName);
             }
 
-            throw new BadRequestException("Failed to assign segment for players");
+            // Add other fields to the request
+            multipartContent.Add(new StringContent(request.SegmentId), "SegmentId");
+            multipartContent.Add(new StringContent(_context.SecurityContextAccessor.UserId.ToString()), "ByUserId");
+
+            // Send the multipart/form-data request
+            var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Segment/{request.SegmentId}/AssignPlayers", multipartContent);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HubAPIRequestFailedException($"Failed to assign players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
+            }
+
+            return new ApplicationResult
+            {
+                Success = true,
+                Data = await response.Content.ReadAsStringAsync(), // Optionally deserialize if needed
+            };
         }
+
     }
 }

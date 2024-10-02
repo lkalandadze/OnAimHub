@@ -2,6 +2,7 @@
 using OnAim.Admin.APP.Shared.Clients;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using System.Net.Http.Headers;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnBlockSegmentForPlayers
 {
@@ -20,21 +21,39 @@ namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnBlockSegmentForPla
         {
             await ValidateAsync(request, cancellationToken);
 
-            var req = new
-            {
-                SegmentId = request.SegmentId,
-                File = request.File,
-                ByUserId = _context.SecurityContextAccessor.UserId
-            };
+            //var req = new
+            //{
+            //    SegmentId = request.SegmentId,
+            //    File = request.File,
+            //    ByUserId = _context.SecurityContextAccessor.UserId
+            //};
 
-            var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}/Segment/{request.SegmentId}/AssignPlayers", req);
+            //var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Segment/{request.SegmentId}/UnblockPlayers", req);
+            using var multipartContent = new MultipartFormDataContent();
 
-            if (result.IsSuccessStatusCode)
+            if (request.File != null)
             {
-                return new ApplicationResult { Success = true };
+                var fileContent = new StreamContent(request.File.OpenReadStream());
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(request.File.ContentType);
+                multipartContent.Add(fileContent, "file", request.File.FileName);
             }
 
-            throw new BadRequestException("Failed to unblock segment for players");
+            multipartContent.Add(new StringContent(request.SegmentId), "SegmentId");
+            multipartContent.Add(new StringContent(_context.SecurityContextAccessor.UserId.ToString()), "ByUserId");
+
+            var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Segment/{request.SegmentId}/UnblockPlayers", multipartContent);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HubAPIRequestFailedException($"Failed to Unblock Players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
+            }
+
+            return new ApplicationResult
+            {
+                Success = true,
+                Data = await response.Content.ReadAsStringAsync(),
+            };
         }
     }
 }

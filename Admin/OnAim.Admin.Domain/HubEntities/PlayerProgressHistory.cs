@@ -6,7 +6,7 @@ namespace OnAim.Admin.Domain.HubEntities
 		public Int32 Progress { get; set; }
 		public Int32 PlayerId { get; set; }
 		public Player Player { get; set; }
-		public String CurrencyId { get; set; }
+		public string CurrencyId { get; set; }
 		public Currency Currency { get; set; }
 	}
 }

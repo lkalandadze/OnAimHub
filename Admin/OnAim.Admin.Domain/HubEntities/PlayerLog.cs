@@ -3,7 +3,7 @@ namespace OnAim.Admin.Domain.HubEntities
 	// Generated Code
 
 	public class PlayerLog : BaseEntity<Int32>	{
-		public String Log { get; set; }
+		public string Log { get; set; }
 		public DateTimeOffset Timestamp { get; set; }
 		public Int32 PlayerId { get; set; }
 		public Player Player { get; set; }

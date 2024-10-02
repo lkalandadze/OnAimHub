@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP.Features.SegmentFeatures.Commands.AssignPlayer;
 using OnAim.Admin.APP.Features.SegmentFeatures.Commands.AssignPlayersToSegment;
@@ -68,12 +69,40 @@ namespace OnAim.Admin.API.Controllers
             => Ok(await Mediator.Send(command));
  
         [HttpPost(nameof(AssignSegmentToPlayers))]
-        public async Task<IActionResult> AssignSegmentToPlayers(IFormFile file, [FromBody] AssignSegmentToPlayersCommand command)
-            => Ok(await Mediator.Send(command with { File = file}));
+        public async Task<IActionResult> AssignSegmentToPlayers(IFormFile formFile, [FromForm] string segmentId)
+        {
+            try
+            {
+                await Mediator.Send(new AssignSegmentToPlayersCommand(segmentId, formFile));
+                return Ok(new { results = "File Uploaded Successfully To Database" });
+            }
+            catch (ValidationException ve)
+            {
+                return BadRequest(new { results = ve.Message });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = e.Message });
+            }
+        }
 
         [HttpPost(nameof(UnAssignPlayersToSegment))]
-        public async Task<IActionResult> UnAssignPlayersToSegment(IFormFile file, [FromBody] UnAssignPlayersToSegmentCommand command)
-            => Ok(await Mediator.Send(command with { File = file }));
+        public async Task<IActionResult> UnAssignPlayersToSegment(IFormFile formFile, [FromForm] string segmentId)
+        {
+            try
+            {
+                await Mediator.Send(new UnAssignPlayersToSegmentCommand(segmentId, formFile));
+                return Ok(new { results = "File Uploaded Successfully To Database" });
+            }
+            catch (ValidationException ve)
+            {
+                return BadRequest(new { results = ve.Message });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = e.Message });
+            }
+        }
 
         [HttpPost(nameof(BlockSegmentForPlayer))]
         public async Task<IActionResult> BlockSegmentForPlayer([FromBody] BlockSegmentForPlayerCommand command)
@@ -84,11 +113,39 @@ namespace OnAim.Admin.API.Controllers
             => Ok(await Mediator.Send(command));
 
         [HttpPost(nameof(BlockSegmentForPlayers))]
-        public async Task<IActionResult> BlockSegmentForPlayers(IFormFile file, [FromBody] BlockSegmentForPlayersCommand command)
-            => Ok(await Mediator.Send(command with { File = file }));
+        public async Task<IActionResult> BlockSegmentForPlayers(IFormFile formFile, [FromForm] string segmentId)
+        {
+            try
+            {
+                await Mediator.Send(new BlockSegmentForPlayersCommand(segmentId, formFile));
+                return Ok(new { results = "File Uploaded Successfully To Database" });
+            }
+            catch (ValidationException ve)
+            {
+                return BadRequest(new { results = ve.Message });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = e.Message });
+            }
+        }
 
         [HttpPost(nameof(UnBlockSegmentForPlayers))]
-        public async Task<IActionResult> UnBlockSegmentForPlayers(IFormFile file, [FromBody] UnBlockSegmentForPlayersCommand command)
-            => Ok(await Mediator.Send(command with { File = file }));
+        public async Task<IActionResult> UnBlockSegmentForPlayers(IFormFile formFile, [FromForm] string segmentId)
+        {
+            try
+            {
+                await Mediator.Send(new UnBlockSegmentForPlayersCommand(segmentId, formFile));
+                return Ok(new { results = "File Uploaded Successfully To Database" });
+            }
+            catch (ValidationException ve)
+            {
+                return BadRequest(new { results = ve.Message });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = e.Message });
+            }
+        }
     }
 }

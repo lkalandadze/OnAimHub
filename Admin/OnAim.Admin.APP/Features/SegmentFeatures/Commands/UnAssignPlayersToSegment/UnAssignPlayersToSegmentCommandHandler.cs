@@ -2,6 +2,7 @@
 using OnAim.Admin.APP.Shared.Clients;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using System.Net.Http.Headers;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnAssignPlayersToSegment
 {
@@ -20,21 +21,31 @@ namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnAssignPlayersToSeg
         {
             await ValidateAsync(request, cancellationToken);
 
-            var req = new
-            {
-                SegmentId = request.SegmentId,
-                File = request.File,
-                ByUserId = _context.SecurityContextAccessor.UserId
-            };
+            using var multipartContent = new MultipartFormDataContent();
 
-            var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}/Segment/{request.SegmentId}/UnassignPlayers", req);
-
-            if (result.IsSuccessStatusCode)
+            if (request.File != null)
             {
-                return new ApplicationResult { Success = true };
+                var fileContent = new StreamContent(request.File.OpenReadStream());
+                fileContent.Headers.ContentType = new MediaTypeHeaderValue(request.File.ContentType);
+                multipartContent.Add(fileContent, "file", request.File.FileName);
             }
 
-            throw new BadRequestException("Failed to unassign segment for players");
+            multipartContent.Add(new StringContent(request.SegmentId), "SegmentId");
+            multipartContent.Add(new StringContent(_context.SecurityContextAccessor.UserId.ToString()), "ByUserId");
+
+            var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Segment/{request.SegmentId}/UnassignPlayers", multipartContent);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HubAPIRequestFailedException($"Failed to unassign players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
+            }
+
+            return new ApplicationResult
+            {
+                Success = true,
+                Data = await response.Content.ReadAsStringAsync(),
+            };
         }
     }
 }

@@ -8,7 +8,7 @@ namespace OnAim.Admin.Domain.HubEntities
 		public Boolean IsBulk { get; set; }
 		public Nullable<Int32> ActionId { get; set; }
 		public PlayerSegmentActType Action { get; set; }
-		public String SegmentId { get; set; }
+		public string SegmentId { get; set; }
 		public Segment Segment { get; set; }
 	}
 }
