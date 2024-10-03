@@ -5,10 +5,6 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class AllowedEmailDomain : BaseEntity
 {
-    public string Domain { get; set; }
-    public int? CreatedBy { get; set; }
-    public bool IsDeleted { get; set; }
-
     public AllowedEmailDomain(string domain, int? createdBy)
     {
         Domain = domain;
@@ -18,10 +14,7 @@ public class AllowedEmailDomain : BaseEntity
         IsActive = true;
     }
 
-    public void Update(string domain, bool isActive)
-    {
-        Domain = domain;
-        IsActive = isActive;
-        DateUpdated = SystemDate.Now;
-    }
+    public string Domain { get; set; }
+    public int? CreatedBy { get; set; }
+    public bool IsDeleted { get; set; }
 }

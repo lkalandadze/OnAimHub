@@ -8,9 +8,9 @@ namespace OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetLeaderBoardResultBy
 
 public class GetLeaderBoardResultByPlayerIdQueryHandler : IQueryHandler<GetLeaderBoardResultByPlayerIdQuery, ApplicationResult>
 {
-    private readonly IReadOnlyRepository<LeaderboardResult> _readOnlyRepository;
+    private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _readOnlyRepository;
 
-    public GetLeaderBoardResultByPlayerIdQueryHandler(IReadOnlyRepository<LeaderboardResult> readOnlyRepository)
+    public GetLeaderBoardResultByPlayerIdQueryHandler(ILeaderBoardReadOnlyRepository<LeaderboardResult> readOnlyRepository)
     {
         _readOnlyRepository = readOnlyRepository;
     }

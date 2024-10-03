@@ -5,9 +5,6 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class AppSetting : BaseEntity
 {
-    public string Key { get; set; }
-    public string Value { get; set; }
-
     public AppSetting(string key, string value)
     {
         Key = key;
@@ -15,4 +12,8 @@ public class AppSetting : BaseEntity
         DateCreated = SystemDate.Now;
         IsActive = true;
     }
+
+    public string Key { get; set; }
+    public string Value { get; set; }
+
 }

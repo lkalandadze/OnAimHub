@@ -24,8 +24,8 @@ public class EndpointController : ApiControllerBase
         => Ok(await Mediator.Send(new UpdateEndpointCommand { Id = id, Endpoint = model }));
 
     [HttpGet(nameof(GetAll))]
-    public async Task<IActionResult> GetAll([FromQuery] EndpointFilter roleFilter)
-        => Ok(await Mediator.Send(new GetAllEndpointQuery(roleFilter)));
+    public async Task<IActionResult> GetAll([FromQuery] EndpointFilter filter)
+        => Ok(await Mediator.Send(new GetAllEndpointQuery(filter)));
 
     [HttpGet(nameof(Get) + "/{id}")]
     public async Task<IActionResult> Get([FromRoute] int id)

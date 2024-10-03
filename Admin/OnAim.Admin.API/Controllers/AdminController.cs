@@ -35,7 +35,7 @@ public class AdminController : ApiControllerBase
     }
 
     [HttpGet(nameof(GetAllDomain))]
-    public async Task<IActionResult> GetAllDomain([FromRoute] DomainFilter filter)
+    public async Task<IActionResult> GetAllDomain([FromQuery] DomainFilter filter)
         => Ok(await Mediator.Send(new GetAllDomainQuery(filter)));
 
     [HttpPost(nameof(InsertDomain))]

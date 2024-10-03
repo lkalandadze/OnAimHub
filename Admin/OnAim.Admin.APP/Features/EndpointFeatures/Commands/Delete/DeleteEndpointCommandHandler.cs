@@ -30,7 +30,7 @@ public class DeleteEndpointCommandHandler : BaseCommandHandler<DeleteEndpointCom
         foreach ( var endpoint in endpoints )
         {
             endpoint.IsActive = false;
-            endpoint.MarkAsDeleted();
+            endpoint.IsDeleted = true;
         }
 
         await _repository.CommitChanges();

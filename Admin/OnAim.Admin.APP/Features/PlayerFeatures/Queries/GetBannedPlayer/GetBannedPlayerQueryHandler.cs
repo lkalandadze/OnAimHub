@@ -16,12 +16,12 @@ public class GetBannedPlayerQueryHandler : IQueryHandler<GetBannedPlayerQuery, A
     }
     public async Task<ApplicationResult> Handle(GetBannedPlayerQuery request, CancellationToken cancellationToken)
     {
-        var palyer = await _readOnlyRepository.Query(x => x.PlayerId == request.PlayerId).FirstOrDefaultAsync();
+        var palyer = await _readOnlyRepository.Query(x => x.Id == request.Id).FirstOrDefaultAsync();
 
         return new ApplicationResult
         {
             Success = true,
-            Data = palyer != null,
+            Data = palyer ?? null,
         };
     }
 }

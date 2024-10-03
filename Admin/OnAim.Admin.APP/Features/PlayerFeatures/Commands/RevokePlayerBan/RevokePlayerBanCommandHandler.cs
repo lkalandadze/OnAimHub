@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Shared.Clients;
+using OnAim.Admin.APP.Services.ClientService;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 
@@ -24,7 +24,7 @@ public class RevokePlayerBanCommandHandler : BaseCommandHandler<RevokePlayerBanC
     {
         await ValidateAsync(request, cancellationToken);
 
-        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}/Player/RevokePlayerBan", request);
+        var result = await _hubApiClient.PutAsJson($"{_options.Endpoint}Player/RevokePlayerBan", request);
 
         if (result.IsSuccessStatusCode)
         {

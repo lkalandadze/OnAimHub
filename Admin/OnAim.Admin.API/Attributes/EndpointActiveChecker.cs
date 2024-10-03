@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using OnAim.Admin.Infrasturcture.Persistance.Data;
 using Endpoint = OnAim.Admin.Domain.Entities.Endpoint;
 using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 
 namespace OnAim.Admin.API.Attributes
 {

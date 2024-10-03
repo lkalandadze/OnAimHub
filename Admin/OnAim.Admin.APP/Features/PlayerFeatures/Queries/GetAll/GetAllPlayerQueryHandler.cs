@@ -37,14 +37,29 @@ public class GetAllPlayerQueryHandler : IQueryHandler<GetAllPlayerQuery, Applica
         var pageNumber = request.Filter.PageNumber ?? 1;
         var pageSize = request.Filter.PageSize ?? 25;
 
+        bool sortDescending = request.Filter.SortDescending.GetValueOrDefault();
+
+        if (request.Filter.SortBy == "playerId" || request.Filter.SortBy == "PlayerId")
+        {
+            palyers = sortDescending
+                ? palyers.OrderByDescending(x => x.Id)
+                : palyers.OrderBy(x => x.Id);
+        }
+        else if (request.Filter.SortBy == "playerName" || request.Filter.SortBy == "PlayerName")
+        {
+            palyers = sortDescending
+                ? palyers.OrderByDescending(x => x.UserName)
+                : palyers.OrderBy(x => x.UserName);
+        }
+
         var res = palyers
             .Select(x => new PlayerListDto
             {
-                Id = x.Id,
+                PlayerId = x.Id,
                 PlayerName = x.UserName ?? null,
                 RegistrationDate = null,
                 LastVisit = null,
-                Segment = x.PlayerSegments.Select(x => x.Segment.Description).FirstOrDefault(),
+                Segment = x.PlayerSegments.Select(x => x.Segment.Id).FirstOrDefault(),
                 Status = null,
             })
             .Skip((pageNumber - 1) * pageSize)

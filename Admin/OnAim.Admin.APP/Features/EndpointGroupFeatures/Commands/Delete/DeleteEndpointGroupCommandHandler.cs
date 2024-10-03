@@ -26,7 +26,7 @@ public class DeleteEndpointGroupCommandHandler : BaseCommandHandler<DeleteEndpoi
         foreach ( var group in groups)
         {
             group.IsActive = false;
-            group.MarkAsDeleted();
+            group.IsDeleted = true;
         }
 
         await _repository.CommitChanges();

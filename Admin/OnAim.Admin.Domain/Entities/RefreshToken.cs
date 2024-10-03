@@ -5,12 +5,6 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class RefreshToken : BaseEntity
 {
-    public int UserId { get; set; }
-    public string Token { get; set; }
-    public DateTime Expiration { get; set; }
-    public bool IsRevoked { get; set; }
-    public User User { get; set; }
-
     public RefreshToken(int userId, string token, DateTime expiration, bool isRevoked)
     {
         UserId = userId;
@@ -20,4 +14,10 @@ public class RefreshToken : BaseEntity
         DateCreated = SystemDate.Now;
         IsActive = true;
     }
+
+    public int UserId { get; set; }
+    public string Token { get; set; }
+    public DateTime Expiration { get; set; }
+    public bool IsRevoked { get; set; }
+    public User User { get; set; }
 }

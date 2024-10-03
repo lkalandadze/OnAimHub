@@ -21,6 +21,7 @@ public class GetBannedPlayersQueryHandler : IQueryHandler<GetBannedPlayersQuery,
 
         var result = banned.Select(x => new BannedPlayerListDto
         {
+            Id = x.Id,
             PlayerId = x.PlayerId,
             PlayerName = x.Player.UserName,
             Description = x.Description,

@@ -2,6 +2,7 @@
 {
     public class BannedPlayerListDto
     {
+        public int Id { get; set; }
         public int PlayerId { get; set; }
         public string PlayerName { get; set; }
         public DateTimeOffset DateBanned { get; set; }

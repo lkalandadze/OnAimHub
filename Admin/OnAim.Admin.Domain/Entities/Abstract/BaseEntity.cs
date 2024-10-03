@@ -12,11 +12,4 @@ public abstract class BaseEntity
     public DateTimeOffset DateCreated { get; set; }
     public DateTimeOffset DateUpdated { get; set; }
     public DateTimeOffset DateDeleted { get; set; }
-
-    public void MarkAsDeleted()
-    {
-        IsDeleted = true;
-        IsActive = false;
-        DateDeleted = SystemDate.Now;
-    }
 }

@@ -1,5 +1,5 @@
 ﻿using Nito.AsyncEx;
-using OnAim.Admin.Shared.DTOs;
+using OnAim.Admin.Shared.ApplicationInfrastructure.Validation;
 using System.Net.Http.Json;
 
 namespace OnAim.Admin.Domain.Exceptions;

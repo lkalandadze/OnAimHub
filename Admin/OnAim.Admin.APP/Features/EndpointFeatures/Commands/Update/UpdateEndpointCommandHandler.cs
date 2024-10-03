@@ -23,7 +23,8 @@ public sealed class UpdateEndpointCommandHandler : BaseCommandHandler<UpdateEndp
         if (ep == null || ep?.IsDeleted == true)
             throw new NotFoundException("Permission Not Found");
 
-        ep.Update(request.Endpoint.Description, request.Endpoint.IsActive ?? true);
+        ep.Description = request.Endpoint.Description;
+        ep.IsActive = request.Endpoint.IsActive ?? true;
 
         await _repository.CommitChanges();
 

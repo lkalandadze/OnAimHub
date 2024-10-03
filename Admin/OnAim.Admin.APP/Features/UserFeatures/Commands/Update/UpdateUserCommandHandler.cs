@@ -29,7 +29,10 @@ public class UpdateUserCommandHandler : BaseCommandHandler<UpdateUserCommand, Ap
         if (existingUser == null)
             throw new NotFoundException("User not found");           
 
-        existingUser.UpdateUserDetails(request.Model.FirstName, request.Model.LastName, request.Model.Phone, request.Model.IsActive);
+        existingUser.FirstName = request.Model.FirstName;
+        existingUser.LastName = request.Model.LastName;
+        existingUser.Phone = request.Model.Phone;
+        existingUser.IsActive = request.Model.IsActive ?? true;
 
         var currentRoles = await _userRoleRepository.Query(ur => ur.UserId == request.Id).ToListAsync();
 

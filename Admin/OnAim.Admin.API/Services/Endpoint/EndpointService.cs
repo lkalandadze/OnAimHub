@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Infrasturcture.Persistance.Data;
 using OnAim.Admin.Shared.Models;
+using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 
 namespace OnAim.Admin.API.Service.Endpoint;
 
