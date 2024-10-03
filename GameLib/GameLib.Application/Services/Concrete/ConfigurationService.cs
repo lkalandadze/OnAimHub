@@ -3,6 +3,7 @@ using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
 using GameLib.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameLib.Application.Services.Concrete;
 
@@ -21,15 +22,12 @@ public class ConfigurationService : IConfigurationService
 
     public async Task<IEnumerable<ConfigurationGetModel>> GetAllAsync()
     {
-        var configurations = await _configurationRepository.QueryAsync();
+        var configurations = await _configurationRepository.Query()
+                                                           .Include(c => c.Segments)
+                                                           .Where(c => c.Segments.Any(s => !s.IsDeleted))
+                                                           .ToListAsync();
 
-        return configurations.Select(c => new ConfigurationGetModel
-        {
-            Id = c.Id,
-            Name = c.Name,
-            Value = c.Value,
-            IsActive = c.IsActive,
-        });
+        return configurations.Select(c => ConfigurationGetModel.MapFrom(c));
     }
 
     public async Task<ConfigurationGetModel> GetByIdAsync(int id)
@@ -41,13 +39,7 @@ public class ConfigurationService : IConfigurationService
             throw new KeyNotFoundException($"Configuration not found for Id: {id}");
         }
 
-        return new ConfigurationGetModel
-        {
-            Id = configuration.Id,
-            Name = configuration.Name,
-            Value = configuration.Value,
-            IsActive = configuration.IsActive,
-        };
+        return ConfigurationGetModel.MapFrom(configuration);
     }
 
     public async Task CreateAsync(ConfigurationCreateModel model)

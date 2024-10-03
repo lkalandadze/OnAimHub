@@ -7,13 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\GameLib\GameLib.Application\GameLib.Application.csproj" />
-    <ProjectReference Include="..\..\..\Shared\Shared.Lib\Shared.Lib.csproj" />
-    <ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
+    <Compile Remove="Features\**" />
+    <EmbeddedResource Remove="Features\**" />
+    <None Remove="Features\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\WheelFeatures\" />
+    <ProjectReference Include="..\..\..\GameLib\GameLib.Application\GameLib.Application.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Shared.Lib\Shared.Lib.csproj" />
+    <ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -14,24 +14,6 @@ public class ConfigurationController : BaseApiController
         _configurationService = configurationService;
     }
 
-    [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<IEnumerable<ConfigurationGetModel>>> GetAllAsync()
-    {
-        return Ok(await _configurationService.GetAllAsync());
-    }
-
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<ConfigurationGetModel>> GetByIdAsync(int id)
-    {
-        return Ok(await _configurationService.GetByIdAsync(id));
-    }
-
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
