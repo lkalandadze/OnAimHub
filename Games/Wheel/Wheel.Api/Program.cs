@@ -1,9 +1,10 @@
 using GameLib.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Wheel.Api;
 using Wheel.Infrastructure.DataAccess;
 
+CreateDatabaseIfNotExists();
 var host = CreateHostBuilder(args).Build();
-CreateDatabaseIfNotExists(host);
 host.Run();
 
 static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -17,14 +18,20 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
             webBuilder.UseStartup<Startup>();
         });
 
-static void CreateDatabaseIfNotExists(IHost host)
+static void CreateDatabaseIfNotExists()
 {
-    using (var scope = host.Services.CreateScope())
-    {
-        var services = scope.ServiceProvider;
-        var dbContext = services.GetRequiredService<WheelConfigDbContext>();
-        dbContext.Database.EnsureCreated();
+    var configuration = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json")
+        .Build();
 
-        _ = new DbInitializer(scope);
-    }
+    string connectionString = configuration.GetConnectionString("GameConfig")!;
+
+    var optionsBuilder = new DbContextOptionsBuilder<WheelConfigDbContext>();
+    optionsBuilder.UseNpgsql(connectionString);
+
+    var dbContext = new WheelConfigDbContext(optionsBuilder.Options);
+    dbContext.Database.EnsureCreated();
+
+    _ = new DbInitializer(dbContext);
 }

@@ -49,7 +49,7 @@ public class ConsulHostedService : IHostedService
                 Name = _consulConfig.ServiceName,
                 Address = uri.Host,
                 Port = _consulConfig.ServicePort,
-                Tags = new[] { "wheelapi" }
+                Tags = new[] { "WheelApi" }
             };
 
             _logger.LogInformation("Registering with Consul");

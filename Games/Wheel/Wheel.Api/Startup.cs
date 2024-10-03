@@ -104,8 +104,9 @@ public class Startup
                 ID = serviceId,
                 Name = "wheelapi",
                 Address = "wheelapi",
+
                 Port = 8080,
-                Tags = new[] { "Game", "Back" },
+                Tags = ["Game", "Back"],
                 Meta = new Dictionary<string, string>
                 {
                     { "GameData", serializedGameData }

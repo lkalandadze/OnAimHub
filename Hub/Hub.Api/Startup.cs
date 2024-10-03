@@ -81,6 +81,7 @@ public class Startup
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
+        services.Configure<GameApiConfiguration>(Configuration.GetSection("GameApiConfiguration"));
 
         services.AddHangfire(config =>
             config.UsePostgreSqlStorage(Configuration.GetConnectionString("OnAimHub")));
