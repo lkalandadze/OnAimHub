@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Shared.Clients;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using System.Net.Http;
 using System;
 using System.Net.Http.Headers;
+using OnAim.Admin.APP.Services.ClientService;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.AssignPlayersToSegment;
 

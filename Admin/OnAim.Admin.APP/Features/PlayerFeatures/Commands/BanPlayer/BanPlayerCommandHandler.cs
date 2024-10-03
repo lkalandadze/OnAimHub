@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Shared.Clients;
+using OnAim.Admin.APP.Services.ClientService;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 

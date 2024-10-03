@@ -1,4 +1,4 @@
-﻿namespace OnAim.Admin.APP.Shared.Clients;
+﻿namespace OnAim.Admin.APP.Services.ClientService;
 
 public class PolicyOptions : ICircuitBreakerPolicyOptions, IRetryPolicyOptions, ITimeoutPolicyOptions
 {

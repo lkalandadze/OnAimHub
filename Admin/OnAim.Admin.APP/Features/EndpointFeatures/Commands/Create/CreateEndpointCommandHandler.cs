@@ -11,10 +11,7 @@ public class CreateEndpointCommandHandler : BaseCommandHandler<CreateEndpointCom
 {
     private readonly IRepository<Endpoint> _repository;
 
-    public CreateEndpointCommandHandler(
-        CommandContext<CreateEndpointCommand> context,
-        IRepository<Endpoint> repository)
-        : base(context)
+    public CreateEndpointCommandHandler(CommandContext<CreateEndpointCommand> context,IRepository<Endpoint> repository): base(context)
     {
         _repository = repository;
     }
@@ -54,7 +51,7 @@ public class CreateEndpointCommandHandler : BaseCommandHandler<CreateEndpointCom
         return new ApplicationResult
         {
             Success = true,
-            Data = string.Join(", ", results),
+            Data = string.Join(", ", results.Select(x => x.Name)),
         };
     }
 }

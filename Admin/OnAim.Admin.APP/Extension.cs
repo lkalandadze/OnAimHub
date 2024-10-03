@@ -20,10 +20,10 @@ using OnAim.Admin.Infrasturcture.Repositories;
 using OnAim.Admin.APP.Services.SettingServices;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
 using Microsoft.AspNetCore.Http;
-using OnAim.Admin.APP.Shared.Clients;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using OnAim.Admin.APP.Services.ClientService;
 
 
 namespace OnAim.Admin.APP;

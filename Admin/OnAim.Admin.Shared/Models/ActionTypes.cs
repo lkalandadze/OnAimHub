@@ -12,7 +12,7 @@ public static class ActionTypes
 
 public static class EntityNames
 {
-    public const string User = "User";
+    public const string User = "Users";
     public const string Endpoint = "Endpoint";
     public const string EndpointGroup = "EndpointGroup";
     public const string Role = "Role";

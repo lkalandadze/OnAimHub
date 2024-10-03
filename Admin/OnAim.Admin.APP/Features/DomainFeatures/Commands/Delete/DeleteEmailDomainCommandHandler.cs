@@ -29,7 +29,7 @@ public class DeleteEmailDomainCommandHandler : BaseCommandHandler<DeleteEmailDom
         foreach (var domain in domains)
         {
             domain.IsActive = false;
-            domain.MarkAsDeleted();
+            domain.IsDeleted = true;
         }
 
         await _repository.CommitChanges();

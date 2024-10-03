@@ -29,11 +29,4 @@ public class Endpoint : BaseEntity
     public EndpointType? Type { get; set; }
     public string Description { get; set; }
     public List<EndpointGroupEndpoint> EndpointGroupEndpoints { get; set; }
-
-    public void Update(string description, bool isActive)
-    {
-        Description = description;
-        IsActive = isActive;
-        DateUpdated = SystemDate.Now;
-    }
 }

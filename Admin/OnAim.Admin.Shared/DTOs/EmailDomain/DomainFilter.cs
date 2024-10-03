@@ -4,7 +4,7 @@ using OnAim.Admin.Shared.Enums;
 namespace OnAim.Admin.Shared.DTOs.EmailDomain;
 
 public record DomainFilter(
-    string domain, 
+    string? domain, 
     bool? IsActive,
     HistoryStatus? HistoryStatus
     ) : BaseFilter;

@@ -46,6 +46,8 @@ public class GetAllDomainQueryHandler : IQueryHandler<GetAllDomainQuery, Applica
             {
                Id = domain.Id,
                Domain = domain.Domain,
+               IsActive = domain.IsActive,
+               IsDeleted = domain.IsDeleted,
             },
             cancellationToken
         );

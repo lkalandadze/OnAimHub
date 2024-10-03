@@ -26,8 +26,9 @@ public class UserProfileUpdateCommandHandler : BaseCommandHandler<UserProfileUpd
         if (user == null)
             throw new NotFoundException("User Not Found");
 
-        user.UpdateUserDetails(request.profileUpdateRequest.FirstName, request.profileUpdateRequest.LastName, request.profileUpdateRequest.Phone, request.profileUpdateRequest.IsActive );
-
+        user.FirstName = request.profileUpdateRequest.FirstName;
+        user.LastName = request.profileUpdateRequest.LastName;
+        user.Phone = request.profileUpdateRequest.Phone;
         await _repository.CommitChanges();
 
         return new ApplicationResult { Success = true };
