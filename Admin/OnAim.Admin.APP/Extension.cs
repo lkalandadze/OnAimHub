@@ -47,12 +47,21 @@ public static class Extension
             .AddTransient<IJwtFactory, JwtFactory>()
             .AddHostedService<TokenCleanupService>()
             .Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"))
-            .AddTransient<IEmailService, EmailService>()
+            //.AddTransient<IEmailService, EmailService>()
+            //.AddTransient<IEmailService, MailgunService>()
             .AddScoped<IDomainValidationService, DomainValidationService>()
             .AddScoped<IAppSettingsService, AppSettingsService>()
             .AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>))
             .AddScoped(typeof(CommandContext<>), typeof(CommandContext<>))
             .AddHtmlGenerator();
+
+        services.Configure<PostmarkOptions>(configuration.GetSection("Postmark"));
+
+        services.AddTransient<IEmailService>(sp =>
+        {
+            var options = sp.GetRequiredService<IOptions<PostmarkOptions>>().Value;
+            return new PostmarkService(options.ApiKey);
+        });
 
         if (configureOptions is { })
         {
@@ -81,7 +90,15 @@ public static class Extension
 
     
 }
-
+public class PostmarkOptions
+{
+    public string ApiKey { get; set; }
+}
+public class MailgunOptions
+{
+    public string ApiKey { get; set; }
+    public string Domain { get; set; }
+}
 public static partial class WebApplicationBuilderExtensions
 {
     public static WebApplicationBuilder AddCustomHttpClients(this WebApplicationBuilder builder)

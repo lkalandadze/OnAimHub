@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Infrasturcture.Persistance.Data;
+using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 
 namespace OnAim.Admin.API.Extensions;
 

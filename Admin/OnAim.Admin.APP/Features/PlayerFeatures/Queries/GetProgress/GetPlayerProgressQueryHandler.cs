@@ -21,8 +21,8 @@ public class GetPlayerProgressQueryHandler : IQueryHandler<GetPlayerProgressQuer
 
         var result = new PlayerProgressDto
         {
-            DailyProgress = progress.Progress,
-            TotalProgress = progress.Progress
+            DailyProgress = progress?.Progress ?? 0,
+            TotalProgress = progress?.Progress ?? 0
         };
 
         return new ApplicationResult

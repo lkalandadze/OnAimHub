@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.Interfaces;
-using OnAim.Admin.Infrasturcture.Persistance.Data;
+using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 using OnAim.Admin.Shared.DTOs.Endpoint;
 using OnAim.Admin.Shared.DTOs.EndpointGroup;
 using OnAim.Admin.Shared.DTOs.Role;

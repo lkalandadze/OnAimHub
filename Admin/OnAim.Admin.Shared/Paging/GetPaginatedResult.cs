@@ -60,6 +60,18 @@ public class Paginator
             case "name":
                 property = Expression.Property(parameter, "Name");
                 break;
+            case "status":
+                property = Expression.Property(parameter, "Status");
+                break;
+            case "title":
+                property = Expression.Property(parameter, "Title");
+                break;
+            case "playerId":
+                property = Expression.Property(parameter, "PlayerId");
+                break;
+            case "playerName":
+                property = Expression.Property(parameter, "PlayerName");
+                break;
             default:
                 property = Expression.Property(parameter, "Id");
                 break;

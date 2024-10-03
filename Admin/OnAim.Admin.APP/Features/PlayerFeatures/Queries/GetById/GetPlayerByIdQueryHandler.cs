@@ -75,7 +75,7 @@ public class GetPlayerByIdQueryHandler : IQueryHandler<GetPlayerByIdQuery, Appli
         if (referee != null)
             refPlayer = await _playerRepository.Query(x => x.ReferrerId == referee.ReferrerId).FirstOrDefaultAsync(cancellationToken);
 
-        var logs = await _playerLogRepository.Query(x => x.PlayerId == player.Id).ToListAsync(cancellationToken);
+        var logs = await _playerLogRepository.Query(x => x.PlayerId == player.Id).Include(x => x.PlayerLogType).ToListAsync(cancellationToken);
 
         var result = new PlayerDto
         {

@@ -19,7 +19,7 @@ public class BanPlayerCommandHandler : BaseCommandHandler<BanPlayerCommand, Appl
     {
         await ValidateAsync(request, cancellationToken);
 
-        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}/Player/BanPlayer", request);
+        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Player/BanPlayer", request);
 
         if (result.IsSuccessStatusCode)
         {

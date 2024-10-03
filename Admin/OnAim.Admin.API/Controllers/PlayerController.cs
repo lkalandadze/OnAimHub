@@ -4,6 +4,7 @@ using OnAim.Admin.APP.Features.PlayerFeatures.Commands.BanPlayer;
 using OnAim.Admin.APP.Features.PlayerFeatures.Commands.RevokePlayerBan;
 using OnAim.Admin.APP.Features.PlayerFeatures.Commands.UpdatePlayerBan;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetAll;
+using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBalance;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBannedPlayer;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBannedPlayers;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetById;
@@ -25,7 +26,7 @@ public class PlayerController : ApiControllerBase
 
     [HttpGet(nameof(GetPlayerBalance) + "/{id}")]
     public async Task<IActionResult> GetPlayerBalance([FromRoute] int id)
-        => Ok(await Mediator.Send(new GetPlayerByIdQuery(id)));
+        => Ok(await Mediator.Send(new GetPlayerBalanceQuery(id)));
 
     [HttpGet(nameof(GetPlayerProgress) + "/{id}")]
     public async Task<IActionResult> GetPlayerProgress([FromRoute] int id)

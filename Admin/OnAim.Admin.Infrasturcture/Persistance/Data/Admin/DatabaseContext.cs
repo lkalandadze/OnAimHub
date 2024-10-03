@@ -4,7 +4,7 @@ using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Domain.Interfaces;
 using System.Data;
 
-namespace OnAim.Admin.Infrasturcture.Persistance.Data;
+namespace OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 
 public class DatabaseContext : DbContext, IUnitOfWork
 {
