@@ -62,6 +62,13 @@ public static class Extension
             var options = sp.GetRequiredService<IOptions<PostmarkOptions>>().Value;
             return new PostmarkService(options.ApiKey);
         });
+        //services.Configure<MailgunOptions>(configuration.GetSection("Postmark"));
+
+        //services.AddTransient<IEmailService>(sp =>
+        //{
+        //    var options = sp.GetRequiredService<IOptions<MailgunOptions>>().Value;
+        //    return new MailgunService(options.ApiKey, options.Domain);
+        //});
 
         if (configureOptions is { })
         {

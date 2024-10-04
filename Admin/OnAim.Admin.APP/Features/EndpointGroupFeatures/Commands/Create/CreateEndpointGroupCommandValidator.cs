@@ -7,7 +7,7 @@ public class CreateEndpointGroupCommandValidator : AbstractValidator<CreateEndpo
     public CreateEndpointGroupCommandValidator()
     {
         RuleFor(x => x.Model.Name)
-            .NotEmpty()
-            .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
+                .NotEmpty()
+                .Matches(@"^[a-zA-Z\s]+$").WithMessage("Name should only contain letters and spaces, no numbers or symbols.");
     }
 }

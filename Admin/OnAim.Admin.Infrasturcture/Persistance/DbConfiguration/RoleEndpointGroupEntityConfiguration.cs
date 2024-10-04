@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnAim.Admin.Domain.Entities;
-namespace OnAim.Admin.Infrasturcture.Persistance.Data.DbConfiguration;
+namespace OnAim.Admin.Infrasturcture.Persistance.DbConfiguration;
 
 public class RoleEndpointGroupEntityConfiguration : IEntityTypeConfiguration<RoleEndpointGroup>
 {

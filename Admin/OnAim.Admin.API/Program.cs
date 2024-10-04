@@ -57,7 +57,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-    app.ApplyMigrations();
+app.ApplyMigrations();
 
 app.UseCors("MyPolicy");
 app.UseHttpsRedirection();
@@ -66,7 +66,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<PermissionMiddleware>();
-//app.UseMiddleware<RequestHandlerMiddleware>();
+app.UseMiddleware<RequestHandlerMiddleware>();
 
 app.MapControllers();
 

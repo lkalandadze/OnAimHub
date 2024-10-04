@@ -24,11 +24,16 @@ public class CreateEndpointGroupCommandHandler : BaseCommandHandler<CreateEndpoi
     {
         await ValidateAsync(request, cancellationToken);
 
-        var existedGroupName = await _repository.Query(x => x.Name == request.Model.Name).FirstOrDefaultAsync();
+        var existedGroupName = await _repository.Query(x => x.Name == request.Model.Name.ToLower()).FirstOrDefaultAsync();
 
-        if (existedGroupName == null)
+        if (existedGroupName == null || existedGroupName?.IsDeleted == true)
         {
-            var endpointGroup = EndpointGroup.Create(request.Model.Name, request.Model.Description, _context.SecurityContextAccessor.UserId, new List<EndpointGroupEndpoint>());
+            var endpointGroup = EndpointGroup.Create(
+                request.Model.Name.ToLower(), 
+                request.Model.Description, 
+                _context.SecurityContextAccessor.UserId,
+                new List<EndpointGroupEndpoint>()
+                );
 
             foreach (var endpointId in request.Model.EndpointIds)
             {

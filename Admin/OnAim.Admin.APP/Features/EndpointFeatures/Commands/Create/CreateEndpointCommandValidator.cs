@@ -10,7 +10,7 @@ public class CreateEndpointCommandValidator : AbstractValidator<CreateEndpointCo
         {
             endpoint.RuleFor(x => x.Name)
                 .NotEmpty()
-                .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
+                .Matches(@"^[a-zA-Z\s]+$").WithMessage("Name should only contain letters and spaces, no numbers or symbols.");
 
             endpoint.RuleFor(x => x.Description)
                 .NotEmpty();

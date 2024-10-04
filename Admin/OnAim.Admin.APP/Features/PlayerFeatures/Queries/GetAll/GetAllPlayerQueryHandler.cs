@@ -18,7 +18,7 @@ public class GetAllPlayerQueryHandler : IQueryHandler<GetAllPlayerQuery, Applica
     public async Task<ApplicationResult> Handle(GetAllPlayerQuery request, CancellationToken cancellationToken)
     {
         var palyers = _readOnlyRepository.Query(x =>
-                        string.IsNullOrEmpty(request.Filter.Name) || x.UserName.Contains(request.Filter.Name));
+                        string.IsNullOrEmpty(request.Filter.Name) || x.UserName.ToLower().Contains(request.Filter.Name.ToLower()));
 
         //if(request.Filter.Status != null)
         //    palyers.Select(x => x.Status == request.Filter.Status);

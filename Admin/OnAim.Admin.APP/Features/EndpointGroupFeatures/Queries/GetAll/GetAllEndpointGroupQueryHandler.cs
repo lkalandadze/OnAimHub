@@ -20,7 +20,7 @@ public class GetAllEndpointGroupQueryHandler : IQueryHandler<GetAllEndpointGroup
     public async Task<ApplicationResult> Handle(GetAllEndpointGroupQuery request, CancellationToken cancellationToken)
     {
         var query = _repository.Query(x =>
-                     (string.IsNullOrEmpty(request.Filter.Name) || x.Name.Contains(request.Filter.Name)) &&
+                     (string.IsNullOrEmpty(request.Filter.Name) || x.Name.ToLower().Contains(request.Filter.Name.ToLower())) &&
                      (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value)
             );
 

@@ -9,6 +9,6 @@ public class UpdateEndpointGroupCommandValidator : AbstractValidator<UpdateEndpo
         RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.model.Name)
             .NotEmpty()
-            .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
+            .Matches(@"^[a-zA-Z\s]+$").WithMessage("Name should only contain letters and spaces, no numbers or symbols.");
     }
 }

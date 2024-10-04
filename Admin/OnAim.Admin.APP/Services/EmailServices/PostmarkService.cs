@@ -1,63 +1,62 @@
 ﻿using OnAim.Admin.APP.Services.Abstract;
 using PostmarkDotNet;
 
-namespace OnAim.Admin.APP.Services.Email
+namespace OnAim.Admin.APP.Services.Email;
+
+public class PostmarkService : IEmailService
 {
-    public class PostmarkService : IEmailService
+    private readonly string _apiKey;
+
+    public PostmarkService(string apiKey)
     {
-        private readonly string _apiKey;
+        _apiKey = apiKey;
+    }
 
-        public PostmarkService(string apiKey)
+    public async Task SendActivationEmailAsync(string recipientEmail, string subject, string htmlBody)
+    {
+        var client = new PostmarkClient(_apiKey);
+
+        var message = new PostmarkMessage
         {
-            _apiKey = apiKey;
+            From = "gokropiridze@onaim.io",
+            To = recipientEmail,
+            Subject = subject,
+            HtmlBody = htmlBody
+        };
+
+        var result = await client.SendMessageAsync(message);
+
+        if (result.Status != PostmarkStatus.Success)
+        {
+            Console.WriteLine($"Error: {result.Message}");
         }
-
-        public async Task SendActivationEmailAsync(string recipientEmail, string subject, string htmlBody)
+        else
         {
-            var client = new PostmarkClient(_apiKey);
-
-            var message = new PostmarkMessage
-            {
-                From = "gokropiridze@onaim.io",
-                To = recipientEmail,
-                Subject = subject,
-                HtmlBody = htmlBody
-            };
-
-            var result = await client.SendMessageAsync(message);
-
-            if (result.Status != PostmarkStatus.Success)
-            {
-                Console.WriteLine($"Error: {result.Message}");
-            }
-            else
-            {
-                Console.WriteLine("Email sent successfully!");
-            }
+            Console.WriteLine("Email sent successfully!");
         }
+    }
 
-        public async Task SendEmailAsync(string toEmail, string subject, string body)
+    public async Task SendEmailAsync(string toEmail, string subject, string body)
+    {
+        var client = new PostmarkClient(_apiKey);
+
+        var message = new PostmarkMessage
         {
-            var client = new PostmarkClient(_apiKey);
+            From = "gokropiridze@onaim.io", // Your Postmark sender email
+            To = toEmail,
+            Subject = subject,
+            TextBody = body
+        };
 
-            var message = new PostmarkMessage
-            {
-                From = "gokropiridze@onaim.io", // Your Postmark sender email
-                To = toEmail,
-                Subject = subject,
-                TextBody = body
-            };
+        var result = await client.SendMessageAsync(message);
 
-            var result = await client.SendMessageAsync(message);
-
-            if (result.Status != PostmarkStatus.Success)
-            {
-                Console.WriteLine($"Error: {result.Message}");
-            }
-            else
-            {
-                Console.WriteLine("Email sent successfully!");
-            }
+        if (result.Status != PostmarkStatus.Success)
+        {
+            Console.WriteLine($"Error: {result.Message}");
+        }
+        else
+        {
+            Console.WriteLine("Email sent successfully!");
         }
     }
 }

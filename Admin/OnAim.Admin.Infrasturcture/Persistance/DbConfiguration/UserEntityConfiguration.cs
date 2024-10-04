@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.Entities;
 
-namespace OnAim.Admin.Infrasturcture.Persistance.Data.DbConfiguration;
+namespace OnAim.Admin.Infrasturcture.Persistance.DbConfiguration;
 
 public class UserEntityConfiguration : IEntityTypeConfiguration<User>
 {

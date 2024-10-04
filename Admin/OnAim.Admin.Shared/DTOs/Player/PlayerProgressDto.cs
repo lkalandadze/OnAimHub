@@ -1,8 +1,7 @@
-﻿namespace OnAim.Admin.Shared.DTOs.Player
+﻿namespace OnAim.Admin.Shared.DTOs.Player;
+
+public class PlayerProgressDto
 {
-    public class PlayerProgressDto
-    {
-        public decimal TotalProgress { get; set; }
-        public decimal DailyProgress { get; set; }
-    }
+    public decimal TotalProgress { get; set; }
+    public decimal DailyProgress { get; set; }
 }

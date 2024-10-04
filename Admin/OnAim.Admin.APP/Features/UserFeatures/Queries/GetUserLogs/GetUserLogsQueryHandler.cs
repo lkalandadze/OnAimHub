@@ -5,6 +5,7 @@ using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.DTOs.AuditLog;
 using OnAim.Admin.Shared.Paging;
+using System.Linq.Dynamic.Core;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Queries.GetUserLogs;
 
@@ -43,6 +44,11 @@ public class GetUserLogsQueryHandler : IQueryHandler<GetUserLogsQuery, Applicati
         var pageNumber = request.Filter.PageNumber ?? 1;
         var pageSize = request.Filter.PageSize ?? 25;
 
+        var sortBy = request.Filter.SortBy ?? "id";
+        var sortDescending = request.Filter.SortDescending ?? false;
+
+        logs = SortLogs(logs, sortBy, sortDescending).ToList();
+
         var pagedLogs = logs
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
@@ -66,5 +72,18 @@ public class GetUserLogsQueryHandler : IQueryHandler<GetUserLogsQuery, Applicati
                 Items = pagedLogs
             }
         };
+    }
+    private IEnumerable<AuditLog> SortLogs(IEnumerable<AuditLog> logs, string sortBy, bool descending)
+    {
+        var sortDirection = descending ? " descending" : string.Empty;
+        var orderBy = $"{sortBy}{sortDirection}";
+
+        return logs.AsQueryable().OrderBy(orderBy);
+    }
+    public List<dynamic> Sort(List<dynamic> input, string property)
+    {
+        return input.OrderBy(p => p.GetType()
+                                   .GetProperty(property)
+                                   .GetValue(p, null)).ToList();
     }
 }

@@ -21,7 +21,7 @@ public class CreateEmailDomainCommandHandler : BaseCommandHandler<CreateEmailDom
     protected override async Task<ApplicationResult> ExecuteAsync(CreateEmailDomainCommand request, CancellationToken cancellationToken)
     {
         await ValidateAsync(request, cancellationToken);
-
+        // Update
         if (request.Domains != null && request.Domains.Any())
         {
             var domainEntities = await _repository.Query(x => request.Domains.Select(d => d.Id).Contains(x.Id)).ToListAsync();
@@ -37,6 +37,7 @@ public class CreateEmailDomainCommandHandler : BaseCommandHandler<CreateEmailDom
             return new ApplicationResult { Success = true };
         }
 
+        //Create If Deleted
         var existingDomain = await _repository.Query(x => x.Domain == request.Domain).FirstOrDefaultAsync();
         if (existingDomain != null)
         {
@@ -51,6 +52,7 @@ public class CreateEmailDomainCommandHandler : BaseCommandHandler<CreateEmailDom
             throw new BadRequestException("Domain Already Exists");
         }
 
+        //Create New
         var newDomain = new AllowedEmailDomain(request.Domain, _context.SecurityContextAccessor.UserId);
         await _repository.Store(newDomain);
         await _repository.CommitChanges();

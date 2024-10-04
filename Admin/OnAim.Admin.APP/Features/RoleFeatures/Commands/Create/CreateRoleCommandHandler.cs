@@ -31,7 +31,11 @@ public class CreateRoleCommandHandler : BaseCommandHandler<CreateRoleCommand, Ap
         if (existsName)
             throw new BadRequestException("Role With That Name ALready Exists");
 
-        var role = new Role(request.Request.Name, request.Request.Description, _context.SecurityContextAccessor.UserId);
+        var role = new Role(
+            request.Request.Name.ToLower(), 
+            request.Request.Description,
+            _context.SecurityContextAccessor.UserId
+            );
 
         await _repository.Store(role);
         await _repository.CommitChanges();

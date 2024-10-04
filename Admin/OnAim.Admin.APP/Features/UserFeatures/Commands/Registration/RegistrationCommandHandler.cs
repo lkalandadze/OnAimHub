@@ -24,7 +24,7 @@ public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand
         IConfigurationRepository<UserRole> configurationRepository,
         IEmailService emailService,
         IDomainValidationService domainValidationService
-        ) : base( context )
+        ) : base(context)
     {
         _userRepository = userRepository;
         _roleRepository = roleRepository;
@@ -36,25 +36,67 @@ public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand
     {
         await ValidateAsync(request, cancellationToken);
 
-        var existingUser = await _userRepository.Query(x => x.Email == request.Email && !x.IsDeleted).FirstOrDefaultAsync();
+        var existingUser = await GetExistingUserAsync(request.Email);
 
         if (existingUser != null)
-            throw new BadRequestException($"User creation failed. A user already exists with email: {request.Email}");           
+        {
+            if (existingUser.IsDeleted)
+            {
+                await CreateNewUser(request);
+            }
+            else
+            {
+                HandleExistingUser(existingUser);
+            }
+        }
+        else
+        {
+            await CreateNewUser(request);
+        }
 
-        if (existingUser?.IsActive == false)
-            throw new BadRequestException($"User creation failed. A user already exists or is not active with email: {request.Email}");          
+        return new ApplicationResult { Success = true };
+    }
 
-        if (!await _domainValidationService.IsDomainAllowedAsync(request.Email))
-            throw new BadRequestException("Domain not allowed");           
+    private async Task<User?> GetExistingUserAsync(string email)
+    {
+        return await _userRepository.Query(x => x.Email == email).FirstOrDefaultAsync();
+    }
 
+    private async Task AssignDefaultRoleToUserAsync(User user)
+    {
+        var role = await _roleRepository.Query(x => x.Name == "DefaultRole").FirstOrDefaultAsync();
+        if (role != null)
+        {
+            await AssignRoleToUserAsync(user.Id, role.Id);
+        }
+    }
+
+    private async Task AssignRoleToUserAsync(int userId, int roleId)
+    {
+        var userRole = new UserRole(userId, roleId);
+        await _configurationRepository.Store(userRole);
+        await _configurationRepository.CommitChanges();
+    }
+
+    private void HandleExistingUser(User existingUser)
+    {
+        if (existingUser.IsActive == false)
+        {
+            throw new BadRequestException($"User creation failed. The user with email: {existingUser.Email} is inactive.");
+        }
+        else
+        {
+            throw new BadRequestException($"User creation failed. A user already exists with email: {existingUser.Email}");
+        }
+    }
+
+    private async Task CreateNewUser(RegistrationCommand request)
+    {
         var salt = EncryptPasswordExtension.Salt();
         string hashed = EncryptPasswordExtension.EncryptPassword(request.Password, salt);
 
         var activationCode = ActivationCodeHelper.ActivationCode();
-        var ActivationCodeExpiration = DateTime.UtcNow.AddMinutes(15);
-
-        var localhostBaseUrl = "https://localhost:7126";
-        var verificationUrl = $"{localhostBaseUrl}/verify?code={activationCode}";
+        var activationCodeExpiration = DateTime.UtcNow.AddMinutes(15);
 
         var user = new User(
             request.FirstName,
@@ -65,19 +107,24 @@ public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand
             salt,
             request.Phone,
             _context.SecurityContextAccessor.UserId,
-            false,
-            false,
-            activationCode,
-            ActivationCodeExpiration,
-            false
-            );
+            isVerified: false,
+            isActive: false,
+            activationCode: activationCode,
+            activationCodeExpiration: activationCodeExpiration,
+            isSuperAdmin: false
+        );
 
         await _userRepository.Store(user);
         await _userRepository.CommitChanges();
 
         var role = await _roleRepository.Query(x => x.Name == "DefaultRole").FirstOrDefaultAsync();
-        await AssignRoleToUserAsync(user.Id, user, role.Id, role);
+        await AssignRoleToUserAsync(user.Id, role.Id);
 
+        await SendActivationEmailAsync(user, activationCode);
+    }
+
+    private async Task SendActivationEmailAsync(User user, int activationCode)
+    {
         var activationLink = $"activate?userId={user.Id}&code={activationCode}";
 
         string htmlBody = "" +
@@ -89,28 +136,10 @@ public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand
             " <p style=\"color: rgba(0, 167, 111, 1); font-size: 32px; font-weight: 800; line-height: 43.58px; margin: 16px 0 0;\">{code}</p>\n    <p><a href=\"{link}\">Verify your account</a></p>\n   " +
             " <p>If you didn't request this, please ignore this email.</p>\n    <p>Best regards,<br>Your Company</p>\n</body>\n</html>\n";
 
-        //string templatePath = Path.Combine("Templates", "Emails", "Register.html");
-        //string htmlBody = await ReadEmailTemplateAsync(templatePath);
-
         htmlBody = htmlBody.Replace("{firstName}", user.FirstName)
                            .Replace("{code}", activationCode.ToString())
                            .Replace("{link}", activationLink);
 
         await _emailService.SendActivationEmailAsync(user.Email, "Activation Code", htmlBody);
-
-
-        return new ApplicationResult{ Success = true };
-    }
-
-    private async Task<string> ReadEmailTemplateAsync(string path)
-    {
-        return await File.ReadAllTextAsync(path);
-    }
-
-    private async Task AssignRoleToUserAsync(int userId, Domain.Entities.User user, int roleId, Role role)
-    {
-        var userRole = new UserRole(userId, roleId);
-        await _configurationRepository.Store(userRole);
-        await _configurationRepository.CommitChanges();
     }
 }

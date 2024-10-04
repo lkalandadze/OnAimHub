@@ -6,7 +6,6 @@ using System.Text;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using OnAim.Admin.Domain.Exceptions;
-using System.Net.Http.Headers;
 
 namespace OnAim.Admin.APP.Services.ClientService;
 
@@ -20,7 +19,6 @@ public class HubApiClient : IHubApiClient
     {
         _httpClient = httpClient.NotBeNull();
         _options = options.Value;
-        //_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJQbGF5ZXJJZCI6IjI3IiwiVXNlck5hbWUiOiIxOTEzIiwiU2VnbWVudElkcyI6ImRlZmF1bHQiLCJleHAiOjIzMjc3ODY0ODUsImlzcyI6IkhVQiIsImF1ZCI6IkhVQi1BVURJRU5DRSJ9.wXw5FHhnnr_a1CM_QicKNlQqKf7_Y6WlHUHAJeL8GVCKDL8JFLn7Tp9NboDuXs7ztoZPritBVOixSgXNQ8J3Iw");
 
         var retryPolicy = Policy
        .Handle<HttpRequestException>()

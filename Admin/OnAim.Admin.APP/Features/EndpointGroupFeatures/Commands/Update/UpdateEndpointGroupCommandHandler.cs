@@ -43,13 +43,13 @@ public class UpdateEndpointGroupCommandHandler : BaseCommandHandler<UpdateEndpoi
             if (request.model.Name == super.Name)
                 throw new BadRequestException("You don't have permmission to update this group!");
 
-            bool nameExists = await _repository.Query(x => x.Name == request.model.Name && x.Id != request.Id)
+            bool nameExists = await _repository.Query(x => x.Name == request.model.Name.ToLower() && x.Id != request.Id)
                 .AnyAsync();
 
             if (nameExists)
                 throw new BadRequestException("Permmission Group with this name already exists.");
 
-            group.Name = request.model.Name;
+            group.Name = request.model.Name.ToLower();
         }
 
         if (request.model.Description != null)

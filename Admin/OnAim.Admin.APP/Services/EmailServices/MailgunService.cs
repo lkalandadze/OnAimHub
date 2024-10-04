@@ -1,8 +1,5 @@
-﻿//using DocumentFormat.OpenXml.Wordprocessing;
-//using OnAim.Admin.APP.Services.Abstract;
+﻿//using OnAim.Admin.APP.Services.Abstract;
 //using RestSharp;
-//using System;
-//using System.Threading.Tasks;
 
 //namespace OnAim.Admin.APP.Services.Email
 //{
