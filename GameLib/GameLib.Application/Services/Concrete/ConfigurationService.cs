@@ -52,10 +52,10 @@ public class ConfigurationService : IConfigurationService
 
     public async Task CreateAsync(ConfigurationCreateModel model)
     {
-        var configuration = new Configuration(model.Name, model.Value);
+        //var configuration = new GameConfiguration(model.Name, model.Value);
 
-        await _configurationRepository.InsertAsync(configuration);
-        await _unitOfWork.SaveAsync();
+        //await _configurationRepository.InsertAsync(configuration);
+        //await _unitOfWork.SaveAsync();
     }
 
     public async Task UpdateAsync(int id, ConfigurationUpdateModel model)
@@ -119,6 +119,7 @@ public class ConfigurationService : IConfigurationService
         {
             foreach (var segmentId in missingSegmentIds)
             {
+                // Assuming you want to instantiate Segment with GameConfiguration as the type argument
                 var segment = new Segment(segmentId);
 
                 await _segmentRepository.InsertAsync(segment);

@@ -6,15 +6,20 @@ namespace GameLib.Infrastructure.DataAccess;
 
 public abstract class SharedGameConfigDbContext(DbContextOptions options) : DbContext(options)
 {
+
+}
+
+public abstract class SharedGameConfigDbContext<T>(DbContextOptions options) : SharedGameConfigDbContext(options) where T : GameConfiguration<T>
+{
     public DbSet<Currency> Currencies { get; set; }
-    public DbSet<Segment> Segments { get; set; }
-    public DbSet<Configuration> Configurations { get; set; }
-    public DbSet<Price> Prices { get; set; }
+    public DbSet<T> Segments { get; set; }
+    public DbSet<T> GameConfigurations { get; set; }
+    public DbSet<T> Prices { get; set; }
     public DbSet<PrizeType> PrizeTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(SharedGameConfigDbContext))!);
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(SharedGameConfigDbContext<>))!);
 
         base.OnModelCreating(modelBuilder);
     }

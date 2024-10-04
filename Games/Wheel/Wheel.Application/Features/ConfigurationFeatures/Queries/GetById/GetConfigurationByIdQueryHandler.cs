@@ -1,6 +1,6 @@
-﻿using GameLib.Domain.Abstractions.Repository;
+﻿using GameLib.Application.Generators;
+using GameLib.Domain.Abstractions.Repository;
 using GameLib.Domain.Entities;
-using GameLib.Domain.Generators;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,8 +23,8 @@ public class GetConfigurationByIdQueryHandler : IRequestHandler<GetConfiguration
         {
             var configuration = await _configurationRepository
                 .Query()
-                .Include(x => x.Prices)
-                .Include(x => x.Segments)
+                //.Include(x => x.Prices)
+                //.Include(x => x.Segments)
                 .FirstOrDefaultAsync(x => x.Id == request.ConfigurationId);
 
             if (configuration == null)
@@ -33,7 +33,7 @@ public class GetConfigurationByIdQueryHandler : IRequestHandler<GetConfiguration
                 throw new KeyNotFoundException($"Configuration with ID {request.ConfigurationId} was not found.");
             }
 
-            var metadata = _entityGenerator.GenerateEntityMetadata(typeof(Configuration));
+            var metadata = _entityGenerator.GenerateEntityMetadata(typeof(GameConfiguration));
 
             return new GetConfigurationByIdQueryResponse
             {

@@ -18,6 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\Lib\OnAim.Lib.EntityExtension.GlobalAttributes\OnAim.Lib.EntityExtension.GlobalAttributes.csproj" />
 	  <ProjectReference Include="..\..\Shared\RNG\RNG.csproj" />
 	  <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
 	  <ProjectReference Include="..\..\Shared\Shared.Lib\Shared.Lib.csproj" />

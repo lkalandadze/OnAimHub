@@ -46,7 +46,7 @@ public class SegmentService : ISegmentService
 
     public async Task CreateAsync(SegmentCreateModel model)
     {
-        var segment = new Segment(model.Id, model.ConfigurationId);
+        var segment = new Segment(model.Id /*model.ConfigurationId*/);
 
         await _segmentRepository.InsertAsync(segment);
         await _unitOfWork.SaveAsync();
