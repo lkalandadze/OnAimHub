@@ -1,4 +1,5 @@
 using GameLib.Infrastructure;
+using GameLib.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Wheel.Api;
 using Wheel.Infrastructure.DataAccess;
@@ -27,7 +28,8 @@ static void CreateDatabaseIfNotExists()
 
     string connectionString = configuration.GetConnectionString("GameConfig")!;
 
-    var optionsBuilder = new DbContextOptionsBuilder<WheelConfigDbContext>();
+    //var optionsBuilder = new DbContextOptionsBuilder<SharedGameConfigDbContext<WheelConfiguration>>();
+    var optionsBuilder = new DbContextOptionsBuilder<SharedGameConfigDbContext>();
     optionsBuilder.UseNpgsql(connectionString);
 
     var dbContext = new WheelConfigDbContext(optionsBuilder.Options);
@@ -35,3 +37,4 @@ static void CreateDatabaseIfNotExists()
 
     _ = new DbInitializer(dbContext);
 }
+

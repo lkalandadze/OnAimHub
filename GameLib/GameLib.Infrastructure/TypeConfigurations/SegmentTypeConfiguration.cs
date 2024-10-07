@@ -6,11 +6,13 @@ namespace GameLib.Infrastructure.TypeConfigurations;
 
 public class SegmentTypeConfiguration : IEntityTypeConfiguration<Segment>
 {
+
+    //todo: what to do here?
     public void Configure(EntityTypeBuilder<Segment> builder)
     {
-        builder.HasOne(s => s.Configuration)
-               .WithMany(s => s.Segments)
-               .HasForeignKey(s => s.ConfigurationId)
-               .IsRequired(false);
+        //builder.HasOne(s => s.Configuration)
+        //       .WithMany(s => (s).Segments)
+        //       .HasForeignKey(s => s.ConfigurationId)
+        //       .IsRequired(false);
     }
 }

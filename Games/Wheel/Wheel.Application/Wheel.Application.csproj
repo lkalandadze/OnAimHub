@@ -7,15 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Features\**" />
-    <EmbeddedResource Remove="Features\**" />
-    <None Remove="Features\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\GameLib\GameLib.Application\GameLib.Application.csproj" />
     <ProjectReference Include="..\..\..\Shared\Shared.Lib\Shared.Lib.csproj" />
     <ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\ConfigurationFeatures\Commands\" />
+    <Folder Include="Features\WheelFeatures\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.1" />
   </ItemGroup>
 
 </Project>
