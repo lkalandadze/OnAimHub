@@ -197,9 +197,9 @@ public class Startup
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("admin", new OpenApiInfo { Title = "Admin API", Version = "v1" });
-            c.SwaggerDoc("game", new OpenApiInfo { Title = "Game API", Version = "v1" });
-            c.SwaggerDoc("hub", new OpenApiInfo { Title = "Hub API", Version = "v1" });
+            c.SwaggerDoc("admin", new OpenApiInfo { Title = "Admin | Hub.Api", Version = "v1" });
+            c.SwaggerDoc("game", new OpenApiInfo { Title = "Game | Hub.Api", Version = "v1" });
+            c.SwaggerDoc("hub", new OpenApiInfo { Title = "Hub | Hub.Api", Version = "v1" });
 
             c.DocInclusionPredicate((docName, apiDesc) =>
             {
