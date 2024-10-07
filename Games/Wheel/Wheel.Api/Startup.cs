@@ -1,11 +1,15 @@
 ﻿using Consul;
+using GameLib.Application;
+using GameLib.Domain.Entities;
 using GameLib.Infrastructure.DataAccess;
 using GameLib.ServiceRegistry;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Shared.Infrastructure.DataAccess;
 using Wheel.Api.Consul;
+using Wheel.Application.Features.ConfigurationFeatures.Queries.GetById;
 using Wheel.Application.Models.Game;
 using Wheel.Application.Services.Abstract;
 using Wheel.Application.Services.Concrete;
@@ -16,6 +20,15 @@ using Wheel.Infrastructure.Repositories;
 
 namespace Wheel.Api;
 
+//public class TestContext : SharedGameConfigDbContext<WheelConfiguration>
+//{
+//    public TestContext(DbContextOptions<TestContext> options)
+//     : base(options)
+//    {
+//    }
+
+//}
+
 public class Startup
 {
     public IConfiguration Configuration { get; }
@@ -25,21 +38,34 @@ public class Startup
         Configuration = configuration;
     }
 
+
+
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetConfigurationByIdQueryHandler).Assembly));
+
+
+        services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
+        services.AddScoped<SharedGameConfigDbContext<WheelConfiguration>, WheelConfigDbContext>();
+
         services.AddDbContext<WheelConfigDbContext>(opt =>
-             opt.UseNpgsql(Configuration.GetConnectionString("GameConfig")));
+        {
+            opt.UseNpgsql(Configuration.GetConnectionString("GameConfig"));
+        });
+
+        services.AddDbContext<SharedGameConfigDbContext>(opt =>
+        {
+            opt.UseNpgsql(Configuration.GetConnectionString("GameConfig"));
+        });
 
         services.AddDbContext<SharedGameHistoryDbContext>(opt =>
             opt.UseNpgsql(Configuration.GetConnectionString("GameHistory")));
-
-        services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
 
         services.AddScoped<IRoundRepository, RoundRepository>();
         services.AddScoped<IWheelPrizeRepository, WheelPrizeRepository>();
 
         var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup), typeof(JackpotPrizeGroup) };
-        services.Resolve(Configuration, prizeGroupTypes, "WheelApi");
+        services.Resolve<WheelConfiguration>(Configuration, prizeGroupTypes, "WheelApi");
 
         services.AddScoped<IGameService, GameService>();
 

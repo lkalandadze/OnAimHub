@@ -1,5 +1,6 @@
 ﻿using GameLib.Domain.Entities;
 using Shared.Domain.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GameLib.Domain.Abstractions;
 
@@ -9,7 +10,11 @@ public abstract class BasePrizeGroup : BaseEntity<int>
     public int? NextPrizeIndex { get; set; }
 
     public int ConfigurationId { get; set; }
-    public Configuration Configuration { get; set; }
+
+    //todo
+    // leave this not mapped
+    //[NotMapped]
+    //public GameConfiguration Configuration { get; set; }
 
     public ICollection<BasePrize> Prizes { get; set; }
 }
