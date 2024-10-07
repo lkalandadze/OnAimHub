@@ -4,21 +4,26 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.Api.Controllers;
 
-public class TransactionController : BaseApiController
+[ApiExplorerSettings(GroupName = "game")]
+public class GameController : BaseApiController
 {
-    [HttpPost("Win")]
-    public async Task<IActionResult> CreateWinTransactionAsync([FromBody] CreateWinTransactionCommand command)
+    #region Transactions
+
+    [HttpPost(nameof(WinTransaction))]
+    public async Task<IActionResult> WinTransaction([FromBody] CreateWinTransactionCommand command)
     {
         var result = await Mediator.Send(command);
 
         return StatusCode(201, result);
     }
 
-    [HttpPost("Bet")]
-    public async Task<IActionResult> CreateBetTransactionAsync([FromBody] CreateBetTransactionCommand command)
+    [HttpPost(nameof(BetTransaction))]
+    public async Task<IActionResult> BetTransaction([FromBody] CreateBetTransactionCommand command)
     {
         var result = await Mediator.Send(command);
 
         return StatusCode(201, result);
     }
+
+    #endregion
 }

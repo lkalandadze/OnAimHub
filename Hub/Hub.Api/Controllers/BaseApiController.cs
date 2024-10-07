@@ -1,14 +1,13 @@
 ﻿#nullable disable
 
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.Api.Controllers;
 
-[Authorize]
+//[Authorize]
 [ApiController]
-[Route("hubapi/[controller]")]
+[Route("HubApi/[controller]")]
 public abstract class BaseApiController : ControllerBase
 {
     private IMediator _mediator;
