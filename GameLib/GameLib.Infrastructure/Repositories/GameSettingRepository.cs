@@ -4,9 +4,14 @@ using Shared.Domain.Abstractions.Repository;
 
 namespace GameLib.Infrastructure.Repositories;
 
-public class GameSettingRepository(SharedGameConfigDbContext context) : ISettingRepository
+public class GameSettingRepository<T> : ISettingRepository where T : GameConfiguration<T>
 {
-    private SharedGameConfigDbContext _context = context;
+    private readonly SharedGameConfigDbContext<T> _context;
+
+    public GameSettingRepository(SharedGameConfigDbContext<T> context)
+    {
+        _context = context;
+    }
 
     public object GetOrCreateValue(string dbSettingPropertyName, object defaultValue)
     {

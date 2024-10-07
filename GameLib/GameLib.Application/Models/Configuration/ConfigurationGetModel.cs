@@ -10,7 +10,7 @@ public class ConfigurationGetModel : ConfigurationBaseGetModel
 {
     public IEnumerable<SegmentBaseGetModel> Segments { get; set; }
 
-    public static ConfigurationGetModel MapFrom(Domain.Entities.Configuration configuration, bool includeNavProperties = true)
+    public static ConfigurationGetModel MapFrom(Domain.Entities.GameConfiguration configuration, bool includeNavProperties = true)
     {
         var model = new ConfigurationGetModel
         {

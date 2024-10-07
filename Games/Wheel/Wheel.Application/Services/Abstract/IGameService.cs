@@ -11,7 +11,4 @@ public interface IGameService
     Task UpdateMetadataAsync();
     Task<PlayResponseModel> PlayJackpotAsync(PlayRequestModel command);
     Task<PlayResponseModel> PlayWheelAsync(PlayRequestModel command);
-    Task<(ConfigurationModel, List<RoundModel>)> CreateConfigurationAndRoundsAsync(
-            string configurationName, int configurationValue, string rule,
-            List<RoundModel> rounds, List<PriceModel> prices = null, List<SegmentModel> segments = null);
 }

@@ -2,13 +2,13 @@
 using GameLib.Application;
 using GameLib.Application.Configurations;
 using GameLib.Application.Controllers;
+using GameLib.Application.Generators;
 using GameLib.Application.Holders;
 using GameLib.Application.Managers;
 using GameLib.Application.Services.Abstract;
 using GameLib.Application.Services.Concrete;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
-using GameLib.Domain.Generators;
 using GameLib.Infrastructure.DataAccess;
 using GameLib.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,15 +16,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using Shared.Domain.Abstractions.Repository;
 using System.Security.Cryptography;
+using GameLib.Domain.Entities;
 
 namespace GameLib.ServiceRegistry;
 
 public static class DependencyResolver
 {
-    public static IServiceCollection Resolve(this IServiceCollection services, IConfiguration configuration, List<Type> prizeGroupTypes, string routePrefix)
+    public static IServiceCollection Resolve<T>(this IServiceCollection services, IConfiguration configuration, List<Type> prizeGroupTypes, string routePrefix) where T: GameConfiguration<T>
     {
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
         services.AddSingleton<GameSettings>();
         services.AddSingleton<GeneratorHolder>();
         services.AddSingleton<ConfigurationHolder>();
@@ -46,7 +50,7 @@ public static class DependencyResolver
         services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
         services.AddScoped<ISegmentRepository, SegmentRepository>();
-        services.AddScoped<ISettingRepository, GameSettingRepository>();
+        services.AddScoped<ISettingRepository, GameSettingRepository<T>>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IConsulClient, ConsulClient>();
