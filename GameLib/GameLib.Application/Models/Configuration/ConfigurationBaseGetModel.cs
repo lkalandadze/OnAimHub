@@ -9,7 +9,7 @@ public class ConfigurationBaseGetModel
     public int Value { get; set; }
     public bool IsActive { get; set; }
 
-    public static ConfigurationBaseGetModel MapFrom(Domain.Entities.Configuration configuration)
+    public static ConfigurationBaseGetModel MapFrom(Domain.Entities.GameConfiguration configuration)
     {
         return ConfigurationGetModel.MapFrom(configuration, false);
     }
