@@ -3,7 +3,7 @@
     "Hub.Api [Hub]": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger/index.html?urls.primaryName=Hub",
+      "launchUrl": "swagger/hub",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -13,7 +13,7 @@
     "Hub.Api [Admin]": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger/index.html?urls.primaryName=Admin",
+      "launchUrl": "swagger/admin",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -23,7 +23,7 @@
     "Hub.Api [Game]": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger/index.html?urls.primaryName=Game",
+      "launchUrl": "swagger/game",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
