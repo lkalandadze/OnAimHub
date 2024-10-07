@@ -142,38 +142,7 @@ public class Startup
             DbSettings.Init(settingRepository);
         }
 
-        app.UseSwagger();
-
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/hub/swagger.json", "Hub | Hub.Api");
-            c.RoutePrefix = "swagger";
-            c.DocumentTitle = "Hub | Hub.Api";
-        });
-
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/hub/swagger.json", "Hub | Hub.Api");
-
-            c.RoutePrefix = "swagger/hub";
-            c.DocumentTitle = "Hub | Hub.Api";
-        });
-
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/admin/swagger.json", "Admin | Hub.Api");
-
-            c.RoutePrefix = "swagger/admin";
-            c.DocumentTitle = "Admin | Hub.Api";
-        });
-
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/game/swagger.json", "Game | Hub.Api");
-
-            c.RoutePrefix = "swagger/game";
-            c.DocumentTitle = "Game | Hub.Api";
-        });
+        ConfigureSwagger(app);
 
         app.UseForwardedHeaders();
         app.UseCertificateForwarding();
@@ -288,6 +257,42 @@ public class Startup
                     new List<string>()
                 },
             });
+        });
+    }
+
+    private void ConfigureSwagger(IApplicationBuilder app)
+    {
+        app.UseSwagger();
+
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/hub/swagger.json", "Hub | Hub.Api");
+            c.RoutePrefix = "swagger";
+            c.DocumentTitle = "Hub | Hub.Api";
+        });
+
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/hub/swagger.json", "Hub | Hub.Api");
+
+            c.RoutePrefix = "swagger/hub";
+            c.DocumentTitle = "Hub | Hub.Api";
+        });
+
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/admin/swagger.json", "Admin | Hub.Api");
+
+            c.RoutePrefix = "swagger/admin";
+            c.DocumentTitle = "Admin | Hub.Api";
+        });
+
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/game/swagger.json", "Game | Hub.Api");
+
+            c.RoutePrefix = "swagger/game";
+            c.DocumentTitle = "Game | Hub.Api";
         });
     }
 
