@@ -146,14 +146,14 @@ public class Startup
 
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("/swagger/hub/swagger.json", "Hub Api");
+            c.SwaggerEndpoint("/swagger/hub/swagger.json", "Hub | Hub.Api");
             c.RoutePrefix = "swagger";
             c.DocumentTitle = "Hub | Hub.Api";
         });
 
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("/swagger/hub/swagger.json", "Hub Api");
+            c.SwaggerEndpoint("/swagger/hub/swagger.json", "Hub | Hub.Api");
 
             c.RoutePrefix = "swagger/hub";
             c.DocumentTitle = "Hub | Hub.Api";
@@ -161,7 +161,7 @@ public class Startup
 
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("/swagger/admin/swagger.json", "Admin Api");
+            c.SwaggerEndpoint("/swagger/admin/swagger.json", "Admin | Hub.Api");
 
             c.RoutePrefix = "swagger/admin";
             c.DocumentTitle = "Admin | Hub.Api";
@@ -169,10 +169,10 @@ public class Startup
 
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("/swagger/game/swagger.json", "Game API");
+            c.SwaggerEndpoint("/swagger/game/swagger.json", "Game | Hub.Api");
 
             c.RoutePrefix = "swagger/game";
-            c.DocumentTitle = "Game | Hub.API";
+            c.DocumentTitle = "Game | Hub.Api";
         });
 
         app.UseForwardedHeaders();
