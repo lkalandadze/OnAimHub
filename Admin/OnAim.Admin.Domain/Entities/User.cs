@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OnAim.Admin.Domain.Entities.Abstract;
 using OnAim.Admin.Shared.DTOs.User;
+using OnAim.Admin.Shared.Enums;
 using OnAim.Admin.Shared.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,9 +20,11 @@ public class User : BaseEntity
         int? createdBy,
         bool isVerified,
         bool isActive,
-        int? activationCode,
-        DateTime? activationCodeExpiration,
-        bool isSuperAdmin = false)
+        string? verificationCode,
+        VerificationPurpose? verificationPurpose,
+        DateTime? verificationCodeExpiration,
+        bool isSuperAdmin = false
+        )
     {
         FirstName = firstName;
         LastName = lastName;
@@ -34,10 +37,11 @@ public class User : BaseEntity
         IsDeleted = false;
         IsVerified = isVerified;
         IsActive = isActive;
-        ActivationCode = activationCode;
-        ActivationCodeExpiration = activationCodeExpiration;
         CreatedBy = createdBy;
         DateCreated = SystemDate.Now;
+        VerificationCode = verificationCode;
+        VerificationPurpose = verificationPurpose;
+        VerificationCodeExpiration = verificationCodeExpiration;
     }
 
     public string FirstName { get; set; }
@@ -54,15 +58,16 @@ public class User : BaseEntity
     public bool IsSuperAdmin { get; set; }
     public DateTimeOffset LastLogin { get; set; }
 
-    public int? ActivationCode { get; set; }
-    public DateTime? ActivationCodeExpiration { get; set; }
     public bool IsVerified { get; set; }
 
-    public int? ResetCode { get; set; }
-    public DateTime? ResetCodeExpiration { get; set; }
+    public bool? IsTwoFactorEnabled { get; set; }
 
     public ICollection<AccessToken> AccessTokens { get; set; }
     public ICollection<RefreshToken> RefreshTokens { get; set; }
+
+    public string? VerificationCode { get; set; }
+    public VerificationPurpose? VerificationPurpose { get; set; }
+    public DateTime? VerificationCodeExpiration { get; set; }
 
     public string PreferencesJson { get; set; } = "{}";
     [NotMapped]

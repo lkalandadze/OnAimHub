@@ -126,6 +126,7 @@ public class CreateUserCommandHandler : BaseCommandHandler<CreateUserCommand, Ap
             isActive,
             null,
             null,
+            null,
             isSuperAdmin
         );
     }

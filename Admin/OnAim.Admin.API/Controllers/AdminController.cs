@@ -22,7 +22,7 @@ public class AdminController : ApiControllerBase
     [HttpGet(nameof(GetSettings))]
     public IActionResult GetSettings()
     {
-        var domainRestrictionsEnabled = _appSettingsService.GetSetting("DomainRestrictionsEnabled") != "false";
+        var domainRestrictionsEnabled = _appSettingsService.GetSettings();
         return Ok(new { DomainRestrictionsEnabled = domainRestrictionsEnabled });
     }
 
@@ -33,6 +33,10 @@ public class AdminController : ApiControllerBase
         _appSettingsService.SetSetting("DomainRestrictionsEnabled", settingValue);
         return NoContent();
     }
+
+    [HttpPost(nameof(SetTwoFactorAuth))]
+    public async Task<IActionResult> SetTwoFactorAuth([FromBody] bool twoFactorAuth)
+        => Ok(await _appSettingsService.SetTwoFactorAuth(twoFactorAuth));
 
     [HttpGet(nameof(GetAllDomain))]
     public async Task<IActionResult> GetAllDomain([FromQuery] DomainFilter filter)

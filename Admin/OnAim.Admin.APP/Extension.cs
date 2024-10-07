@@ -51,6 +51,7 @@ public static class Extension
             //.AddTransient<IEmailService, MailgunService>()
             .AddScoped<IDomainValidationService, DomainValidationService>()
             .AddScoped<IAppSettingsService, AppSettingsService>()
+            .AddScoped<IOtpService, OtpService>()
             .AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>))
             .AddScoped(typeof(CommandContext<>), typeof(CommandContext<>))
             .AddHtmlGenerator();

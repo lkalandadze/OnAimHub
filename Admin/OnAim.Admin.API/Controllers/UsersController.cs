@@ -14,6 +14,7 @@ using OnAim.Admin.APP.Feature.UserFeature.Commands.Update;
 using OnAim.Admin.APP.Feature.UserFeature.Queries.GetAllUser;
 using OnAim.Admin.APP.Feature.UserFeature.Queries.GetById;
 using OnAim.Admin.APP.Feature.UserFeature.Queries.GetUserLogs;
+using OnAim.Admin.APP.Features.UserFeatures.Commands.TwoFA;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.ApplicationInfrastructure.Validation;
 using OnAim.Admin.Shared.DTOs.User;
@@ -62,6 +63,11 @@ public class UsersController : ApiControllerBase
     [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
     public async Task<AuthResultDto> Login([FromBody] LoginUserRequest model)
         => await Mediator.Send(new LoginUserCommand(model));
+
+    [HttpPost(nameof(VerifyOtp))]
+    [AllowAnonymous]
+    public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpCommand command)
+        => Ok(await Mediator.Send(command));
 
     [HttpPost(nameof(ChangePassword))]
     [AllowAnonymous]

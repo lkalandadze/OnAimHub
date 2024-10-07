@@ -1,113 +1,48 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Exceptions;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Domain.Entities;
+using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
 using OnAim.Admin.Shared.DTOs.Endpoint;
 using OnAim.Admin.Shared.DTOs.EndpointGroup;
 using OnAim.Admin.Shared.DTOs.Role;
 using OnAim.Admin.Shared.DTOs.User;
 using OnAim.Admin.Shared.Models;
 using System.Security.Claims;
-using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
-using OnAim.Admin.Shared.Helpers.Password;
-using OnAim.Admin.APP.Services.Abstract;
 
-namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Login;
+namespace OnAim.Admin.APP.Features.UserFeatures.Commands.TwoFA;
 
-public class LoginUserCommandHandler : BaseCommandHandler<LoginUserCommand, AuthResultDto>
+public class VerifyOtpCommandHandler : BaseCommandHandler<VerifyOtpCommand, AuthResultDto>
 {
-    private readonly IRepository<User> _userRepository;
-    private readonly IRepository<Role> _roleRepository;
-    private readonly IConfigurationRepository<UserRole> _userConfigurationRepository;
+    private readonly IRepository<User> _repository;
     private readonly IJwtFactory _jwtFactory;
     private readonly IOtpService _otpService;
-    private readonly IEmailService _emailService;
+    private readonly IConfigurationRepository<UserRole> _userConfigurationRepository;
+    private readonly IRepository<Role> _roleRepository;
 
-    public LoginUserCommandHandler(
-        CommandContext<LoginUserCommand> context,
-        IRepository<User> userRepository,
-        IRepository<Role> roleRepository,
-        IConfigurationRepository<UserRole> userConfigurationRepository,
-        IJwtFactory jwtFactory,
+    public VerifyOtpCommandHandler(CommandContext<VerifyOtpCommand> context, 
+        IRepository<Domain.Entities.User> repository,
+         IJwtFactory jwtFactory,
         IOtpService otpService,
-        IEmailService emailService
-        ) : base( context )
+        IConfigurationRepository<UserRole> userConfigurationRepository,
+        IRepository<Role> roleRepository
+        ) : base(context)
     {
-        _userRepository = userRepository;
-        _roleRepository = roleRepository;
-        _userConfigurationRepository = userConfigurationRepository;
+        _repository = repository;
         _jwtFactory = jwtFactory;
         _otpService = otpService;
-        _emailService = emailService;
-    }
-    protected override async Task<AuthResultDto> ExecuteAsync(LoginUserCommand request, CancellationToken cancellationToken)
-    {
-        await ValidateAsync(request, cancellationToken);
-
-        var user = await _userRepository.Query(x => x.Email == request.Model.Email && x.IsDeleted == false).FirstOrDefaultAsync();
-
-        if (user == null)
-            throw new NotFoundException("User is not active Or Doesn't Exist");
-
-        if (user.IsActive == false)
-            throw new NotFoundException("User is not active Or Doesn't Exist");
-
-        if (user.IsVerified == false)
-            throw new NotFoundException("User Not Verified");
-
-        string hashed = EncryptPasswordExtension.EncryptPassword(request.Model.Password, user.Salt);
-
-        if (hashed == user.Password)
-        {
-            if (user.IsTwoFactorEnabled.HasValue)
-            {
-                var otp = _otpService.GenerateOtp(user.Email);
-                _otpService.StoreOtp(user.Id, otp);
-
-                await _emailService.SendActivationEmailAsync(user.Email, "Your OTP Code", $"Your OTP code is: {otp}");
-
-                return new AuthResultDto
-                {
-                    AccessToken = null,
-                    RefreshToken = null,
-                    StatusCode = 201,
-                    Message = "OTP has been sent to your email."
-                };
-            }
-            var roles = await GetUserRolesAsync(user.Id);
-            var roleNames = roles.Select(r => r.Name).ToList();
-
-            var token = _jwtFactory.GenerateEncodedToken(user.Id, user.Email, new List<Claim>(), roleNames);
-            var refreshToken = await _jwtFactory.GenerateRefreshToken(user.Id);
-
-            await _jwtFactory.SaveAccessToken(user.Id, token, DateTime.UtcNow.AddDays(1));
-
-            user.LastLogin = SystemDate.Now;
-
-            await _userRepository.CommitChanges();
-
-            return new AuthResultDto
-            {
-                AccessToken = token,
-                RefreshToken = refreshToken,
-                StatusCode = 200
-            };
-        }
-
-        return new AuthResultDto
-        {
-            AccessToken = null,
-            RefreshToken = null,
-            StatusCode = 404
-        };
+        _userConfigurationRepository = userConfigurationRepository;
+        _roleRepository = roleRepository;
     }
 
-    public async Task<AuthResultDto> VerifyOtpAsync(int userId, string otp)
+    protected async override Task<AuthResultDto> ExecuteAsync(VerifyOtpCommand request, CancellationToken cancellationToken)
     {
-        var storedOtp = await _otpService.GetStoredOtp(userId);
-        if (storedOtp == otp)
+        var userId = await _repository.Query(x => x.Email == request.Email && x.IsDeleted == false).FirstOrDefaultAsync();
+        var storedOtp = await _otpService.GetStoredOtp(userId.Id);
+        if (storedOtp == request.OtpCode)
         {
-            var user = await _userRepository.Query(u => u.Id == userId).FirstOrDefaultAsync();
+            var user = await _repository.Query(u => u.Id == userId.Id).FirstOrDefaultAsync();
             if (user == null)
                 throw new NotFoundException("User doesn't exist");
 
@@ -121,7 +56,7 @@ public class LoginUserCommandHandler : BaseCommandHandler<LoginUserCommand, Auth
 
             user.LastLogin = SystemDate.Now;
 
-            await _userRepository.CommitChanges();
+            await _repository.CommitChanges();
 
             return new AuthResultDto
             {

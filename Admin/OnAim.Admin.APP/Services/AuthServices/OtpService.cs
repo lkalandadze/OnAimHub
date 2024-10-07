@@ -1,15 +1,21 @@
-﻿using OnAim.Admin.APP.Services.Abstract;
-using System.Collections.Concurrent;
+﻿using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.Domain.Entities;
+using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.Enums;
 
 namespace OnAim.Admin.APP.Services.AuthServices;
 
 public class OtpService : IOtpService
 {
-    private static readonly ConcurrentDictionary<int, (string Otp, DateTime Expiration)> _otpStore =
-        new ConcurrentDictionary<int, (string Otp, DateTime Expiration)>();
-
     private readonly int _otpLength = 6;
     private readonly int _otpExpiryMinutes = 10;
+    private readonly IRepository<User> _repository;
+
+    public OtpService(IRepository<Domain.Entities.User> repository)
+    {
+        _repository = repository;
+    }
 
     public string GenerateOtp(string email)
     {
@@ -19,25 +25,33 @@ public class OtpService : IOtpService
         return otp;
     }
 
-    public void StoreOtp(int userId, string otp)
+    public async void StoreOtp(int userId, string otp)
     {
         var expirationTime = DateTime.UtcNow.AddMinutes(_otpExpiryMinutes);
-        _otpStore[userId] = (otp, expirationTime);
-    }
-
-    public string GetStoredOtp(int userId)
-    {
-        if (_otpStore.TryGetValue(userId, out var otpEntry) && otpEntry.Expiration > DateTime.UtcNow)
+        var user = await _repository.Query(x => x.Id == userId && x.IsDeleted == false).FirstOrDefaultAsync();
+        if (user != null)
         {
-            return otpEntry.Otp;
+            user.VerificationCode = otp;
+            user.VerificationPurpose = VerificationPurpose.Login;
+            user.VerificationCodeExpiration = expirationTime;
+            await _repository.CommitChanges();
         }
-
-        return null;
     }
 
-    public bool ValidateOtp(int userId, string otp)
+    public async Task<string> GetStoredOtp(int userId)
     {
-        var storedOtp = GetStoredOtp(userId);
+        var userOtp = await _repository.Query(uo =>
+                uo.Id == userId &&
+                uo.VerificationPurpose == VerificationPurpose.Login &&
+                uo.VerificationCodeExpiration > DateTime.UtcNow)
+                .FirstOrDefaultAsync();
+
+        return userOtp?.VerificationCode;
+    }
+
+    public async Task<bool> ValidateOtp(int userId, string otp)
+    {
+        var storedOtp = await GetStoredOtp(userId);
         return storedOtp != null && storedOtp == otp;
     }
 }

@@ -19,6 +19,7 @@ public class Paginator
         var pageSize = filter.PageSize ?? 25;
         var sortDescending = filter.SortDescending.GetValueOrDefault();
         var sortBy = filter.SortBy?.ToLower();
+        var sortableFields = new List<string> { "Id", "Name" };
 
         Expression<Func<TEntity, object>> sortExpression = CreateSortExpression<TEntity>(sortBy);
 
@@ -37,7 +38,8 @@ public class Paginator
             PageNumber = pageNumber,
             PageSize = pageSize,
             TotalCount = totalCount,
-            Items = items
+            Items = items,
+            SortableFields = sortableFields,
         };
     }
 
