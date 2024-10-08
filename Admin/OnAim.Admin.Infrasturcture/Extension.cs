@@ -1,7 +1,6 @@
-﻿using Autofac;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
 using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 using OnAim.Admin.Infrasturcture.Persistance.Data.Hub;
 using OnAim.Admin.Infrasturcture.Persistance.Data.LeaderBoard;
@@ -9,51 +8,32 @@ using OnAim.Admin.Infrasturcture.Persistance.MongoDB;
 
 namespace OnAim.Admin.Infrasturcture;
 
-public class InfrastructureModule : Module
+public static class Extension
 {
-    protected override void Load(ContainerBuilder builder)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        builder.Register(context =>
+        services.AddDbContext<DatabaseContext>(options =>
         {
-            var configuration = context.Resolve<IConfiguration>();
-            var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
-            optionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnectionString"));
-            return new DatabaseContext(optionsBuilder.Options);
-        }).InstancePerLifetimeScope();
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnectionString"));
+        });
 
-        builder.Register(context =>
+        services.AddDbContext<ReadOnlyDataContext>(options =>
         {
-            var configuration = context.Resolve<IConfiguration>();
-            var optionsBuilder = new DbContextOptionsBuilder<ReadOnlyDataContext>();
-            optionsBuilder.UseNpgsql(configuration.GetConnectionString("HubDefaultConnectionString"));
-            return new ReadOnlyDataContext(optionsBuilder.Options);
-        }).InstancePerLifetimeScope();
-
-        builder.Register(context =>
+            options.UseNpgsql(configuration.GetConnectionString("HubDefaultConnectionString"));
+        });
+        services.AddDbContext<LeaderBoardReadOnlyDataContext>(options =>
         {
-            var configuration = context.Resolve<IConfiguration>();
-            var optionsBuilder = new DbContextOptionsBuilder<LeaderBoardReadOnlyDataContext>();
-            optionsBuilder.UseNpgsql(configuration.GetConnectionString("LeaderBoardDefaultConnectionString"));
-            return new LeaderBoardReadOnlyDataContext(optionsBuilder.Options);
-        }).InstancePerLifetimeScope();
+            options.UseNpgsql(configuration.GetConnectionString("LeaderBoardDefaultConnectionString"));
+        });
 
-        builder.Register(context =>
-        {
-            var configuration = context.Resolve<IConfiguration>();
-            var mongoOptions = configuration.GetSection("MongoDB").Get<MongoDbOptions>();
-            return Options.Create(mongoOptions);
-        }).As<IOptions<MongoDbOptions>>().SingleInstance();
+        services.AddMongoDbContext(configuration);
 
-        builder.RegisterType<AuditLogDbContext>().InstancePerLifetimeScope();
+        return services;
+    }
+
+    private static void AddMongoDbContext(this IServiceCollection services, IConfiguration configuration)
+    {
+        var options = configuration.GetSection("MongoDB");
+        services.AddScoped<AuditLogDbContext>().AddOptions<MongoDbOptions>().Bind(options);
     }
 }
-
-
-//public static class Extension
-//{
-//    private static void AddMongoDbContext(this IServiceCollection services, IConfiguration configuration)
-//    {
-//        var options = configuration.GetSection("MongoDB");
-//        services.AddScoped<AuditLogDbContext>().AddOptions<MongoDbOptions>().Bind(options);
-//    }
-//}

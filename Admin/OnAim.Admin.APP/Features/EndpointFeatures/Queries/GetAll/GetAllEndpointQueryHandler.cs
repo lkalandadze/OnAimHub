@@ -61,6 +61,7 @@ public class GetAllEndpointQueryHandler : IQueryHandler<GetAllEndpointQuery, App
                 DateCreated = item.DateCreated,
                 DateUpdated = item.DateUpdated,
             },
+            new List<string> { "Id", "Name"},
             cancellationToken
         );
 

@@ -16,85 +16,95 @@ using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories;
 using OnAim.Admin.APP.Services.SettingServices;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OnAim.Admin.APP.Services.ClientService;
 using Autofac;
 using System.Reflection;
+using OnAim.Admin.Shared.Helpers.HtmlGenerators;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Domain.Exceptions;
+using ValidationException = OnAim.Admin.Domain.Exceptions.ValidationException;
 
 
 namespace OnAim.Admin.APP;
 
-public class AppModule : Autofac.Module
+public static class Extension
 {
-    private readonly IConfiguration _configuration;
-
-    public AppModule(IConfiguration configuration)
+    public static IServiceCollection AddApp(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        Action<EmailOptions>? configureOptions = null)
     {
-        _configuration = configuration;
+        var emailOptions = new EmailOptions();
+        configuration.GetSection(nameof(EmailOptions)).Bind(emailOptions);
+        configureOptions?.Invoke(emailOptions);
+        services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
+
+        services
+            .AddScoped<IRoleRepository, RoleRepository>()
+            .AddScoped<ILogRepository, LogRepository>()
+            .AddScoped<IPermissionService, PermissionService>()
+            .AddScoped<IPasswordService, PasswordService>()
+            .AddTransient<IJwtFactory, JwtFactory>()
+            .AddHostedService<TokenCleanupService>()
+            .Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"))
+            //.AddTransient<IEmailService, EmailService>()
+            //.AddTransient<IEmailService, MailgunService>()
+            .AddScoped<IDomainValidationService, DomainValidationService>()
+            .AddScoped<IAppSettingsService, AppSettingsService>()
+            .AddScoped<IOtpService, OtpService>()
+            .AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>))
+            .AddScoped(typeof(CommandContext<>), typeof(CommandContext<>))
+            .AddHtmlGenerator();
+        services
+            .AddScoped(typeof(IRepository<>), typeof(EfRepository<>))
+            .AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>))
+            .AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>))
+            .AddScoped(typeof(ILeaderBoardReadOnlyRepository<>), typeof(LeaderBoardReadOnlyRepository<>));
+
+        services.Configure<PostmarkOptions>(configuration.GetSection("Postmark"));
+
+        services.AddTransient<IEmailService>(sp =>
+        {
+            var options = sp.GetRequiredService<IOptions<PostmarkOptions>>().Value;
+            return new PostmarkService(options.ApiKey);
+        });
+        //services.Configure<MailgunOptions>(configuration.GetSection("Postmark"));
+
+        //services.AddTransient<IEmailService>(sp =>
+        //{
+        //    var options = sp.GetRequiredService<IOptions<MailgunOptions>>().Value;
+        //    return new MailgunService(options.ApiKey, options.Domain);
+        //});
+
+        if (configureOptions is { })
+        {
+            services.Configure(nameof(EmailOptions), configureOptions);
+        }
+        else
+        {
+            services
+                .AddOptions<EmailOptions>()
+                .Bind(configuration.GetSection(nameof(EmailOptions)))
+                .ValidateDataAnnotations();
+        }
+
+        services.AddScoped<ISecurityContextAccessor, SecurityContextAccessor>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        services
+            .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
+            .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        return services;
     }
+    public static IEnumerable<T> OrEmptyIfNull<T>(this IEnumerable<T> src)
+    => src ?? Enumerable.Empty<T>();
 
-    protected override void Load(ContainerBuilder builder)
-    {
-        builder.Register(context =>
-        {
-            var config = context.Resolve<IConfiguration>();
-            var jwtConfig = config.GetSection("JwtConfiguration").Get<JwtConfiguration>();
-            return Microsoft.Extensions.Options.Options.Create(jwtConfig);
-        }).As<IOptions<JwtConfiguration>>().SingleInstance();
 
-        builder.Register(context =>
-        {
-            var config = context.Resolve<IConfiguration>();
-            var smtpSettings = config.GetSection("SmtpSettings").Get<SmtpSettings>();
-            return Microsoft.Extensions.Options.Options.Create(smtpSettings);
-        }).As<IOptions<SmtpSettings>>().SingleInstance();
-
-        builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
-        builder.RegisterGeneric(typeof(ConfigurationRepository<>)).As(typeof(IConfigurationRepository<>)).InstancePerLifetimeScope();
-        builder.RegisterGeneric(typeof(ReadOnlyRepository<>)).As(typeof(IReadOnlyRepository<>)).InstancePerLifetimeScope();
-        builder.RegisterGeneric(typeof(LeaderBoardReadOnlyRepository<>)).As(typeof(ILeaderBoardReadOnlyRepository<>)).InstancePerLifetimeScope();
-        builder.RegisterType<RoleRepository>().As<IRoleRepository>().InstancePerLifetimeScope();
-        builder.RegisterType<LogRepository>().As<ILogRepository>().InstancePerLifetimeScope();
-        builder.RegisterType<PermissionService>().As<IPermissionService>().InstancePerLifetimeScope();
-        builder.RegisterType<JwtFactory>().As<IJwtFactory>().InstancePerDependency();
-        builder.RegisterType<TokenCleanupService>().AsImplementedInterfaces().SingleInstance();
-        builder.RegisterType<DomainValidationService>().As<IDomainValidationService>().InstancePerLifetimeScope();
-        builder.RegisterType<AppSettingsService>().As<IAppSettingsService>().InstancePerLifetimeScope();
-        builder.RegisterType<OtpService>().As<IOtpService>().InstancePerLifetimeScope();
-        builder.RegisterGeneric(typeof(CsvWriter<>)).As(typeof(ICsvWriter<>)).InstancePerLifetimeScope();
-        builder.RegisterGeneric(typeof(CommandContext<>)).AsSelf().InstancePerLifetimeScope();
-        builder.RegisterType<SecurityContextAccessor>().As<ISecurityContextAccessor>().InstancePerLifetimeScope();
-
-        builder.Register(context =>
-        {
-            var config = context.Resolve<IConfiguration>();
-            var options = config.GetSection("Postmark").Get<PostmarkOptions>();
-            return Microsoft.Extensions.Options.Options.Create(options);
-        }).As<IOptions<PostmarkOptions>>().SingleInstance();
-
-        builder.Register(context =>
-        {
-            var options = context.Resolve<IOptions<PostmarkOptions>>();
-            return new PostmarkService(options.Value.ApiKey);
-        }).As<IEmailService>().InstancePerLifetimeScope();
-
-        builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-               .AsImplementedInterfaces();
-
-    }
-}
-public class PostmarkOptions
-{
-    public string ApiKey { get; set; }
-}
-public class MailgunOptions
-{
-    public string ApiKey { get; set; }
-    public string Domain { get; set; }
 }
 public static partial class WebApplicationBuilderExtensions
 {
@@ -169,6 +179,7 @@ public static partial class WebApplicationBuilderExtensions
         }
     }
 }
+
 public static class HttpResponseMessageExtensions
 {
     public static async Task EnsureSuccessStatusCodeWithDetailAsync(this HttpResponseMessage response)
@@ -183,28 +194,7 @@ public static class HttpResponseMessageExtensions
         throw new HttpResponseException(content, (int)response.StatusCode);
     }
 }
-public class HttpResponseException : System.Exception
-{
-    public string? ResponseContent { get; }
 
-    public IReadOnlyDictionary<string, IEnumerable<string>>? Headers { get; }
-
-    public HttpResponseException(
-        string responseContent,
-        int statusCode = StatusCodes.Status500InternalServerError,
-        IReadOnlyDictionary<string, IEnumerable<string>>? headers = null,
-        System.Exception? inner = null
-    )
-    {
-        ResponseContent = responseContent;
-        Headers = headers;
-    }
-
-    public override string ToString()
-    {
-        return $"HTTP Response: \n\n{ResponseContent}\n\n{base.ToString()}";
-    }
-}
 public static class ValidationExtensions
 {
 

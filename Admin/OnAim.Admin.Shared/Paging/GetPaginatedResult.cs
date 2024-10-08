@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Shared.DTOs.Base;
 using System.Linq.Expressions;
-
+using System.Reflection;
 
 namespace OnAim.Admin.Shared.Paging;
 
@@ -11,6 +11,7 @@ public class Paginator
         IQueryable<TEntity> query,
         TFilter filter,
         Expression<Func<TEntity, TDto>> projection,
+        List<string> sortableFields,
         CancellationToken cancellationToken)
         where TEntity : class
         where TFilter : BaseFilter
@@ -19,7 +20,7 @@ public class Paginator
         var pageSize = filter.PageSize ?? 25;
         var sortDescending = filter.SortDescending.GetValueOrDefault();
         var sortBy = filter.SortBy?.ToLower();
-        var sortableFields = new List<string> { "Id", "Name" };
+        var sortableFieldList = sortableFields;
 
         Expression<Func<TEntity, object>> sortExpression = CreateSortExpression<TEntity>(sortBy);
 
@@ -46,44 +47,15 @@ public class Paginator
     private static Expression<Func<TEntity, object>> CreateSortExpression<TEntity>(string sortBy)
     {
         var parameter = Expression.Parameter(typeof(TEntity), "x");
-        Expression property = null;
 
-        switch (sortBy)
-        {
-            case "id":
-                property = Expression.Property(parameter, "Id");
-                break;
-            case "firstname":
-                property = Expression.Property(parameter, "FirstName");
-                break;
-            case "lastname":
-                property = Expression.Property(parameter, "LastName");
-                break;
-            case "name":
-                property = Expression.Property(parameter, "Name");
-                break;
-            case "status":
-                property = Expression.Property(parameter, "Status");
-                break;
-            case "title":
-                property = Expression.Property(parameter, "Title");
-                break;
-            case "playerId":
-                property = Expression.Property(parameter, "PlayerId");
-                break;
-            case "playerName":
-                property = Expression.Property(parameter, "PlayerName");
-                break;
-            default:
-                property = Expression.Property(parameter, "Id");
-                break;
-        }
+        var property = typeof(TEntity).GetProperty(sortBy, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
 
         if (property == null)
         {
             throw new ArgumentException($"Property '{sortBy}' is not defined for type '{typeof(TEntity).Name}'.");
         }
 
-        return Expression.Lambda<Func<TEntity, object>>(Expression.Convert(property, typeof(object)), parameter);
+        var propertyAccess = Expression.MakeMemberAccess(parameter, property);
+        return Expression.Lambda<Func<TEntity, object>>(Expression.Convert(propertyAccess, typeof(object)), parameter);
     }
 }

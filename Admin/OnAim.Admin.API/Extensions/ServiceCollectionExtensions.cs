@@ -10,33 +10,50 @@ using OnAim.Admin.APP.Feature.Identity;
 using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace OnAim.Admin.API.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    //public static IServiceCollection AddConfigs(this IServiceCollection services, ConfigurationManager config)
+    //{
+    //    config.AddEnvironmentVariables();
+
+    //    services.Configure<AuthenticationConfig>(
+    //        config.GetSection(AuthenticationConfig.ToString()));
+
+    //    return services;
+    //}
+
     public static TOptions BindOptions<TOptions>(
-        this IConfiguration configuration,
-        Action<TOptions>? configurator = null
-    ) where TOptions : new()
+    this IConfiguration configuration,
+    Action<TOptions>? configurator = null
+    )
+     where TOptions : new()
     {
         return BindOptions(configuration, typeof(TOptions).Name, configurator);
     }
 
     public static TOptions BindOptions<TOptions>(
-        this IConfiguration configuration,
-        string section,
-        Action<TOptions>? configurator = null
-    ) where TOptions : new()
+    this IConfiguration configuration,
+    string section,
+    Action<TOptions>? configurator = null
+    )
+    where TOptions : new()
     {
         var options = new TOptions();
+
         var optionsSection = configuration.GetSection(section);
         optionsSection.Bind(options);
+
         configurator?.Invoke(options);
+
         return options;
     }
 
-    public static void AddCustomJwtAuthentication(this ContainerBuilder builder, IConfiguration configuration)
+    public static AuthenticationBuilder AddCustomJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
@@ -53,18 +70,23 @@ public static class ServiceCollectionExtensions
             throw new ArgumentException("SecretKey cannot be null or empty.", nameof(jwtOptions.Secret));
         }
 
-        builder.RegisterType<JwtFactory>().As<IJwtFactory>().InstancePerLifetimeScope();
+        services.TryAddTransient<IJwtFactory, JwtFactory>();
 
-        builder.Register(c =>
-        {
-            var options = new JwtBearerOptions
+        return services
+            .AddAuthentication(options =>
             {
-                Audience = jwtOptions.Audience,
-                SaveToken = true,
-                RefreshOnIssuerKeyNotFound = false,
-                RequireHttpsMetadata = false,
-                IncludeErrorDetails = true,
-                TokenValidationParameters = new TokenValidationParameters
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.Audience = jwtOptions.Audience;
+                options.SaveToken = true;
+                options.RefreshOnIssuerKeyNotFound = false;
+                options.RequireHttpsMetadata = false;
+                options.IncludeErrorDetails = true;
+
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
@@ -75,8 +97,9 @@ public static class ServiceCollectionExtensions
                     SaveSigninToken = true,
                     ClockSkew = TimeSpan.Zero,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret))
-                },
-                Events = new JwtBearerEvents
+                };
+
+                options.Events = new JwtBearerEvents
                 {
                     OnAuthenticationFailed = context =>
                     {
@@ -97,53 +120,50 @@ public static class ServiceCollectionExtensions
                         context.Response.StatusCode = StatusCodes.Status403Forbidden;
                         return Task.CompletedTask;
                     }
-                }
-            };
-            return options;
-        }).SingleInstance();
-    }
-
-    public static void AddCustomAuthorization(this ContainerBuilder builder)
-    {
-        builder.Register(c =>
-        {
-            var services = c.Resolve<IServiceCollection>();
-            services.AddAuthorization(options =>
-            {
-                var policyBuilder = new AuthorizationPolicyBuilder();
-                policyBuilder.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
-                policyBuilder.RequireAuthenticatedUser();
-
-                options.DefaultPolicy = policyBuilder.Build();
+                };
             });
-
-            return services.BuildServiceProvider().GetRequiredService<IAuthorizationService>();
-        }).AsSelf().SingleInstance();
     }
 
-    public static void AddCustomCors(this ContainerBuilder builder)
+    public static IServiceCollection AddCustomAuthorization(this IServiceCollection services)
     {
-        builder.Register(c =>
+        return services.AddAuthorization(options =>
         {
-            var policyBuilder = new CorsPolicyBuilder();
-            policyBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-            return policyBuilder.Build();
-        }).As<CorsPolicy>().SingleInstance();
+            var policyBuilder = new AuthorizationPolicyBuilder();
+            policyBuilder.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+            policyBuilder.RequireAuthenticatedUser();
+
+            options.DefaultPolicy = policyBuilder.Build();
+        });
     }
 
-    public static void AddCustomServices(this ContainerBuilder builder)
+    public static IServiceCollection AddCustomCors(this IServiceCollection services)
     {
-        builder.RegisterType<EndpointService>().As<IEndpointService>().InstancePerLifetimeScope();
-        builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerLifetimeScope();
-    }
-
-    public static void AddCustomSwagger(this ContainerBuilder builder)
-    {
-        builder.Register(c =>
+        services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
         {
-            var options = new SwaggerGenOptions();
+            builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        }));
+
+        return services;
+    }
+
+    public static IServiceCollection AddCustomServices(this IServiceCollection services)
+    {
+        services.AddScoped<IEndpointService, EndpointService>();
+        services.AddHttpContextAccessor();
+
+        return services;
+    }
+
+    public static IServiceCollection AddCustomSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(options =>
+        {
             options.SwaggerDoc("v1", new OpenApiInfo { Title = "OnAim", Description = "Docs OnAim API", Version = "3.0.0" });
             options.CustomSchemaIds(x => x.FullName);
+
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
@@ -152,6 +172,7 @@ public static class ServiceCollectionExtensions
                 Scheme = "bearer",
                 BearerFormat = "JWT"
             });
+
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
@@ -166,7 +187,8 @@ public static class ServiceCollectionExtensions
                     Array.Empty<string>()
                 }
             });
-            return options;
-        }).SingleInstance();
+        });
+
+        return services;
     }
 }

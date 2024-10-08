@@ -78,6 +78,7 @@ public sealed class GetAllUserQueryHandler : IQueryHandler<GetAllUserQuery, Appl
                     IsActive = xx.Role.IsActive,
                 }).ToList(),
             },
+            new List<string> { "Id", "FirstName", "LastName"},
             cancellationToken
         );
 

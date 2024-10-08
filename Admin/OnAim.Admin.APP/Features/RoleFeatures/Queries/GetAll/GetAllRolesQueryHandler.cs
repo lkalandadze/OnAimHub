@@ -66,6 +66,7 @@ public class GetAllRolesQueryHandler : IQueryHandler<GetAllRolesQuery, Applicati
                         IsActive = z.EndpointGroup.IsActive,
                     }).ToList()
            },
+           new List<string> { "Id", "Name"},
            cancellationToken
        );
 
