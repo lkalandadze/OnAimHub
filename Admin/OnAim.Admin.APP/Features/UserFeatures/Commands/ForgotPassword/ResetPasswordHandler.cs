@@ -3,6 +3,7 @@ using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.Enums;
 using OnAim.Admin.Shared.Helpers.Password;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.ForgotPassword;
@@ -25,8 +26,9 @@ public class ResetPasswordHandler : BaseCommandHandler<ResetPassword, Applicatio
 
         var user = await _userRepository.Query(x =>
              x.Email == request.Email &&
-             x.ResetCode == request.Code &&
-             x.ResetCodeExpiration > DateTime.UtcNow &&
+             x.VerificationPurpose == VerificationPurpose.PasswordReset &&
+             x.VerificationCode == request.Code &&
+             x.VerificationCodeExpiration > DateTime.UtcNow &&
              !x.IsDeleted).FirstOrDefaultAsync(cancellationToken);
 
         if (user == null)
@@ -37,8 +39,9 @@ public class ResetPasswordHandler : BaseCommandHandler<ResetPassword, Applicatio
 
         user.Password = hashedPassword;
         user.Salt = salt;
-        user.ResetCode = null;
-        user.ResetCodeExpiration = null;
+        user.VerificationPurpose = VerificationPurpose.PasswordReset;
+        user.VerificationCode = null;
+        user.VerificationCodeExpiration = null;
 
         await _userRepository.CommitChanges();
 

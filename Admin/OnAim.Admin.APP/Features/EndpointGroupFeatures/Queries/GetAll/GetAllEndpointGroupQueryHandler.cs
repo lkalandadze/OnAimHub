@@ -19,6 +19,8 @@ public class GetAllEndpointGroupQueryHandler : IQueryHandler<GetAllEndpointGroup
     }
     public async Task<ApplicationResult> Handle(GetAllEndpointGroupQuery request, CancellationToken cancellationToken)
     {
+        var sortableFields = new List<string> { "Id", "Name" };
+
         var query = _repository.Query(x =>
                      (string.IsNullOrEmpty(request.Filter.Name) || x.Name.ToLower().Contains(request.Filter.Name.ToLower())) &&
                      (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value)

@@ -4,6 +4,7 @@ using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Shared.Helpers;
+using OnAim.Admin.Shared.Enums;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.ForgotPassword;
 
@@ -31,11 +32,12 @@ public class ForgotPasswordCommandHandler : BaseCommandHandler<ForgotPasswordCom
         if (user == null)
             throw new NotFoundException("User Not Found");          
 
-        var resetCode = ActivationCodeHelper.ActivationCode();
+        var resetCode = ActivationCodeHelper.ActivationCode().ToString();
         var resetCodeExpiration = DateTime.UtcNow.AddHours(1);
 
-        user.ResetCode = resetCode;
-        user.ResetCodeExpiration = resetCodeExpiration;
+        user.VerificationCode = resetCode;
+        user.VerificationCodeExpiration = resetCodeExpiration;
+        user.VerificationPurpose = VerificationPurpose.PasswordReset;
 
         await _userRepository.CommitChanges();
 

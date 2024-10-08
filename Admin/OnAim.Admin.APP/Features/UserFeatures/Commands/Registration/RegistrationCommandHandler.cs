@@ -6,6 +6,7 @@ using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Helpers;
 using OnAim.Admin.Shared.Helpers.Password;
+using OnAim.Admin.Shared.Enums;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Registration;
 
@@ -37,6 +38,9 @@ public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand
         await ValidateAsync(request, cancellationToken);
 
         var existingUser = await GetExistingUserAsync(request.Email);
+
+        if (!await _domainValidationService.IsDomainAllowedAsync(request.Email))
+            throw new BadRequestException("Domain not allowed");
 
         if (existingUser != null)
         {
@@ -95,7 +99,7 @@ public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand
         var salt = EncryptPasswordExtension.Salt();
         string hashed = EncryptPasswordExtension.EncryptPassword(request.Password, salt);
 
-        var activationCode = ActivationCodeHelper.ActivationCode();
+        var activationCode = ActivationCodeHelper.ActivationCode().ToString();
         var activationCodeExpiration = DateTime.UtcNow.AddMinutes(15);
 
         var user = new User(
@@ -109,8 +113,9 @@ public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand
             _context.SecurityContextAccessor.UserId,
             isVerified: false,
             isActive: false,
-            activationCode: activationCode,
-            activationCodeExpiration: activationCodeExpiration,
+            activationCode,
+            VerificationPurpose.AccountActivation,
+            activationCodeExpiration,
             isSuperAdmin: false
         );
 
@@ -123,7 +128,7 @@ public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand
         await SendActivationEmailAsync(user, activationCode);
     }
 
-    private async Task SendActivationEmailAsync(User user, int activationCode)
+    private async Task SendActivationEmailAsync(User user, string activationCode)
     {
         var activationLink = $"activate?userId={user.Id}&code={activationCode}";
 

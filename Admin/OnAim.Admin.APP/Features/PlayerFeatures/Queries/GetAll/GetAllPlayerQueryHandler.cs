@@ -17,10 +17,12 @@ public class GetAllPlayerQueryHandler : IQueryHandler<GetAllPlayerQuery, Applica
     }
     public async Task<ApplicationResult> Handle(GetAllPlayerQuery request, CancellationToken cancellationToken)
     {
+        var sortableFields = new List<string> { "PlayerId", "PlayerName" };
+
         var palyers = _readOnlyRepository.Query(x =>
                         string.IsNullOrEmpty(request.Filter.Name) || x.UserName.ToLower().Contains(request.Filter.Name.ToLower()));
 
-        //if(request.Filter.Status != null)
+        //if (request.Filter.Status != null)
         //    palyers.Select(x => x.Status == request.Filter.Status);
 
         if (request.Filter.SegmentIds?.Any() == true)
@@ -74,7 +76,8 @@ public class GetAllPlayerQueryHandler : IQueryHandler<GetAllPlayerQuery, Applica
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalCount = totalCount,
-                Items = await res.ToListAsync()
+                Items = await res.ToListAsync(),
+                SortableFields = sortableFields,
             },
         };
     }
