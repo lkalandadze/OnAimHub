@@ -10,6 +10,6 @@ public class CreateRoleCommandValidator : AbstractValidator<CreateRoleCommand>
             .NotEmpty()
             .NotNull()
             .WithMessage("Name is required.")
-            .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
+            .Matches(@"^[a-zA-Z\s]+$").WithMessage("Name should only contain letters and spaces, no numbers or symbols.");
     }
 }

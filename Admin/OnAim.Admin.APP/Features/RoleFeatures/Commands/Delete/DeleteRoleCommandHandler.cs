@@ -26,7 +26,7 @@ public class DeleteRoleCommandHandler : BaseCommandHandler<DeleteRoleCommand, Ap
         foreach ( var role in roles)
         {
             role.IsActive = false;
-            role.MarkAsDeleted();
+            role.IsDeleted = true;
         }
 
         await _repository.CommitChanges();

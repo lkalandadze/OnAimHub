@@ -1,10 +1,12 @@
 ﻿#nullable disable
 
 using Hub.Domain.Entities.DbEnums;
+using OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing.Attributes;
 using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;
 
+[GloballyVisible]
 public class PlayerProgress : BaseEntity<int>
 {
     public PlayerProgress()

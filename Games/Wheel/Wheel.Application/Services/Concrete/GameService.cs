@@ -5,6 +5,7 @@ using GameLib.Domain.Abstractions.Repository;
 using Wheel.Application.Models.Game;
 using Wheel.Application.Models.Player;
 using Wheel.Application.Services.Abstract;
+using Wheel.Domain.Abstractions.Repository;
 using Wheel.Domain.Entities;
 
 namespace Wheel.Application.Services.Concrete;
@@ -16,19 +17,30 @@ public class GameService : IGameService
     private readonly IAuthService _authService;
     private readonly IHubService _hubService;
     private readonly IConsulGameService _consulGameService;
-
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IRoundRepository _roundRepository;
+    private readonly IWheelPrizeRepository _wheelPrizeRepository;
+    private readonly ISegmentRepository _segmentRepository;
     public GameService(
         ConfigurationHolder configurationHolder,
-        IConfigurationRepository segmentRepository,
+        IConfigurationRepository configurationRepository,
         IAuthService authService,
         IHubService hubService,
-        IConsulGameService consulGameService)
+        IConsulGameService consulGameService,
+        IUnitOfWork unitOfWork,
+        IRoundRepository roundRepository,
+        IWheelPrizeRepository wheelPrizeRepository,
+        ISegmentRepository segmentRepository)
     {
         _configurationHolder = configurationHolder;
-        _configurationRepository = segmentRepository;
+        _configurationRepository = configurationRepository;
         _authService = authService;
         _hubService = hubService;
         _consulGameService = consulGameService;
+        _unitOfWork = unitOfWork;
+        _roundRepository = roundRepository;
+        _wheelPrizeRepository = wheelPrizeRepository;
+        _segmentRepository = segmentRepository;
     }
 
     public InitialDataResponseModel GetInitialData()

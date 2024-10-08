@@ -24,16 +24,17 @@ public class ActivateAccountCommandHandler : BaseCommandHandler<ActivateAccountC
 
         var user = await _repository.Query(x => x.Email == request.Email && !x.IsDeleted).FirstOrDefaultAsync();
 
-        if (user == null || user.ActivationCode != request.Code)
+        if (user == null || user.VerificationCode != request.Code)
             throw new BadRequestException("Invalid activation code.");
 
-        if (user.ActivationCodeExpiration < DateTime.UtcNow)
+        if (user.VerificationCodeExpiration < DateTime.UtcNow)
             throw new BadRequestException("Activation code has expired.");
 
         user.IsActive = true;
         user.IsVerified = true;
-        user.ActivationCode = null;
-        user.ActivationCodeExpiration = null;
+        user.VerificationPurpose = Shared.Enums.VerificationPurpose.AccountActivation;
+        user.VerificationCode = null;
+        user.VerificationCodeExpiration = null;
 
         await _repository.CommitChanges();
 

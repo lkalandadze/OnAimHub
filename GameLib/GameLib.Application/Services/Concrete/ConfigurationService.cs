@@ -3,6 +3,7 @@ using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
 using GameLib.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameLib.Application.Services.Concrete;
 
@@ -21,15 +22,12 @@ public class ConfigurationService : IConfigurationService
 
     public async Task<IEnumerable<ConfigurationGetModel>> GetAllAsync()
     {
-        var configurations = await _configurationRepository.QueryAsync();
+        var configurations = await _configurationRepository.Query()
+                                                           .Include(c => c.Segments)
+                                                           .Where(c => c.Segments.Any(s => !s.IsDeleted))
+                                                           .ToListAsync();
 
-        return configurations.Select(c => new ConfigurationGetModel
-        {
-            Id = c.Id,
-            Name = c.Name,
-            Value = c.Value,
-            IsActive = c.IsActive,
-        });
+        return configurations.Select(c => ConfigurationGetModel.MapFrom(c));
     }
 
     public async Task<ConfigurationGetModel> GetByIdAsync(int id)
@@ -41,21 +39,15 @@ public class ConfigurationService : IConfigurationService
             throw new KeyNotFoundException($"Configuration not found for Id: {id}");
         }
 
-        return new ConfigurationGetModel
-        {
-            Id = configuration.Id,
-            Name = configuration.Name,
-            Value = configuration.Value,
-            IsActive = configuration.IsActive,
-        };
+        return ConfigurationGetModel.MapFrom(configuration);
     }
 
     public async Task CreateAsync(ConfigurationCreateModel model)
     {
-        var configuration = new Configuration(model.Name, model.Value);
+        //var configuration = new GameConfiguration(model.Name, model.Value);
 
-        await _configurationRepository.InsertAsync(configuration);
-        await _unitOfWork.SaveAsync();
+        //await _configurationRepository.InsertAsync(configuration);
+        //await _unitOfWork.SaveAsync();
     }
 
     public async Task UpdateAsync(int id, ConfigurationUpdateModel model)
@@ -119,6 +111,7 @@ public class ConfigurationService : IConfigurationService
         {
             foreach (var segmentId in missingSegmentIds)
             {
+                // Assuming you want to instantiate Segment with GameConfiguration as the type argument
                 var segment = new Segment(segmentId);
 
                 await _segmentRepository.InsertAsync(segment);

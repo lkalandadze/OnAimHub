@@ -13,32 +13,25 @@ namespace OnAim.Admin.API.Controllers;
 
 public class RoleController : ApiControllerBase
 {
-    [HttpPost("Create")]
+    [HttpPost(nameof(Create))]
     [ProducesResponseType(typeof(CreateRoleCommand), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Create([FromBody] CreateRoleCommand roleModel)
        => Ok(await Mediator.Send(roleModel));
 
-    [HttpGet("GetAll")]
+    [HttpGet(nameof(GetAll))]
     public async Task<IActionResult> GetAll([FromQuery] RoleFilter filter)
         => Ok(await Mediator.Send(new GetAllRolesQuery(filter)));
 
-    [HttpGet("Get/{id}")]
+    [HttpGet(nameof(Get) + "/{id}")]
     public async Task<IActionResult> Get([FromRoute] int id)
         => Ok(await Mediator.Send(new GetRoleByIdQuery(id)));
 
-    //[HttpGet("Download")]
-    //public async Task<IResult> Download([FromQuery] RolesExportQuery query)
-    //{
-    //    var result = await Mediator.Send(query);
-    //    return result;
-    //}
-
-    [HttpPut("Update/{id}")]
+    [HttpPut(nameof(Update) + "/{id}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRoleRequest model)
         => Ok(await Mediator.Send(new UpdateRoleCommand(id, model)));
 
-    [HttpPost("Delete")]
+    [HttpPost(nameof(Delete))]
     public async Task<IActionResult> Delete([FromBody] List<int> ids)
         => Ok(await Mediator.Send(new DeleteRoleCommand(ids)));
 }

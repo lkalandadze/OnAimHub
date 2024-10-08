@@ -69,7 +69,8 @@ services:
     environment:
       POSTGRES_DB: WheelConfig
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Asdasd123!
+      # POSTGRES_PASSWORD: Asdasd123!
+      POSTGRES_PASSWORD: 1234
     ports:
       - "5432:5432"
     volumes:
@@ -80,7 +81,8 @@ services:
     environment:
       POSTGRES_DB: WheelHistory
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Asdasd123!
+      # POSTGRES_PASSWORD: Asdasd123!
+      POSTGRES_PASSWORD: 1234
     ports:
       - "5433:5432"
     volumes:

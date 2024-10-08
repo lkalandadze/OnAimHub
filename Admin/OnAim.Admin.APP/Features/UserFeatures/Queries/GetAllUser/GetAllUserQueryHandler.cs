@@ -19,7 +19,8 @@ public sealed class GetAllUserQueryHandler : IQueryHandler<GetAllUserQuery, Appl
     public async Task<ApplicationResult> Handle(GetAllUserQuery request, CancellationToken cancellationToken)
     {
         var query = _repository.Query(x =>
-                        string.IsNullOrEmpty(request.UserFilter.Name) || x.FirstName.Contains(request.UserFilter.Name));
+            string.IsNullOrEmpty(request.UserFilter.Name) ||
+            x.FirstName.ToLower().Contains(request.UserFilter.Name.ToLower()));
 
         if (request.UserFilter?.HistoryStatus.HasValue == true)
         {

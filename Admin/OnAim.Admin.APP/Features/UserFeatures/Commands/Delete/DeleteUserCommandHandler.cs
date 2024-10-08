@@ -29,7 +29,7 @@ public class DeleteUserCommandHandler : BaseCommandHandler<DeleteUserCommand, Ap
         foreach (var user in users)
         {
             user.IsActive = false;
-            user.MarkAsDeleted();
+            user.IsDeleted = true;
         }
 
         await _repository.CommitChanges();

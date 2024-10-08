@@ -1,5 +1,6 @@
 ﻿using Wheel.Application.Models.Player;
 using Wheel.Application.Models.Game;
+using static Wheel.Application.Services.Concrete.GameService;
 
 namespace Wheel.Application.Services.Abstract;
 

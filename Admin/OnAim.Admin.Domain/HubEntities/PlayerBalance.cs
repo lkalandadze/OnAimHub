@@ -1,33 +1,12 @@
-﻿#nullable disable
-
-using OnAim.Admin.Domain.HubEntities.DbEnums;
-
-namespace OnAim.Admin.Domain.HubEntities;
-
-public class PlayerBalance : BaseEntity<int>
+namespace OnAim.Admin.Domain.HubEntities
 {
-    public PlayerBalance()
-    {
-        
-    }
+	// Generated Code
 
-    public PlayerBalance(decimal amount, int playerId, string currencyId)
-    {
-        Amount = amount;
-        PlayerId = playerId;
-        CurrencyId = currencyId;
-    }
-
-    public decimal Amount { get; private set; }
-
-    public int PlayerId { get; private set; }
-    public Player Player { get; private set; }
-
-    public string CurrencyId { get; private set; }
-    public Currency Currency { get; private set; }
-
-    public void SetAmount(decimal amount)
-    {
-        Amount = amount;
-    }
+	public class PlayerBalance : BaseEntity<Int32>	{
+		public Decimal Amount { get; set; }
+		public Int32 PlayerId { get; set; }
+		public Player Player { get; set; }
+		public string CurrencyId { get; set; }
+		public Currency Currency { get; set; }
+	}
 }

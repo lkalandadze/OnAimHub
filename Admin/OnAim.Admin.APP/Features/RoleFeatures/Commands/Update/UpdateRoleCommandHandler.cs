@@ -43,15 +43,15 @@ public class UpdateRoleCommandHandler : BaseCommandHandler<UpdateRoleCommand, Ap
             var super = await _repository.Query(x => x.Name == "SuperRole").FirstOrDefaultAsync();
 
             if (request.Model.Name == super.Name)
-                throw new Exception("You don't have permmission to update this role!");
+                throw new BadRequestException("You don't have permmission to update this role!");
 
-            bool nameExists = await _repository.Query(x => x.Name == request.Model.Name && x.Id != request.Id)
+            bool nameExists = await _repository.Query(x => x.Name == request.Model.Name.ToLower() && x.Id != request.Id)
                 .AnyAsync();
 
             if (nameExists)
-                throw new AlreadyExistsException("Role with this name already exists.");
+                throw new BadRequestException("Role with this name already exists.");
 
-            role.Name = request.Model.Name;
+            role.Name = request.Model.Name.ToLower();
         }
 
         if (!request.Model.IsActive)

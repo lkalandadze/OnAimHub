@@ -6,6 +6,7 @@ using Hub.Api.Common.Consul;
 using Hub.Api.Middlewares;
 using Hub.Application;
 using Hub.Application.Configurations;
+using Hub.Application.Features.IdentityFeatures.Commands.BasicAuthentication;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Services.Abstract;
 using Hub.Application.Services.Abstract.BackgroundJobs;
@@ -18,12 +19,15 @@ using Hub.Infrastructure.DataAccess;
 using Hub.Infrastructure.Repositories;
 using MassTransit;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.PostgreSQL;
+using Swashbuckle.AspNetCore.Filters;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using System.Security.Cryptography;
 
@@ -80,7 +84,9 @@ public class Startup
         services.AddScoped<IBackgroundJobScheduler, HangfireJobScheduler>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
+        services.Configure<BasicAuthConfiguration>(Configuration.GetSection("BasicAuthConfiguration"));
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
+        services.Configure<GameApiConfiguration>(Configuration.GetSection("GameApiConfiguration"));
 
         services.AddHangfire(config =>
             config.UsePostgreSqlStorage(Configuration.GetConnectionString("OnAimHub")));
@@ -110,7 +116,10 @@ public class Startup
         services.AddEndpointsApiExplorer();
 
         ConfigureSwagger(services);
-        ConfigureJwt(services);
+        ConfigureAuthentication(services);
+
+        services.AddAuthentication("BasicAuth")
+            .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuth", null);
 
         services.AddAuthorization();
 
@@ -133,12 +142,7 @@ public class Startup
             DbSettings.Init(settingRepository);
         }
 
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.DefaultModelExpandDepth(-1);
-            c.DocumentTitle = "Hub.Api";
-        });
+        ConfigureSwagger(app);
 
         app.UseForwardedHeaders();
         app.UseCertificateForwarding();
@@ -158,7 +162,7 @@ public class Startup
         }
 
         app.UseEndpoints(endpoints =>
-        {
+        { 
             endpoints.MapControllers();
         });
     }
@@ -193,17 +197,16 @@ public class Startup
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo
+            c.SwaggerDoc("admin", new OpenApiInfo { Title = "Admin | Hub.Api", Version = "v1" });
+            c.SwaggerDoc("game", new OpenApiInfo { Title = "Game | Hub.Api", Version = "v1" });
+            c.SwaggerDoc("hub", new OpenApiInfo { Title = "Hub | Hub.Api", Version = "v1" });
+
+            c.DocInclusionPredicate((docName, apiDesc) =>
             {
-                Title = "Hub Api",
-                Version = "v1",
-                Description = "Hub Api",
-                Contact = new OpenApiContact
-                {
-                    Name = "HubApi",
-                },
+                var groupName = apiDesc.GroupName;
+                return docName.Equals(groupName);
             });
-            c.ResolveConflictingActions(apiDescription => apiDescription.First());
+
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Name = "Authorization",
@@ -214,24 +217,86 @@ public class Startup
                 Description = "JWT Authorization header using the bearer scheme.",
             });
 
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            c.AddSecurityDefinition("Basic", new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http,
+                Scheme = "basic",
+                In = ParameterLocation.Header,
+                Name = "Authorization",
+                Description = "Basic Authentication with username and password. Example: 'username:password' base64-encoded."
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            {
                 {
+                    new OpenApiSecurityScheme
                     {
-                        new OpenApiSecurityScheme
+                        Reference = new OpenApiReference
                         {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer",
-                            },
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
                         },
-                        Array.Empty<string>()
+                        Scheme = "oauth2",
+                        Name = "Bearer",
+                        In = ParameterLocation.Header,
                     },
-                });
+                    new List<string>()
+                },
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Basic"
+                        },
+                        Scheme = "basic",
+                        Name = "Basic",
+                        In = ParameterLocation.Header,
+                    },
+                    new List<string>()
+                },
+            });
         });
     }
 
-    private void ConfigureJwt(IServiceCollection services)
+    private void ConfigureSwagger(IApplicationBuilder app)
+    {
+        app.UseSwagger();
+
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/hub/swagger.json", "Hub | Hub.Api");
+            c.RoutePrefix = "swagger";
+            c.DocumentTitle = "Hub | Hub.Api";
+        });
+
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/hub/swagger.json", "Hub | Hub.Api");
+
+            c.RoutePrefix = "swagger/hub";
+            c.DocumentTitle = "Hub | Hub.Api";
+        });
+
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/admin/swagger.json", "Admin | Hub.Api");
+
+            c.RoutePrefix = "swagger/admin";
+            c.DocumentTitle = "Admin | Hub.Api";
+        });
+
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/game/swagger.json", "Game | Hub.Api");
+
+            c.RoutePrefix = "swagger/game";
+            c.DocumentTitle = "Game | Hub.Api";
+        });
+    }
+
+    private void ConfigureAuthentication(IServiceCollection services)
     {
         var jwtConfig = Configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>()!;
 
@@ -240,6 +305,7 @@ public class Startup
         ecdsa.ImportECPrivateKey(keyBytes, out _);
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null)
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters

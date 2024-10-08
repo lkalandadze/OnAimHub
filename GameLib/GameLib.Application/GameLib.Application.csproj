@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="MediatR" Version="12.4.1" />
 	  <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
@@ -17,6 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\Lib\OnAim.Lib.EntityExtension.GlobalAttributes\OnAim.Lib.EntityExtension.GlobalAttributes.csproj" />
 	  <ProjectReference Include="..\..\Shared\RNG\RNG.csproj" />
 	  <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
 	  <ProjectReference Include="..\..\Shared\Shared.Lib\Shared.Lib.csproj" />

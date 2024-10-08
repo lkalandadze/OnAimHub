@@ -14,16 +14,6 @@ namespace OnAim.Admin.API.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddConfigs(this IServiceCollection services, ConfigurationManager config)
-    {
-        config.AddEnvironmentVariables();
-
-        services.Configure<AuthenticationConfig>(
-            config.GetSection(AuthenticationConfig.ToString()));
-
-        return services;
-    }
-
     public static TOptions BindOptions<TOptions>(
     this IConfiguration configuration,
     Action<TOptions>? configurator = null

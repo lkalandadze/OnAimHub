@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Shared.Lib.Wrappersl;
+using Shared.Lib.Wrappers;
 
 namespace Leaderboard.Application.Features.LeaderboardResultFeatures.Queries.GetByPlayerId;
 

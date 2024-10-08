@@ -1,4 +1,4 @@
-﻿namespace Shared.Lib.Wrappersl;
+﻿namespace Shared.Lib.Wrappers;
 
 public class PagedRequest
 {

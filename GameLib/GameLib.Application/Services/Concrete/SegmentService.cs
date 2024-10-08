@@ -3,6 +3,7 @@ using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
 using GameLib.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameLib.Application.Services.Concrete;
 
@@ -17,36 +18,30 @@ public class SegmentService : ISegmentService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<SegmentGetModel>> GetAllAsync()
+    public async Task<IEnumerable<SegmentBaseGetModel>> GetAllAsync()
     {
-        var segments = await _segmentRepository.QueryAsync();
+        var segments = await _segmentRepository.Query()
+                                               .Where(s => !s.IsDeleted)
+                                               .ToListAsync();
 
-        return segments.Select(s => new SegmentGetModel
-        {
-            Id = s.Id,
-            IsDeleted = s.IsDeleted,
-        });
+        return segments.Select(s => SegmentBaseGetModel.MapFrom(s));
     }
 
-    public async Task<SegmentGetModel> GetByIdAsync(int id)
+    public async Task<SegmentBaseGetModel> GetByIdAsync(int id)
     {
         var segment = await _segmentRepository.OfIdAsync(id);
 
-        if (segment == null)
+        if (segment == null || segment.IsDeleted)
         {
             throw new KeyNotFoundException($"Segment not found for Id: {id}");
         }
 
-        return new SegmentGetModel
-        {
-            Id = segment.Id,
-            IsDeleted = segment.IsDeleted,
-        };
+        return SegmentBaseGetModel.MapFrom(segment);
     }
 
     public async Task CreateAsync(SegmentCreateModel model)
     {
-        var segment = new Segment(model.Id, model.ConfigurationId);
+        var segment = new Segment(model.Id /*model.ConfigurationId*/);
 
         await _segmentRepository.InsertAsync(segment);
         await _unitOfWork.SaveAsync();

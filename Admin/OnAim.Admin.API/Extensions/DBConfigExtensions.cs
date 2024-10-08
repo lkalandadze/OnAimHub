@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.API.Service.Endpoint;
 using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Infrasturcture.Persistance.Data;
+using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 using System.Security.Cryptography;
 
 namespace OnAim.Admin.API.Extensions;
@@ -110,6 +110,7 @@ public static class DBConfigExtensions
                 null, 
                 true, 
                 true,
+                null,
                 null,
                 null,
                 true));

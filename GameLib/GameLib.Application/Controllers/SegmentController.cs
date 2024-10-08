@@ -19,7 +19,7 @@ public class SegmentController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<IEnumerable<SegmentGetModel>>> GetAllAsync()
+    public async Task<ActionResult<IEnumerable<SegmentBaseGetModel>>> GetAllAsync()
     {
         return Ok(await _segmentService.GetAllAsync());
     }
@@ -28,7 +28,7 @@ public class SegmentController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<ConfigurationGetModel>> GetByIdAsync(int id)
+    public async Task<ActionResult<ConfigurationBaseGetModel>> GetByIdAsync(int id)
     {
         return Ok(await _segmentService.GetByIdAsync(id));
     }

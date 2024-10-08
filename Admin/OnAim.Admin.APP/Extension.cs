@@ -20,10 +20,10 @@ using OnAim.Admin.Infrasturcture.Repositories;
 using OnAim.Admin.APP.Services.SettingServices;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
 using Microsoft.AspNetCore.Http;
-using OnAim.Admin.APP.Shared.Clients;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using OnAim.Admin.APP.Services.ClientService;
 
 
 namespace OnAim.Admin.APP;
@@ -47,12 +47,29 @@ public static class Extension
             .AddTransient<IJwtFactory, JwtFactory>()
             .AddHostedService<TokenCleanupService>()
             .Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"))
-            .AddTransient<IEmailService, EmailService>()
+            //.AddTransient<IEmailService, EmailService>()
+            //.AddTransient<IEmailService, MailgunService>()
             .AddScoped<IDomainValidationService, DomainValidationService>()
             .AddScoped<IAppSettingsService, AppSettingsService>()
+            .AddScoped<IOtpService, OtpService>()
             .AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>))
             .AddScoped(typeof(CommandContext<>), typeof(CommandContext<>))
             .AddHtmlGenerator();
+
+        services.Configure<PostmarkOptions>(configuration.GetSection("Postmark"));
+
+        services.AddTransient<IEmailService>(sp =>
+        {
+            var options = sp.GetRequiredService<IOptions<PostmarkOptions>>().Value;
+            return new PostmarkService(options.ApiKey);
+        });
+        //services.Configure<MailgunOptions>(configuration.GetSection("Postmark"));
+
+        //services.AddTransient<IEmailService>(sp =>
+        //{
+        //    var options = sp.GetRequiredService<IOptions<MailgunOptions>>().Value;
+        //    return new MailgunService(options.ApiKey, options.Domain);
+        //});
 
         if (configureOptions is { })
         {
@@ -81,7 +98,15 @@ public static class Extension
 
     
 }
-
+public class PostmarkOptions
+{
+    public string ApiKey { get; set; }
+}
+public class MailgunOptions
+{
+    public string ApiKey { get; set; }
+    public string Domain { get; set; }
+}
 public static partial class WebApplicationBuilderExtensions
 {
     public static WebApplicationBuilder AddCustomHttpClients(this WebApplicationBuilder builder)

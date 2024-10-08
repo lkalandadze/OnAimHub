@@ -2,8 +2,8 @@
 
 public class PlayerListDto
 {
-    public int Id { get; set; }
-    public string PlayerName { get; set; }
+    public int PlayerId { get; set; }
+    public string? PlayerName { get; set; }
     public DateTimeOffset? RegistrationDate { get; set; }
     public DateTimeOffset? LastVisit { get; set; }
     public string? Segment {  get; set; }

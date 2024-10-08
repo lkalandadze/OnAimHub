@@ -1,5 +1,35 @@
 {
   "profiles": {
+    "Hub.Api [Hub]": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger/hub",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7069;http://localhost:5232"
+    },
+    "Hub.Api [Admin]": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger/admin",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7069;http://localhost:5232"
+    },
+    "Hub.Api [Game]": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger/game",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7069;http://localhost:5232"
+    },
     "http": {
       "commandName": "Project",
       "launchBrowser": true,

@@ -1,0 +1,17 @@
+﻿#nullable disable
+
+using GameLib.Application.Managers;
+using Shared.Application;
+using Shared.Lib.Attributes;
+
+namespace GameLib.Application;
+
+public class GameSettings : Settings
+{
+    public GameSettings() : base(RepositoryManager.GetGameSettingRepository())
+    {
+    }
+
+    [SettingPropertyDefaultValue(true)]
+    public SettingProperty<bool> IsActive { get; set; }
+}

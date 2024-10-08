@@ -1,53 +1,29 @@
-﻿#nullable disable
-
-using OnAim.Admin.Domain.HubEntities.DbEnums;
-
-namespace OnAim.Admin.Domain.HubEntities;
-
-public class Transaction : BaseEntity<int>
+namespace OnAim.Admin.Domain.HubEntities
 {
-    public Transaction()
+	// Generated Code
+
+	public class Transaction : BaseEntity<Int32>	{
+		public Decimal Amount { get; set; }
+		public Nullable<Int32> GameId { get; set; }
+		public Game Game { get; set; }
+		public Int32 PlayerId { get; set; }
+		public Player Player { get; set; }
+		public Int32 FromAccountId { get; set; }
+		public AccountType FromAccount { get; set; }
+		public Int32 ToAccountId { get; set; }
+		public AccountType ToAccount { get; set; }
+		public string CurrencyId { get; set; }
+		public Currency Currency { get; set; }
+		public Int32 StatusId { get; set; }
+		public TransactionStatus Status { get; set; }
+		public Int32 TypeId { get; set; }
+		public TransactionType Type { get; set; }
+	}
+    public class AccountType : DbEnum<int, AccountType>
     {
-        
-    }
-
-    public Transaction(decimal amount, int? gameId, int playerId, AccountType fromAccount, AccountType toAccount, string currencyId, TransactionStatus status, TransactionType type)
-    {
-        Amount = amount;
-        GameId = gameId;
-        PlayerId = playerId;
-        FromAccountId = fromAccount.Id;
-        ToAccountId = toAccount.Id;
-        CurrencyId = currencyId;
-        StatusId = status.Id;
-        TypeId = type.Id;
-    }
-
-    public decimal Amount { get; private set; }
-
-    public int? GameId { get; private set; }
-    public Game Game { get; private set; }
-
-    public int PlayerId { get; private set; }
-    public Player Player { get; private set; }
-
-    public int FromAccountId { get; private set; }
-    public AccountType FromAccount { get; private set; }
-
-    public int ToAccountId { get; private set; }
-    public AccountType ToAccount { get; private set; }
-
-    public string CurrencyId { get; private set; }
-    public Currency Currency { get; private set; }
-
-    public int StatusId { get; private set; }
-    public TransactionStatus Status { get; private set; }
-
-    public int TypeId { get; private set; }
-    public TransactionType Type { get; private set; }
-
-    public void SetStatus(TransactionStatus status)
-    {
-        StatusId = status.Id;
+        public static AccountType Player => FromId(1);
+        public static AccountType Game => FromId(2);
+        public static AccountType Casino => FromId(3);
+        public static AccountType Reset => FromId(4);
     }
 }

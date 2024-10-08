@@ -1,6 +1,8 @@
 ﻿using Consul;
+using GameLib.Application;
 using GameLib.Application.Configurations;
 using GameLib.Application.Controllers;
+using GameLib.Application.Generators;
 using GameLib.Application.Holders;
 using GameLib.Application.Managers;
 using GameLib.Application.Services.Abstract;
@@ -14,19 +16,27 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
+using Shared.Domain.Abstractions.Repository;
 using System.Security.Cryptography;
+using GameLib.Domain.Entities;
 
 namespace GameLib.ServiceRegistry;
 
 public static class DependencyResolver
 {
-    public static IServiceCollection Resolve(this IServiceCollection services, IConfiguration configuration, List<Type> prigeGroupTypes, string routePrefix)
+    public static IServiceCollection Resolve<T>(this IServiceCollection services, IConfiguration configuration, List<Type> prizeGroupTypes, string routePrefix) where T: GameConfiguration<T>
     {
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+        services.AddSingleton<GameSettings>();
         services.AddSingleton<GeneratorHolder>();
         services.AddSingleton<ConfigurationHolder>();
         services.AddSingleton<RepositoryManager>();
+        services.AddSingleton<EntityGenerator>();
 
-        foreach (var type in prigeGroupTypes)
+        services.AddSingleton(prizeGroupTypes);
+        foreach (var type in prizeGroupTypes)
         {
             services.AddScoped(typeof(IPrizeGroupRepository<>).MakeGenericType(type), typeof(PrizeGroupRepository<>).MakeGenericType(type));
         }
@@ -40,17 +50,15 @@ public static class DependencyResolver
         services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
         services.AddScoped<ISegmentRepository, SegmentRepository>();
+        services.AddScoped<ISettingRepository, GameSettingRepository<T>>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IConsulClient, ConsulClient>();
         services.AddScoped<IConsulGameService, ConsulGameService>();
         services.AddScoped<IConfigurationService, ConfigurationService>();
         services.AddScoped<ISegmentService, SegmentService>();
+        services.AddScoped<IPrizeTypeService, PrizeTypeService>();
 
-        services.BuildServiceProvider().GetRequiredService<RepositoryManager>();
-
-        services.AddHostedService<PrizeConfiguratorService>();
-        
         services.Configure<HubApiConfiguration>(configuration.GetSection("HubApiConfiguration"));
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
         services.Configure<PrizeGenerationConfiguration>(configuration.GetSection("PrizeGenerationConfiguration"));
@@ -70,7 +78,16 @@ public static class DependencyResolver
         services.AddEndpointsApiExplorer();
         services.AddHealthChecks();
 
+        HandleInitializations(services);
+
         return services;
+    }
+
+    private static void HandleInitializations(IServiceCollection services)
+    {
+        services.BuildServiceProvider().GetRequiredService<RepositoryManager>();
+        services.BuildServiceProvider().GetRequiredService<GameSettings>();
+        services.BuildServiceProvider().GetRequiredService<GeneratorHolder>();
     }
 
     private static void ConfigureSwagger(IServiceCollection services)

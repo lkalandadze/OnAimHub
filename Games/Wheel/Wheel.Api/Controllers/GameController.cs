@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Wheel.Application.Models.Game;
 using Wheel.Application.Models.Player;
 using Wheel.Application.Services.Abstract;
+using static Wheel.Application.Services.Concrete.GameService;
 
 namespace Wheel.Api.Controllers;
 

@@ -18,9 +18,10 @@ public class GeneratorHolder
     {
         _prizeGenerationConfig = prizeGenerationConfig.Value;
         this.prizeGroupTypes = prizeGroupTypes;
+        SetGenerators();
     }
 
-    public void SetGenerators()
+    private void SetGenerators()
     {
         prizeGroupTypes.ForEach(type =>
         {
@@ -52,7 +53,7 @@ public class GeneratorHolder
             return Generators
                 .Where(x => x.Key.Prizes.Any() && x.Value.Prizes.Any())
                 .Where(x => x.Key.Prizes.First().GetType() == typeof(TPrize))
-                .Where(x => x.Key.Configuration.Segments.Any(s => s.Id == segmentId))
+                //.Where(x => x.Key.Configuration.Segments.Any(s => s.Id == segmentId))
                 .First(x => predicate?.Invoke(x.Key) ?? true)
                 .Value!;
         }

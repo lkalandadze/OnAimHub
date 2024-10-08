@@ -1,28 +1,12 @@
-﻿#nullable disable
-
-using OnAim.Admin.Domain.HubEntities.DbEnums;
-
-namespace OnAim.Admin.Domain.HubEntities;
-
-public class PlayerProgressHistory : BaseEntity<int>
+namespace OnAim.Admin.Domain.HubEntities
 {
-    public PlayerProgressHistory()
-    {
+	// Generated Code
 
-    }
-
-    public PlayerProgressHistory(int progress, int playerId, string currencyId)
-    {
-        Progress = progress;
-        PlayerId = playerId;
-        CurrencyId = currencyId;
-    }
-
-    public int Progress { get; private set; }
-
-    public int PlayerId { get; private set; }
-    public Player Player { get; private set; }
-
-    public string CurrencyId { get; private set; }
-    public Currency Currency { get; private set; }
+	public class PlayerProgressHistory : BaseEntity<Int32>	{
+		public Int32 Progress { get; set; }
+		public Int32 PlayerId { get; set; }
+		public Player Player { get; set; }
+		public string CurrencyId { get; set; }
+		public Currency Currency { get; set; }
+	}
 }

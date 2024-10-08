@@ -21,7 +21,7 @@ public class GetAllEndpointQueryHandler : IQueryHandler<GetAllEndpointQuery, App
     {
         var query = _repository
             .Query(x =>
-                     (string.IsNullOrEmpty(request.Filter.Name) || x.Name.Contains(request.Filter.Name)) &&
+                     (string.IsNullOrEmpty(request.Filter.Name) || x.Name.ToLower().Contains(request.Filter.Name.ToLower())) &&
                      (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value) &&
                      (!request.Filter.Type.HasValue || x.Type == request.Filter.Type.Value)
                  );

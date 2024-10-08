@@ -1,31 +1,32 @@
-﻿#nullable disable
-
-namespace OnAim.Admin.Domain.HubEntities;
-
-public class DbEnum<T> : BaseEntity<T>
+namespace OnAim.Admin.Domain.HubEntities
 {
-    public string Name { get; set; }
-}
+    // Generated Code
 
-public class DbEnum<T, U> : DbEnum<T> where U : DbEnum<T>, new()
-{
-    public static bool operator ==(DbEnum<T, U> obj1, DbEnum<T, U> obj2)
+    public class DbEnum<T> : BaseEntity<T>
     {
-        return obj1.Equals(obj2);
+        public string Name { get; set; }
     }
 
-    public static bool operator !=(DbEnum<T, U> obj1, DbEnum<T, U> obj2)
+    public class DbEnum<T, U> : DbEnum<T> where U : DbEnum<T>, new()
     {
-        return !(obj1 == obj2);
-    }
+        public static bool operator ==(DbEnum<T, U> obj1, DbEnum<T, U> obj2)
+        {
+            return obj1.Equals(obj2);
+        }
 
-    public override bool Equals(object obj)
-    {
-        return (obj as DbEnum<T, U>)?.Id.Equals(Id) ?? false;
-    }
+        public static bool operator !=(DbEnum<T, U> obj1, DbEnum<T, U> obj2)
+        {
+            return !(obj1 == obj2);
+        }
 
-    public static U FromId(T id)
-    {
-        return new U { Id = id };
+        public override bool Equals(object obj)
+        {
+            return (obj as DbEnum<T, U>)?.Id.Equals(Id) ?? false;
+        }
+
+        public static U FromId(T id)
+        {
+            return new U { Id = id };
+        }
     }
 }

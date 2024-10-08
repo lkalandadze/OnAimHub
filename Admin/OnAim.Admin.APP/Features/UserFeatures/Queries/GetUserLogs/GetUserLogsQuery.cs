@@ -1,5 +1,6 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.DTOs.Base;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Queries.GetUserLogs;
 
@@ -9,7 +10,5 @@ public record AuditLogFilter(
     List<string>? Categories,
     List<string>? Actions,
     DateTimeOffset? DateFrom,
-    DateTimeOffset? DateTo,
-    int? PageNumber,
-    int? PageSize
-    );
+    DateTimeOffset? DateTo
+    ) : BaseFilter;

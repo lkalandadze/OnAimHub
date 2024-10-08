@@ -5,11 +5,6 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class AccessToken : BaseEntity
 {
-    public int UserId { get; set; }
-    public string Token { get; set; }
-    public DateTime Expiration { get; set; }
-    public User User { get; set; }
-
     public AccessToken(int userId, string token, DateTime expiration)
     {
         UserId = userId;
@@ -17,4 +12,9 @@ public class AccessToken : BaseEntity
         Expiration = expiration;
         DateCreated = SystemDate.Now;
     }
+
+    public int UserId { get; set; }
+    public string Token { get; set; }
+    public DateTime Expiration { get; set; }
+    public User User { get; set; }
 }

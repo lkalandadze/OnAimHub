@@ -10,6 +10,7 @@ using OnAim.Admin.Shared.Models;
 using System.Security.Claims;
 using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
 using OnAim.Admin.Shared.Helpers.Password;
+using OnAim.Admin.APP.Services.Abstract;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Login;
 
@@ -19,48 +20,63 @@ public class LoginUserCommandHandler : BaseCommandHandler<LoginUserCommand, Auth
     private readonly IRepository<Role> _roleRepository;
     private readonly IConfigurationRepository<UserRole> _userConfigurationRepository;
     private readonly IJwtFactory _jwtFactory;
+    private readonly IOtpService _otpService;
+    private readonly IEmailService _emailService;
 
     public LoginUserCommandHandler(
         CommandContext<LoginUserCommand> context,
         IRepository<User> userRepository,
         IRepository<Role> roleRepository,
         IConfigurationRepository<UserRole> userConfigurationRepository,
-        IJwtFactory jwtFactory
+        IJwtFactory jwtFactory,
+        IOtpService otpService,
+        IEmailService emailService
         ) : base( context )
     {
         _userRepository = userRepository;
         _roleRepository = roleRepository;
         _userConfigurationRepository = userConfigurationRepository;
         _jwtFactory = jwtFactory;
+        _otpService = otpService;
+        _emailService = emailService;
     }
     protected override async Task<AuthResultDto> ExecuteAsync(LoginUserCommand request, CancellationToken cancellationToken)
     {
         await ValidateAsync(request, cancellationToken);
 
-        var model = request.Model;
-        var user = await _userRepository.Query(x => x.Email == model.Email).FirstOrDefaultAsync();
+        var user = await _userRepository.Query(x => x.Email == request.Model.Email && x.IsDeleted == false).FirstOrDefaultAsync();
 
-        if (user == null)          
+        if (user == null)
             throw new NotFoundException("User is not active Or Doesn't Exist");
-        
 
-        if (user?.IsActive == false)
+        if (user.IsActive == false)
             throw new NotFoundException("User is not active Or Doesn't Exist");
-        
 
-        if (user?.IsVerified == false)
+        if (user.IsVerified == false)
             throw new NotFoundException("User Not Verified");
-        
 
-        string hashed = EncryptPasswordExtension.EncryptPassword(model.Password, user.Salt);
+        string hashed = EncryptPasswordExtension.EncryptPassword(request.Model.Password, user.Salt);
 
         if (hashed == user.Password)
         {
+            if (user.IsTwoFactorEnabled.HasValue)
+            {
+                var otp = _otpService.GenerateOtp(user.Email);
+                _otpService.StoreOtp(user.Id, otp);
+
+                await _emailService.SendActivationEmailAsync(user.Email, "Your OTP Code", $"Your OTP code is: {otp}");
+
+                return new AuthResultDto
+                {
+                    AccessToken = null,
+                    RefreshToken = null,
+                    StatusCode = 201,
+                    Message = "OTP has been sent to your email."
+                };
+            }
             var roles = await GetUserRolesAsync(user.Id);
-
-            var permissions = await GetUserPermissionsAsync(user.Id);
-
             var roleNames = roles.Select(r => r.Name).ToList();
+
             var token = _jwtFactory.GenerateEncodedToken(user.Id, user.Email, new List<Claim>(), roleNames);
             var refreshToken = await _jwtFactory.GenerateRefreshToken(user.Id);
 
@@ -85,6 +101,39 @@ public class LoginUserCommandHandler : BaseCommandHandler<LoginUserCommand, Auth
             StatusCode = 404
         };
     }
+
+    public async Task<AuthResultDto> VerifyOtpAsync(int userId, string otp)
+    {
+        var storedOtp = await _otpService.GetStoredOtp(userId);
+        if (storedOtp == otp)
+        {
+            var user = await _userRepository.Query(u => u.Id == userId).FirstOrDefaultAsync();
+            if (user == null)
+                throw new NotFoundException("User doesn't exist");
+
+            var roles = await GetUserRolesAsync(user.Id);
+            var roleNames = roles.Select(r => r.Name).ToList();
+
+            var token = _jwtFactory.GenerateEncodedToken(user.Id, user.Email, new List<Claim>(), roleNames);
+            var refreshToken = await _jwtFactory.GenerateRefreshToken(user.Id);
+
+            await _jwtFactory.SaveAccessToken(user.Id, token, DateTime.UtcNow.AddDays(1));
+
+            user.LastLogin = SystemDate.Now;
+
+            await _userRepository.CommitChanges();
+
+            return new AuthResultDto
+            {
+                AccessToken = token,
+                RefreshToken = refreshToken,
+                StatusCode = 200
+            };
+        }
+
+        throw new UnauthorizedAccessException("Invalid OTP");
+    }
+
     private async Task<List<RoleResponseModel>> GetUserRolesAsync(int userId)
     {
         var result = await _userConfigurationRepository.Query(ur => ur.UserId == userId)
@@ -124,10 +173,7 @@ public class LoginUserCommandHandler : BaseCommandHandler<LoginUserCommand, Auth
 
     private async Task<IEnumerable<string>> GetUserPermissionsAsync(int userId)
     {
-        var roles = await _userConfigurationRepository
-                                  .Query(ur => ur.UserId == userId)
-                                  .Select(ur => ur.Role)
-                                  .ToListAsync();
+        var roles = await _userConfigurationRepository.Query(ur => ur.UserId == userId).Select(ur => ur.Role).ToListAsync();
 
         foreach (var role in roles)
         {
@@ -142,7 +188,6 @@ public class LoginUserCommandHandler : BaseCommandHandler<LoginUserCommand, Auth
             {
                 if (reg.EndpointGroup == null)
                 {
-                    Console.WriteLine("Null EndpointGroup detected for Role: " + role.Name);
                     continue;
                 }
 
@@ -150,7 +195,6 @@ public class LoginUserCommandHandler : BaseCommandHandler<LoginUserCommand, Auth
                 {
                     if (ege.Endpoint == null)
                     {
-                        Console.WriteLine("Null Endpoint detected in EndpointGroup: " + reg.EndpointGroup.Name);
                     }
                 }
             }

@@ -13,42 +13,48 @@ public class CreateEmailDomainCommandHandler : BaseCommandHandler<CreateEmailDom
     public CreateEmailDomainCommandHandler(
         CommandContext<CreateEmailDomainCommand> context,
         IRepository<AllowedEmailDomain> repository
-        ) : base( context )
+        ) : base(context)
     {
         _repository = repository;
     }
+
     protected override async Task<ApplicationResult> ExecuteAsync(CreateEmailDomainCommand request, CancellationToken cancellationToken)
     {
         await ValidateAsync(request, cancellationToken);
-
-        if (request.Id != 0)
+        // Update
+        if (request.Domains != null && request.Domains.Any())
         {
-            var domainn = await _repository.Query(x => x.Id == request.Id).FirstOrDefaultAsync();
+            var domainEntities = await _repository.Query(x => request.Domains.Select(d => d.Id).Contains(x.Id)).ToListAsync();
 
-            domainn?.Update(request.Domain, request.IsActive ?? true);
+            foreach (var domainEntity in domainEntities)
+            {
+                var updatedDomain = request.Domains.First(d => d.Id == domainEntity.Id);
+                domainEntity.Domain = updatedDomain.Domain;
+                domainEntity.IsActive = updatedDomain.IsActive;
+            }
+
             await _repository.CommitChanges();
-
             return new ApplicationResult { Success = true };
         }
 
-        var existed = await _repository.Query(x => x.Domain == request.Domain).FirstOrDefaultAsync();
-
-        if (existed != null)
+        //Create If Deleted
+        var existingDomain = await _repository.Query(x => x.Domain == request.Domain).FirstOrDefaultAsync();
+        if (existingDomain != null)
         {
-            if (existed?.IsDeleted == true)
+            if (existingDomain.IsDeleted)
             {
-                existed.Update(request.Domain, true);
+                existingDomain.Domain = request.Domain;
+                existingDomain.IsActive = true;
                 await _repository.CommitChanges();
-
                 return new ApplicationResult { Success = true };
             }
 
-            throw new AlreadyExistsException("Domain Already Exists");
+            throw new BadRequestException("Domain Already Exists");
         }
 
-        var domain = new AllowedEmailDomain(request.Domain, _context.SecurityContextAccessor.UserId);
-
-        await _repository.Store(domain);
+        //Create New
+        var newDomain = new AllowedEmailDomain(request.Domain, _context.SecurityContextAccessor.UserId);
+        await _repository.Store(newDomain);
         await _repository.CommitChanges();
 
         return new ApplicationResult { Success = true };

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using OnAim.Admin.Infrasturcture.Persistance.Data;
+using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 
 #nullable disable
 
@@ -351,12 +351,6 @@ namespace OnAim.Admin.Infrasturcture.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ActivationCode")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("ActivationCodeExpiration")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("integer");
 
@@ -389,6 +383,9 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.Property<bool>("IsSuperAdmin")
                         .HasColumnType("boolean");
 
+                    b.Property<bool?>("IsTwoFactorEnabled")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsVerified")
                         .HasColumnType("boolean");
 
@@ -411,12 +408,6 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ResetCode")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("ResetCodeExpiration")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Salt")
                         .IsRequired()
                         .HasColumnType("text");
@@ -424,6 +415,15 @@ namespace OnAim.Admin.Infrasturcture.Migrations
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("VerificationCode")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("VerificationCodeExpiration")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("VerificationPurpose")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

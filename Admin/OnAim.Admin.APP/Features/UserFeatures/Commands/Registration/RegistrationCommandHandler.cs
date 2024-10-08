@@ -6,6 +6,7 @@ using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Helpers;
 using OnAim.Admin.Shared.Helpers.Password;
+using OnAim.Admin.Shared.Enums;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Registration;
 
@@ -24,7 +25,7 @@ public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand
         IConfigurationRepository<UserRole> configurationRepository,
         IEmailService emailService,
         IDomainValidationService domainValidationService
-        ) : base( context )
+        ) : base(context)
     {
         _userRepository = userRepository;
         _roleRepository = roleRepository;
@@ -36,25 +37,70 @@ public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand
     {
         await ValidateAsync(request, cancellationToken);
 
-        var existingUser = await _userRepository.Query(x => x.Email == request.Email && !x.IsDeleted).FirstOrDefaultAsync();
-
-        if (existingUser != null)
-            throw new AlreadyExistsException($"User creation failed. A user already exists with email: {request.Email}");           
-
-        if (existingUser?.IsActive == false)
-            throw new AlreadyExistsException($"User creation failed. A user already exists or is not active with email: {request.Email}");          
+        var existingUser = await GetExistingUserAsync(request.Email);
 
         if (!await _domainValidationService.IsDomainAllowedAsync(request.Email))
-            throw new BadRequestException("Domain not allowed");           
+            throw new BadRequestException("Domain not allowed");
 
+        if (existingUser != null)
+        {
+            if (existingUser.IsDeleted)
+            {
+                await CreateNewUser(request);
+            }
+            else
+            {
+                HandleExistingUser(existingUser);
+            }
+        }
+        else
+        {
+            await CreateNewUser(request);
+        }
+
+        return new ApplicationResult { Success = true };
+    }
+
+    private async Task<User?> GetExistingUserAsync(string email)
+    {
+        return await _userRepository.Query(x => x.Email == email).FirstOrDefaultAsync();
+    }
+
+    private async Task AssignDefaultRoleToUserAsync(User user)
+    {
+        var role = await _roleRepository.Query(x => x.Name == "DefaultRole").FirstOrDefaultAsync();
+        if (role != null)
+        {
+            await AssignRoleToUserAsync(user.Id, role.Id);
+        }
+    }
+
+    private async Task AssignRoleToUserAsync(int userId, int roleId)
+    {
+        var userRole = new UserRole(userId, roleId);
+        await _configurationRepository.Store(userRole);
+        await _configurationRepository.CommitChanges();
+    }
+
+    private void HandleExistingUser(User existingUser)
+    {
+        if (existingUser.IsActive == false)
+        {
+            throw new BadRequestException($"User creation failed. The user with email: {existingUser.Email} is inactive.");
+        }
+        else
+        {
+            throw new BadRequestException($"User creation failed. A user already exists with email: {existingUser.Email}");
+        }
+    }
+
+    private async Task CreateNewUser(RegistrationCommand request)
+    {
         var salt = EncryptPasswordExtension.Salt();
         string hashed = EncryptPasswordExtension.EncryptPassword(request.Password, salt);
 
-        var activationCode = ActivationCodeHelper.ActivationCode();
-        var ActivationCodeExpiration = DateTime.UtcNow.AddMinutes(15);
-
-        var localhostBaseUrl = "https://localhost:7126";
-        var verificationUrl = $"{localhostBaseUrl}/verify?code={activationCode}";
+        var activationCode = ActivationCodeHelper.ActivationCode().ToString();
+        var activationCodeExpiration = DateTime.UtcNow.AddMinutes(15);
 
         var user = new User(
             request.FirstName,
@@ -65,19 +111,25 @@ public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand
             salt,
             request.Phone,
             _context.SecurityContextAccessor.UserId,
-            false,
-            false,
+            isVerified: false,
+            isActive: false,
             activationCode,
-            ActivationCodeExpiration,
-            false
-            );
+            VerificationPurpose.AccountActivation,
+            activationCodeExpiration,
+            isSuperAdmin: false
+        );
 
         await _userRepository.Store(user);
         await _userRepository.CommitChanges();
 
         var role = await _roleRepository.Query(x => x.Name == "DefaultRole").FirstOrDefaultAsync();
-        await AssignRoleToUserAsync(user.Id, user, role.Id, role);
+        await AssignRoleToUserAsync(user.Id, role.Id);
 
+        await SendActivationEmailAsync(user, activationCode);
+    }
+
+    private async Task SendActivationEmailAsync(User user, string activationCode)
+    {
         var activationLink = $"activate?userId={user.Id}&code={activationCode}";
 
         string htmlBody = "" +
@@ -89,28 +141,10 @@ public class RegistrationCommandHandler : BaseCommandHandler<RegistrationCommand
             " <p style=\"color: rgba(0, 167, 111, 1); font-size: 32px; font-weight: 800; line-height: 43.58px; margin: 16px 0 0;\">{code}</p>\n    <p><a href=\"{link}\">Verify your account</a></p>\n   " +
             " <p>If you didn't request this, please ignore this email.</p>\n    <p>Best regards,<br>Your Company</p>\n</body>\n</html>\n";
 
-        //string templatePath = Path.Combine("Templates", "Emails", "Register.html");
-        //string htmlBody = await ReadEmailTemplateAsync(templatePath);
-
         htmlBody = htmlBody.Replace("{firstName}", user.FirstName)
                            .Replace("{code}", activationCode.ToString())
                            .Replace("{link}", activationLink);
 
         await _emailService.SendActivationEmailAsync(user.Email, "Activation Code", htmlBody);
-
-
-        return new ApplicationResult{ Success = true };
-    }
-
-    private async Task<string> ReadEmailTemplateAsync(string path)
-    {
-        return await File.ReadAllTextAsync(path);
-    }
-
-    private async Task AssignRoleToUserAsync(int userId, Domain.Entities.User user, int roleId, Role role)
-    {
-        var userRole = new UserRole(userId, roleId);
-        await _configurationRepository.Store(userRole);
-        await _configurationRepository.CommitChanges();
     }
 }

@@ -10,6 +10,7 @@ using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Infrasturcture.Repository;
 using Serilog;
 using Serilog.Events;
+using OnAim.Admin.Infrasturcture.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,7 @@ builder.AddCustomHttpClients();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>));
 builder.Services.AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>));
+builder.Services.AddScoped(typeof(ILeaderBoardReadOnlyRepository<>), typeof(LeaderBoardReadOnlyRepository<>));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -43,7 +45,6 @@ builder.Services.AddControllersWithViews()
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
-//??????
 builder.Services.AddHealthChecks()
     .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnectionString")!);
 
@@ -56,7 +57,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-    app.ApplyMigrations();
+app.ApplyMigrations();
 
 app.UseCors("MyPolicy");
 app.UseHttpsRedirection();
@@ -64,8 +65,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-//app.UseMiddleware<PermissionMiddleware>();
-//app.UseMiddleware<RequestHandlerMiddleware>();
+app.UseMiddleware<PermissionMiddleware>();
+app.UseMiddleware<RequestHandlerMiddleware>();
 
 app.MapControllers();
 

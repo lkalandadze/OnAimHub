@@ -4,9 +4,9 @@ namespace GameLib.Application.Services.Abstract;
 
 public interface ISegmentService
 {
-    Task<IEnumerable<SegmentGetModel>> GetAllAsync();
+    Task<IEnumerable<SegmentBaseGetModel>> GetAllAsync();
 
-    Task<SegmentGetModel> GetByIdAsync(int id);
+    Task<SegmentBaseGetModel> GetByIdAsync(int id);
 
     Task CreateAsync(SegmentCreateModel model);
 

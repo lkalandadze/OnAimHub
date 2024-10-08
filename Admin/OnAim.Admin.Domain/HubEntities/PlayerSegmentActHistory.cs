@@ -1,23 +1,13 @@
-﻿#nullable disable
-
-namespace OnAim.Admin.Domain.HubEntities;
-
-public class PlayerSegmentActHistory : BaseEntity<int>
+namespace OnAim.Admin.Domain.HubEntities
 {
-    public PlayerSegmentActHistory()
+    // Generated Code
+
+    public class PlayerSegmentActHistory : BaseEntity<int>
     {
+        public int PlayerId { get; set; }
+        public Player Player { get; set; }
 
+        public int PlayerSegmentActId { get; set; }
+        public PlayerSegmentAct PlayerSegmentAct { get; set; }
     }
-
-    public PlayerSegmentActHistory(int playerId, PlayerSegmentAct playerSegmentAct)
-    {
-        PlayerId = playerId;
-        PlayerSegmentAct = playerSegmentAct;
-    }
-
-    public int PlayerId { get; set; }
-    public Player Player { get; set; }
-
-    public int PlayerSegmentActId { get; set; }
-    public PlayerSegmentAct PlayerSegmentAct { get; set; }
 }

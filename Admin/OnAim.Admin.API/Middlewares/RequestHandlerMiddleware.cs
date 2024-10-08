@@ -3,7 +3,6 @@ using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.ApplicationInfrastructure.Validation;
-using OnAim.Admin.Shared.Models;
 using SendGrid.Helpers.Errors.Model;
 using System.Net;
 using System.Text;
@@ -69,6 +68,11 @@ public class RequestHandlerMiddleware
                     break;
 
                 case Domain.Exceptions.NotFoundException e:
+                    response.StatusCode = (int)HttpStatusCode.NotFound;
+                    errorsList.Add(new Error { Code = (int)HttpStatusCode.NotFound, Message = e.Message });
+                    break; 
+
+                case Domain.Exceptions.HubAPIRequestFailedException e:
                     response.StatusCode = (int)HttpStatusCode.NotFound;
                     errorsList.Add(new Error { Code = (int)HttpStatusCode.NotFound, Message = e.Message });
                     break;

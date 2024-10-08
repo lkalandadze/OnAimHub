@@ -3,8 +3,6 @@ using OnAim.Admin.Domain.HubEntities;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.DTOs.Player;
-using OnAim.Admin.Shared.DTOs.Player.Balance;
-using OnAim.Admin.Shared.DTOs.Player.Log;
 using OnAim.Admin.Shared.DTOs.Refer;
 using OnAim.Admin.Shared.DTOs.Segment;
 using OnAim.Admin.Shared.DTOs.Transaction;
@@ -77,8 +75,7 @@ public class GetPlayerByIdQueryHandler : IQueryHandler<GetPlayerByIdQuery, Appli
         if (referee != null)
             refPlayer = await _playerRepository.Query(x => x.ReferrerId == referee.ReferrerId).FirstOrDefaultAsync(cancellationToken);
 
-        var balance = await _playerBalanaceRepository.Query(x => x.PlayerId == player.Id).ToListAsync(cancellationToken);
-        var logs = await _playerLogRepository.Query(x => x.PlayerId == player.Id).ToListAsync(cancellationToken);
+        var logs = await _playerLogRepository.Query(x => x.PlayerId == player.Id).Include(x => x.PlayerLogType).ToListAsync(cancellationToken);
 
         var result = new PlayerDto
         {
@@ -98,12 +95,6 @@ public class GetPlayerByIdQueryHandler : IQueryHandler<GetPlayerByIdQuery, Appli
                 UserName = refPlayer?.UserName,
                 InvitedDateTime = referee.DateCreated
             } : null,
-            PlayerBalances = balance.Select(x => new PlayerBalanceDto
-            {
-                Id = x.Id,
-                Amount = x.Amount,
-                Currency = x.Currency?.Name,
-            }).ToList(),
             PlayerLogs = logs.Select(x => new PlayerLogDto
             {
                 Id = x.Id,

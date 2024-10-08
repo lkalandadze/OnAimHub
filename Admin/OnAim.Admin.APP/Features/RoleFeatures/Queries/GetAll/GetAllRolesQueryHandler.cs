@@ -21,7 +21,7 @@ public class GetAllRolesQueryHandler : IQueryHandler<GetAllRolesQuery, Applicati
     {
         var roleQuery = _repository
             .Query(x =>
-                     (string.IsNullOrEmpty(request.Filter.Name) || x.Name.Contains(request.Filter.Name)) &&
+                     (string.IsNullOrEmpty(request.Filter.Name) || x.Name.ToLower().Contains(request.Filter.Name.ToLower())) &&
                      (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value)
                  );
 

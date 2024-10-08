@@ -5,14 +5,6 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class Endpoint : BaseEntity
 {
-    public string Path { get; set; }
-    public string Name { get; set; }
-    public bool IsDeleted { get; set; }
-    public int? CreatedBy { get; set; }
-    public EndpointType? Type { get; set; }
-    public string Description { get; set; }
-    public List<EndpointGroupEndpoint> EndpointGroupEndpoints { get; set; }
-
     public Endpoint(
              string name,
              string path,
@@ -30,10 +22,11 @@ public class Endpoint : BaseEntity
         DateCreated = SystemDate.Now;
     }
 
-    public void Update(string description, bool isActive)
-    {
-        Description = description;
-        IsActive = isActive;
-        DateUpdated = SystemDate.Now;
-    }
+    public string Path { get; set; }
+    public string Name { get; set; }
+    public bool IsDeleted { get; set; }
+    public int? CreatedBy { get; set; }
+    public EndpointType? Type { get; set; }
+    public string Description { get; set; }
+    public List<EndpointGroupEndpoint> EndpointGroupEndpoints { get; set; }
 }

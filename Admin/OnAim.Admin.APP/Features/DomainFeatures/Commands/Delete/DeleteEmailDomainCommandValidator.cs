@@ -6,6 +6,6 @@ public class DeleteEmailDomainCommandValidator : AbstractValidator<DeleteEmailDo
 {
     public DeleteEmailDomainCommandValidator()
     {
-        RuleFor(x => x.Id).NotEmpty();
+        RuleForEach(x => x.Ids).NotEmpty();
     }
 }

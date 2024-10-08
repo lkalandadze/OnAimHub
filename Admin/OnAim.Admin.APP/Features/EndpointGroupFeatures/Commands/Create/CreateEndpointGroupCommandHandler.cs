@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain.Entities;
+using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 
@@ -23,11 +24,16 @@ public class CreateEndpointGroupCommandHandler : BaseCommandHandler<CreateEndpoi
     {
         await ValidateAsync(request, cancellationToken);
 
-        var existedGroupName = await _repository.Query(x => x.Name == request.Model.Name).FirstOrDefaultAsync();
+        var existedGroupName = await _repository.Query(x => x.Name == request.Model.Name.ToLower()).FirstOrDefaultAsync();
 
-        if (existedGroupName == null)
+        if (existedGroupName == null || existedGroupName?.IsDeleted == true)
         {
-            var endpointGroup = EndpointGroup.Create(request.Model.Name, request.Model.Description, _context.SecurityContextAccessor.UserId, new List<EndpointGroupEndpoint>());
+            var endpointGroup = EndpointGroup.Create(
+                request.Model.Name.ToLower(), 
+                request.Model.Description, 
+                _context.SecurityContextAccessor.UserId,
+                new List<EndpointGroupEndpoint>()
+                );
 
             foreach (var endpointId in request.Model.EndpointIds)
             {
@@ -35,7 +41,7 @@ public class CreateEndpointGroupCommandHandler : BaseCommandHandler<CreateEndpoi
 
                 if (endpoint?.IsDeleted == true)
                 {
-                    throw new Exception("Permmission Is Disabled!");
+                    throw new BadRequestException("Permmission Is Disabled!");
                 }
 
                 var endpointGroupEndpoint = new EndpointGroupEndpoint(endpointGroup.Id, endpoint.Id);
@@ -48,7 +54,7 @@ public class CreateEndpointGroupCommandHandler : BaseCommandHandler<CreateEndpoi
         }
         else
         {
-            throw new Exception("Permmission Group with that name already exists!");
+            throw new BadRequestException("Permmission Group with that name already exists!");
         }
 
         return new ApplicationResult

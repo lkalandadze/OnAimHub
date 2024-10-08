@@ -1,4 +1,4 @@
-﻿using Shared.Lib.Wrappersl;
+﻿using Shared.Lib.Wrappers;
 
 namespace Shared.Lib.Extensions;
 
