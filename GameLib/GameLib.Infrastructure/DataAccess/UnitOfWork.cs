@@ -62,29 +62,35 @@ public class UnitOfWork(SharedGameConfigDbContext context) : IUnitOfWork, IDispo
 
     public async Task SaveAsync()
     {
-        if (_currentTransaction == null)
+        try
         {
-            await using var transaction = await _context.Database.BeginTransactionAsync();
-
-            try
+            if (_currentTransaction == null)
             {
+                // If no transaction is present, just save the changes without beginning a new transaction
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
             }
-            catch
+            else
             {
-                await transaction.RollbackAsync();
-                throw;
+                // If there's an active transaction, just save the changes without starting a new transaction
+                await _context.SaveChangesAsync();
             }
         }
-        else
+        catch (Exception ex)
         {
-            await _context.SaveChangesAsync();
+            if (_currentTransaction != null)
+            {
+                await RollbackTransactionAsync(); // Ensure rollback happens if there is a failure during SaveChangesAsync
+            }
+            throw;
         }
     }
 
     public void Dispose()
     {
-        _currentTransaction?.Dispose();
+        if (_currentTransaction != null)
+        {
+            _currentTransaction.Dispose();
+            _currentTransaction = null;
+        }
     }
 }

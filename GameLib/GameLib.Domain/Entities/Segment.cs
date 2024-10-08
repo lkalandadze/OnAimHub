@@ -6,6 +6,10 @@ namespace GameLib.Domain.Entities;
 
 public class Segment : BaseEntity<string>
 {
+    public Segment()
+    {
+        
+    }
     public bool IsDeleted { get; private set; }
 
     public Segment(string id)
@@ -25,6 +29,10 @@ public class Segment : BaseEntity<string>
 
 public class Segment<T> : Segment where T : Segment<T>
 {
+    public Segment()
+    {
+        
+    }
     public Segment(string id, int? configurationId = null) : base(id)
     {
         // Initialization logic for the generic segment, if any

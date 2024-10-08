@@ -1,11 +1,8 @@
 ﻿using Consul;
-using GameLib.Application;
-using GameLib.Domain.Entities;
 using GameLib.Infrastructure.DataAccess;
 using GameLib.ServiceRegistry;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Shared.Infrastructure.DataAccess;
 using Wheel.Api.Consul;
@@ -63,6 +60,7 @@ public class Startup
 
         services.AddScoped<IRoundRepository, RoundRepository>();
         services.AddScoped<IWheelPrizeRepository, WheelPrizeRepository>();
+        services.AddScoped<IWheelConfigurationRepository, WheelConfigurationRepository>();
 
         var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup), typeof(JackpotPrizeGroup) };
         services.Resolve<WheelConfiguration>(Configuration, prizeGroupTypes, "WheelApi");

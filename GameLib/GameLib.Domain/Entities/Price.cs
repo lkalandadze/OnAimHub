@@ -26,6 +26,10 @@ public class Price : BaseEntity<string>
 
 public class Price<T> : Price where T : Price<T> 
 {
+    public Price()
+    {
+        
+    }
     public Price(decimal value, decimal multiplier, string currencyId, int configurationId) : base(value, multiplier, currencyId)
     {
         // Initialization logic for the generic segment, if any
