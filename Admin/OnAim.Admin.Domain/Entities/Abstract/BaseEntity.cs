@@ -1,5 +1,4 @@
-﻿using OnAim.Admin.Shared.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace OnAim.Admin.Domain.Entities.Abstract;
 

@@ -4,20 +4,23 @@ using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Models;
-using OnAim.Admin.Shared.Helpers.Password;
+using OnAim.Admin.APP.Services.AuthServices;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.ChangePassword;
 
 public class ChangePasswordCommandHandler : BaseCommandHandler<ChangePasswordCommand, ApplicationResult>
 {
     private readonly IRepository<User> _userRepository;
+    private readonly IPasswordService _passwordService;
 
     public ChangePasswordCommandHandler(
         CommandContext<ChangePasswordCommand> context,
-        IRepository<User> userRepository
+        IRepository<User> userRepository,
+        IPasswordService passwordService
         ) : base( context )
     {
         _userRepository = userRepository;
+        _passwordService = passwordService;
     }
     protected override async Task<ApplicationResult> ExecuteAsync(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
@@ -31,13 +34,13 @@ public class ChangePasswordCommandHandler : BaseCommandHandler<ChangePasswordCom
         if (user?.IsActive == false)
             throw new NotFoundException("User Not Found!");
 
-        string hashedOldPassword = EncryptPasswordExtension.EncryptPassword(request.OldPassword, user.Salt);
+        string hashedOldPassword = _passwordService.EncryptPassword(request.OldPassword, user.Salt);
 
         if (user.Password != hashedOldPassword)
             throw new BadRequestException("Old password is incorrect!");
 
-        var newSalt = EncryptPasswordExtension.Salt();
-        string hashedNewPassword = EncryptPasswordExtension.EncryptPassword(request.NewPassword, newSalt);
+        var newSalt = _passwordService.Salt();
+        string hashedNewPassword = _passwordService.EncryptPassword(request.NewPassword, newSalt);
 
         user.Password = hashedNewPassword;
         user.Salt = newSalt;

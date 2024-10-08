@@ -14,7 +14,7 @@ public class GetAllPlayerQueryHandler : IQueryHandler<GetAllPlayerQuery, Applica
     public GetAllPlayerQueryHandler(IReadOnlyRepository<Domain.HubEntities.Player> readOnlyRepository)
     {
         _readOnlyRepository = readOnlyRepository;
-    }
+    } 
     public async Task<ApplicationResult> Handle(GetAllPlayerQuery request, CancellationToken cancellationToken)
     {
         var sortableFields = new List<string> { "PlayerId", "PlayerName" };

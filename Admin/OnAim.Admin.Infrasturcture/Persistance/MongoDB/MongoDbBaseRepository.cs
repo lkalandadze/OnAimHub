@@ -84,4 +84,9 @@ where TEntity : BaseEntity
     {
         throw new NotImplementedException();
     }
+
+    public Task<IQueryable<TEntity>> QueryAsync(Expression<Func<TEntity, bool>>? expression = null)
+    {
+        throw new NotImplementedException();
+    }
 }

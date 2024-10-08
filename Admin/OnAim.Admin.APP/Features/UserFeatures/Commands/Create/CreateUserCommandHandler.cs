@@ -5,6 +5,7 @@ using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.Helpers.Password;
+using OnAim.Admin.Shared.DTOs.User;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Create;
 
@@ -32,29 +33,28 @@ public class CreateUserCommandHandler : BaseCommandHandler<CreateUserCommand, Ap
     {
         await ValidateAsync(request, cancellationToken);
 
-        var existingUser = await _repository.Query(x => x.Email == request.Email && !x.IsDeleted).FirstOrDefaultAsync();
+        var existingUser = await _repository.Query(x => x.Email == request.Email && !x.IsDeleted).ToListAsync();
 
-        if (existingUser != null)
-            throw new BadRequestException($"User creation failed. A user already exists with email: {request.Email}");
-
-        if (existingUser?.IsActive == false)
-            throw new BadRequestException($"User creation failed. A user already exists with email: {request.Email}");
-
-        if (existingUser != null)
+        foreach ( var user in existingUser )
         {
-            if(existingUser.IsDeleted == true)
+            if (user != null)
             {
-                await CreateUserWithTemporaryPassword(request);
+                if (user?.IsDeleted == true)
+                {
+                    await CreateUserWithTemporaryPassword(request);
+                }
+                else
+                {
+                    HandleExistingUser(user);
+                }
             }
             else
             {
-                HandleExistingUser(existingUser);
+                await CreateUserWithTemporaryPassword(request);
             }
         }
-        else
-        {
-            await CreateUserWithTemporaryPassword(request);
-        }
+
+        
 
         return new ApplicationResult { Success = true };
     }
@@ -64,18 +64,9 @@ public class CreateUserCommandHandler : BaseCommandHandler<CreateUserCommand, Ap
         var temporaryPassword = PasswordHelper.GenerateTemporaryPassword();
         var salt = EncryptPasswordExtension.Salt();
         string hashed = EncryptPasswordExtension.EncryptPassword(temporaryPassword, salt);
+        var command = new CreateUserDto(request.FirstName,request.LastName,request.Email,hashed, salt,request.Phone, true,true,false);
 
-        var user = CreateUser(
-            request.FirstName,
-            request.LastName,
-            request.Email,
-            hashed,
-            salt,
-            request.Phone,
-            true,
-            true,
-            false 
-        );
+        var user = CreateUser(command);
 
         await _repository.Store(user);
         await _repository.CommitChanges();
@@ -102,32 +93,23 @@ public class CreateUserCommandHandler : BaseCommandHandler<CreateUserCommand, Ap
         return user;
     }
 
-    private User CreateUser(
-        string firstName,
-        string lastName,
-        string email,
-        string hashed,
-        string salt,
-        string phone,
-        bool isVerified,
-        bool isActive,
-        bool isSuperAdmin)
+    private User CreateUser(CreateUserDto create)
     {
         return new Domain.Entities.User(
-            firstName,
-            lastName,
-            email,
-            email,
-            hashed,
-            salt,
-            phone,
+            create.FirstName,
+            create.LastName,
+            create.Email,
+            create.Email,
+            create.Hashed,
+            create.Salt,
+            create.Phone,
             _context.SecurityContextAccessor.UserId,
-            isVerified,
-            isActive,
+            create.IsVerified,
+            create.IsActive,
             null,
             null,
             null,
-            isSuperAdmin
+            create.IsSuperAdmin
         );
     }
 

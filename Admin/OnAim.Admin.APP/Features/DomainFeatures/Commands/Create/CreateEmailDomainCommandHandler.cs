@@ -45,6 +45,7 @@ public class CreateEmailDomainCommandHandler : BaseCommandHandler<CreateEmailDom
             {
                 existingDomain.Domain = request.Domain;
                 existingDomain.IsActive = true;
+                existingDomain.IsDeleted = false;
                 await _repository.CommitChanges();
                 return new ApplicationResult { Success = true };
             }
