@@ -32,6 +32,9 @@ public class CreatePlayerBanCommandHandler : IRequestHandler<CreatePlayerBanComm
 
         var playerBan = new PlayerBan(request.PlayerId, request.ExpireDate, request.IsPermanent, request.Description);
 
+        player.Ban();
+
+        _playerRepository.Update(player);
         await _playerBanRepository.InsertAsync(playerBan);
         await _unitOfWork.SaveAsync();
 

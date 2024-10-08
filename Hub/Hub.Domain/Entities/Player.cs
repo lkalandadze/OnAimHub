@@ -37,6 +37,7 @@ public class Player : BaseEntity<int>
     public string UserName { get; private set; }
     public int? ReferrerId { get; private set; }
     public bool HasPlayed { get; private set; }
+    public bool IsBanned { get; private set; }
     public DateTimeOffset? RegistredOn { get; private set; }
     public DateTimeOffset? LastVisitedOn { get; private set; }
 
@@ -62,6 +63,16 @@ public class Player : BaseEntity<int>
     public void UpdateHasPlayed()
     {
         HasPlayed = true;
+    }
+
+    public void Ban()
+    {
+        IsBanned = true;
+    }
+
+    public void UnBan()
+    {
+        IsBanned = false;
     }
 
     //public static string GenerateUniqueCode(int length = 5)
