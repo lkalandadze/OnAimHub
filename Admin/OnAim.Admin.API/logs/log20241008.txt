@@ -14,3 +14,19 @@
 2024-10-08 09:35:50.756 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/swagger/v1/swagger.json - null null
 2024-10-08 09:35:50.817 +04:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 60.0839 ms
 2024-10-08 09:35:50.818 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 63.026ms
+2024-10-08 16:02:31.374 +04:00 [INF] User profile is available. Using 'C:\Users\user\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2024-10-08 16:02:31.536 +04:00 [INF] Now listening on: https://localhost:7126
+2024-10-08 16:02:31.537 +04:00 [INF] Now listening on: http://localhost:5192
+2024-10-08 16:02:31.539 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-10-08 16:02:31.540 +04:00 [INF] Hosting environment: Development
+2024-10-08 16:02:31.540 +04:00 [INF] Content root path: C:\Users\user\Desktop\Huubbb\OnAimHub\Admin\OnAim.Admin.API
+2024-10-08 16:02:32.665 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/swagger/index.html - null null
+2024-10-08 16:02:32.774 +04:00 [INF] HTTP GET /swagger/index.html responded 200 in 46.2524 ms
+2024-10-08 16:02:32.778 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/swagger/index.html - 200 null text/html;charset=utf-8 116.1296ms
+2024-10-08 16:02:32.785 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/_framework/aspnetcore-browser-refresh.js - null null
+2024-10-08 16:02:32.787 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/_vs/browserLink - null null
+2024-10-08 16:02:32.791 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 5.2326ms
+2024-10-08 16:02:32.809 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/_vs/browserLink - 200 null text/javascript; charset=UTF-8 22.6336ms
+2024-10-08 16:02:32.827 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/swagger/v1/swagger.json - null null
+2024-10-08 16:02:32.893 +04:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 62.5702 ms
+2024-10-08 16:02:32.894 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 67.0912ms

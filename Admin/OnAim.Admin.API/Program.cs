@@ -63,10 +63,10 @@ app.UseMiddleware<RequestHandlerMiddleware>();
 
 app.MapControllers();
 
-app.UseHealthChecks("/health",
-    new HealthCheckOptions
-    {
-        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-    });
+//app.UseHealthChecks("/health",
+//    new HealthCheckOptions
+//    {
+//        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+//    });
 
 app.Run();
