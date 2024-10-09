@@ -14,8 +14,10 @@ using OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnBlockSegmentForPlayers
 using OnAim.Admin.APP.Features.SegmentFeatures.Commands.Update;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById;
+using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.ActivePlayers;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.ActsAndHistory.Acts;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.ActsAndHistory.History;
+using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPlayers;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetGeneralSegmentActsHistory;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetSegmentActs;
 using OnAim.Admin.Shared.DTOs.Segment;
@@ -39,6 +41,14 @@ public class SegmentController : ApiControllerBase
     [HttpGet(nameof(GetById) + "/{segmentId}")]
     public async Task<IActionResult> GetById([FromRoute] string segmentId)
         => Ok(await Mediator.Send(new GetSegmentByIdQuery(segmentId)));
+
+    [HttpGet(nameof(GetBlackListedPlayers) + "/{segmentId}")]
+    public async Task<IActionResult> GetBlackListedPlayers([FromRoute] string segmentId, [FromQuery] FilterBy filter)
+        => Ok(await Mediator.Send(new GetBlackListedPlayersBySegmentIdQuery(segmentId, filter)));
+
+    [HttpGet(nameof(GetActivePlayers) + "/{segmentId}")]
+    public async Task<IActionResult> GetActivePlayers([FromRoute] string segmentId, [FromQuery] FilterBy filter)
+    => Ok(await Mediator.Send(new GetActivePlayersBySegmentIdQuery(segmentId, filter)));
 
     [HttpGet(nameof(GetSegmentActsById) + "/{segmentId}")]
     public async Task<IActionResult> GetSegmentActsById([FromRoute] string segmentId)

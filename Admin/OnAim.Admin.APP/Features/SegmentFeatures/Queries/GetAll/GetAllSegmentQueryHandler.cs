@@ -32,6 +32,8 @@ public sealed class GetAllSegmentQueryHandler : IQueryHandler<GetAllSegmentQuery
            Name = x.Id,
            Description = x.Description,
            Priority = x.PriorityLevel,
+           IsDeleted = x.IsDeleted,
+           CreatedBy = x.CreatedByUserId,
            TotalPlayers = x.PlayerSegments.Count(),
            LastUpdate = null,
        })

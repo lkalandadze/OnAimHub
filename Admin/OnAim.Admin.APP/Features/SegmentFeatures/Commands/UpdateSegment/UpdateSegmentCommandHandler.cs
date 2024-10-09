@@ -19,7 +19,7 @@ public class UpdateSegmentCommandHandler : BaseCommandHandler<UpdateSegmentComma
     {
         await ValidateAsync(request, cancellationToken);
 
-        var result = await _hubApiClient.PutAsJson($"{_options.Endpoint}Segment", request);
+        var result = await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/UpdateSegment", request);
 
         if (result.IsSuccessStatusCode)
         {

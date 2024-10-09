@@ -23,7 +23,7 @@ public class UpdatePlayerBanCommandHandler : BaseCommandHandler<UpdatePlayerBanC
     {
         await ValidateAsync(request, cancellationToken);
 
-        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Player/UpdateBannedPlayer", request);
+        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/UpdateBannedPlayer", request);
 
         if (result.IsSuccessStatusCode)
         {

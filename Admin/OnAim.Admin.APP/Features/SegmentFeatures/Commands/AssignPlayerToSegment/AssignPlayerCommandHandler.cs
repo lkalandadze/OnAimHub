@@ -26,7 +26,10 @@ public class AssignPlayerCommandHandler : BaseCommandHandler<AssignPlayerCommand
             ByUserId = _context.SecurityContextAccessor.UserId
         };
 
-        var result = await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Segment/{request.SegmentId}/AssignPlayer/{request.PlayerId}", req);
+        var result = await _hubApiClient.PostAsJsonAndSerializeResultTo<object>(
+            $"{_options.Endpoint}Admin/AssignSegmentToPlayer?segmentId={req.SegmentId}&playerId={req.PlayerId}", 
+            req
+            );
 
         if (result != null)
         {

@@ -81,6 +81,7 @@ public class GetPlayerByIdQueryHandler : IQueryHandler<GetPlayerByIdQuery, Appli
         {
             Id = player.Id,
             PlayerName = player.UserName,
+            IsBanned = player.IsBanned,
             Segments = player.PlayerSegments.Select(x => new SegmentListDto
             {
                 Id = x.Segment.Id,

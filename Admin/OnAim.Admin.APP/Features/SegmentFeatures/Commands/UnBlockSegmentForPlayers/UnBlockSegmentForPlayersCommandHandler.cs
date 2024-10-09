@@ -41,7 +41,7 @@ public class UnBlockSegmentForPlayersCommandHandler : BaseCommandHandler<UnBlock
         multipartContent.Add(new StringContent(request.SegmentId), "SegmentId");
         multipartContent.Add(new StringContent(_context.SecurityContextAccessor.UserId.ToString()), "ByUserId");
 
-        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Segment/{request.SegmentId}/UnblockPlayers", multipartContent);
+        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/UnblockSegmentForPlayers?segmentId={request.SegmentId}", multipartContent);
 
         if (!response.IsSuccessStatusCode)
         {

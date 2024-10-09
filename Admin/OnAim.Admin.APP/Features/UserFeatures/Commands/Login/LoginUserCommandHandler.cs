@@ -59,7 +59,7 @@ public class LoginUserCommandHandler : BaseCommandHandler<LoginUserCommand, Auth
 
         if (hashed == user.Password)
         {
-            if (user.IsTwoFactorEnabled.HasValue)
+            if (user.IsTwoFactorEnabled == true)
             {
                 var otp = _otpService.GenerateOtp(user.Email);
                 _otpService.StoreOtp(user.Id, otp);

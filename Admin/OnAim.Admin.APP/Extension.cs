@@ -129,7 +129,7 @@ public static partial class WebApplicationBuilderExtensions
 
                 var baseAddress = catalogApiOptions.Value.BaseApiAddress;
                 client.BaseAddress = new Uri(baseAddress);
-                return new HubApiClient(client, catalogApiOptions, policyOptions);
+                return new HubApiClient(client, catalogApiOptions, policyOptions, "admin", "password");
             }
         );
     }

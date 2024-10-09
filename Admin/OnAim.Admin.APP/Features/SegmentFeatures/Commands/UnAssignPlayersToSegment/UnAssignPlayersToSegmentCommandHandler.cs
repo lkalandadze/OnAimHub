@@ -33,7 +33,7 @@ public class UnAssignPlayersToSegmentCommandHandler : BaseCommandHandler<UnAssig
         multipartContent.Add(new StringContent(request.SegmentId), "SegmentId");
         multipartContent.Add(new StringContent(_context.SecurityContextAccessor.UserId.ToString()), "ByUserId");
 
-        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Segment/{request.SegmentId}/UnassignPlayers", multipartContent);
+        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/UnassignSegmentToPlayers?segmentId={request.SegmentId}", multipartContent);
 
         if (!response.IsSuccessStatusCode)
         {

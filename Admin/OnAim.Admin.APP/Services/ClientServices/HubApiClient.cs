@@ -14,11 +14,23 @@ public class HubApiClient : IHubApiClient
     private readonly HttpClient _httpClient;
     private readonly HubApiClientOptions _options;
     private readonly AsyncPolicyWrap<HttpResponseMessage> _combinedPolicy;
+    private readonly string _username;
+    private readonly string _password;
 
-    public HubApiClient(HttpClient httpClient, IOptions<HubApiClientOptions> options, IOptions<PolicyOptions> policyOptions)
+    public HubApiClient(
+        HttpClient httpClient,
+        IOptions<HubApiClientOptions> options,
+        IOptions<PolicyOptions> policyOptions,
+        string username,
+        string password)
     {
         _httpClient = httpClient.NotBeNull();
         _options = options.Value;
+        _username = username;
+        _password = password;
+
+        var byteArray = Encoding.ASCII.GetBytes($"admin:password");
+        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
         var retryPolicy = Policy
        .Handle<HttpRequestException>()

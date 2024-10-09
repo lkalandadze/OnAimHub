@@ -26,7 +26,7 @@ public sealed class CreateSegmentCommandHandler : BaseCommandHandler<CreateSegme
             CreatedByUserId = _context.SecurityContextAccessor.UserId,
         };
 
-        var result = await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Segment", req);
+        var result = await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/CreateSegment", req);
 
         if (result != null)
         {

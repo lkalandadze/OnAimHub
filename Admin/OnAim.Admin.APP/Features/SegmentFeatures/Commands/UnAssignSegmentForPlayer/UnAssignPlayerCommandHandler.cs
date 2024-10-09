@@ -26,7 +26,7 @@ public class UnAssignPlayerCommandHandler : BaseCommandHandler<UnAssignPlayerCom
             ByUserId = _context.SecurityContextAccessor.UserId
         };
 
-        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Segment/{request.SegmentId}/UnassignPlayer/{request.PlayerId}", req);
+        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/UnassignSegmentToPlayer?segmentId={req.SegmentId}&playerId={req.PlayerId}", req);
 
         if (result.IsSuccessStatusCode)
         {

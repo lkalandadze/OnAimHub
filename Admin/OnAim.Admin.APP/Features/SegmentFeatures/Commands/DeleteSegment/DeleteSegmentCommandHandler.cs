@@ -19,7 +19,7 @@ public class DeleteSegmentCommandHandler : BaseCommandHandler<DeleteSegmentComma
     {
         await ValidateAsync(request, cancellationToken);
 
-        var result = await _hubApiClient.Delete($"{_options.Endpoint}Segment/{request.Id}");
+        var result = await _hubApiClient.Delete($"{_options.Endpoint}Admin/DeleteSegment?id={request.Id}");
 
         if (result.IsSuccessStatusCode)
         {

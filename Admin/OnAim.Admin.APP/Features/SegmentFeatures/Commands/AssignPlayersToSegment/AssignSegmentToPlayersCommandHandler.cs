@@ -25,7 +25,6 @@ public class AssignSegmentToPlayersCommandHandler : BaseCommandHandler<AssignSeg
 
         using var multipartContent = new MultipartFormDataContent();
 
-        // Add the file to the request
         if (request.File != null)
         {
             var fileContent = new StreamContent(request.File.OpenReadStream());
@@ -33,12 +32,10 @@ public class AssignSegmentToPlayersCommandHandler : BaseCommandHandler<AssignSeg
             multipartContent.Add(fileContent, "file", request.File.FileName);
         }
 
-        // Add other fields to the request
         multipartContent.Add(new StringContent(request.SegmentId), "SegmentId");
         multipartContent.Add(new StringContent(_context.SecurityContextAccessor.UserId.ToString()), "ByUserId");
 
-        // Send the multipart/form-data request
-        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Segment/{request.SegmentId}/AssignPlayers", multipartContent);
+        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/AssignSegmentToPlayers?segmentId={request.SegmentId}", multipartContent);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -49,7 +46,7 @@ public class AssignSegmentToPlayersCommandHandler : BaseCommandHandler<AssignSeg
         return new ApplicationResult
         {
             Success = true,
-            Data = await response.Content.ReadAsStringAsync(), // Optionally deserialize if needed
+            Data = await response.Content.ReadAsStringAsync(),
         };
     }
 

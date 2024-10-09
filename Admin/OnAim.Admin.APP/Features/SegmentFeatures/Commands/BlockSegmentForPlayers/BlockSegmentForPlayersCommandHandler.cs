@@ -45,7 +45,7 @@ public class BlockSegmentForPlayersCommandHandler : BaseCommandHandler<BlockSegm
         multipartContent.Add(new StringContent(_context.SecurityContextAccessor.UserId.ToString()), "ByUserId");
 
         // Send the multipart/form-data request
-        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Segment/{request.SegmentId}/BlockPlayers", multipartContent);
+        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/BlockSegmentForPlayers?segmentId={request.SegmentId}", multipartContent);
 
         if (!response.IsSuccessStatusCode)
         {

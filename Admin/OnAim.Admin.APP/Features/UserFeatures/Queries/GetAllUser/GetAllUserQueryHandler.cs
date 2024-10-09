@@ -60,7 +60,7 @@ public sealed class GetAllUserQueryHandler : IQueryHandler<GetAllUserQuery, Appl
         var paginatedResult = await Paginator.GetPaginatedResult(
             query,
             request.UserFilter,
-            user => new UsersModel
+            user => new UsersModel 
             {
                 Id = user.Id,
                 FirstName = user.FirstName,

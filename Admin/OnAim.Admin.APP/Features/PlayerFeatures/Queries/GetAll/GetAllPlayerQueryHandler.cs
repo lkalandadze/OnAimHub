@@ -17,13 +17,13 @@ public class GetAllPlayerQueryHandler : IQueryHandler<GetAllPlayerQuery, Applica
     } 
     public async Task<ApplicationResult> Handle(GetAllPlayerQuery request, CancellationToken cancellationToken)
     {
-        var sortableFields = new List<string> { "PlayerId", "PlayerName" };
+        var sortableFields = new List<string> { "Id", "UserName" };
 
         var palyers = _readOnlyRepository.Query(x =>
                         string.IsNullOrEmpty(request.Filter.Name) || x.UserName.ToLower().Contains(request.Filter.Name.ToLower()));
 
-        //if (request.Filter.Status != null)
-        //    palyers.Select(x => x.Status == request.Filter.Status);
+        if (request.Filter.IsBanned.HasValue)
+            palyers = palyers.Where(x => x.IsBanned == request.Filter.IsBanned.Value);
 
         if (request.Filter.SegmentIds?.Any() == true)
             palyers = palyers.Where(x => x.PlayerSegments.Any(ur => request.Filter.SegmentIds.Contains(ur.SegmentId)));
@@ -41,13 +41,13 @@ public class GetAllPlayerQueryHandler : IQueryHandler<GetAllPlayerQuery, Applica
 
         bool sortDescending = request.Filter.SortDescending.GetValueOrDefault();
 
-        if (request.Filter.SortBy == "playerId" || request.Filter.SortBy == "PlayerId")
+        if (request.Filter.SortBy == "Id" || request.Filter.SortBy == "id")
         {
             palyers = sortDescending
                 ? palyers.OrderByDescending(x => x.Id)
                 : palyers.OrderBy(x => x.Id);
         }
-        else if (request.Filter.SortBy == "playerName" || request.Filter.SortBy == "PlayerName")
+        else if (request.Filter.SortBy == "userName" || request.Filter.SortBy == "UserName")
         {
             palyers = sortDescending
                 ? palyers.OrderByDescending(x => x.UserName)
@@ -57,12 +57,15 @@ public class GetAllPlayerQueryHandler : IQueryHandler<GetAllPlayerQuery, Applica
         var res = palyers
             .Select(x => new PlayerListDto
             {
-                PlayerId = x.Id,
-                PlayerName = x.UserName ?? null,
+                Id = x.Id,
+                UserName = x.UserName ?? null,
                 RegistrationDate = null,
                 LastVisit = null,
-                Segment = x.PlayerSegments.Select(x => x.Segment.Id).FirstOrDefault(),
-                Status = null,
+                Segment = x.PlayerSegments
+                            .OrderByDescending(ps => ps.Segment.PriorityLevel)
+                            .Select(ps => ps.Segment.Id)
+                            .FirstOrDefault(),
+                IsBanned = x.IsBanned,
             })
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize);

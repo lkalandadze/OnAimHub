@@ -26,7 +26,7 @@ public class BlockSegmentForPlayerCommandHandler : BaseCommandHandler<BlockSegme
             ByUserId = _context.SecurityContextAccessor.UserId
         };
 
-        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Segment/{request.SegmentId}/BlockPlayer/{request.PlayerId}", req);
+        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/BlockSegmentForPlayer?segmentId={req.SegmentId}&playerId={req.PlayerId}", req);
 
         if (result.IsSuccessStatusCode)
         {
