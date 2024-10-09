@@ -62,7 +62,7 @@ public class Startup
         services.AddScoped<IWheelPrizeRepository, WheelPrizeRepository>();
         services.AddScoped<IWheelConfigurationRepository, WheelConfigurationRepository>();
 
-        var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup), typeof(JackpotPrizeGroup) };
+        var prizeGroupTypes = new List<Type> { typeof(Round), typeof(JackpotPrizeGroup) };
         services.Resolve<WheelConfiguration>(Configuration, prizeGroupTypes, "WheelApi");
 
         services.AddScoped<IGameService, GameService>();

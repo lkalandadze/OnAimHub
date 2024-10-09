@@ -117,7 +117,7 @@ public class PropertyMetadata
     public string Type { get; set; }
     public string Description { get; set; } // Could be filled with annotations or custom logic
     public string Id { get; set; }  // Unique identifier for each property
-    public EntityMetadata? GenericTypeMetadata { get; set; }
+    public EntityMetadata? GenericTypeMetadata {  get;  set; }
 }
 
 public class ConfigurationMetadata

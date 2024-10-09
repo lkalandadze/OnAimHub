@@ -21,102 +21,87 @@ public class CreateConfigurationCommandHandler : IRequestHandler<CreateConfigura
 
     public async Task Handle(CreateConfigurationCommand request, CancellationToken cancellationToken)
     {
-        string hardcodedJson = @"
+
+        var data = JsonConvert.DeserializeObject<WheelConfiguration>(request.ConfigurationJson);
+        await _wheelConfigurationRepository.InsertAsync(data);
+        try
         {
-          'Name': 'Hardcoded Wheel Configuration',
-          'Value': 1000,
-          'IsActive': true,
-          'Rounds': [
-            {
-              'Name': 'Hardcoded Round 1'
-            },
-            {
-              'Name': 'Hardcoded Round 2'
-            }
-          ],
-          'Prices': [
-            {
-              'Id': 'Price5',   // Set an explicit Id for each Price
-              'Value': 200.50,
-              'Multiplier': 1.5,
-              'CurrencyId': 'OnAimCoin'
-            },
-            {
-              'Id': 'Price6',   // Set an explicit Id for each Price
-              'Value': 350.75,
-              'Multiplier': 2.0,
-              'CurrencyId': 'OnAimCoin'
-            }
-          ],
-          'Segments': [
-            {
-              'Id': 'Segment5',   // Set an explicit Id for each Segment
-              'IsDeleted': true
-            },
-            {
-              'Id': 'Segment6',   // Set an explicit Id for each Segment
-              'IsDeleted': false
-            }
-          ]
-        }";
-        var c = JsonConvert.DeserializeObject<WheelConfiguration>(hardcodedJson);
-        await _wheelConfigurationRepository.InsertAsync(c);
-        await _wheelConfigurationRepository.SaveAsync();
+            await _wheelConfigurationRepository.SaveAsync();
+        }
+        catch (Exception ex) { }
 
     }
-
-    //// This method will dynamically set properties on the entity based on JSON data
-    //private void PopulateEntityFromJson(object entity, JObject data)
-    //{
-    //    try
-    //    {
-    //        var entityType = entity.GetType();
-
-    //        foreach (var prop in data.Properties())
-    //        {
-    //            // Find the property in the entity that matches the JSON field
-    //            var propertyInfo = entityType.GetProperty(prop.Name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-
-    //            if (propertyInfo != null && propertyInfo.CanWrite)
-    //            {
-    //                // If the property is a collection (like Rounds, Prices, Segments)
-    //                if (typeof(System.Collections.IEnumerable).IsAssignableFrom(propertyInfo.PropertyType) && propertyInfo.PropertyType != typeof(string))
-    //                {
-    //                    var listType = propertyInfo.PropertyType.GetGenericArguments().First();
-    //                    var list = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(listType));
-
-    //                    foreach (var item in (JArray)prop.Value)
-    //                    {
-    //                        var itemInstance = Activator.CreateInstance(listType);
-    //                        PopulateEntityFromJson(itemInstance, (JObject)item); // Recursively populate the nested entity
-
-    //                        // Check if the entity is of type Price or Segment and ensure Id is set
-    //                        if (itemInstance is Price price && string.IsNullOrEmpty(price.Id))
-    //                        {
-    //                            price.Id = Guid.NewGuid().ToString();  // Generate a new Id for Price
-    //                        }
-    //                        else if (itemInstance is Segment segment && string.IsNullOrEmpty(segment.Id))
-    //                        {
-    //                            segment.Id = Guid.NewGuid().ToString();  // Generate a new Id for Segment
-    //                        }
-
-    //                        list.Add(itemInstance);
-    //                    }
-
-    //                    propertyInfo.SetValue(entity, list);
-    //                }
-    //                else
-    //                {
-    //                    // For simple types, set the value directly
-    //                    var convertedValue = Convert.ChangeType(prop.Value.ToString(), propertyInfo.PropertyType);
-    //                    propertyInfo.SetValue(entity, convertedValue);
-    //                }
-    //            }
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // Handle exception if needed
-    //    }
-    //}
 }
+//        string hardcodedJson = @"
+//        {
+//    'Name': 'Hardcoded Wheel Configuration',
+//    'Value': 1000,
+//    'IsActive': true,
+//    'Rounds': [
+//        {
+//            'Name': 'Hardcoded Round 1',
+//            'Sequence': [1, 2, 3],
+//            'Prizes': [
+//                {
+//                    'Name': ""Test"",
+//                    'Value': 100,
+//                    'Probability': 50,
+//                    'PrizeTypeId': 1,
+//                    'WheelIndex': 0
+//                },
+//                {
+//                    'Name': ""Test"",
+//                    'Value': 200,
+//                    'Probability': 30,
+//                    'PrizeTypeId': 2,
+//                    'WheelIndex': 1
+//                }
+//            ]
+//        },
+//        {
+//            'Name': 'Hardcoded Round 2',
+//            'Sequence': [1, 2, 3],
+//            'Prizes': [
+//                {
+//                    'Name': ""Test"",
+//                    'Value': 150,
+//                    'Probability': 40,
+//                    'PrizeTypeId': 1,
+//                    'WheelIndex': 2
+//                },
+//                {
+//                    'Name': ""Test"",
+//                    'Value': 250,
+//                    'Probability': 20,
+//                    'PrizeTypeId': 3,
+//                    'WheelIndex': 3
+//                }
+//            ]
+//        }
+//    ],
+//    'Prices': [
+//        {
+//            'Id': 'Price5',
+//            'Value': 200.50,
+//            'Multiplier': 1.5,
+//            'CurrencyId': 'OnAimCoin'
+//        },
+//        {
+//            'Id': 'Price6',
+//            'Value': 350.75,
+//            'Multiplier': 2.0,
+//            'CurrencyId': 'OnAimCoin'
+//        }
+//    ],
+//    'Segments': [
+//        {
+//            'Id': 'Segment5',
+//            'IsDeleted': true
+//        },
+//        {
+//            'Id': 'Segment6',
+//            'IsDeleted': false
+//        }
+//    ]
+//}
+//";

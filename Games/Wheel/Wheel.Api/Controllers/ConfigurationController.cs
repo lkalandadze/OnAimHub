@@ -29,10 +29,6 @@ public class ConfigurationController : BaseApiController
     [HttpPost(nameof(CreateConfiguration))]
     public async Task<IActionResult> CreateConfiguration([FromBody] CreateConfigurationCommand configurationData)
     {
-        //var command = new CreateConfigurationCommand
-        //{
-        //    ConfigurationData = configurationData // Pass the JSON object to the command
-        //};
 
         await Mediator.Send(configurationData);
         return Ok();
