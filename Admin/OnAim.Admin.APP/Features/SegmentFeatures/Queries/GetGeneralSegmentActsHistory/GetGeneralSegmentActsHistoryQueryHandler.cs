@@ -19,48 +19,50 @@ public class GetGeneralSegmentActsHistoryQueryHandler : IQueryHandler<GetGeneral
 
     public async Task<ApplicationResult> Handle(GetGeneralSegmentActsHistoryQuery request, CancellationToken cancellationToken)
     {
-        var query = _readOnlyRepository.Query().Include(x => x.PlayerSegmentAct).Include(x => x.Player);
+        var query = _readOnlyRepository.Query();
 
-        //if (request.Filter.DateFrom.HasValue)
-        //    query = query.Where(x => x.DateCreated >= request.Filter.DateFrom.Value);
+        var totalCount = await query.CountAsync(cancellationToken);
 
-        //if (request.Filter.DateTo.HasValue)
-        //    query = query.Where(x => x.DateCreated <= request.Filter.DateTo.Value);
+        var pageNumber = request.Filter.PageNumber ?? 1;
+        var pageSize = request.Filter.PageSize ?? 25;
 
-        //if (request.Filter.SegmentId != null)
-        //    query = query.Where(x => x.se.Id == request.Filter.SegmentId);
+        if (request.Filter.SegmentId != null)
+        {
+            query = query.Where(x => x.Player.PlayerSegments.Any(ur => request.Filter.SegmentId.Contains(ur.SegmentId)));
+        }
 
-        //if (request.Filter.UserId != null || request.Filter.UserId != 0)
-        //{
-        //    query = query.Where(x => x.ByUserId == request.Filter.UserId);
-        //}
+        if (request.Filter.UserId.HasValue && request.Filter.UserId.Value != 0)
+        {
+            query = query.Where(x => x.PlayerId == request.Filter.UserId.Value);
+        }
 
-        //if (request.Filter.UserId != null || request.Filter.UserId != 0)
-        //{
-        //    query = query.Where(x => x.PlayerId == request.Filter.playerId);
-        //}
+        var res = await query
+            .Select(x => new ActsHistoryDto
+            {
+                Id = x.Id,
+                Note = null,
+                PlayerId = x.PlayerId,
+                PlayerName = x.Player.UserName ?? "Unknown",
+                UploadedBy = null,
+                UploadedOn = null,
+                Quantity = x.PlayerSegmentAct.TotalPlayers,
+                Type = x.PlayerSegmentAct.Action.Name ?? null
+            })
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
-        //var paginatedResult = await Paginator.GetPaginatedResult(
-        //    query,
-        //    request.Filter,
-        //    act => new ActsHistoryDto
-        //    {
-        //        Id = act.Id,
-        //        Note = null,
-        //        PlayerName = act.Player.UserName ?? "Unknown", // Handling null here
-        //        UploadedOn = null,
-        //        Quantity = act.PlayerSegmentAct.TotalPlayers,
-        //        Type = act.PlayerSegmentAct.Action.Name ?? null// Handling null here too
-        //    },
-        //    cancellationToken
-        //);
-
-        var res = await query.ToListAsync(cancellationToken);
 
         return new ApplicationResult
         {
             Success = true,
-            Data = res,
+            Data = new PaginatedResult<ActsHistoryDto>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = res,
+            },
         };
     }
 }
