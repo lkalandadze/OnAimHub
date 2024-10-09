@@ -21,13 +21,13 @@ public abstract class GameConfiguration : BaseEntity<int>
     }
 
     [GlobalDescription("Name of the configuration")]
-    public string Name { get; private set; }
+    public string Name { get; set; }
 
     [GlobalDescription("Value of the configuration")]
-    public int Value { get; private set; }
+    public int Value { get; set; }
 
     [GlobalDescription("IsActive of the configuration")]
-    public bool IsActive { get; private set; }
+    public bool IsActive { get; set; }
     public void ChangeDetails(string name, int value)
     {
         Name = name;
@@ -80,8 +80,8 @@ public abstract class GameConfiguration<T> : GameConfiguration where T : GameCon
     }
 
     //[IgnoreIncludeAll]
-    //public new ICollection<Price> Prices { get;  set; }
+    public new ICollection<Price> Prices { get; set; }
 
     //[IgnoreIncludeAll]
-    //public new ICollection<Segment<T>> Segments { get; private set; }
+    public new ICollection<Segment> Segments { get; set; }
 }

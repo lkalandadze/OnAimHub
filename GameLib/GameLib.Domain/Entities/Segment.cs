@@ -10,7 +10,8 @@ public class Segment : BaseEntity<string>
     {
         
     }
-    public bool IsDeleted { get; private set; }
+
+    public bool IsDeleted { get; set; }
 
     public Segment(string id)
     {
