@@ -60,7 +60,7 @@ public class ChangePasswordCommandHandlerTest
 
         MockService
            .Setup(service => service.GetAll(filter))
-           .ReturnsAsync(new ApplicationResult { Data = new List<DomainDto>().AsQueryable() });
+           .ReturnsAsync(new ApplicationResult { Data = new List<DomainDto>().AsQueryable() }); //??????
 
         _mockPasswordService
             .Setup(e => e.EncryptPassword(command.OldPassword, user.Salt))
@@ -107,7 +107,7 @@ public class ChangePasswordCommandHandlerTest
 
         MockService
            .Setup(service => service.GetAll(filter))
-           .ReturnsAsync(new ApplicationResult { Data = new List<DomainDto>().AsQueryable() });
+           .ReturnsAsync(new ApplicationResult { Data = new List<DomainDto>().AsQueryable() });//??????
 
         MockService
              .Setup(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
