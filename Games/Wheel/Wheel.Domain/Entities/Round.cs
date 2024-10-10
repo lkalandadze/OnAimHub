@@ -9,5 +9,6 @@ public class Round : BasePrizeGroup<WheelPrize>
     }
 
     public string Name { get; set; }
+    public WheelConfiguration Configuration { get; set; }
     public ICollection<WheelPrize> Prizes { get; set; }
 }
