@@ -1,31 +1,30 @@
-﻿using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.ClientService;
+﻿using FluentValidation;
+using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.Delete;
 
-public class DeleteSegmentCommandHandler : BaseCommandHandler<DeleteSegmentCommand, ApplicationResult>
+public class DeleteSegmentCommandHandler : ICommandHandler<DeleteSegmentCommand, ApplicationResult>
 {
-    private readonly IHubApiClient _hubApiClient;
-    private readonly HubApiClientOptions _options;
+    private readonly ISegmentService _segmentService;
+    private readonly IValidator<DeleteSegmentCommand> _validator;
 
-    public DeleteSegmentCommandHandler(CommandContext<DeleteSegmentCommand> context, IHubApiClient hubApiClient, IOptions<HubApiClientOptions> options) : base(context)
+    public DeleteSegmentCommandHandler(ISegmentService segmentService, IValidator<DeleteSegmentCommand> validator)
     {
-        _hubApiClient = hubApiClient;
-        _options = options.Value;
+        _segmentService = segmentService;
+        _validator = validator;
     }
 
-    protected async override Task<ApplicationResult> ExecuteAsync(DeleteSegmentCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult> Handle(DeleteSegmentCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var result = await _hubApiClient.Delete($"{_options.Endpoint}Admin/DeleteSegment?id={request.Id}");
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (result.IsSuccessStatusCode)
-        {
-            return new ApplicationResult { Success = true };
-        }
+        var result = await _segmentService.DeleteSegment(request.Id);
 
-        throw new Exception("Failed to delete segment");
+        return new ApplicationResult { Success = result.Success, Data = result.Data };
     }
 }

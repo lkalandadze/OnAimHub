@@ -1,44 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.CQRS.Query;
-using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Domain.Interfaces;
+﻿using OnAim.Admin.APP.CQRS.Query;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.Segment;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.ActsAndHistory.History;
 
 public class GetSegmentActsHistoryByIdQueryHandler : IQueryHandler<GetSegmentActsHistoryByIdQuery, ApplicationResult>
 {
-    private readonly IReadOnlyRepository<PlayerSegmentActHistory> _playerSegmentActHistoryRepository;
+    private readonly ISegmentService _segmentService;
 
-    public GetSegmentActsHistoryByIdQueryHandler(IReadOnlyRepository<PlayerSegmentActHistory> playerSegmentActHistoryRepository)
+    public GetSegmentActsHistoryByIdQueryHandler(ISegmentService segmentService)
     {
-        _playerSegmentActHistoryRepository = playerSegmentActHistoryRepository;
+        _segmentService = segmentService;
     }
     public async Task<ApplicationResult> Handle(GetSegmentActsHistoryByIdQuery request, CancellationToken cancellationToken)
     {
-        var history = await _playerSegmentActHistoryRepository
-            .Query(x => x.PlayerSegmentActId == request.PlayerSegmentActId)
-            .Include(x => x.Player)
-            .Include(x => x.PlayerSegmentAct)
-            .ToListAsync();
-
-        var res = history.Select(x => new ActsHistoryDto
-        {
-            Id = x.Id,
-            Note = null,
-            PlayerName = x.Player.UserName,
-            PlayerId = x.PlayerId,
-            Quantity = 1,
-            UploadedBy = x.PlayerSegmentAct?.ByUserId,
-            UploadedOn = null,
-            Type = x.PlayerSegmentAct?.Action?.Name,
-        });
+        var result = await _segmentService.GetActsHistory(request.PlayerSegmentActId);
 
         return new ApplicationResult
         {
-            Success = true,
-            Data = res
+            Success = result.Success,
+            Data = result.Data
         };
     }
 }

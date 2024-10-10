@@ -1,36 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Domain.Exceptions;
+﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.APP.CQRS.Command;
+using FluentValidation;
+using OnAim.Admin.APP.Services.Abstract;
 
 namespace OnAim.Admin.APP.Features.EndpointGroupFeatures.Commands.Delete;
 
-public class DeleteEndpointGroupCommandHandler : BaseCommandHandler<DeleteEndpointGroupCommand, ApplicationResult>
+public class DeleteEndpointGroupCommandHandler : ICommandHandler<DeleteEndpointGroupCommand, ApplicationResult>
 {
-    private readonly IRepository<EndpointGroup> _repository;
+    private readonly IEndpointGroupService _endpointGroupService;
+    private readonly IValidator<DeleteEndpointGroupCommand> _validator;
 
-    public DeleteEndpointGroupCommandHandler(CommandContext<DeleteEndpointGroupCommand> context,IRepository<EndpointGroup> repository) : base( context )
+    public DeleteEndpointGroupCommandHandler(IEndpointGroupService endpointGroupService, IValidator<DeleteEndpointGroupCommand> validator)
     {
-        _repository = repository;
+        _endpointGroupService = endpointGroupService;
+        _validator = validator;
     }
-    protected override async Task<ApplicationResult> ExecuteAsync(DeleteEndpointGroupCommand request, CancellationToken cancellationToken)
+
+    public async Task<ApplicationResult> Handle(DeleteEndpointGroupCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var groups = await _repository.Query(x => request.GroupIds.Contains(x.Id)).ToListAsync();
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (!groups.Any())
-            throw new NotFoundException("Permission Group Not Found");
+        var result = await _endpointGroupService.Delete(request.GroupIds);
 
-        foreach ( var group in groups)
-        {
-            group.IsActive = false;
-            group.IsDeleted = true;
-        }
-
-        await _repository.CommitChanges();
-
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult { Success = result.Success, Data = result };
     }
 }

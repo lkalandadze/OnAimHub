@@ -1,36 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Domain.Exceptions;
+﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
+using FluentValidation;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Commands.Delete;
 
-public class DeleteRoleCommandHandler : BaseCommandHandler<DeleteRoleCommand, ApplicationResult>
+public class DeleteRoleCommandHandler : ICommandHandler<DeleteRoleCommand, ApplicationResult>
 {
-    private readonly IRepository<Role> _repository;
+    private readonly IRoleService _roleService;
+    private readonly IValidator<DeleteRoleCommand> _validator;
 
-    public DeleteRoleCommandHandler(CommandContext<DeleteRoleCommand> context,IRepository<Role> repository) : base( context )
+    public DeleteRoleCommandHandler(IRoleService roleService, IValidator<DeleteRoleCommand> validator)
     {
-        _repository = repository;
+        _roleService = roleService;
+        _validator = validator;
     }
-    protected override async Task<ApplicationResult> ExecuteAsync(DeleteRoleCommand request, CancellationToken cancellationToken)
+
+    public async Task<ApplicationResult> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var roles = await _repository.Query(x => request.Ids.Contains(x.Id)).ToListAsync();
+        if(!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (!roles.Any())
-            throw new NotFoundException("Role Not Found");
+        var result = await _roleService.Delete(request.Ids);
 
-        foreach ( var role in roles)
-        {
-            role.IsActive = false;
-            role.IsDeleted = true;
-        }
-
-        await _repository.CommitChanges();
-
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult { Success = result.Success };
     }
 }

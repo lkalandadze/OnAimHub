@@ -1,39 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Domain.Exceptions;
+﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
+using FluentValidation;
 
 namespace OnAim.Admin.APP.Features.DomainFeatures.Commands.Delete;
 
-public class DeleteEmailDomainCommandHandler : BaseCommandHandler<DeleteEmailDomainCommand, ApplicationResult>
+public class DeleteEmailDomainCommandHandler : ICommandHandler<DeleteEmailDomainCommand, ApplicationResult>
 {
-    private readonly IRepository<AllowedEmailDomain> _repository;
+    private readonly IDomainService _domainService;
+    private readonly IValidator<DeleteEmailDomainCommand> _validator;
 
-    public DeleteEmailDomainCommandHandler(
-        CommandContext<DeleteEmailDomainCommand> context,
-        IRepository<AllowedEmailDomain> repository
-        ) : base( context )
+    public DeleteEmailDomainCommandHandler(IDomainService domainService, IValidator<DeleteEmailDomainCommand> validator)
     {
-        _repository = repository;
+        _domainService = domainService;
+        _validator = validator;
     }
-    protected override async Task<ApplicationResult> ExecuteAsync(DeleteEmailDomainCommand request, CancellationToken cancellationToken)
+
+    public async Task<ApplicationResult> Handle(DeleteEmailDomainCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var domains = await _repository.Query(x => request.Ids.Contains(x.Id)).ToListAsync();
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (!domains.Any())
-            throw new NotFoundException("Domain Not Found!");
+        var result = await _domainService.DeleteEmailDomain(request.Ids);
 
-        foreach (var domain in domains)
-        {
-            domain.IsActive = false;
-            domain.IsDeleted = true;
-        }
-
-        await _repository.CommitChanges();
-
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult { Success = result.Success };
     }
 }

@@ -1,64 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Exceptions;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
+using FluentValidation;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Commands.Create;
 
-public class CreateRoleCommandHandler : BaseCommandHandler<CreateRoleCommand, ApplicationResult>
+public class CreateRoleCommandHandler : ICommandHandler<CreateRoleCommand, ApplicationResult>
 {
-    private readonly IRepository<Role> _repository;
-    private readonly IRepository<EndpointGroup> _endpointGroupRepository;
-    private readonly IConfigurationRepository<RoleEndpointGroup> _configurationRepository;
+    private readonly IRoleService _roleService;
+    private readonly IValidator<CreateRoleCommand> _validator;
 
-    public CreateRoleCommandHandler(
-        CommandContext<CreateRoleCommand> context,
-        IRepository<Role> repository,
-        IRepository<EndpointGroup> EndpointGroupRepository,
-        IConfigurationRepository<RoleEndpointGroup> ConfigurationRepository
-        ) : base( context )
+    public CreateRoleCommandHandler(IRoleService roleService, IValidator<CreateRoleCommand> validator) 
     {
-        _repository = repository;
-        _endpointGroupRepository = EndpointGroupRepository;
-        _configurationRepository = ConfigurationRepository;
+        _roleService = roleService;
+        _validator = validator;
     }
-    protected override async Task<ApplicationResult> ExecuteAsync(CreateRoleCommand request, CancellationToken cancellationToken)
+
+    public async Task<ApplicationResult> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var existsName = _repository.Query(x => x.Name.ToLower() == request.Request.Name.ToLower()).Any();
-        if (existsName)
-            throw new BadRequestException("Role With That Name ALready Exists");
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        var role = new Role(
-            request.Request.Name.ToLower(), 
-            request.Request.Description,
-            _context.SecurityContextAccessor.UserId
-            );
+        var result = await _roleService.Create(request.Request);
 
-        await _repository.Store(role);
-        await _repository.CommitChanges();
-
-        foreach (var group in request.Request.EndpointGroupIds)
-        {
-            var epgroup = await _endpointGroupRepository.Query(x => x.Id == group).FirstOrDefaultAsync();
-
-            if (epgroup?.IsDeleted == true)
-                throw new BadRequestException("EndpointGroup Is Disabled!");
-
-            var roleEndpointGroup = new RoleEndpointGroup(role.Id, epgroup.Id);
-
-            role.RoleEndpointGroups.Add(roleEndpointGroup);
-            await _configurationRepository.CommitChanges();
-        }
-
-        await _configurationRepository.CommitChanges();
-
-        return new ApplicationResult
-        {
-            Success = true,
-            Data = $"Role {role.Name} Successfully Created!",
-        };
+        return new ApplicationResult { Success = result.Success, Data = result.Data };
     }
 }

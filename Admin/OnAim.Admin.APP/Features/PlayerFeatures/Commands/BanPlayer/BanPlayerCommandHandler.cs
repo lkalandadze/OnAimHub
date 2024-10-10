@@ -1,31 +1,30 @@
-﻿using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.ClientService;
-using OnAim.Admin.Domain.Exceptions;
+﻿using FluentValidation;
+using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Commands.BanPlayer;
 
-public class BanPlayerCommandHandler : BaseCommandHandler<BanPlayerCommand, ApplicationResult>
+public class BanPlayerCommandHandler : ICommandHandler<BanPlayerCommand, ApplicationResult>
 {
-    private readonly IHubApiClient _hubApiClient;
-    private readonly HubApiClientOptions _options;
+    private readonly IPlayerService _playerService;
+    private readonly IValidator<BanPlayerCommand> _validator;
 
-    public BanPlayerCommandHandler(CommandContext<BanPlayerCommand> context, IHubApiClient hubApiClient, IOptions<HubApiClientOptions> options) : base(context)
+    public BanPlayerCommandHandler(IPlayerService playerService, IValidator<BanPlayerCommand> validator)
     {
-        _hubApiClient = hubApiClient;
-        _options = options.Value;
+        _playerService = playerService;
+        _validator = validator;
     }
-    protected override async Task<ApplicationResult> ExecuteAsync(BanPlayerCommand request, CancellationToken cancellationToken)
+
+    public async Task<ApplicationResult> Handle(BanPlayerCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/BanPlayer", request);
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (result.IsSuccessStatusCode)
-        {
-            return new ApplicationResult { Success = true };
-        }
+        var result = await _playerService.BanPlayer(request.PlayerId, request.ExpireDate, request.IsPermanent, request.Description);
 
-        throw new BadRequestException("Failed to Ban player");
+        return new ApplicationResult { Success = result.Success };
     }
 }

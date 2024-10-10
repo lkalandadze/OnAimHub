@@ -1,40 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Exceptions;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.APP.CQRS.Command;
+using FluentValidation;
+using OnAim.Admin.APP.Services.Abstract;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Commands.Delete;
 
-public class DeleteEndpointCommandHandler : BaseCommandHandler<DeleteEndpointCommand, ApplicationResult>
+public class DeleteEndpointCommandHandler : ICommandHandler<DeleteEndpointCommand, ApplicationResult>
 {
-    private readonly IRepository<Endpoint> _repository;
+    private readonly IEndpointService _endpointService;
+    private readonly IValidator<DeleteEndpointCommand> _validator;
 
-    public DeleteEndpointCommandHandler(
-        CommandContext<DeleteEndpointCommand> context,
-        IRepository<Endpoint> repository
-        ) : base(context)
+    public DeleteEndpointCommandHandler(IEndpointService endpointService, IValidator<DeleteEndpointCommand> validator) 
     {
-        _repository = repository;
+        _endpointService = endpointService;
+        _validator = validator;
     }
 
-    protected override async Task<ApplicationResult> ExecuteAsync(DeleteEndpointCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult> Handle(DeleteEndpointCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var endpoints = await _repository.Query(x => request.Ids.Contains(x.Id)).ToListAsync();
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (!endpoints.Any())
-            throw new NotFoundException("Permission Not Found");
+        var result = await _endpointService.Delete(request.Ids);
 
-        foreach ( var endpoint in endpoints )
-        {
-            endpoint.IsActive = false;
-            endpoint.IsDeleted = true;
-        }
-
-        await _repository.CommitChanges();
-
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult { Success = result.Success, Data = result };
     }
 }

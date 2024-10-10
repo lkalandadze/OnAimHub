@@ -26,6 +26,13 @@ using OnAim.Admin.Shared.Helpers.HtmlGenerators;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Domain.Exceptions;
 using ValidationException = OnAim.Admin.Domain.Exceptions.ValidationException;
+using OnAim.Admin.APP.Services.Domain;
+using OnAim.Admin.APP.Services.User;
+using OnAim.Admin.APP.Services.Endpoint;
+using OnAim.Admin.APP.Services.EndpointGroup;
+using OnAim.Admin.APP.Services.Role;
+using OnAim.Admin.APP.Services.Segment;
+using OnAim.Admin.APP.Services.Player;
 
 
 namespace OnAim.Admin.APP;
@@ -47,11 +54,16 @@ public static class Extension
             .AddScoped<ILogRepository, LogRepository>()
             .AddScoped<IPermissionService, PermissionService>()
             .AddScoped<IPasswordService, PasswordService>()
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IEndpointService, EndpointService>()
+            .AddScoped<IEndpointGroupService, EndpointGroupService>()
+            .AddScoped<IRoleService, RoleService>()
+            .AddScoped<IDomainService, DomainService>()
+            .AddScoped<ISegmentService, SegmentService>()
+            .AddScoped<IPlayerService, PlayerService>()
             .AddTransient<IJwtFactory, JwtFactory>()
             .AddHostedService<TokenCleanupService>()
             .Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"))
-            //.AddTransient<IEmailService, EmailService>()
-            //.AddTransient<IEmailService, MailgunService>()
             .AddScoped<IDomainValidationService, DomainValidationService>()
             .AddScoped<IAppSettingsService, AppSettingsService>()
             .AddScoped<IOtpService, OtpService>()

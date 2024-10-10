@@ -1,34 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.CQRS.Query;
-using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Domain.Interfaces;
+﻿using OnAim.Admin.APP.CQRS.Query;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.Player;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetProgress;
 
 public class GetPlayerProgressQueryHandler : IQueryHandler<GetPlayerProgressQuery, ApplicationResult>
 {
-    private readonly IReadOnlyRepository<PlayerProgress> _readOnlyRepository;
+    private readonly IPlayerService _playerService;
 
-    public GetPlayerProgressQueryHandler(IReadOnlyRepository<PlayerProgress> readOnlyRepository)
+    public GetPlayerProgressQueryHandler(IPlayerService playerService)
     {
-        _readOnlyRepository = readOnlyRepository;
+        _playerService = playerService;
     }
     public async Task<ApplicationResult> Handle(GetPlayerProgressQuery request, CancellationToken cancellationToken)
     {
-        var progress = await _readOnlyRepository.Query(x => x.PlayerId == request.Id).FirstOrDefaultAsync();
-
-        var result = new PlayerProgressDto
-        {
-            DailyProgress = progress?.Progress ?? 0,
-            TotalProgress = progress?.Progress ?? 0
-        };
+        var result = await _playerService.GetPlayerProgress(request.Id);
 
         return new ApplicationResult
         {
-            Success = true,
-            Data = result
+            Success = result.Success,
+            Data = result.Data
         };
     }
 }

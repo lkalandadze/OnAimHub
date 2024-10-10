@@ -1,40 +1,33 @@
 ﻿using FluentValidation;
-using MockQueryable;
 using Moq;
 using OnAim.Admin.APP.Feature.UserFeature.Commands.ChangePassword;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
-using OnAim.Admin.Domain.Exceptions;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using System.Linq.Expressions;
+using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Shared.DTOs.EmailDomain;
 
 namespace OnAim.Admin.Test.User;
 
 public class ChangePasswordCommandHandlerTest
 {
-    private readonly Mock<IRepository<OnAim.Admin.Domain.Entities.User>> _mockUserRepository;
-    private readonly Mock<IValidator<ChangePasswordCommand>> _mockValidator;
+    protected readonly Mock<IUserService> MockService;
+    protected readonly Mock<IValidator<ChangePasswordCommand>> MockValidator;
     private readonly Mock<ISecurityContextAccessor> _mockSecurityContextAccessor;
     private readonly Mock<IPasswordService> _mockPasswordService;
-    private readonly CommandContext<ChangePasswordCommand> _commandContext;
 
     public ChangePasswordCommandHandlerTest()
     {
-        _mockUserRepository = new Mock<IRepository<Admin.Domain.Entities.User>>();
-        _mockValidator = new Mock<IValidator<ChangePasswordCommand>>();
+        MockService = new Mock<IUserService>();
+        MockValidator = new Mock<IValidator<ChangePasswordCommand>>();
         _mockSecurityContextAccessor = new Mock<ISecurityContextAccessor>();
         _mockPasswordService = new Mock<IPasswordService>();
-
-        _commandContext = new CommandContext<ChangePasswordCommand>(
-            _mockValidator.Object,
-            _mockSecurityContextAccessor.Object
-            );
 
         _mockSecurityContextAccessor
             .Setup(x => x.UserId)
             .Returns(1);
 
-        _mockValidator
+        MockValidator
             .Setup(v => v.ValidateAsync(It.IsAny<ChangePasswordCommand>(), CancellationToken.None))
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
     }
@@ -52,9 +45,22 @@ public class ChangePasswordCommandHandlerTest
             verificationCodeExpiration: null
         );
 
-        _mockUserRepository
-            .Setup(repo => repo.Query(It.IsAny<Expression<Func<OnAim.Admin.Domain.Entities.User, bool>>>()))
-            .Returns(new List<OnAim.Admin.Domain.Entities.User> { user }.AsQueryable().BuildMock());
+        var filter = new Shared.DTOs.User.UserFilter(
+            "", 
+            "",
+            "", 
+            new List<int>(),
+            true,
+            Shared.Enums.HistoryStatus.All, 
+            new DateTime(), 
+            new DateTime(),
+            new DateTime(),
+            new DateTime()
+            );
+
+        MockService
+           .Setup(service => service.GetAll(filter))
+           .ReturnsAsync(new ApplicationResult { Data = new List<DomainDto>().AsQueryable() });
 
         _mockPasswordService
             .Setup(e => e.EncryptPassword(command.OldPassword, user.Salt))
@@ -68,17 +74,17 @@ public class ChangePasswordCommandHandlerTest
             .Setup(e => e.EncryptPassword(command.NewPassword, "newSalt"))
             .Returns("hashedNewPassword");
 
-        _mockUserRepository
-            .Setup(repo => repo.CommitChanges())
-            .Returns(Task.CompletedTask);
+        MockService
+            .Setup(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            .ReturnsAsync(new ApplicationResult { Success = true })
+            .Verifiable();
 
-        var handler = new ChangePasswordCommandHandler(_commandContext, _mockUserRepository.Object, _mockPasswordService.Object);
+        var handler = new ChangePasswordCommandHandler(MockService.Object, MockValidator.Object);
 
         var result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.Success);
-        Assert.Equal("hashedNewPassword", user.Password);
-        _mockUserRepository.Verify(repo => repo.CommitChanges(), Times.Once);
+        MockService.Verify(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
@@ -86,13 +92,34 @@ public class ChangePasswordCommandHandlerTest
     {
         var command = new ChangePasswordCommand("nonexistent@example.com", "OldPassword123", "NewPassword123");
 
-        _mockUserRepository
-            .Setup(repo => repo.Query(It.IsAny<Expression<Func<OnAim.Admin.Domain.Entities.User, bool>>>()))
-            .Returns(new List<OnAim.Admin.Domain.Entities.User>().AsQueryable().BuildMock());
+        var filter = new Shared.DTOs.User.UserFilter(
+              "",
+              "",
+              "",
+              new List<int>(),
+              true,
+              Shared.Enums.HistoryStatus.All,
+              new DateTime(),
+              new DateTime(),
+              new DateTime(),
+              new DateTime()
+              );
 
-        var handler = new ChangePasswordCommandHandler(_commandContext, _mockUserRepository.Object, _mockPasswordService.Object);
+        MockService
+           .Setup(service => service.GetAll(filter))
+           .ReturnsAsync(new ApplicationResult { Data = new List<DomainDto>().AsQueryable() });
 
-        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+        MockService
+             .Setup(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+             .ReturnsAsync(new ApplicationResult { Success = true })
+             .Verifiable();
+
+        var handler = new ChangePasswordCommandHandler(MockService.Object, MockValidator.Object);
+
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        Assert.True(result.Success);
+        MockService.Verify(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }
 
 }

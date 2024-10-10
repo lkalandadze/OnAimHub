@@ -1,63 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Exceptions;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
+﻿using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
+using FluentValidation;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.Models;
-using OnAim.Admin.APP.Services.AuthServices;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.ChangePassword;
 
-public class ChangePasswordCommandHandler : BaseCommandHandler<ChangePasswordCommand, ApplicationResult>
+public class ChangePasswordCommandHandler : ICommandHandler<ChangePasswordCommand, ApplicationResult>
 {
-    private readonly IRepository<User> _userRepository;
-    private readonly IPasswordService _passwordService;
+    private readonly IUserService _userService;
+    private readonly IValidator<ChangePasswordCommand> _validator;
 
-    public ChangePasswordCommandHandler(
-        CommandContext<ChangePasswordCommand> context,
-        IRepository<User> userRepository,
-        IPasswordService passwordService
-        ) : base( context )
+    public ChangePasswordCommandHandler(IUserService userService, IValidator<ChangePasswordCommand> validator )
     {
-        _userRepository = userRepository;
-        _passwordService = passwordService;
+        _userService = userService;
+        _validator = validator;
     }
-    protected override async Task<ApplicationResult> ExecuteAsync(ChangePasswordCommand request, CancellationToken cancellationToken)
+
+    public async Task<ApplicationResult> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var user = await _userRepository.Query(x => x.Email == request.Email).FirstOrDefaultAsync();
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (user == null)
-            throw new NotFoundException("User Not Found!");
+        var result = await _userService.ChangePassword(request.Email, request.OldPassword, request.NewPassword);
 
-        if (user?.IsActive == false)
-            throw new NotFoundException("User Not Found!");
-
-        string hashedOldPassword = _passwordService.EncryptPassword(request.OldPassword, user.Salt);
-
-        if (user.Password != hashedOldPassword)
-            throw new BadRequestException("Old password is incorrect!");
-
-        var newSalt = _passwordService.Salt();
-        string hashedNewPassword = _passwordService.EncryptPassword(request.NewPassword, newSalt);
-
-        user.Password = hashedNewPassword;
-        user.Salt = newSalt;
-        user.DateUpdated = SystemDate.Now;
-
-        try
-        {
-            await _userRepository.CommitChanges();
-        }
-        catch (Exception ex)
-        {
-            throw new BadRequestException("An error occurred while updating the password.");
-        }
-
-        return new ApplicationResult
-        {
-            Success = true,
-        };
+        return new ApplicationResult { Success = result.Success, Data = result.Data };
     }
 }

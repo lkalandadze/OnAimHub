@@ -1,31 +1,30 @@
-﻿using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.ClientService;
+﻿using FluentValidation;
+using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.Update;
 
-public class UpdateSegmentCommandHandler : BaseCommandHandler<UpdateSegmentCommand, ApplicationResult>
+public class UpdateSegmentCommandHandler : ICommandHandler<UpdateSegmentCommand, ApplicationResult>
 {
-    private readonly IHubApiClient _hubApiClient;
-    private readonly HubApiClientOptions _options;
+    private readonly ISegmentService _segmentService;
+    private readonly IValidator<UpdateSegmentCommand> _validator;
 
-    public UpdateSegmentCommandHandler(CommandContext<UpdateSegmentCommand> context, IHubApiClient hubApiClient, IOptions<HubApiClientOptions> options) : base(context)
+    public UpdateSegmentCommandHandler(ISegmentService segmentService, IValidator<UpdateSegmentCommand> validator)
     {
-        _hubApiClient = hubApiClient;
-        _options = options.Value;
+        _segmentService = segmentService;
+        _validator = validator;
     }
 
-    protected async override Task<ApplicationResult> ExecuteAsync(UpdateSegmentCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult> Handle(UpdateSegmentCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var result = await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/UpdateSegment", request);
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (result.IsSuccessStatusCode)
-        {
-            return new ApplicationResult { Success = true };
-        }
+        var result = await _segmentService.UpdateSegment(request.Id, request.Description, request.PriorityLevel);
 
-        throw new Exception("Failed to update segment");
+        return new ApplicationResult { Success = result.Success, Data = result.Data };
     }
 }

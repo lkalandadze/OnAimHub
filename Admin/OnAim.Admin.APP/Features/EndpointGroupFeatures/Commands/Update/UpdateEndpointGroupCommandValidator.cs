@@ -7,7 +7,7 @@ public class UpdateEndpointGroupCommandValidator : AbstractValidator<UpdateEndpo
     public UpdateEndpointGroupCommandValidator()
     {
         RuleFor(x => x.Id).NotEmpty();
-        RuleFor(x => x.model.Name)
+        RuleFor(x => x.Model.Name)
             .NotEmpty()
             .Matches(@"^[a-zA-Z\s]+$").WithMessage("Name should only contain letters and spaces, no numbers or symbols.");
     }

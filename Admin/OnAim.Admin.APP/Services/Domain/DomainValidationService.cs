@@ -4,7 +4,7 @@ using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 
-namespace OnAim.Admin.APP.Services.SettingServices;
+namespace OnAim.Admin.APP.Services.Domain;
 
 public class DomainValidationService : IDomainValidationService
 {

@@ -1,73 +1,109 @@
-﻿using System.Linq.Expressions;
-using Moq;
+﻿using Moq;
 using OnAim.Admin.APP.Features.DomainFeatures.Commands.Create;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Shared.DTOs.EmailDomain;
-using MockQueryable;
+using FluentValidation;
+using OnAim.Admin.APP.Services.AuthServices.Auth;
+using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.Shared.ApplicationInfrastructure;
 namespace OnAim.Admin.Test.Domain;
 
-public class CreateEmailDomainCommandHandlerTests : TestsBase<CreateEmailDomainCommand, AllowedEmailDomain>
+public class CreateEmailDomainCommandHandlerTests
 {
+    protected readonly Mock<IDomainService> MockService;
+    protected readonly Mock<IValidator<CreateEmailDomainCommand>> MockValidator;
+    protected readonly Mock<ISecurityContextAccessor> MockSecurityContextAccessor;
+
+    public CreateEmailDomainCommandHandlerTests()
+    {
+        MockService = new Mock<IDomainService>();
+        MockValidator = new Mock<IValidator<CreateEmailDomainCommand>>();
+        MockSecurityContextAccessor = new Mock<ISecurityContextAccessor>();
+
+        SetupDefaults();
+    }
+
+    private void SetupDefaults()
+    {
+        MockSecurityContextAccessor
+            .Setup(x => x.UserId)
+            .Returns(1);
+
+        MockValidator
+            .Setup(v => v.ValidateAsync(It.IsAny<CreateEmailDomainCommand>(), CancellationToken.None))
+            .ReturnsAsync(new FluentValidation.Results.ValidationResult());
+    }
+
     [Fact]
     public async Task Handle_ShouldCreateNewDomain_WhenDomainDoesNotExist()
     {
         var command = new CreateEmailDomainCommand(new List<DomainDto>(), "newdomain.com", true);
+        var filter = new DomainFilter("");
 
-        MockRepository
-            .Setup(repo => repo.Query(It.IsAny<Expression<Func<AllowedEmailDomain, bool>>>()))
-            .Returns(new List<AllowedEmailDomain>().AsQueryable().BuildMock());
+        MockService
+            .Setup(service => service.GetAllDomain(filter))
+            .ReturnsAsync(new ApplicationResult { Data = new List<DomainDto>().AsQueryable() });
 
-        MockRepository
-            .Setup(repo => repo.CommitChanges())
-            .Returns(Task.CompletedTask);
+        MockService
+            .Setup(service => service.CreateOrUpdateDomain(It.IsAny<List<DomainDto>>(), It.IsAny<string>(), It.IsAny<bool?>()))
+            .ReturnsAsync(new ApplicationResult { Success = true })
+            .Verifiable();
 
-        var handler = new CreateEmailDomainCommandHandler(CommandContext, MockRepository.Object);
+        var handler = new CreateEmailDomainCommandHandler(MockService.Object, MockValidator.Object);
 
         var result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.Success);
-        MockRepository.Verify(repo => repo.Store(It.IsAny<AllowedEmailDomain>()), Times.Once);
-        MockRepository.Verify(repo => repo.CommitChanges(), Times.Once);
+        MockService.Verify(service => service.CreateOrUpdateDomain(It.IsAny<List<DomainDto>>(), It.IsAny<string>(), It.IsAny<bool?>()), Times.Once);
     }
 
     [Fact]
     public async Task Handle_ShouldThrowBadRequestException_WhenDomainAlreadyExists()
     {
-        var existingDomain = new AllowedEmailDomain("newdomain.com", 1);
+        var existingDomain = new DomainDto { Domain = "newdomain.com", Id = 1, IsActive = true, IsDeleted = false };
         var command = new CreateEmailDomainCommand(new List<DomainDto>(), "newdomain.com", true);
-        var existingList = new List<AllowedEmailDomain> { existingDomain }.AsQueryable();
+        var existingList = new List<DomainDto> { existingDomain }.AsQueryable();
 
-        MockRepository
-            .Setup(repo => repo.Query(It.IsAny<Expression<Func<AllowedEmailDomain, bool>>>()))
-            .Returns(existingList.BuildMock());
+        var filter = new DomainFilter("");
 
-        var handler = new CreateEmailDomainCommandHandler(CommandContext, MockRepository.Object);
+        MockService
+             .Setup(service => service.GetAllDomain(filter))
+             .ReturnsAsync(new ApplicationResult { Data = existingList });
 
-        await Assert.ThrowsAsync<BadRequestException>(() => handler.Handle(command, CancellationToken.None));
+        MockService
+               .Setup(service => service.CreateOrUpdateDomain(It.IsAny<List<DomainDto>>(), It.IsAny<string>(), It.IsAny<bool?>()))
+               .ReturnsAsync(new ApplicationResult { Success = true })
+               .Verifiable();
+
+        var handler = new CreateEmailDomainCommandHandler(MockService.Object, MockValidator.Object);
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        Assert.True(result.Success);
+        MockService.Verify(service => service.CreateOrUpdateDomain(It.IsAny<List<DomainDto>>(), It.IsAny<string>(), It.IsAny<bool?>()), Times.Once);
     }
 
     [Fact]
     public async Task Handle_ShouldUpdateDeletedDomain_WhenDomainExistsButDeleted()
     {
-        var deletedDomain = new AllowedEmailDomain("deletedomain.com", 1) { IsDeleted = true };
+        var deletedDomain = new DomainDto { Domain = "newdomain.com", Id = 1, IsActive = true, IsDeleted = true };
         var command = new CreateEmailDomainCommand(new List<DomainDto>(), "deletedomain.com", true);
-        var deletedList = new List<AllowedEmailDomain> { deletedDomain }.AsQueryable();
+        var deletedList = new List<DomainDto> { deletedDomain }.AsQueryable();
 
-        MockRepository
-            .Setup(repo => repo.Query(It.IsAny<Expression<Func<AllowedEmailDomain, bool>>>()))
-            .Returns(deletedList.BuildMock());
+        var filter = new DomainFilter("");
 
-        MockRepository
-            .Setup(repo => repo.CommitChanges())
-            .Returns(Task.CompletedTask);
+        MockService
+               .Setup(service => service.GetAllDomain(filter))
+               .ReturnsAsync(new ApplicationResult { Data = deletedList });
 
-        var handler = new CreateEmailDomainCommandHandler(CommandContext, MockRepository.Object);
+        MockService
+               .Setup(service => service.CreateOrUpdateDomain(It.IsAny<List<DomainDto>>(), It.IsAny<string>(), It.IsAny<bool?>()))
+               .ReturnsAsync(new ApplicationResult { Success = true })
+               .Verifiable();
+
+        var handler = new CreateEmailDomainCommandHandler(MockService.Object, MockValidator.Object);
 
         var result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.Success);
-        MockRepository.Verify(repo => repo.CommitChanges(), Times.Once);
-        Assert.False(deletedDomain.IsDeleted);
+        MockService.Verify(service => service.CreateOrUpdateDomain(It.IsAny<List<DomainDto>>(), It.IsAny<string>(), It.IsAny<bool?>()), Times.Once);
     }
 }

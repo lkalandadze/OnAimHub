@@ -1,41 +1,30 @@
-﻿using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.ClientService;
+﻿using FluentValidation;
+using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.AssignPlayer;
 
-public class AssignPlayerCommandHandler : BaseCommandHandler<AssignPlayerCommand, ApplicationResult>
+public class AssignPlayerCommandHandler : ICommandHandler<AssignPlayerCommand, ApplicationResult>
 {
-    private readonly IHubApiClient _hubApiClient;
-    private readonly HubApiClientOptions _options;
+    private readonly ISegmentService _segmentService;
+    private readonly IValidator<AssignPlayerCommand> _validator;
 
-    public AssignPlayerCommandHandler(CommandContext<AssignPlayerCommand> context, IHubApiClient hubApiClient, IOptions<HubApiClientOptions> options) : base(context)
+    public AssignPlayerCommandHandler(ISegmentService segmentService, IValidator<AssignPlayerCommand> validator)
     {
-        _hubApiClient = hubApiClient;
-        _options = options.Value;
+        _segmentService = segmentService;
+        _validator = validator;
     }
 
-    protected async override Task<ApplicationResult> ExecuteAsync(AssignPlayerCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult> Handle(AssignPlayerCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var req = new 
-        {
-            PlayerId = request.PlayerId,
-            SegmentId = request.SegmentId,
-            ByUserId = _context.SecurityContextAccessor.UserId
-        };
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        var result = await _hubApiClient.PostAsJsonAndSerializeResultTo<object>(
-            $"{_options.Endpoint}Admin/AssignSegmentToPlayer?segmentId={req.SegmentId}&playerId={req.PlayerId}", 
-            req
-            );
+        var result = await _segmentService.AssignSegmentToPlayer(request.SegmentId, request.PlayerId);
 
-        if (result != null)
-        {
-            return new ApplicationResult { Success = true };
-        }
-
-        throw new Exception("Failed to assign segment");
+        return new ApplicationResult { Success = result.Success, Data = result.Data };
     }
 }

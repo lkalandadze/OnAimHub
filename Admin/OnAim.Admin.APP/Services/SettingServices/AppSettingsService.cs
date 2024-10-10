@@ -8,11 +8,11 @@ namespace OnAim.Admin.APP.Services.SettingServices;
 public class AppSettingsService : IAppSettingsService
 {
     private readonly IRepository<AppSetting> _appSettingRepository;
-    private readonly IRepository<User> _repository;
+    private readonly IRepository<OnAim.Admin.Domain.Entities.User> _repository;
 
     public AppSettingsService(
         IRepository<AppSetting> appSettingRepository,
-        IRepository<Domain.Entities.User> repository
+        IRepository<OnAim.Admin.Domain.Entities.User> repository
         )
     {
         _appSettingRepository = appSettingRepository;

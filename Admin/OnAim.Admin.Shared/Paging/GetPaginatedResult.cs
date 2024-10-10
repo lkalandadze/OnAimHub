@@ -11,8 +11,7 @@ public class Paginator
         IQueryable<TEntity> query,
         TFilter filter,
         Expression<Func<TEntity, TDto>> projection,
-        List<string> sortableFields,
-        CancellationToken cancellationToken)
+        List<string> sortableFields)
         where TEntity : class
         where TFilter : BaseFilter
     {
@@ -26,13 +25,13 @@ public class Paginator
 
         query = sortDescending ? query.OrderByDescending(sortExpression) : query.OrderBy(sortExpression);
 
-        var totalCount = await query.CountAsync(cancellationToken);
+        var totalCount = await query.CountAsync();
 
         var items = await query
             .Select(projection)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync(cancellationToken);
+            .ToListAsync();
 
         return new PaginatedResult<TDto>
         {

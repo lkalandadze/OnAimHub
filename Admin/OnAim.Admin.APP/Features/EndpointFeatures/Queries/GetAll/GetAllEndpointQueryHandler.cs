@@ -1,74 +1,25 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.Endpoint;
-using OnAim.Admin.Shared.Enums;
-using OnAim.Admin.Shared.Helpers;
-using OnAim.Admin.Shared.Paging;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Queries.GetAll;
 
 public class GetAllEndpointQueryHandler : IQueryHandler<GetAllEndpointQuery, ApplicationResult>
 {
-    private readonly IRepository<Endpoint> _repository;
+    private readonly IEndpointService _endpointService;
 
-    public GetAllEndpointQueryHandler(IRepository<Endpoint> repository)
+    public GetAllEndpointQueryHandler(IEndpointService endpointService)
     {
-        _repository = repository;
+        _endpointService = endpointService;
     }
     public async Task<ApplicationResult> Handle(GetAllEndpointQuery request, CancellationToken cancellationToken)
     {
-        var query = _repository
-            .Query(x =>
-                     (string.IsNullOrEmpty(request.Filter.Name) || x.Name.ToLower().Contains(request.Filter.Name.ToLower())) &&
-                     (!request.Filter.IsActive.HasValue || x.IsActive == request.Filter.IsActive.Value) &&
-                     (!request.Filter.Type.HasValue || x.Type == request.Filter.Type.Value)
-                 );
-
-        if (request.Filter?.HistoryStatus.HasValue == true)
-        {
-            switch (request.Filter.HistoryStatus.Value)
-            {
-                case HistoryStatus.Existing:
-                    query = query.Where(u => u.IsDeleted == false);
-                    break;
-                case HistoryStatus.Deleted:
-                    query = query.Where(u => u.IsDeleted == true);
-                    break;
-                case HistoryStatus.All:
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        if (request.Filter.GroupIds != null && request.Filter.GroupIds.Any())
-            query = query.Where(x => x.EndpointGroupEndpoints.Any(ur => request.Filter.GroupIds.Contains(ur.EndpointGroupId)));
-
-        var paginatedResult = await Paginator.GetPaginatedResult(
-            query,
-            request.Filter,
-            item => new EndpointResponseModel
-            {
-                Id = item.Id,
-                Path = item.Path,
-                Name = item.Name,
-                Description = item.Description,
-                Type = ToHttpMethodExtension.ToHttpMethod(item.Type),
-                IsActive = item.IsActive,
-                IsDeleted = item.IsDeleted,
-                DateCreated = item.DateCreated,
-                DateUpdated = item.DateUpdated,
-            },
-            new List<string> { "Id", "Name"},
-            cancellationToken
-        );
+        var result = await _endpointService.GetAll(request.Filter);
 
         return new ApplicationResult
         {
             Success = true,
-            Data = paginatedResult
+            Data = result
         };
     }
 }

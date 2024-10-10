@@ -1,43 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Domain.Exceptions;
+﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
+using FluentValidation;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Activate;
 
-public class ActivateAccountCommandHandler : BaseCommandHandler<ActivateAccountCommand, ApplicationResult>
+public class ActivateAccountCommandHandler : ICommandHandler<ActivateAccountCommand, ApplicationResult>
 {
-    private readonly IRepository<User> _repository;
+    private readonly IUserService _userService;
+    private readonly IValidator<ActivateAccountCommand> _validator;
 
-    public ActivateAccountCommandHandler(
-        CommandContext<ActivateAccountCommand> context,
-        IRepository<User> repository
-        ) : base( context )
+    public ActivateAccountCommandHandler(IUserService userService, IValidator<ActivateAccountCommand> validator) 
     {
-        _repository = repository;
+        _userService = userService;
+        _validator = validator;
     }
 
-    protected override async Task<ApplicationResult> ExecuteAsync(ActivateAccountCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult> Handle(ActivateAccountCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var user = await _repository.Query(x => x.Email == request.Email && !x.IsDeleted).FirstOrDefaultAsync();
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (user == null || user.VerificationCode != request.Code)
-            throw new BadRequestException("Invalid activation code.");
+        var result = await _userService.ActivateAccount(request.Email, request.Code);
 
-        if (user.VerificationCodeExpiration < DateTime.UtcNow)
-            throw new BadRequestException("Activation code has expired.");
-
-        user.IsActive = true;
-        user.IsVerified = true;
-        user.VerificationPurpose = Shared.Enums.VerificationPurpose.AccountActivation;
-        user.VerificationCode = null;
-        user.VerificationCodeExpiration = null;
-
-        await _repository.CommitChanges();
-
-        return new ApplicationResult { Success = true, Data = "Account activated successfully." };
+        return new ApplicationResult { Success = result.Success, Data = result.Data };
     }
 }

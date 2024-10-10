@@ -1,29 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.CQRS.Query;
-using OnAim.Admin.Domain.Interfaces;
-using OnAim.Admin.Domain.LeaderBoradEntities;
+﻿using OnAim.Admin.APP.CQRS.Query;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetLeaderBoardResultByPlayerId;
 
 public class GetLeaderBoardResultByPlayerIdQueryHandler : IQueryHandler<GetLeaderBoardResultByPlayerIdQuery, ApplicationResult>
 {
-    private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _readOnlyRepository;
+    private readonly IPlayerService _playerService;
 
-    public GetLeaderBoardResultByPlayerIdQueryHandler(ILeaderBoardReadOnlyRepository<LeaderboardResult> readOnlyRepository)
+    public GetLeaderBoardResultByPlayerIdQueryHandler(IPlayerService playerService)
     {
-        _readOnlyRepository = readOnlyRepository;
+        _playerService = playerService;
     }
     public async Task<ApplicationResult> Handle(GetLeaderBoardResultByPlayerIdQuery request, CancellationToken cancellationToken)
-    {
-        var leaderboardResults = _readOnlyRepository.Query().Where(x => x.PlayerId == request.PlayerId);
-
-        var total = leaderboardResults.Count();       
+    {         
+        var result = await _playerService.GetLeaderBoardResultByPlayer(request.PlayerId);
 
         return new ApplicationResult
         {
-            Success = true,
-            Data = await leaderboardResults.ToListAsync(),
+            Success = result.Success,
+            Data = result.Data,
         };
     }
 }
