@@ -1,131 +1,136 @@
 ﻿#nullable disable
+
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace CheckmateValidations
+namespace CheckmateValidations;
+
+public class Checkmate
 {
-    public class Checkmate
+    public List<CheckContainer> CheckContainers { get; private set; } = [];
+
+    public static bool IsValid<TEntity>(TEntity obj)
     {
-        public List<Check> Checks { get; private set; } = [];
+        return !GetFailedChecks(obj).Any();
+    }
 
-        public static bool Check<U>(U obj)
+    public static IEnumerable<Check> GetFailedChecks<TEntity>(TEntity obj)
+    {
+        var checkContainers = GetCheckContainers(obj);
+
+        foreach (var checkContainer in checkContainers)
         {
-            var checks = GetCheckers(obj);
-
-            foreach (var check in checks)
+            foreach (var check in checkContainer.Checks)
             {
-                if (!Check(obj, check))
-                {
-                    return false;
-                }
+                //TODO
+
+                //if (!IsValid(obj, check))
+                //{
+                //    yield return check;
+                //}
+
+                yield return check;
             }
-
-            return true;
-        }
-
-        private static bool Check<TEntity>(TEntity obj, Check check)
-        {
-            var val = (TEntity)check.GetExpression()(obj);
-
-            switch (check.ValidationType)
-            {
-                case ValidationType.Equals:
-                    return val.Equals((TEntity)check.Values.First());
-
-                //case ValidationType.LessThan:
-                //    return GetPropertyValue(obj, check.Property) < check.Values.First();
-
-                //case ValidationType.GreaterThan:
-                //    return GetPropertyValue(obj, check.Property) > check.Values.First();
-
-                //case ValidationType.Between:
-                //    return GetPropertyValue(obj, check.Property) >= check.Values.First()
-                //              && GetPropertyValue(obj, check.Property) <= check.Values[1];
-            }
-
-            return true;
-        }
-
-        private static object GetPropertyValue<T>(T obj, string propertyName)
-        {
-            PropertyInfo propertyInfo = typeof(T).GetProperty(propertyName);
-
-            if (propertyInfo == null)
-            {
-                throw new ArgumentException($"Property '{propertyName}' not found on type '{typeof(T).Name}'");
-            }
-
-            return propertyInfo.GetValue(obj);
-        }
-
-        public static List<Check> GetCheckers(object obj)
-        {
-            var type = obj.GetType();
-
-            if (type.GetCustomAttributes(typeof(CheckMateAttribute)).FirstOrDefault() is { } attr)
-            {
-                var checkmateType = ((CheckMateAttribute)attr).GetCheckmateType();
-
-                var instance = (Checkmate)Activator.CreateInstance(checkmateType);
-
-                return instance.Checks;
-            }
-
-            return null;
         }
     }
 
-    public abstract class Checkmate<SourceType> : Checkmate where SourceType : class
+    private static bool IsValid<TEntity>(TEntity obj, CheckContainer checkContainer)
     {
-        public Checkmate()
-        {
+        var val = checkContainer.GetExpression()(obj);
 
+        foreach (var check in checkContainer.Checks)
+        {
+            var predicate = check.GetPredicate();
+
+            return predicate(val);
         }
 
-        public Check<SourceType, PropertyType> Check<PropertyType>(Expression<Func<SourceType, PropertyType>> expression)
+        return true;
+    }
+
+    private static object GetPropertyValue<T>(T obj, string propertyName)
+    {
+        PropertyInfo propertyInfo = typeof(T).GetProperty(propertyName);
+
+        if (propertyInfo == null)
         {
-            string propertyChain = GetPropertyChain(expression.Body);
-
-            if (!string.IsNullOrEmpty(propertyChain))
-            {
-                var newCheck = new Check<SourceType, PropertyType> { Property = propertyChain, Expression = expression };
-                Checks.Add(newCheck);
-                return newCheck;
-            }
-
-            throw new ArgumentException("Invalid expression");
+            throw new ArgumentException($"Property '{propertyName}' not found on type '{typeof(T).Name}'");
         }
 
-        private string GetPropertyChain(Expression expression)
+        return propertyInfo.GetValue(obj);
+    }
+
+    public static List<CheckContainer> GetCheckContainers(object obj)
+    {
+        return GetCheckContainers(obj.GetType());
+    }
+
+    public static List<CheckContainer> GetCheckContainers(Type type)
+    {
+        if (type.GetCustomAttributes(typeof(CheckMateAttribute)).FirstOrDefault() is { } attr)
         {
-            if (expression is MemberExpression memberExpression)
-            {
-                var parent = GetPropertyChain(memberExpression.Expression);
-                return string.IsNullOrEmpty(parent) ? memberExpression.Member.Name : $"{parent}.{memberExpression.Member.Name}";
-            }
+            var checkmateType = ((CheckMateAttribute)attr).GetCheckmateType();
 
-            if (expression is MethodCallExpression methodCallExpression)
-            {
-                string parent = null;
+            var instance = (Checkmate)Activator.CreateInstance(checkmateType);
 
-                if (methodCallExpression.Object != null)
-                {
-                    parent = GetPropertyChain(methodCallExpression.Object);
-                }
-                else if (methodCallExpression.Arguments.Count > 0)
-                {
-                    parent = GetPropertyChain(methodCallExpression.Arguments[0]);
-                }
-
-                return parent != null ? $"{parent}.{methodCallExpression.Method.Name}()" : $"{methodCallExpression.Method.Name}()";
-            }
-
-            if (expression is UnaryExpression unaryExpression)
-            {
-                return GetPropertyChain(unaryExpression.Operand);
-            }
-
-            return null;
+            return instance.CheckContainers;
         }
+
+        return null;
+    }
+}
+
+public abstract class Checkmate<TEntity> : Checkmate where TEntity : class
+{
+    public Checkmate()
+    {
+
+    }
+
+    public CheckContainer<TEntity, TMember> Check<TMember>(Expression<Func<TEntity, TMember>> expression)
+    {
+        var checkContainer = new CheckContainer<TEntity, TMember>(expression);
+        
+        string propertyChain = GetPropertyChain(expression.Body);
+
+        if (!string.IsNullOrEmpty(propertyChain))//???
+        {
+            CheckContainers.Add(checkContainer);
+            return checkContainer;
+        }
+
+        throw new ArgumentException("Invalid expression");
+    }
+
+    private string GetPropertyChain(Expression expression)
+    {
+        if (expression is MemberExpression memberExpression)
+        {
+            var parent = GetPropertyChain(memberExpression.Expression);
+            return string.IsNullOrEmpty(parent) ? memberExpression.Member.Name : $"{parent}.{memberExpression.Member.Name}";
+        }
+
+        if (expression is MethodCallExpression methodCallExpression)
+        {
+            string parent = null;
+
+            if (methodCallExpression.Object != null)
+            {
+                parent = GetPropertyChain(methodCallExpression.Object);
+            }
+            else if (methodCallExpression.Arguments.Count > 0)
+            {
+                parent = GetPropertyChain(methodCallExpression.Arguments[0]);
+            }
+
+            return parent != null ? $"{parent}.{methodCallExpression.Method.Name}()" : $"{methodCallExpression.Method.Name}()";
+        }
+
+        if (expression is UnaryExpression unaryExpression)
+        {
+            return GetPropertyChain(unaryExpression.Operand);
+        }
+
+        return null;
     }
 }

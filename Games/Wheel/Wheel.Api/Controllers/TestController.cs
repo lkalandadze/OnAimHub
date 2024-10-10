@@ -1,7 +1,10 @@
-﻿using GameLib.Application.Controllers;
+﻿using Consul;
+using GameLib.Application.Controllers;
+using GameLib.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
+using Wheel.Domain.Entities;
 
 namespace Wheel.Api.Controllers;
 
@@ -14,6 +17,22 @@ public class TestController : BaseApiController
         // Initialize user balance for the example
         var userId = new Guid("d271d93f-f736-4b2d-924d-55fe4b8462d1"); // Example user ID
         UserBalances.TryAdd(userId, 20.00m); // Each user starts with 20 GEL
+    }
+
+    [HttpPost("AddConfigTest")]
+    public ActionResult AddConfigTest()
+    {
+        var price = new Price(-1, 34, string.Empty);
+        var segment = new Segment("S");
+
+        var config = new WheelConfiguration("C", 3, [price], [segment]);
+
+        var allCheck = CheckmateValidations.Checkmate.GetCheckContainers(price);
+
+        var failedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(config);
+        var status = CheckmateValidations.Checkmate.IsValid(config);
+
+        return Ok();
     }
 
     [AllowAnonymous]
