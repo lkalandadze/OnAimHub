@@ -3,6 +3,7 @@ using GameLib.Application.Generators;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Wheel.Application.Features.ConfigurationFeatures.Commands.Create;
+using Wheel.Application.Features.ConfigurationFeatures.Commands.Update;
 using Wheel.Domain.Entities;
 
 namespace Wheel.Api.Controllers;
@@ -28,6 +29,14 @@ public class ConfigurationController : BaseApiController
 
     [HttpPost(nameof(CreateConfiguration))]
     public async Task<IActionResult> CreateConfiguration([FromBody] CreateConfigurationCommand configurationData)
+    {
+
+        await Mediator.Send(configurationData);
+        return Ok();
+    }
+
+    [HttpPut(nameof(UpdateConfiguration))]
+    public async Task<IActionResult> UpdateConfiguration([FromBody] UpdateConfigurationCommand configurationData)
     {
 
         await Mediator.Send(configurationData);
