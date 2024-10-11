@@ -1,93 +1,92 @@
-﻿using Checkmate;
-using CheckmateValidations;
+﻿using System.Collections;
+using System.Reflection;
 
-var A = new A()
+var a = new A
 {
-    Prop1 = 3,
-    B = new B()
-    {
-        Prop1 = 2,
-        Prop2 = 333,
-        C = new C()
-        {
-            Prop1 = 1,
-        },
-        Cs = 
-        [
-            new() { Prop1 = 10,
-                    Ds = [
-                        new() { Prop1 = 5 },
-                        new() { Prop1 = 15 },
-                        new() { Prop1 = 25 },
-                    ]},
-            new() { Prop1 = 22,
-                    Ds = [
-                        new() { Prop1 = 3 },
-                        new() { Prop1 = 13 },
-                        new() { Prop1 = 23 },
-                    ]},
-        ]
-    },
+    Bs = new List<B>
+            {
+                new B
+                {
+                    Cs = new List<C>
+                    {
+                        new C
+                        {
+                            Ds = new List<D> { new D(), new D() }
+                        },
+                        new C()
+                    }
+                },
+                new B
+                {
+                    Cs = new List<C>
+                    {
+                        new C()
+                    }
+                }
+            }
 };
 
-var checkersA = CheckmateValidations.Checkmate.GetCheckContainers(A);
+var addresses = AddressCollector.CollectAddresses(a);
 
-var validations = CheckmateValidations.Checkmate.GetCheckContainers(A).Select(x => x.Messages).ToList();
-
-var failedCheckersA = CheckmateValidations.Checkmate.GetFailedChecks(A);
-
-var statusA = CheckmateValidations.Checkmate.IsValid(A);
-
-Console.WriteLine();
-
-public class AChecker : Checkmate<A>
+foreach (var address in addresses)
 {
-    public AChecker() : base()
+    Console.WriteLine(address);
+}
+
+// end main ------------------------------------------
+
+static class AddressCollector
+{
+    public static List<string> CollectAddresses(object obj, string basePath = "")
     {
-        //Check(A => A.Prop1)
-        //    .IsEqual(3)
-        //    .WithMessage("Class A, Prop1");
+        var addresses = new List<string>();
 
-        //Check(A => A.Prop1)
-        //    .LessThan(2)
-        //    .WithMessage("Class A, Prop1");
+        if (obj == null) return addresses;
 
-        //Check(A => A.Prop1)
-        //    .Between(3, 8)
-        //    .WithMessage("Class A, Prop1");
+        Type type = obj.GetType();
+        PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-        Check(A => A.B.Cs[1].Prop1)
-            .Between(8, 15)
-            .WithMessage("A.B.Cs[1].Prop1 sad asdasdasd");
+        foreach (var property in properties)
+        {
+            // Check if the property is a collection
+            if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && property.PropertyType != typeof(string))
+            {
+                // Get the collection items
+                var collection = property.GetValue(obj) as IEnumerable;
+                if (collection != null)
+                {
+                    int index = 0;
+                    foreach (var item in collection)
+                    {
+                        string path = $"{basePath}.{property.Name}[{index}]";
+                        addresses.Add(path);
+                        addresses.AddRange(CollectAddresses(item, path));
+                        index++;
+                    }
+                }
+            }
+        }
 
-        Check(A => A.B.Cs[1].Ds[0].Prop1)
-            .IsEqual(3)
-            .WithMessage("A.B.Cs[1].Ds[0].Prop1");
+        return addresses;
     }
 }
 
-[CheckMate<AChecker>]
-public class A
+class A
 {
-    public int Prop1 { get; set; }
-    public B B { get; set; }
+    public ICollection<B> Bs { get; set; } = new List<B>();
 }
 
-public class B
+class B
 {
-    public int Prop1 { get; set; }
-    public int Prop2 { get; set; }
-    public C C { get; set; }
-    public List<C> Cs { get; set; }
+    public ICollection<C> Cs { get; set; } = new List<C>();
 }
 
-public class C
+class C
 {
-    public int Prop1 { get; set; }
-    public List<D> Ds { get; set; }
+    public ICollection<D> Ds { get; set; } = new List<D>();
 }
 
-public class D
+class D
 {
-    public int Prop1 { get; set; }
+    // Additional properties for class D
 }

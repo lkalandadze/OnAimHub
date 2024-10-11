@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -9,63 +10,52 @@ public class Checkmate
 {
     public List<CheckContainer> CheckContainers { get; private set; } = [];
 
-    public static bool IsValid<TEntity>(TEntity obj)
+    public static bool IsValid<TEntity>(TEntity obj, bool isTree = false)
     {
+        if (isTree)
+        {
+            return !GetTreeFailedChecks(obj).Any();
+        }
+
         return !GetFailedChecks(obj).Any();
     }
 
-    public static IEnumerable<Check> GetFailedChecks<TEntity>(TEntity obj)
+    public static IEnumerable<Check> GetFailedChecks<TEntity>(TEntity obj, bool isTree = false)
     {
+        if (isTree)
+        {
+            GetTreeFailedChecks(obj);
+        }
+
         var checkContainers = GetCheckContainers(obj);
 
         foreach (var checkContainer in checkContainers)
         {
+            var val = checkContainer.GetExpression()(obj);
+
             foreach (var check in checkContainer.Checks)
             {
-                //TODO
+                var predicate = check.GetPredicate();
 
-                //if (!IsValid(obj, check))
-                //{
-                //    yield return check;
-                //}
-
-                yield return check;
+                if (!predicate(val))
+                {
+                    yield return check;
+                }
             }
         }
     }
 
-    private static bool IsValid<TEntity>(TEntity obj, CheckContainer checkContainer)
+    public static List<CheckContainer> GetCheckContainers(object obj, bool isTree = false)
     {
-        var val = checkContainer.GetExpression()(obj);
-
-        foreach (var check in checkContainer.Checks)
+        if (isTree)
         {
-            var predicate = check.GetPredicate();
-
-            return predicate(val);
+            return GetTreeCheckContainers(obj);
         }
 
-        return true;
+        return GetRootCheckContainers(obj.GetType());
     }
 
-    private static object GetPropertyValue<T>(T obj, string propertyName)
-    {
-        PropertyInfo propertyInfo = typeof(T).GetProperty(propertyName);
-
-        if (propertyInfo == null)
-        {
-            throw new ArgumentException($"Property '{propertyName}' not found on type '{typeof(T).Name}'");
-        }
-
-        return propertyInfo.GetValue(obj);
-    }
-
-    public static List<CheckContainer> GetCheckContainers(object obj)
-    {
-        return GetCheckContainers(obj.GetType());
-    }
-
-    public static List<CheckContainer> GetCheckContainers(Type type)
+    public static List<CheckContainer> GetRootCheckContainers(Type type)
     {
         if (type.GetCustomAttributes(typeof(CheckMateAttribute)).FirstOrDefault() is { } attr)
         {
@@ -78,6 +68,108 @@ public class Checkmate
 
         return null;
     }
+
+    public static IEnumerable<Check> GetTreeFailedChecks<TEntity>(TEntity obj)
+    {
+        var checkContainers = GetTreeCheckContainers(obj);
+
+        foreach (var checkContainer in checkContainers)
+        {
+            // კონფიგურაციისთვის მუშაობს, ფრაისზე რომ გადადის ვეღარ მოაქ ექსფრეშენი
+            var val = checkContainer.GetExpression()(obj);
+
+            foreach (var check in checkContainer.Checks)
+            {
+                var predicate = check.GetPredicate();
+
+                if (!predicate(val))
+                {
+                    yield return check;
+                }
+            }
+        }
+    }
+
+    private static List<CheckContainer> GetTreeCheckContainers<TEntity>(TEntity obj)
+    {
+        if (obj == null)
+        {
+            return [];
+        }
+
+        Type type = obj.GetType();
+        PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        var containers = GetCheckContainers(obj);
+
+        foreach (var property in properties)
+        {
+            if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && property.PropertyType != typeof(string))
+            {
+                var collection = property.GetValue(obj) as IEnumerable;
+
+                if (collection != null)
+                {
+                    int index = 0;
+
+                    foreach (var item in collection)
+                    {
+                        containers.AddRange(GetTreeCheckContainers(item));
+                    }
+                }
+            }
+        }
+
+        return containers;
+    }
+
+    //TEST
+    public static List<string> GetAddresses(object obj, string basePath = "")
+    {
+        var addresses = new List<string>();
+
+        if (obj == null) return addresses;
+
+        Type type = obj.GetType();
+        PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        foreach (var property in properties)
+        {
+            if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && property.PropertyType != typeof(string))
+            {
+                var collection = property.GetValue(obj) as IEnumerable;
+
+                if (collection != null)
+                {
+                    int index = 0;
+
+                    foreach (var item in collection)
+                    {
+                        string path = $"{basePath}.{property.Name}[{index}]";
+
+                        addresses.Add(path);
+                        addresses.AddRange(GetAddresses(item, path));
+                        index++;
+                    }
+                }
+            }
+        }
+
+        return addresses;
+    }
+
+    // OLD ???
+    private static object GetPropertyValue<T>(T obj, string propertyName)
+    {
+        PropertyInfo propertyInfo = typeof(T).GetProperty(propertyName);
+
+        if (propertyInfo == null)
+        {
+            throw new ArgumentException($"Property '{propertyName}' not found on type '{typeof(T).Name}'");
+        }
+
+        return propertyInfo.GetValue(obj);
+    }
 }
 
 public abstract class Checkmate<TEntity> : Checkmate where TEntity : class
@@ -87,13 +179,13 @@ public abstract class Checkmate<TEntity> : Checkmate where TEntity : class
 
     }
 
-    public CheckContainer<TEntity, TMember> Check<TMember>(Expression<Func<TEntity, TMember>> expression)
+    public IToConditionCheckContainer<TEntity, TMember> Check<TMember>(Expression<Func<TEntity, TMember>> expression)
     {
         var checkContainer = new CheckContainer<TEntity, TMember>(expression);
-        
+
         string propertyChain = GetPropertyChain(expression.Body);
 
-        if (!string.IsNullOrEmpty(propertyChain))//???
+        if (!string.IsNullOrEmpty(propertyChain)) //TODO: ???
         {
             CheckContainers.Add(checkContainer);
             return checkContainer;

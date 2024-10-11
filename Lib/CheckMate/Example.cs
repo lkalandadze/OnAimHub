@@ -22,10 +22,6 @@ namespace Checkmate
     {
         public TestEntityChecker() : base()
         {
-            //TODO: es ar shemedzlos
-            Check(x => x.Prop1)
-                .WithMessage("Dsadas");
-
             //KI
             Check(x => x.Prop1)
             .SetCondition(x => x == 2)
@@ -42,12 +38,6 @@ namespace Checkmate
             .SetCondition(x => x == 2)
             .WithMessage("dksjalkdjaslkdj")
             .SetCondition(x => x == 2)
-            .WithMessage("dksjalkdjaslkdj");
-
-            //ARA
-            Check(x => x.Prop1)
-            .SetCondition(x => x == 2)
-            .WithMessage("dksjalkdjaslkdj")
             .WithMessage("dksjalkdjaslkdj");
 
             //Check(x => x.Prop1)

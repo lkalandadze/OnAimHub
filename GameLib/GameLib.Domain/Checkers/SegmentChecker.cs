@@ -8,8 +8,8 @@ public class SegmentChecker : Checkmate<Segment>
 {
     public SegmentChecker()
     {
-        //Check(x => x.IsDeleted)
-        //    .IsNotNull()
-        //    .WithMessage("IsDeleted must not be null.");
+        Check(x => x.Id.Length)
+            .GreaterThan(3)
+            .WithMessage("The length of id should be more than 3.");
     }
 }

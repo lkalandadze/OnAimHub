@@ -22,15 +22,20 @@ public class TestController : BaseApiController
     [HttpPost("AddConfigTest")]
     public ActionResult AddConfigTest()
     {
-        var price = new Price(-1, 34, string.Empty);
+        var price = new Price(1, 34, string.Empty);
         var segment = new Segment("S");
 
         var config = new WheelConfiguration("C", 3, [price], [segment]);
 
-        var allCheck = CheckmateValidations.Checkmate.GetCheckContainers(price);
+        var rootCheckContainer = CheckmateValidations.Checkmate.GetCheckContainers(config);
+        var treeCheckContainer = CheckmateValidations.Checkmate.GetCheckContainers(config, true);
 
-        var failedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(config);
-        var status = CheckmateValidations.Checkmate.IsValid(config);
+        var rootFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(config).ToList();
+        //var treeFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(config, true).ToList();
+        var treeFailedCheckers1 = CheckmateValidations.Checkmate.GetTreeFailedChecks(config).ToList();
+
+        var rootStatus = CheckmateValidations.Checkmate.IsValid(config);
+        var treeStatus = CheckmateValidations.Checkmate.IsValid(config, true);
 
         return Ok();
     }

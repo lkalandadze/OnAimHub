@@ -23,7 +23,7 @@ public class EntityGenerator
         {
             Name = type.Name,
             Description = GetClassDescription(type),
-            Validations = CheckmateValidations.Checkmate.GetCheckContainers(type),
+            Validations = CheckmateValidations.Checkmate.GetRootCheckContainers(type),
         };
 
         foreach (var property in type.GetProperties())
