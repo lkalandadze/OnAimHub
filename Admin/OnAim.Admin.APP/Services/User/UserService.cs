@@ -50,7 +50,7 @@ public class UserService : IUserService
         IEmailService emailService,
         IDomainValidationService domainValidationService,
         ILogRepository logRepository,
-        ISecurityContextAccessor securityContextAccessor 
+        ISecurityContextAccessor securityContextAccessor
         )
     {
         _userRepository = userRepository;
@@ -125,7 +125,7 @@ public class UserService : IUserService
 
     public async Task<ApplicationResult> Create(string email, string firstName, string lastName, string phone)
     {
-        var existingUser = await _userRepository.Query(x => x.Email == email && !x.IsDeleted).ToListAsync();
+        var existingUser = await _userRepository.Query(x => x.Email == email && !x.IsDeleted).FirstOrDefaultAsync();
 
         var request = new CreateUserCommand
         {
@@ -135,31 +135,29 @@ public class UserService : IUserService
             Phone = phone
         };
 
-        foreach (var user in existingUser)
+        if (existingUser != null)
         {
-            if (user != null)
-            {
-                if (user?.IsDeleted == true)
-                {
-                    await CreateUserWithTemporaryPassword(request);
-                }
-                else
-                {
-                    HandleExistingUser(user);
-                }
-            }
-            else
+            if (existingUser?.IsDeleted == true)
             {
                 await CreateUserWithTemporaryPassword(request);
             }
+            else
+            {
+                HandleExistingUser(existingUser);
+            }
+        }
+        else
+        {
+            await CreateUserWithTemporaryPassword(request);
         }
 
 
+        await CreateUserWithTemporaryPassword(request);
 
         return new ApplicationResult { Success = true };
     }
 
-    public async Task<ApplicationResult> Delete(List<int> userIds) 
+    public async Task<ApplicationResult> Delete(List<int> userIds)
     {
         var users = await _userRepository.Query(x => userIds.Contains(x.Id)).ToListAsync();
 
@@ -177,7 +175,7 @@ public class UserService : IUserService
         return new ApplicationResult { Success = true };
     }
 
-    public async Task<ApplicationResult> ForgotPassword(string email) 
+    public async Task<ApplicationResult> ForgotPassword(string email)
     {
         var user = await _userRepository.Query(x => x.Email == email).FirstOrDefaultAsync();
 
@@ -243,7 +241,7 @@ public class UserService : IUserService
         return new ApplicationResult { Success = true };
     }
 
-    public async Task<AuthResultDto> Login(LoginUserRequest model) 
+    public async Task<AuthResultDto> Login(LoginUserRequest model)
     {
         var user = await _userRepository.Query(x => x.Email == model.Email && x.IsDeleted == false).FirstOrDefaultAsync();
 
@@ -303,7 +301,7 @@ public class UserService : IUserService
         };
     }
 
-    public async Task<ApplicationResult> ProfileUpdate(int id, ProfileUpdateRequest profileUpdateRequest) 
+    public async Task<ApplicationResult> ProfileUpdate(int id, ProfileUpdateRequest profileUpdateRequest)
     {
         var user = await _userRepository.Query(x => x.Id == id).FirstOrDefaultAsync();
 
@@ -318,7 +316,7 @@ public class UserService : IUserService
         return new ApplicationResult { Success = true };
     }
 
-    public async Task<ApplicationResult> Registration(string email, string password, string firstName, string lastName, string phone, DateTime DateOfBirth) 
+    public async Task<ApplicationResult> Registration(string email, string password, string firstName, string lastName, string phone, DateTime DateOfBirth)
     {
         var existingUser = await GetExistingUserAsync(email);
 
@@ -355,7 +353,7 @@ public class UserService : IUserService
         return new ApplicationResult { Success = true };
     }
 
-    public async Task<AuthResultDto> TwoFA(string email, string otpCode) 
+    public async Task<AuthResultDto> TwoFA(string email, string otpCode)
     {
         var userId = await _userRepository.Query(x => x.Email == email && x.IsDeleted == false).FirstOrDefaultAsync();
         var storedOtp = await _otpService.GetStoredOtp(userId.Id);
@@ -388,7 +386,7 @@ public class UserService : IUserService
         throw new UnauthorizedAccessException("Invalid OTP");
     }
 
-    public async Task<ApplicationResult> Update(int id, UpdateUserRequest model) 
+    public async Task<ApplicationResult> Update(int id, UpdateUserRequest model)
     {
         var existingUser = await _userRepository.Query(x => x.Id == id).FirstOrDefaultAsync();
 
@@ -418,9 +416,7 @@ public class UserService : IUserService
             var userRole = await _configurationRepository
                 .Query(ur => ur.UserId == id && ur.RoleId == roleId).FirstOrDefaultAsync();
             if (userRole != null)
-            {
                 await _configurationRepository.Remove(userRole);
-            }
         }
 
         await _userRepository.CommitChanges();
@@ -904,5 +900,20 @@ public class UserService : IUserService
         return input.OrderBy(p => p.GetType()
                                    .GetProperty(property)
                                    .GetValue(p, null)).ToList();
+    }
+
+    public async Task<ApplicationResult> GetByEmail(string email)
+    {
+        var query = await _userRepository
+            .Query(x => x.Email == email)
+            .Include(x => x.UserRoles)
+            .ThenInclude(x => x.Role)
+            .ThenInclude(x => x.RoleEndpointGroups)
+            .ThenInclude(x => x.EndpointGroup)
+            .ThenInclude(x => x.EndpointGroupEndpoints)
+            .ThenInclude(x => x.Endpoint)
+            .FirstOrDefaultAsync();
+
+        return new ApplicationResult { Data = query };
     }
 }

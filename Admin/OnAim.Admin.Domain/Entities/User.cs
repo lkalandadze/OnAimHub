@@ -9,6 +9,10 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class User : BaseEntity
 {
+    public User()
+    {
+        
+    }
     public User(
         string firstName,
         string lastName,

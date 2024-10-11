@@ -40,8 +40,8 @@ public class CreateEmailDomainCommandHandlerTests
         var filter = new DomainFilter("");
 
         MockService
-            .Setup(service => service.GetAllDomain(filter))
-            .ReturnsAsync(new ApplicationResult { Data = new List<DomainDto>().AsQueryable() });
+            .Setup(service => service.GetById(0))
+            .ReturnsAsync(new Admin.Domain.Entities.AllowedEmailDomain("newdomain.com", 1));
 
         MockService
             .Setup(service => service.CreateOrUpdateDomain(It.IsAny<List<DomainDto>>(), It.IsAny<string>(), It.IsAny<bool?>()))

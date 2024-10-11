@@ -5,7 +5,6 @@ using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.EmailDomain;
 
 namespace OnAim.Admin.Test.User;
 
@@ -45,22 +44,9 @@ public class ChangePasswordCommandHandlerTest
             verificationCodeExpiration: null
         );
 
-        var filter = new Shared.DTOs.User.UserFilter(
-            "", 
-            "",
-            "", 
-            new List<int>(),
-            true,
-            Shared.Enums.HistoryStatus.All, 
-            new DateTime(), 
-            new DateTime(),
-            new DateTime(),
-            new DateTime()
-            );
-
         MockService
-           .Setup(service => service.GetAll(filter))
-           .ReturnsAsync(new ApplicationResult { Data = new List<DomainDto>().AsQueryable() }); //??????
+           .Setup(service => service.GetById(user.Id))
+           .ReturnsAsync(new ApplicationResult { Data = user });
 
         _mockPasswordService
             .Setup(e => e.EncryptPassword(command.OldPassword, user.Salt))
@@ -92,22 +78,9 @@ public class ChangePasswordCommandHandlerTest
     {
         var command = new ChangePasswordCommand("nonexistent@example.com", "OldPassword123", "NewPassword123");
 
-        var filter = new Shared.DTOs.User.UserFilter(
-              "",
-              "",
-              "",
-              new List<int>(),
-              true,
-              Shared.Enums.HistoryStatus.All,
-              new DateTime(),
-              new DateTime(),
-              new DateTime(),
-              new DateTime()
-              );
-
         MockService
-           .Setup(service => service.GetAll(filter))
-           .ReturnsAsync(new ApplicationResult { Data = new List<DomainDto>().AsQueryable() });//??????
+           .Setup(service => service.GetByEmail(command.Email))
+           .ReturnsAsync(new ApplicationResult { Data = null });
 
         MockService
              .Setup(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))

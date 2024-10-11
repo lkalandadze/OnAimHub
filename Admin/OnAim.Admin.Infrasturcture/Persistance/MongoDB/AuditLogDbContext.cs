@@ -9,9 +9,11 @@ public class AuditLogDbContext : MongoDbContext
     public AuditLogDbContext(IOptions<MongoDbOptions> options) : base(options)
     {
         AuditLogs = GetCollection<AuditLog>();
-        RejectedLogs = GetCollection<RejectedLog>();
+        AccessDeniedLogs = GetCollection<AccessDeniedLog>();
+        OperationFailedLogs = GetCollection<OperationFailedLog>();
     }
 
     public IMongoCollection<AuditLog> AuditLogs { get; }
-    public IMongoCollection<RejectedLog> RejectedLogs { get; }
+    public IMongoCollection<AccessDeniedLog> AccessDeniedLogs { get; }
+    public IMongoCollection<OperationFailedLog> OperationFailedLogs { get; }
 }

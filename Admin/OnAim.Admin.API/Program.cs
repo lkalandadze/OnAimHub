@@ -1,11 +1,7 @@
 using OnAim.Admin.API.Extensions;
 using OnAim.Admin.API.Middleware;
 using OnAim.Admin.APP;
-using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture;
-using OnAim.Admin.Infrasturcture.Repositories;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Infrasturcture.Repository;
 using Serilog;
 using Serilog.Events;
 

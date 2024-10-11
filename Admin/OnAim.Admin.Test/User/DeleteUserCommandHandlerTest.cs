@@ -5,8 +5,6 @@ using OnAim.Admin.APP.Feature.UserFeature.Commands.Delete;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.User;
-using OnAim.Admin.Shared.Paging;
 
 namespace OnAim.Admin.Test.User;
 
@@ -87,7 +85,7 @@ public class DeleteUserCommandHandlerTests
 
         MockService
            .Setup(service => service.GetAll(filter))
-           .ReturnsAsync(new ApplicationResult { Data = new List<PaginatedResult<UsersModel>>().AsQueryable() });//??????
+           .ReturnsAsync(new ApplicationResult { Data = users.AsQueryable() });//??????
 
         MockService
            .Setup(service => service.Delete(It.IsAny<List<int>>()))

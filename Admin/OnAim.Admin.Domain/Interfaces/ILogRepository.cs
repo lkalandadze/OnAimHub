@@ -5,6 +5,7 @@ namespace OnAim.Admin.Domain.Interfaces;
 public interface ILogRepository
 {
     Task AddAuditLogAsync(AuditLog auditLog);
-    Task AddRejectedLogAsync(RejectedLog rejectedLog);
+    Task AddOperationFailedLogAsync(OperationFailedLog operationFailedLog);
+    Task AddAccessDeniedLogAsync(AccessDeniedLog accessDeniedLog);
     Task<List<AuditLog>> GetUserLogs(int userId);
 }

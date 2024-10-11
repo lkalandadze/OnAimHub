@@ -122,4 +122,10 @@ public class DomainService : IDomainService
 
         return new ApplicationResult { Success = true, Data = paginatedResult };
     }
+
+    public async Task<AllowedEmailDomain> GetById(int id)
+    {
+        var domain = await _repository.Query(x => x.Id == id).FirstOrDefaultAsync();
+        return domain;
+    }
 }

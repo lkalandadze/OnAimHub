@@ -4,9 +4,9 @@ using OnAim.Admin.Shared.Models;
 
 namespace OnAim.Admin.Domain.Entities;
 
-public class RejectedLog
+public abstract class FailureLog
 {
-    public RejectedLog(string action, int userId, int? objectId, string? objectt, string log, string errorMessage, int retryCount)
+    protected FailureLog(string action, int userId, int? objectId, string? objectt, string log, string errorMessage, int retryCount)
     {
         Action = action;
         UserId = userId;
@@ -29,3 +29,20 @@ public class RejectedLog
     public string ErrorMessage { get; set; }
     public int RetryCount { get; set; }
 }
+
+public class AccessDeniedLog : FailureLog
+{
+    public AccessDeniedLog(string action, int userId, int? objectId, string? objectt, string log, string errorMessage, int retryCount)
+        : base(action, userId, objectId, objectt, log, errorMessage, retryCount)
+    {
+    }
+}
+
+public class OperationFailedLog : FailureLog
+{
+    public OperationFailedLog(string action, int userId, int? objectId, string? objectt, string log, string errorMessage, int retryCount)
+        : base(action, userId, objectId, objectt, log, errorMessage, retryCount)
+    {
+    }
+}
+

@@ -22,4 +22,5 @@ public interface IUserService
     Task<ApplicationResult> GetAll(UserFilter filter);
     Task<ApplicationResult> GetById(int id);
     Task<ApplicationResult> GetUserLogs(int id, AuditLogFilter filter);
+    Task<ApplicationResult> GetByEmail(string email);
 }

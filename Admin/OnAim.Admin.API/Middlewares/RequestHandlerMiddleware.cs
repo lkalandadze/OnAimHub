@@ -27,6 +27,7 @@ public class RequestHandlerMiddleware
         var entityName = segments.Length > 2 ? segments[2] : "Unknown";
 
 
+
         string requestBody;
         context.Request.EnableBuffering();
         using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8, leaveOpen: true))
@@ -34,6 +35,38 @@ public class RequestHandlerMiddleware
             requestBody = await reader.ReadToEndAsync();
             context.Request.Body.Position = 0;
         }
+
+        //if (method == HttpMethods.Post && path.StartsWithSegments("/api/Users/Login"))
+        //{
+        //    requestBody = requestBody.Trim();
+
+        //    LoginUserRequest model;
+        //    try
+        //    {
+        //        var options = new JsonSerializerOptions
+        //        {
+        //            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        //        };
+        //        model = JsonSerializer.Deserialize<LoginUserRequest>(requestBody, options);
+        //    }
+        //    catch (JsonException ex)
+        //    {
+        //        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        //        var errorResponse = new { Message = "Invalid request data." };
+        //        await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
+        //        return;
+        //    }
+
+        //    if (model != null)
+        //    {
+        //        model.Password = EncryptPasswordExtension.EncryptPassword(model.Password, "");
+
+        //        requestBody = JsonSerializer.Serialize(model);
+        //        context.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(requestBody));
+        //        context.Request.ContentLength = requestBody.Length;
+        //    }
+
+        //}
 
         Exception caughtError = null;
 
@@ -109,11 +142,13 @@ public class RequestHandlerMiddleware
         }
         finally
         {
-            var rejectedLog = new RejectedLog(method, securityContextAccessor.UserId, null, requestBody, $"{method} {path} failed", caughtError?.Message, 0);
-
             if (caughtError != null)
             {
-                await auditLogService.AddRejectedLogAsync(rejectedLog);
+                OperationFailedLog operationFailedLog;
+
+                operationFailedLog = new OperationFailedLog(method, securityContextAccessor.UserId, null, requestBody, $"{method} {path} failed", caughtError.Message, 0);
+
+                await auditLogService.AddOperationFailedLogAsync(operationFailedLog);
             }
             else
             {

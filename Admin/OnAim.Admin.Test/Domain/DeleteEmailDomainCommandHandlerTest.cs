@@ -6,7 +6,7 @@ using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Shared.DTOs.EmailDomain;
-
+ 
 namespace OnAim.Admin.Test.Domain;
 
 public class DeleteEmailDomainCommandHandlerTest
@@ -45,7 +45,7 @@ public class DeleteEmailDomainCommandHandlerTest
 
         MockService
             .Setup(service => service.GetAllDomain(filter))
-            .ReturnsAsync(new ApplicationResult { Data = new List<DomainDto>().AsQueryable() });
+            .ReturnsAsync(new ApplicationResult { Data = domains.AsQueryable() });
 
         MockService
             .Setup(service => service.DeleteEmailDomain(It.IsAny<List<int>>()))
@@ -70,7 +70,7 @@ public class DeleteEmailDomainCommandHandlerTest
 
         MockService
             .Setup(service => service.GetAllDomain(filter))
-            .ReturnsAsync(new ApplicationResult { Data = new List<DomainDto>().AsQueryable() });
+            .ReturnsAsync(new ApplicationResult { Data = emptyDomains.AsQueryable() });
 
         MockService
              .Setup(service => service.DeleteEmailDomain(It.IsAny<List<int>>()))

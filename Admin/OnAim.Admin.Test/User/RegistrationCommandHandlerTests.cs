@@ -3,11 +3,13 @@ using Moq;
 using OnAim.Admin.APP.Feature.UserFeature.Commands.Registration;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
+using OnAim.Admin.Domain.Exceptions;
 
 namespace OnAim.Admin.Test.User;
 
 public class RegistrationCommandHandlerTests
 {
+    private readonly Mock<IUserService> _mockUserService;
     private readonly Mock<IEmailService> _mockEmailService;
     private readonly Mock<IDomainValidationService> _mockDomainValidationService;
     private readonly Mock<IValidator<RegistrationCommand>> _mockValidator;
@@ -15,6 +17,7 @@ public class RegistrationCommandHandlerTests
 
     public RegistrationCommandHandlerTests()
     {
+        _mockUserService = new Mock<IUserService>();
         _mockEmailService = new Mock<IEmailService>();
         _mockDomainValidationService = new Mock<IDomainValidationService>();
         _mockValidator = new Mock<IValidator<RegistrationCommand>>();
@@ -39,7 +42,24 @@ public class RegistrationCommandHandlerTests
 
         _mockDomainValidationService
             .Setup(d => d.IsDomainAllowedAsync(command.Email))
-            .ReturnsAsync(true);     
+            .ReturnsAsync(true);
+
+        //////////////////////////////
+        ///
+        var handler = new RegistrationCommandHandler(_mockUserService.Object, _mockValidator.Object);
+
+        var result = await handler.Handle(command, CancellationToken.None);
+        Assert.True(result.Success);
+        _mockUserService.Verify(service => service.Registration(
+            It.IsAny<string>(), 
+            It.IsAny<string>(), 
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<DateTime>())
+        , Times.Once);
+
+        _mockEmailService.Verify(emailService => emailService.SendActivationEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
@@ -54,7 +74,21 @@ public class RegistrationCommandHandlerTests
             .Setup(d => d.IsDomainAllowedAsync(command.Email))
             .ReturnsAsync(false);
 
-       
+        var handler = new RegistrationCommandHandler(_mockUserService.Object, _mockValidator.Object);
+
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        Assert.True(result.Success);
+        _mockUserService.Verify(service => service.Registration(
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<DateTime>())
+        , Times.Once);
+
+        await Assert.ThrowsAsync<BadRequestException>(() => handler.Handle(command, CancellationToken.None));
     }
 
     [Fact]
@@ -75,6 +109,7 @@ public class RegistrationCommandHandlerTests
             Shared.Enums.VerificationPurpose.AccountActivation,
             new DateTime(),
             false);
+
         var command = new RegistrationCommand
         {
             Email = "jane.doe@example.com"
@@ -84,8 +119,7 @@ public class RegistrationCommandHandlerTests
             .Setup(d => d.IsDomainAllowedAsync(command.Email))
             .ReturnsAsync(true);
 
-       
-
+        ////////////////////////////
     }
 
     [Fact]
@@ -107,6 +141,7 @@ public class RegistrationCommandHandlerTests
             new DateTime(),
             false)
         { IsActive = false };
+
         var command = new RegistrationCommand
         {
             Email = "inactive.user@example.com"
@@ -116,7 +151,7 @@ public class RegistrationCommandHandlerTests
             .Setup(d => d.IsDomainAllowedAsync(command.Email))
             .ReturnsAsync(true);
 
-       
+       /////////////////////////////////
     }
 
     [Fact]
@@ -147,6 +182,6 @@ public class RegistrationCommandHandlerTests
 
         var deletedList = new List<OnAim.Admin.Domain.Entities.User> { deletedUser };
 
-       
+       /////////////////////////////
     }
 }
