@@ -6,6 +6,12 @@ using System.Reflection;
 
 namespace CheckmateValidations;
 
+public class CheckContainerWithInstance
+{
+    public CheckContainer CheckContainer { get; set; }
+    public object Instance { get; set; }
+}
+
 public class Checkmate
 {
     public List<CheckContainer> CheckContainers { get; private set; } = [];
@@ -22,6 +28,7 @@ public class Checkmate
 
     public static IEnumerable<Check> GetFailedChecks<TEntity>(TEntity obj, bool isTree = false)
     {
+        /// es ra aris?????
         if (isTree)
         {
             GetTreeFailedChecks(obj);
@@ -31,9 +38,9 @@ public class Checkmate
 
         foreach (var checkContainer in checkContainers)
         {
-            var val = checkContainer.GetExpression()(obj);
+            var val = checkContainer.CheckContainer.GetExpression()(checkContainer.Instance);
 
-            foreach (var check in checkContainer.Checks)
+            foreach (var check in checkContainer.CheckContainer.Checks)
             {
                 var predicate = check.GetPredicate();
 
@@ -45,14 +52,19 @@ public class Checkmate
         }
     }
 
-    public static List<CheckContainer> GetCheckContainers(object obj, bool isTree = false)
+    public static List<CheckContainerWithInstance> GetCheckContainers(object obj, bool isTree = false)
     {
         if (isTree)
         {
             return GetTreeCheckContainers(obj);
         }
 
-        return GetRootCheckContainers(obj.GetType());
+        return GetRootCheckContainers(obj.GetType()).Select(x => new CheckContainerWithInstance
+        {
+            CheckContainer = x,
+            Instance = obj
+        }).ToList();
+
     }
 
     public static List<CheckContainer> GetRootCheckContainers(Type type)
@@ -71,14 +83,14 @@ public class Checkmate
 
     public static IEnumerable<Check> GetTreeFailedChecks<TEntity>(TEntity obj)
     {
-        var checkContainers = GetTreeCheckContainers(obj);
+        var checkContainersWithInsance = GetTreeCheckContainers(obj);
 
-        foreach (var checkContainer in checkContainers)
+        foreach (var checkContainerWithInsance in checkContainersWithInsance)
         {
             // კონფიგურაციისთვის მუშაობს, ფრაისზე რომ გადადის ვეღარ მოაქ ექსფრეშენი
-            var val = checkContainer.GetExpression()(obj);
+            var val = checkContainerWithInsance.CheckContainer.GetExpression()(checkContainerWithInsance.Instance);
 
-            foreach (var check in checkContainer.Checks)
+            foreach (var check in checkContainerWithInsance.CheckContainer.Checks)
             {
                 var predicate = check.GetPredicate();
 
@@ -90,7 +102,7 @@ public class Checkmate
         }
     }
 
-    private static List<CheckContainer> GetTreeCheckContainers<TEntity>(TEntity obj)
+    private static List<CheckContainerWithInstance> GetTreeCheckContainers<TEntity>(TEntity obj)
     {
         if (obj == null)
         {
