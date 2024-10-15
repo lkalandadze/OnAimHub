@@ -6,41 +6,24 @@ using System.Reflection;
 
 namespace CheckmateValidations;
 
-public class CheckContainerWithInstance
-{
-    public CheckContainer CheckContainer { get; set; }
-    public object Instance { get; set; }
-}
-
 public class Checkmate
 {
     public List<CheckContainer> CheckContainers { get; private set; } = [];
 
     public static bool IsValid<TEntity>(TEntity obj, bool isTree = false)
     {
-        if (isTree)
-        {
-            return !GetTreeFailedChecks(obj).Any();
-        }
-
-        return !GetFailedChecks(obj).Any();
+        return !GetFailedChecks(obj, isTree).Any();
     }
 
     public static IEnumerable<Check> GetFailedChecks<TEntity>(TEntity obj, bool isTree = false)
     {
-        /// es ra aris?????
-        if (isTree)
+        var checkContainersWithInstance = GetCheckContainersWithInstance(obj, "", isTree);
+
+        foreach (var checkContainerWithInstance in checkContainersWithInstance)
         {
-            GetTreeFailedChecks(obj);
-        }
+            var val = checkContainerWithInstance.CheckContainer.GetExpression()(checkContainerWithInstance.Instance);
 
-        var checkContainers = GetCheckContainers(obj);
-
-        foreach (var checkContainer in checkContainers)
-        {
-            var val = checkContainer.CheckContainer.GetExpression()(checkContainer.Instance);
-
-            foreach (var check in checkContainer.CheckContainer.Checks)
+            foreach (var check in checkContainerWithInstance.CheckContainer.Checks)
             {
                 var predicate = check.GetPredicate();
 
@@ -52,19 +35,48 @@ public class Checkmate
         }
     }
 
-    public static List<CheckContainerWithInstance> GetCheckContainers(object obj, bool isTree = false)
+    public static List<CheckContainerWithInstance> GetCheckContainersWithInstance<TEntity>(TEntity obj, string path = "", bool isTree = false)
     {
-        if (isTree)
+        if (obj == null)
         {
-            return GetTreeCheckContainers(obj);
+            return [];
         }
 
-        return GetRootCheckContainers(obj.GetType()).Select(x => new CheckContainerWithInstance
+        var type = obj.GetType();
+        var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        var containers = GetRootCheckContainers(obj.GetType()).Select(x => new CheckContainerWithInstance
         {
             CheckContainer = x,
-            Instance = obj
+            Instance = obj,
+            Path = path,
         }).ToList();
 
+        if (!isTree)
+        {
+            return containers;
+        }
+
+        foreach (var property in properties)
+        {
+            if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && property.PropertyType != typeof(string))
+            {
+                var collection = property.GetValue(obj) as IEnumerable;
+
+                if (collection != null)
+                {
+                    var index = 0;
+
+                    foreach (var item in collection)
+                    {
+                        containers.AddRange(GetCheckContainersWithInstance(item, $"{path}.{property.Name}[{index}]"));
+                        index++;
+                    }
+                }
+            }
+        }
+
+        return containers;
     }
 
     public static List<CheckContainer> GetRootCheckContainers(Type type)
@@ -81,62 +93,8 @@ public class Checkmate
         return null;
     }
 
-    public static IEnumerable<Check> GetTreeFailedChecks<TEntity>(TEntity obj)
-    {
-        var checkContainersWithInsance = GetTreeCheckContainers(obj);
-
-        foreach (var checkContainerWithInsance in checkContainersWithInsance)
-        {
-            // კონფიგურაციისთვის მუშაობს, ფრაისზე რომ გადადის ვეღარ მოაქ ექსფრეშენი
-            var val = checkContainerWithInsance.CheckContainer.GetExpression()(checkContainerWithInsance.Instance);
-
-            foreach (var check in checkContainerWithInsance.CheckContainer.Checks)
-            {
-                var predicate = check.GetPredicate();
-
-                if (!predicate(val))
-                {
-                    yield return check;
-                }
-            }
-        }
-    }
-
-    private static List<CheckContainerWithInstance> GetTreeCheckContainers<TEntity>(TEntity obj)
-    {
-        if (obj == null)
-        {
-            return [];
-        }
-
-        Type type = obj.GetType();
-        PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-        var containers = GetCheckContainers(obj);
-
-        foreach (var property in properties)
-        {
-            if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && property.PropertyType != typeof(string))
-            {
-                var collection = property.GetValue(obj) as IEnumerable;
-
-                if (collection != null)
-                {
-                    int index = 0;
-
-                    foreach (var item in collection)
-                    {
-                        containers.AddRange(GetTreeCheckContainers(item));
-                    }
-                }
-            }
-        }
-
-        return containers;
-    }
-
     //TEST
-    public static List<string> GetAddresses(object obj, string basePath = "")
+    private static List<string> GetAddresses(object obj, string basePath = "")
     {
         var addresses = new List<string>();
 
@@ -168,19 +126,6 @@ public class Checkmate
         }
 
         return addresses;
-    }
-
-    // OLD ???
-    private static object GetPropertyValue<T>(T obj, string propertyName)
-    {
-        PropertyInfo propertyInfo = typeof(T).GetProperty(propertyName);
-
-        if (propertyInfo == null)
-        {
-            throw new ArgumentException($"Property '{propertyName}' not found on type '{typeof(T).Name}'");
-        }
-
-        return propertyInfo.GetValue(obj);
     }
 }
 

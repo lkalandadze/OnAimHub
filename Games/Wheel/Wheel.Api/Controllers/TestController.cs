@@ -25,14 +25,16 @@ public class TestController : BaseApiController
         var price = new Price(1, 34, string.Empty);
         var segment = new Segment("S");
 
-        var config = new WheelConfiguration("C", 3, [price], [segment]);
+        var config = new WheelConfiguration("123456", 3, [price], [segment]);
 
-        var rootCheckContainer = CheckmateValidations.Checkmate.GetCheckContainers(config);
-        var treeCheckContainer = CheckmateValidations.Checkmate.GetCheckContainers(config, true);
+        var rootCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(config);
+        var treeCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(config, "", true);
+
+        //var rootCheckers = CheckmateValidations.Checkmate.GetChecks(config).ToList();
+        //var treeCheckers = CheckmateValidations.Checkmate.GetChecks(config, true).ToList();
 
         var rootFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(config).ToList();
-        //var treeFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(config, true).ToList();
-        var treeFailedCheckers1 = CheckmateValidations.Checkmate.GetTreeFailedChecks(config).ToList();
+        var treeFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(config, true).ToList();
 
         var rootStatus = CheckmateValidations.Checkmate.IsValid(config);
         var treeStatus = CheckmateValidations.Checkmate.IsValid(config, true);

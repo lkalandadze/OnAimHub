@@ -12,7 +12,7 @@ namespace Checkmate
             entity.Prop1 = 1;
             entity.Prop2 = "Pass";
 
-            var checkers = CheckmateValidations.Checkmate.GetCheckContainers(entity);
+            var checkers = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(entity);
 
             var status = CheckmateValidations.Checkmate.IsValid(entity);
         }
