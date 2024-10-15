@@ -1,27 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.CQRS.Query;
-using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Domain.Interfaces;
+﻿using OnAim.Admin.APP.CQRS.Query;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBannedPlayer;
 
 public class GetBannedPlayerQueryHandler : IQueryHandler<GetBannedPlayerQuery, ApplicationResult>
 {
-    private readonly IReadOnlyRepository<PlayerBan> _readOnlyRepository;
+    private readonly IPlayerService _playerService;
 
-    public GetBannedPlayerQueryHandler(IReadOnlyRepository<PlayerBan> readOnlyRepository)
+    public GetBannedPlayerQueryHandler(IPlayerService playerService)
     {
-        _readOnlyRepository = readOnlyRepository;
+        _playerService = playerService;
     }
     public async Task<ApplicationResult> Handle(GetBannedPlayerQuery request, CancellationToken cancellationToken)
     {
-        var palyer = await _readOnlyRepository.Query(x => x.Id == request.Id).FirstOrDefaultAsync();
+        var result = await _playerService.GetBannedPlayer(request.Id);
 
         return new ApplicationResult
         {
-            Success = true,
-            Data = palyer ?? null,
+            Success = result.Success,
+            Data = result.Data,
         };
     }
 }

@@ -1,36 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Exceptions;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
+using FluentValidation;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.ProfileUpdate;
 
-public class UserProfileUpdateCommandHandler : BaseCommandHandler<UserProfileUpdateCommand, ApplicationResult>
+public class UserProfileUpdateCommandHandler : ICommandHandler<UserProfileUpdateCommand, ApplicationResult>
 {
-    private readonly IRepository<User> _repository;
+    private readonly IUserService _userService;
+    private readonly IValidator<UserProfileUpdateCommand> _validator;
 
-    public UserProfileUpdateCommandHandler(
-        CommandContext<UserProfileUpdateCommand> context,
-        IRepository<User> repository
-        ) : base( context )
+    public UserProfileUpdateCommandHandler(IUserService userService, IValidator<UserProfileUpdateCommand> validator)
     {
-        _repository = repository;
+        _userService = userService;
+        _validator = validator;
     }
-    protected override async Task<ApplicationResult> ExecuteAsync(UserProfileUpdateCommand request, CancellationToken cancellationToken)
+
+    public async Task<ApplicationResult> Handle(UserProfileUpdateCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var user = await _repository.Query(x => x.Id == request.Id).FirstOrDefaultAsync(cancellationToken);
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (user == null)
-            throw new NotFoundException("User Not Found");
+        var result = await _userService.ProfileUpdate(request.Id, request.ProfileUpdateRequest);
 
-        user.FirstName = request.profileUpdateRequest.FirstName;
-        user.LastName = request.profileUpdateRequest.LastName;
-        user.Phone = request.profileUpdateRequest.Phone;
-        await _repository.CommitChanges();
-
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult { Success = result.Success, Data = result.Data };
     }
 }

@@ -1,36 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.CQRS.Query;
-using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Domain.Interfaces;
+﻿using OnAim.Admin.APP.CQRS.Query;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.Segment;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.ActsAndHistory.Acts;
 
 public class GetSegmentActsByIdQueryHandler : IQueryHandler<GetSegmentActsByIdQuery, ApplicationResult>
 {
-    private readonly IReadOnlyRepository<PlayerSegmentAct> _playerSegmentActRepository;
+    private readonly ISegmentService _segmentService;
 
-    public GetSegmentActsByIdQueryHandler(IReadOnlyRepository<PlayerSegmentAct> playerSegmentActRepository)
+    public GetSegmentActsByIdQueryHandler(ISegmentService segmentService)
     {
-        _playerSegmentActRepository = playerSegmentActRepository;
+        _segmentService = segmentService;
     }
     public async Task<ApplicationResult> Handle(GetSegmentActsByIdQuery request, CancellationToken cancellationToken)
     {
-        var playerSegmentActs = await _playerSegmentActRepository.Query(x => x.SegmentId == request.SegmentId).Include(x => x.Action).ToListAsync();
-
-        var res = playerSegmentActs.Select(x => new ActsDto
-        {
-            Id = x.Id,
-            UploadedBy = x.ByUserId,
-            Quantity = x.TotalPlayers,
-            Type = x.Action?.Name,
-        });
+        var result = await _segmentService.GetActs(request.SegmentId);
 
         return new ApplicationResult
         {
-            Success = true,
-            Data = res
+            Success = result.Success,
+            Data = result.Data
         };
     }
 }

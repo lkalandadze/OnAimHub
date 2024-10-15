@@ -12,6 +12,8 @@ public interface IRepository<T> where T : class
 
     IQueryable<T> Query(Expression<Func<T, bool>>? expression = null);
 
+    Task<IQueryable<T>> QueryAsync(Expression<Func<T, bool>>? expression = null);
+
     Task Store(T document);
 
     void Remove(T document);

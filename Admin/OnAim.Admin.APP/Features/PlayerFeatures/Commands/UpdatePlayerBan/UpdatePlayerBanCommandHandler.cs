@@ -1,35 +1,30 @@
-﻿using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.ClientService;
-using OnAim.Admin.Domain.Exceptions;
+﻿using FluentValidation;
+using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Commands.UpdatePlayerBan;
 
-public class UpdatePlayerBanCommandHandler : BaseCommandHandler<UpdatePlayerBanCommand, ApplicationResult>
+public class UpdatePlayerBanCommandHandler : ICommandHandler<UpdatePlayerBanCommand, ApplicationResult>
 {
-    private readonly IHubApiClient _hubApiClient;
-    private readonly HubApiClientOptions _options;
+    private readonly IPlayerService _playerService;
+    private readonly IValidator<UpdatePlayerBanCommand> _validator;
 
-    public UpdatePlayerBanCommandHandler(
-        CommandContext<UpdatePlayerBanCommand> context, 
-        IHubApiClient hubApiClient,
-        IOptions<HubApiClientOptions> options) : base(context)
+    public UpdatePlayerBanCommandHandler(IPlayerService playerService, IValidator<UpdatePlayerBanCommand> validator) 
     {
-        _hubApiClient = hubApiClient;
-        _options = options.Value;
+        _playerService = playerService;
+        _validator = validator;
     }
 
-    protected async override Task<ApplicationResult> ExecuteAsync(UpdatePlayerBanCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult> Handle(UpdatePlayerBanCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Player/UpdateBannedPlayer", request);
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (result.IsSuccessStatusCode)
-        {
-            return new ApplicationResult { Success = true };
-        }
+        var result = await _playerService.UpdateBan(request.Id, request.ExpireDate, request.IsPermanent, request.Description);
 
-        throw new BadRequestException("");
+        return new ApplicationResult { Success = result.Success };
     }
 }

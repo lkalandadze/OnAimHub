@@ -21,8 +21,8 @@ public class UnblockSegmentForPlayerHandler : IRequestHandler<UnblockSegmentForP
 
     public async Task<Unit> Handle(UnblockSegmentForPlayerCommand request, CancellationToken cancellationToken)
     {
-        await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Unblock, [request.PlayerId], request.SegmentId, request.ByUserId);
         _playerBlockedSegmentService.UnblockPlayerSegment([request.PlayerId], request.SegmentId);
+        await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Unblock, [request.PlayerId], request.SegmentId, request.ByUserId);
 
         await _unitOfWork.SaveAsync();
 

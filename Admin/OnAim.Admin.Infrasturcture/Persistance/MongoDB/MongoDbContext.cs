@@ -21,7 +21,7 @@ public abstract class MongoDbContext
 
 
     public IMongoCollection<AuditLog> AuditLogs { get; }
-    public IMongoCollection<RejectedLog> RejectedLogs { get; }
+    public IMongoCollection<FailureLog> FailureLogs { get; }
 
 
     public IMongoCollection<TEntity> GetCollection<TEntity>(string name = "")

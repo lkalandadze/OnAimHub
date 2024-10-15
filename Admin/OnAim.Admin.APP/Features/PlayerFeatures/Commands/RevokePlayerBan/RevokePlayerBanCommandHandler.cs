@@ -1,36 +1,30 @@
-﻿using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.ClientService;
-using OnAim.Admin.Domain.Exceptions;
+﻿using FluentValidation;
+using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Commands.RevokePlayerBan;
 
-public class RevokePlayerBanCommandHandler : BaseCommandHandler<RevokePlayerBanCommand, ApplicationResult>
+public class RevokePlayerBanCommandHandler : ICommandHandler<RevokePlayerBanCommand, ApplicationResult>
 {
-    private readonly IHubApiClient _hubApiClient;
-    private readonly HubApiClientOptions _options;
+    private readonly IPlayerService _playerService;
+    private readonly IValidator<RevokePlayerBanCommand> _validator;
 
-    public RevokePlayerBanCommandHandler(
-        CommandContext<RevokePlayerBanCommand> context,
-        IHubApiClient hubApiClient, 
-        IOptions<HubApiClientOptions> options
-        ) : base(context)
+    public RevokePlayerBanCommandHandler(IPlayerService playerService, IValidator<RevokePlayerBanCommand> validator) 
     {
-        _hubApiClient = hubApiClient;
-        _options = options.Value;
+        _playerService = playerService;
+        _validator = validator;
     }
 
-    protected override async Task<ApplicationResult> ExecuteAsync(RevokePlayerBanCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult> Handle(RevokePlayerBanCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var result = await _hubApiClient.PutAsJson($"{_options.Endpoint}Player/RevokePlayerBan", request);
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (result.IsSuccessStatusCode)
-        {
-            return new ApplicationResult { Success = true };
-        }
+        var result = await _playerService.RevokeBan(request.Id);
 
-        throw new BadRequestException("");
+        return new ApplicationResult { Success = result.Success };
     }
 }

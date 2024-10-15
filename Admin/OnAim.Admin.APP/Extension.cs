@@ -1,8 +1,6 @@
-﻿using MediatR;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Repository;
-using System.Reflection;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using OnAim.Admin.Shared.Models;
@@ -11,7 +9,6 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using OnAim.Admin.APP.Services.Email;
 using OnAim.Admin.APP.Feature.Identity;
-using OnAim.Admin.Shared.Helpers.HtmlGenerators;
 using OnAim.Admin.Shared.Helpers.Csv;
 using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
 using OnAim.Admin.APP.Services.AuthServices;
@@ -19,11 +16,23 @@ using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories;
 using OnAim.Admin.APP.Services.SettingServices;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OnAim.Admin.APP.Services.ClientService;
+using Autofac;
+using System.Reflection;
+using OnAim.Admin.Shared.Helpers.HtmlGenerators;
+using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Domain.Exceptions;
+using ValidationException = OnAim.Admin.Domain.Exceptions.ValidationException;
+using OnAim.Admin.APP.Services.Domain;
+using OnAim.Admin.APP.Services.User;
+using OnAim.Admin.APP.Services.Endpoint;
+using OnAim.Admin.APP.Services.EndpointGroup;
+using OnAim.Admin.APP.Services.Role;
+using OnAim.Admin.APP.Services.Segment;
+using OnAim.Admin.APP.Services.Player;
 
 
 namespace OnAim.Admin.APP;
@@ -44,17 +53,28 @@ public static class Extension
             .AddScoped<IRoleRepository, RoleRepository>()
             .AddScoped<ILogRepository, LogRepository>()
             .AddScoped<IPermissionService, PermissionService>()
+            .AddScoped<IPasswordService, PasswordService>()
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IEndpointService, EndpointService>()
+            .AddScoped<IEndpointGroupService, EndpointGroupService>()
+            .AddScoped<IRoleService, RoleService>()
+            .AddScoped<IDomainService, DomainService>()
+            .AddScoped<ISegmentService, SegmentService>()
+            .AddScoped<IPlayerService, PlayerService>()
             .AddTransient<IJwtFactory, JwtFactory>()
             .AddHostedService<TokenCleanupService>()
             .Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"))
-            //.AddTransient<IEmailService, EmailService>()
-            //.AddTransient<IEmailService, MailgunService>()
             .AddScoped<IDomainValidationService, DomainValidationService>()
             .AddScoped<IAppSettingsService, AppSettingsService>()
             .AddScoped<IOtpService, OtpService>()
             .AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>))
             .AddScoped(typeof(CommandContext<>), typeof(CommandContext<>))
             .AddHtmlGenerator();
+        services
+            .AddScoped(typeof(IRepository<>), typeof(EfRepository<>))
+            .AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>))
+            .AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>))
+            .AddScoped(typeof(ILeaderBoardReadOnlyRepository<>), typeof(LeaderBoardReadOnlyRepository<>));
 
         services.Configure<PostmarkOptions>(configuration.GetSection("Postmark"));
 
@@ -96,16 +116,7 @@ public static class Extension
     public static IEnumerable<T> OrEmptyIfNull<T>(this IEnumerable<T> src)
     => src ?? Enumerable.Empty<T>();
 
-    
-}
-public class PostmarkOptions
-{
-    public string ApiKey { get; set; }
-}
-public class MailgunOptions
-{
-    public string ApiKey { get; set; }
-    public string Domain { get; set; }
+
 }
 public static partial class WebApplicationBuilderExtensions
 {
@@ -130,7 +141,7 @@ public static partial class WebApplicationBuilderExtensions
 
                 var baseAddress = catalogApiOptions.Value.BaseApiAddress;
                 client.BaseAddress = new Uri(baseAddress);
-                return new HubApiClient(client, catalogApiOptions, policyOptions);
+                return new HubApiClient(client, catalogApiOptions, policyOptions, "admin", "password");
             }
         );
     }
@@ -181,7 +192,7 @@ public static partial class WebApplicationBuilderExtensions
     }
 }
 
-    public static class HttpResponseMessageExtensions
+public static class HttpResponseMessageExtensions
 {
     public static async Task EnsureSuccessStatusCodeWithDetailAsync(this HttpResponseMessage response)
     {
@@ -195,28 +206,7 @@ public static partial class WebApplicationBuilderExtensions
         throw new HttpResponseException(content, (int)response.StatusCode);
     }
 }
-public class HttpResponseException : System.Exception
-{
-    public string? ResponseContent { get; }
 
-    public IReadOnlyDictionary<string, IEnumerable<string>>? Headers { get; }
-
-    public HttpResponseException(
-        string responseContent,
-        int statusCode = StatusCodes.Status500InternalServerError,
-        IReadOnlyDictionary<string, IEnumerable<string>>? headers = null,
-        System.Exception? inner = null
-    )
-    {
-        ResponseContent = responseContent;
-        Headers = headers;
-    }
-
-    public override string ToString()
-    {
-        return $"HTTP Response: \n\n{ResponseContent}\n\n{base.ToString()}";
-    }
-}
 public static class ValidationExtensions
 {
 

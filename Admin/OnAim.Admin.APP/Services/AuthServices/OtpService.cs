@@ -10,9 +10,9 @@ public class OtpService : IOtpService
 {
     private readonly int _otpLength = 6;
     private readonly int _otpExpiryMinutes = 10;
-    private readonly IRepository<User> _repository;
+    private readonly IRepository<OnAim.Admin.Domain.Entities.User> _repository;
 
-    public OtpService(IRepository<Domain.Entities.User> repository)
+    public OtpService(IRepository<OnAim.Admin.Domain.Entities.User> repository)
     {
         _repository = repository;
     }

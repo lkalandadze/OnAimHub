@@ -7,5 +7,5 @@ public record PlayerFilter(
     DateTime? DateFrom,
     DateTime? DateTo,
     List<string>? SegmentIds,
-    string? Status
+    bool? IsBanned
     ) : BaseFilter;

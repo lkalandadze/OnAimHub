@@ -5,6 +5,10 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class AllowedEmailDomain : BaseEntity
 {
+    public AllowedEmailDomain()
+    {
+        
+    }
     public AllowedEmailDomain(string domain, int? createdBy)
     {
         Domain = domain;

@@ -1,66 +1,26 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.CQRS.Query;
-using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Domain.Interfaces;
+﻿using OnAim.Admin.APP.CQRS.Query;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.Segment;
-using OnAim.Admin.Shared.Paging;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetGeneralSegmentActsHistory;
 
 public class GetGeneralSegmentActsHistoryQueryHandler : IQueryHandler<GetGeneralSegmentActsHistoryQuery, ApplicationResult>
 {
-    private readonly IReadOnlyRepository<PlayerSegmentActHistory> _readOnlyRepository;
+    private readonly ISegmentService _segmentService;
 
-    public GetGeneralSegmentActsHistoryQueryHandler(IReadOnlyRepository<PlayerSegmentActHistory> readOnlyRepository)
+    public GetGeneralSegmentActsHistoryQueryHandler(ISegmentService segmentService)
     {
-        _readOnlyRepository = readOnlyRepository;
+        _segmentService = segmentService;
     }
 
     public async Task<ApplicationResult> Handle(GetGeneralSegmentActsHistoryQuery request, CancellationToken cancellationToken)
     {
-        var query = _readOnlyRepository.Query().Include(x => x.PlayerSegmentAct).Include(x => x.Player);
-
-        //if (request.Filter.DateFrom.HasValue)
-        //    query = query.Where(x => x.DateCreated >= request.Filter.DateFrom.Value);
-
-        //if (request.Filter.DateTo.HasValue)
-        //    query = query.Where(x => x.DateCreated <= request.Filter.DateTo.Value);
-
-        //if (request.Filter.SegmentId != null)
-        //    query = query.Where(x => x.se.Id == request.Filter.SegmentId);
-
-        //if (request.Filter.UserId != null || request.Filter.UserId != 0)
-        //{
-        //    query = query.Where(x => x.ByUserId == request.Filter.UserId);
-        //}
-
-        //if (request.Filter.UserId != null || request.Filter.UserId != 0)
-        //{
-        //    query = query.Where(x => x.PlayerId == request.Filter.playerId);
-        //}
-
-        //var paginatedResult = await Paginator.GetPaginatedResult(
-        //    query,
-        //    request.Filter,
-        //    act => new ActsHistoryDto
-        //    {
-        //        Id = act.Id,
-        //        Note = null,
-        //        PlayerName = act.Player.UserName ?? "Unknown", // Handling null here
-        //        UploadedOn = null,
-        //        Quantity = act.PlayerSegmentAct.TotalPlayers,
-        //        Type = act.PlayerSegmentAct.Action.Name ?? null// Handling null here too
-        //    },
-        //    cancellationToken
-        //);
-
-        var res = await query.ToListAsync(cancellationToken);
+        var result = await _segmentService.GetGeneralSegmentActsHistory(request.Filter);
 
         return new ApplicationResult
         {
-            Success = true,
-            Data = res,
+            Success = result.Success,
+            Data = result.Data
         };
     }
 }

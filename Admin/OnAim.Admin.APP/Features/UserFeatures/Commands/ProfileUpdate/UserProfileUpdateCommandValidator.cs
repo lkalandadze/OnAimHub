@@ -9,10 +9,10 @@ public class UserProfileUpdateCommandValidator : AbstractValidator<UserProfileUp
         RuleFor(x => x.Id)
             .NotEmpty()
             .NotNull();
-        RuleFor(x => x.profileUpdateRequest.FirstName)
+        RuleFor(x => x.ProfileUpdateRequest.FirstName)
             .NotEmpty()
             .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
-        RuleFor(x => x.profileUpdateRequest.LastName)
+        RuleFor(x => x.ProfileUpdateRequest.LastName)
             .NotEmpty()
             .Matches(@"^[^\d]*$").WithMessage("Name should not contain numbers.");
     }

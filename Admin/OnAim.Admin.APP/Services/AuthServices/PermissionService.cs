@@ -9,7 +9,7 @@ public class PermissionService : IPermissionService
 {
     private readonly IRoleRepository _roleRepository;
     private readonly IConfigurationRepository<UserRole> _userRoleRepository;
-    private readonly IRepository<Role> _repository;
+    private readonly IRepository<OnAim.Admin.Domain.Entities.Role> _repository;
     private static Dictionary<string, List<string>>? _endpointsByRoles;
 
     private async Task<Dictionary<string, List<string>>> GetEndpointsByRolesAsync()
@@ -32,7 +32,7 @@ public class PermissionService : IPermissionService
     public PermissionService(
         IRoleRepository roleRepository,
         IConfigurationRepository<UserRole> userRoleRepository,
-        IRepository<Role> repository)
+        IRepository<OnAim.Admin.Domain.Entities.Role> repository)
     {
         _roleRepository = roleRepository;
         _userRoleRepository = userRoleRepository;

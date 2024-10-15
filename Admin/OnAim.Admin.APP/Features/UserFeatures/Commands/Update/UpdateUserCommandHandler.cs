@@ -1,69 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Exceptions;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
+using FluentValidation;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Update;
 
-public class UpdateUserCommandHandler : BaseCommandHandler<UpdateUserCommand, ApplicationResult>
+public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand, ApplicationResult>
 {
-    private readonly IRepository<User> _repository;
-    private readonly IConfigurationRepository<UserRole> _userRoleRepository;
+    private readonly IUserService _userService;
+    private readonly IValidator<UpdateUserCommand> _validator;
 
-    public UpdateUserCommandHandler(
-        CommandContext<UpdateUserCommand> context,
-        IRepository<User> repository,
-        IConfigurationRepository<UserRole> userRoleRepository
-        ) : base( context )
+    public UpdateUserCommandHandler(IUserService userService, IValidator<UpdateUserCommand> validator) 
     {
-        _repository = repository;
-        _userRoleRepository = userRoleRepository;
+        _userService = userService;
+        _validator = validator;
     }
-    protected override async Task<ApplicationResult> ExecuteAsync(UpdateUserCommand request, CancellationToken cancellationToken)
+
+    public async Task<ApplicationResult> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var existingUser = await _repository.Query(x => x.Id == request.Id).FirstOrDefaultAsync();
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (existingUser == null)
-            throw new NotFoundException("User not found");           
+        var result = await _userService.Update(request.Id, request.Model);
 
-        existingUser.FirstName = request.Model.FirstName;
-        existingUser.LastName = request.Model.LastName;
-        existingUser.Phone = request.Model.Phone;
-        existingUser.IsActive = request.Model.IsActive ?? true;
-
-        var currentRoles = await _userRoleRepository.Query(ur => ur.UserId == request.Id).ToListAsync();
-
-        var currentRoleIds = currentRoles.Select(ur => ur.RoleId).ToHashSet();
-        var newRoleIds = request.Model.RoleIds?.ToHashSet() ?? new HashSet<int>();
-
-        var rolesToAdd = newRoleIds.Except(currentRoleIds).ToList();
-        foreach (var roleId in rolesToAdd)
-        {
-            var userRole = new UserRole(request.Id, roleId);
-            await _userRoleRepository.Store(userRole);
-        }
-
-        var rolesToRemove = currentRoleIds.Except(newRoleIds).ToList();
-        foreach (var roleId in rolesToRemove)
-        {
-            var userRole = await _userRoleRepository
-                .Query(ur => ur.UserId == request.Id && ur.RoleId == roleId).FirstOrDefaultAsync();
-            if (userRole != null)
-            {
-                await _userRoleRepository.Remove(userRole);
-            }
-        }
-
-        await _repository.CommitChanges();
-        await _userRoleRepository.CommitChanges();
-
-        return new ApplicationResult
-        {
-            Success = true,
-            Data = $"User {existingUser.FirstName} {existingUser.LastName} Updated Successfully"
-        };
+        return new ApplicationResult { Success = result.Success, Data = result.Data };
     }
 }

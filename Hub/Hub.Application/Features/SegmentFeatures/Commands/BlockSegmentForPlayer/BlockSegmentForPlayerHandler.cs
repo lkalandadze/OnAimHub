@@ -20,8 +20,8 @@ public class BlockSegmentForPlayerHandler : IRequestHandler<BlockSegmentForPlaye
 
     public async Task<Unit> Handle(BlockSegmentForPlayerCommand request, CancellationToken cancellationToken)
     {
-        await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Block, [request.PlayerId], request.SegmentId, request.ByUserId);
         await _playerBlockedSegmentService.BlockPlayerSegmentAsync([request.PlayerId], request.SegmentId);
+        await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Block, [request.PlayerId], request.SegmentId, request.ByUserId);
 
         await _unitOfWork.SaveAsync();
 

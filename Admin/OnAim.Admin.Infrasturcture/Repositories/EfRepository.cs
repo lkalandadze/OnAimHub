@@ -63,4 +63,9 @@ public class EfRepository<T> : IRepository<T>
         await Task.CompletedTask;
     }
 
+    public async Task<IQueryable<T>> QueryAsync(Expression<Func<T, bool>>? expression = null)
+    {
+        var query = expression == null ? _db.Set<T>() : _db.Set<T>().Where(expression);
+        return await Task.FromResult(query);
+    }
 }

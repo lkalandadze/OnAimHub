@@ -20,9 +20,14 @@ public class LogRepository : ILogRepository
         await _context.AuditLogs.InsertOneAsync(auditLog);
     }
 
-    public async Task AddRejectedLogAsync(RejectedLog rejectedLog)
+    public async Task AddOperationFailedLogAsync(OperationFailedLog operationFailedLog)
     {
-        await _context.RejectedLogs.InsertOneAsync(rejectedLog);
+        await _context.OperationFailedLogs.InsertOneAsync(operationFailedLog);
+    }
+
+    public async Task AddAccessDeniedLogAsync(AccessDeniedLog accessDeniedLog)
+    {
+        await _context.AccessDeniedLogs.InsertOneAsync(accessDeniedLog);
     }
 
     public async Task<List<AuditLog>> GetUserLogs(int userId)

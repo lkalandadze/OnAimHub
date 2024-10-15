@@ -4,4 +4,4 @@ using OnAim.Admin.Shared.DTOs.EndpointGroup;
 
 namespace OnAim.Admin.APP.Features.EndpointGroupFeatures.Commands.Update;
 
-public record UpdateEndpointGroupCommand(int Id, UpdateEndpointGroupRequest model) : ICommand<ApplicationResult>;
+public record UpdateEndpointGroupCommand(int Id, UpdateEndpointGroupRequest Model) : ICommand<ApplicationResult>;

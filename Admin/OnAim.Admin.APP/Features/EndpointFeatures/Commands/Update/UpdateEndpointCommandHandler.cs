@@ -1,37 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Exceptions;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.APP.CQRS.Command;
+using FluentValidation;
+using OnAim.Admin.APP.Services.Abstract;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Commands.Update;
 
-public sealed class UpdateEndpointCommandHandler : BaseCommandHandler<UpdateEndpointCommand, ApplicationResult>
+public sealed class UpdateEndpointCommandHandler : ICommandHandler<UpdateEndpointCommand, ApplicationResult>
 {
-    private readonly IRepository<Endpoint> _repository;
+    private readonly IEndpointService _endpointService;
+    private readonly IValidator<UpdateEndpointCommand> _validator;
 
-    public UpdateEndpointCommandHandler(CommandContext<UpdateEndpointCommand> context, IRepository<Endpoint> repository) : base( context )
+    public UpdateEndpointCommandHandler(IEndpointService endpointService, IValidator<UpdateEndpointCommand> validator)
     {
-        _repository = repository;
+        _endpointService = endpointService;
+        _validator = validator;
     }
-    protected override async Task<ApplicationResult> ExecuteAsync(UpdateEndpointCommand request, CancellationToken cancellationToken)
+
+    public async Task<ApplicationResult> Handle(UpdateEndpointCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var ep = await _repository.Query(x => x.Id == request.Id).FirstOrDefaultAsync();
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (ep == null || ep?.IsDeleted == true)
-            throw new NotFoundException("Permission Not Found");
+        var result = await _endpointService.Update(request.Id, request.Endpoint);
 
-        ep.Description = request.Endpoint.Description;
-        ep.IsActive = request.Endpoint.IsActive ?? true;
-
-        await _repository.CommitChanges();
-
-        return new ApplicationResult
-        {
-            Success = true,
-            Data = $"Permmission {ep.Name} Successfully Updated"
-        };
+        return new ApplicationResult { Success = result.Success, Data = result };
     }
 }

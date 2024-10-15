@@ -1,39 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Exceptions;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Abstract;
+using FluentValidation;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Delete;
 
-public class DeleteUserCommandHandler : BaseCommandHandler<DeleteUserCommand, ApplicationResult>
+public class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand, ApplicationResult>
 {
-    private readonly IRepository<User> _repository;
+    private readonly IUserService _userService;
+    private readonly IValidator<DeleteUserCommand> _validator;
 
-    public DeleteUserCommandHandler(
-        CommandContext<DeleteUserCommand> context,
-        IRepository<User> repository
-        ) : base( context )
+    public DeleteUserCommandHandler(IUserService userService, IValidator<DeleteUserCommand> validator)
     {
-        _repository = repository;
+        _userService = userService;
+        _validator = validator;
     }
-    protected override async Task<ApplicationResult> ExecuteAsync(DeleteUserCommand request, CancellationToken cancellationToken)
+
+    public async Task<ApplicationResult> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        var users = await _repository.Query(x => request.UserIds.Contains(x.Id)).ToListAsync(cancellationToken);
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors);
 
-        if (!users.Any())
-            throw new NotFoundException("No users found for the provided IDs");
+        var result = await _userService.Delete(request.UserIds);
 
-        foreach (var user in users)
-        {
-            user.IsActive = false;
-            user.IsDeleted = true;
-        }
-
-        await _repository.CommitChanges();
-
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult { Success = result.Success, Data = result.Data };
     }
 }
