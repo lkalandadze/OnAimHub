@@ -1,23 +1,92 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Test;
+﻿using System.Collections;
+using System.Reflection;
 
-var serviceProvider = new ServiceCollection()
-           .AddDbContext<GameDbContext>(options =>
-               options.UseNpgsql("User ID =postgres;Password=1234;Server=localhost;Port=5432;Database=TestGame3;Pooling=true"))
-           .BuildServiceProvider();
-
-using (var context = serviceProvider.GetRequiredService<GameDbContext>())
+var a = new A
 {
-    context.Database.EnsureCreated();
+    Bs = new List<B>
+            {
+                new B
+                {
+                    Cs = new List<C>
+                    {
+                        new C
+                        {
+                            Ds = new List<D> { new D(), new D() }
+                        },
+                        new C()
+                    }
+                },
+                new B
+                {
+                    Cs = new List<C>
+                    {
+                        new C()
+                    }
+                }
+            }
+};
 
+var addresses = AddressCollector.CollectAddresses(a);
+
+foreach (var address in addresses)
+{
+    Console.WriteLine(address);
 }
 
-var p = new WheelPrizeGroup { test1 = 12, test = 14 };
+// end main ------------------------------------------
 
-Generator.AddGroup(p);
+static class AddressCollector
+{
+    public static List<string> CollectAddresses(object obj, string basePath = "")
+    {
+        var addresses = new List<string>();
 
-var t = Generator.GetPrize<WheelPrizeGroup>();
-var L = new List<WheelPrizeGroup>();
+        if (obj == null) return addresses;
 
-Console.WriteLine("Hello, World!");
+        Type type = obj.GetType();
+        PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        foreach (var property in properties)
+        {
+            // Check if the property is a collection
+            if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && property.PropertyType != typeof(string))
+            {
+                // Get the collection items
+                var collection = property.GetValue(obj) as IEnumerable;
+                if (collection != null)
+                {
+                    int index = 0;
+                    foreach (var item in collection)
+                    {
+                        string path = $"{basePath}.{property.Name}[{index}]";
+                        addresses.Add(path);
+                        addresses.AddRange(CollectAddresses(item, path));
+                        index++;
+                    }
+                }
+            }
+        }
+
+        return addresses;
+    }
+}
+
+class A
+{
+    public ICollection<B> Bs { get; set; } = new List<B>();
+}
+
+class B
+{
+    public ICollection<C> Cs { get; set; } = new List<C>();
+}
+
+class C
+{
+    public ICollection<D> Ds { get; set; } = new List<D>();
+}
+
+class D
+{
+    // Additional properties for class D
+}

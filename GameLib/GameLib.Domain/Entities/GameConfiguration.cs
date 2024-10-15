@@ -1,10 +1,13 @@
 ﻿#nullable disable
 
+using CheckmateValidations;
+using GameLib.Domain.Checkers;
 using OnAim.Lib.EntityExtension.GlobalAttributes.Attributes;
 using Shared.Domain.Entities;
 
 namespace GameLib.Domain.Entities;
 
+[CheckMate<GameConfigurationChecker>]
 public abstract class GameConfiguration : BaseEntity<int>
 {
     public GameConfiguration()
@@ -16,8 +19,8 @@ public abstract class GameConfiguration : BaseEntity<int>
     {
         Name = name;
         Value = value;
-        //Prices = prices?.Select(x => x as Price<T>).ToList() ?? [];
-        //Segments = segments?.Select(x => x as Segment<T>).ToList() ?? [];
+        Prices = prices?.ToList() ?? [];
+        Segments = segments?.ToList() ?? [];
     }
 
     [GlobalDescription("Name of the configuration")]
@@ -28,6 +31,7 @@ public abstract class GameConfiguration : BaseEntity<int>
 
     [GlobalDescription("IsActive of the configuration")]
     public bool IsActive { get; private set; }
+
     public void ChangeDetails(string name, int value)
     {
         Name = name;

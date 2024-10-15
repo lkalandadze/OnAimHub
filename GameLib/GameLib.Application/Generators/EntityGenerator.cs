@@ -1,4 +1,5 @@
-﻿using GameLib.Domain.Abstractions;
+﻿using CheckmateValidations;
+using GameLib.Domain.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using OnAim.Lib.EntityExtension.GlobalAttributes;
 using OnAim.Lib.EntityExtension.GlobalAttributes.Attributes;
@@ -11,7 +12,7 @@ namespace GameLib.Application.Generators;
 
 public class EntityGenerator
 {
-    public EntityMetadata GenerateEntityMetadata(Type type)
+    public EntityMetadata? GenerateEntityMetadata(Type type)
     {
         if (AttributeHelper.IsHidden(type))
         {
@@ -21,7 +22,8 @@ public class EntityGenerator
         var entityMetadata = new EntityMetadata
         {
             Name = type.Name,
-            Description = GetClassDescription(type)
+            Description = GetClassDescription(type),
+            Validations = CheckmateValidations.Checkmate.GetRootCheckContainers(type),
         };
 
         foreach (var property in type.GetProperties())
@@ -37,7 +39,7 @@ public class EntityGenerator
                 Type = IsCollection(property.PropertyType)
                         ? "List"
                         : property.PropertyType.Name,
-                Description = GetPropertyDescription(property)
+                Description = GetPropertyDescription(property),
             };
 
             if (IsCollection(property.PropertyType))
@@ -99,15 +101,18 @@ public class EntityGenerator
 
         return property.GetCustomAttribute<DescriptionAttribute>()?.Description ?? "";
     }
+
     private bool IsDbEnum(Type type)
     {
         return type.BaseType != null && type.BaseType.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(DbEnum<,>);
     }
 }
+
 public class EntityMetadata
 {
     public string Name { get; set; }
     public string Description { get; set; }
+    public List<CheckContainer> Validations { get; set; }
     public List<PropertyMetadata> Properties { get; set; } = new List<PropertyMetadata>();
 }
 

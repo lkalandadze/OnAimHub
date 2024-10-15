@@ -1,9 +1,13 @@
 ﻿#nullable disable
+
+using CheckmateValidations;
+using GameLib.Domain.Checkers;
 using Shared.Domain.Entities;
 using System.Text.Json.Serialization;
 
 namespace GameLib.Domain.Entities;
 
+[CheckMate<PriceChecker>]
 public class Price : BaseEntity<string>
 {
     public Price()

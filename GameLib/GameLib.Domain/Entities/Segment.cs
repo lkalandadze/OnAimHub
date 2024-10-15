@@ -1,9 +1,13 @@
 ﻿#nullable disable
+
+using CheckmateValidations;
+using GameLib.Domain.Checkers;
 using Shared.Domain.Entities;
 using System.Text.Json.Serialization;
 
 namespace GameLib.Domain.Entities;
 
+[CheckMate<SegmentChecker>]
 public class Segment : BaseEntity<string>
 {
     public bool IsDeleted { get; private set; }

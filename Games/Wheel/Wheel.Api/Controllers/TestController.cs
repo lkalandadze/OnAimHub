@@ -1,7 +1,12 @@
-﻿using GameLib.Application.Controllers;
+﻿using Consul;
+using GameLib.Application.Controllers;
+using GameLib.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Concurrent;
+using System.Text.Json;
+using Wheel.Domain.Entities;
 
 namespace Wheel.Api.Controllers;
 
@@ -14,6 +19,35 @@ public class TestController : BaseApiController
         // Initialize user balance for the example
         var userId = new Guid("d271d93f-f736-4b2d-924d-55fe4b8462d1"); // Example user ID
         UserBalances.TryAdd(userId, 20.00m); // Each user starts with 20 GEL
+    }
+
+    [HttpPost("AddConfigTest")]
+    public ActionResult AddConfigTest()
+    {
+        var price = new Price(-1, -34, string.Empty);
+        var segment = new Segment("S");
+
+        var config = new WheelConfiguration("1", -3, [price], [segment]);
+
+        //var rootContainers = CheckmateValidations.Checkmate.GetRootCheckContainers(config.GetType());
+
+        var rootCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(config);
+        var treeCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(config, "", true);
+
+        //var rootCheckers = CheckmateValidations.Checkmate.GetChecks(config).ToList();
+        //var treeCheckers = CheckmateValidations.Checkmate.GetChecks(config, true).ToList();
+
+        var rootFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(config).ToList();
+        var treeFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(config, true).ToList();
+
+        var rootStatus = CheckmateValidations.Checkmate.IsValid(config);
+        var treeStatus = CheckmateValidations.Checkmate.IsValid(config, true);
+
+        string json1 = JsonSerializer.Serialize(config);
+        string json2 = JsonSerializer.Serialize(treeFailedCheckers);
+        string json3 = JsonSerializer.Serialize(treeCheckContainer);
+
+        return Ok();
     }
 
     [AllowAnonymous]
