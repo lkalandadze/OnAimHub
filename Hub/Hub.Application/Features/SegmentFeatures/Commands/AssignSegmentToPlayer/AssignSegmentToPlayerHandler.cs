@@ -20,8 +20,8 @@ public class AssignSegmentToPlayerHandler : IRequestHandler<AssignSegmentToPlaye
 
     public async Task<Unit> Handle(AssignSegmentToPlayerCommand request, CancellationToken cancellationToken)
     {
-        await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Assign, [request.PlayerId], request.SegmentId, request.ByUserId);
         await _playerSegmentService.AssignPlayersToSegmentAsync([request.PlayerId], request.SegmentId);
+        await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Assign, [request.PlayerId], request.SegmentId, request.ByUserId);
 
         await _unitOfWork.SaveAsync();
 

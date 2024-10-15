@@ -4,15 +4,15 @@ using Hub.Application.Features.PlayerBanFeatures.Commands.Create;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Revoke;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Update;
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentToPlayer;
-using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentToPlayers;
+using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentsToPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.BlockSegmentForPlayer;
-using Hub.Application.Features.SegmentFeatures.Commands.BlockSegmentForPlayers;
+using Hub.Application.Features.SegmentFeatures.Commands.BlockSegmentsForPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.CreateSegment;
 using Hub.Application.Features.SegmentFeatures.Commands.DeleteSegment;
 using Hub.Application.Features.SegmentFeatures.Commands.UnassignSegmentToPlayer;
-using Hub.Application.Features.SegmentFeatures.Commands.UnassignSegmentToPlayers;
+using Hub.Application.Features.SegmentFeatures.Commands.UnassignSegmentsToPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentForPlayer;
-using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentForPlayers;
+using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentsForPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.UpdateSegment;
 using Hub.Application.Models.Game;
 using Microsoft.AspNetCore.Authorization;
@@ -84,19 +84,19 @@ public class AdminController : BaseApiController
         return StatusCode(200, result);
     }
 
-    [HttpPost(nameof(AssignSegmentToPlayers))]
-    public async Task<IActionResult> AssignSegmentToPlayers(string segmentId, [FromForm] PlayersSegmentRequestModel request)
+    [HttpPost(nameof(AssignSegmentsToPlayers))]
+    public async Task<IActionResult> AssignSegmentsToPlayers([FromForm] PlayersSegmentRequestModel request)
     {
-        var command = new AssignSegmentToPlayersCommand(segmentId, request.File, request.ByUserId);
+        var command = new AssignSegmentsToPlayersCommand(request.SegmentIds, request.File, request.ByUserId);
         var result = await Mediator.Send(command);
 
         return StatusCode(200, result);
     }
 
-    [HttpPost(nameof(UnassignSegmentToPlayers))]
-    public async Task<IActionResult> UnassignSegmentToPlayers(string segmentId, [FromForm] PlayersSegmentRequestModel request)
+    [HttpPost(nameof(UnassignSegmentsToPlayers))]
+    public async Task<IActionResult> UnassignSegmentsToPlayers([FromForm] PlayersSegmentRequestModel request)
     {
-        var command = new UnassignSegmentToPlayersCommand(segmentId, request.File, request.ByUserId);
+        var command = new UnassignSegmentsToPlayersCommand(request.SegmentIds, request.File, request.ByUserId);
         var result = await Mediator.Send(command);
 
         return StatusCode(200, result);
@@ -120,19 +120,19 @@ public class AdminController : BaseApiController
         return StatusCode(200, result);
     }
 
-    [HttpPost(nameof(BlockSegmentForPlayers))]
-    public async Task<IActionResult> BlockSegmentForPlayers(string segmentId, [FromForm] PlayersSegmentRequestModel request)
+    [HttpPost(nameof(BlockSegmentsForPlayers))]
+    public async Task<IActionResult> BlockSegmentsForPlayers([FromForm] PlayersSegmentRequestModel request)
     {
-        var command = new BlockSegmentForPlayersCommand(segmentId, request.File, request.ByUserId);
+        var command = new BlockSegmentsForPlayersCommand(request.SegmentIds, request.File, request.ByUserId);
         var result = await Mediator.Send(command);
 
         return StatusCode(200, result);
     }
 
-    [HttpPost(nameof(UnblockSegmentForPlayers))]
-    public async Task<IActionResult> UnblockSegmentForPlayers(string segmentId, [FromForm] PlayersSegmentRequestModel request)
+    [HttpPost(nameof(UnblockSegmentsForPlayers))]
+    public async Task<IActionResult> UnblockSegmentsForPlayers([FromForm] PlayersSegmentRequestModel request)
     {
-        var command = new UnblockSegmentForPlayersCommand(segmentId, request.File, request.ByUserId);
+        var command = new UnblockSegmentsForPlayersCommand(request.SegmentIds, request.File, request.ByUserId);
         var result = await Mediator.Send(command);
 
         return StatusCode(200, result);

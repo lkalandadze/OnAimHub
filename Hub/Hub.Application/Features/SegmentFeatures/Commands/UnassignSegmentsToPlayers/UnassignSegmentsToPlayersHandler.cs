@@ -6,24 +6,24 @@ using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
 using Shared.Lib.Helpers;
 
-namespace Hub.Application.Features.SegmentFeatures.Commands.BlockSegmentForPlayers;
+namespace Hub.Application.Features.SegmentFeatures.Commands.UnassignSegmentsToPlayers;
 
-public class BlockSegmentForPlayersHandler : IRequestHandler<BlockSegmentForPlayersCommand>
+public class UnassignSegmentsToPlayersHandler : IRequestHandler<UnassignSegmentsToPlayersCommand>
 {
     private readonly IPlayerService _playerService;
-    private readonly IPlayerBlockedSegmentService _playerBlockedSegmentService;
+    private readonly IPlayerSegmentService _playerSegmentService;
     private readonly IPlayerSegmentActService _playerSegmentActService;
     private readonly IUnitOfWork _unitOfWork;
 
-    public BlockSegmentForPlayersHandler(IPlayerService playerService, IPlayerBlockedSegmentService playerBlockedSegmentService, IPlayerSegmentActService playerSegmentActService, IUnitOfWork unitOfWork)
+    public UnassignSegmentsToPlayersHandler(IPlayerService playerService, IPlayerSegmentService playerSegmentService, IPlayerSegmentActService playerSegmentActService, IUnitOfWork unitOfWork)
     {
         _playerService = playerService;
-        _playerBlockedSegmentService = playerBlockedSegmentService;
+        _playerSegmentService = playerSegmentService;
         _playerSegmentActService = playerSegmentActService;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Unit> Handle(BlockSegmentForPlayersCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UnassignSegmentsToPlayersCommand request, CancellationToken cancellationToken)
     {
         var playerIds = await request.File.ReadExcelFirstColumnAsync<int>();
 
@@ -33,8 +33,12 @@ public class BlockSegmentForPlayersHandler : IRequestHandler<BlockSegmentForPlay
         }
 
         await _playerService.CreatePlayersIfNotExist(playerIds);
-        await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Block, playerIds, request.SegmentId, request.ByUserId, true);
-        await _playerBlockedSegmentService.BlockPlayerSegmentAsync(playerIds, request.SegmentId);
+
+        foreach (var segmentId in request.SegmentIds)
+        {
+            _playerSegmentService.UnassignPlayersToSegment(playerIds, segmentId);
+            await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Unassign, playerIds, segmentId, request.ByUserId, true);
+        }
 
         await _unitOfWork.SaveAsync();
 
