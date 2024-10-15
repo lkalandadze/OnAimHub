@@ -34,3 +34,11 @@ public class Check<TEntity, TMember> : Check
         };
     }
 }
+
+public class FailedCheck
+{
+    public string Path { get; internal set; }
+    public string Message { get; set; }
+    public string ValidationRule { get; set; }
+    public string MemberSelector { get; set; }
+}

@@ -23,8 +23,9 @@ public abstract class CheckContainer
 {
     public abstract List<Check> Checks { get; }
     public abstract string PropertyPath { get; set; }
-    public string MemberSelector => GetExpression().ToString();
+    public string MemberSelector => GetExpressionAsString();
     public abstract Func<object, object> GetExpression();
+    protected abstract string GetExpressionAsString();
 }
 
 public class CheckContainer<TEntity, TMember> : CheckContainer, ICheckContainer<TEntity, TMember>
@@ -34,7 +35,7 @@ public class CheckContainer<TEntity, TMember> : CheckContainer, ICheckContainer<
     public override List<Check> Checks => _checks.Cast<Check>().ToList();
     public override string PropertyPath { get; set; }
     public Expression<Func<TEntity, TMember>> Expression { get; set; }
-
+    
     public CheckContainer(Expression<Func<TEntity, TMember>> expression)
     {
         Expression = expression;
@@ -65,6 +66,11 @@ public class CheckContainer<TEntity, TMember> : CheckContainer, ICheckContainer<
                 throw new InvalidCastException($"The object must be of type {typeof(TEntity).Name}.");
             }
         };
+    }
+
+    protected override string GetExpressionAsString()
+    {
+        return Expression?.Body.ToString() ?? string.Empty;
     }
 
     public ICheckContainer<TEntity, TMember> SetCondition(Expression<Func<TMember, bool>> predicate)

@@ -15,24 +15,28 @@ public class Checkmate
         return !GetFailedChecks(obj, isTree).Any();
     }
 
-    public static IEnumerable<Check> GetFailedChecks<TEntity>(TEntity obj, bool isTree = false)
+    public static IEnumerable<FailedCheck> GetFailedChecks<TEntity>(TEntity obj, bool isTree = false)
     {
         var checkContainersWithInstance = GetCheckContainersWithInstance(obj, "", isTree);
+        var failedChecks = new List<FailedCheck>();
 
         foreach (var checkContainerWithInstance in checkContainersWithInstance)
         {
             var val = checkContainerWithInstance.CheckContainer.GetExpression()(checkContainerWithInstance.Instance);
 
-            foreach (var check in checkContainerWithInstance.CheckContainer.Checks)
-            {
-                var predicate = check.GetPredicate();
-
-                if (!predicate(val))
+            var containerFailedChecks = checkContainerWithInstance.CheckContainer.Checks.Where(x => !x.GetPredicate()(val))
+                .Select(x => new FailedCheck
                 {
-                    yield return check;
-                }
-            }
+                    Path = checkContainerWithInstance.Path,
+                    Message = x.Message,
+                    ValidationRule = x.ValidationRule,
+                    MemberSelector = checkContainerWithInstance.CheckContainer.MemberSelector,
+                });
+
+            failedChecks.AddRange(containerFailedChecks);
         }
+
+        return failedChecks;
     }
 
     public static List<CheckContainerWithInstance> GetCheckContainersWithInstance<TEntity>(TEntity obj, string path = "", bool isTree = false)
@@ -91,41 +95,6 @@ public class Checkmate
         }
 
         return null;
-    }
-
-    //TEST
-    private static List<string> GetAddresses(object obj, string basePath = "")
-    {
-        var addresses = new List<string>();
-
-        if (obj == null) return addresses;
-
-        Type type = obj.GetType();
-        PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-        foreach (var property in properties)
-        {
-            if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && property.PropertyType != typeof(string))
-            {
-                var collection = property.GetValue(obj) as IEnumerable;
-
-                if (collection != null)
-                {
-                    int index = 0;
-
-                    foreach (var item in collection)
-                    {
-                        string path = $"{basePath}.{property.Name}[{index}]";
-
-                        addresses.Add(path);
-                        addresses.AddRange(GetAddresses(item, path));
-                        index++;
-                    }
-                }
-            }
-        }
-
-        return addresses;
     }
 }
 

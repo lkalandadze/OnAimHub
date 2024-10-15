@@ -3,7 +3,9 @@ using GameLib.Application.Controllers;
 using GameLib.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Concurrent;
+using System.Text.Json;
 using Wheel.Domain.Entities;
 
 namespace Wheel.Api.Controllers;
@@ -22,10 +24,12 @@ public class TestController : BaseApiController
     [HttpPost("AddConfigTest")]
     public ActionResult AddConfigTest()
     {
-        var price = new Price(1, 34, string.Empty);
+        var price = new Price(-1, -34, string.Empty);
         var segment = new Segment("S");
 
-        var config = new WheelConfiguration("123456", 3, [price], [segment]);
+        var config = new WheelConfiguration("1", -3, [price], [segment]);
+
+        //var rootContainers = CheckmateValidations.Checkmate.GetRootCheckContainers(config.GetType());
 
         var rootCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(config);
         var treeCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(config, "", true);
@@ -38,6 +42,10 @@ public class TestController : BaseApiController
 
         var rootStatus = CheckmateValidations.Checkmate.IsValid(config);
         var treeStatus = CheckmateValidations.Checkmate.IsValid(config, true);
+
+        string json1 = JsonSerializer.Serialize(config);
+        string json2 = JsonSerializer.Serialize(treeFailedCheckers);
+        string json3 = JsonSerializer.Serialize(treeCheckContainer);
 
         return Ok();
     }
