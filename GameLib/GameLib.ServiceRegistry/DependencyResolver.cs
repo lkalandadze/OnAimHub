@@ -34,6 +34,7 @@ public static class DependencyResolver
         services.AddSingleton<ConfigurationHolder>();
         services.AddSingleton<RepositoryManager>();
         services.AddSingleton<EntityGenerator>();
+        services.AddSingleton<CommandGenerator>();
 
         services.AddSingleton(prizeGroupTypes);
         foreach (var type in prizeGroupTypes)

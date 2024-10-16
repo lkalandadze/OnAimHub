@@ -10,7 +10,12 @@ namespace GameLib.Domain.Entities;
 [CheckMate<SegmentChecker>]
 public class Segment : BaseEntity<string>
 {
-    public bool IsDeleted { get; private set; }
+    public Segment()
+    {
+        
+    }
+
+    public bool IsDeleted { get; set; }
 
     public Segment(string id)
     {
@@ -29,6 +34,10 @@ public class Segment : BaseEntity<string>
 
 public class Segment<T> : Segment where T : Segment<T>
 {
+    public Segment()
+    {
+        
+    }
     public Segment(string id, int? configurationId = null) : base(id)
     {
         // Initialization logic for the generic segment, if any

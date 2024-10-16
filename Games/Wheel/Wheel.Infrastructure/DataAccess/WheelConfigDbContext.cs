@@ -16,7 +16,6 @@ public class WheelConfigDbContext : SharedGameConfigDbContext<WheelConfiguration
     {
     }
 
-    public DbSet<WheelPrizeGroup> WheelPrizeGroups { get; set; }
     public DbSet<WheelPrize> WheelPrizes { get; set; }
     public DbSet<JackpotPrizeGroup> JackpotPrizeGroups { get; set; }
     public DbSet<JackpotPrize> JackpotPrizes { get; set; }

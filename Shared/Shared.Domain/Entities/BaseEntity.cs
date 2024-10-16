@@ -20,5 +20,5 @@ public abstract class BaseEntity<T> : BaseEntity
 
 public abstract class BaseEntity
 {
-    public dynamic Id { get; set; } = null!;
+    public dynamic Id { get; internal set; } = null!;
 }

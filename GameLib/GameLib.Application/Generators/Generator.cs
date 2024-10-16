@@ -17,6 +17,7 @@ internal abstract class Generator
 
     internal static Generator Create(BasePrizeGroup prizeGroup, PrizeGenerationType type)
     {
+        return null;
         return type == PrizeGenerationType.RNG
             ? new RNGPrizeGenerator(prizeGroup.Id, prizeGroup.Prizes.ToList())
             : new SequencePrizeGenerator(prizeGroup.Id, prizeGroup.Prizes.ToList(), prizeGroup.Sequence, prizeGroup.NextPrizeIndex!.Value);
