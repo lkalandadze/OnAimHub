@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Hub.Domain\Hub.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\LevelFeatures\Queries\" />
+  </ItemGroup>
+
 </Project>
