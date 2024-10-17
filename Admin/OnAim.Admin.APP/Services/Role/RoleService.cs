@@ -193,6 +193,20 @@ public class RoleService : IRoleService
         if (filter.GroupIds != null && filter.GroupIds.Any())
             roleQuery = roleQuery.Where(x => x.RoleEndpointGroups.Any(ur => filter.GroupIds.Contains(ur.EndpointGroupId)));
 
+        bool sortDescending = filter.SortDescending.GetValueOrDefault();
+        if (filter.SortBy == "Id" || filter.SortBy == "id")
+        {
+            roleQuery = sortDescending
+                ? roleQuery.OrderByDescending(x => x.Id)
+                : roleQuery.OrderBy(x => x.Id);
+        }
+        else if (filter.SortBy == "Name" || filter.SortBy == "name")
+        {
+            roleQuery = sortDescending
+                ? roleQuery.OrderByDescending(x => x.Name)
+                : roleQuery.OrderBy(x => x.Name);
+        }
+
         var paginatedResult = await Paginator.GetPaginatedResult(
            roleQuery,
            filter,

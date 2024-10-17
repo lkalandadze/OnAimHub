@@ -200,6 +200,20 @@ public class EndpointGroupService : IEndpointGroupService
         if (filter.EndpointIds != null && filter.EndpointIds.Any())
             query = query.Where(x => x.EndpointGroupEndpoints.Any(ur => filter.EndpointIds.Contains(ur.EndpointId)));
 
+        bool sortDescending = filter.SortDescending.GetValueOrDefault();
+        if (filter.SortBy == "Id" || filter.SortBy == "id")
+        {
+            query = sortDescending
+                ? query.OrderByDescending(x => x.Id)
+                : query.OrderBy(x => x.Id);
+        }
+        else if (filter.SortBy == "Name" || filter.SortBy == "name")
+        {
+            query = sortDescending
+                ? query.OrderByDescending(x => x.Name)
+                : query.OrderBy(x => x.Name);
+        }
+
         var paginatedResult = await Paginator.GetPaginatedResult(
             query,
             filter,

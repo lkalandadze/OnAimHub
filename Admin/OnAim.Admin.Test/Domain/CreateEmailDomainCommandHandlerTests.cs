@@ -5,12 +5,8 @@ using FluentValidation;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.APP.Services.Domain;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using System.Linq.Expressions;
-using NSubstitute;
-using MockQueryable;
 namespace OnAim.Admin.Test.Domain;
 
 public class CreateEmailDomainCommandHandlerTests
@@ -114,58 +110,4 @@ public class CreateEmailDomainCommandHandlerTests
         Assert.True(result.Success);
         MockService.Verify(service => service.CreateOrUpdateDomain(It.IsAny<List<DomainDto>>(), It.IsAny<string>(), It.IsAny<bool?>()), Times.Once);
     }
-
-    /////////////////////////////////
-    ///
-    //[Fact]
-    //public async Task CreateOrUpdateDomain_UpdatesExistingDomains_ReturnsSuccess()
-    //{
-    //    // Arrange
-    //    var domains = new List<DomainDto>
-    //{
-    //    new DomainDto { Id = 1, Domain = "example.com", IsActive = true }
-    //};
-
-    //    var existingDomainEntity = new AllowedEmailDomain{ Id = 1, Domain = "old.com", IsActive = false };
-    //    _mockRepository.Setup(r => r.Query(It.IsAny<Expression<Func<AllowedEmailDomain, bool>>>()))
-    //    .Returns(new ApplicationResult { Data = domains } );
-
-    //    // Act
-    //    var result = await MockService.Object.CreateOrUpdateDomain(domains, null, null);
-
-    //    // Assert
-    //    Assert.True(result.Success);
-    //    Assert.Equal("example.com", existingDomainEntity.Domain);
-    //    Assert.True(existingDomainEntity.IsActive);
-    //    _mockRepository.Verify(r => r.CommitChanges(), Times.Once);
-    //}
-    //[Fact]
-    //public async Task CreateOrUpdateDomain_CreatesNewDomain_ReturnsSuccess()
-    //{
-    //    // Arrange
-    //    var domain = "newdomain.com";
-    //    _mockRepository.Setup(r => r.Query(It.IsAny<Expression<Func<DomainEntity, bool>>>()))
-    //        .ReturnsAsync((DomainEntity)null);
-
-    //    // Act
-    //    var result = await _domainService.CreateOrUpdateDomain(null, domain, null);
-
-    //    // Assert
-    //    Assert.True(result.Success);
-    //    _mockRepository.Verify(r => r.Store(It.IsAny<DomainEntity>()), Times.Once);
-    //    _mockRepository.Verify(r => r.CommitChanges(), Times.Once);
-    //}
-    //[Fact]
-    //public async Task CreateOrUpdateDomain_ThrowsBadRequest_WhenDomainExists()
-    //{
-    //    // Arrange
-    //    var existingDomainEntity = new DomainEntity { Domain = "existing.com", IsDeleted = false };
-    //    _mockRepository.Setup(r => r.Query(It.IsAny<Expression<Func<DomainEntity, bool>>>()))
-    //        .ReturnsAsync(existingDomainEntity);
-
-    //    // Act & Assert
-    //    await Assert.ThrowsAsync<BadRequestException>(() =>
-    //        _domainService.CreateOrUpdateDomain(null, "existing.com", null));
-    //}
-
 }

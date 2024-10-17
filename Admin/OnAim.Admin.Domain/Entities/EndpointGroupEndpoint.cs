@@ -2,6 +2,10 @@
 
 public class EndpointGroupEndpoint
 {
+    public EndpointGroupEndpoint()
+    {
+        
+    }
     public EndpointGroupEndpoint(int endpointGroupId, int endpointId)
     {
         EndpointGroupId = endpointGroupId;

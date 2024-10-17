@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
-using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
@@ -133,6 +132,20 @@ public class EndpointService : IEndpointService
 
         if (filter.GroupIds != null && filter.GroupIds.Any())
             query = query.Where(x => x.EndpointGroupEndpoints.Any(ur => filter.GroupIds.Contains(ur.EndpointGroupId)));
+
+        bool sortDescending = filter.SortDescending.GetValueOrDefault();
+        if (filter.SortBy == "Id" || filter.SortBy == "id")
+        {
+            query = sortDescending
+                ? query.OrderByDescending(x => x.Id)
+                : query.OrderBy(x => x.Id);
+        }
+        else if (filter.SortBy == "Name" || filter.SortBy == "name")
+        {
+            query = sortDescending
+                ? query.OrderByDescending(x => x.Name)
+                : query.OrderBy(x => x.Name);
+        }
 
         var paginatedResult = await Paginator.GetPaginatedResult(
             query,

@@ -5,6 +5,10 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class RefreshToken : BaseEntity
 {
+    public RefreshToken()
+    {
+        
+    }
     public RefreshToken(int userId, string token, DateTime expiration, bool isRevoked)
     {
         UserId = userId;

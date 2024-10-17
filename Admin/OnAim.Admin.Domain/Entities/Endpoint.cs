@@ -5,6 +5,10 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class Endpoint : BaseEntity
 {
+    public Endpoint()
+    {
+        
+    }
     public Endpoint(
              string name,
              string path,

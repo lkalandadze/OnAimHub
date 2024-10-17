@@ -6,6 +6,10 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class AuditLog
 {
+    public AuditLog()
+    {
+        
+    }
     public AuditLog(string action, int? objectId, string? objectt, int userId, string log, string category)
     {
         Action = action;

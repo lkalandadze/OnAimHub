@@ -1,25 +1,62 @@
 ﻿using FluentValidation;
+using MockQueryable;
 using Moq;
 using OnAim.Admin.APP.Feature.UserFeature.Commands.Activate;
 using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.APP.Services.AuthServices;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
+using OnAim.Admin.APP.Services.User;
+using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Domain.Exceptions;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Domain.Interfaces;
+using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
+using System.Linq.Expressions;
 
 namespace OnAim.Admin.Test.User;
 
 public class ActivateAccountCommandHandlerTest
 {
-    protected readonly Mock<IUserService> MockService;
+    private readonly UserService _userService;
     protected readonly Mock<IValidator<ActivateAccountCommand>> MockValidator;
     protected readonly Mock<ISecurityContextAccessor> MockSecurityContextAccessor;
+    private readonly Mock<IRepository<Admin.Domain.Entities.User>> _mockUserRepository;
+
+    private readonly Mock<IPasswordService> _mockPasswordService;
+    private readonly Mock<IRepository<Admin.Domain.Entities.Role>> _mockRoleRepository;
+    private readonly Mock<IConfigurationRepository<UserRole>> _mockConfigurationRepository;
+    private readonly Mock<IJwtFactory> _mockJwtFactory;
+    private readonly Mock<IOtpService> _mockOtpService;
+    private readonly Mock<IEmailService> _mockEmailService;
+    private readonly Mock<IDomainValidationService> _mockDomainValidationService;
+    private readonly Mock<ILogRepository> _mockLogRepository;
 
     public ActivateAccountCommandHandlerTest()
     {
-        MockService = new Mock<IUserService>();
+        _mockUserRepository = new Mock<IRepository<Admin.Domain.Entities.User>>();
         MockValidator = new Mock<IValidator<ActivateAccountCommand>>();
         MockSecurityContextAccessor = new Mock<ISecurityContextAccessor>();
+        _mockPasswordService = new Mock<IPasswordService>();
+        _mockRoleRepository = new Mock<IRepository<Admin.Domain.Entities.Role>>();
+        _mockConfigurationRepository = new Mock<IConfigurationRepository<UserRole>>();
+        _mockJwtFactory = new Mock<IJwtFactory>();
+        _mockOtpService = new Mock<IOtpService>();
+        _mockEmailService = new Mock<IEmailService>();
+        _mockDomainValidationService = new Mock<IDomainValidationService>();
+        _mockLogRepository = new Mock<ILogRepository>();
 
+        _userService = new UserService(
+            _mockUserRepository.Object,
+            _mockPasswordService.Object, 
+            _mockRoleRepository.Object, 
+            _mockConfigurationRepository.Object, 
+            _mockJwtFactory.Object,
+            _mockOtpService.Object,
+            _mockEmailService.Object,
+            _mockDomainValidationService.Object,
+            _mockLogRepository.Object, 
+            MockSecurityContextAccessor.Object
+            );
 
         MockSecurityContextAccessor
              .Setup(x => x.UserId)
@@ -31,60 +68,75 @@ public class ActivateAccountCommandHandlerTest
     }
 
     [Fact]
-    public async Task Handle_ShouldActivateAccount_WhenCodeIsCorrect()
+    public async Task ActivateAccount_ValidCode_ActivatesAccount()
     {
-        var command = new ActivateAccountCommand("test@example.com", "valid-code");
-        var user = new OnAim.Admin.Domain.Entities.User
+        var email = "test@example.com";
+        var code = "123456";
+        var user = new Admin.Domain.Entities.User
         {
-            Email = "test@example.com",
-            VerificationCode = "valid-code",
-            VerificationCodeExpiration = DateTime.UtcNow.AddMinutes(5),
-            IsActive = false,
-            IsVerified = false
+            Email = email,
+            VerificationCode = code,
+            VerificationCodeExpiration = DateTime.UtcNow.AddMinutes(10),
+            IsDeleted = false
         };
 
-        MockService.Setup(s => s.ActivateAccount(command.Email, command.Code)).ReturnsAsync(new ApplicationResult { Success = true });
-        var result = await MockService.Object.ActivateAccount(command.Email, command.Code);
+        _mockUserRepository
+            .Setup(x => x.Query(It.IsAny<Expression<Func<OnAim.Admin.Domain.Entities.User, bool>>>()))
+            .Returns(new[] { user }.AsQueryable().BuildMock());
+
+        var result = await _userService.ActivateAccount(email, code);
 
         Assert.True(result.Success);
         Assert.Equal("Account activated successfully.", result.Data);
+        Assert.True(user.IsActive);
+        Assert.True(user.IsVerified);
+        Assert.Null(user.VerificationCode);
+        Assert.Null(user.VerificationCodeExpiration);
     }
 
     [Fact]
-    public async Task Handle_ShouldThrowBadRequest_WhenCodeIsIncorrect()
+    public async Task ActivateAccount_InvalidCode_ThrowsBadRequestException()
     {
-        var command = new ActivateAccountCommand("test@example.com","invalid-code");
-        var user = new OnAim.Admin.Domain.Entities.User
+        var email = "test@example.com";
+        var code = "wrong_code";
+        var user = new Admin.Domain.Entities.User
         {
-            Email = "test@example.com",
-            VerificationCode = "valid-code",
-            VerificationCodeExpiration = DateTime.UtcNow.AddMinutes(5),
-            IsActive = false,
-            IsVerified = false
+            Email = email,
+            VerificationCode = "123456",
+            VerificationCodeExpiration = DateTime.UtcNow.AddMinutes(10),
+            IsDeleted = false
         };
 
-        MockService.Setup(s => s.ActivateAccount(command.Email, command.Code)).ThrowsAsync(new BadRequestException("Invalid activation code."));
+        _mockUserRepository
+            .Setup(x => x.Query(It.IsAny<Expression<Func<OnAim.Admin.Domain.Entities.User, bool>>>()))
+            .Returns(new[] { user }.AsQueryable().BuildMock());
 
-        var exception = await Assert.ThrowsAsync<BadRequestException>(() => MockService.Object.ActivateAccount(command.Email, command.Code));
+        var exception = await Assert.ThrowsAsync<BadRequestException>(
+            () => _userService.ActivateAccount(email, code));
+
         Assert.Equal("Invalid activation code.", exception.Message);
     }
 
     [Fact]
-    public async Task Handle_ShouldThrowBadRequest_WhenCodeHasExpired()
+    public async Task ActivateAccount_ExpiredCode_ThrowsBadRequestException()
     {
-        var command = new ActivateAccountCommand("test@example.com", "valid-code");
-        var user = new OnAim.Admin.Domain.Entities.User
+        var email = "test@example.com";
+        var code = "123456";
+        var user = new Admin.Domain.Entities.User
         {
-            Email = "test@example.com",
-            VerificationCode = "valid-code",
-            VerificationCodeExpiration = DateTime.UtcNow.AddMinutes(-5),
-            IsActive = false,
-            IsVerified = false
+            Email = email,
+            VerificationCode = code,
+            VerificationCodeExpiration = DateTime.UtcNow.AddMinutes(-10),
+            IsDeleted = false
         };
 
-        MockService.Setup(s => s.ActivateAccount(command.Email, command.Code)).ThrowsAsync(new BadRequestException("Activation code has expired."));
+        _mockUserRepository
+            .Setup(x => x.Query(It.IsAny<Expression<Func<OnAim.Admin.Domain.Entities.User, bool>>>()))
+            .Returns(new[] { user }.AsQueryable().BuildMock());
 
-        var exception = await Assert.ThrowsAsync<BadRequestException>(() => MockService.Object.ActivateAccount(command.Email, command.Code));
+        var exception = await Assert.ThrowsAsync<BadRequestException>(
+            () => _userService.ActivateAccount(email, code));
+
         Assert.Equal("Activation code has expired.", exception.Message);
     }
 }

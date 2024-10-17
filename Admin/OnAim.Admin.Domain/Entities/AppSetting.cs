@@ -5,6 +5,10 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class AppSetting : BaseEntity
 {
+    public AppSetting()
+    {
+        
+    }
     public AppSetting(string key, string value)
     {
         Key = key;
