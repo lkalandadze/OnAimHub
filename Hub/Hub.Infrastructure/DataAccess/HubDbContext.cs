@@ -31,6 +31,9 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<ReferralDistribution> ReferralDistributions { get; set; }
     public DbSet<Setting> Settings { get; set; }
     public DbSet<PlayerBan> PlayerBans { get; set; }
+    public DbSet<Act> Acts { get; set; }
+    public DbSet<Level> Levels { get; set; }
+    public DbSet<LevelPrize> LevelPrizes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

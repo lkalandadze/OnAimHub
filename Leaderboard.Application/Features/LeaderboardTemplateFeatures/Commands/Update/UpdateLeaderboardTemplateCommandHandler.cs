@@ -1,5 +1,4 @@
-﻿using Leaderboard.Application.Features.LeaderboardRecordFeatures.Commands.Update;
-using Leaderboard.Domain.Abstractions.Repository;
+﻿using Leaderboard.Domain.Abstractions.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
