@@ -18,7 +18,7 @@ public class CreateRewardHandler : IRequestHandler<CreateRewardCommand>
 
     public async Task<Unit> Handle(CreateRewardCommand request, CancellationToken cancellationToken)
     {
-        var prizes = request.Prizes.Select(p => new RewardPrize(p.Value));
+        var prizes = request.Prizes.Select(p => new RewardPrize(p.Amount, p.CurrencyId));
 
         var reward = new Reward(request.PlayerId, request.SourceId, prizes);
 
