@@ -67,6 +67,7 @@ public class Startup
         services.AddScoped<IReferralDistributionRepository, ReferralDistributionRepository>();
         services.AddScoped<ISettingRepository, SettingRepository>();
         services.AddScoped<IPlayerBanRepository, PlayerBanRepository>();
+        services.AddScoped<IRewardRepository, PrizeClaimRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddSingleton<IActiveGameService, ActiveGameService>();

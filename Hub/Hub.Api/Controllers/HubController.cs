@@ -5,6 +5,9 @@ using Hub.Application.Features.IdentityFeatures.Commands.RefreshTokens;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerBalance;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerProgress;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPromoCode;
+using Hub.Application.Features.RewardFeatures.Commands.ClaimReward;
+using Hub.Application.Features.RewardFeatures.Dtos;
+using Hub.Application.Features.RewardFeatures.Queries.GetPlayerRewards;
 using Hub.Application.Models.Game;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,7 +19,7 @@ namespace Hub.Api.Controllers;
 
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiExplorerSettings(GroupName = "hub")]
-public class HubController : BaseApiController 
+public class HubController : BaseApiController
 {
     #region Authentification
 
@@ -70,6 +73,22 @@ public class HubController : BaseApiController
     public async Task<string> GetPromoCode([FromQuery] GetPromoCodeQuery request)
     {
         return await Mediator.Send(request);
+    }
+
+    #endregion
+
+    #region Rewards
+
+    [HttpGet(nameof(PlayerRewards))]
+    public async Task<ActionResult<PagedResponse<RewardDtoModel>>> PlayerRewards()
+    {
+        return Ok(await Mediator.Send(new GetPlayerRewardsQuery()));
+    }
+
+    [HttpPost(nameof(ClaimReward))]
+    public async Task<ActionResult> ClaimReward(ClaimRewardCommand request)
+    {
+        return Ok(await Mediator.Send(request));
     }
 
     #endregion
