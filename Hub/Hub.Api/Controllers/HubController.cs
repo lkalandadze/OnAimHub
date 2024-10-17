@@ -4,6 +4,7 @@ using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationTok
 using Hub.Application.Features.IdentityFeatures.Commands.RefreshTokens;
 using Hub.Application.Features.LevelFeatures.Commands.Create;
 using Hub.Application.Features.LevelFeatures.Commands.Update;
+using Hub.Application.Features.LevelFeatures.Queries.Get;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerBalance;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerProgress;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPromoCode;
@@ -80,8 +81,12 @@ public class HubController : BaseApiController
     [HttpPost(nameof(CreateLevels))]
     public async Task<ActionResult<Unit>> CreateLevels([FromBody] CreateLevelCommand request) => await Mediator.Send(request);
 
+    //[AllowAnonymous]
+    //[HttpPut(nameof(UpdateLevels))]
+    //public async Task<ActionResult<Unit>> UpdateLevels([FromBody] UpdateLevelCommand request) => await Mediator.Send(request);
+
     [AllowAnonymous]
-    [HttpPut(nameof(UpdateLevels))]
-    public async Task<ActionResult<Unit>> UpdateLevels([FromBody] UpdateLevelCommand request) => await Mediator.Send(request);
+    [HttpGet(nameof(GetLevels))]
+    public async Task<GetLevelsQueryResponse> GetLevels([FromQuery] GetLevelsQuery request) => await Mediator.Send(request);
 
 }
