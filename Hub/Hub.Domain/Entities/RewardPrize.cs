@@ -12,17 +12,17 @@ public class RewardPrize : BaseEntity<int>
         
     }
 
-    public RewardPrize(int amount, int currencyId)
+    public RewardPrize(int value, string prizeTypeId)
     {
-        Amount = amount;
-        CurrencyId = currencyId;
+        Value = value;
+        PrizeTypeId = prizeTypeId;
     }
 
-    public int Amount { get; private set; }
+    public int Value { get; private set; }
 
     public int RewardId { get; private set; }
     public Reward Reward { get; private set; }
 
-    public int CurrencyId { get; private set; }
-    public Currency Currency { get; private set; }
+    public string PrizeTypeId { get; private set; }
+    public PrizeType PrizeType { get; private set; }
 }
