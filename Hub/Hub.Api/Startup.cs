@@ -70,6 +70,7 @@ public class Startup
         services.AddScoped<IActRepository, ActRepository>();
         services.AddScoped<ILevelRepository, LevelRepository>();
         services.AddScoped<ILevelPrizeRepository, LevelPrizeRepository>();
+        services.AddScoped<IRewardRepository, PrizeClaimRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddSingleton<IActiveGameService, ActiveGameService>();

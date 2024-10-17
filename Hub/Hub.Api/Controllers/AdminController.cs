@@ -3,14 +3,16 @@ using Hub.Application.Features.GameFeatures.Queries.GetAllGame;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Create;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Revoke;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Update;
-using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentToPlayer;
+using Hub.Application.Features.PrizeClaimFeatures.Commands.CreateReward;
+using Hub.Application.Features.PrizeClaimFeatures.Commands.DeleteReward;
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentsToPlayers;
+using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentToPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.BlockSegmentForPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.BlockSegmentsForPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.CreateSegment;
 using Hub.Application.Features.SegmentFeatures.Commands.DeleteSegment;
-using Hub.Application.Features.SegmentFeatures.Commands.UnassignSegmentToPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.UnassignSegmentsToPlayers;
+using Hub.Application.Features.SegmentFeatures.Commands.UnassignSegmentToPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentForPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentsForPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.UpdateSegment;
@@ -152,6 +154,22 @@ public class AdminController : BaseApiController
         _ = await Mediator.Send(new DeleteSegmentCommand(id));
 
         return Ok();
+    }
+
+    #endregion
+
+    #region Rewards
+
+    [HttpPost(nameof(CreateReward))]
+    public async Task<ActionResult> CreateReward(CreateRewardCommand request)
+    {
+        return Ok(await Mediator.Send(request));
+    }
+
+    [HttpPost(nameof(DeleteReward))]
+    public async Task<ActionResult> DeleteReward(DeleteRewardCommand request)
+    {
+        return Ok(await Mediator.Send(request));
     }
 
     #endregion
