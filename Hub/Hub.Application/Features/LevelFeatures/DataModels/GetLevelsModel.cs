@@ -29,7 +29,7 @@ public sealed record GetLevelsModel
                 {
                     Id = prize.Id,
                     Amount = prize.Amount,
-                    CurrencyId = prize.CurrencyId,
+                    PrizeTypeId = prize.PrizeTypeId,
                     PrizeDeliveryType = prize.PrizeDeliveryType
                 }).ToList()
             }).ToList()
@@ -48,7 +48,7 @@ public sealed record GetLevelsModel
     {
         public int Id { get; set; }
         public int Amount { get; set; }
-        public string CurrencyId { get; set; }
+        public string PrizeTypeId { get; set; }
         public PrizeDeliveryType PrizeDeliveryType { get; set; }
     }
 }

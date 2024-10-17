@@ -25,6 +25,6 @@ public class CreateLevelModel
 public class CreateLevelPrizeModel
 {
     public int Amount { get; set; }
-    public string CurrencyId { get; set; }
+    public string PrizeTypeId { get; set; }
     public PrizeDeliveryType PrizeDeliveryType { get; set; }
 }
