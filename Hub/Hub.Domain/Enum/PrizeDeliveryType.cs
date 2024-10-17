@@ -1,6 +1,6 @@
 ﻿namespace Hub.Domain.Enum;
 
-public enum PrizeType
+public enum PrizeDeliveryType
 {
     Onetime = 0,
     Activation = 1,

@@ -23,7 +23,7 @@ public class Level : BaseEntity<int>
     }
 
 
-    public void UpdateLevelPrizes(int id, int amount, string currencyId, PrizeType prizeType)
+    public void UpdateLevelPrizes(int id, int amount, string currencyId, PrizeDeliveryType prizeType)
     {
         var prize = LevelPrizes.FirstOrDefault(x => x.Id == id);
 

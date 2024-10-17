@@ -32,7 +32,7 @@ public class UpdateLevelCommandHandler : IRequestHandler<UpdateLevelCommand>
             {
                 foreach (var prizeModel in levelModel.Prize)
                 {
-                    level.UpdateLevelPrizes(prizeModel.Id, prizeModel.Amount, prizeModel.CurrencyId, prizeModel.PrizeType);
+                    level.UpdateLevelPrizes(prizeModel.Id, prizeModel.Amount, prizeModel.CurrencyId, prizeModel.PrizeDeliveryType);
                 }
             }
         }
