@@ -1,17 +1,18 @@
 ﻿#nullable disable
 
+using Hub.Domain.Entities.DbEnums;
 using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;
 
-public class Prize : BaseEntity<int>
+public class RewardPrize : BaseEntity<int>
 {
-    public Prize()
+    public RewardPrize()
     {
         
     }
 
-    public Prize(int value)
+    public RewardPrize(int value)
     {
         Value = value;
     }
@@ -20,6 +21,9 @@ public class Prize : BaseEntity<int>
 
     public int RewardId { get; private set; }
     public Reward Reward { get; private set; }
+
+    public int CurrencyId { get; private set; }
+    public Currency Currency { get; private set; }
 
     public void ChangeDetails(int value, int probability, int prizeTypeId)
     {

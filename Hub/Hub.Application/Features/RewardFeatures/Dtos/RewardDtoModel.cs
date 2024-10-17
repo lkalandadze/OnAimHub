@@ -8,7 +8,7 @@ namespace Hub.Application.Features.RewardFeatures.Dtos;
 public class RewardDtoModel : RewardBaseDtoModel
 {
     public PlayerBaseDtoModel Player { get; set; }
-    public IEnumerable<Prize> Prizes { get; set; }
+    public IEnumerable<RewardPrize> Prizes { get; set; }
 
     public static RewardDtoModel MapFrom(Reward reward, bool includeNavProperties = true)
     {

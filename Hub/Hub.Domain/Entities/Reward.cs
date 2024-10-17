@@ -12,7 +12,7 @@ public class Reward : BaseEntity<int>
         
     }
 
-    public Reward(int playerId, int sourceId, IEnumerable<Prize> prizes)
+    public Reward(int playerId, int sourceId, IEnumerable<RewardPrize> prizes)
     {
         PlayerId = playerId;
         SourceId = sourceId;
@@ -33,7 +33,7 @@ public class Reward : BaseEntity<int>
     public int SourceId { get; private set; }
     public RewardSource Source { get; private set; }
 
-    public ICollection<Prize> Prizes { get; private set; }
+    public ICollection<RewardPrize> Prizes { get; private set; }
 
     public void SetAsClaimed()
     {

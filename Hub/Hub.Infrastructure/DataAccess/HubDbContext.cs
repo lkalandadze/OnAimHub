@@ -32,7 +32,7 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<Setting> Settings { get; set; }
     public DbSet<PlayerBan> PlayerBans { get; set; }
     public DbSet<Reward> Rewards { get; set; }
-    public DbSet<Prize> Prizes { get; set; }
+    public DbSet<RewardPrize> RewardPrizes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
