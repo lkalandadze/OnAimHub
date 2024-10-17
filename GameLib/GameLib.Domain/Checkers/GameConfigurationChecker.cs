@@ -17,5 +17,9 @@ public class GameConfigurationChecker : Checkmate<GameConfiguration>
         Check(x => x.Value)
            .GreaterThan(0)
            .WithMessage("The value must be positive");
+
+        Check(x => x.Prices)
+           .SetCondition(x => x.Sum(x => x.Value) == 100)
+           .WithMessage("The sum of configuration price values should be a 100.");
     }
 }

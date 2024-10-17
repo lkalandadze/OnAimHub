@@ -1,5 +1,6 @@
 ﻿using Consul;
 using GameLib.Application.Controllers;
+using GameLib.Application.Services.Concrete;
 using GameLib.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,10 +25,16 @@ public class TestController : BaseApiController
     [HttpPost("AddConfigTest")]
     public ActionResult AddConfigTest()
     {
-        var price = new Price(-1, -34, string.Empty);
-        var segment = new Segment("S");
+        var prices = new List<Price>
+        {
+            new Price(1, 5, string.Empty),
+            new Price(2, 10, string.Empty),
+            new Price(3, 15, string.Empty),
+        };
 
-        var config = new WheelConfiguration("1", -3, [price], [segment]);
+        var segment = new Segment("Segment 1");
+
+        var config = new WheelConfiguration("Wheel Configuration", 10, prices: prices, segments: [segment]);
 
         //var rootContainers = CheckmateValidations.Checkmate.GetRootCheckContainers(config.GetType());
 
