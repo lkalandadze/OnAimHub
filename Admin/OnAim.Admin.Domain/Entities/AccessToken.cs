@@ -5,6 +5,10 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class AccessToken : BaseEntity
 {
+    public AccessToken()
+    {
+        
+    }
     public AccessToken(int userId, string token, DateTime expiration)
     {
         UserId = userId;

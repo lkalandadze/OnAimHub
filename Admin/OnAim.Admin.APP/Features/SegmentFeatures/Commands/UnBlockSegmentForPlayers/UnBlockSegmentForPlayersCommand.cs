@@ -4,4 +4,4 @@ using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnBlockSegmentForPlayers;
 
-public record UnBlockSegmentForPlayersCommand(string SegmentId, IFormFile File) : ICommand<ApplicationResult>;
+public record UnBlockSegmentForPlayersCommand(IEnumerable<string> SegmentId, IFormFile File) : ICommand<ApplicationResult>;

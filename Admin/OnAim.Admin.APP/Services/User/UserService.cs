@@ -722,6 +722,26 @@ public class UserService : IUserService
         if (filter.RoleIds?.Any() == true)
             query = query.Where(x => x.UserRoles.Any(ur => filter.RoleIds.Contains(ur.RoleId)));
 
+        bool sortDescending = filter.SortDescending.GetValueOrDefault();
+        if (filter.SortBy == "Id" || filter.SortBy == "id")
+        {
+            query = sortDescending
+                ? query.OrderByDescending(x => x.Id)
+                : query.OrderBy(x => x.Id);
+        }
+        else if (filter.SortBy == "Name" || filter.SortBy == "name")
+        {
+            query = sortDescending
+                ? query.OrderByDescending(x => x.FirstName)
+                : query.OrderBy(x => x.FirstName);
+        }
+        else if (filter.SortBy == "LastName" || filter.SortBy == "lastName")
+        {
+            query = sortDescending
+                ? query.OrderByDescending(x => x.LastName)
+                : query.OrderBy(x => x.LastName);
+        }
+
         var paginatedResult = await Paginator.GetPaginatedResult(
             query,
             filter,

@@ -5,6 +5,10 @@ namespace OnAim.Admin.Domain.Entities;
 
 public class Role : BaseEntity
 {
+    public Role()
+    {
+        
+    }
     public Role(string name, string description, int? createdBy)
     {
         Name = name;

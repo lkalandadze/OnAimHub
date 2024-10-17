@@ -79,7 +79,7 @@ public class SegmentController : ApiControllerBase
         => Ok(await Mediator.Send(command));
 
     [HttpPost(nameof(AssignSegmentToPlayers))]
-    public async Task<IActionResult> AssignSegmentToPlayers(IFormFile formFile, [FromForm] string segmentId)
+    public async Task<IActionResult> AssignSegmentToPlayers(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
     {
         try
         {
@@ -97,7 +97,7 @@ public class SegmentController : ApiControllerBase
     }
 
     [HttpPost(nameof(UnAssignPlayersToSegment))]
-    public async Task<IActionResult> UnAssignPlayersToSegment(IFormFile formFile, [FromForm] string segmentId)
+    public async Task<IActionResult> UnAssignPlayersToSegment(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
     {
         try
         {
@@ -123,7 +123,7 @@ public class SegmentController : ApiControllerBase
         => Ok(await Mediator.Send(command));
 
     [HttpPost(nameof(BlockSegmentForPlayers))]
-    public async Task<IActionResult> BlockSegmentForPlayers(IFormFile formFile, [FromForm] string segmentId)
+    public async Task<IActionResult> BlockSegmentForPlayers(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
     {
         try
         {
@@ -141,7 +141,7 @@ public class SegmentController : ApiControllerBase
     }
 
     [HttpPost(nameof(UnBlockSegmentForPlayers))]
-    public async Task<IActionResult> UnBlockSegmentForPlayers(IFormFile formFile, [FromForm] string segmentId)
+    public async Task<IActionResult> UnBlockSegmentForPlayers(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
     {
         try
         {

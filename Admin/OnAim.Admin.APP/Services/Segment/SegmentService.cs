@@ -47,7 +47,7 @@ public class SegmentService : ISegmentService
         _options = options.Value;
     }
 
-    public async Task<ApplicationResult> AssignSegmentToPlayers(string segmentId, IFormFile file)
+    public async Task<ApplicationResult> AssignSegmentToPlayers(IEnumerable<string> segmentIds, IFormFile file)
     {
         using var multipartContent = new MultipartFormDataContent();
 
@@ -58,10 +58,10 @@ public class SegmentService : ISegmentService
             multipartContent.Add(fileContent, "file", file.FileName);
         }
 
-        multipartContent.Add(new StringContent(segmentId), "SegmentId");
+        multipartContent.Add(new StringContent(string.Join(",", segmentIds)), "SegmentIds");
         multipartContent.Add(new StringContent(_securityContextAccessor.UserId.ToString()), "ByUserId");
 
-        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/AssignSegmentToPlayers?segmentId={segmentId}", multipartContent);
+        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/AssignSegmentsToPlayers", multipartContent);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -98,7 +98,7 @@ public class SegmentService : ISegmentService
         throw new Exception("Failed to assign segment");
     }
 
-    public async Task<ApplicationResult> BlockSegmentForPlayers(string segmentId, IFormFile file)
+    public async Task<ApplicationResult> BlockSegmentForPlayers(IEnumerable<string> segmentIds, IFormFile file)
     {
         using var multipartContent = new MultipartFormDataContent();
 
@@ -109,10 +109,10 @@ public class SegmentService : ISegmentService
             multipartContent.Add(fileContent, "file", file.FileName);
         }
 
-        multipartContent.Add(new StringContent(segmentId), "SegmentId");
+        multipartContent.Add(new StringContent(string.Join(",", segmentIds)), "SegmentIds");
         multipartContent.Add(new StringContent(_securityContextAccessor.UserId.ToString()), "ByUserId");
 
-        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/BlockSegmentForPlayers?segmentId={segmentId}", multipartContent);
+        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/BlockSegmentsForPlayers", multipartContent);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -178,7 +178,7 @@ public class SegmentService : ISegmentService
         throw new Exception("Failed to delete segment");
     }
 
-    public async Task<ApplicationResult> UnAssignPlayersToSegment(string segmentId, IFormFile file)
+    public async Task<ApplicationResult> UnAssignPlayersToSegment(IEnumerable<string> segmentIds, IFormFile file)
     {
         using var multipartContent = new MultipartFormDataContent();
 
@@ -189,10 +189,10 @@ public class SegmentService : ISegmentService
             multipartContent.Add(fileContent, "file", file.FileName);
         }
 
-        multipartContent.Add(new StringContent(segmentId), "SegmentId");
+        multipartContent.Add(new StringContent(string.Join(",", segmentIds)), "SegmentIds");
         multipartContent.Add(new StringContent(_securityContextAccessor.UserId.ToString()), "ByUserId");
 
-        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/UnassignSegmentToPlayers?segmentId={segmentId}", multipartContent);
+        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/UnassignSegmentsToPlayers", multipartContent);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -245,7 +245,7 @@ public class SegmentService : ISegmentService
         throw new Exception("Failed to unblock segment for player");
     }
 
-    public async Task<ApplicationResult> UnBlockSegmentForPlayers(string segmentId, IFormFile file)
+    public async Task<ApplicationResult> UnBlockSegmentForPlayers(IEnumerable<string> segmentIds, IFormFile file)
     {
         using var multipartContent = new MultipartFormDataContent();
 
@@ -256,10 +256,10 @@ public class SegmentService : ISegmentService
             multipartContent.Add(fileContent, "file", file.FileName);
         }
 
-        multipartContent.Add(new StringContent(segmentId), "SegmentId");
+        multipartContent.Add(new StringContent(string.Join(",", segmentIds)), "SegmentIds");
         multipartContent.Add(new StringContent(_securityContextAccessor.UserId.ToString()), "ByUserId");
 
-        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/UnblockSegmentForPlayers?segmentId={segmentId}", multipartContent);
+        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/UnblockSegmentsForPlayers", multipartContent);
 
         if (!response.IsSuccessStatusCode)
         {

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Shared.DTOs.Base;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace OnAim.Admin.Shared.Paging;
 
@@ -21,10 +20,6 @@ public class Paginator
         var sortBy = filter.SortBy?.ToLower();
         var sortableFieldList = sortableFields;
 
-        Expression<Func<TEntity, object>> sortExpression = CreateSortExpression<TEntity>(sortBy);
-
-        query = sortDescending ? query.OrderByDescending(sortExpression) : query.OrderBy(sortExpression);
-
         var totalCount = await query.CountAsync();
 
         var items = await query
@@ -41,20 +36,5 @@ public class Paginator
             Items = items,
             SortableFields = sortableFields,
         };
-    }
-
-    private static Expression<Func<TEntity, object>> CreateSortExpression<TEntity>(string sortBy)
-    {
-        var parameter = Expression.Parameter(typeof(TEntity), "x");
-
-        var property = typeof(TEntity).GetProperty(sortBy, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-
-        if (property == null)
-        {
-            throw new ArgumentException($"Property '{sortBy}' is not defined for type '{typeof(TEntity).Name}'.");
-        }
-
-        var propertyAccess = Expression.MakeMemberAccess(parameter, property);
-        return Expression.Lambda<Func<TEntity, object>>(Expression.Convert(propertyAccess, typeof(object)), parameter);
     }
 }

@@ -160,10 +160,7 @@ public class HubApiClient : IHubApiClient
 
     }
 
-    public async Task<HttpResponseMessage> Delete(
-            string uri,
-            CancellationToken ct = default
-        )
+    public async Task<HttpResponseMessage> Delete(string uri,CancellationToken ct = default)
     {
         var res = await _httpClient.DeleteAsync(
             uri,
@@ -188,8 +185,6 @@ public class HubApiClient : IHubApiClient
 
         return response;
     }
-
-
 
     private string Serialize(object obj)
         => JsonConvert.SerializeObject(

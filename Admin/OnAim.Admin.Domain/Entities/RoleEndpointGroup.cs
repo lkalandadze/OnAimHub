@@ -2,6 +2,10 @@
 
 public class RoleEndpointGroup
 {
+    public RoleEndpointGroup()
+    {
+        
+    }
     public RoleEndpointGroup(int roleId, int endpointGroupId)
     {
         RoleId = roleId;

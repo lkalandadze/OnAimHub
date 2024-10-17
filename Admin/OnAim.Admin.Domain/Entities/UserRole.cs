@@ -2,6 +2,10 @@
 
 public class UserRole
 {
+    public UserRole()
+    {
+        
+    }
     public UserRole(int userId, int roleId)
     {
         UserId = userId;

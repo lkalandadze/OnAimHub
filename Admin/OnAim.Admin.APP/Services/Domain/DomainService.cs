@@ -107,6 +107,20 @@ public class DomainService : IDomainService
             }
         }
 
+        bool sortDescending = filter.SortDescending.GetValueOrDefault();
+        if (filter.SortBy == "Id" || filter.SortBy == "id")
+        {
+            domains = sortDescending
+                ? domains.OrderByDescending(x => x.Id)
+                : domains.OrderBy(x => x.Id);
+        }
+        else if (filter.SortBy == "Domain" || filter.SortBy == "domain")
+        {
+            domains = sortDescending
+                ? domains.OrderByDescending(x => x.Domain)
+                : domains.OrderBy(x => x.Domain);
+        }
+
         var paginatedResult = await Paginator.GetPaginatedResult(
             domains,
             filter,

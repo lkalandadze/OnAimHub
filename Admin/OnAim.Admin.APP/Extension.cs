@@ -33,6 +33,7 @@ using OnAim.Admin.APP.Services.EndpointGroup;
 using OnAim.Admin.APP.Services.Role;
 using OnAim.Admin.APP.Services.Segment;
 using OnAim.Admin.APP.Services.Player;
+using OnAim.Admin.APP.Services.Game;
 
 
 namespace OnAim.Admin.APP;
@@ -59,6 +60,7 @@ public static class Extension
             .AddScoped<IEndpointGroupService, EndpointGroupService>()
             .AddScoped<IRoleService, RoleService>()
             .AddScoped<IDomainService, DomainService>()
+            .AddScoped<IGameService, GameService>()
             .AddScoped<ISegmentService, SegmentService>()
             .AddScoped<IPlayerService, PlayerService>()
             .AddTransient<IJwtFactory, JwtFactory>()

@@ -6,6 +6,10 @@ namespace OnAim.Admin.Domain.Entities;
 
 public abstract class FailureLog
 {
+    protected FailureLog()
+    {
+        
+    }
     protected FailureLog(string action, int userId, int? objectId, string? objectt, string log, string errorMessage, int retryCount)
     {
         Action = action;
