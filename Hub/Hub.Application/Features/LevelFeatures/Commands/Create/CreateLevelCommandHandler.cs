@@ -22,7 +22,7 @@ public class CreateLevelCommandHandler : IRequestHandler<CreateLevelCommand>
             Status = request.Act.Status,
             Levels = request.Act.Level.Select(l => new Level(l.Number, l.ExperienceToArchive)
             {
-                LevelPrizes = l.Prize.Select(p => new LevelPrize(p.Amount, p.CurrencyId, p.PrizeDeliveryType)).ToList()
+                LevelPrizes = l.Prize.Select(p => new LevelPrize(p.Amount, p.PrizeTypeId, p.PrizeDeliveryType)).ToList()
             }).ToList()
         };
 
