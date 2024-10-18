@@ -7,6 +7,7 @@ namespace GameLib.Application.Services.Concrete;
 public class ConsulGameService : IConsulGameService
 {
     private readonly IConsulClient? _consulClient;
+
     public ConsulGameService(IConsulClient? consulClient)
     {
         _consulClient = consulClient;
