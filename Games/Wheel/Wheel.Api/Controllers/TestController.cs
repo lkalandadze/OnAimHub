@@ -1,10 +1,7 @@
-﻿using Consul;
-using GameLib.Application.Controllers;
-using GameLib.Application.Services.Concrete;
+﻿using GameLib.Application.Controllers;
 using GameLib.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Concurrent;
 using System.Text.Json;
 using Wheel.Domain.Entities;
@@ -27,14 +24,38 @@ public class TestController : BaseApiController
     {
         var prices = new List<Price>
         {
-            new Price(1, 5, string.Empty),
+            new Price(1, 5, "OnAimCoin"),
             new Price(2, 10, string.Empty),
-            new Price(3, 15, string.Empty),
+            new Price(3, 15, "OnAimCoin"),
         };
 
-        var segment = new Segment("Segment 1");
+        var segments = new List<Segment>
+        {
+            new Segment("Segment 1"),
+            new Segment("Segment 2"),
+        };
 
-        var config = new WheelConfiguration("Wheel Configuration", 10, prices: prices, segments: [segment]);
+        var prizes1 = new List<WheelPrize>
+        {
+            new WheelPrize("R1 P1", 1) { Value = 1, Probability = 10 },
+            new WheelPrize("R1 P2", 2) { Value = 2, Probability = 20 },
+            new WheelPrize("R1 P3", 3) { Value = 3, Probability = 30 },
+        };
+
+        var prizes2 = new List<WheelPrize>
+        {
+            new WheelPrize("R2 P1", 1) { Value = 1, Probability = 15 },
+            new WheelPrize("R2 P2", 2) { Value = 2, Probability = 25 },
+            new WheelPrize("R2 P3", 3) { Value = 3, Probability = 35 },
+        };
+
+        var rounds = new List<Round>
+        {
+            new Round("R1", prizes1),
+            new Round("R2", prizes2),
+        };
+
+        var config = new WheelConfiguration("Wheel Configuration", 10, prices: prices, segments: segments, rounds: rounds);
 
         //var rootContainers = CheckmateValidations.Checkmate.GetRootCheckContainers(config.GetType());
 

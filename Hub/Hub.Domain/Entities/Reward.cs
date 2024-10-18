@@ -12,10 +12,11 @@ public class Reward : BaseEntity<int>
         
     }
 
-    public Reward(int playerId, int sourceId, IEnumerable<RewardPrize> prizes)
+    public Reward(int playerId, int sourceId, DateTime expirationDate, IEnumerable<RewardPrize> prizes)
     {
         PlayerId = playerId;
         SourceId = sourceId;
+        ExpirationDate = expirationDate;
         Prizes = prizes?.ToList();
         IsClaimed = false;
         IsDeleted = false;
@@ -26,6 +27,7 @@ public class Reward : BaseEntity<int>
     public bool IsDeleted { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? ClaimedAt { get; private set; }
+    public DateTime ExpirationDate { get; private set; }
 
     public int PlayerId { get; private set; }
     public Player Player { get; private set; }
