@@ -1,4 +1,6 @@
-﻿using Hub.Api.Models.Segments;
+﻿using Hub.Api.Models.Games;
+using Hub.Api.Models.Segments;
+using Hub.Application.Features.GameFeatures.Dtos;
 using Hub.Application.Features.GameFeatures.Queries.GetAllGame;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Create;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Revoke;
@@ -24,6 +26,7 @@ using Hub.Application.Models.Game;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Lib.Wrappers;
 
 namespace Hub.Api.Controllers;
 
@@ -33,13 +36,13 @@ public class AdminController : BaseApiController
 {
     #region Games
 
-    [HttpGet(nameof(Games))]
-    public async Task<ActionResult<IEnumerable<ActiveGameModel>>> Games([FromForm] string? name, IEnumerable<string>? segmentIds)
+    [HttpGet(nameof(AllGames))]
+    public async Task<ActionResult<Response<IEnumerable<GameBaseDtoModel>>>> AllGames([FromQuery] GameRequestModel model)
     {
         var query = new GetAllGameQuery(false)
         {
-            Name = name,
-            SegmentIds = segmentIds,
+            Name = model.Name,
+            SegmentIds = model.SegmentIds,
         };
 
         return Ok(await Mediator.Send(query));
