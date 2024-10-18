@@ -1,6 +1,7 @@
 ﻿using Hub.Application.Features.RewardFeatures.Dtos;
 using Hub.Application.Services.Abstract;
 using Hub.Domain.Absractions.Repository;
+using Hub.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,12 +22,12 @@ public class GetPlayerRewardsQueryHandler : IRequestHandler<GetPlayerRewardsQuer
     {
         var playerId = _authService.GetCurrentPlayerId();
 
-        var rewards = await _rewardRepository.Query(r => r.PlayerId == playerId && !r.IsDeleted)
+        var rewards = await _rewardRepository.Query(r => r.PlayerId == playerId && !r.IsDeleted && !r.IsClaimed && r.ExpirationDate > DateTime.UtcNow)
+                                             .Include(r => r.Prizes)
                                              .Include(r => r.Source)
                                              .Include(r => r.Player)
-                                             .Include(r => r.Prizes)
                                              .ToListAsync();
-
+        
         return new GetPlayerRewardsQueryResponse
         {
             Succeeded = true,

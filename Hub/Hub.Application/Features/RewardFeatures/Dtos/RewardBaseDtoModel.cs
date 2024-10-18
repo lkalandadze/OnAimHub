@@ -11,7 +11,7 @@ public class RewardBaseDtoModel
     public bool IsClaimed { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? ClaimedAt { get; set; }
-    public RewardSource RewardSource { get; set; }
+    public string RewardSource { get; set; }
 
     public static RewardBaseDtoModel MapFrom(Reward reward)
     {
