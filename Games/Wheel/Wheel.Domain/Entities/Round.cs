@@ -13,10 +13,11 @@ public class Round : BasePrizeGroup<WheelPrize>
 {
     public Round()
     {
-        
+
     }
 
     public string Name { get; set; }
+    [JsonIgnore]
     public WheelConfiguration Configuration { get; set; }
     public ICollection<WheelPrize> Prizes { get; set; }
 }
