@@ -5,6 +5,8 @@ using Hub.Application.Features.PlayerBanFeatures.Commands.Revoke;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Update;
 using Hub.Application.Features.PrizeClaimFeatures.Commands.CreateReward;
 using Hub.Application.Features.PrizeClaimFeatures.Commands.DeleteReward;
+using Hub.Application.Features.ReferralFeatures.ReferralDistributionFeatures.Queries.Get;
+using Hub.Application.Features.ReferralFeatures.ReferralDistributionFeatures.Queries.GetById;
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentsToPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentToPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.BlockSegmentForPlayer;
@@ -16,7 +18,10 @@ using Hub.Application.Features.SegmentFeatures.Commands.UnassignSegmentToPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentForPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentsForPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.UpdateSegment;
+using Hub.Application.Features.SettingFeatures.Commands.Update;
+using Hub.Application.Features.SettingFeatures.Queries;
 using Hub.Application.Models.Game;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -171,6 +176,26 @@ public class AdminController : BaseApiController
     {
         return Ok(await Mediator.Send(request));
     }
+
+    #endregion
+
+    #region Settings
+
+    //[HttpGet(nameof(GetSettings))]
+    //public async Task<ActionResult<GetSettingsQueryResponse>> GetSettings([FromQuery] GetSettingsQuery request) => await Mediator.Send(request);
+
+    [HttpPut(nameof(UpdateSettings))]
+    public async Task<Unit> UpdateSettings(UpdateSettingCommand request) => await Mediator.Send(request);
+
+    #endregion
+
+    #region Referral Distributions
+
+    //[HttpGet(nameof(GetReferralDistributions))]
+    //public async Task<ActionResult<GetReferralDistributionsQueryResponse>> GetReferralDistributions([FromQuery] GetReferralDistributionsQuery request) => await Mediator.Send(request);
+
+    //[HttpGet(nameof(GetReferralDistributionById))]
+    //public async Task<ActionResult<GetReferralDistributionByIdQueryResponse>> GetReferralDistributionById([FromQuery] GetReferralDistributionByIdQuery request) => await Mediator.Send(request);
 
     #endregion
 }

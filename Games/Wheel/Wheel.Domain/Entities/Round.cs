@@ -16,8 +16,16 @@ public class Round : BasePrizeGroup<WheelPrize>
 
     }
 
+    public Round(string name, IEnumerable<WheelPrize> prizes = null)
+    {
+        Name = name;
+        Prizes = prizes.ToList() ?? [];
+    }
+
     public string Name { get; set; }
+
     [JsonIgnore]
     public WheelConfiguration Configuration { get; set; }
+
     public ICollection<WheelPrize> Prizes { get; set; }
 }
