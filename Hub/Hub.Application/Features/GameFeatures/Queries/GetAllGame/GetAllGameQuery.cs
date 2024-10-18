@@ -9,5 +9,7 @@ public class GetAllGameQuery : IRequest<GetAllGameResponse>
         IsAuthorized = isAuthorized;
     }
 
-    public bool IsAuthorized { get; set; }
+    public bool IsAuthorized { get; private set; }
+    public string? Name { get; set; }
+    public IEnumerable<string>? SegmentIds { get; set; }
 }

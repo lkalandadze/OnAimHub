@@ -8,6 +8,7 @@ public class GetActiveGamesQueryHandler : IRequestHandler<GetActiveGamesQuery, L
 {
     private readonly IActiveGameService _activeGameService;
     private readonly IAuthService _authService;
+
     public GetActiveGamesQueryHandler(IActiveGameService activeGameService, IAuthService authService)
     {
         _activeGameService = activeGameService;

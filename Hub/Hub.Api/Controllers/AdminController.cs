@@ -34,9 +34,15 @@ public class AdminController : BaseApiController
     #region Games
 
     [HttpGet(nameof(Games))]
-    public async Task<ActionResult<IEnumerable<ActiveGameModel>>> Games()
+    public async Task<ActionResult<IEnumerable<ActiveGameModel>>> Games([FromForm] string? name, IEnumerable<string>? segmentIds)
     {
-        return Ok(await Mediator.Send(new GetAllGameQuery(false)));
+        var query = new GetAllGameQuery(false)
+        {
+            Name = name,
+            SegmentIds = segmentIds,
+        };
+
+        return Ok(await Mediator.Send(query));
     }
 
     #endregion
