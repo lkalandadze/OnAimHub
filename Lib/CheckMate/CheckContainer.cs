@@ -96,6 +96,6 @@ public class CheckContainer<TEntity, TMember> : CheckContainer, ICheckContainer<
 public class CheckContainerWithInstance
 {
     public CheckContainer CheckContainer { get; set; }
-    public object Instance { get; set; }
+    internal object Instance { get; set; }
     public string Path { get; internal set; }
 }

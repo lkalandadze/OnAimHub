@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\GameLib\GameLib.Domain\GameLib.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Lib\CheckMate\Checkmate.csproj" />
     <ProjectReference Include="..\..\..\Lib\OnAim.Lib.EntityExtension.GlobalAttributes\OnAim.Lib.EntityExtension.GlobalAttributes.csproj" />
   </ItemGroup>
 
