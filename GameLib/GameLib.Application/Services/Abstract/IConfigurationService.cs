@@ -1,4 +1,5 @@
 ﻿using GameLib.Application.Models.Configuration;
+using GameLib.Domain.Entities;
 
 namespace GameLib.Application.Services.Abstract;
 
@@ -19,4 +20,5 @@ public interface IConfigurationService
     Task AssignConfigurationToSegmentsAsync(int configurationId, IEnumerable<string> segmentIds);
 
     Task UnassignConfigurationToSegmentsAsync(int configurationId, IEnumerable<string> segmentIds);
+    Task<GameConfiguration?> GetConfigurationByIdAsync(int id);
 }

@@ -24,6 +24,7 @@
 	  <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
 	  <ProjectReference Include="..\..\Shared\Shared.Lib\Shared.Lib.csproj" />
 	  <ProjectReference Include="..\GameLib.Domain\GameLib.Domain.csproj" />
+	  <ProjectReference Include="..\GameLib.Infrastructure\GameLib.Infrastructure.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

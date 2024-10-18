@@ -29,6 +29,6 @@ public class HubController : BaseApiController
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<ConfigurationBaseGetModel>> GetConfigurationByIdAsync([FromRoute] int id)
     {
-        return Ok(await _configurationService.GetByIdAsync(id));
+        return Ok(await _configurationService.GetConfigurationByIdAsync(id));
     }
 }
