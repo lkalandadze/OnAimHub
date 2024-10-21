@@ -8,10 +8,10 @@ namespace Wheel.Application.Features.ConfigurationFeatures.Queries.GetById;
 
 public class GetConfigurationByIdQueryHandler : IRequestHandler<GetConfigurationByIdQuery, GetConfigurationByIdQueryResponse>
 {
-    private readonly IConfigurationRepository _configurationRepository;
+    private readonly IGameConfigurationRepository _configurationRepository;
     private readonly EntityGenerator _entityGenerator;
 
-    public GetConfigurationByIdQueryHandler(IConfigurationRepository configurationRepository, EntityGenerator entityGenerator)
+    public GetConfigurationByIdQueryHandler(IGameConfigurationRepository configurationRepository, EntityGenerator entityGenerator)
     {
         _configurationRepository = configurationRepository;
         _entityGenerator = entityGenerator;

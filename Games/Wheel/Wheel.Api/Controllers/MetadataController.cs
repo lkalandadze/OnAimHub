@@ -13,11 +13,11 @@ public class MetadataController : BaseApiController
 {
 
     private readonly EntityGenerator _entityGenerator;
-    private readonly IConfigurationRepository _configurationRepository;
+    private readonly IGameConfigurationRepository _configurationRepository;
     private readonly WheelConfigDbContext _context;
     
 
-    public MetadataController(EntityGenerator entityGenerator, IConfigurationRepository configurationRepository, WheelConfigDbContext context)
+    public MetadataController(EntityGenerator entityGenerator, IGameConfigurationRepository configurationRepository, WheelConfigDbContext context)
     {
         _entityGenerator = entityGenerator;
         _configurationRepository = configurationRepository;

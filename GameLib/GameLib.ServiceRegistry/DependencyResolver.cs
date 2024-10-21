@@ -48,7 +48,7 @@ public static class DependencyResolver
         services.AddScoped<ICurrencyRepository, CurrencyRepository>();
         services.AddScoped<IPriceRepository, PriceRepository>();
         services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
-        services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
+        services.AddScoped<IGameConfigurationRepository, GameConfigurationRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
         services.AddScoped<ISegmentRepository, SegmentRepository>();
         services.AddScoped<ISettingRepository, GameSettingRepository<T>>();
@@ -75,7 +75,7 @@ public static class DependencyResolver
         {
             options.Conventions.Add(new RoutePrefixConvention(routePrefix));
         })
-            .AddApplicationPart(typeof(ConfigurationController).Assembly);
+            .AddApplicationPart(typeof(BaseApiController).Assembly);
 
         services.AddEndpointsApiExplorer();
         services.AddHealthChecks();

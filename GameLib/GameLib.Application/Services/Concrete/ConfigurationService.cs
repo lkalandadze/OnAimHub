@@ -10,12 +10,12 @@ namespace GameLib.Application.Services.Concrete;
 
 public class ConfigurationService : IConfigurationService
 {
-    private readonly IConfigurationRepository _configurationRepository;
+    private readonly IGameConfigurationRepository _configurationRepository;
     private readonly ISegmentRepository _segmentRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly SharedGameConfigDbContext _dbContext;
 
-    public ConfigurationService(IConfigurationRepository configurationRepository, ISegmentRepository segmentRepository, IUnitOfWork unitOfWork, SharedGameConfigDbContext dbContext)
+    public ConfigurationService(IGameConfigurationRepository configurationRepository, ISegmentRepository segmentRepository, IUnitOfWork unitOfWork, SharedGameConfigDbContext dbContext)
     {
         _configurationRepository = configurationRepository;
         _segmentRepository = segmentRepository;
