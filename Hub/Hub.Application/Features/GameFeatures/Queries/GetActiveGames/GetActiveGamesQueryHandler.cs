@@ -30,7 +30,6 @@ public class GetActiveGamesQueryHandler : IRequestHandler<GetActiveGamesQuery, L
         }
 
         var filteredGames = activeGames
-            .Where(game => game.SegmentIds.Any(segmentId => userSegmentIds.Contains(segmentId)))
             .Select(game => new Response<GetActiveGamesQueryResponse>(new GetActiveGamesQueryResponse(
                 game.Id,
                 game.Name,
