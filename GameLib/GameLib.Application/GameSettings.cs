@@ -14,4 +14,7 @@ public class GameSettings : Settings
 
     [SettingPropertyDefaultValue(true)]
     public SettingProperty<bool> IsActive { get; set; }
+
+    [SettingPropertyDefaultValue("TODO: description of wheel")]
+    public SettingProperty<string> Description { get; set; }
 }

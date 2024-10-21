@@ -10,8 +10,8 @@ namespace Hub.Api.Controllers;
 public class TestController : BaseApiController
 {
     private readonly IBus _bus;
-    private readonly IActiveGameService _activeGameService;
-    public TestController(IBus bus, IActiveGameService gameService)
+    private readonly IGameService _activeGameService;
+    public TestController(IBus bus, IGameService gameService)
     {
         _bus = bus;
         _activeGameService = gameService;
@@ -32,7 +32,7 @@ public class TestController : BaseApiController
     [HttpGet("active-games-anonymous")]
     public IActionResult GetActiveGamesAnonymous()
     {
-        var activeGames = _activeGameService.GetActiveGames();
+        var activeGames = _activeGameService.GetGames();
         return Ok(activeGames);
     }
 

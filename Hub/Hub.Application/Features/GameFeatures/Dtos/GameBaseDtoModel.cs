@@ -6,17 +6,21 @@ namespace Hub.Application.Features.GameFeatures.Dtos;
 
 public class GameBaseDtoModel
 {
-    public int Id { get; set; }
     public string Name { get; set; }
-    public IEnumerable<GameConfigurationGetModel> Configurations { get; set; }
+    public bool Status { get; set; }
+    public string Description { get; set; }
+    public int ConfigurationCount { get; set; }
+    public IEnumerable<string> Segments { get; set; }
 
-    public static GameBaseDtoModel MapFrom(ActiveGameModel game, IEnumerable<GameConfigurationGetModel> configurations = null)
+    public static GameBaseDtoModel MapFrom(string name, GameShortInfoGetModel game)
     {
         return new GameBaseDtoModel
         {
-            Id = game.Id,
-            Name = game.Name,
-            Configurations = configurations,
+            Name = name,
+            Status = game.Status,
+            Description = game.Description,
+            ConfigurationCount = game.ConfigurationCount,
+            Segments = game.Segments,
         };
     }
 }
