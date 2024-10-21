@@ -8,7 +8,7 @@ namespace Wheel.IntegrationEvents;
 
 public class SpinRequestedIntegrationEventHandler : IIntegrationEventHandler<SpinRequestedIntegrationEvent>
 {
-    private static readonly ConcurrentDictionary<Guid, decimal> UserBalances = new ConcurrentDictionary<Guid, decimal>();
+    private static readonly ConcurrentDictionary<int, decimal> UserBalances = new ConcurrentDictionary<int, decimal>();
     private readonly ILogger<SpinRequestedIntegrationEventHandler> _logger;
 
     public SpinRequestedIntegrationEventHandler(ILogger<SpinRequestedIntegrationEventHandler> logger)
@@ -16,7 +16,7 @@ public class SpinRequestedIntegrationEventHandler : IIntegrationEventHandler<Spi
         _logger = logger;
 
         // Initialize user balance for the example
-        var userId = new Guid("d271d93f-f736-4b2d-924d-55fe4b8462d1"); // Example user ID
+        var userId = 59; // Example user ID
         UserBalances.TryAdd(userId, 20.00m); // Each user starts with 20 GEL
     }
 

@@ -22,7 +22,7 @@ builder.Services
                 .AddCustomServices()
                 .AddControllers()
                 .Services.AddCustomSwagger()
-                .AddApp(builder.Configuration)
+                .AddApp(builder.Configuration, consumerAssemblyMarkerType: typeof(Program))
                 .AddInfrastructure(builder.Configuration);
 builder.AddCustomHttpClients();
 builder.Services.AddEndpointsApiExplorer();

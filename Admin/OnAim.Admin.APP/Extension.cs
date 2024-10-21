@@ -34,6 +34,9 @@ using OnAim.Admin.APP.Services.Role;
 using OnAim.Admin.APP.Services.Segment;
 using OnAim.Admin.APP.Services.Player;
 using OnAim.Admin.APP.Services.Game;
+using MassTransit;
+using Shared.Infrastructure.MassTransit;
+using Shared.Infrastructure.Bus;
 
 
 namespace OnAim.Admin.APP;
@@ -43,6 +46,7 @@ public static class Extension
     public static IServiceCollection AddApp(
         this IServiceCollection services,
         IConfiguration configuration,
+        Type consumerAssemblyMarkerType,
         Action<EmailOptions>? configureOptions = null)
     {
         var emailOptions = new EmailOptions();
@@ -92,7 +96,6 @@ public static class Extension
         //    var options = sp.GetRequiredService<IOptions<MailgunOptions>>().Value;
         //    return new MailgunService(options.ApiKey, options.Domain);
         //});
-
         if (configureOptions is { })
         {
             services.Configure(nameof(EmailOptions), configureOptions);
@@ -106,19 +109,56 @@ public static class Extension
         }
 
         services.AddScoped<ISecurityContextAccessor, SecurityContextAccessor>();
-
         var serviceProvider = services.BuildServiceProvider();
-
+        services.AddMessageBus(configuration, consumerAssemblyMarkerType);
         services
             .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         return services;
     }
-    public static IEnumerable<T> OrEmptyIfNull<T>(this IEnumerable<T> src)
-    => src ?? Enumerable.Empty<T>();
 
+    public static void AddMessageBus(this IServiceCollection services, IConfiguration configuration, Type consumerAssemblyMarkerType)
+    {
+        services.AddMassTransitWithRabbitMqTransport(configuration, consumerAssemblyMarkerType);
 
+        services.AddScoped<IMessageBus, MessageBus>();
+    }
+    public static void AddMassTransitWithRabbitMqTransport(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        Type consumerAssemblyMarkerType
+    )
+    {
+        var rabbitMqOptions = configuration.GetSection("RabbitMQ").Get<RabbitMqOptions>();
+
+        services.AddMassTransit(x =>
+        {
+            x.AddConsumers(consumerAssemblyMarkerType.Assembly);
+
+            x.UsingRabbitMq(
+                (context, cfg) =>
+                {
+                    cfg.Host(
+                        rabbitMqOptions.Host,
+                        h =>
+                        {
+                            h.Username(rabbitMqOptions.UserName);
+                            h.Password(rabbitMqOptions.Password);
+                        }
+                    );
+
+                    cfg.ReceiveEndpoint(
+                        rabbitMqOptions.ExchangeName,
+                        e =>
+                        {
+                            e.ConfigureConsumers(context);
+                        }
+                    );
+                }
+            );
+        });
+    }
 }
 public static partial class WebApplicationBuilderExtensions
 {

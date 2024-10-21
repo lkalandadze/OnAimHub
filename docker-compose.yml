@@ -45,11 +45,11 @@ services:
     environment:
       - CONSUL_ADDRESS=http://consul:8500
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__GameConfig=Host=gameconfigdb;Port=5432;Database=WheelConfig;Username=postgres;Password=Asdasd123!
-      - ConnectionStrings__GameHistory=Host=gamehistorydb;Port=5432;Database=WheelHistory;Username=postgres;Password=Asdasd123!
+      - ConnectionStrings__GameConfig=Host=gameconfigdb;Port=5432;Database=WheelConfig;Username=postgres;Password=1234
+      - ConnectionStrings__GameHistory=Host=gamehistorydb;Port=5432;Database=WheelHistory;Username=postgres;Password=1234
     volumes:
       - ./Games/Wheel/Wheel.Api/appsettings.json:/app/appsettings.json
-      
+       
   hubapi:
     build:
       context: .
@@ -63,13 +63,26 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     volumes:
       - ./Hub/Hub.Api/appsettings.json:/app/appsettings.json
-      
+
+  adminapi:
+    build:
+      context: .
+      dockerfile: Admin/OnAim.Admin.API/Dockerfile
+    ports:
+      - "5003:8080"
+    depends_on:
+      - mongodb
+    environment:
+      - CONSUL_ADDRESS=http://consul:8500
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./Admin/OnAim.Admin.Api/appsettings.json:/app/appsettings.json
+
   gameconfigdb:
     image: postgres:13
     environment:
       POSTGRES_DB: WheelConfig
       POSTGRES_USER: postgres
-      # POSTGRES_PASSWORD: Asdasd123!
       POSTGRES_PASSWORD: 1234
     ports:
       - "5432:5432"
@@ -81,15 +94,47 @@ services:
     environment:
       POSTGRES_DB: WheelHistory
       POSTGRES_USER: postgres
-      # POSTGRES_PASSWORD: Asdasd123!
       POSTGRES_PASSWORD: 1234
     ports:
       - "5433:5432"
     volumes:
       - gamehistorydb_data:/var/lib/postgresql/data
 
+  admin.database:
+    image: postgres:latest
+    container_name: admin_database
+    environment:
+      POSTGRES_DB: admin
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+    volumes:
+      - admin_database_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - backend
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
+
 volumes:
   gameconfigdb_data:
     driver: local
   gamehistorydb_data:
     driver: local
+  admin_database_data:
+    driver: local
+  mongo_data:
+    driver: local
+
+networks:
+  backend:
+    driver: bridge

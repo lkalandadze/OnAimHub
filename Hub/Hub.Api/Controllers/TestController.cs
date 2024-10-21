@@ -18,7 +18,7 @@ public class TestController : BaseApiController
     }
 
     [HttpPost("spin-wheel")]
-    public async Task<IActionResult> SpinWheel(Guid userId)
+    public async Task<IActionResult> SpinWheel(int userId)
     {
         var correlationId = Guid.NewGuid();
         var spinEvent = new SpinRequestedIntegrationEvent(correlationId, userId);
