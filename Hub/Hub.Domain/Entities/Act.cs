@@ -7,8 +7,8 @@ public class Act : BaseEntity<int>
 {
     public Act(DateTimeOffset dateFrom, DateTimeOffset dateTo)
     {
-        DateFrom = dateFrom;
-        DateTo = dateTo;
+        DateFrom = dateFrom.ToUniversalTime();
+        DateTo = dateTo.ToUniversalTime();
     }
 
     public DateTimeOffset DateFrom { get; set; }
