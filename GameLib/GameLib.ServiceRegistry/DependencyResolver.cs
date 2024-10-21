@@ -59,6 +59,7 @@ public static class DependencyResolver
         services.AddScoped<IConfigurationService, ConfigurationService>();
         services.AddScoped<ISegmentService, SegmentService>();
         services.AddScoped<IPrizeTypeService, PrizeTypeService>();
+        services.AddScoped<IGameInfoService, GameInfoService>();
 
         services.Configure<HubApiConfiguration>(configuration.GetSection("HubApiConfiguration"));
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));

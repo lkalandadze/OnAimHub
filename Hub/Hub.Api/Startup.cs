@@ -73,7 +73,7 @@ public class Startup
         services.AddScoped<IRewardRepository, PrizeClaimRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-        services.AddSingleton<IActiveGameService, ActiveGameService>();
+        services.AddSingleton<IGameService, GameService>();
         services.AddScoped<IPlayerService, PlayerService>();
         services.AddScoped<IPlayerBalanceService, PlayerBalanceService>();
         services.AddScoped<IPlayerProgressService, PlayerProgressService>();

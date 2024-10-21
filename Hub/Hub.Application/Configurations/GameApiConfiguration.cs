@@ -10,5 +10,5 @@ public class GameApiConfiguration
 
 public class GameEndpoints
 {
-    public string GetGameConfigurations { get; set; }
+    public string GetGameShortInfo { get; set; }
 }

@@ -44,7 +44,7 @@ public class HubController : BaseApiController
     #region Games
 
     [HttpGet("Games")]
-    public async Task<ActionResult<IEnumerable<ActiveGameModel>>> Games()
+    public async Task<ActionResult<IEnumerable<GameModel>>> Games()
     {
         return Ok(await Mediator.Send(new GetAllGameQuery()));
     }

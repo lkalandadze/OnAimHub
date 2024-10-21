@@ -12,13 +12,13 @@ namespace Hub.Api;
 public class ConsulWatcherService : BackgroundService
 {
     private readonly IConsulClient _consulClient;
-    private readonly IActiveGameService _activeGameService;
+    private readonly IGameService _activeGameService;
     private readonly IServiceProvider _serviceProvider;
     private readonly ConcurrentDictionary<string, string> _trackedGames;
 
     public ConsulWatcherService(
         IConsulClient consulClient,
-        IActiveGameService activeGameService,
+        IGameService activeGameService,
         IServiceProvider serviceProvider)
     {
         _consulClient = consulClient;
@@ -43,12 +43,12 @@ public class ConsulWatcherService : BackgroundService
                 {
                     if (service.Tags.Contains("Game") && service.Meta.TryGetValue("GameData", out var gameDataJson))
                     {
-                        var gameStatus = JsonSerializer.Deserialize<ActiveGameModel>(gameDataJson);
+                        var gameStatus = JsonSerializer.Deserialize<GameModel>(gameDataJson);
 
                         if (gameStatus != null)
                         {
                             gameStatus.Address = service.Address;
-                            _activeGameService.AddOrUpdateActiveGame(gameStatus);
+                            _activeGameService.AddOrUpdateGame(gameStatus);
 
                             if (!_trackedGames.TryGetValue(service.ID, out var previousGameDataJson) || previousGameDataJson != gameDataJson)
                             {
@@ -74,7 +74,7 @@ public class ConsulWatcherService : BackgroundService
                 var removedGameIds = _trackedGames.Keys.Except(currentGameIds).ToList();
                 foreach (var gameId in removedGameIds)
                 {
-                    _activeGameService.RemoveActiveGame(gameId);
+                    _activeGameService.RemoveGame(gameId);
                     _trackedGames.TryRemove(gameId, out _);
                 }
             }

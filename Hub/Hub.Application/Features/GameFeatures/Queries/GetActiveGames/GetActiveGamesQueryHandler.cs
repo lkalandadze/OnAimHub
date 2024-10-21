@@ -6,10 +6,10 @@ namespace Hub.Application.Features.GameFeatures.Queries.GetActiveGames;
 
 public class GetActiveGamesQueryHandler : IRequestHandler<GetActiveGamesQuery, List<Response<GetActiveGamesQueryResponse>>>
 {
-    private readonly IActiveGameService _activeGameService;
+    private readonly IGameService _activeGameService;
     private readonly IAuthService _authService;
 
-    public GetActiveGamesQueryHandler(IActiveGameService activeGameService, IAuthService authService)
+    public GetActiveGamesQueryHandler(IGameService activeGameService, IAuthService authService)
     {
         _activeGameService = activeGameService;
         _authService = authService;
@@ -19,7 +19,7 @@ public class GetActiveGamesQueryHandler : IRequestHandler<GetActiveGamesQuery, L
     {
         var userSegmentIds = _authService.GetCurrentPlayerSegments().Select(x => x.SegmentId);
 
-        var activeGames = _activeGameService.GetActiveGames();
+        var activeGames = _activeGameService.GetGames();
 
         if (activeGames == null || !activeGames.Any())
         {
@@ -30,7 +30,6 @@ public class GetActiveGamesQueryHandler : IRequestHandler<GetActiveGamesQuery, L
         }
 
         var filteredGames = activeGames
-            .Where(game => game.SegmentIds.Any(segmentId => userSegmentIds.Contains(segmentId)))
             .Select(game => new Response<GetActiveGamesQueryResponse>(new GetActiveGamesQueryResponse(
                 game.Id,
                 game.Name,
