@@ -13,7 +13,7 @@ namespace Wheel.Application.Services.Concrete;
 public class GameService : IGameService
 {
     private readonly ConfigurationHolder _configurationHolder;
-    private readonly IConfigurationRepository _configurationRepository;
+    private readonly IGameConfigurationRepository _configurationRepository;
     private readonly IAuthService _authService;
     private readonly IHubService _hubService;
     private readonly IConsulGameService _consulGameService;
@@ -23,7 +23,7 @@ public class GameService : IGameService
     private readonly ISegmentRepository _segmentRepository;
     public GameService(
         ConfigurationHolder configurationHolder,
-        IConfigurationRepository configurationRepository,
+        IGameConfigurationRepository configurationRepository,
         IAuthService authService,
         IHubService hubService,
         IConsulGameService consulGameService,
@@ -54,6 +54,8 @@ public class GameService : IGameService
 
     public GameResponseModel GetGame()
     {
+        var segments = _configurationRepository.Query();
+
         return new GameResponseModel
         {
             Name = "Wheel",

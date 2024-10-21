@@ -85,6 +85,7 @@ public class Startup
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IJobService, JobService>();
+        services.AddScoped<IActSchedulerService, ActSchedulerService>();
         services.AddScoped<IBackgroundJobScheduler, HangfireJobScheduler>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));

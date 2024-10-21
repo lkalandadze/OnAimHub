@@ -11,17 +11,17 @@ public abstract class BaseRepository<TContext, TAggregateRoot>(TContext context)
 {
     protected readonly TContext _context = context;
 
-    public async Task<TAggregateRoot?> OfIdAsync(dynamic id)
+    public virtual async Task<TAggregateRoot?> OfIdAsync(dynamic id)
     {
         return await _context.Set<TAggregateRoot>().FindAsync(id);
     }
 
-    public IQueryable<TAggregateRoot> Query(Expression<Func<TAggregateRoot, bool>>? expression = default)
+    public virtual IQueryable<TAggregateRoot> Query(Expression<Func<TAggregateRoot, bool>>? expression = default)
     {
         return expression == null ? _context.Set<TAggregateRoot>().AsQueryable() : _context.Set<TAggregateRoot>().Where(expression);
     }
 
-    public async Task<List<TAggregateRoot>> QueryAsync(Expression<Func<TAggregateRoot, bool>>? expression = default)
+    public virtual async Task<List<TAggregateRoot>> QueryAsync(Expression<Func<TAggregateRoot, bool>>? expression = default)
     {
         if (expression == null)
         {
