@@ -3,11 +3,11 @@ using GameLib.Domain.Entities;
 
 namespace GameLib.Application.Services.Abstract;
 
-public interface IConfigurationService
+public interface IGameConfigurationService
 {
-    Task<IEnumerable<ConfigurationGetModel>> GetAllAsync();
+    Task<IEnumerable<ConfigurationBaseGetModel>> GetAllAsync();
 
-    Task<ConfigurationGetModel> GetByIdAsync(int id);
+    Task<GameConfiguration> GetByIdAsync(int id);
 
     Task CreateAsync(ConfigurationCreateModel model);
 
@@ -20,5 +20,4 @@ public interface IConfigurationService
     Task AssignConfigurationToSegmentsAsync(int configurationId, IEnumerable<string> segmentIds);
 
     Task UnassignConfigurationToSegmentsAsync(int configurationId, IEnumerable<string> segmentIds);
-    Task<GameConfiguration?> GetConfigurationByIdAsync(int id);
 }

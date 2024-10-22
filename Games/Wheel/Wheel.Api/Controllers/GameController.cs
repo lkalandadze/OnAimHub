@@ -4,46 +4,43 @@ using Microsoft.AspNetCore.Mvc;
 using Wheel.Application.Models.Game;
 using Wheel.Application.Models.Player;
 using Wheel.Application.Services.Abstract;
-using static Wheel.Application.Services.Concrete.GameService;
 
 namespace Wheel.Api.Controllers;
 
 public class GameController : BaseApiController
 {
-    private readonly IGameService _gameService;
+    private readonly IWheelService _gameService;
 
-    public GameController(IGameService gameService)
+    public GameController(IWheelService gameService)
     {
         _gameService = gameService;
     }
 
-    [HttpGet("InitialData")]
-    public ActionResult<InitialDataResponseModel> GetInitialDataAsync()
+    [HttpGet(nameof(InitialData))]
+    public ActionResult<InitialDataResponseModel> InitialData()
     {
-        var result = _gameService.GetInitialData();
-        return Ok(result);
+        return Ok(_gameService.GetInitialData());
     }
 
     [AllowAnonymous]
-    [HttpGet(nameof(GetGameVersion))]
-    public ActionResult<GameResponseModel> GetGameVersion()
+    [HttpGet(nameof(GameVersion))]
+    public ActionResult<GameResponseModel> GameVersion()
     {
         var game = _gameService.GetGame();
         _gameService.UpdateMetadataAsync();
+
         return Ok(game);
     }
      
-    [HttpPost("PlayJackpot")]
-    public async Task<ActionResult<PlayResponseModel>> PlayJackpotAsync([FromBody] PlayRequestModel model)
+    [HttpPost(nameof(PlayJackpot))]
+    public async Task<ActionResult<PlayResponseModel>> PlayJackpot([FromBody] PlayRequestModel model)
     {
-        var result = await _gameService.PlayJackpotAsync(model);
-        return Ok(result);
+        return Ok(await _gameService.PlayJackpotAsync(model));
     }
 
-    [HttpPost("PlayWheel")]
-    public async Task<ActionResult<PlayResponseModel>> PlayWheelAsync([FromBody] PlayRequestModel model)
+    [HttpPost(nameof(PlayWheel))]
+    public async Task<ActionResult<PlayResponseModel>> PlayWheel([FromBody] PlayRequestModel model)
     {
-        var result = await _gameService.PlayWheelAsync(model);
-        return Ok(result);
+        return Ok(await _gameService.PlayWheelAsync(model));
     }
 }

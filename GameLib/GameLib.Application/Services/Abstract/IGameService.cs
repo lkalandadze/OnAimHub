@@ -2,7 +2,13 @@
 
 namespace GameLib.Application.Services.Abstract;
 
-public interface IGameInfoService
+public interface IGameService
 {
     Task<GetGameShortInfoModel> GetGameShortInfo();
+
+    bool GameStatus();
+
+    void ActivateGame();
+
+    void DeactivateGame();
 }

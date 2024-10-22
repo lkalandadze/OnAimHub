@@ -65,7 +65,7 @@ public class Startup
         var prizeGroupTypes = new List<Type> { typeof(Round), typeof(JackpotPrizeGroup) };
         services.Resolve<WheelConfiguration>(Configuration, prizeGroupTypes, "WheelApi");
 
-        services.AddScoped<IGameService, GameService>();
+        services.AddScoped<IWheelService, WheelService>();
 
 
         ConfigureMassTransit(services);
@@ -117,7 +117,7 @@ public class Startup
             GameResponseModel activeGameModel;
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                var gameService = scope.ServiceProvider.GetRequiredService<IGameService>();
+                var gameService = scope.ServiceProvider.GetRequiredService<IWheelService>();
                 activeGameModel = gameService.GetGame();
             }
 
