@@ -12,6 +12,7 @@ public sealed class UpdateActModel
     public int Id { get; set; }
     public DateTimeOffset DateFrom { get; set; }
     public DateTimeOffset DateTo { get; set; }
+    public bool IsCustom { get; set; }
     public ActStatus Status { get; set; }
     public List<CreateLevelModel> Level { get; set; }
 }
