@@ -2,7 +2,6 @@
 using GameLib.Domain.Entities;
 using GameLib.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace GameLib.Infrastructure.Repositories;
@@ -12,21 +11,19 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
     public override async Task<GameConfiguration?> OfIdAsync(dynamic id)
     {
         int convertedId = Convert.ToInt32(id);
-        var configuration = Query(gc => gc.Id == convertedId);
 
-        return await configuration.FirstOrDefaultAsync();
+        return await IncludeNavigationProperties(GetDbSet()).Where(c => c.Id == convertedId)
+                                                            .FirstOrDefaultAsync();
     }
 
     public override IQueryable<GameConfiguration> Query(Expression<Func<GameConfiguration, bool>>? expression = null)
     {
-        return GetConfigurationsWithNavigations();
+        return expression != null ? GetDbSet().Where(expression) : GetDbSet();
     }
 
     public override async Task<List<GameConfiguration>> QueryAsync(Expression<Func<GameConfiguration, bool>>? expression = null)
     {
-        var configurations = GetConfigurationsWithNavigations();
-
-        return expression != null ? configurations.Where(expression).ToList() : await configurations.ToListAsync();
+        return expression != null ? GetDbSet().Where(expression).ToList() : await GetDbSet().ToListAsync();
     }
 
     public override Task InsertAsync(GameConfiguration aggregateRoot)
@@ -44,10 +41,8 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
         base.Delete(aggregateRoot);
     }
 
-    private IQueryable<GameConfiguration> GetConfigurationsWithNavigations()
+    private IQueryable<GameConfiguration> GetDbSet()
     {
-        var configurations = new List<GameConfiguration>();
-
         var dbSets = context.GetType().GetProperties()
             .Where(p => p.PropertyType.IsGenericType &&
                         p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>));
@@ -58,7 +53,7 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
 
         if (set != null)
         {
-            return IncludeNavigationProperties(set.Cast<GameConfiguration>());
+            return set.Cast<GameConfiguration>();
         }
 
         return Enumerable.Empty<GameConfiguration>().AsQueryable();

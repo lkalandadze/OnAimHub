@@ -10,7 +10,7 @@ using Wheel.Domain.Entities;
 
 namespace Wheel.Application.Services.Concrete;
 
-public class GameService : IGameService
+public class WheelService : IWheelService
 {
     private readonly ConfigurationHolder _configurationHolder;
     private readonly IGameConfigurationRepository _configurationRepository;
@@ -21,7 +21,8 @@ public class GameService : IGameService
     private readonly IRoundRepository _roundRepository;
     private readonly IWheelPrizeRepository _wheelPrizeRepository;
     private readonly ISegmentRepository _segmentRepository;
-    public GameService(
+
+    public WheelService(
         ConfigurationHolder configurationHolder,
         IGameConfigurationRepository configurationRepository,
         IAuthService authService,

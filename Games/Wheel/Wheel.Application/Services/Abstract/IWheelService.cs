@@ -1,10 +1,10 @@
 ﻿using Wheel.Application.Models.Player;
 using Wheel.Application.Models.Game;
-using static Wheel.Application.Services.Concrete.GameService;
+using static Wheel.Application.Services.Concrete.WheelService;
 
 namespace Wheel.Application.Services.Abstract;
 
-public interface IGameService
+public interface IWheelService
 {
     InitialDataResponseModel GetInitialData();
     GameResponseModel GetGame();

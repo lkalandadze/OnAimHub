@@ -56,10 +56,10 @@ public static class DependencyResolver
 
         services.AddScoped<IConsulClient, ConsulClient>();
         services.AddScoped<IConsulGameService, ConsulGameService>();
-        services.AddScoped<IConfigurationService, ConfigurationService>();
+        services.AddScoped<IGameConfigurationService, GameConfigurationService>();
         services.AddScoped<ISegmentService, SegmentService>();
         services.AddScoped<IPrizeTypeService, PrizeTypeService>();
-        services.AddScoped<IGameInfoService, GameInfoService>();
+        services.AddScoped<IGameService, GameService>();
 
         services.Configure<HubApiConfiguration>(configuration.GetSection("HubApiConfiguration"));
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
