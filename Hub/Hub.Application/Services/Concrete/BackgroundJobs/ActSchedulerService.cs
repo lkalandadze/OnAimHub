@@ -29,9 +29,9 @@ public class ActSchedulerService : IActSchedulerService
 
     public void ScheduleActJobs(Act act)
     {
-        _backgroundJobClient.Schedule(() => StartAct(act.Id), act.DateFrom);
+        _backgroundJobClient.Schedule(() => StartAct(act.Id), act.DateFrom.Value.UtcDateTime);
 
-        _backgroundJobClient.Schedule(() => FinishAct(act.Id), act.DateTo);
+        _backgroundJobClient.Schedule(() => FinishAct(act.Id), act.DateTo.Value.UtcDateTime);
     }
 
     public async Task StartAct(int actId)

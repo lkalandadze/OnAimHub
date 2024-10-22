@@ -22,7 +22,7 @@ public class UpdateLevelCommandHandler : IRequestHandler<UpdateLevelCommand>
             throw new Exception("Act not found");
 
 
-        act.Update(request.Act.DateFrom, request.Act.DateTo);
+        act.Update(request.Act.DateFrom, request.Act.DateTo, request.Act.IsCustom);
         foreach (var levelModel in request.Act.Level)
         {
             act.UpdateLevel(levelModel.Id, levelModel.Number, levelModel.ExperienceToArchive);

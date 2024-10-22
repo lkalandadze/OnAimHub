@@ -6,8 +6,9 @@ namespace Hub.Application.Features.LevelFeatures.DataModels;
 public sealed record GetLevelsModel
 {
     public int Id { get; set; }
-    public DateTimeOffset DateFrom { get; set; }
-    public DateTimeOffset DateTo { get; set; }
+    public DateTimeOffset? DateFrom { get; set; }
+    public DateTimeOffset? DateTo { get; set; }
+    public bool IsCustom { get; set; }
     public ActStatus Status { get; set; }
     public List<GetLevels> Levels { get; set; }
 
@@ -18,6 +19,7 @@ public sealed record GetLevelsModel
             Id = act.Id,
             DateFrom = act.DateFrom,
             DateTo = act.DateTo,
+            IsCustom = act.IsCustom,
             Status = act.Status,
 
             Levels = act.Levels?.Select(level => new GetLevels
