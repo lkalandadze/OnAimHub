@@ -16,22 +16,19 @@ public class CheckEndpointStatusAttribute : ActionFilterAttribute
         var dynamicRequiredPermission = $"{actionName}_{controllerName}";
 
         var dbContext = (DatabaseContext)context.HttpContext.RequestServices.GetService(typeof(DatabaseContext));
-        var endpoints = await GetEndpointById(dbContext);
+        var endpoints = await GetEndpointById(dynamicRequiredPermission, dbContext);
 
-        foreach (var endpoint in endpoints)
+        if (endpoints == null || endpoints.IsDeleted || !endpoints.IsActive)
         {
-            if (endpoint == null || endpoint.IsDeleted || !endpoint.IsActive)
-            {
-                context.Result = new NotFoundResult();
-                return;
-            }
+            context.Result = new NotFoundResult();
+            return;
         }
 
         await next();
     }
 
-    private async Task<List<Endpoint>> GetEndpointById(DatabaseContext context)
+    private async Task<Endpoint> GetEndpointById(string endpoint, DatabaseContext context)
     {
-        return await context.Endpoints.ToListAsync();
+        return await context.Endpoints.Where(x => x.Name == endpoint).FirstOrDefaultAsync();
     }
 }

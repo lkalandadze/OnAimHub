@@ -42,7 +42,7 @@ public class PostmarkService : IEmailService
 
         var message = new PostmarkMessage
         {
-            From = "gokropiridze@onaim.io", // Your Postmark sender email
+            From = "gokropiridze@onaim.io",
             To = toEmail,
             Subject = subject,
             TextBody = body

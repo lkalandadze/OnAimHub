@@ -859,10 +859,13 @@ public class UserService : IUserService
         var pageNumber = filter.PageNumber ?? 1;
         var pageSize = filter.PageSize ?? 25;
 
-        var sortBy = filter.SortBy ?? "id";
-        var sortDescending = filter.SortDescending ?? false;
-
-        logs = SortLogs(logs, sortBy, sortDescending).ToList();
+        bool sortDescending = filter.SortDescending.GetValueOrDefault();
+        if (filter.SortBy == "Id" || filter.SortBy == "id")
+        {
+            logs = (List<AuditLog>)(sortDescending
+                ? logs.OrderByDescending(x => x.Id)
+                : logs.OrderBy(x => x.Id));
+        }
 
         var pagedLogs = logs
             .Skip((pageNumber - 1) * pageSize)
