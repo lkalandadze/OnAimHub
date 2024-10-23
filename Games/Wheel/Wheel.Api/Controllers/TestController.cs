@@ -7,22 +7,27 @@ using System.Collections.Concurrent;
 using System.Text.Json;
 using Wheel.Domain.Entities;
 using GameLib.Domain;
+using GameLib.Application.Generators;
+using GameLib.Application;
 
 namespace Wheel.Api.Controllers;
 
 public class TestController : BaseApiController
 {
     private static readonly ConcurrentDictionary<Guid, decimal> UserBalances = new ConcurrentDictionary<Guid, decimal>();
+    private readonly EntityGenerator _entityGenerator;
 
-    public TestController()
+    public TestController(EntityGenerator entityGenerator)
     {
+        _entityGenerator = entityGenerator;
+
         // Initialize user balance for the example
         var userId = new Guid("d271d93f-f736-4b2d-924d-55fe4b8462d1"); // Example user ID
         UserBalances.TryAdd(userId, 20.00m); // Each user starts with 20 GEL
     }
 
-    [HttpPost("AddConfigTest")]
-    public ActionResult AddConfigTest()
+    [HttpGet("TestJson")]
+    public ActionResult<EntityMetadata> TestJson()
     {
         #region Configurations
 
@@ -80,30 +85,30 @@ public class TestController : BaseApiController
 
         var e = new E
         {
-            Number = -1
+            NumberE = -1
         };
 
         var d = new D
         {
-            Number = - 1,
+            NumberD = - 1,
             E = [e],
         };
 
         var c = new C
         {
-            Number = -1,
+            NumberC = -1,
             D = [d],
         };
 
         var b = new B
         {
-            Number = -1,
-            C= [c],
+            NumberB = -1,
+            C = [c],
         };
 
         var a = new A
         {
-            Number = -1,
+            NumberA = -1,
             B = [b],
         };
 
@@ -113,9 +118,13 @@ public class TestController : BaseApiController
         string jsonA = JsonSerializer.Serialize(aRootCheckContainer);
         string jsonA1 = JsonSerializer.Serialize(aTreeCheckContainer);
 
+        var aMetaData = _entityGenerator.GenerateEntityMetadata(typeof(A));
+
+        string jsonA2 = JsonSerializer.Serialize(aMetaData);
+
         #endregion
 
-        return Ok();
+        return Ok(aMetaData);
     }
 
     [AllowAnonymous]
