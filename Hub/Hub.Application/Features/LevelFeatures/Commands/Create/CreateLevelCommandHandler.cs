@@ -20,7 +20,7 @@ public class CreateLevelCommandHandler : IRequestHandler<CreateLevelCommand>
 
     public async Task<Unit> Handle(CreateLevelCommand request, CancellationToken cancellationToken)
     {
-        var act = new Act(request.Act.DateFrom, request.Act.DateTo)
+        var act = new Act(request.Act.DateFrom, request.Act.DateTo, request.Act.IsCustom)
         {
             Status = request.Act.Status,
             Levels = request.Act.Level.Select(l => new Level(l.Number, l.ExperienceToArchive)
@@ -32,7 +32,8 @@ public class CreateLevelCommandHandler : IRequestHandler<CreateLevelCommand>
         await _actRepository.InsertAsync(act);
         await _unitOfWork.SaveAsync();
 
-        _actSchedulerService.ScheduleActJobs(act);
+        if(!request.Act.IsCustom)
+            _actSchedulerService.ScheduleActJobs(act);
 
         return Unit.Value;
     }

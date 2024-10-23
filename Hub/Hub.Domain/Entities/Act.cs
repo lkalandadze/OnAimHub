@@ -5,14 +5,16 @@ namespace Hub.Domain.Entities;
 
 public class Act : BaseEntity<int>
 {
-    public Act(DateTimeOffset dateFrom, DateTimeOffset dateTo)
+    public Act(DateTimeOffset? dateFrom, DateTimeOffset? dateTo, bool isCustom)
     {
-        DateFrom = dateFrom.ToUniversalTime();
-        DateTo = dateTo.ToUniversalTime();
+        DateFrom = dateFrom;
+        DateTo = dateFrom;
+        IsCustom = isCustom;
     }
 
-    public DateTimeOffset DateFrom { get; set; }
-    public DateTimeOffset DateTo { get; set;}
+    public DateTimeOffset? DateFrom { get; set; }
+    public DateTimeOffset? DateTo { get; set;}
+    public bool IsCustom { get; set; }
     public ActStatus Status { get; set; }
 
     public ICollection<Level> Levels { get; set; }
@@ -22,10 +24,11 @@ public class Act : BaseEntity<int>
         Status = status;
     }
 
-    public void Update(DateTimeOffset datefrom, DateTimeOffset dateTo)
+    public void Update(DateTimeOffset datefrom, DateTimeOffset dateTo, bool isCustom)
     {
         DateFrom = datefrom;
         DateTo = dateTo;
+        IsCustom = isCustom;
     }
 
 
