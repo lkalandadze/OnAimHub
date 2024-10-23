@@ -63,6 +63,17 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     volumes:
       - ./Hub/Hub.Api/appsettings.json:/app/appsettings.json
+
+  adminapi:
+    build:
+      context: .
+      dockerfile: Admin/OnAim.Admin.API/Dockerfile
+    ports:
+      - "5003:8080"  # Map host port 5002 to container port 8080
+    environment:
+      - ConnectionStrings__Connection=Host=admindb;Port=5435;Database=OnAimAdmin;Username=postgres;Password=12345678;Pooling=true;
+    volumes:
+          - ./Admin/OnAim.Admin.API/appsettings.json:/app/appsettings.json
       
   gameconfigdb:
     image: postgres:13
@@ -88,8 +99,41 @@ services:
     volumes:
       - gamehistorydb_data:/var/lib/postgresql/data
 
+  admindb:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: OnAimAdmin
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+    ports:
+      - "5435:5432"
+    volumes:
+      - admindb:/var/lib/postgresql/data
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    container_name: mongo
+    ports:
+      - 27017:27017
+    # environment:
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: SpeakLouder
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mongo_net
+
 volumes:
   gameconfigdb_data:
     driver: local
   gamehistorydb_data:
     driver: local
+  admindb:
+    driver: local
+  mongo-data:
+    driver: local
+
+networks:
+  mongo_net:
+    driver: bridge

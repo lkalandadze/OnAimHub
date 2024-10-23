@@ -18,6 +18,6 @@ public class GetAllActiveGamesQueryHandler : IQueryHandler<GetAllActiveGamesQuer
 
         var result = await _gameService.GetAll();
 
-        return new ApplicationResult { Success = result.Success, Data = result.Data };
+        return new ApplicationResult { Data = result };
     }
 }
