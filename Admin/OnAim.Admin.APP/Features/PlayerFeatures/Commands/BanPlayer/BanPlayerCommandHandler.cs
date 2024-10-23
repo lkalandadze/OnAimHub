@@ -1,18 +1,17 @@
 ﻿using FluentValidation;
 using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Features.PlayerFeatures.Commands.BanPlayer;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using Shared.Infrastructure.Bus;
-using Shared.IntegrationEvents.IntegrationEvents.Player;
 
 public class BanPlayerCommandHandler : ICommandHandler<BanPlayerCommand, ApplicationResult>
 {
-    private readonly IMessageBus _bus;
+    private readonly IPlayerService _playerService;
     private readonly IValidator<BanPlayerCommand> _validator;
 
-    public BanPlayerCommandHandler(IMessageBus bus, IValidator<BanPlayerCommand> validator)
+    public BanPlayerCommandHandler(IPlayerService playerService, IValidator<BanPlayerCommand> validator)
     {
-        _bus = bus;
+        _playerService = playerService;
         _validator = validator;
     }
 
@@ -23,14 +22,8 @@ public class BanPlayerCommandHandler : ICommandHandler<BanPlayerCommand, Applica
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var playerEvent = new BanPlayerEvent(
-            playerId: request.PlayerId,
-            expireDate: request.ExpireDate,
-            isPermanent: request.IsPermanent,
-            description: request.Description);
+        var result = await _playerService.BanPlayer(request.PlayerId, request.ExpireDate, request.IsPermanent, request.Description);
 
-        await _bus.Publish(playerEvent);
-
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult { Success = result.Success };
     }
 }
