@@ -3,4 +3,4 @@ using OnAim.Admin.Shared.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.GameFeatures.Queries.GetById.GetGameConfigurations;
 
-public record GetGameConfigurationsQuery(int Id) : IQuery<ApplicationResult>;
+public record GetGameConfigurationsQuery() : IQuery<ApplicationResult>;

@@ -69,15 +69,12 @@ services:
       context: .
       dockerfile: Admin/OnAim.Admin.API/Dockerfile
     ports:
-      - "5003:8080"
-    depends_on:
-      - mongodb
+      - "5003:8080"  # Map host port 5002 to container port 8080
     environment:
-      - CONSUL_ADDRESS=http://consul:8500
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Connection=Host=admindb;Port=5435;Database=OnAimAdmin;Username=postgres;Password=12345678;Pooling=true;
     volumes:
-      - ./Admin/OnAim.Admin.Api/appsettings.json:/app/appsettings.json
-
+          - ./Admin/OnAim.Admin.API/appsettings.json:/app/appsettings.json
+      
   gameconfigdb:
     image: postgres:13
     environment:
@@ -100,41 +97,41 @@ services:
     volumes:
       - gamehistorydb_data:/var/lib/postgresql/data
 
-  admin.database:
-    image: postgres:latest
-    container_name: admin_database
+  admindb:
+    image: postgres:13
     environment:
-      POSTGRES_DB: admin
+      POSTGRES_DB: OnAimAdmin
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345678
-    volumes:
-      - admin_database_data:/var/lib/postgresql/data
     ports:
-      - "5434:5432"
-    networks:
-      - backend
+      - "5435:5432"
+    volumes:
+      - admindb:/var/lib/postgresql/data
 
-  mongodb:
+  mongo:
     image: mongo:latest
-    container_name: mongodb
     restart: always
-    volumes:
-      - mongo_data:/data/db
+    container_name: mongo
     ports:
-      - "27017:27017"
+      - 27017:27017
+    # environment:
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: SpeakLouder
+    volumes:
+      - mongo-data:/data/db
     networks:
-      - backend
+      - mongo_net
 
 volumes:
   gameconfigdb_data:
     driver: local
   gamehistorydb_data:
     driver: local
-  admin_database_data:
+  admindb:
     driver: local
-  mongo_data:
+  mongo-data:
     driver: local
 
 networks:
-  backend:
+  mongo_net:
     driver: bridge

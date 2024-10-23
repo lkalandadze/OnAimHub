@@ -43,39 +43,38 @@ public class Checkmate
     {
         if (obj == null)
         {
-            return [];
+            return new List<CheckContainerWithInstance>();
         }
 
         var type = obj.GetType();
         var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        var containers = new List<CheckContainerWithInstance>();
 
-        var containers = GetRootCheckContainers(obj.GetType()).Select(x => new CheckContainerWithInstance
+        if (GetRootCheckContainers(type) != null)
         {
-            CheckContainer = x,
-            Instance = obj,
-            Path = path,
-        }).ToList();
-
-        if (!isTree)
-        {
-            return containers;
-        }
-
-        foreach (var property in properties)
-        {
-            if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && property.PropertyType != typeof(string))
+            containers.AddRange(GetRootCheckContainers(type).Select(x => new CheckContainerWithInstance
             {
-                var collection = property.GetValue(obj) as IEnumerable;
-
-                if (collection != null)
+                CheckContainer = x,
+                Instance = obj,
+                Path = path,
+            }));
+        }
+        
+        if (isTree)
+        {
+            foreach (var property in properties)
+            {
+                var propertyValue = property.GetValue(obj);
+                if (propertyValue is IEnumerable enumerable && propertyValue.GetType() != typeof(string))
                 {
-                    var index = 0;
-
-                    foreach (var item in collection)
+                    foreach (var item in enumerable)
                     {
-                        containers.AddRange(GetCheckContainersWithInstance(item, $"{path}.{property.Name}[{index}]"));
-                        index++;
+                        containers.AddRange(GetCheckContainersWithInstance(item, $"{path}.{property.Name}", true));
                     }
+                }
+                else if (propertyValue != null)
+                {
+                    containers.AddRange(GetCheckContainersWithInstance(propertyValue, $"{path}.{property.Name}", true));
                 }
             }
         }

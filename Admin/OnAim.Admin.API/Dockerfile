@@ -11,10 +11,6 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Admin/OnAim.Admin.API/OnAim.Admin.API.csproj", "Admin/OnAim.Admin.API/"]
 COPY ["Admin/OnAim.Admin.APP/OnAim.Admin.APP.csproj", "Admin/OnAim.Admin.APP/"]
-COPY ["Shared/Shared.Infrastructure/Shared.Infrastructure.csproj", "Shared/Shared.Infrastructure/"]
-COPY ["Shared/Shared.Domain/Shared.Domain.csproj", "Shared/Shared.Domain/"]
-COPY ["Shared/Shared.Lib/Shared.Lib.csproj", "Shared/Shared.Lib/"]
-COPY ["Shared/Shared.IntegrationEvents/Shared.IntegrationEvents.csproj", "Shared/Shared.IntegrationEvents/"]
 COPY ["Admin/OnAim.Admin.Infrasturcture/OnAim.Admin.Infrasturcture.csproj", "Admin/OnAim.Admin.Infrasturcture/"]
 COPY ["Admin/OnAim.Admin.Domain/OnAim.Admin.Domain.csproj", "Admin/OnAim.Admin.Domain/"]
 COPY ["Admin/OnAim.Admin.Shared/OnAim.Admin.Shared.csproj", "Admin/OnAim.Admin.Shared/"]

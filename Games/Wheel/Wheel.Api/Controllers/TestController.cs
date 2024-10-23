@@ -1,10 +1,12 @@
-﻿using GameLib.Application.Controllers;
+﻿using CheckmateValidations;
+using GameLib.Application.Controllers;
 using GameLib.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
 using System.Text.Json;
 using Wheel.Domain.Entities;
+using GameLib.Domain;
 
 namespace Wheel.Api.Controllers;
 
@@ -22,58 +24,96 @@ public class TestController : BaseApiController
     [HttpPost("AddConfigTest")]
     public ActionResult AddConfigTest()
     {
-        var prices = new List<Price>
+        #region Configurations
+
+        //var prices = new List<Price>
+        //{
+        //    new Price(1, 5, "OnAimCoin"),
+        //    new Price(2, 10, string.Empty),
+        //    new Price(3, 15, "OnAimCoin"),
+        //};
+
+        //var segments = new List<Segment>
+        //{
+        //    new Segment("Segment 1"),
+        //    new Segment("Segment 2"),
+        //};
+
+        //var prizes1 = new List<WheelPrize>
+        //{
+        //    new WheelPrize("R1 P1", 1) { Value = 1, Probability = 10 },
+        //    new WheelPrize("R1 P2", 2) { Value = 2, Probability = 20 },
+        //    new WheelPrize("R1 P3", 3) { Value = 3, Probability = 30 },
+        //};
+
+        //var prizes2 = new List<WheelPrize>
+        //{
+        //    new WheelPrize("R2 P1", 1) { Value = 1, Probability = 15 },
+        //    new WheelPrize("R2 P2", 2) { Value = 2, Probability = 25 },
+        //    new WheelPrize("R2 P3", 3) { Value = 3, Probability = 35 },
+        //};
+
+        //var rounds = new List<Round>
+        //{
+        //    new Round("R1", prizes1),
+        //    new Round("R2", prizes2),
+        //};
+
+        //var config = new WheelConfiguration("Wheel Configuration", 10, prices: prices, segments: segments, rounds: rounds);
+
+        //var rootCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(config);
+        //var treeCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(config, "", true);
+
+        //var rootFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(config).ToList();
+        //var treeFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(config, true).ToList();
+
+        //var rootStatus = CheckmateValidations.Checkmate.IsValid(config);
+        //var treeStatus = CheckmateValidations.Checkmate.IsValid(config, true);
+
+        //string json1 = JsonSerializer.Serialize(config);
+        //string json2 = JsonSerializer.Serialize(treeFailedCheckers);
+        //string json3 = JsonSerializer.Serialize(treeCheckContainer);
+
+        #endregion
+
+        #region TestForJson
+
+        var e = new E
         {
-            new Price(1, 5, "OnAimCoin"),
-            new Price(2, 10, string.Empty),
-            new Price(3, 15, "OnAimCoin"),
+            Number = -1
         };
 
-        var segments = new List<Segment>
+        var d = new D
         {
-            new Segment("Segment 1"),
-            new Segment("Segment 2"),
+            Number = - 1,
+            E = [e],
         };
 
-        var prizes1 = new List<WheelPrize>
+        var c = new C
         {
-            new WheelPrize("R1 P1", 1) { Value = 1, Probability = 10 },
-            new WheelPrize("R1 P2", 2) { Value = 2, Probability = 20 },
-            new WheelPrize("R1 P3", 3) { Value = 3, Probability = 30 },
+            Number = -1,
+            D = [d],
         };
 
-        var prizes2 = new List<WheelPrize>
+        var b = new B
         {
-            new WheelPrize("R2 P1", 1) { Value = 1, Probability = 15 },
-            new WheelPrize("R2 P2", 2) { Value = 2, Probability = 25 },
-            new WheelPrize("R2 P3", 3) { Value = 3, Probability = 35 },
+            Number = -1,
+            C= [c],
         };
 
-        var rounds = new List<Round>
+        var a = new A
         {
-            new Round("R1", prizes1),
-            new Round("R2", prizes2),
+            Number = -1,
+            B = [b],
         };
 
-        var config = new WheelConfiguration("Wheel Configuration", 10, prices: prices, segments: segments, rounds: rounds);
+        var aRootCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(a);
+        var aTreeCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(a, "", true);
 
-        //var rootContainers = CheckmateValidations.Checkmate.GetRootCheckContainers(config.GetType());
+        string jsonA = JsonSerializer.Serialize(aRootCheckContainer);
+        string jsonA1 = JsonSerializer.Serialize(aTreeCheckContainer);
 
-        var rootCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(config);
-        var treeCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(config, "", true);
-
-        //var rootCheckers = CheckmateValidations.Checkmate.GetChecks(config).ToList();
-        //var treeCheckers = CheckmateValidations.Checkmate.GetChecks(config, true).ToList();
-
-        var rootFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(config).ToList();
-        var treeFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(config, true).ToList();
-
-        var rootStatus = CheckmateValidations.Checkmate.IsValid(config);
-        var treeStatus = CheckmateValidations.Checkmate.IsValid(config, true);
-
-        string json1 = JsonSerializer.Serialize(config);
-        string json2 = JsonSerializer.Serialize(treeFailedCheckers);
-        string json3 = JsonSerializer.Serialize(treeCheckContainer);
+        #endregion
 
         return Ok();
     }
