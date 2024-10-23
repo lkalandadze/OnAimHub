@@ -77,7 +77,10 @@ public static class Extension
             .AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>))
             .AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>))
             .AddScoped(typeof(ILeaderBoardReadOnlyRepository<>), typeof(LeaderBoardReadOnlyRepository<>));
-
+        services.AddHttpClient("ApiGateway", client =>
+        {
+            client.BaseAddress = new Uri("http://ocelotapigateway:8080");
+        });
         services.Configure<PostmarkOptions>(configuration.GetSection("Postmark"));
 
         services.AddTransient<IEmailService>(sp =>
