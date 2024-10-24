@@ -1,14 +1,10 @@
-﻿using CheckmateValidations;
-using GameLib.Application.Controllers;
-using GameLib.Domain.Entities;
+﻿using GameLib.Application.Controllers;
+using GameLib.Application.Generators;
+using GameLib.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Collections.Concurrent;
-using System.Text.Json;
-using Wheel.Domain.Entities;
-using GameLib.Domain;
-using GameLib.Application.Generators;
-using GameLib.Application;
 
 namespace Wheel.Api.Controllers;
 
@@ -27,7 +23,7 @@ public class TestController : BaseApiController
     }
 
     [HttpGet("TestJson")]
-    public ActionResult<EntityMetadata> TestJson()
+    public ActionResult<EntityMetadata> GetTestJson()
     {
         #region Configurations
 
@@ -94,37 +90,51 @@ public class TestController : BaseApiController
             E = [e],
         };
 
-        var c = new C
+        var c1 = new C1
         {
-            NumberC = -1,
+            NumberC1 = -1,
             D = [d],
         };
 
-        var b = new B
+        var b1 = new B1
         {
-            NumberB = -1,
-            C = [c],
+            NumberB1 = -1,
+            C1 = [c1],
         };
 
         var a = new A
         {
             NumberA = -1,
-            B = [b],
+            B1 = [b1],
         };
 
         var aRootCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(a);
         var aTreeCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(a, "", true);
 
-        string jsonA = JsonSerializer.Serialize(aRootCheckContainer);
-        string jsonA1 = JsonSerializer.Serialize(aTreeCheckContainer);
+        //string jsonA = JsonSerializer.Serialize(aRootCheckContainer);
+        //string jsonA1 = JsonSerializer.Serialize(aTreeCheckContainer);
 
-        var aMetaData = _entityGenerator.GenerateEntityMetadata(typeof(A));
+        //var aMetaData = _entityGenerator.GenerateEntityMetadata(typeof(A));
 
-        string jsonA2 = JsonSerializer.Serialize(aMetaData);
+        //string jsonA2 = JsonSerializer.Serialize(aMetaData);
 
         #endregion
 
-        return Ok(aMetaData);
+        return Ok(/*aMetaData*/);
+    }
+
+    [HttpPost("CreateObjectFromJson")]
+    public ActionResult CreateObjectTest(TestObjectModel model)
+    {
+        var data = JsonConvert.DeserializeObject<A>(model.ObjectJson);
+
+        var treeCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(data, "", true);
+        var treeFailedChecks = CheckmateValidations.Checkmate.GetFailedChecks(data, true);
+
+        var json1 = JsonConvert.SerializeObject(treeCheckContainer);
+        var json2 = JsonConvert.SerializeObject(treeFailedChecks);
+
+        return StatusCode(201);
     }
 
     [AllowAnonymous]
@@ -179,4 +189,9 @@ public class TestController : BaseApiController
 
         return Ok(new { Balance = UserBalances[userId] });
     }
+}
+
+public class TestObjectModel
+{
+    public string ObjectJson { get; set; }
 }
