@@ -25,8 +25,12 @@ namespace GameLib.ServiceRegistry;
 
 public static class DependencyResolver
 {
-    public static IServiceCollection Resolve<T>(this IServiceCollection services, IConfiguration configuration, List<Type> prizeGroupTypes, string routePrefix) where T: GameConfiguration<T>
+    public static IServiceCollection Resolve<TGameConfiguration>(this IServiceCollection services, IConfiguration configuration, List<Type> prizeGroupTypes, string routePrefix)
+        where TGameConfiguration: GameConfiguration<TGameConfiguration>
     {
+        // TODO: should be deleted
+        Globals.ConfigurationType = typeof(TGameConfiguration);
+
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
         services.AddSingleton<GameSettings>();
@@ -51,7 +55,7 @@ public static class DependencyResolver
         services.AddScoped<IGameConfigurationRepository, GameConfigurationRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
         services.AddScoped<ISegmentRepository, SegmentRepository>();
-        services.AddScoped<ISettingRepository, GameSettingRepository<T>>();
+        services.AddScoped<ISettingRepository, GameSettingRepository<TGameConfiguration>>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IConsulClient, ConsulClient>();

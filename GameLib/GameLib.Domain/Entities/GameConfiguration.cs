@@ -8,7 +8,7 @@ using Shared.Domain.Entities;
 namespace GameLib.Domain.Entities;
 
 [CheckMate<GameConfigurationChecker>]
-public abstract class GameConfiguration : BaseEntity<int>
+public class GameConfiguration : BaseEntity<int>
 {
     public GameConfiguration()
     {
@@ -31,6 +31,7 @@ public abstract class GameConfiguration : BaseEntity<int>
 
     [GlobalDescription("IsActive of the configuration")]
     public bool IsActive { get; set; }
+
     public void ChangeDetails(string name, int value)
     {
         Name = name;
@@ -70,7 +71,7 @@ public abstract class GameConfiguration : BaseEntity<int>
     public ICollection<Segment> Segments { get; set; }
 }
 
-public abstract class GameConfiguration<T> : GameConfiguration where T : GameConfiguration<T>
+public class GameConfiguration<T> : GameConfiguration where T : GameConfiguration<T>
 {
     public GameConfiguration()
     {
