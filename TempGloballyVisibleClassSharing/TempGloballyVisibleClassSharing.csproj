@@ -27,7 +27,7 @@
 			<Output TaskParameter="Lines" ItemName="JsonContent" />
 		</ReadLinesFromFile>
 
-		<Exec Command="&quot;$(GeneratorPath)&quot; &quot;$(DllPath)&quot; &quot;$(OutputFolder)&quot; %(JsonContent.Identity)" />
+		<!--<Exec Command="&quot;$(GeneratorPath)&quot; &quot;$(DllPath)&quot; &quot;$(OutputFolder)&quot; %(JsonContent.Identity)" />-->
 	</Target>
 
 </Project>

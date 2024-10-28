@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Lib\OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing\OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Domain\Shared.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\Shared.IntegrationEvents\Shared.IntegrationEvents.csproj" />
   </ItemGroup>
  
 	<!--<Target Name="RunGVGenerator" AfterTargets="Build">

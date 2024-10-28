@@ -6,7 +6,7 @@ public abstract class BaseCommand : IRequest<CommandResult> { }
 
 public class CommandResult
 {
-    private CommandResult(string message = "", string entityId = "")
+    public CommandResult(string message = "", string entityId = "")
     {
         EntityId = entityId;
         Message = message;
