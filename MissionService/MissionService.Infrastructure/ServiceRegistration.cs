@@ -16,7 +16,7 @@ public static class ServiceRegistration
 
         services.AddDbContext<MissionDbContext>(options =>
         {
-            options.UseNpgsql(configuration.GetConnectionString("OnAimMissionService"), x =>
+            options.UseNpgsql(configuration.GetConnectionString("OnAimMission"), x =>
             {
                 x.CommandTimeout((int)TimeSpan.FromMinutes(3).TotalSeconds);
             }).LogTo(Console.WriteLine, LogLevel.Information);

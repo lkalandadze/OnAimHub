@@ -37,7 +37,7 @@ builder.Services
 //builder.Services.AddScoped<IBackgroundJobScheduler, BackgroundJobScheduler>();
 
 builder.Services.AddHangfire(config =>
-    config.UsePostgreSqlStorage(configuration.GetConnectionString("OnAimLevelService")));
+    config.UsePostgreSqlStorage(configuration.GetConnectionString("OnAimLevel")));
 builder.Services.AddHangfireServer();
 
 //builder.Services.AddHostedService<JobSyncService>();

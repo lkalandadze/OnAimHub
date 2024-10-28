@@ -16,7 +16,7 @@ public static class ServiceRegistration
 
         services.AddDbContext<LevelDbContext>(options =>
         {
-            options.UseNpgsql(configuration.GetConnectionString("OnAimLevelService"), x =>
+            options.UseNpgsql(configuration.GetConnectionString("OnAimLevel"), x =>
             {
                 x.CommandTimeout((int)TimeSpan.FromMinutes(3).TotalSeconds);
             }).LogTo(Console.WriteLine, LogLevel.Information);
