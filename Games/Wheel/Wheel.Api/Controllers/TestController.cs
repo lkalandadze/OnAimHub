@@ -1,28 +1,29 @@
-﻿using CheckmateValidations;
-using GameLib.Application.Controllers;
-using GameLib.Domain.Entities;
+﻿using GameLib.Application.Controllers;
+using GameLib.Application.Generators;
+using GameLib.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Collections.Concurrent;
-using System.Text.Json;
-using Wheel.Domain.Entities;
-using GameLib.Domain;
 
 namespace Wheel.Api.Controllers;
 
 public class TestController : BaseApiController
 {
     private static readonly ConcurrentDictionary<Guid, decimal> UserBalances = new ConcurrentDictionary<Guid, decimal>();
+    private readonly EntityGenerator _entityGenerator;
 
-    public TestController()
+    public TestController(EntityGenerator entityGenerator)
     {
+        _entityGenerator = entityGenerator;
+
         // Initialize user balance for the example
         var userId = new Guid("d271d93f-f736-4b2d-924d-55fe4b8462d1"); // Example user ID
         UserBalances.TryAdd(userId, 20.00m); // Each user starts with 20 GEL
     }
 
-    [HttpPost("AddConfigTest")]
-    public ActionResult AddConfigTest()
+    [HttpGet("TestJson")]
+    public ActionResult<EntityMetadata> GetTestJson()
     {
         #region Configurations
 
@@ -80,42 +81,60 @@ public class TestController : BaseApiController
 
         var e = new E
         {
-            Number = -1
+            NumberE = -1
         };
 
         var d = new D
         {
-            Number = - 1,
+            NumberD = - 1,
             E = [e],
         };
 
-        var c = new C
+        var c1 = new C1
         {
-            Number = -1,
+            NumberC1 = -1,
             D = [d],
         };
 
-        var b = new B
+        var b1 = new B1
         {
-            Number = -1,
-            C= [c],
+            NumberB1 = -1,
+            C1 = [c1],
         };
 
         var a = new A
         {
-            Number = -1,
-            B = [b],
+            NumberA = -1,
+            B1 = [b1],
         };
 
         var aRootCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(a);
         var aTreeCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(a, "", true);
 
-        string jsonA = JsonSerializer.Serialize(aRootCheckContainer);
-        string jsonA1 = JsonSerializer.Serialize(aTreeCheckContainer);
+        //string jsonA = JsonSerializer.Serialize(aRootCheckContainer);
+        //string jsonA1 = JsonSerializer.Serialize(aTreeCheckContainer);
+
+        //var aMetaData = _entityGenerator.GenerateEntityMetadata(typeof(A));
+
+        //string jsonA2 = JsonSerializer.Serialize(aMetaData);
 
         #endregion
 
-        return Ok();
+        return Ok(/*aMetaData*/);
+    }
+
+    [HttpPost("CreateObjectFromJson")]
+    public ActionResult CreateObjectTest(TestObjectModel model)
+    {
+        var data = JsonConvert.DeserializeObject<A>(model.ObjectJson);
+
+        var treeCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(data, "", true);
+        var treeFailedChecks = CheckmateValidations.Checkmate.GetFailedChecks(data, true);
+
+        var json1 = JsonConvert.SerializeObject(treeCheckContainer);
+        var json2 = JsonConvert.SerializeObject(treeFailedChecks);
+
+        return StatusCode(201);
     }
 
     [AllowAnonymous]
@@ -170,4 +189,9 @@ public class TestController : BaseApiController
 
         return Ok(new { Balance = UserBalances[userId] });
     }
+}
+
+public class TestObjectModel
+{
+    public string ObjectJson { get; set; }
 }
