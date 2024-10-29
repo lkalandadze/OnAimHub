@@ -7,8 +7,6 @@ using Hub.Application.Features.PlayerBanFeatures.Commands.Revoke;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Update;
 using Hub.Application.Features.PrizeClaimFeatures.Commands.CreateReward;
 using Hub.Application.Features.PrizeClaimFeatures.Commands.DeleteReward;
-using Hub.Application.Features.ReferralFeatures.ReferralDistributionFeatures.Queries.Get;
-using Hub.Application.Features.ReferralFeatures.ReferralDistributionFeatures.Queries.GetById;
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentsToPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentToPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.BlockSegmentForPlayer;
@@ -21,8 +19,6 @@ using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentForPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentsForPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.UpdateSegment;
 using Hub.Application.Features.SettingFeatures.Commands.Update;
-using Hub.Application.Features.SettingFeatures.Queries;
-using Hub.Application.Models.Game;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +47,7 @@ public class AdminController : BaseApiController
     #endregion
 
     #region Players
+
 
     [HttpPut(nameof(UpdateBannedPlayer))]
     public async Task<ActionResult> UpdateBannedPlayer(UpdatePlayerBanCommand request)

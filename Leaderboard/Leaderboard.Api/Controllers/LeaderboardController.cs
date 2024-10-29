@@ -8,6 +8,7 @@ using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.Upda
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Queries.Get;
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Queries.GetById;
 using Leaderboard.Application.Services.Abstract.BackgroundJobs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Leaderboard.Api.Controllers;
@@ -32,6 +33,7 @@ public class LeaderboardController : BaseApiController
     [HttpPut(nameof(UpdateLeaderboardRecord))]
     public async Task UpdateLeaderboardRecord(UpdateLeaderboardRecordCommand request) => await Mediator.Send(request);
 
+    [Authorize]
     [HttpGet(nameof(GetLeaderboardRecords))]
     public async Task<ActionResult<GetLeaderboardRecordsQueryResponse>> GetLeaderboardRecords([FromQuery] GetLeaderboardRecordsQuery request) => await Mediator.Send(request);
 

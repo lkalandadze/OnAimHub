@@ -1,6 +1,4 @@
-﻿using Hub.Domain.Entities;
-using Shared.IntegrationEvents.IntegrationEvents.Player;
-using Shared.IntegrationEvents.Interfaces;
+﻿using Shared.IntegrationEvents.Interfaces;
 
 namespace Hub.Domain.Events;
 

@@ -1,11 +1,11 @@
-﻿using Leaderboard.Domain.Abstractions.Repository;
+﻿using Hub.Domain.Events;
+using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Domain.Entities;
-using Leaderboard.Domain.Events;
-using Shared.Infrastructure.Bus;
+using MassTransit;
 
 namespace Leaderboard.Application.Consumers;
 
-public sealed class CreatePlayerAggregationConsumer : IMessageBusConsumer<CreatePlayerAggregationConsumer, CreatePlayerEvent>
+public sealed class CreatePlayerAggregationConsumer : IConsumer<CreatePlayerEvent>
 {
     private readonly IPlayerRepository _playerRepository;
 
@@ -13,17 +13,19 @@ public sealed class CreatePlayerAggregationConsumer : IMessageBusConsumer<Create
     {
         _playerRepository = playerRepository;
     }
-    public async Task HandleAsync(CreatePlayerEvent data, MetaData metaData, CancellationToken cancellationToken = default)
+    public async Task Consume(ConsumeContext<CreatePlayerEvent> context)
     {
-        //Check for Duplicate Requests
-        var requestProcessed = _playerRepository.Query().FirstOrDefault(x => x.Id == data.PlayerId);
+        var data = context.Message;
 
-        if (requestProcessed != default)
-            throw new Exception("User already exists");
+        // Check for Duplicate Requests
+        //var requestProcessed = _playerRepository.Query().FirstOrDefault(x => x.Id == data.PlayerId);
+
+        //if (requestProcessed != null)
+        //    throw new Exception("User already exists");
 
         var player = new Player(data.PlayerId, data.UserName);
 
         await _playerRepository.InsertAsync(player);
-        await _playerRepository.SaveChangesAsync(cancellationToken);
+        await _playerRepository.SaveChangesAsync(context.CancellationToken);
     }
 }

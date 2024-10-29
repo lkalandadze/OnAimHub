@@ -1,6 +1,9 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Leaderboard.Application.Behaviours;
+using Leaderboard.Application.Consumers;
+using Leaderboard.Domain.Abstractions.Repository;
+using Leaderboard.Infrastructure.Repositories;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +25,7 @@ public static class ServiceExtensions
                 .AddFluentValidationClientsideAdapters();
 
         var assembly = Assembly.Load("Leaderboard.Application");
-
+        services.AddScoped<IPlayerRepository, PlayerRepository>();
         services.AddValidatorsFromAssembly(assembly);
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
@@ -31,41 +34,40 @@ public static class ServiceExtensions
     }
 
     public static IServiceCollection AddMassTransitWithRabbitMqTransport(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        Type consumerAssemblyMarkerType
-    )
+     this IServiceCollection services,
+     IConfiguration configuration,
+     Type consumerAssemblyMarkerType
+ )
     {
-        var rabbitMqOptions = configuration.GetSection("MessageBroker:RabbitMQ").Get<RabbitMqOptions>();
+        var rabbitMqOptions = configuration.GetSection("RabbitMQSettings").Get<RabbitMqOptions>();
 
         services.AddMassTransit(x =>
         {
-            x.AddConsumers(consumerAssemblyMarkerType.Assembly);
-
-            x.UsingRabbitMq(
-                (context, cfg) =>
+            x.AddConsumer<CreatePlayerAggregationConsumer>();
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(rabbitMqOptions.Host, h =>
                 {
-                    cfg.Host(
-                        rabbitMqOptions.Host,
-                        h =>
-                        {
-                            h.Username(rabbitMqOptions.UserName);
-                            h.Password(rabbitMqOptions.Password);
-                        }
-                    );
+                    h.Username(rabbitMqOptions.UserName);
+                    h.Password(rabbitMqOptions.Password);
+                });
 
-                    cfg.ReceiveEndpoint(
-                        rabbitMqOptions.ExchangeName,
-                        e =>
-                        {
-                            e.ConfigureConsumers(context);
-                        }
-                    );
-                }
-            );
+
+                cfg.ReceiveEndpoint("HubApiQueue", e =>
+                {
+                    var rabbitMqEndpoint = e as IRabbitMqReceiveEndpointConfigurator;
+                    rabbitMqEndpoint?.Bind(rabbitMqOptions.ExchangeName, x =>
+                    {
+                        x.RoutingKey = rabbitMqOptions.RoutingKeys["CreatePlayerEvent"];
+                        x.ExchangeType = "fanout";
+                    });
+                    e.ConfigureConsumer<CreatePlayerAggregationConsumer>(context);
+                });
+            });
         });
 
-        return services; // Add this line
+        return services;
     }
+
 
 }

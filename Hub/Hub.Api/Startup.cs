@@ -14,12 +14,12 @@ using Hub.Application.Services.Concrete.BackgroundJobs;
 using Hub.Application.Services.Concretel;
 using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
+using Hub.Domain.Events;
 using Hub.Infrastructure.DataAccess;
 using Hub.Infrastructure.Repositories;
 using Hub.IntegrationEvents.Player;
 using MassTransit;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -27,6 +27,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.PostgreSQL;
 using Shared.Infrastructure.Bus;
+using Shared.Infrastructure.MassTransit;
 using System.Reflection;
 using System.Security.Cryptography;
 
@@ -99,7 +100,7 @@ public class Startup
 
         services.AddHostedService<JobSyncService>();
 
-        ConfigureMassTransit(services, Configuration, env);
+        ConfigureMassTransit(services, Configuration, env, consumerAssemblyMarkerType: typeof(Program));
 
         services.AddMediatR(new[]
         {
@@ -374,25 +375,63 @@ public class Startup
         return !string.IsNullOrEmpty(isDocker) && isDocker == "true";
     }
 
-    private void ConfigureMassTransit(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
+    private void ConfigureMassTransit(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env, Type consumerAssemblyMarkerType)
     {
+        var rabbitMqOptions = configuration.GetSection("RabbitMQSettings").Get<RabbitMqOptions>();
+
         services.AddMassTransit(x =>
         {
-            x.UsingRabbitMq((context, cfg) =>
-            {
-                cfg.Host(configuration["RabbitMQSettings:Host"], h =>
-                {
-                    h.Username(configuration["RabbitMQSettings:User"]);
-                    h.Password(configuration["RabbitMQSettings:Password"]);
-                });
+            x.AddConsumers(consumerAssemblyMarkerType.Assembly);
 
-                cfg.ReceiveEndpoint($"{configuration["RabbitMQSettings:QueueName"]}_{env.EnvironmentName}_TEMP", ep =>
+            x.UsingRabbitMq(
+                (context, cfg) =>
                 {
-                    // ep.ConfigureConsumer<YourConsumer>(context);
-                });
+                    cfg.Host(
+                        rabbitMqOptions.Host,
+                        h =>
+                        {
+                            h.Username(rabbitMqOptions.UserName);
+                            h.Password(rabbitMqOptions.Password);
+                        }
+                    );
 
-                cfg.ConfigureEndpoints(context);
-            });
+                    cfg.Message<CreatePlayerEvent>(c => c.SetEntityName("leaderboard.fanout"));
+
+                    cfg.Publish<CreatePlayerEvent>(p =>
+                    {
+                        p.ExchangeType = "fanout";
+                    });
+
+                    cfg.ReceiveEndpoint("HubApiQueue", e =>
+                    {
+                        e.Bind("leaderboard.fanout", x =>
+                        {
+                            x.ExchangeType = "fanout"; // Bind the queue to the fanout exchange
+                        });
+
+                        //e.ConfigureConsumer<CreatePlayerAggregationConsumer>(context); // Ensure the consumer is attached
+                    });
+                }
+            );
         });
+
+        //services.AddMassTransit(x =>
+        //{
+        //    x.UsingRabbitMq((context, cfg) =>
+        //    {
+        //        cfg.Host(configuration["RabbitMQSettings:Host"], h =>
+        //        {
+        //            h.Username(configuration["RabbitMQSettings:User"]);
+        //            h.Password(configuration["RabbitMQSettings:Password"]);
+        //        });
+
+        //        cfg.ReceiveEndpoint($"{configuration["RabbitMQSettings:QueueName"]}_{env.EnvironmentName}_TEMP", ep =>
+        //        {
+        //            ep.ConfigureConsumer(context);
+        //        });
+
+        //        cfg.ConfigureEndpoints(context);
+        //    });
+        //});
     }
 }
