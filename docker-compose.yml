@@ -74,6 +74,39 @@ services:
       - ConnectionStrings__Connection=Host=admindb;Port=5435;Database=OnAimAdmin;Username=postgres;Password=12345678;Pooling=true;
     volumes:
           - ./Admin/OnAim.Admin.API/appsettings.json:/app/appsettings.json
+          
+  levelapi:
+    build:
+      context: .
+      dockerfile: LevelService/LevelService.Api/Dockerfile
+    ports:
+      - "5004:8080"  # Map host port 5004 to container port 8080
+    depends_on:
+      - consul
+      - leveldb
+    environment:
+      - CONSUL_ADDRESS=http://consul:8500
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__OnAimLevel=Host=leveldb;Port=5432;Database=OnAimLevel;Username=postgres;Password=Test1234!
+    volumes:
+      - ./LevelService/LevelService.Api/appsettings.json:/app/appsettings.json
+      
+  missionapi:
+    build:
+      context: .
+      dockerfile: MissionService/MissionService.Api/Dockerfile
+    ports:
+      - "5005:8080"  # Map host port 5005 to container port 8080
+    depends_on:
+      - consul
+      - missiondb
+    environment:
+      - CONSUL_ADDRESS=http://consul:8500
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__OnAimMission=Host=missiondb;Port=5432;Database=OnAimMission;Username=postgres;Password=Test1234!
+    volumes:
+      - ./MissionService/MissionService.Api/appsettings.json:/app/appsettings.json
+      
 
   leaderboardapi:
     build:
@@ -105,7 +138,7 @@ services:
       - "5432:5432"
     volumes:
       - gameconfigdb_data:/var/lib/postgresql/data
-
+      
   gamehistorydb:
     image: postgres:13
     environment:
@@ -127,6 +160,30 @@ services:
       - "5435:5432"
     volumes:
       - admindb:/var/lib/postgresql/data
+      
+  leveldb:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: OnAimLevel
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test1234!
+      # POSTGRES_PASSWORD: 1234
+    ports:
+      - "5436:5432"
+    volumes:
+      - leveldb_data:/var/lib/postgresql/data
+      
+  missiondb:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: OnAimMission
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test1234!
+      # POSTGRES_PASSWORD: 1234
+    ports:
+      - "5437:5432"
+    volumes:
+      - missiondb_data:/var/lib/postgresql/data
 
   mongo:
     image: mongo:latest
@@ -161,6 +218,10 @@ volumes:
   admindb:
     driver: local
   mongo-data:
+    driver: local
+  missiondb_data:
+    driver: local
+  leveldb_data:
     driver: local
   leaderboarddb_data:
     driver: local
