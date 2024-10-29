@@ -19,7 +19,7 @@ using Shared.Lib.Wrappers;
 
 namespace Hub.Api.Controllers;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiExplorerSettings(GroupName = "hub")]
 public class HubController : BaseApiController
 {

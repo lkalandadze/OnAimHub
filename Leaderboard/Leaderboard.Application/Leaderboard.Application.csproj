@@ -21,9 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared.Domain\Shared.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Shared\Shared.Lib\Shared.Lib.csproj" />
     <ProjectReference Include="..\Leaderboard.Infrastructure\Leaderboard.Infrastructure.csproj" />
-    <ProjectReference Include="..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
-    <ProjectReference Include="..\Shared\Shared.Lib\Shared.Lib.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities;
 using Hub.Domain.Entities.DbEnums;
+using Hub.IntegrationEvents.Player;
 using MediatR;
 using Microsoft.Extensions.Options;
 using Shared.Lib.Extensions;
@@ -23,6 +24,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
     private readonly ITokenService _tokenService;
     private readonly HttpClient _httpClient;
     private readonly CasinoApiConfiguration _casinoApiConfiguration;
+    private readonly IMediator _mediator;
 
     public CreateAuthenticationTokenHandler(IPlayerRepository playerRepository,
                                             IPlayerBanRepository playerBanRepository,
@@ -32,7 +34,8 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
                                             ITokenService tokenService,
                                             IPlayerLogService playerLogService,
                                             HttpClient httpClient,
-                                            IOptions<CasinoApiConfiguration> casinoApiConfiguration)
+                                            IOptions<CasinoApiConfiguration> casinoApiConfiguration,
+                                            IMediator mediator)
     {
         _playerRepository = playerRepository;
         _playerBanRepository = playerBanRepository;
@@ -43,6 +46,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
         _playerLogService = playerLogService;
         _httpClient = httpClient;
         _casinoApiConfiguration = casinoApiConfiguration.Value;
+        _mediator = mediator;
     }
 
     public async Task<Response<CreateAuthenticationTokenResponse>> Handle(CreateAuthenticationTokenCommand request, CancellationToken cancellationToken)
@@ -118,6 +122,10 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
 
         var (token, refreshToken) = await _tokenService.GenerateTokenStringAsync(player);
         var response = new CreateAuthenticationTokenResponse(token, refreshToken);
+
+        var events = new CreatePlayerPublishCommand(player.Id, player.UserName);
+
+        await _mediator.Send(events);
 
         return new Response<CreateAuthenticationTokenResponse>(response);
     }

@@ -74,6 +74,26 @@ services:
       - ConnectionStrings__Connection=Host=admindb;Port=5435;Database=OnAimAdmin;Username=postgres;Password=12345678;Pooling=true;
     volumes:
           - ./Admin/OnAim.Admin.API/appsettings.json:/app/appsettings.json
+
+  leaderboardapi:
+    build:
+      context: .
+      dockerfile: Leaderboard/Leaderboard.Api/Dockerfile
+    ports:
+      - "5004:8080"
+    environment:
+      - ConnectionString__OnAimLeaderboard=Host=leaderboarddb;Port=5436;Database=OnAimLeaderboard;Username=postgres;Password=Test1234!
+    volumes:
+      - ./Leaderboard/Leaderboard.Api/appsettings.json:/app/appsettings.json
+      
+  testapi:
+    build:
+      context: .
+      dockerfile: Test.Api/Dockerfile
+    ports:
+      - "5005:8080"
+    volumes:
+      - ./Test.Api/appsettings.json:/app/appsettings.json
       
   gameconfigdb:
     image: postgres:13
@@ -121,6 +141,17 @@ services:
       - mongo-data:/data/db
     networks:
       - mongo_net
+      
+  leaderboarddb:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: OnAimLeaderboard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test1234!
+    ports:
+      - "5436:5432"
+    volumes:
+      - leaderboarddb_data:/var/lib/postgresql/data
 
 volumes:
   gameconfigdb_data:
@@ -130,6 +161,8 @@ volumes:
   admindb:
     driver: local
   mongo-data:
+    driver: local
+  leaderboarddb_data:
     driver: local
 
 networks:

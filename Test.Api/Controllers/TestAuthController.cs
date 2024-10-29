@@ -25,8 +25,8 @@ public class TestAuthController : ControllerBase
                 IssuerSigningKey = key,
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                ValidIssuer = "https://localhost:7141/",
-                ValidAudience = "https://localhost:7141/",
+                ValidIssuer = "http://192.168.8.115:5002/",
+                ValidAudience = "http://192.168.8.115:5002/",
                 ClockSkew = TimeSpan.Zero
             }, out SecurityToken validatedToken);
 
@@ -79,8 +79,8 @@ public class TestAuthController : ControllerBase
         };
 
         var token = new JwtSecurityToken(
-            issuer: "https://localhost:7141/",
-            audience: "https://localhost:7141/",
+            issuer: "http://192.168.8.115:5002/",
+            audience: "http://192.168.8.115:5002/",
             claims: claims,
             expires: DateTime.Now.AddMinutes(60),
             signingCredentials: creds

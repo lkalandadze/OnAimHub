@@ -1,5 +1,23 @@
 {
-  "Routes": [],
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/hubapi/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hubapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/hubapi/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ]
+    }
+  ],
   "GlobalConfiguration": {
     "BaseUrl": "http://ocelotapigateway:8080",
     "ServiceDiscoveryProvider": {

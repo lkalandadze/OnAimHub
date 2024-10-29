@@ -10,17 +10,24 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.DefaultModelExpandDepth(-1);
-        c.DocumentTitle = "Test.Api";
-    });
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI(c =>
+//    {
+//        c.DefaultModelExpandDepth(-1);
+//        c.DocumentTitle = "Test.Api";
+//    });
+//}
 
-app.UseHttpsRedirection();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.DefaultModelExpandDepth(-1);
+    c.DocumentTitle = "Test.Api";
+});
+
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

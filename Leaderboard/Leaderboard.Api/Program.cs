@@ -8,6 +8,7 @@ using Leaderboard.Application.Services.Abstract.BackgroundJobs;
 using Leaderboard.Application.Services.Concrete;
 using Leaderboard.Application.Services.Concrete.BackgroundJobs;
 using Leaderboard.Infrastructure;
+using MassTransit;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,7 @@ builder.Services
 
 builder.Services
             .AddApplicationLayer()
+            .AddMassTransitWithRabbitMqTransport(configuration, consumerAssemblyMarkerType: typeof(Program))
             .AddInfrastructureLayer(configuration)
             .AddCustomServices(configuration);
 

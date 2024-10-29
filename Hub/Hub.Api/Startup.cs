@@ -6,7 +6,6 @@ using Hub.Api.Common.Consul;
 using Hub.Api.Middlewares;
 using Hub.Application;
 using Hub.Application.Configurations;
-using Hub.Application.Features.IdentityFeatures.Commands.BasicAuthentication;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Services.Abstract;
 using Hub.Application.Services.Abstract.BackgroundJobs;
@@ -17,6 +16,7 @@ using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
 using Hub.Infrastructure.DataAccess;
 using Hub.Infrastructure.Repositories;
+using Hub.IntegrationEvents.Player;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -26,8 +26,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.PostgreSQL;
-using Swashbuckle.AspNetCore.Filters;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Shared.Infrastructure.Bus;
 using System.Reflection;
 using System.Security.Cryptography;
 
@@ -87,6 +86,7 @@ public class Startup
         services.AddScoped<IJobService, JobService>();
         services.AddScoped<IActSchedulerService, ActSchedulerService>();
         services.AddScoped<IBackgroundJobScheduler, HangfireJobScheduler>();
+        services.AddScoped<IMessageBus, MessageBus>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<BasicAuthConfiguration>(Configuration.GetSection("BasicAuthConfiguration"));
@@ -104,7 +104,8 @@ public class Startup
         services.AddMediatR(new[]
         {
             typeof(CreateAuthenticationTokenHandler).GetTypeInfo().Assembly,
-        });
+            typeof(CreatePlayerPublishHandler).Assembly
+    });
 
         services.AddMassTransitHostedService();
 
@@ -123,8 +124,8 @@ public class Startup
         ConfigureSwagger(services);
         ConfigureAuthentication(services);
 
-        services.AddAuthentication("BasicAuth")
-            .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuth", null);
+        services.AddAuthentication("BasicAuth");
+            //.AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuth", null);
 
         services.AddAuthorization();
 
@@ -310,7 +311,7 @@ public class Startup
         ecdsa.ImportECPrivateKey(keyBytes, out _);
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null)
+            //.AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null)
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
