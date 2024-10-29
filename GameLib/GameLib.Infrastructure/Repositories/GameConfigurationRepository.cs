@@ -29,9 +29,7 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
 
     public override async Task<List<GameConfiguration>> QueryAsync(Expression<Func<GameConfiguration, bool>>? expression = null)
     {
-        var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
-
-        return expression != null ? dbSet.Where(expression).ToList() : await dbSet.ToListAsync();
+        return await Query(expression).ToListAsync();
     }
 
     public void InsertConfigurationTree(GameConfiguration aggregateRoot)
@@ -50,28 +48,28 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
         addMethod.Invoke(dbSet, parameters);
     }
 
-    public async Task UpdateConfigurationTreeAsync(GameConfiguration updatedEntity)
+    public async Task UpdateConfigurationTreeAsync(GameConfiguration updatedConfig)
     {
         var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
 
-        var existingEntity = await RepositoryHelper.IncludeNavigationProperties(context, dbSet)
+        var existingConfig = await RepositoryHelper.IncludeNavigationProperties(context, dbSet)
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == updatedEntity.Id);
+            .FirstOrDefaultAsync(x => x.Id == updatedConfig.Id);
 
-        if (existingEntity == null)
+        if (existingConfig == null)
         {
-            throw new KeyNotFoundException($"Entity with ID {updatedEntity.Id} not found.");
+            throw new KeyNotFoundException($"Entity with ID {updatedConfig.Id} not found.");
         }
 
-        var configType = RepositoryHelper.GetEntityType<GameConfiguration>(context);
+        var configType = RepositoryHelper.GetDbSetEntityType<GameConfiguration>(context);
         var properties = configType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
         foreach (var property in properties)
         {
-            if (RepositoryHelper.IsCollection(property.PropertyType))
+            if (TypeHelper.IsGenericCollection(property.PropertyType))
             {
-                var existingCollection = property.GetValue(existingEntity) as IEnumerable;
-                var updatedCollection = property.GetValue(updatedEntity) as IEnumerable;
+                var existingCollection = property.GetValue(existingConfig) as IEnumerable;
+                var updatedCollection = property.GetValue(updatedConfig) as IEnumerable;
 
                 if (existingCollection != null && updatedCollection != null)
                 {
@@ -80,15 +78,15 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
             }
             else
             {
-                var updatedValue = property.GetValue(updatedEntity);
+                var updatedValue = property.GetValue(updatedConfig);
 
                 if (updatedValue != null)
                 {
-                    property.SetValue(existingEntity, updatedValue);
+                    property.SetValue(existingConfig, updatedValue);
                 }
             }
         }
 
-        base.Update(existingEntity);
+        base.Update(existingConfig);
     }
 }

@@ -5,12 +5,7 @@ namespace Shared.Lib.Helpers;
 
 public static class RepositoryHelper
 {
-    public static bool IsCollection(Type type)
-    {
-        return type.IsGenericType && (typeof(ICollection<>).IsAssignableFrom(type.GetGenericTypeDefinition()) || typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition()));
-    }
-
-    public static Type GetEntityType<T>(DbContext context) where T : class
+    public static Type GetDbSetEntityType<T>(DbContext context) where T : class
     {
         var dbSets = context.GetType()
                             .GetProperties()
@@ -24,7 +19,7 @@ public static class RepositoryHelper
 
     public static IQueryable<T> GetDbSet<T>(DbContext context) where T : class
     {
-        var configType = GetEntityType<T>(context);
+        var configType = GetDbSetEntityType<T>(context);
 
         var setMethod = typeof(DbContext)
             .GetMethods()
