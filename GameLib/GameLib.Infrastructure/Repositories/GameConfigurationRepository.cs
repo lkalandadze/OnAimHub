@@ -2,6 +2,7 @@
 using GameLib.Domain.Entities;
 using GameLib.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Shared.Lib.Helpers;
 using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -13,29 +14,29 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
     public override async Task<GameConfiguration?> OfIdAsync(dynamic id)
     {
         int convertedId = Convert.ToInt32(id);
+        var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
 
-        return await IncludeNavigationProperties(GetDbSet()).Where(c => c.Id == convertedId)
-                                                            .FirstOrDefaultAsync();
+        return await RepositoryHelper.IncludeNavigationProperties(context, dbSet).Where(c => c.Id == convertedId)
+                                                                                 .FirstOrDefaultAsync();
     }
 
     public override IQueryable<GameConfiguration> Query(Expression<Func<GameConfiguration, bool>>? expression = null)
     {
-        return expression != null ? GetDbSet().Where(expression) : GetDbSet();
+        var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
+
+        return expression != null ? dbSet.Where(expression) : dbSet;
     }
 
     public override async Task<List<GameConfiguration>> QueryAsync(Expression<Func<GameConfiguration, bool>>? expression = null)
     {
-        return expression != null ? GetDbSet().Where(expression).ToList() : await GetDbSet().ToListAsync();
-    }
+        var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
 
-    public override void Delete(GameConfiguration aggregateRoot)
-    {
-        base.Delete(aggregateRoot);
+        return expression != null ? dbSet.Where(expression).ToList() : await dbSet.ToListAsync();
     }
 
     public void InsertConfigurationTree(GameConfiguration aggregateRoot)
     {
-        var dbSet = GetDbSet();
+        var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
 
         var addMethod = dbSet.GetType().GetMethod(nameof(DbSet<object>.Add));
 
@@ -51,9 +52,9 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
 
     public async Task UpdateConfigurationTreeAsync(GameConfiguration updatedEntity)
     {
-        var dbSet = GetDbSet();
+        var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
 
-        var existingEntity = await IncludeNavigationProperties(dbSet)
+        var existingEntity = await RepositoryHelper.IncludeNavigationProperties(context, dbSet)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == updatedEntity.Id);
 
@@ -62,18 +63,19 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
             throw new KeyNotFoundException($"Entity with ID {updatedEntity.Id} not found.");
         }
 
-        var properties = GetGameConfigurationType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        var configType = RepositoryHelper.GetEntityType<GameConfiguration>(context);
+        var properties = configType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
         foreach (var property in properties)
         {
-            if (IsCollection(property.PropertyType))
+            if (RepositoryHelper.IsCollection(property.PropertyType))
             {
                 var existingCollection = property.GetValue(existingEntity) as IEnumerable;
                 var updatedCollection = property.GetValue(updatedEntity) as IEnumerable;
 
                 if (existingCollection != null && updatedCollection != null)
                 {
-                    UpdateCollection(existingCollection, updatedCollection, property.PropertyType);
+                    RepositoryHelper.UpdateCollection(context, existingCollection, updatedCollection, property.PropertyType);
                 }
             }
             else
@@ -89,108 +91,4 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
 
         base.Update(existingEntity);
     }
-
-    public void UpdateCollection(IEnumerable existingCollection, IEnumerable updatedCollection, Type collectionType)
-    {
-        if (existingCollection == null || updatedCollection == null)
-        {
-            return;
-        }
-
-        var itemType = collectionType.GetGenericArguments().FirstOrDefault();
-
-        if (itemType == null)
-        {
-            return;
-        }
-
-        var clearMethod = typeof(ICollection<>).MakeGenericType(itemType).GetMethod(nameof(ICollection<object>.Clear));
-        clearMethod?.Invoke(existingCollection, null);
-
-        var addMethod = typeof(ICollection<>).MakeGenericType(itemType).GetMethod(nameof(ICollection<object>.Add));
-
-        foreach (var updatedItem in updatedCollection)
-        {
-            var entityEntry = _context.Entry(updatedItem);
-
-            if (entityEntry.State == EntityState.Detached)
-            {
-                _context.Attach(updatedItem);
-            }
-
-            entityEntry.State = EntityState.Modified;
-
-            addMethod?.Invoke(existingCollection, [updatedItem]);
-        }
-    }
-
-    public bool IsCollection(Type type)
-    {
-        return type.IsGenericType && (typeof(ICollection<>).IsAssignableFrom(type.GetGenericTypeDefinition()) || typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition()));
-    }
-
-    private Type GetGameConfigurationType()
-    {
-        var dbSets = context.GetType()
-                            .GetProperties()
-                            .Where(p => p.PropertyType.IsGenericType 
-                                     && p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>));
-
-        return dbSets.Select(dbSet => dbSet.PropertyType.GetGenericArguments()[0])
-                                                        .First(setType => typeof(GameConfiguration)
-                                                        .IsAssignableFrom(setType));
-    }
-
-    private IQueryable<GameConfiguration> GetDbSet()
-    {
-        var configType = GetGameConfigurationType();
-
-        var setMethod = typeof(DbContext)
-            .GetMethods()
-            .First(m => m.Name == nameof(DbContext.Set) && m.IsGenericMethod);
-
-        var genericSetMethod = setMethod.MakeGenericMethod(configType);
-        var dbSet = genericSetMethod.Invoke(_context, null);
-
-        if (dbSet == null)
-        {
-            throw new ArgumentNullException(nameof(dbSet));
-        }
-
-        return (IQueryable<GameConfiguration>)dbSet;
-    }
-
-    private IQueryable<GameConfiguration> IncludeNavigationProperties(IQueryable<GameConfiguration> query)
-    {
-        var derivedEntityTypes = context.Model.GetEntityTypes()
-            .Where(e => typeof(GameConfiguration).IsAssignableFrom(e.ClrType) && !e.ClrType.IsAbstract);
-
-        foreach (var entityType in derivedEntityTypes)
-        {
-            var navigationProperties = entityType.GetNavigations().Select(n => n.Name).Distinct();
-
-            foreach (var navigationProperty in navigationProperties)
-            {
-                query = query.Include(navigationProperty);
-            }
-        }
-
-        return query;
-    }
-
-    //#pragma warning disable CS0809
-
-    //[Obsolete("This method is obsolete and should not be used. Please use InsertConfigurationTree(GameConfiguration aggregateRoot) instead.", true)]
-    //public override Task InsertAsync(GameConfiguration aggregateRoot)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //[Obsolete("This method is obsolete and should not be used. Please use UpdateConfigurationTreeAsync(GameConfiguration updatedEntity) instead.", true)]
-    //public override void Update(GameConfiguration aggregateRoot)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //#pragma warning restore CS0809
 }
