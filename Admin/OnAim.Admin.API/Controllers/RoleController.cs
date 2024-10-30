@@ -5,8 +5,8 @@ using OnAim.Admin.APP.Features.RoleFeatures.Commands.Delete;
 using OnAim.Admin.APP.Features.RoleFeatures.Commands.Update;
 using OnAim.Admin.APP.Features.RoleFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.RoleFeatures.Queries.GetById;
-using OnAim.Admin.Shared.ApplicationInfrastructure.Validation;
-using OnAim.Admin.Shared.DTOs.Role;
+using OnAim.Admin.Contracts.ApplicationInfrastructure.Validation;
+using OnAim.Admin.Contracts.Dtos.Role;
 using System.Net;
 
 namespace OnAim.Admin.API.Controllers;

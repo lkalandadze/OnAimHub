@@ -41,7 +41,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OnAim.Admin.APP\OnAim.Admin.APP.csproj" />
-    <ProjectReference Include="..\OnAim.Admin.Shared\OnAim.Admin.Shared.csproj" />
   </ItemGroup>
 
 </Project>

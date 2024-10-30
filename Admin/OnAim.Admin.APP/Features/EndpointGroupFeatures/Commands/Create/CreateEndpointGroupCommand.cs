@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.EndpointGroup;
+using OnAim.Admin.Contracts.Dtos.EndpointGroup;
 
 namespace OnAim.Admin.APP.Features.EndpointGroupFeatures.Commands.Create;
 

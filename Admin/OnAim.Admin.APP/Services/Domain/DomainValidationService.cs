@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Exceptions;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;

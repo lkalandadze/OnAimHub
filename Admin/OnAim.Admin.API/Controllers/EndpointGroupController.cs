@@ -5,8 +5,8 @@ using OnAim.Admin.APP.Features.EndpointGroupFeatures.Commands.Delete;
 using OnAim.Admin.APP.Features.EndpointGroupFeatures.Commands.Update;
 using OnAim.Admin.APP.Features.EndpointGroupFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.EndpointGroupFeatures.Queries.GetById;
-using OnAim.Admin.Shared.ApplicationInfrastructure.Validation;
-using OnAim.Admin.Shared.DTOs.EndpointGroup;
+using OnAim.Admin.Contracts.Dtos.EndpointGroup;
+using OnAim.Admin.Contracts.ApplicationInfrastructure.Validation;
 using System.Net;
 
 namespace OnAim.Admin.API.Controllers;

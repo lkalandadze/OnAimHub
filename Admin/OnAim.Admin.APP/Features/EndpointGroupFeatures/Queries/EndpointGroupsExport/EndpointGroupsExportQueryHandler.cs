@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.DTOs.EndpointGroup;
+using OnAim.Admin.Contracts.Dtos.EndpointGroup;
 using Microsoft.AspNetCore.Http;
 using System.Dynamic;
 using System.Net.Mime;
-using OnAim.Admin.Shared.Helpers.Csv;
+using OnAim.Admin.Contracts.Helpers.Csv;
 using OnAim.Admin.APP.CQRS.Query;
 
 namespace OnAim.Admin.APP.Features.EndpointGroupFeatures.Queries.EndpointGroupsExport;

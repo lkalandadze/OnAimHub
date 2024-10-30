@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Exceptions;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.DTOs.User;
+using OnAim.Admin.Contracts.Dtos.User;
 using System.Security.Claims;
-using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
+using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
 using OnAim.Admin.APP.CQRS.Command;
 
 namespace OnAim.Admin.APP.Feature.Identity;

@@ -1,5 +1,5 @@
-﻿using OnAim.Admin.Shared.DTOs.Role;
-using OnAim.Admin.Shared.Paging;
+﻿using OnAim.Admin.Contracts.Dtos.Role;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.Domain.Interfaces;
 

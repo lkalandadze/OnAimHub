@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.Role;
+using OnAim.Admin.Contracts.Dtos.Role;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Commands.Create;
 

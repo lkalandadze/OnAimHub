@@ -7,23 +7,24 @@ using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
 using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Domain.Exceptions;
+using OnAim.Admin.Contracts.Dtos;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
-using OnAim.Admin.Shared.DTOs.AuditLog;
-using OnAim.Admin.Shared.DTOs.Endpoint;
-using OnAim.Admin.Shared.DTOs.EndpointGroup;
-using OnAim.Admin.Shared.DTOs.Role;
-using OnAim.Admin.Shared.DTOs.User;
-using OnAim.Admin.Shared.Enums;
-using OnAim.Admin.Shared.Helpers;
-using OnAim.Admin.Shared.Helpers.Password;
-using OnAim.Admin.Shared.Models;
-using OnAim.Admin.Shared.Paging;
+using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
+using OnAim.Admin.Contracts.Dtos.AuditLog;
+using OnAim.Admin.Contracts.Dtos.Endpoint;
+using OnAim.Admin.Contracts.Dtos.EndpointGroup;
+using OnAim.Admin.Contracts.Dtos.Role;
+using OnAim.Admin.Contracts.Dtos.User;
+using OnAim.Admin.Contracts.Enums;
+using OnAim.Admin.Contracts.Helpers;
+using OnAim.Admin.Contracts.Helpers.Password;
+using OnAim.Admin.Contracts.Models;
+using OnAim.Admin.Contracts.Paging;
 using System.Linq.Expressions;
 using System.Security.Claims;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 
 namespace OnAim.Admin.APP.Services.User;
 
@@ -41,9 +42,9 @@ public class UserService : IUserService
     private readonly ISecurityContextAccessor _securityContextAccessor;
 
     public UserService(
-        IRepository<OnAim.Admin.Domain.Entities.User> userRepository,
+        IRepository<Admin.Domain.Entities.User> userRepository,
         IPasswordService passwordService,
-        IRepository<OnAim.Admin.Domain.Entities.Role> roleRepository,
+        IRepository<Admin.Domain.Entities.Role> roleRepository,
         IConfigurationRepository<UserRole> configurationRepository,
         IJwtFactory jwtFactory,
         IOtpService otpService,
@@ -77,7 +78,7 @@ public class UserService : IUserService
 
         user.IsActive = true;
         user.IsVerified = true;
-        user.VerificationPurpose = Shared.Enums.VerificationPurpose.AccountActivation;
+        user.VerificationPurpose = VerificationPurpose.AccountActivation;
         user.VerificationCode = null;
         user.VerificationCodeExpiration = null;
 
@@ -540,7 +541,7 @@ public class UserService : IUserService
         return permissions;
     }
 
-    private async Task<OnAim.Admin.Domain.Entities.User> CreateUserWithTemporaryPassword(CreateUserCommand request)
+    private async Task<Admin.Domain.Entities.User> CreateUserWithTemporaryPassword(CreateUserCommand request)
     {
         var temporaryPassword = PasswordHelper.GenerateTemporaryPassword();
         var salt = EncryptPasswordExtension.Salt();
@@ -574,7 +575,7 @@ public class UserService : IUserService
         return user;
     }
 
-    private OnAim.Admin.Domain.Entities.User CreateUser(CreateUserDto create)
+    private Admin.Domain.Entities.User CreateUser(CreateUserDto create)
     {
         return new OnAim.Admin.Domain.Entities.User(
             create.FirstName,
@@ -594,7 +595,7 @@ public class UserService : IUserService
         );
     }
 
-    private void HandleExistingUser(OnAim.Admin.Domain.Entities.User existingUser)
+    private void HandleExistingUser(Admin.Domain.Entities.User existingUser)
     {
         if (existingUser.IsActive == false)
         {
@@ -613,12 +614,12 @@ public class UserService : IUserService
         await _configurationRepository.CommitChanges();
     }
 
-    private async Task<OnAim.Admin.Domain.Entities.User?> GetExistingUserAsync(string email)
+    private async Task<Admin.Domain.Entities.User?> GetExistingUserAsync(string email)
     {
         return await _userRepository.Query(x => x.Email == email).FirstOrDefaultAsync();
     }
 
-    private async Task AssignDefaultRoleToUserAsync(OnAim.Admin.Domain.Entities.User user)
+    private async Task AssignDefaultRoleToUserAsync(Admin.Domain.Entities.User user)
     {
         var role = await _roleRepository.Query(x => x.Name == "DefaultRole").FirstOrDefaultAsync();
         if (role != null)
@@ -661,7 +662,7 @@ public class UserService : IUserService
         await SendActivationEmailAsync(user, activationCode);
     }
 
-    private async Task SendActivationEmailAsync(OnAim.Admin.Domain.Entities.User user, string activationCode)
+    private async Task SendActivationEmailAsync(Admin.Domain.Entities.User user, string activationCode)
     {
         var activationLink = $"activate?userId={user.Id}&code={activationCode}";
 

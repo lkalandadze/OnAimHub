@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.Base;
+using OnAim.Admin.Contracts.Dtos.Base;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Queries.GetUserLogs;
 

@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.User;
+using OnAim.Admin.Contracts.Dtos.User;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Queries.GetAllUser;
 

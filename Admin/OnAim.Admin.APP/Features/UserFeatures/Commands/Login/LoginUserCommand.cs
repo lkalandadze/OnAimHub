@@ -1,5 +1,5 @@
 ﻿using OnAim.Admin.APP.CQRS.Command;
-using OnAim.Admin.Shared.DTOs.User;
+using OnAim.Admin.Contracts.Dtos.User;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Login;
 

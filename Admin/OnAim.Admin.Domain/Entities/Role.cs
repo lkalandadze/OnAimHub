@@ -1,5 +1,5 @@
-﻿using OnAim.Admin.Domain.Entities.Abstract;
-using OnAim.Admin.Shared.Models;
+﻿using OnAim.Admin.Contracts.Models;
+using OnAim.Admin.Domain.Entities.Abstract;
 
 namespace OnAim.Admin.Domain.Entities;
 

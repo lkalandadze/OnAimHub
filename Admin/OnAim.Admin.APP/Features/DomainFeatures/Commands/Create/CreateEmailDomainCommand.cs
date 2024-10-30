@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.Contracts.Dtos.EmailDomain;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.EmailDomain;
 
 namespace OnAim.Admin.APP.Features.DomainFeatures.Commands.Create;
 

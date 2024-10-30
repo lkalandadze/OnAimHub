@@ -1,4 +1,4 @@
-﻿using OnAim.Admin.Shared.Helpers.Password;
+﻿using OnAim.Admin.Contracts.Helpers.Password;
 
 namespace OnAim.Admin.APP.Services.AuthServices;
 

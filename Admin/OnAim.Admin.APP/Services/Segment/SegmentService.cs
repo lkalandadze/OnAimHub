@@ -5,13 +5,14 @@ using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPlayer
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
 using OnAim.Admin.APP.Services.ClientService;
-using OnAim.Admin.Domain.Exceptions;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.HubEntities;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.Segment;
-using OnAim.Admin.Shared.Paging;
+using OnAim.Admin.Contracts.Dtos.Segment;
+using OnAim.Admin.Contracts.Dtos;
 using System.Net.Http.Headers;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.APP.Services.Segment;
 

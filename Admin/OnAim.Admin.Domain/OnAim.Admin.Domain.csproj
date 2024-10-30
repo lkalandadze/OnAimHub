@@ -14,8 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\Shared.IntegrationEvents\Shared.IntegrationEvents.csproj" />
-    <ProjectReference Include="..\OnAim.Admin.Shared\OnAim.Admin.Shared.csproj" />
+    <ProjectReference Include="..\OnAim.Admin.Contracts\OnAim.Admin.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
