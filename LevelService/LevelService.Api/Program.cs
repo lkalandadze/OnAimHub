@@ -3,6 +3,8 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using LevelService.Api.Extensions;
 using LevelService.Application;
+using LevelService.Application.Services.Abstract.BackgroundJobs;
+using LevelService.Application.Services.Concrete.BackgroundJobs;
 using LevelService.Infrastructure;
 using System.Globalization;
 
@@ -33,15 +35,13 @@ builder.Services
 
 
 //needs to be taken to custom services
-//builder.Services.AddScoped<IJobService, JobService>();
-//builder.Services.AddScoped<IBackgroundJobScheduler, BackgroundJobScheduler>();
+builder.Services.AddScoped<IStageSchedulerService, StageSchedulerService>();
 
 builder.Services.AddHangfire(config =>
     config.UsePostgreSqlStorage(configuration.GetConnectionString("OnAimLevel")));
 builder.Services.AddHangfireServer();
 
 //builder.Services.AddHostedService<JobSyncService>();
-//builder.Services.AddHostedService<LevelStatusUpdaterService>();
 
 CustomServiceExtensions.ConfigureJwt(builder.Services, configuration);
 CustomServiceExtensions.ConfigureSwagger(builder.Services);
