@@ -15,7 +15,7 @@ using OnAim.Admin.APP.Feature.UserFeature.Queries.GetAllUser;
 using OnAim.Admin.APP.Feature.UserFeature.Queries.GetById;
 using OnAim.Admin.APP.Feature.UserFeature.Queries.GetUserLogs;
 using OnAim.Admin.APP.Features.UserFeatures.Commands.TwoFA;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.ApplicationInfrastructure.Validation;
 using OnAim.Admin.Contracts.Dtos.User;
 using System.Net;

@@ -3,7 +3,8 @@ using Moq;
 using OnAim.Admin.APP.Feature.UserFeature.Commands.Registration;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
-using OnAim.Admin.Domain.Exceptions;
+using OnAim.Admin.Contracts.Enums;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 
 namespace OnAim.Admin.Test.User;
 
@@ -106,7 +107,7 @@ public class RegistrationCommandHandlerTests
             false,
             false,
             "",
-            Shared.Enums.VerificationPurpose.AccountActivation,
+            VerificationPurpose.AccountActivation,
             new DateTime(),
             false);
 
@@ -137,7 +138,7 @@ public class RegistrationCommandHandlerTests
             false,
             false,
             "",
-            Shared.Enums.VerificationPurpose.AccountActivation,
+            VerificationPurpose.AccountActivation,
             new DateTime(),
             false)
         { IsActive = false };
@@ -169,7 +170,7 @@ public class RegistrationCommandHandlerTests
             true,
             false,
             "",
-            Shared.Enums.VerificationPurpose.AccountActivation,
+            VerificationPurpose.AccountActivation,
             DateTime.UtcNow,
             false)
         { IsDeleted = true };

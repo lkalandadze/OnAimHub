@@ -8,7 +8,7 @@ using OnAim.Admin.APP.Services.ClientService;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.HubEntities;
 using OnAim.Admin.Domain.Interfaces;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Segment;
 using OnAim.Admin.Contracts.Dtos;
 using System.Net.Http.Headers;

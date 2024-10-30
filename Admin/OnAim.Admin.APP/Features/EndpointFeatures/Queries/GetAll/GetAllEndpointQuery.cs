@@ -1,5 +1,5 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Endpoint;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Queries.GetAll;

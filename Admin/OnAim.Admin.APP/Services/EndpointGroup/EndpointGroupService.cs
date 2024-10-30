@@ -4,7 +4,7 @@ using OnAim.Admin.APP.Services.AuthServices.Auth;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Endpoint;
 using OnAim.Admin.Contracts.Dtos.EndpointGroup;
 using OnAim.Admin.Contracts.Dtos.Role;

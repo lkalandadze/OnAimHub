@@ -1,5 +1,5 @@
-﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.EndpointGroup;
+﻿using OnAim.Admin.Contracts.Dtos.EndpointGroup;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Services.Abstract;
 

@@ -3,9 +3,10 @@ using Moq;
 using OnAim.Admin.APP.Features.EndpointFeatures.Commands.Create;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
-using OnAim.Admin.Domain.Exceptions;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.Endpoint;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.Endpoint;
+using OnAim.Admin.Contracts.Enums;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 
 namespace OnAim.Admin.Test.Endpoint;
 
@@ -35,7 +36,7 @@ public class CreateEndpointCommandHandlerTest
     {
         var command = new CreateEndpointCommand(new List<CreateEndpointDto>());
 
-        var filter = new EndpointFilter("", true, Shared.Enums.HistoryStatus.All, null, null, null);
+        var filter = new EndpointFilter("", true, HistoryStatus.All, null, null, null);
 
         MockEndpointService
             .Setup(service => service.GetAll(filter))

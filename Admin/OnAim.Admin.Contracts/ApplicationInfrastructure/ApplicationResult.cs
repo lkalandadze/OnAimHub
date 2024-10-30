@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.Contracts.ApplicationInfrastructure.Validation;
 
-namespace OnAim.Admin.Shared.ApplicationInfrastructure;
+namespace OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 public class ApplicationResult<T>
 {

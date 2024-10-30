@@ -1,5 +1,5 @@
 ﻿using OnAim.Admin.APP.CQRS.Command;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using System.ComponentModel.DataAnnotations;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Create;

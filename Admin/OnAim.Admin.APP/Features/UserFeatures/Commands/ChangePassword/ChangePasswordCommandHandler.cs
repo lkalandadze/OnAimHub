@@ -1,7 +1,7 @@
 ﻿using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Services.Abstract;
 using FluentValidation;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.ChangePassword;
 

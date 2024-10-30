@@ -2,7 +2,7 @@
 using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Features.PlayerFeatures.Commands.BanPlayer;
 using OnAim.Admin.APP.Services.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 public class BanPlayerCommandHandler : ICommandHandler<BanPlayerCommand, ApplicationResult>
 {

@@ -5,7 +5,7 @@ using OnAim.Admin.APP.Services.ClientService;
 using OnAim.Admin.Domain.HubEntities;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Domain.LeaderBoradEntities;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Player;
 using OnAim.Admin.Contracts.Dtos.Refer;
 using OnAim.Admin.Contracts.Dtos.Segment;

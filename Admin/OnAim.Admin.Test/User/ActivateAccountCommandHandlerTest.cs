@@ -6,11 +6,11 @@ using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
 using OnAim.Admin.APP.Services.User;
+using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
 using System.Linq.Expressions;
 
 namespace OnAim.Admin.Test.User;

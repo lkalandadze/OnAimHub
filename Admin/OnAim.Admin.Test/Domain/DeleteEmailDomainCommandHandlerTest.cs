@@ -4,9 +4,9 @@ using Moq;
 using OnAim.Admin.APP.Features.DomainFeatures.Commands.Delete;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.EmailDomain;
- 
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.EmailDomain;
+
 namespace OnAim.Admin.Test.Domain;
 
 public class DeleteEmailDomainCommandHandlerTest

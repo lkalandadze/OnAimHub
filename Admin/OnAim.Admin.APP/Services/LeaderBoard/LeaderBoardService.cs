@@ -8,7 +8,7 @@ using OnAim.Admin.Contracts.Dtos.Player;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Domain.LeaderBoradEntities;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 

@@ -4,7 +4,9 @@ using Moq;
 using OnAim.Admin.APP.Feature.UserFeature.Commands.Delete;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.User;
+using OnAim.Admin.Contracts.Enums;
 
 namespace OnAim.Admin.Test.User;
 
@@ -70,13 +72,13 @@ public class DeleteUserCommandHandlerTests
             )
         }.AsQueryable().BuildMock();
         var command = new DeleteUserCommand(userIds);
-        var filter = new Shared.DTOs.User.UserFilter(
+        var filter = new UserFilter(
             "",
             "",
             "",
             new List<int>(),
             true,
-            Shared.Enums.HistoryStatus.All,
+            HistoryStatus.All,
             new DateTime(),
             new DateTime(),
             new DateTime(),
@@ -107,13 +109,13 @@ public class DeleteUserCommandHandlerTests
         var emptyUsers = new List<OnAim.Admin.Domain.Entities.User>().AsQueryable().BuildMock();
         var command = new DeleteUserCommand(userIds);
 
-        var filter = new Shared.DTOs.User.UserFilter(
+        var filter = new UserFilter(
             "",
             "",
             "",
             new List<int>(),
             true,
-            Shared.Enums.HistoryStatus.All,
+            HistoryStatus.All,
             new DateTime(),
             new DateTime(),
             new DateTime(),

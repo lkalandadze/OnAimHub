@@ -4,8 +4,8 @@ using Moq;
 using OnAim.Admin.APP.Features.EndpointFeatures.Commands.Delete;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.Endpoint;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.Endpoint;
 
 namespace OnAim.Admin.Test.Endpoint;
 

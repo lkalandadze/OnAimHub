@@ -1,7 +1,7 @@
-﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.APP.CQRS.Command;
+﻿using OnAim.Admin.APP.CQRS.Command;
 using FluentValidation;
 using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Commands.Update;
 

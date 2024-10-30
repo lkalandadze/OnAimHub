@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.EmailDomain;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Services.Abstract;
 

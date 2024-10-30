@@ -1,4 +1,4 @@
-﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
+﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.Abstract;
 namespace OnAim.Admin.APP.Features.EndpointGroupFeatures.Queries.GetById;

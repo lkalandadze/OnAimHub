@@ -7,10 +7,8 @@ using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
 using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Contracts.Dtos;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
 using OnAim.Admin.Contracts.Dtos.AuditLog;
 using OnAim.Admin.Contracts.Dtos.Endpoint;
@@ -25,6 +23,7 @@ using OnAim.Admin.Contracts.Paging;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Services.User;
 
