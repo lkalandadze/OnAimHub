@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LevelService.Infrastructure.Migrations
 {
     [DbContext(typeof(LevelDbContext))]
-    [Migration("20241028090951_init")]
+    [Migration("20241030065230_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -148,14 +148,28 @@ namespace LevelService.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTimeOffset?>("DateDeleted")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTimeOffset?>("DateFrom")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset?>("DateTo")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("IsCustom")
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
+
+                    b.Property<bool>("IsExpirable")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
