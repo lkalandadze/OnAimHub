@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.Contracts.Dtos.Endpoint;
+using OnAim.Admin.Contracts.Dtos.EndpointGroup;
+using OnAim.Admin.Contracts.Dtos.Role;
+using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
-using OnAim.Admin.Shared.DTOs.Endpoint;
-using OnAim.Admin.Shared.DTOs.EndpointGroup;
-using OnAim.Admin.Shared.DTOs.Role;
-using OnAim.Admin.Shared.Paging;
 
 namespace OnAim.Admin.Infrasturcture.Repository;
 

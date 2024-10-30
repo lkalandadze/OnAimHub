@@ -1,5 +1,5 @@
 ﻿using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.Player;
+using OnAim.Admin.Contracts.Dtos.Player;
 
 namespace OnAim.Admin.APP.Services.Abstract;
 

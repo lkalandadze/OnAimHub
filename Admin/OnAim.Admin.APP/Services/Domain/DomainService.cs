@@ -2,12 +2,12 @@
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
 using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Domain.Exceptions;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.EmailDomain;
-using OnAim.Admin.Shared.Enums;
-using OnAim.Admin.Shared.Paging;
+using OnAim.Admin.Contracts.Dtos.EmailDomain;
+using OnAim.Admin.Contracts.Enums;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.APP.Services.Domain;
 

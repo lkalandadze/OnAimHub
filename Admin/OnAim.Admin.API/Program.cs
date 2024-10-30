@@ -1,6 +1,7 @@
 using OnAim.Admin.API.Extensions;
 using OnAim.Admin.API.Middleware;
 using OnAim.Admin.APP;
+using OnAim.Admin.APP.Services.ClientServices;
 using OnAim.Admin.Infrasturcture;
 using Serilog;
 using Serilog.Events;
@@ -16,6 +17,8 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 builder.Services.AddCustomJwtAuthentication(builder.Configuration);
+builder.Services.AddScoped<HttpClientService>();
+
 builder.Services
                 .AddCustomAuthorization()
                 .AddCustomCors()
@@ -37,11 +40,11 @@ var app = builder.Build();
 
 app.UseSerilogRequestLogging();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//}
+app.UseSwagger();
+app.UseSwaggerUI();
 app.ApplyMigrations();
 
 app.UseCors("MyPolicy");

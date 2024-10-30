@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
+using OnAim.Admin.Contracts.Dtos.User;
+using OnAim.Admin.Contracts.Enums;
 using OnAim.Admin.Domain.Entities.Abstract;
-using OnAim.Admin.Shared.DTOs.User;
-using OnAim.Admin.Shared.Enums;
-using OnAim.Admin.Shared.Models;
+using OnAim.Admin.Contracts.Dtos.User;
+using OnAim.Admin.Contracts.Enums;
+using OnAim.Admin.Contracts.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnAim.Admin.Domain.Entities;

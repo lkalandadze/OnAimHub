@@ -1,7 +1,7 @@
 ﻿using OnAim.Admin.APP.Feature.UserFeature.Commands.ProfileUpdate;
 using OnAim.Admin.APP.Feature.UserFeature.Queries.GetUserLogs;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.User;
+using OnAim.Admin.Contracts.Dtos.User;
 
 namespace OnAim.Admin.APP.Services.Abstract;
 

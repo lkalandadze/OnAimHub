@@ -5,7 +5,7 @@ using Polly;
 using System.Text;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
-using OnAim.Admin.Domain.Exceptions;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 
 namespace OnAim.Admin.APP.Services.ClientService;
 

@@ -5,8 +5,9 @@ using OnAim.Admin.APP.Features.DomainFeatures.Commands.Create;
 using OnAim.Admin.APP.Features.DomainFeatures.Commands.Delete;
 using OnAim.Admin.APP.Features.DomainFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Services.Abstract;
-using OnAim.Admin.Shared.DTOs.EmailDomain;
-using OnAim.Admin.Shared.Models;
+using OnAim.Admin.Contracts.Dtos.EmailDomain;
+using OnAim.Admin.Contracts.Dtos;
+using OnAim.Admin.Contracts.Models;
 
 namespace OnAim.Admin.API.Controllers;
 

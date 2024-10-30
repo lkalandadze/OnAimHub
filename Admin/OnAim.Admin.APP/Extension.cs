@@ -3,14 +3,14 @@ using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Repository;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
-using OnAim.Admin.Shared.Models;
+using OnAim.Admin.Contracts.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using OnAim.Admin.APP.Services.Email;
 using OnAim.Admin.APP.Feature.Identity;
-using OnAim.Admin.Shared.Helpers.Csv;
-using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
+using OnAim.Admin.Contracts.Helpers.Csv;
+using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
 using OnAim.Admin.APP.Services.AuthServices;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories;
@@ -22,10 +22,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using OnAim.Admin.APP.Services.ClientService;
 using Autofac;
 using System.Reflection;
-using OnAim.Admin.Shared.Helpers.HtmlGenerators;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Domain.Exceptions;
-using ValidationException = OnAim.Admin.Domain.Exceptions.ValidationException;
 using OnAim.Admin.APP.Services.Domain;
 using OnAim.Admin.APP.Services.User;
 using OnAim.Admin.APP.Services.Endpoint;
@@ -34,9 +31,14 @@ using OnAim.Admin.APP.Services.Role;
 using OnAim.Admin.APP.Services.Segment;
 using OnAim.Admin.APP.Services.Player;
 using OnAim.Admin.APP.Services.Game;
-using MassTransit;
-using Shared.Infrastructure.MassTransit;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
+using ValidationException = OnAim.Admin.CrossCuttingConcerns.Exceptions.ValidationException;
 using Shared.Infrastructure.Bus;
+using Shared.Infrastructure.MassTransit;
+using MassTransit;
+using OnAim.Admin.APP.Services.LeaderBoard;
+using OnAim.Admin.APP.Services.ClientServices;
+using System;
 
 
 namespace OnAim.Admin.APP;
@@ -66,6 +68,7 @@ public static class Extension
             .AddScoped<IDomainService, DomainService>()
             .AddScoped<IGameService, GameService>()
             .AddScoped<ISegmentService, SegmentService>()
+            .AddScoped<ILeaderBoardService, LeaderBoardService>()
             .AddScoped<IPlayerService, PlayerService>()
             .AddTransient<IJwtFactory, JwtFactory>()
             .AddHostedService<TokenCleanupService>()
@@ -74,8 +77,8 @@ public static class Extension
             .AddScoped<IAppSettingsService, AppSettingsService>()
             .AddScoped<IOtpService, OtpService>()
             .AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>))
-            .AddScoped(typeof(CommandContext<>), typeof(CommandContext<>))
-            .AddHtmlGenerator();
+            .AddScoped(typeof(CommandContext<>), typeof(CommandContext<>));
+            ////.AddHtmlGenerator();
         services
             .AddScoped(typeof(IRepository<>), typeof(EfRepository<>))
             .AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>))
@@ -177,6 +180,9 @@ public static partial class WebApplicationBuilderExtensions
     private static void AddHubApiClient(WebApplicationBuilder builder)
     {
         builder.Services.AddValidatedOptions<HubApiClientOptions>();
+
+        builder.Services.AddValidatedOptions<LeaderBoardApiClientOptions>();
+
         builder.Services.AddHttpClient<IHubApiClient, HubApiClient>(
             (client, sp) =>
             {
@@ -189,6 +195,19 @@ public static partial class WebApplicationBuilderExtensions
                 return new HubApiClient(client, catalogApiOptions, policyOptions, "admin", "password");
             }
         );
+
+        builder.Services.AddHttpClient<ILeaderBoardApiClient, HttpClientService>(
+           (client, sp) =>
+           {
+               var catalogApiOptions = sp.GetRequiredService<IOptions<LeaderBoardApiClientOptions>>();
+               var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
+               catalogApiOptions.Value.NotBeNull();
+
+               var baseAddress = catalogApiOptions.Value.BaseApiAddress;
+               client.BaseAddress = new Uri(baseAddress);
+               return new HttpClientService(client, catalogApiOptions, policyOptions);
+           }
+       );
     }
 
     public static IServiceCollection AddValidatedOptions<T>(

@@ -68,7 +68,7 @@ public class LeaderboardRecord : BaseEntity<int>
     {
         var prize = LeaderboardRecordPrizes.FirstOrDefault(x => x.Id == id);
 
-        if (prize != null) return;
+        if (prize == null) return;
 
         prize.Update(startRank, endRank, prizeId, amount);
     }

@@ -24,6 +24,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.7" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.29.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Npgsql" Version="8.0.3" />
@@ -32,8 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OnAim.Admin.Contracts\OnAim.Admin.Contracts.csproj" />
     <ProjectReference Include="..\OnAim.Admin.Domain\OnAim.Admin.Domain.csproj" />
-    <ProjectReference Include="..\OnAim.Admin.Shared\OnAim.Admin.Shared.csproj" />
   </ItemGroup>
 
 </Project>

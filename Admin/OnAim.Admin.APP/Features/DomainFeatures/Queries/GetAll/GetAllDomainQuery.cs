@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.EmailDomain;
+using OnAim.Admin.Contracts.Dtos.EmailDomain;
 
 namespace OnAim.Admin.APP.Features.DomainFeatures.Queries.GetAll;
 

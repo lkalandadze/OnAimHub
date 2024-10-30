@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPlayers;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.Segment;
+using OnAim.Admin.Contracts.Dtos.Segment;
 
 namespace OnAim.Admin.APP.Services.Abstract;
 

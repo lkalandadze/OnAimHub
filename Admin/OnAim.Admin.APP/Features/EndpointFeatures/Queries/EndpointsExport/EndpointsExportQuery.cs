@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using OnAim.Admin.APP.CQRS.Query;
-using OnAim.Admin.Shared.DTOs.Endpoint;
+using OnAim.Admin.Contracts.Dtos.Endpoint;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Queries.EndpointsExport;
 

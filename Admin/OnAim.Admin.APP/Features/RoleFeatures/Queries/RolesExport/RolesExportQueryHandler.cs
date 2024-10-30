@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.DTOs.Role;
+using OnAim.Admin.Contracts.Dtos.Role;
 using Microsoft.AspNetCore.Http;
 using System.Dynamic;
 using System.Net.Mime;
-using OnAim.Admin.Shared.Helpers.Csv;
+using OnAim.Admin.Contracts.Helpers.Csv;
 using OnAim.Admin.APP.CQRS.Query;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Queries.RolesExport;

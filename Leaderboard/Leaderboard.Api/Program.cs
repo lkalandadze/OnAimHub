@@ -37,6 +37,10 @@ builder.Services
             .AddInfrastructureLayer(configuration)
             .AddCustomServices(configuration);
 
+builder.Services.Configure<HostOptions>(options =>
+{
+    options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore;
+});
 
 //needs to be taken to custom services
 builder.Services.AddScoped<ICalendarService, CalendarService>();

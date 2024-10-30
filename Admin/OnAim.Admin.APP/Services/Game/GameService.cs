@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.ClientService;
-using OnAim.Admin.Shared.DTOs.Game;
+using OnAim.Admin.Contracts.Dtos.Game;
 
 namespace OnAim.Admin.APP.Services.Game;
 

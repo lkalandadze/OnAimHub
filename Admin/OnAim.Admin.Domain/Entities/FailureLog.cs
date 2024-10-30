@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
-using OnAim.Admin.Shared.Models;
+using OnAim.Admin.Contracts.Models;
 
 namespace OnAim.Admin.Domain.Entities;
 

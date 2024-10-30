@@ -14,7 +14,7 @@ public class UpdateLeaderboardRecordCommandHandler : IRequestHandler<UpdateLeade
 
     public async Task Handle(UpdateLeaderboardRecordCommand request, CancellationToken cancellationToken)
     {
-        var leaderboard = await _leaderboardRecordRepository.Query().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var leaderboard = await _leaderboardRecordRepository.Query().Include(x => x.LeaderboardRecordPrizes).FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (leaderboard == default)
             throw new Exception("Leaderboard not found");

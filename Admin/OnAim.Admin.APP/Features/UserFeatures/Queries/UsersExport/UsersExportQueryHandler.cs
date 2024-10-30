@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Shared.DTOs.User;
+using OnAim.Admin.Contracts.Dtos.User;
 using System.Net.Mime;
 using System.Dynamic;
-using OnAim.Admin.Shared.Helpers.Csv;
+using OnAim.Admin.Contracts.Helpers.Csv;
 using OnAim.Admin.APP.CQRS.Query;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Queries.UsersExport;

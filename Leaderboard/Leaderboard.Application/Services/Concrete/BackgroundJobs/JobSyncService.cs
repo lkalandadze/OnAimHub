@@ -17,17 +17,25 @@ public class JobSyncService : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            using (var scope = _serviceScopeFactory.CreateScope())
+            try
             {
-                var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
-                var backgroundJobScheduler = scope.ServiceProvider.GetRequiredService<IBackgroundJobScheduler>();
-
-                var jobs = await jobService.GetAllTemplateJobsAsync();
-
-                foreach (var job in jobs)
+                using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    backgroundJobScheduler.ScheduleJob(job);
+                    var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
+                    var backgroundJobScheduler = scope.ServiceProvider.GetRequiredService<IBackgroundJobScheduler>();
+
+                    var jobs = await jobService.GetAllTemplateJobsAsync();
+
+                    foreach (var job in jobs)
+                    {
+                        backgroundJobScheduler.ScheduleJob(job);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception, handle it as needed
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
 
             await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken); // Sync every 5 minutes

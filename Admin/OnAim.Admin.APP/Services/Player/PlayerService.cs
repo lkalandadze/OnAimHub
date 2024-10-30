@@ -2,16 +2,16 @@
 using Microsoft.Extensions.Options;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.ClientService;
-using OnAim.Admin.Domain.Exceptions;
 using OnAim.Admin.Domain.HubEntities;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Shared.ApplicationInfrastructure;
-using OnAim.Admin.Shared.DTOs.Player;
-using OnAim.Admin.Shared.DTOs.Refer;
-using OnAim.Admin.Shared.DTOs.Segment;
-using OnAim.Admin.Shared.DTOs.Transaction;
-using OnAim.Admin.Shared.Paging;
+using OnAim.Admin.Contracts.Dtos.Player;
+using OnAim.Admin.Contracts.Dtos.Refer;
+using OnAim.Admin.Contracts.Dtos.Segment;
+using OnAim.Admin.Contracts.Dtos.Transaction;
+using OnAim.Admin.Contracts.Paging;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 
 namespace OnAim.Admin.APP.Services.Player;
 

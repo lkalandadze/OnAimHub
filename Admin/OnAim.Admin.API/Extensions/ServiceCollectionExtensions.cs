@@ -7,7 +7,7 @@ using OnAim.Admin.API.Service.Endpoint;
 using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using OnAim.Admin.APP.Feature.Identity;
-using OnAim.Admin.Shared.ApplicationInfrastructure.Configuration;
+using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Authentication;

@@ -10,7 +10,7 @@ using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBannedPlayers;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetById;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetLeaderBoardResultByPlayerId;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetProgress;
-using OnAim.Admin.Shared.DTOs.Player;
+using OnAim.Admin.Contracts.Dtos.Player;
 
 namespace OnAim.Admin.API.Controllers;
 

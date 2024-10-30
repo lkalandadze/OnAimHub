@@ -20,7 +20,7 @@ using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.ActsAndHistory.Hi
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPlayers;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetGeneralSegmentActsHistory;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetSegmentActs;
-using OnAim.Admin.Shared.DTOs.Segment;
+using OnAim.Admin.Contracts.Dtos.Segment;
 
 namespace OnAim.Admin.API.Controllers;
 
