@@ -17,7 +17,7 @@ public class Configuration : BaseEntity<int>
     public decimal ExperienceToGrant { get; set; }
 
     public bool IsDeleted { get; private set; }
-    public DateTimeOffset DateDeleted { get; private set; }
+    public DateTimeOffset? DateDeleted { get; private set; }
 
     public void Update(string currencyId, decimal experienceToGrant)
     {
