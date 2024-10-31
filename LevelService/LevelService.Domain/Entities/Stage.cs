@@ -24,6 +24,7 @@ public class Stage : BaseEntity<int>
     public DateTimeOffset? DateDeleted { get; private set; }
 
     public ICollection<Level> Levels { get; set; }
+    public ICollection<Configuration> Configurations { get; set; }
 
     public void UpdateStatus(StageStatus status)
     {
@@ -43,9 +44,18 @@ public class Stage : BaseEntity<int>
     {
         var level = Levels.FirstOrDefault(x => x.Id == id);
 
-        if (level == null) return;
+        if (level == default) return;
 
         level.Update(number, experienceToArchieve);
+    }
+
+    public void UpdateConfiguration(int id, string currencyId, decimal experienceToGrant)
+    {
+        var configuration = Configurations.FirstOrDefault(x => x.Id == id);
+
+        if (configuration == default) return;
+
+        configuration.Update(currencyId, experienceToGrant);
     }
 
     public void Delete()

@@ -1,9 +1,5 @@
 ﻿using LevelService.Application.Features.LevelFeatures.Commands.Create;
 using LevelService.Application.Features.LevelFeatures.Queries.Get;
-using LevelService.Application.Features.StageFeatures.Commands.Create;
-using LevelService.Application.Features.StageFeatures.Commands.Delete;
-using LevelService.Application.Features.StageFeatures.Commands.Update;
-using LevelService.Application.Features.StageFeatures.Queries.Get;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LevelService.Api.Controllers;

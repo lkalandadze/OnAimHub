@@ -1,5 +1,6 @@
 ﻿using LevelService.Domain.Abstractions.Repository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace LevelService.Application.Features.StageFeatures.Commands.Update;
 
@@ -13,11 +14,13 @@ public class UpdateStageCommandHandler : IRequestHandler<UpdateStageCommand>
 
     public async Task Handle(UpdateStageCommand request, CancellationToken cancellationToken)
     {
-        var stage = _stageRepository.Query().FirstOrDefault(x => x.Id.Equals(request.Id));
+        var stage = await _stageRepository.Query().FirstOrDefaultAsync(x => x.Id.Equals(request.Id));
 
         if (stage == default)
             throw new Exception("Stage not found");
 
         stage.Update(request.Name, request.Description, request.DateFrom, request.DateTo, request.IsExpirable);
+
+        await _stageRepository.SaveChangesAsync(cancellationToken);
     }
 }

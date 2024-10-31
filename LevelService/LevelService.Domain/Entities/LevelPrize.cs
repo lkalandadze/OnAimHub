@@ -13,11 +13,11 @@ public class LevelPrize : BaseEntity<int>
         PrizeDeliveryType = prizeDeliveryType;
     }
 
-    public int Amount { get; set; }
-    public string PrizeTypeId { get; set; }
-    public PrizeType PrizeType { get; set; }
-    public PrizeDeliveryType PrizeDeliveryType { get; set; }
-    public int RankId { get; set; }
+    public int Amount { get; private set; }
+    public string PrizeTypeId { get; private set; }
+    public PrizeType PrizeType { get; private set; }
+    public PrizeDeliveryType PrizeDeliveryType { get; private set; }
+    public int RankId { get; private set; }
 
     public void Update(int amount, string prizeTypeId, PrizeDeliveryType prizeDeliveryType)
     {

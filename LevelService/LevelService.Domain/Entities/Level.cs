@@ -11,9 +11,9 @@ public class Level : BaseEntity<int>
         ExperienceToArchieve = experienceToArchieve;
     }
 
-    public int Number { get; set; }
-    public int ExperienceToArchieve { get; set; }
-    public int ActId { get; set; }
+    public int Number { get; private set; }
+    public int ExperienceToArchieve { get; private set; }
+    public int ActId { get; private set; }
     public ICollection<LevelPrize> LevelPrizes { get; set; }
 
     public void Update(int number, int experienceToArchieve)

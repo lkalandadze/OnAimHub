@@ -8,7 +8,14 @@ public class Player : BaseEntity<int>
     {
         Id = id;
         Username = username;
+        Experience = 0;
     }
 
-    public string Username { get; set; }
+    public string Username { get; private set; }
+    public decimal Experience { get; private set; }
+
+    public void AddExperience(decimal experiencePoints)
+    {
+        Experience += experiencePoints;
+    }
 }

@@ -3,6 +3,7 @@ using System;
 using LevelService.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LevelService.Infrastructure.Migrations
 {
     [DbContext(typeof(LevelDbContext))]
-    partial class LevelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241031103224_ChangedPlayers_AddedConfiguration")]
+    partial class ChangedPlayers_AddedConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,14 +38,8 @@ namespace LevelService.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("DateDeleted")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<decimal>("ExperienceToGrant")
                         .HasColumnType("numeric");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
 
                     b.Property<int?>("StageId")
                         .HasColumnType("integer");
