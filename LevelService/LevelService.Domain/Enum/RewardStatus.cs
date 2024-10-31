@@ -1,4 +1,4 @@
-﻿namespace LevelService.Domain.Entities;
+﻿namespace LevelService.Domain.Enum;
 
 public enum RewardStatus
 {

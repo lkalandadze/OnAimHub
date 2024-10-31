@@ -1,4 +1,5 @@
-﻿using Shared.Domain.Entities;
+﻿using LevelService.Domain.Enum;
+using Shared.Domain.Entities;
 
 namespace LevelService.Domain.Entities;
 
