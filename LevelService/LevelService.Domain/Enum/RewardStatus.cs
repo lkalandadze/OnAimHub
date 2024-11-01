@@ -2,7 +2,6 @@
 
 public enum RewardStatus
 {
-    InProgress = 0,
-    Finished = 1,
-    Claimed = 2,
+    Unclaimed = 0,
+    Claimed = 1,
 }

@@ -9,7 +9,7 @@ public class PlayerReward : BaseEntity<int>
     {
         PlayerId = playerId;
         LevelPrizeId = levelPrizeId;
-        RewardStatus = RewardStatus.InProgress;
+        RewardStatus = RewardStatus.Unclaimed;
     }
 
     public int PlayerId { get; set; }
