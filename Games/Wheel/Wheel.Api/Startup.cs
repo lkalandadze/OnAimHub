@@ -17,15 +17,6 @@ using Wheel.Infrastructure.Repositories;
 
 namespace Wheel.Api;
 
-//public class TestContext : SharedGameConfigDbContext<WheelConfiguration>
-//{
-//    public TestContext(DbContextOptions<TestContext> options)
-//     : base(options)
-//    {
-//    }
-
-//}
-
 public class Startup
 {
     public IConfiguration Configuration { get; }
@@ -35,12 +26,9 @@ public class Startup
         Configuration = configuration;
     }
 
-
-
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetConfigurationByIdQueryHandler).Assembly));
-
 
         services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
         services.AddScoped<SharedGameConfigDbContext<WheelConfiguration>, WheelConfigDbContext>();
@@ -66,7 +54,6 @@ public class Startup
         services.Resolve<WheelConfiguration>(Configuration, prizeGroupTypes, "WheelApi");
 
         services.AddScoped<IWheelService, WheelService>();
-
 
         ConfigureMassTransit(services);
         services.AddMassTransitHostedService();

@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnAim.Lib.EntityExtension.GlobalAttributes.Attributes;
 using System.Collections;
+using System.Reflection;
 
 namespace Shared.Lib.Helpers;
 
@@ -34,6 +36,73 @@ public static class RepositoryHelper
         }
 
         return (IQueryable<T>)dbSet;
+    }
+
+    public static IQueryable<TEntity> IncludeNotHiddenAll<TEntity>(this IQueryable<TEntity> query) where TEntity : class
+    {
+        return IncludeNotHiddenAll(query, typeof(TEntity));
+    }
+
+    public static IQueryable<TEntity> IncludeNotHiddenAll<TEntity>(this IQueryable<TEntity> query, Type type) where TEntity : class
+    {
+        var pathsToInclude = GetAllNavigationPaths(query, type, "", []);
+
+        pathsToInclude.ForEach(path =>
+        {
+            query = query.Include(path);
+        });
+
+        return query;
+    }
+
+    public static List<string> GetAllNavigationPaths<TEntity>(IQueryable<TEntity> query, Type entityType, string path, List<string> paths) where TEntity : class
+    {
+        var navigations = entityType.GetProperties()
+            .Where(p => IsNavigableProperty(p) && p.Name != "Id")
+            .Where(p => p.GetCustomAttribute<IgnoreIncludeAllAttribute>() == null)
+            .ToList();
+
+        foreach (var navigation in navigations)
+        {
+            if (!TypeHelper.IsGenericCollection(navigation.PropertyType))
+            {
+                continue;
+            }
+
+            var navigationPath = string.IsNullOrEmpty(path) ? navigation.Name : $"{path}.{navigation.Name}";
+
+            var isTypeHidden = navigation.PropertyType.GetGenericArguments().First()
+                                         .GetCustomAttributes<IgnoreIncludeAllAttribute>().Any();
+
+            if (!navigation.PropertyType.IsGenericType || isTypeHidden)
+            {
+                continue;
+            }
+
+            paths.Add(navigationPath);
+
+            Type navigationType = navigation.PropertyType;
+
+            navigationType = navigation.PropertyType.IsGenericType
+                ? navigation.PropertyType.GetGenericArguments().FirstOrDefault()
+                : navigation.PropertyType.GetElementType();
+
+            paths = GetAllNavigationPaths(query, navigationType, navigationPath, paths);
+        }
+
+        return paths.Distinct().ToList();
+    }
+
+    public static bool IsNavigableProperty(PropertyInfo property)
+    {
+        var type = property.PropertyType;
+
+        if (type.IsPrimitive || type == typeof(string) || type.IsEnum || type == typeof(DateTime) || type == typeof(decimal))
+        {
+            return false;
+        }
+
+        return type.IsClass || TypeHelper.IsGenericCollection(type);
     }
 
     public static IQueryable<T> IncludeNavigationProperties<T>(DbContext context, IQueryable<T> query) where T : class

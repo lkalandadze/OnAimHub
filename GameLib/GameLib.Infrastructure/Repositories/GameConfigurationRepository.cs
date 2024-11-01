@@ -15,9 +15,10 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
     {
         int convertedId = Convert.ToInt32(id);
         var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
+        var type = RepositoryHelper.GetDbSetEntityType<GameConfiguration>(context);
 
-        return await RepositoryHelper.IncludeNavigationProperties(context, dbSet).Where(c => c.Id == convertedId)
-                                                                                 .FirstOrDefaultAsync();
+        return await dbSet.IncludeNotHiddenAll(type).Where(c => c.Id == convertedId)
+                                                    .FirstOrDefaultAsync();
     }
 
     public override IQueryable<GameConfiguration> Query(Expression<Func<GameConfiguration, bool>>? expression = null)
