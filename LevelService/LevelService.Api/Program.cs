@@ -3,7 +3,9 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using LevelService.Api.Extensions;
 using LevelService.Application;
+using LevelService.Application.Services.Abstract;
 using LevelService.Application.Services.Abstract.BackgroundJobs;
+using LevelService.Application.Services.Concrete;
 using LevelService.Application.Services.Concrete.BackgroundJobs;
 using LevelService.Infrastructure;
 using System.Globalization;
@@ -36,6 +38,7 @@ builder.Services
 
 //needs to be taken to custom services
 builder.Services.AddScoped<IStageSchedulerService, StageSchedulerService>();
+builder.Services.AddScoped<IPlayerService, PlayerService>();
 
 builder.Services.AddHangfire(config =>
     config.UsePostgreSqlStorage(configuration.GetConnectionString("OnAimLevel")));

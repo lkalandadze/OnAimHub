@@ -31,6 +31,7 @@ public static class ServiceRegistration
         services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
         services.AddScoped<ICurrencyRepository, CurrencyRepository>();
         services.AddScoped<IPlayerRepository, PlayerRepository>();
+        services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
 
         return services;
     }

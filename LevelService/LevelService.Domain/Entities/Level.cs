@@ -13,7 +13,6 @@ public class Level : BaseEntity<int>
 
     public int Number { get; private set; }
     public int ExperienceToArchieve { get; private set; }
-    public int ActId { get; private set; }
     public ICollection<LevelPrize> LevelPrizes { get; set; }
 
     public void Update(int number, int experienceToArchieve)
