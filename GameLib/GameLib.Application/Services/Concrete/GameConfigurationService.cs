@@ -94,7 +94,6 @@ public class GameConfigurationService : IGameConfigurationService
             Console.WriteLine(ex.Message);
             throw;
         }
-        
     }
 
     public async Task ActivateAsync(int id)
