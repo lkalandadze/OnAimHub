@@ -20,5 +20,5 @@ public class PlayerReward : BaseEntity<int>
 
     public RewardStatus RewardStatus { get; set; }
 
-    public DateTimeOffset? DateClaimed { get; private set; }
+    public DateTimeOffset? DateClaimed { get; set; }
 }
