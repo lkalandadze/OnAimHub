@@ -7,4 +7,5 @@ public enum LeaderboardRecordStatus
     Announced = 2,
     InProgress = 3,
     Finished = 4,
+    Cancelled = 5,
 }
