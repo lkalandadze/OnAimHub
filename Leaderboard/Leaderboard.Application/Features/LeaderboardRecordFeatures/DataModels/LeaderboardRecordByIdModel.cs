@@ -6,6 +6,8 @@ namespace Leaderboard.Application.Features.LeaderboardRecordFeatures.DataModels;
 public sealed record LeaderboardRecordByIdModel
 {
     public int Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
     public DateTimeOffset CreationDate { get; set; }
     public DateTimeOffset AnnouncementDate { get; set; }
     public DateTimeOffset StartDate { get; set; }
@@ -18,6 +20,8 @@ public sealed record LeaderboardRecordByIdModel
         return new LeaderboardRecordByIdModel
         {
             Id = leaderboardRecord.Id,
+            Name = leaderboardRecord.Name,
+            Description = leaderboardRecord.Description,
             CreationDate = leaderboardRecord.CreationDate,
             AnnouncementDate = leaderboardRecord.AnnouncementDate,
             StartDate = leaderboardRecord.StartDate,

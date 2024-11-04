@@ -11,6 +11,7 @@ public class LeaderboardRecord : BaseEntity<int>
     }
 
     public LeaderboardRecord(string name,
+                             string description,
                              DateTimeOffset creationDate,
                              DateTimeOffset announcementDate,
                              DateTimeOffset startDate,
@@ -22,6 +23,7 @@ public class LeaderboardRecord : BaseEntity<int>
                              bool isGenerated)
     {
         Name = name;
+        Description = description;
         CreationDate = creationDate;
         AnnouncementDate = announcementDate;
         StartDate = startDate;
@@ -34,6 +36,7 @@ public class LeaderboardRecord : BaseEntity<int>
     }
 
     public string Name { get; set; }
+    public string Description { get; set; }
     public int? LeaderboardTemplateId { get; set; }
     public LeaderboardTemplate LeaderboardTemplate { get; set; }
     public DateTimeOffset CreationDate { get; set; }
@@ -47,9 +50,10 @@ public class LeaderboardRecord : BaseEntity<int>
     public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; } = new List<LeaderboardProgress>();
     public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; } = new List<LeaderboardRecordPrize>();
 
-    public void Update(string name, DateTimeOffset creationDate, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate, LeaderboardType leaderboardType)
+    public void Update(string name, string description, DateTimeOffset creationDate, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate, LeaderboardType leaderboardType)
     {
         Name = name;
+        Description = description;
         CreationDate = creationDate;
         AnnouncementDate = announcementDate;
         StartDate = startDate;

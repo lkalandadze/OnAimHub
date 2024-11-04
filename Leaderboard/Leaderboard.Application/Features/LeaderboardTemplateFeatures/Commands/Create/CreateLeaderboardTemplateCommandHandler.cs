@@ -21,6 +21,7 @@ public class CreateLeaderboardTemplateCommandHandler : IRequestHandler<CreateLea
     {
         var leaderboardTemplate = new LeaderboardTemplate(
             request.Name,
+            request.Description,
             request.StartTime,
             request.EndIn,
             request.StartIn,

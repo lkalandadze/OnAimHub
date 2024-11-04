@@ -113,6 +113,7 @@ public class JobService : IJobService
         // Create a new LeaderboardRecord based on the calculated dates and template info
         var newRecord = new LeaderboardRecord(
             schedule.Name,
+            leaderboardTemplate.Description,
             creationDate.ToUniversalTime(),
             announcementDate.ToUniversalTime(),
             startDate.ToUniversalTime(),

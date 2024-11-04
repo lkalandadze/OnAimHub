@@ -5,9 +5,10 @@ namespace Leaderboard.Domain.Entities;
 
 public class LeaderboardTemplate : BaseEntity<int>
 {
-    public LeaderboardTemplate(string name, TimeSpan startTime, int announceIn, int startIn, int endIn)
+    public LeaderboardTemplate(string name, string description, TimeSpan startTime, int announceIn, int startIn, int endIn)
     {
         Name = name;
+        Description = description;
         StartTime = startTime;
         AnnounceIn = announceIn;
         StartIn = startIn;
@@ -15,6 +16,7 @@ public class LeaderboardTemplate : BaseEntity<int>
     }
 
     public string Name { get; set; }
+    public string Description { get; set; }
     public TimeSpan StartTime { get; set; }
     public int AnnounceIn { get; set; }
     public int StartIn { get; set; }
@@ -36,9 +38,10 @@ public class LeaderboardTemplate : BaseEntity<int>
         prize.Update(startRank, endRank, prizeId, amount);
     }
 
-    public void Update(string name, TimeSpan startTime, int announceIn, int startIn, int endIn)
+    public void Update(string name, string description, TimeSpan startTime, int announceIn, int startIn, int endIn)
     {
         Name = name;
+        Description = description;
         StartTime = startTime;
         AnnounceIn = announceIn;
         StartIn = startIn;

@@ -19,7 +19,7 @@ public class UpdateLeaderboardTemplateCommandHandler : IRequestHandler<UpdateLea
         if (leaderboard == default)
             throw new Exception("Leaderboard not found");
 
-        leaderboard.Update(request.Name, request.StartTime, request.EndIn, request.StartIn, request.AnnounceIn);
+        leaderboard.Update(request.Name, request.Description, request.StartTime, request.EndIn, request.StartIn, request.AnnounceIn);
         foreach (var prize in request.Prizes)
         {
             leaderboard.UpdateLeaderboardPrizes(prize.Id, prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);

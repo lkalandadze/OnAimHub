@@ -21,6 +21,7 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
     {
         var leaderboard = new LeaderboardRecord(
             request.Name,
+            request.Description,
             request.CreationDate.ToUniversalTime(),
             request.AnnouncementDate.ToUniversalTime(),
             request.StartDate.ToUniversalTime(),
