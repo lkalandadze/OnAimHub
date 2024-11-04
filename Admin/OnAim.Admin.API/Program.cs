@@ -53,15 +53,9 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<PermissionMiddleware>();
+//app.UseMiddleware<PermissionMiddleware>();
 app.UseMiddleware<RequestHandlerMiddleware>();
 
 app.MapControllers();
-
-//app.UseHealthChecks("/health",
-//    new HealthCheckOptions
-//    {
-//        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-//    });
 
 app.Run();

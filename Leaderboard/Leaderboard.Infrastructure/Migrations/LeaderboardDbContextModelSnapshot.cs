@@ -337,6 +337,27 @@ namespace Leaderboard.Infrastructure.Migrations
                     b.ToTable("Prize");
                 });
 
+            modelBuilder.Entity("Leaderboard.Domain.Entities.Segment", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnOrder(1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("PriorityLevel")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Segments");
+                });
+
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardProgress", b =>
                 {
                     b.HasOne("Leaderboard.Domain.Entities.LeaderboardRecord", "LeaderboardRecord")

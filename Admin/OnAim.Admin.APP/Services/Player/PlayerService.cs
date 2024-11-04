@@ -117,7 +117,7 @@ public class PlayerService : IPlayerService
         var sortableFields = new List<string> { "Id", "UserName" };
 
         var palyers = _playerRepository.Query(x =>
-                        string.IsNullOrEmpty(filter.Name) || x.UserName.ToLower().Contains(filter.Name.ToLower()));
+                        string.IsNullOrEmpty(filter.Name) || EF.Functions.Like(x.UserName, $"{filter.Name}%")).AsNoTracking();
 
         if (filter.IsBanned.HasValue)
             palyers = palyers.Where(x => x.IsBanned == filter.IsBanned.Value);

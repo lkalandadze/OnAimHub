@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -8,8 +7,6 @@ using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using OnAim.Admin.APP.Feature.Identity;
 using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -17,16 +14,6 @@ namespace OnAim.Admin.API.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    //public static IServiceCollection AddConfigs(this IServiceCollection services, ConfigurationManager config)
-    //{
-    //    config.AddEnvironmentVariables();
-
-    //    services.Configure<AuthenticationConfig>(
-    //        config.GetSection(AuthenticationConfig.ToString()));
-
-    //    return services;
-    //}
-
     public static TOptions BindOptions<TOptions>(
     this IConfiguration configuration,
     Action<TOptions>? configurator = null

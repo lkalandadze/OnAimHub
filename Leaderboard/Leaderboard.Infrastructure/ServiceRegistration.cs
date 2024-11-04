@@ -33,7 +33,7 @@ public static class ServiceRegistration
         services.AddScoped<ILeaderboardPrizeRepository, LeaderboardPrizeRepository>();
         services.AddScoped<ILeaderboardProgressRepository, LeaderboardProgressRepository>();
         services.AddScoped<ILeaderboardResultRepository, LeaderboardResultRepository>();
-
+        services.AddScoped<ISegmentRepository, SegmentRepository>();
         return services;
     }
 }

@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.API.Extensions;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.AuthServices.Auth;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Domain.Interfaces;
+using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 using System.Text;
 
 namespace OnAim.Admin.API.Middleware;
@@ -59,6 +62,7 @@ public class PermissionMiddleware
         if (user.Identity.IsAuthenticated)
         {
             var roles = user.GetRoles();
+
             var hasPermission = await permissionService.RolesContainPermission(roles, dynamicRequiredPermission);
 
             if (hasPermission)
@@ -73,5 +77,23 @@ public class PermissionMiddleware
 
         var logEntry = new AccessDeniedLog(method, securityContextAccessor.UserId, null, requestBody, $"{method} {path} access denied", "Access denied due to insufficient permissions", 0);
         await auditLogService.AddAccessDeniedLogAsync(logEntry);
+    }
+    private async Task<List<string>> GetActiveRolesAsync(List<string> roles, DatabaseContext dbContext)
+    {
+        var activeRoles = new List<string>();
+
+        foreach (var role in roles)
+        {
+            var roleRecord = await dbContext.Roles
+                .Where(x => x.Name == role && x.IsActive && !x.IsDeleted)
+                .FirstOrDefaultAsync();
+
+            if (roleRecord != null)
+            {
+                activeRoles.Add(role);
+            }
+        }
+
+        return activeRoles;
     }
 }

@@ -684,24 +684,18 @@ public class UserService : IUserService
     public async Task<ApplicationResult> GetAll(UserFilter filter)
     {
         var query = _userRepository.Query(x =>
-                    string.IsNullOrEmpty(filter.Name) ||
-                    x.FirstName.ToLower().Contains(filter.Name.ToLower()));
+            string.IsNullOrEmpty(filter.Name) || EF.Functions.Like(x.FirstName, $"%{filter.Name}%")
+        ).AsNoTracking();
+
 
         if (filter?.HistoryStatus.HasValue == true)
         {
-            switch (filter.HistoryStatus.Value)
+            query = filter.HistoryStatus.Value switch
             {
-                case HistoryStatus.Existing:
-                    query = query.Where(u => u.IsDeleted == false);
-                    break;
-                case HistoryStatus.Deleted:
-                    query = query.Where(u => u.IsDeleted == true);
-                    break;
-                case HistoryStatus.All:
-                    break;
-                default:
-                    break;
-            }
+                HistoryStatus.Existing => query.Where(u => !u.IsDeleted),
+                HistoryStatus.Deleted => query.Where(u => u.IsDeleted),
+                _ => query
+            };
         }
 
         if (filter.IsActive.HasValue)
@@ -722,25 +716,19 @@ public class UserService : IUserService
         if (filter.RoleIds?.Any() == true)
             query = query.Where(x => x.UserRoles.Any(ur => filter.RoleIds.Contains(ur.RoleId)));
 
-        bool sortDescending = filter.SortDescending.GetValueOrDefault();
-        if (filter.SortBy == "Id" || filter.SortBy == "id")
+        query = filter.SortBy?.ToLower() switch
         {
-            query = sortDescending
+            "id" => filter.SortDescending.GetValueOrDefault()
                 ? query.OrderByDescending(x => x.Id)
-                : query.OrderBy(x => x.Id);
-        }
-        else if (filter.SortBy == "Name" || filter.SortBy == "name")
-        {
-            query = sortDescending
+                : query.OrderBy(x => x.Id),
+            "name" => filter.SortDescending.GetValueOrDefault()
                 ? query.OrderByDescending(x => x.FirstName)
-                : query.OrderBy(x => x.FirstName);
-        }
-        else if (filter.SortBy == "LastName" || filter.SortBy == "lastName")
-        {
-            query = sortDescending
+                : query.OrderBy(x => x.FirstName),
+            "lastname" => filter.SortDescending.GetValueOrDefault()
                 ? query.OrderByDescending(x => x.LastName)
-                : query.OrderBy(x => x.LastName);
-        }
+                : query.OrderBy(x => x.LastName),
+            _ => query
+        };
 
         var paginatedResult = await Paginator.GetPaginatedResult(
             query,

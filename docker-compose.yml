@@ -80,7 +80,7 @@ services:
       context: .
       dockerfile: LevelService/LevelService.Api/Dockerfile
     ports:
-      - "5004:8080"  # Map host port 5004 to container port 8080
+      - "5008:8080"  # Map host port 5004 to container port 8080
     depends_on:
       - consul
       - leveldb
@@ -96,7 +96,7 @@ services:
       context: .
       dockerfile: MissionService/MissionService.Api/Dockerfile
     ports:
-      - "5005:8080"  # Map host port 5005 to container port 8080
+      - "5009:8080"  # Map host port 5005 to container port 8080
     depends_on:
       - consul
       - missiondb
@@ -169,7 +169,7 @@ services:
       POSTGRES_PASSWORD: Test1234!
       # POSTGRES_PASSWORD: 1234
     ports:
-      - "5436:5432"
+      - "5439:5432"
     volumes:
       - leveldb_data:/var/lib/postgresql/data
       

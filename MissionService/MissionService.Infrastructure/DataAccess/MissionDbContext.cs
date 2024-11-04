@@ -21,6 +21,7 @@ public class MissionDbContext : DbContext
     }
 
     public DbSet<Player> Players { get; set; }
+    public DbSet<Segment> Segments { get; set; }
     public DbSet<PrizeType> PrizeTypes { get; set; }
     public DbSet<Currency> Currencies { get; set; }
 

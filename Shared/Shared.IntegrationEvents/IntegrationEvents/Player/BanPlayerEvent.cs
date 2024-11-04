@@ -4,14 +4,13 @@ using System.Text.Json.Serialization;
 
 namespace Shared.IntegrationEvents.IntegrationEvents.Player;
 
-public class BanPlayerEvent : DomainEvent, IIntegrationEvent
+public class BanPlayerEvent : IIntegrationEvent
 {
     public BanPlayerEvent(
         int playerId,
         DateTimeOffset? expireDate,
         bool isPermanent,
-        string description)
-        : base(entityId: playerId, entityType: "Player")
+        string description)       
     {
         PlayerId = playerId;
         ExpireDate = expireDate;

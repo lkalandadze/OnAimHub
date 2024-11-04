@@ -38,7 +38,6 @@ using Shared.Infrastructure.MassTransit;
 using MassTransit;
 using OnAim.Admin.APP.Services.LeaderBoard;
 using OnAim.Admin.APP.Services.ClientServices;
-using System;
 
 
 namespace OnAim.Admin.APP;
@@ -78,7 +77,6 @@ public static class Extension
             .AddScoped<IOtpService, OtpService>()
             .AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>))
             .AddScoped(typeof(CommandContext<>), typeof(CommandContext<>));
-            ////.AddHtmlGenerator();
         services
             .AddScoped(typeof(IRepository<>), typeof(EfRepository<>))
             .AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>))
@@ -95,13 +93,6 @@ public static class Extension
             var options = sp.GetRequiredService<IOptions<PostmarkOptions>>().Value;
             return new PostmarkService(options.ApiKey);
         });
-        //services.Configure<MailgunOptions>(configuration.GetSection("Postmark"));
-
-        //services.AddTransient<IEmailService>(sp =>
-        //{
-        //    var options = sp.GetRequiredService<IOptions<MailgunOptions>>().Value;
-        //    return new MailgunService(options.ApiKey, options.Domain);
-        //});
         if (configureOptions is { })
         {
             services.Configure(nameof(EmailOptions), configureOptions);
@@ -149,7 +140,7 @@ public static class Extension
                         rabbitMqOptions.Host,
                         h =>
                         {
-                            h.Username(rabbitMqOptions.UserName);
+                            h.Username(rabbitMqOptions.User);
                             h.Password(rabbitMqOptions.Password);
                         }
                     );

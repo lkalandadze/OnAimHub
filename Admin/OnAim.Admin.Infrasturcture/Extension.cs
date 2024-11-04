@@ -38,7 +38,6 @@ public static class Extension
         var mongoDbConnectionString = mongoDbSettings["Connection"];
         var mongoDbDatabaseName = mongoDbSettings["DatabaseName"];
 
-        // Log the retrieved values for debugging
         if (string.IsNullOrEmpty(mongoDbConnectionString))
         {
             throw new ArgumentNullException(nameof(mongoDbConnectionString), "MongoDB connection string is not configured.");
@@ -58,10 +57,4 @@ public static class Extension
 
         services.AddScoped<AuditLogDbContext>();
     }
-
-    //private static void AddMongoDbContext(this IServiceCollection services, IConfiguration configuration)
-    //{
-    //    var options = configuration.GetSection("MongoDB");
-    //    services.AddScoped<AuditLogDbContext>().AddOptions<MongoDbOptions>().Bind(options);
-    //}
 }

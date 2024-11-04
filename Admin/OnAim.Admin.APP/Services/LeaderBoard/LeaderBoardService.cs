@@ -4,7 +4,6 @@ using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.ClientService;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
-using OnAim.Admin.Contracts.Dtos.Player;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Domain.LeaderBoradEntities;

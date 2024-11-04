@@ -28,6 +28,7 @@ using Serilog;
 using Serilog.Sinks.PostgreSQL;
 using Shared.Infrastructure.Bus;
 using Shared.Infrastructure.MassTransit;
+using Shared.IntegrationEvents.IntegrationEvents.Segment;
 using System.Reflection;
 using System.Security.Cryptography;
 
@@ -383,55 +384,43 @@ public class Startup
         {
             x.AddConsumers(consumerAssemblyMarkerType.Assembly);
 
-            x.UsingRabbitMq(
-                (context, cfg) =>
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(rabbitMqOptions.Host, h =>
                 {
-                    cfg.Host(
-                        rabbitMqOptions.Host,
-                        h =>
-                        {
-                            h.Username(rabbitMqOptions.UserName);
-                            h.Password(rabbitMqOptions.Password);
-                        }
-                    );
+                    h.Username(rabbitMqOptions.User);
+                    h.Password(rabbitMqOptions.Password);
+                });
 
-                    cfg.Message<CreatePlayerEvent>(c => c.SetEntityName("leaderboard.fanout"));
+                cfg.Message<CreatePlayerEvent>(c => c.SetEntityName("leaderboard.fanout"));
+                cfg.Publish<CreatePlayerEvent>(p =>
+                {
+                    p.ExchangeType = "fanout";
+                });
 
-                    cfg.Publish<CreatePlayerEvent>(p =>
+                cfg.Message<CreateSegmentEvent>(c => c.SetEntityName("leaderboard.fanout"));
+                cfg.Publish<CreateSegmentEvent>(p =>
+                {
+                    p.ExchangeType = "fanout";
+                });
+
+                cfg.ReceiveEndpoint(rabbitMqOptions.Queues["PlayerQueue"].QueueName, e =>
+                {
+                    e.Bind(rabbitMqOptions.ExchangeName, x =>
                     {
-                        p.ExchangeType = "fanout";
+                        x.ExchangeType = "fanout";
                     });
+                });
 
-                    cfg.ReceiveEndpoint("HubApiQueue", e =>
+                cfg.ReceiveEndpoint(rabbitMqOptions.Queues["SegmentQueue"].QueueName, e =>
+                {
+                    e.Bind(rabbitMqOptions.ExchangeName, x =>
                     {
-                        e.Bind("leaderboard.fanout", x =>
-                        {
-                            x.ExchangeType = "fanout"; // Bind the queue to the fanout exchange
-                        });
-
-                        //e.ConfigureConsumer<CreatePlayerAggregationConsumer>(context); // Ensure the consumer is attached
+                        x.ExchangeType = "fanout"; 
                     });
-                }
-            );
+                });
+            });
         });
-
-        //services.AddMassTransit(x =>
-        //{
-        //    x.UsingRabbitMq((context, cfg) =>
-        //    {
-        //        cfg.Host(configuration["RabbitMQSettings:Host"], h =>
-        //        {
-        //            h.Username(configuration["RabbitMQSettings:User"]);
-        //            h.Password(configuration["RabbitMQSettings:Password"]);
-        //        });
-
-        //        cfg.ReceiveEndpoint($"{configuration["RabbitMQSettings:QueueName"]}_{env.EnvironmentName}_TEMP", ep =>
-        //        {
-        //            ep.ConfigureConsumer(context);
-        //        });
-
-        //        cfg.ConfigureEndpoints(context);
-        //    });
-        //});
     }
+
 }

@@ -19,7 +19,7 @@ public class GetEndpointByIdQueryHandler : IQueryHandler<GetEndpointByIdQuery, A
         return new ApplicationResult
         {
             Success = true,
-            Data = result,
+            Data = result.Data
         };
     }
 }

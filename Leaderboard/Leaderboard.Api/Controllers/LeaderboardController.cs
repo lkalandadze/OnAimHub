@@ -36,7 +36,7 @@ public class LeaderboardController : BaseApiController
     [HttpPut(nameof(UpdateLeaderboardRecord))]
     public async Task UpdateLeaderboardRecord(UpdateLeaderboardRecordCommand request) => await Mediator.Send(request);
 
-    [Authorize]
+    //[Authorize]
     [HttpGet(nameof(GetLeaderboardRecords))]
     public async Task<ActionResult<GetLeaderboardRecordsQueryResponse>> GetLeaderboardRecords([FromQuery] GetLeaderboardRecordsQuery request) => await Mediator.Send(request);
 

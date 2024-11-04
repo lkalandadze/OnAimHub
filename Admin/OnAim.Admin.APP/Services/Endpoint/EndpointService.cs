@@ -7,7 +7,6 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Endpoint;
 using OnAim.Admin.Contracts.Dtos.EndpointGroup;
 using OnAim.Admin.Contracts.Dtos.User;
-using OnAim.Admin.Contracts.Dtos;
 using OnAim.Admin.Contracts.Helpers;
 using OnAim.Admin.Contracts.Models;
 using OnAim.Admin.Contracts.Paging;

@@ -32,6 +32,7 @@ public class LeaderboardDbContext : DbContext
     public DbSet<LeaderboardResult> LeaderboardResults { get; set; }
     public DbSet<Currency> Currencies { get; set; }
     public DbSet<Player> Players { get; set; }
+    public DbSet<Segment> Segments { get; set; }
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken)
     {

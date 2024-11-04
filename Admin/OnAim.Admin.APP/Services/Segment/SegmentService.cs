@@ -296,7 +296,7 @@ public class SegmentService : ISegmentService
 
     public async Task<ApplicationResult> GetAll(int? pageNumber, int? pageSize)
     {
-        var segments = _segmentRepository.Query().Include(x => x.PlayerSegments);
+        var segments = _segmentRepository.Query().Include(x => x.PlayerSegments).AsNoTracking();
 
         var totalCount = await segments.CountAsync();
 

@@ -16,6 +16,23 @@
         "Put",
         "Delete"
       ]
+    },
+    {
+      "DownstreamPathTemplate": "/wheelapi/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "wheelapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/wheelapi/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ]
     }
   ],
   "GlobalConfiguration": {

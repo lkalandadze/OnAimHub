@@ -25,7 +25,7 @@ public static class MassTransitExtensions
                         rabbitMqOptions.Host,
                         h =>
                         {
-                            h.Username(rabbitMqOptions.UserName);
+                            h.Username(rabbitMqOptions.User);
                             h.Password(rabbitMqOptions.Password);
                         }
                     );

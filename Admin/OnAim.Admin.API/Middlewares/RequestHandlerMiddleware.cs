@@ -34,7 +34,6 @@ public class RequestHandlerMiddleware
         }
         finally
         {
-            // Avoid logging overhead
             _ = caughtError != null
                 ? auditLogService.AddOperationFailedLogAsync(new OperationFailedLog(
                     method,

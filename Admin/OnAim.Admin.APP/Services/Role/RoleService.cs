@@ -9,7 +9,6 @@ using OnAim.Admin.Contracts.Dtos.Endpoint;
 using OnAim.Admin.Contracts.Dtos.EndpointGroup;
 using OnAim.Admin.Contracts.Dtos.Role;
 using OnAim.Admin.Contracts.Dtos.User;
-using OnAim.Admin.Contracts.Dtos;
 using OnAim.Admin.Contracts.Helpers;
 using OnAim.Admin.Contracts.Models;
 using OnAim.Admin.Contracts.Paging;
@@ -167,25 +166,18 @@ public class RoleService : IRoleService
     {
         var roleQuery = _roleRepository
             .Query(x =>
-                     (string.IsNullOrEmpty(filter.Name) || x.Name.ToLower().Contains(filter.Name.ToLower())) &&
+                     (string.IsNullOrEmpty(filter.Name) || EF.Functions.Like(x.Name, $"{filter.Name}%")) &&
                      (!filter.IsActive.HasValue || x.IsActive == filter.IsActive.Value)
-        );
+        ).AsNoTracking();
 
         if (filter?.HistoryStatus.HasValue == true)
         {
-            switch (filter.HistoryStatus.Value)
+            roleQuery = filter.HistoryStatus.Value switch
             {
-                case HistoryStatus.Existing:
-                    roleQuery = roleQuery.Where(u => u.IsDeleted == false);
-                    break;
-                case HistoryStatus.Deleted:
-                    roleQuery = roleQuery.Where(u => u.IsDeleted == true);
-                    break;
-                case HistoryStatus.All:
-                    break;
-                default:
-                    break;
-            }
+                HistoryStatus.Existing => roleQuery.Where(u => !u.IsDeleted),
+                HistoryStatus.Deleted => roleQuery.Where(u => u.IsDeleted),
+                _ => roleQuery
+            };
         }
 
         if (filter.UserIds != null && filter.UserIds.Any())
@@ -194,19 +186,16 @@ public class RoleService : IRoleService
         if (filter.GroupIds != null && filter.GroupIds.Any())
             roleQuery = roleQuery.Where(x => x.RoleEndpointGroups.Any(ur => filter.GroupIds.Contains(ur.EndpointGroupId)));
 
-        bool sortDescending = filter.SortDescending.GetValueOrDefault();
-        if (filter.SortBy == "Id" || filter.SortBy == "id")
+        roleQuery = filter.SortBy?.ToLower() switch
         {
-            roleQuery = sortDescending
+            "id" => filter.SortDescending.GetValueOrDefault()
                 ? roleQuery.OrderByDescending(x => x.Id)
-                : roleQuery.OrderBy(x => x.Id);
-        }
-        else if (filter.SortBy == "Name" || filter.SortBy == "name")
-        {
-            roleQuery = sortDescending
+                : roleQuery.OrderBy(x => x.Id),
+            "name" => filter.SortDescending.GetValueOrDefault()
                 ? roleQuery.OrderByDescending(x => x.Name)
-                : roleQuery.OrderBy(x => x.Name);
-        }
+                : roleQuery.OrderBy(x => x.Name),
+            _ => roleQuery
+        };
 
         var paginatedResult = await Paginator.GetPaginatedResult(
            roleQuery,

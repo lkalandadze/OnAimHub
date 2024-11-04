@@ -16,6 +16,10 @@ public class GetAllDomainQueryHandler : IQueryHandler<GetAllDomainQuery, Applica
     {
         var list = await _domainService.GetAllDomain(request.Filter);
 
-        return new ApplicationResult { Success = true, Data = list };
+        return new ApplicationResult
+        { 
+            Success = list.Success, 
+            Data = list.Data
+        };
     }
 }

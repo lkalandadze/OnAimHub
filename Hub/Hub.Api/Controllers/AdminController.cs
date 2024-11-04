@@ -26,7 +26,7 @@ using Shared.Lib.Wrappers;
 
 namespace Hub.Api.Controllers;
 
-[Authorize(AuthenticationSchemes = "BasicAuthentication")]
+//[Authorize(AuthenticationSchemes = "BasicAuthentication")]
 [ApiExplorerSettings(GroupName = "admin")]
 public class AdminController : BaseApiController
 {

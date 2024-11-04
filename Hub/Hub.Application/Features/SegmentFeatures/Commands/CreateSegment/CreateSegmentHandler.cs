@@ -4,6 +4,8 @@ using Hub.Domain.Entities;
 using MediatR;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
+using Shared.Infrastructure.Bus;
+using Shared.IntegrationEvents.IntegrationEvents.Segment;
 
 namespace Hub.Application.Features.SegmentFeatures.Commands.CreateSegment;
 
@@ -11,11 +13,13 @@ public class CreateSegmentHandler : IRequestHandler<CreateSegmentCommand>
 {
     private readonly ISegmentRepository _segmentRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMessageBus _messageBus;
 
-    public CreateSegmentHandler(ISegmentRepository segmentRepository, IUnitOfWork unitOfWork)
+    public CreateSegmentHandler(ISegmentRepository segmentRepository, IUnitOfWork unitOfWork, IMessageBus messageBus)
     {
         _segmentRepository = segmentRepository;
         _unitOfWork = unitOfWork;
+        _messageBus = messageBus;
     }
 
     public async Task<Unit> Handle(CreateSegmentCommand request, CancellationToken cancellationToken)
@@ -31,6 +35,10 @@ public class CreateSegmentHandler : IRequestHandler<CreateSegmentCommand>
 
         await _segmentRepository.InsertAsync(segment);
         await _unitOfWork.SaveAsync();
+
+        var @event = new CreateSegmentEvent(request.Id, Guid.NewGuid(), request.Description, request.PriorityLevel, false);
+
+        await _messageBus.Publish(@event);
 
         return Unit.Value;
     }
