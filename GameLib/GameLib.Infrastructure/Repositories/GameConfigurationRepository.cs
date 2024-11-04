@@ -5,11 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Shared.Domain.Entities;
 using Shared.Lib.Helpers;
+using System;
 using System.Collections;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 
 namespace GameLib.Infrastructure.Repositories;
 
@@ -56,8 +58,9 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
     public async Task UpdateConfigurationTreeAsync(GameConfiguration updatedConfig)
     {
         var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
+        var type = RepositoryHelper.GetDbSetEntityType<GameConfiguration>(context);
 
-        var existingConfig = await RepositoryHelper.IncludeNavigationProperties(context, dbSet)
+        var existingConfig = await dbSet.IncludeNotHiddenAll(type)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == updatedConfig.Id);
 
@@ -66,66 +69,39 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
             throw new KeyNotFoundException($"Entity with ID {updatedConfig.Id} not found.");
         }
 
-        UpdateEntityTree(existingConfig, updatedConfig);
+        UpdateEntityTreeRecursive(existingConfig, updatedConfig);
 
         base.Update(existingConfig);
     }
 
-    private void UpdateEntityTree(object existingEntity, object updatedEntity)
+    private void UpdateEntityTreeRecursive(object existingEntity, object updatedEntity)
     {
         var entityType = existingEntity.GetType();
         var properties = entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
         foreach (var property in properties)
         {
-            if (TypeHelper.IsGenericCollection(property.PropertyType))
+            //Temp
+            if (property.Name == "Prices")
+            {
+                
+            }
+
+            if (property.Name == nameof(BaseEntity.Id))
+            {
+                continue;
+            }
+            else if (TypeHelper.IsGenericCollection(property.PropertyType))
             {
                 var existingCollection = property.GetValue(existingEntity) as IEnumerable;
                 var updatedCollection = property.GetValue(updatedEntity) as IEnumerable;
 
+                if (existingCollection == null && updatedCollection == null)
+                {
+                    continue;
+                }
+
                 UpdateCollection(existingCollection.ToDynamicList(), updatedCollection.ToDynamicList());
-            }
-            //else if (property.PropertyType.IsClass && property.PropertyType != typeof(string))
-            //{
-            //    continue;
-            //    // Review
-            //    //var existingChild = property.GetValue(existingEntity);
-            //    //var updatedChild = property.GetValue(updatedEntity);
-
-            //    //if (updatedChild != null)
-            //    //{
-            //    //    if (existingChild != null)
-            //    //    {
-            //    //        UpdateEntityTree(existingChild, updatedChild);
-            //    //    }
-            //    //    else
-            //    //    {
-            //    //        property.SetValue(existingEntity, updatedChild);
-            //    //    }
-            //    //}
-            //}
-            else
-            {
-                property.SetValue(existingEntity, property.GetValue(updatedEntity));
-            }
-        }
-    }
-
-    public void UpdateRecursive(object existingEntity, object updatedEntity)
-    {
-        var entityType = existingEntity.GetType();
-        var properties = entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-        if (entityType != updatedEntity.GetType())
-        {
-            throw new Exception();
-        }
-
-        foreach (var property in properties)
-        {
-            if (TypeHelper.IsGenericCollection(property.PropertyType))
-            {
-                //UpdateCollection();
             }
             else
             {
@@ -136,26 +112,37 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
 
     public void UpdateCollection(List<object> oldCollection, List<object> newCollection)
     {
-        var removedItems = oldCollection.Where(x => newCollection.All(xx => HaveSameId(x,xx))).ToList();
+        var removedItems = oldCollection.Where(x => newCollection.All(xx => !HaveSameId(x, xx))).ToList();
         _context.RemoveRange(removedItems);
 
-        var added = newCollection.Where(x => GetId(x) == 0).ToList();
+        var added = newCollection.Where(x =>
+        {
+            var id = GetId(x);
+            return (id is int intId && intId == 0) || (id is string strId && string.IsNullOrEmpty(strId));
+        }).ToList();
         _context.AddRange(added);
 
-        var updatedInNew = newCollection.Where(x => GetId(x) != 0).ToList();
-        var updateInOld = oldCollection.Where(x => newCollection.Any(xx => HaveSameId(x, xx))).ToList();
+        var updatedInNew = newCollection.Where(x =>
+        {
+            var id = GetId(x);
+            return (id is int intId && intId != 0) || (id is string strId && !string.IsNullOrEmpty(strId));
+        }).ToList();
+
+        var updateInOld = oldCollection.Where(x => updatedInNew.Any(xx => HaveSameId(x, xx))).ToList();
 
         foreach (var item in updatedInNew)
         {
-            var a = updateInOld.First(x => GetId(x));
+            //Temp
+            var a = updateInOld.First(x => HaveSameId(x, item));
             var b = item;
 
-            UpdateEntityTree(a, b);
+            UpdateEntityTreeRecursive(a, b);
         }
     }
 
     private static bool HaveSameId(object entity1, object entity2)
     {
+        //Temp
         var a = GetId(entity1);
         var b = GetId(entity2);
 
@@ -164,6 +151,11 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
 
     private static dynamic? GetId(object entity)
     {
-        return (entity as BaseEntity)?.Id;
+        var idProperty = entity.GetType().GetProperties().FirstOrDefault(x => x.Name == nameof(BaseEntity.Id));
+
+        return idProperty?.GetValue(entity);
+
+        //Temp
+        //return (entity as BaseEntity)?.Id;
     }
 }

@@ -21,7 +21,7 @@ public abstract class BasePrizeGroup<TPrize> : BasePrizeGroup where TPrize : Bas
 {
     new public ICollection<TPrize> Prizes
     {
-        get { return base.Prizes.Select(x => (TPrize)x).ToList() ?? []; }
-        set { base.Prizes = value?.Select(x => (BasePrize)x).ToList() ?? []; }
+        get { return base.Prizes?.Select(x => (TPrize)x).ToList() ?? new List<TPrize>(); }
+        set { base.Prizes = value?.Select(x => (BasePrize)x).ToList() ?? new List<BasePrize>(); }
     }
 }
