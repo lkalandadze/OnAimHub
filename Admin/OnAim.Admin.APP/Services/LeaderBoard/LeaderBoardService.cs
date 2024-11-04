@@ -15,18 +15,21 @@ public class LeaderBoardService : ILeaderBoardService
 {
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardTemplate> _leaderboardTemplateRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecord> _leaderboardRecordRepository;
+    private readonly ILeaderBoardReadOnlyRepository<Prize> _prizeRepository;
     private readonly LeaderBoardApiClientOptions _options;
     private readonly ILeaderBoardApiClient _httpClientService;
 
     public LeaderBoardService(
         ILeaderBoardReadOnlyRepository<LeaderboardTemplate> leaderboardTemplateRepository,
         ILeaderBoardReadOnlyRepository<LeaderboardRecord> leaderboardRecordRepository,
+        ILeaderBoardReadOnlyRepository<Prize> prizeRepository,
         IOptions<LeaderBoardApiClientOptions> options,
         ILeaderBoardApiClient httpClientService
         )
     {
         _leaderboardTemplateRepository = leaderboardTemplateRepository;
         _leaderboardRecordRepository = leaderboardRecordRepository;
+        _prizeRepository = prizeRepository;
         _options = options.Value;
         _httpClientService = httpClientService;
     }
@@ -45,10 +48,11 @@ public class LeaderBoardService : ILeaderBoardService
             {
                 Id = x.Id,
                 Name = x.Name,
-                Announce = x.AnnouncementLeadTimeInDays,
-                Description = null,
-                Start = x.StartTime,
-                End = TimeSpan.Zero,
+                AnnounceIn = x.AnnounceIn,
+                Description = x.Description,
+                StartTime = x.StartTime,
+                StartIn = x.StartIn,
+                EndIn = x.EndIn,
                 Segments = 0,
                 Usage = 0,
             })
@@ -145,6 +149,17 @@ public class LeaderBoardService : ILeaderBoardService
                 TotalCount = totalCount,
                 Items = await res.ToListAsync(),
             },
+        };
+    }
+
+    public async Task<ApplicationResult> GetAllPrizes()
+    {
+        var prizes = _prizeRepository.Query();
+
+        return new ApplicationResult
+        {
+            Success = true,
+            Data = await prizes.ToListAsync(),
         };
     }
 

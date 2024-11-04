@@ -7,8 +7,10 @@ using OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.Schedule;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.Template.CreateTemplate;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.Template.UpdateTemplate;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetAllLeaderBoard;
+using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetAllPrizes;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetAllTemplates;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
+using OnAim.Admin.Contracts.Helpers;
 
 namespace OnAim.Admin.API.Controllers;
 
@@ -46,4 +48,15 @@ public class LeaderBoardController : ApiControllerBase
     [HttpPost(nameof(Execute) + "/{templateId}")]
     public async Task<IActionResult> Execute([FromRoute] int templateId)
         => Ok(await Mediator.Send(new ExecuteCommand(templateId)));
+
+    [HttpGet(nameof(GetLeaderboardRecordStatuses))]
+    public ActionResult<List<EnumValueDto>> GetLeaderboardRecordStatuses()
+    {
+        var statuses = EnumHelper.GetEnumValues<LeaderboardRecordStatus>();
+        return Ok(statuses);
+    }
+
+    [HttpGet(nameof(GetAllPrizes))]
+    public async Task<IActionResult> GetAllPrizes()
+        => Ok(await Mediator.Send(new GetAllPrizesQuery()));
 }

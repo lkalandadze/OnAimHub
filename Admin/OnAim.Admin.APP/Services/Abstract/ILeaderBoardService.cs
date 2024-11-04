@@ -8,6 +8,7 @@ public interface ILeaderBoardService
 {
     Task<ApplicationResult> GetLeaderBoardTemplates(BaseFilter filter);
     Task<ApplicationResult> GetAllLeaderBoard(LeaderBoardFilter? filter);
+    Task<ApplicationResult> GetAllPrizes();
     Task<ApplicationResult> CreateTemplate(CreateLeaderboardTemplateDto createLeaderboardTemplateDto);
     Task<ApplicationResult> UpdateTemplate(UpdateLeaderboardTemplateDto updateLeaderboardTemplateDto);
     Task<ApplicationResult> CreateLeaderBoardRecord(CreateLeaderboardRecordDto createLeaderboardRecordDto);
