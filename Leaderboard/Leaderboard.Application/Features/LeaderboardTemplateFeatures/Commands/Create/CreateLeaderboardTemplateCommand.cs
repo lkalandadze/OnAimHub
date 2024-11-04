@@ -6,11 +6,10 @@ namespace Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.
 public sealed class CreateLeaderboardTemplateCommand : IRequest
 {
     public string Name { get; set; }
-    public JobTypeEnum JobType { get; set; }
     public TimeSpan StartTime { get; set; }
-    public int DurationInDays { get; set; }
-    public int AnnouncementLeadTimeInDays { get; set; }
-    public int CreationLeadTimeInDays { get; set; }
+    public int AnnounceIn { get; set; }
+    public int StartIn { get; set; }
+    public int EndIn { get; set; }
     public List<CreateLeaderboardTemplatePrizeCommandItem> LeaderboardPrizes { get; set; }
 }
 

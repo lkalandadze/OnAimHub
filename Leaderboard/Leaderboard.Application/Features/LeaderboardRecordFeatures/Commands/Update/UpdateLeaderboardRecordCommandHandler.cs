@@ -24,7 +24,9 @@ public class UpdateLeaderboardRecordCommandHandler : IRequestHandler<UpdateLeade
                            request.AnnouncementDate.ToUniversalTime(), 
                            request.StartDate.ToUniversalTime(),
                            request.EndDate.ToUniversalTime(),
-                           request.LeaderboardType, request.JobType);
+                           request.LeaderboardType
+                           //request.JobType
+                           );
 
         foreach(var prize in request.Prizes)
         {

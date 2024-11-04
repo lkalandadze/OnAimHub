@@ -4,16 +4,22 @@ using Leaderboard.Application.Services.Abstract;
 using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Domain.Entities;
 using Leaderboard.Domain.Enum;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Leaderboard.Application.Services.Concrete;
 
 public class CalendarService : ICalendarService
 {
-    private readonly ILeaderboardTemplateRepository _leaderboardTemplateRepository;
-    public CalendarService(ILeaderboardTemplateRepository leaderboardTemplateRepository)
+    private readonly ILeaderboardScheduleRepository _leaderboardScheduleRepository;
+
+    public CalendarService(ILeaderboardScheduleRepository leaderboardScheduleRepository)
     {
-        _leaderboardTemplateRepository = leaderboardTemplateRepository;
+        _leaderboardScheduleRepository = leaderboardScheduleRepository;
     }
+
     public List<LeaderboardRecordsModel> GenerateFutureLeaderboards(GetCalendarQuery request)
     {
         var futureLeaderboards = new List<LeaderboardRecordsModel>();
@@ -22,27 +28,35 @@ public class CalendarService : ICalendarService
         // Use EndDate parameter from the request for how far to generate future leaderboards
         var endDateForFuture = request.EndDate.HasValue ? request.EndDate.Value : now.AddMonths(1); // Default 1 month if not provided
 
-        // Retrieve a single leaderboard template from the repository (adjust the query as needed)
-        var template = _leaderboardTemplateRepository.Query().FirstOrDefault(); // Example: query the template you need
+        // Retrieve the relevant leaderboard schedule from the repository
+        var schedule = _leaderboardScheduleRepository.Query()
+            .Include(s => s.LeaderboardTemplate)
+            .FirstOrDefault(x => x.Status != LeaderboardScheduleStatus.Cancelled); // Adjust to get the appropriate schedule based on request
 
-        // Ensure a template was found
-        if (template == null)
+        // Ensure a schedule was found
+        if (schedule == default)
         {
-            throw new Exception("Leaderboard template not found.");
+            throw new Exception("Leaderboard schedule not found.");
         }
 
-        // Start generating based on the template's recurrence settings
-        var nextStartDate = CalculateNextStartDate(now, template); // Dynamic start date based on template
+        var leaderboardTemplate = schedule.LeaderboardTemplate;
+        if (leaderboardTemplate == null)
+        {
+            throw new Exception("Associated leaderboard template not found.");
+        }
+
+        // Start generating based on the schedule's recurrence settings
+        var nextStartDate = CalculateNextStartDate(now, schedule); // Dynamic start date based on schedule
 
         while (nextStartDate < endDateForFuture)
         {
-            var endDate = nextStartDate.AddDays(template.DurationInDays); // Duration from template
+            var endDate = nextStartDate.AddDays(leaderboardTemplate.EndIn); // Duration from template
 
             var futureLeaderboard = new LeaderboardRecordsModel
             {
                 Id = 0, // No real ID since this is a dynamically generated record
-                CreationDate = nextStartDate.AddDays(-template.CreationLeadTimeInDays), // Creation lead time from template
-                AnnouncementDate = nextStartDate.AddDays(-template.AnnouncementLeadTimeInDays), // Announcement lead time from template
+                CreationDate = nextStartDate.AddDays(-leaderboardTemplate.AnnounceIn), // Creation lead time from template
+                AnnouncementDate = nextStartDate.AddDays(-leaderboardTemplate.StartIn), // Announcement lead time from template
                 StartDate = nextStartDate.ToUniversalTime(),
                 EndDate = endDate.ToUniversalTime(),
                 LeaderboardType = LeaderboardType.Win, // Use type from the template
@@ -51,42 +65,62 @@ public class CalendarService : ICalendarService
 
             futureLeaderboards.Add(futureLeaderboard);
 
-            // Move to the next interval based on the JobType (weekly, monthly, custom) from the template
-            nextStartDate = CalculateNextInterval(nextStartDate, template);
+            // Move to the next interval based on RepeatType and RepeatValue from the schedule
+            nextStartDate = CalculateNextInterval(nextStartDate, schedule);
         }
 
         return futureLeaderboards;
     }
 
-
-    public DateTimeOffset CalculateNextStartDate(DateTimeOffset current, LeaderboardTemplate template)
+    public DateTimeOffset CalculateNextStartDate(DateTimeOffset current, LeaderboardSchedule schedule)
     {
-        switch (template.JobType)
+        var startTime = schedule.LeaderboardTemplate?.StartTime ?? TimeSpan.Zero;
+
+        switch (schedule.RepeatType)
         {
-            case JobTypeEnum.Daily:
-                var todayStart = current.Date.Add(template.StartTime);
-                return current >= todayStart ? todayStart.AddDays(1) : todayStart;
-            case JobTypeEnum.Weekly:
-                return current.Date.AddDays(-(int)current.DayOfWeek + (int)DayOfWeek.Monday); // Start next Monday
-            case JobTypeEnum.Monthly:
-                return new DateTimeOffset(current.Year, current.Month, 1, 0, 0, 0, TimeSpan.Zero).AddMonths(1); // Start on the 1st of the next month
+            case RepeatType.SingleDate:
+                if (!schedule.SpecificDate.HasValue)
+                    throw new Exception("SpecificDate is required for RepeatType.SingleDate");
+                var specificDateTime = new DateTime(schedule.SpecificDate.Value.Year, schedule.SpecificDate.Value.Month, schedule.SpecificDate.Value.Day, startTime.Hours, startTime.Minutes, startTime.Seconds);
+                return specificDateTime > current ? new DateTimeOffset(specificDateTime, TimeSpan.Zero) : specificDateTime.AddYears(1); // Run once or move to next year
+
+            case RepeatType.EveryNDays:
+                return current.Date.AddDays(schedule.RepeatValue ?? 1).Add(startTime);
+
+            case RepeatType.DayOfWeek:
+                var daysUntilTargetDay = ((schedule.RepeatValue.Value - (int)current.DayOfWeek + 7) % 7);
+                return current.Date.AddDays(daysUntilTargetDay).Add(startTime);
+
+            case RepeatType.DayOfMonth:
+                var targetDay = schedule.RepeatValue ?? 1;
+                var currentMonth = new DateTime(current.Year, current.Month, 1);
+                var nextMonth = currentMonth.AddMonths(1);
+                var nextScheduledDate = new DateTime(nextMonth.Year, nextMonth.Month, targetDay);
+                return new DateTimeOffset(nextScheduledDate.Add(startTime), TimeSpan.Zero);
+
             default:
-                throw new ArgumentException("Unsupported job type");
+                throw new ArgumentException("Unsupported repeat type");
         }
     }
 
-    public DateTimeOffset CalculateNextInterval(DateTimeOffset startDate, LeaderboardTemplate template)
+    public DateTimeOffset CalculateNextInterval(DateTimeOffset startDate, LeaderboardSchedule schedule)
     {
-        switch (template.JobType)
+        switch (schedule.RepeatType)
         {
-            case JobTypeEnum.Daily:
-                return startDate.AddDays(1);
-            case JobTypeEnum.Weekly:
+            case RepeatType.SingleDate:
+                return DateTimeOffset.MaxValue; // Only one occurrence; no next interval
+
+            case RepeatType.EveryNDays:
+                return startDate.AddDays(schedule.RepeatValue ?? 1);
+
+            case RepeatType.DayOfWeek:
                 return startDate.AddDays(7); // Move to the next week
-            case JobTypeEnum.Monthly:
+
+            case RepeatType.DayOfMonth:
                 return startDate.AddMonths(1); // Move to the next month
+
             default:
-                throw new ArgumentException("Unsupported job type");
+                throw new ArgumentException("Unsupported repeat type");
         }
     }
 }

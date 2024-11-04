@@ -5,23 +5,20 @@ namespace Leaderboard.Domain.Entities;
 
 public class LeaderboardTemplate : BaseEntity<int>
 {
-    public LeaderboardTemplate(string name, JobTypeEnum jobType, TimeSpan startTime, int durationInDays, int announcementLeadTimeInDays, int creationLeadTimeInDays)
+    public LeaderboardTemplate(string name, TimeSpan startTime, int announceIn, int startIn, int endIn)
     {
         Name = name;
-        JobType = jobType;
         StartTime = startTime;
-        DurationInDays = durationInDays;
-        AnnouncementLeadTimeInDays = announcementLeadTimeInDays;
-        CreationLeadTimeInDays = creationLeadTimeInDays;
+        AnnounceIn = announceIn;
+        StartIn = startIn;
+        EndIn = endIn;
     }
 
     public string Name { get; set; }
-
-    public JobTypeEnum JobType { get; set; }
     public TimeSpan StartTime { get; set; }
-    public int DurationInDays { get; set; }
-    public int AnnouncementLeadTimeInDays { get; set; }
-    public int CreationLeadTimeInDays { get; set; }
+    public int AnnounceIn { get; set; }
+    public int StartIn { get; set; }
+    public int EndIn { get; set; }
     public ICollection<LeaderboardTemplatePrize> LeaderboardTemplatePrizes { get; set; } = new List<LeaderboardTemplatePrize>();
 
     public void AddLeaderboardTemplatePrizes(int startRank, int endRank, string prizeId, int amount)
@@ -39,13 +36,12 @@ public class LeaderboardTemplate : BaseEntity<int>
         prize.Update(startRank, endRank, prizeId, amount);
     }
 
-    public void Update(string name, JobTypeEnum jobType, TimeSpan startTime, int durationInDays, int announcementLeadTimeInDays, int creationgLeadTimeInDays)
+    public void Update(string name, TimeSpan startTime, int announceIn, int startIn, int endIn)
     {
         Name = name;
-        JobType = jobType;
         StartTime = startTime;
-        DurationInDays = durationInDays;
-        AnnouncementLeadTimeInDays = announcementLeadTimeInDays;
-        CreationLeadTimeInDays = creationgLeadTimeInDays;
+        AnnounceIn = announceIn;
+        StartIn = startIn;
+        EndIn = endIn;
     }
 }

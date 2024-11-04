@@ -8,11 +8,10 @@ public sealed record LeaderboardTemplateByIdModel
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public JobTypeEnum JobType { get; set; }
     public TimeSpan StartTime { get; set; }
-    public int DurationInDays { get; set; }
-    public int AnnouncementLeadTimeInDays { get; set; }
-    public int CreationLeadTimeInDays { get; set; }
+    public int AnnounceIn { get; set; }
+    public int StartIn { get; set; }
+    public int EndIn { get; set; }
     public List<LeaderboardPrizeModel> Prizes { get; set; } = new();
 
     public static LeaderboardTemplateByIdModel MapFrom(LeaderboardTemplate leaderboardTemplate)
@@ -21,11 +20,10 @@ public sealed record LeaderboardTemplateByIdModel
         {
             Id = leaderboardTemplate.Id,
             Name = leaderboardTemplate.Name,
-            JobType = leaderboardTemplate.JobType,
             StartTime = leaderboardTemplate.StartTime,
-            DurationInDays = leaderboardTemplate.DurationInDays,
-            AnnouncementLeadTimeInDays = leaderboardTemplate.AnnouncementLeadTimeInDays,
-            CreationLeadTimeInDays = leaderboardTemplate.CreationLeadTimeInDays,
+            AnnounceIn = leaderboardTemplate.AnnounceIn,
+            StartIn = leaderboardTemplate.StartIn,
+            EndIn = leaderboardTemplate.EndIn,
             Prizes = leaderboardTemplate.LeaderboardTemplatePrizes?.Select(prize => new LeaderboardPrizeModel
             {
                 Id = prize.Id,

@@ -3,6 +3,9 @@ using Leaderboard.Application.Features.LeaderboardRecordFeatures.Commands.Update
 using Leaderboard.Application.Features.LeaderboardRecordFeatures.Queries.Get;
 using Leaderboard.Application.Features.LeaderboardRecordFeatures.Queries.GetById;
 using Leaderboard.Application.Features.LeaderboardRecordFeatures.Queries.GetCalendar;
+using Leaderboard.Application.Features.LeaderboardScheduleFeatures.Commands.Create;
+using Leaderboard.Application.Features.LeaderboardScheduleFeatures.Commands.Update;
+using Leaderboard.Application.Features.LeaderboardScheduleFeatures.Queries.Get;
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.Create;
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.Update;
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Queries.Get;
@@ -61,42 +64,19 @@ public class LeaderboardController : BaseApiController
     [HttpGet(nameof(GetLeaderboardTemplateById))]
     public async Task<ActionResult<GetLeaderboardTemplateByIdQueryResponse>> GetLeaderboardTemplateById([FromQuery] GetLeaderboardTemplateByIdQuery request) => await Mediator.Send(request);
 
-    #endregion Test
+    #endregion
 
-    [HttpPost("schedule/{templateId}")]
-    public async Task<IActionResult> ScheduleJob(int templateId)
-    {
-        try
-        {
-            var jobs = await _jobService.GetAllJobsAsync();
-            var job = jobs.FirstOrDefault(j => j.LeaderboardTemplateId == templateId);
 
-            if (job == null)
-            {
-                return NotFound($"Leaderboard job for template ID {templateId} not found.");
-            }
+    #region LeaderboardSchedule
 
-            // Schedule the job with the template ID
-            _backgroundJobScheduler.ScheduleJob(job.LeaderboardTemplate);
-            return Ok($"Job for template ID {templateId} has been scheduled.");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest($"Error scheduling job: {ex.Message}");
-        }
-    }
+    [HttpPost(nameof(CreateLeaderboardSchedule))]
+    public async Task CreateLeaderboardSchedule([FromBody] CreateLeaderboardScheduleCommand request) => await Mediator.Send(request);
 
-    [HttpPost("execute/{templateId}")]
-    public async Task<IActionResult> ExecuteJob(int templateId)
-    {
-        try
-        {
-            await _jobService.ExecuteLeaderboardRecordGeneration(templateId);
-            return Ok($"Leaderboard record generation for template ID {templateId} has been executed.");
-        }
-        catch (Exception ex)
-        {
-            return BadRequest($"Error executing job: {ex.Message}");
-        }
-    }
+    [HttpPut(nameof(UpdateLeaderboardSchedule))]
+    public async Task UpdateLeaderboardSchedule([FromBody] UpdateLeaderboardScheduleCommand request) => await Mediator.Send(request);
+
+    [HttpGet(nameof(GetLeaderboardSchedules))]
+    public async Task<ActionResult<GetLeaderboardSchedulesQueryResponse>> GetLeaderboardSchedules([FromQuery] GetLeaderboardSchedulesQuery request) => await Mediator.Send(request);
+
+    #endregion
 }

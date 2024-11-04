@@ -5,9 +5,9 @@ namespace Leaderboard.Application.Services.Abstract.BackgroundJobs;
 
 public interface IBackgroundJobScheduler
 {
-    void ScheduleJob(LeaderboardTemplate leaderboardTemplate);
-    void ScheduleRecordJob(LeaderboardRecord job);
+    void ScheduleJob(LeaderboardSchedule schedule);
+    //void ScheduleRecordJob(LeaderboardRecord job);
     void RemoveScheduledJob(int jobId);
     void ExecuteJob(int leaderboardTemplateId);
-    string GenerateCronExpression(JobTypeEnum jobType);
+    string GenerateCronExpression(LeaderboardSchedule schedule);
 }

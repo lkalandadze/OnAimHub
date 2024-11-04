@@ -24,11 +24,13 @@ public class JobSyncService : BackgroundService
                     var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
                     var backgroundJobScheduler = scope.ServiceProvider.GetRequiredService<IBackgroundJobScheduler>();
 
-                    var jobs = await jobService.GetAllTemplateJobsAsync();
+                    // Retrieve all active schedules
+                    var schedules = await jobService.GetAllActiveSchedulesAsync();
 
-                    foreach (var job in jobs)
+                    foreach (var schedule in schedules)
                     {
-                        backgroundJobScheduler.ScheduleJob(job);
+                        // Schedule each active leaderboard schedule
+                        backgroundJobScheduler.ScheduleJob(schedule);
                     }
                 }
             }

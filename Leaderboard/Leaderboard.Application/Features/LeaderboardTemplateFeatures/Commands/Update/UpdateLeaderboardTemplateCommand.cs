@@ -7,11 +7,10 @@ public sealed class UpdateLeaderboardTemplateCommand : IRequest
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public JobTypeEnum JobType { get; set; }
     public TimeSpan StartTime { get; set; }
-    public int DurationInDays { get; set; }
-    public int AnnouncementLeadTimeInDays { get; set; }
-    public int CreationLeadTimeInDays { get; set; }
+    public int AnnounceIn { get; set; }
+    public int StartIn { get; set; }
+    public int EndIn { get; set; }
     public List<UpdateLeaderboardTemplateCommandCommandItem> Prizes { get; set; }
 }
 public class UpdateLeaderboardTemplateCommandCommandItem

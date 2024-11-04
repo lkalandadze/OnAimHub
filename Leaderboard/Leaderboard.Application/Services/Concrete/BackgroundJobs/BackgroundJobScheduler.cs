@@ -17,16 +17,19 @@ public class BackgroundJobScheduler : IBackgroundJobScheduler
         _serviceScopeFactory = serviceScopeFactory;
     }
 
-    public void ScheduleJob(LeaderboardTemplate job)
+    public void ScheduleJob(LeaderboardSchedule schedule)
     {
-        var cronExpression = GenerateCronExpression(job.JobType); // Automatically generate cron expression
+        // Generate a cron expression based on the schedule details
+        var cronExpression = GenerateCronExpression(schedule);
+
         _recurringJobManager.AddOrUpdate(
-            job.Id.ToString(),
-            () => ExecuteJob(job.Id), // Use .Value if it's not null
+            schedule.Id.ToString(),
+            () => ExecuteJob(schedule.Id), // Job for the LeaderboardSchedule
             cronExpression,
             TimeZoneInfo.Local
         );
 
+        // Schedule a recurring job to update leaderboard statuses every hour
         _recurringJobManager.AddOrUpdate(
             "UpdateLeaderboardStatuses",
             () => UpdateLeaderboardStatuses(),
@@ -35,16 +38,16 @@ public class BackgroundJobScheduler : IBackgroundJobScheduler
         );
     }
 
-    public void ScheduleRecordJob(LeaderboardRecord job)
-    {
-        var cronExpression = GenerateCronExpression(job.JobType); // Automatically generate cron expression
-        _recurringJobManager.AddOrUpdate(
-            job.Id.ToString(),
-            () => ExecuteRecordJob(job.Id), // Use .Value if it's not null
-            cronExpression,
-            TimeZoneInfo.Local
-        );
-    }
+    //public void ScheduleRecordJob(LeaderboardRecord job)
+    //{
+    //    var cronExpression = GenerateCronExpression(job.JobType); // Automatically generate cron expression
+    //    _recurringJobManager.AddOrUpdate(
+    //        job.Id.ToString(),
+    //        () => ExecuteRecordJob(job.Id), // Use .Value if it's not null
+    //        cronExpression,
+    //        TimeZoneInfo.Local
+    //    );
+    //}
 
     public void RemoveScheduledJob(int jobId)
     {
@@ -111,15 +114,15 @@ public void ExecuteRecordJob(int id)
     }
 
     // Make sure this method is public and generates the cron expression
-    public string GenerateCronExpression(JobTypeEnum jobType)
+    public string GenerateCronExpression(LeaderboardSchedule schedule)
     {
-        return jobType switch
+        return schedule.RepeatType switch
         {
-            JobTypeEnum.Daily => Cron.Daily(),
-            JobTypeEnum.Weekly => Cron.Weekly(DayOfWeek.Monday),
-            JobTypeEnum.Monthly => Cron.Monthly(1),
-            JobTypeEnum.Custom => Cron.Hourly(), // Adjust for custom logic
-            _ => throw new ArgumentException("Unsupported job type"),
+            RepeatType.SingleDate => Cron.Yearly(schedule.StartDate.Month, schedule.StartDate.Day), // Run once on the specified date
+            RepeatType.EveryNDays => Cron.DayInterval(schedule.RepeatValue ?? 1), // Run every N days
+            RepeatType.DayOfWeek => Cron.Weekly((DayOfWeek)(schedule.RepeatValue ?? 0)), // Run weekly on specified day
+            RepeatType.DayOfMonth => Cron.Monthly(schedule.RepeatValue ?? 1), // Run monthly on specified day
+            _ => throw new ArgumentException("Unsupported repeat type")
         };
     }
 }

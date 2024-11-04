@@ -16,7 +16,7 @@ public class LeaderboardRecord : BaseEntity<int>
                              DateTimeOffset startDate,
                              DateTimeOffset endDate,
                              LeaderboardType leaderboardType,
-                             JobTypeEnum jobType,
+                             //JobTypeEnum jobType,
                              int? leaderboardTemplateId,
                              LeaderboardRecordStatus status,
                              bool isGenerated)
@@ -27,7 +27,7 @@ public class LeaderboardRecord : BaseEntity<int>
         StartDate = startDate;
         EndDate = endDate;
         LeaderboardType = leaderboardType;
-        JobType = jobType;
+        //JobType = jobType;
         LeaderboardTemplateId = leaderboardTemplateId;
         Status = status;
         IsGenerated = isGenerated;
@@ -41,13 +41,13 @@ public class LeaderboardRecord : BaseEntity<int>
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
     public LeaderboardType LeaderboardType { get; set; }
-    public JobTypeEnum JobType { get; set; }
+    //public JobTypeEnum JobType { get; set; }
     public LeaderboardRecordStatus Status { get; set; }
     public bool IsGenerated { get; set; }
     public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; } = new List<LeaderboardProgress>();
     public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; } = new List<LeaderboardRecordPrize>();
 
-    public void Update(string name, DateTimeOffset creationDate, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate, LeaderboardType leaderboardType, JobTypeEnum jobType)
+    public void Update(string name, DateTimeOffset creationDate, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate, LeaderboardType leaderboardType)
     {
         Name = name;
         CreationDate = creationDate;
@@ -55,7 +55,7 @@ public class LeaderboardRecord : BaseEntity<int>
         StartDate = startDate;
         EndDate = endDate;
         LeaderboardType = leaderboardType;
-        JobType = jobType;
+        //JobType = jobType;
     }
 
     public void AddLeaderboardRecordPrizes(int startRank, int endRank, string prizeId, int amount)

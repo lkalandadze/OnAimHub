@@ -53,6 +53,7 @@ builder.Services.AddHangfireServer();
 
 builder.Services.AddHostedService<JobSyncService>();
 builder.Services.AddHostedService<LeaderboardStatusUpdaterService>();
+builder.Services.AddHostedService<LeaderboardScheduleStatusUpdaterService>();
 
 CustomServiceExtensions.ConfigureJwt(builder.Services, configuration);
 CustomServiceExtensions.ConfigureSwagger(builder.Services);

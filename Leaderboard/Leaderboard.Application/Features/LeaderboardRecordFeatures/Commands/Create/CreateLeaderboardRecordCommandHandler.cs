@@ -26,7 +26,7 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
             request.StartDate.ToUniversalTime(),
             request.EndDate.ToUniversalTime(),
             request.LeaderboardType,
-            request.JobType,
+            //request.JobType,
             request.LeaderboardTemplateId,
             request.Status,
             false
@@ -40,6 +40,6 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
         await _leaderboardRecordRepository.InsertAsync(leaderboard);
         await _leaderboardRecordRepository.SaveChangesAsync(cancellationToken);
 
-        _backgroundJobScheduler.ScheduleRecordJob(leaderboard);
+        //_backgroundJobScheduler.ScheduleRecordJob(leaderboard);
     }
 }

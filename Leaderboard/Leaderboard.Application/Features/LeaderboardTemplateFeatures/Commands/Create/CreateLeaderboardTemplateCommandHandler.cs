@@ -21,11 +21,10 @@ public class CreateLeaderboardTemplateCommandHandler : IRequestHandler<CreateLea
     {
         var leaderboardTemplate = new LeaderboardTemplate(
             request.Name,
-            request.JobType,
             request.StartTime,
-            request.DurationInDays,
-            request.AnnouncementLeadTimeInDays,
-            request.CreationLeadTimeInDays);
+            request.EndIn,
+            request.StartIn,
+            request.AnnounceIn);
 
         foreach (var prize in request.LeaderboardPrizes)
         {
@@ -37,6 +36,6 @@ public class CreateLeaderboardTemplateCommandHandler : IRequestHandler<CreateLea
 
         await _jobService.ExecuteLeaderboardRecordGeneration(leaderboardTemplate.Id);
 
-        _backgroundJobScheduler.ScheduleJob(leaderboardTemplate);
+        //_backgroundJobScheduler.ScheduleJob(leaderboardTemplate);
     }
 }

@@ -1,5 +1,4 @@
-﻿using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Queries.GetById;
-using Leaderboard.Application.Services.Abstract.BackgroundJobs;
+﻿using Leaderboard.Application.Services.Abstract.BackgroundJobs;
 using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Domain.Entities;
 using Leaderboard.Domain.Enum;
@@ -14,17 +13,20 @@ public class JobService : IJobService
     private readonly ILeaderboardTemplateRepository _leaderboardTemplateRepository;
     private readonly ILeaderboardProgressRepository _leaderboardProgressRepository;
     private readonly ILeaderboardResultRepository _leaderboardResultRepository;
+    private readonly ILeaderboardScheduleRepository _leaderboardScheduleRepository;
     private readonly IMediator _mediator;
     public JobService(ILeaderboardRecordRepository leaderboardRecordRepository,
                      ILeaderboardTemplateRepository leaderboardTemplateRepository,
                      ILeaderboardProgressRepository leaderboardProgressRepository,
                      ILeaderboardResultRepository leaderboardResultRepository,
+                     ILeaderboardScheduleRepository leaderboardScheduleRepository,
                      IMediator mediator)
     {
         _leaderboardRecordRepository = leaderboardRecordRepository;
         _leaderboardTemplateRepository = leaderboardTemplateRepository;
         _leaderboardProgressRepository = leaderboardProgressRepository;
         _leaderboardResultRepository = leaderboardResultRepository;
+        _leaderboardScheduleRepository = leaderboardScheduleRepository;
         _mediator = mediator;
     }
 
@@ -38,74 +40,91 @@ public class JobService : IJobService
         return await _leaderboardTemplateRepository.QueryAsync();
     }
 
-    public async Task ExecuteLeaderboardRecordGeneration(int templateId)
+    public async Task<List<LeaderboardSchedule>> GetAllActiveSchedulesAsync()
+    {
+        return await _leaderboardScheduleRepository.QueryAsync(s => s.Status == LeaderboardScheduleStatus.Active);
+    }
+
+    public async Task ExecuteLeaderboardRecordGeneration(int scheduleId)
      {
-        var query = new GetLeaderboardTemplateByIdQuery(templateId);
-        var response = await _mediator.Send(query);
+        //var query = new GetLeaderboardTemplateByIdQuery(templateId);
 
-        if (response?.Data == null)
-        {
-            throw new Exception("Leaderboard template not found");
-        }
+        var schedule = await _leaderboardScheduleRepository.Query()
+            .Include(s => s.LeaderboardTemplate) // Include the related LeaderboardTemplate for prize data
+            .FirstOrDefaultAsync(s => s.Id == scheduleId);
 
-        var leaderboardTemplate = response.Data;
+        if (schedule == default)
+            throw new Exception("Leaderboard schedule not found");
+
+        var leaderboardTemplate = schedule.LeaderboardTemplate;
+
+        if (leaderboardTemplate == null)
+            throw new Exception("Associated leaderboard template not found");
 
         var now = DateTimeOffset.UtcNow;
         DateTimeOffset creationDate, announcementDate, startDate, endDate;
 
-        switch (leaderboardTemplate.JobType)
+        switch (schedule.RepeatType)
         {
-            case JobTypeEnum.Daily:
-                startDate = now.Date.Add(leaderboardTemplate.StartTime).ToUniversalTime();
-                endDate = startDate.AddDays(leaderboardTemplate.DurationInDays);
-                creationDate = startDate.AddDays(-leaderboardTemplate.CreationLeadTimeInDays);
-                announcementDate = startDate.AddDays(-leaderboardTemplate.AnnouncementLeadTimeInDays);
+            case RepeatType.SingleDate:
+                if (!schedule.SpecificDate.HasValue)
+                    throw new Exception("SpecificDate is required for RepeatType.SingleDate");
+
+                startDate = now.Date.Add(schedule.StartTime);
+                endDate = startDate.AddDays(leaderboardTemplate.EndIn);
                 break;
 
-            case JobTypeEnum.Weekly:
-                // Start on the next Monday at the specified time
-                int daysUntilMonday = ((int)DayOfWeek.Monday - (int)now.DayOfWeek + 7) % 7;
-                startDate = now.Date.AddDays(daysUntilMonday).Add(leaderboardTemplate.StartTime).ToUniversalTime();
-                endDate = startDate.AddDays(leaderboardTemplate.DurationInDays);
-                creationDate = startDate.AddDays(-leaderboardTemplate.CreationLeadTimeInDays);
-                announcementDate = startDate.AddDays(-leaderboardTemplate.AnnouncementLeadTimeInDays);
+            case RepeatType.EveryNDays:
+                if (!schedule.RepeatValue.HasValue)
+                    throw new Exception("RepeatValue is required for RepeatType.EveryNDays");
+
+                startDate = now.Date.AddDays(schedule.RepeatValue.Value).Add(schedule.StartDate.TimeOfDay);
+                endDate = startDate.AddDays(leaderboardTemplate.EndIn);
                 break;
 
-            case JobTypeEnum.Monthly:
-                // Start on the first of the next month at the specified time
-                var firstOfNextMonth = new DateTime(now.Year, now.Month, 1).AddMonths(1);
-                startDate = new DateTimeOffset(firstOfNextMonth.Add(leaderboardTemplate.StartTime), TimeSpan.Zero).ToUniversalTime();
-                endDate = startDate.AddDays(leaderboardTemplate.DurationInDays);
-                creationDate = startDate.AddDays(-leaderboardTemplate.CreationLeadTimeInDays);
-                announcementDate = startDate.AddDays(-leaderboardTemplate.AnnouncementLeadTimeInDays);
+            case RepeatType.DayOfWeek:
+                if (!schedule.RepeatValue.HasValue)
+                    throw new Exception("RepeatValue is required for RepeatType.DayOfWeek");
+
+                int daysUntilTargetDay = ((schedule.RepeatValue.Value - (int)now.DayOfWeek + 7) % 7);
+                startDate = now.Date.AddDays(daysUntilTargetDay).Add(schedule.StartDate.TimeOfDay);
+                endDate = startDate.AddDays(leaderboardTemplate.EndIn);
                 break;
 
-            case JobTypeEnum.Custom:
-                // Custom logic for start, end, and announcement dates
-                startDate = now.Date.Add(leaderboardTemplate.StartTime).ToUniversalTime();
-                endDate = startDate.AddDays(leaderboardTemplate.DurationInDays);
-                creationDate = startDate.AddDays(-leaderboardTemplate.CreationLeadTimeInDays);
-                announcementDate = startDate.AddDays(-leaderboardTemplate.AnnouncementLeadTimeInDays);
+            case RepeatType.DayOfMonth:
+                if (!schedule.RepeatValue.HasValue)
+                    throw new Exception("RepeatValue is required for RepeatType.DayOfMonth");
+
+                var targetDay = schedule.RepeatValue.Value;
+                var currentMonth = new DateTime(now.Year, now.Month, 1);
+                var nextScheduledDate = currentMonth.AddMonths(1).AddDays(targetDay - 1);
+                startDate = new DateTimeOffset(nextScheduledDate.Add(schedule.StartDate.TimeOfDay), TimeSpan.Zero);
+                endDate = startDate.AddDays(leaderboardTemplate.EndIn);
                 break;
 
             default:
-                throw new ArgumentException("Unsupported job type");
+                throw new ArgumentException("Unsupported repeat type");
         }
 
+        // Calculate creation and announcement dates
+        creationDate = startDate.AddDays(-leaderboardTemplate.AnnounceIn);
+        announcementDate = startDate.AddDays(-leaderboardTemplate.StartIn);
+
+        // Create a new LeaderboardRecord based on the calculated dates and template info
         var newRecord = new LeaderboardRecord(
-            leaderboardTemplate.Name,
+            schedule.Name,
             creationDate.ToUniversalTime(),
             announcementDate.ToUniversalTime(),
             startDate.ToUniversalTime(),
             endDate.ToUniversalTime(),
-            LeaderboardType.Win, // needs to be dynamic
-            leaderboardTemplate.JobType,
-            templateId,
+            LeaderboardType.Win, // Set dynamically if needed
+            //schedule.RepeatType,
+            schedule.LeaderboardTemplateId,
             LeaderboardRecordStatus.Created,
             true
         );
 
-        foreach (var prize in leaderboardTemplate.Prizes)
+        foreach (var prize in leaderboardTemplate.LeaderboardTemplatePrizes)
         {
             newRecord.AddLeaderboardRecordPrizes(prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
         }
@@ -143,6 +162,21 @@ public class JobService : IJobService
         }
 
         await _leaderboardRecordRepository.SaveChangesAsync();
+    }
+
+    public async Task UpdateScheduleStatusesAsync()
+    {
+        var now = DateTimeOffset.UtcNow;
+
+        var activeSchedules = await _leaderboardScheduleRepository.QueryAsync(s =>
+            s.Status == LeaderboardScheduleStatus.Active && s.EndDate <= now);
+
+        foreach (var schedule in activeSchedules)
+        {
+            schedule.UpdateStatus(LeaderboardScheduleStatus.Completed);
+        }
+
+        await _leaderboardScheduleRepository.SaveChangesAsync();
     }
 
     public async Task ExecuteLeaderboardJob(int leaderboardRecordId)
