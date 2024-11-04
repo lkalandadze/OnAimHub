@@ -18,9 +18,9 @@ public abstract class SharedGameConfigDbContext<T> : SharedGameConfigDbContext w
     }
 
     public DbSet<Currency> Currencies { get; set; }
-    public DbSet<T> Segments { get; set; }
+    public DbSet<Segment> Segments { get; set; }
     public DbSet<T> GameConfigurations { get; set; }
-    public DbSet<T> Prices { get; set; }
+    public DbSet<Price> Prices { get; set; }
     public DbSet<PrizeType> PrizeTypes { get; set; }
     public DbSet<GameSetting> GameSettings { get; set; }
 

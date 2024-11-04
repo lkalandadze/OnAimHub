@@ -38,11 +38,6 @@ public static class RepositoryHelper
         return (IQueryable<T>)dbSet;
     }
 
-    public static IQueryable<TEntity> IncludeNotHiddenAll<TEntity>(this IQueryable<TEntity> query) where TEntity : class
-    {
-        return IncludeNotHiddenAll(query, typeof(TEntity));
-    }
-
     public static IQueryable<TEntity> IncludeNotHiddenAll<TEntity>(this IQueryable<TEntity> query, Type type) where TEntity : class
     {
         var pathsToInclude = GetAllNavigationPaths(query, type, "", []);
@@ -105,59 +100,59 @@ public static class RepositoryHelper
         return type.IsClass || TypeHelper.IsGenericCollection(type);
     }
 
-    public static IQueryable<T> IncludeNavigationProperties<T>(DbContext context, IQueryable<T> query) where T : class
+    public static void UpdateEntityTreeRecursive(DbContext context, object existingEntity, object updatedEntity)
     {
-        var derivedEntityTypes = context.Model.GetEntityTypes()
-            .Where(e => typeof(T).IsAssignableFrom(e.ClrType) && !e.ClrType.IsAbstract);
+        var entityType = existingEntity.GetType();
+        var properties = entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-        foreach (var entityType in derivedEntityTypes)
+        foreach (var property in properties)
         {
-            var navigationProperties = entityType.GetNavigations().Select(n => n.Name).Distinct();
-
-            foreach (var navigationProperty in navigationProperties)
+            if (property.Name == "Id")
             {
-                query = query.Include(navigationProperty);
+                continue;
             }
-        }
-
-        return query;
-    }
-
-    public static void UpdateCollection(DbContext context, IEnumerable existingCollection, IEnumerable updatedCollection, Type collectionType)
-    {
-        if (existingCollection == null || updatedCollection == null)
-        {
-            return;
-        }
-
-        var itemType = collectionType.GetGenericArguments().FirstOrDefault();
-
-        if (itemType == null)
-        {
-            return;
-        }
-
-        var clearMethod = typeof(ICollection<>).MakeGenericType(itemType).GetMethod(nameof(ICollection<object>.Clear));
-        clearMethod?.Invoke(existingCollection, null);
-
-        var addMethod = typeof(ICollection<>).MakeGenericType(itemType).GetMethod(nameof(ICollection<object>.Add));
-
-        foreach (var updatedItem in updatedCollection)
-        {
-            var entityEntry = context.Entry(updatedItem);
-
-            if (entityEntry.State == EntityState.Detached)
+            else if (TypeHelper.IsGenericCollection(property.PropertyType))
             {
-                context.Attach(updatedItem);
+                var existingCollection = property.GetValue(existingEntity) as IEnumerable<object>;
+                var updatedCollection = property.GetValue(updatedEntity) as IEnumerable<object>;
+
+                if (existingCollection != null && updatedCollection != null)
+                {
+                    UpdateCollection(context, existingCollection, updatedCollection);
+                }
             }
-
-            entityEntry.State = EntityState.Modified;
-
-            addMethod?.Invoke(existingCollection, [updatedItem]);
+            else
+            {
+                property.SetValue(existingEntity, property.GetValue(updatedEntity));
+            }
         }
     }
 
+    public static void UpdateCollection(DbContext context, IEnumerable<object> oldCollection, IEnumerable<object> newCollection)
+    {
+        //Remove
+        var removedItems = oldCollection.Where(x => newCollection.All(xx => !EntityHelper.HaveSameId(x, xx))).ToList();
+        removedItems.ForEach(r => CollectionHelper.RemoveFromCollection(oldCollection, r));
 
+        //Add
+        var added = newCollection.Where(x =>
+        {
+            var id = EntityHelper.GetId(x);
+            return (id is int intId && intId == 0) || (id is string strId && string.IsNullOrEmpty(strId));
+        }).ToList();
 
+        added.ForEach(a => CollectionHelper.AddToCollection(oldCollection, a));
 
+        //Update
+        var updatedInNew = newCollection.Where(x => !EntityHelper.IsNewEntity(x)).ToList();
+        var updateInOld = oldCollection.Where(x => updatedInNew.Any(xx => EntityHelper.HaveSameId(x, xx))).ToList();
+
+        foreach (var newItem in updatedInNew)
+        {
+            var existingItem = updateInOld.First(x => EntityHelper.HaveSameId(x, newItem));
+            UpdateEntityTreeRecursive(context, existingItem, newItem);
+
+            context.Entry(existingItem).State = EntityState.Modified;
+        }
+    }
 }

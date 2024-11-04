@@ -21,7 +21,7 @@ public class WheelPrize : BasePrize<Round>
         RoundId = roundId;
     }
 
-    public string Name { get; private set; }
-    public int? WheelIndex { get; private set; }
-    public int? RoundId { get; private set; }
+    public string Name { get; set; }
+    public int? WheelIndex { get; set; }
+    public int? RoundId { get; set; }
 }
