@@ -5,6 +5,7 @@ using Wheel.Application.Services.Abstract;
 
 namespace Wheel.Api.Controllers;
 
+[ApiExplorerSettings(GroupName = "game")]
 public class GameController : BaseApiController
 {
     private readonly IWheelService _gameService;
