@@ -2,7 +2,7 @@
 
 namespace GameLib.Application.Models.Game;
 
-public class GetGameShortInfoModel
+public class GameShortInfoResponseModel
 {
     public bool Status { get; set; }
     public string Description { get; set; }

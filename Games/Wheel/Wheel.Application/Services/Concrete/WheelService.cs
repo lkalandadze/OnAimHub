@@ -1,66 +1,21 @@
 ﻿using GameLib.Application.Holders;
 using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Abstractions;
-using GameLib.Domain.Abstractions.Repository;
-using Wheel.Application.Models.Game;
 using Wheel.Application.Models.Player;
 using Wheel.Application.Services.Abstract;
-using Wheel.Domain.Abstractions.Repository;
 using Wheel.Domain.Entities;
 
 namespace Wheel.Application.Services.Concrete;
 
 public class WheelService : IWheelService
 {
-    private readonly IGameConfigurationRepository _configurationRepository;
     private readonly IAuthService _authService;
     private readonly IHubService _hubService;
-    private readonly IConsulGameService _consulGameService;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IRoundRepository _roundRepository;
-    private readonly IWheelPrizeRepository _wheelPrizeRepository;
-    private readonly ISegmentRepository _segmentRepository;
 
-    public WheelService(
-        IGameConfigurationRepository configurationRepository,
-        IAuthService authService,
-        IHubService hubService,
-        IConsulGameService consulGameService,
-        IUnitOfWork unitOfWork,
-        IRoundRepository roundRepository,
-        IWheelPrizeRepository wheelPrizeRepository,
-        ISegmentRepository segmentRepository)
+    public WheelService(IAuthService authService, IHubService hubService)
     {
-        _configurationRepository = configurationRepository;
         _authService = authService;
         _hubService = hubService;
-        _consulGameService = consulGameService;
-        _unitOfWork = unitOfWork;
-        _roundRepository = roundRepository;
-        _wheelPrizeRepository = wheelPrizeRepository;
-        _segmentRepository = segmentRepository;
-    }
-
-    public GameResponseModel GetGame()
-    {
-        var segments = _configurationRepository.Query();
-
-        return new GameResponseModel
-        {
-            Name = "Wheel",
-            ActivationTime = DateTime.UtcNow,
-        };
-    }
-
-    public async Task UpdateMetadataAsync()
-    {
-        await _consulGameService.UpdateMetadataAsync(
-            getDataFunc: GetGame,
-            serviceId: "WheelApi",
-            serviceName: "WheelApi",
-            port: 8080,
-            tags: ["Game", "Back"]
-        );
     }
 
     public async Task<PlayResponseModel> PlayJackpotAsync(PlayRequestModel model)

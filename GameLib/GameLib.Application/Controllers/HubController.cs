@@ -18,7 +18,7 @@ public class HubController : BaseApiController
     #region Game
 
     [HttpGet(nameof(GameShortInfo))]
-    public async Task<ActionResult<IEnumerable<GetGameShortInfoModel>>> GameShortInfo()
+    public async Task<ActionResult<IEnumerable<GameShortInfoResponseModel>>> GameShortInfo()
     {
         return Ok(await _gameService.GetGameShortInfo());
     }

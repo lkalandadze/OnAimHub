@@ -36,7 +36,7 @@ public static class DependencyResolver
     public static IServiceCollection ResolveGameLibServices<TGameConfiguration>(this IServiceCollection services, IConfiguration configuration, List<Type> prizeGroupTypes)
         where TGameConfiguration : GameConfiguration<TGameConfiguration>
     {
-        var apiName = configuration["GameConfiguration:ApiName"];
+        var apiName = configuration["GameInfoConfiguration:ApiName"];
 
         Globals.ConfigurationType = typeof(TGameConfiguration);
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
@@ -74,6 +74,7 @@ public static class DependencyResolver
         services.AddScoped<IPrizeTypeService, PrizeTypeService>();
         services.AddScoped<IGameService, GameService>();
 
+        services.Configure<GameInfoConfiguration>(configuration.GetSection("GameInfoConfiguration"));
         services.Configure<HubApiConfiguration>(configuration.GetSection("HubApiConfiguration"));
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
         services.Configure<BasicAuthConfiguration>(configuration.GetSection("BasicAuthConfiguration"));
@@ -106,7 +107,7 @@ public static class DependencyResolver
 
     public static void ResolveGameLib(this IApplicationBuilder app, IConfiguration configuration, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
     {
-        var routePrefix = configuration["GameConfiguration:ApiName"];
+        var apiName = configuration["GameInfoConfiguration:ApiName"];
 
         app.UseCors("AllowAnyOrigin");
         app.UseHttpsRedirection();
@@ -117,7 +118,7 @@ public static class DependencyResolver
         app.UseAuthentication();
         app.UseAuthorization();
 
-        ConfigureSwagger(app, routePrefix);
+        ConfigureSwagger(app, apiName);
 
         app.UseEndpoints(endpoints =>
         {

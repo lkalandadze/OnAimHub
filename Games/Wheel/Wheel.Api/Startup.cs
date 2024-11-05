@@ -1,4 +1,6 @@
 ﻿using Consul;
+using GameLib.Application.Models.Game;
+using GameLib.Application.Services.Abstract;
 using GameLib.Infrastructure.DataAccess;
 using GameLib.ServiceRegistry;
 using MassTransit;
@@ -6,8 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Shared.Infrastructure.DataAccess;
 using Wheel.Api.Consul;
-using Wheel.Application.Features.ConfigurationFeatures.Queries.GetById;
-using Wheel.Application.Models.Game;
 using Wheel.Application.Services.Abstract;
 using Wheel.Application.Services.Concrete;
 using Wheel.Domain.Abstractions.Repository;
@@ -28,8 +28,6 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetConfigurationByIdQueryHandler).Assembly));
-
         services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
         services.AddScoped<SharedGameConfigDbContext<WheelConfiguration>, WheelConfigDbContext>();
 
@@ -85,7 +83,7 @@ public class Startup
             GameResponseModel activeGameModel;
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                var gameService = scope.ServiceProvider.GetRequiredService<IWheelService>();
+                var gameService = scope.ServiceProvider.GetRequiredService<IGameService>();
                 activeGameModel = gameService.GetGame();
             }
 
@@ -96,7 +94,6 @@ public class Startup
                 ID = serviceId,
                 Name = "wheelapi",
                 Address = "wheelapi",
-
                 Port = 8080,
                 Tags = ["Game", "Back"],
                 Meta = new Dictionary<string, string>

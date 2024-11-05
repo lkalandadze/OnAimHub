@@ -1,7 +1,5 @@
 ﻿using GameLib.Application.Controllers;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Wheel.Application.Models.Game;
 using Wheel.Application.Models.Player;
 using Wheel.Application.Services.Abstract;
 
@@ -14,16 +12,6 @@ public class GameController : BaseApiController
     public GameController(IWheelService gameService)
     {
         _gameService = gameService;
-    }
-
-    [AllowAnonymous]
-    [HttpGet(nameof(GameVersion))]
-    public ActionResult<GameResponseModel> GameVersion()
-    {
-        var game = _gameService.GetGame();
-        _gameService.UpdateMetadataAsync();
-
-        return Ok(game);
     }
      
     [HttpPost(nameof(PlayJackpot))]

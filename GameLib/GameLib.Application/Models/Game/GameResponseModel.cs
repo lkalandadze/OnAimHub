@@ -1,8 +1,6 @@
 ﻿#nullable disable
 
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-
-namespace Wheel.Application.Models.Game;
+namespace GameLib.Application.Models.Game;
 
 public class GameResponseModel
 {
