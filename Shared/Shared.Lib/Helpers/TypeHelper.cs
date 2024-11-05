@@ -2,6 +2,11 @@
 
 public static class TypeHelper
 {
+    public static bool IsGenericCollection(Type type)
+    {
+        return type.IsGenericType && (typeof(ICollection<>).IsAssignableFrom(type.GetGenericTypeDefinition()) || typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition()));
+    }
+
     public static bool In<T>(this T item, params T[] source)
     {
         return source.Contains(item);

@@ -1,11 +1,11 @@
-﻿using GameLib.Application.Models.Configuration;
+﻿using GameLib.Application.Generators;
+using GameLib.Application.Models.Configuration;
 using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
 using GameLib.Domain.Entities;
-using GameLib.Infrastructure.DataAccess;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace GameLib.Application.Services.Concrete;
 
@@ -14,14 +14,19 @@ public class GameConfigurationService : IGameConfigurationService
     private readonly IGameConfigurationRepository _configurationRepository;
     private readonly ISegmentRepository _segmentRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly SharedGameConfigDbContext _dbContext;
+    private readonly EntityGenerator _entityGenerator;
 
-    public GameConfigurationService(IGameConfigurationRepository configurationRepository, ISegmentRepository segmentRepository, IUnitOfWork unitOfWork, SharedGameConfigDbContext dbContext)
+    public GameConfigurationService(IGameConfigurationRepository configurationRepository, ISegmentRepository segmentRepository, IUnitOfWork unitOfWork, EntityGenerator entityGenerator)
     {
         _configurationRepository = configurationRepository;
         _segmentRepository = segmentRepository;
         _unitOfWork = unitOfWork;
-        _dbContext = dbContext;
+        _entityGenerator = entityGenerator;
+    }
+
+    public EntityMetadata? GetConfigurationMetaData()
+    {
+        return _entityGenerator.GenerateEntityMetadata(Globals.ConfigurationType);
     }
 
     public async Task<IEnumerable<ConfigurationBaseGetModel>> GetAllAsync()
@@ -44,27 +49,51 @@ public class GameConfigurationService : IGameConfigurationService
         return configuration;
     }
 
-    public async Task CreateAsync(ConfigurationCreateModel model)
+    public async Task CreateAsync(string configurationJson)
     {
-        //var configuration = new GameConfiguration(model.Name, model.Value);
+        var configurationTree = JsonConvert.DeserializeObject(configurationJson, Globals.ConfigurationType) as GameConfiguration;
 
-        //await _configurationRepository.InsertAsync(configuration);
-        //await _unitOfWork.SaveAsync();
-    }
-
-    public async Task UpdateAsync(int id, ConfigurationUpdateModel model)
-    {
-        var configuration = await _configurationRepository.OfIdAsync(id);
-
-        if (configuration == null)
+        if (configurationTree == null)
         {
-            throw new KeyNotFoundException($"Configuration not found for Id: {id}");
+            throw new ArgumentException("Invalid JSON configurationTree for configuration create.");
         }
 
-        configuration.ChangeDetails(model.Name, model.Value);
+        try
+        {
+            _configurationRepository.InsertConfigurationTree(configurationTree);
+            await _unitOfWork.SaveAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw;
+        }
+    }
 
-        _configurationRepository.Update(configuration);
-        await _unitOfWork.SaveAsync();
+    public async Task UpdateAsync(string configurationJson)
+    {
+        if (string.IsNullOrWhiteSpace(configurationJson))
+        {
+            throw new ArgumentException("Configuration JSON cannot be null or empty.", nameof(configurationJson));
+        }
+
+        var updatedConfiguration = JsonConvert.DeserializeObject(configurationJson, Globals.ConfigurationType) as GameConfiguration;
+
+        if (updatedConfiguration == null)
+        {
+            throw new ArgumentException("Invalid JSON configuration for update.");
+        }
+
+        try
+        {
+            await _configurationRepository.UpdateConfigurationTreeAsync(updatedConfiguration);
+            await _unitOfWork.SaveAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw;
+        }
     }
 
     public async Task ActivateAsync(int id)
@@ -92,53 +121,6 @@ public class GameConfigurationService : IGameConfigurationService
         }
 
         configuration.Deactivate();
-
-        _configurationRepository.Update(configuration);
-        await _unitOfWork.SaveAsync();
-    }
-
-    public async Task AssignConfigurationToSegmentsAsync(int configurationId, IEnumerable<string> segmentIds)
-    {
-        var configuration = await _configurationRepository.OfIdAsync(configurationId);
-
-        if (configuration == null)
-        {
-            throw new KeyNotFoundException($"Configuration not found for Id: {configurationId}");
-        }
-
-        var existingSegments = _segmentRepository.Query(s => segmentIds.Contains(s.Id)).ToList();
-        var missingSegmentIds = segmentIds.Except(existingSegments.Select(s => s.Id));
-
-        if (missingSegmentIds.Any())
-        {
-            foreach (var segmentId in missingSegmentIds)
-            {
-                // Assuming you want to instantiate Segment with GameConfiguration as the type argument
-                var segment = new Segment(segmentId);
-
-                await _segmentRepository.InsertAsync(segment);
-                existingSegments.Add(segment);
-            }
-        }
-
-        configuration.AssignSegments(existingSegments);
-
-        _configurationRepository.Update(configuration);
-        await _unitOfWork.SaveAsync();
-    }
-
-    public async Task UnassignConfigurationToSegmentsAsync(int configurationId, IEnumerable<string> segmentIds)
-    {
-        var configuration = await _configurationRepository.OfIdAsync(configurationId);
-
-        if (configuration == null)
-        {
-            throw new KeyNotFoundException($"Configuration not found for Id: {configurationId}");
-        }
-
-        var existingSegments = _segmentRepository.Query(s => segmentIds.Contains(s.Id));
-
-        configuration.UnassignSegments(existingSegments);
 
         _configurationRepository.Update(configuration);
         await _unitOfWork.SaveAsync();

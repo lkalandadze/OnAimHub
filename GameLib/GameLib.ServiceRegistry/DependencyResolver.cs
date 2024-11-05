@@ -9,6 +9,7 @@ using GameLib.Application.Services.Abstract;
 using GameLib.Application.Services.Concrete;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
+using GameLib.Domain.Entities;
 using GameLib.Infrastructure.DataAccess;
 using GameLib.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,17 +17,21 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using Shared.Domain.Abstractions.Repository;
+using System.Reflection;
 using System.Security.Cryptography;
-using GameLib.Domain.Entities;
+using System.Text.Json.Serialization;
 
 namespace GameLib.ServiceRegistry;
 
 public static class DependencyResolver
 {
-    public static IServiceCollection Resolve<T>(this IServiceCollection services, IConfiguration configuration, List<Type> prizeGroupTypes, string routePrefix) where T: GameConfiguration<T>
+    public static IServiceCollection Resolve<TGameConfiguration>(this IServiceCollection services, IConfiguration configuration, List<Type> prizeGroupTypes, string routePrefix)
+        where TGameConfiguration : GameConfiguration<TGameConfiguration>
     {
+        // TODO: should be deleted
+        Globals.ConfigurationType = typeof(TGameConfiguration);
+
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
         services.AddSingleton<GameSettings>();
@@ -51,7 +56,7 @@ public static class DependencyResolver
         services.AddScoped<IGameConfigurationRepository, GameConfigurationRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
         services.AddScoped<ISegmentRepository, SegmentRepository>();
-        services.AddScoped<ISettingRepository, GameSettingRepository<T>>();
+        services.AddScoped<ISettingRepository, GameSettingRepository<TGameConfiguration>>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IConsulClient, ConsulClient>();
@@ -70,12 +75,14 @@ public static class DependencyResolver
 
         services.AddHttpContextAccessor();
         services.AddAuthorization();
-
         services.AddControllers(options =>
         {
             options.Conventions.Add(new RoutePrefixConvention(routePrefix));
         })
-            .AddApplicationPart(typeof(BaseApiController).Assembly);
+            .AddApplicationPart(typeof(BaseApiController).Assembly).AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
 
         services.AddEndpointsApiExplorer();
         services.AddHealthChecks();

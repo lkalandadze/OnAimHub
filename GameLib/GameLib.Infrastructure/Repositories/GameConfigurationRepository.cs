@@ -2,7 +2,16 @@
 using GameLib.Domain.Entities;
 using GameLib.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Shared.Domain.Entities;
+using Shared.Lib.Helpers;
+using System;
+using System.Collections;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 
 namespace GameLib.Infrastructure.Repositories;
 
@@ -11,69 +20,56 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
     public override async Task<GameConfiguration?> OfIdAsync(dynamic id)
     {
         int convertedId = Convert.ToInt32(id);
+        var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
+        var type = RepositoryHelper.GetDbSetEntityType<GameConfiguration>(context);
 
-        return await IncludeNavigationProperties(GetDbSet()).Where(c => c.Id == convertedId)
-                                                            .FirstOrDefaultAsync();
+        return await dbSet.IncludeNotHiddenAll(type).Where(c => c.Id == convertedId)
+                                                    .FirstOrDefaultAsync();
     }
 
     public override IQueryable<GameConfiguration> Query(Expression<Func<GameConfiguration, bool>>? expression = null)
     {
-        return expression != null ? GetDbSet().Where(expression) : GetDbSet();
+        var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
+
+        return expression != null ? dbSet.Where(expression) : dbSet;
     }
 
     public override async Task<List<GameConfiguration>> QueryAsync(Expression<Func<GameConfiguration, bool>>? expression = null)
     {
-        return expression != null ? GetDbSet().Where(expression).ToList() : await GetDbSet().ToListAsync();
+        return await Query(expression).ToListAsync();
     }
 
-    public override Task InsertAsync(GameConfiguration aggregateRoot)
+    public void InsertConfigurationTree(GameConfiguration aggregateRoot)
     {
-        return base.InsertAsync(aggregateRoot);
-    }
+        var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
 
-    public override void Update(GameConfiguration aggregateRoot)
-    {
-        base.Update(aggregateRoot);
-    }
+        var addMethod = dbSet.GetType().GetMethod(nameof(DbSet<object>.Add));
 
-    public override void Delete(GameConfiguration aggregateRoot)
-    {
-        base.Delete(aggregateRoot);
-    }
-
-    private IQueryable<GameConfiguration> GetDbSet()
-    {
-        var dbSets = context.GetType().GetProperties()
-            .Where(p => p.PropertyType.IsGenericType &&
-                        p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>));
-
-        var set = dbSets.Where(set => typeof(GameConfiguration).IsAssignableFrom(set.PropertyType.GetGenericArguments()[0]))
-            .FirstOrDefault()
-            ?.GetValue(context) as IQueryable;
-
-        if (set != null)
+        if (addMethod == null)
         {
-            return set.Cast<GameConfiguration>();
+            throw new ArgumentNullException(nameof(addMethod));
         }
 
-        return Enumerable.Empty<GameConfiguration>().AsQueryable();
+        var parameters = new object[] { aggregateRoot };
+
+        addMethod.Invoke(dbSet, parameters);
     }
 
-    private IQueryable<GameConfiguration> IncludeNavigationProperties(IQueryable<GameConfiguration> query)
+    public async Task UpdateConfigurationTreeAsync(GameConfiguration updatedConfig)
     {
-        var derivedEntityTypes = context.Model.GetEntityTypes()
-            .Where(e => typeof(GameConfiguration).IsAssignableFrom(e.ClrType) && !e.ClrType.IsAbstract);
+        var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
+        var type = RepositoryHelper.GetDbSetEntityType<GameConfiguration>(context);
 
-        foreach (var entityType in derivedEntityTypes)
+        var existingConfig = await dbSet.IncludeNotHiddenAll(type)
+            .FirstOrDefaultAsync(x => x.Id == updatedConfig.Id);
+
+        if (existingConfig == null)
         {
-            var navigationProperties = entityType.GetNavigations().Select(n => n.Name).Distinct();
-
-            foreach (var navigationProperty in navigationProperties)
-            {
-                query = query.Include(navigationProperty);
-            }
+            throw new KeyNotFoundException($"Entity with ID {updatedConfig.Id} not found.");
         }
 
-        return query;
+        RepositoryHelper.UpdateEntityTreeRecursive(context, existingConfig, updatedConfig);
+        
+        base.Update(existingConfig);
     }
 }
