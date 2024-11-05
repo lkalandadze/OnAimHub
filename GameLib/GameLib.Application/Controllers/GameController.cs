@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GameLib.Application.Controllers;
 
+[ApiExplorerSettings(GroupName = "game")]
 public class GameController : BaseApiController
 {
     private readonly IGameService _gameService;

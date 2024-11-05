@@ -5,10 +5,13 @@ using GameLib.Application.Models.PrizeType;
 using GameLib.Application.Models.Segment;
 using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameLib.Application.Controllers;
 
+[Authorize(AuthenticationSchemes = "BasicAuthentication")]
+[ApiExplorerSettings(GroupName = "admin")]
 public class AdminController : BaseApiController
 {
     private readonly IGameService _gameService;

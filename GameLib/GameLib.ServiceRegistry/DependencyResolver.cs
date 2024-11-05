@@ -12,11 +12,18 @@ using GameLib.Domain.Abstractions.Repository;
 using GameLib.Domain.Entities;
 using GameLib.Infrastructure.DataAccess;
 using GameLib.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Shared.Application;
+using Shared.Application.Configurations;
 using Shared.Domain.Abstractions.Repository;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -26,12 +33,12 @@ namespace GameLib.ServiceRegistry;
 
 public static class DependencyResolver
 {
-    public static IServiceCollection Resolve<TGameConfiguration>(this IServiceCollection services, IConfiguration configuration, List<Type> prizeGroupTypes, string routePrefix)
+    public static IServiceCollection ResolveGameLibServices<TGameConfiguration>(this IServiceCollection services, IConfiguration configuration, List<Type> prizeGroupTypes)
         where TGameConfiguration : GameConfiguration<TGameConfiguration>
     {
-        // TODO: should be deleted
-        Globals.ConfigurationType = typeof(TGameConfiguration);
+        var apiName = configuration["GameConfiguration:ApiName"];
 
+        Globals.ConfigurationType = typeof(TGameConfiguration);
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
         services.AddSingleton<GameSettings>();
@@ -42,6 +49,7 @@ public static class DependencyResolver
         services.AddSingleton<CommandGenerator>();
 
         services.AddSingleton(prizeGroupTypes);
+
         foreach (var type in prizeGroupTypes)
         {
             services.AddScoped(typeof(IPrizeGroupRepository<>).MakeGenericType(type), typeof(PrizeGroupRepository<>).MakeGenericType(type));
@@ -68,16 +76,20 @@ public static class DependencyResolver
 
         services.Configure<HubApiConfiguration>(configuration.GetSection("HubApiConfiguration"));
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
+        services.Configure<BasicAuthConfiguration>(configuration.GetSection("BasicAuthConfiguration"));
         services.Configure<PrizeGenerationConfiguration>(configuration.GetSection("PrizeGenerationConfiguration"));
 
-        ConfigureSwagger(services);
-        ConfigureJwt(services, configuration);
+        ConfigureSwagger(services, apiName);
+        ConfigureAuthentication(services, configuration);
+
+        services.AddAuthentication("BasicAuth")
+            .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuth", null);
 
         services.AddHttpContextAccessor();
         services.AddAuthorization();
         services.AddControllers(options =>
         {
-            options.Conventions.Add(new RoutePrefixConvention(routePrefix));
+            options.Conventions.Add(new RoutePrefixConvention(apiName));
         })
             .AddApplicationPart(typeof(BaseApiController).Assembly).AddJsonOptions(options =>
         {
@@ -92,6 +104,27 @@ public static class DependencyResolver
         return services;
     }
 
+    public static void ResolveGameLib(this IApplicationBuilder app, IConfiguration configuration, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
+    {
+        var routePrefix = configuration["GameConfiguration:ApiName"];
+
+        app.UseCors("AllowAnyOrigin");
+        app.UseHttpsRedirection();
+
+        app.UseHttpsRedirection();
+
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        ConfigureSwagger(app, routePrefix);
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
+    }
+
     private static void HandleInitializations(IServiceCollection services)
     {
         services.BuildServiceProvider().GetRequiredService<RepositoryManager>();
@@ -99,17 +132,40 @@ public static class DependencyResolver
         services.BuildServiceProvider().GetRequiredService<GeneratorHolder>();
     }
 
-    private static void ConfigureSwagger(IServiceCollection services)
+    private static void ConfigureSwagger(IServiceCollection services, string routePrefix)
     {
         services.AddSwaggerGen(c =>
         {
+            List<string> swaggerEndpoints = ["hub", "admin", "game"];
+
+            swaggerEndpoints.ForEach(controller =>
+            {
+                c.SwaggerDoc(controller, new OpenApiInfo { Title = $"{controller.ToUpper()} | {routePrefix}", Version = "v1" });
+            });
+
+            c.DocInclusionPredicate((docName, apiDesc) =>
+            {
+                var groupName = apiDesc.GroupName;
+                return docName.Equals(groupName);
+            });
+
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')",
                 Name = "Authorization",
-                In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer"
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "JWT Authorization header using the bearer scheme.",
+            });
+
+            c.AddSecurityDefinition("Basic", new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http,
+                Scheme = "basic",
+                In = ParameterLocation.Header,
+                Name = "Authorization",
+                Description = "Basic Authentication with username and password. Example: 'username:password' base64-encoded."
             });
 
             c.AddSecurityRequirement(new OpenApiSecurityRequirement()
@@ -127,12 +183,40 @@ public static class DependencyResolver
                         In = ParameterLocation.Header,
                     },
                     new List<string>()
-                }
+                },
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Basic"
+                        },
+                        Scheme = "basic",
+                        Name = "Basic",
+                        In = ParameterLocation.Header,
+                    },
+                    new List<string>()
+                },
             });
         });
     }
 
-    private static void ConfigureJwt(IServiceCollection services, IConfiguration configuration)
+    private static void ConfigureSwagger(IApplicationBuilder app, string routePrefix)
+    {
+        app.UseSwagger();
+
+        List<string> swaggerEndpoints = ["hub", "admin", "game"];
+
+        swaggerEndpoints.ForEach(controller => app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint($"/swagger/{controller}/swagger.json", $"{controller.ToUpper()} | {routePrefix}");
+            c.RoutePrefix = $"swagger/{controller}";
+            c.DocumentTitle = $"{controller.ToUpper()} | {routePrefix}";
+        }));
+    }
+
+    private static void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)
     {
         var jwtConfig = configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>()!;
 
@@ -141,6 +225,7 @@ public static class DependencyResolver
         ecdsa.ImportSubjectPublicKeyInfo(keyBytes, out _);
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null)
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters

@@ -1,9 +1,29 @@
 {
   "profiles": {
-    "http": {
+    "Wheel.Api [Game]": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "swagger/game",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5066"
+    },
+    "Wheel.Api [Admin]": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger/admin",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5066"
+    },
+    "Wheel.Api [Hub]": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger/hub",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

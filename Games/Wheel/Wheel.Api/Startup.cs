@@ -51,7 +51,7 @@ public class Startup
         services.AddScoped<IWheelConfigurationRepository, WheelConfigurationRepository>();
 
         var prizeGroupTypes = new List<Type> { typeof(Round), typeof(JackpotPrizeGroup) };
-        services.Resolve<WheelConfiguration>(Configuration, prizeGroupTypes, "WheelApi");
+        services.ResolveGameLibServices<WheelConfiguration>(Configuration, prizeGroupTypes);
 
         services.AddScoped<IWheelService, WheelService>();
 
@@ -66,31 +66,12 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
     {
-        app.UseCors("AllowAnyOrigin");
-        app.UseHttpsRedirection();
-
         if (IsRunningInDocker())
         {
             ConfigureConsulLifetime(app, lifetime);
         }
 
-        app.UseHttpsRedirection();
-
-        app.UseRouting();
-        app.UseAuthentication();
-        app.UseAuthorization();
-
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.DefaultModelExpandDepth(-1);
-            c.DocumentTitle = "Wheel.Api";
-        });
-
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
+        app.ResolveGameLib(Configuration, env, lifetime);
     }
 
     private void ConfigureConsulLifetime(IApplicationBuilder app, IHostApplicationLifetime lifetime)

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GameLib.Application.Controllers;
 
+//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[ApiExplorerSettings(GroupName = "hub")]
 public class HubController : BaseApiController
 {
     private readonly IGameService _gameService;
