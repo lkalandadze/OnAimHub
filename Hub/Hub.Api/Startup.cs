@@ -20,12 +20,15 @@ using Hub.Infrastructure.Repositories;
 using Hub.IntegrationEvents.Player;
 using MassTransit;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.PostgreSQL;
+using Shared.Application;
+using Shared.Application.Configurations;
 using Shared.Infrastructure.Bus;
 using Shared.Infrastructure.MassTransit;
 using Shared.IntegrationEvents.IntegrationEvents.Segment;
@@ -107,7 +110,7 @@ public class Startup
         {
             typeof(CreateAuthenticationTokenHandler).GetTypeInfo().Assembly,
             typeof(CreatePlayerPublishHandler).Assembly
-    });
+        });
 
         services.AddMassTransitHostedService();
 
@@ -125,9 +128,6 @@ public class Startup
 
         ConfigureSwagger(services);
         ConfigureAuthentication(services);
-
-        services.AddAuthentication("BasicAuth");
-            //.AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuth", null);
 
         services.AddAuthorization();
 
@@ -205,9 +205,12 @@ public class Startup
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("admin", new OpenApiInfo { Title = "Admin | Hub.Api", Version = "v1" });
-            c.SwaggerDoc("game", new OpenApiInfo { Title = "Game | Hub.Api", Version = "v1" });
-            c.SwaggerDoc("hub", new OpenApiInfo { Title = "Hub | Hub.Api", Version = "v1" });
+            List<string> swaggerEndpoints = ["hub", "admin", "game"];
+
+            swaggerEndpoints.ForEach(controller =>
+            {
+                c.SwaggerDoc(controller, new OpenApiInfo { Title = $"{controller.ToUpper()} | Hub.Api", Version = "v1" });
+            });
 
             c.DocInclusionPredicate((docName, apiDesc) =>
             {
@@ -272,36 +275,14 @@ public class Startup
     {
         app.UseSwagger();
 
-        app.UseSwaggerUI(c =>
+        List<string> swaggerEndpoints = ["hub", "admin", "game"];
+
+        swaggerEndpoints.ForEach(controller => app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("/swagger/hub/swagger.json", "Hub | Hub.Api");
-            c.RoutePrefix = "swagger";
-            c.DocumentTitle = "Hub | Hub.Api";
-        });
-
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/hub/swagger.json", "Hub | Hub.Api");
-
-            c.RoutePrefix = "swagger/hub";
-            c.DocumentTitle = "Hub | Hub.Api";
-        });
-
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/admin/swagger.json", "Admin | Hub.Api");
-
-            c.RoutePrefix = "swagger/admin";
-            c.DocumentTitle = "Admin | Hub.Api";
-        });
-
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/game/swagger.json", "Game | Hub.Api");
-
-            c.RoutePrefix = "swagger/game";
-            c.DocumentTitle = "Game | Hub.Api";
-        });
+            c.SwaggerEndpoint($"/swagger/{controller}/swagger.json", $"{controller.ToUpper()} | Hub.Api");
+            c.RoutePrefix = $"swagger/{controller}";
+            c.DocumentTitle = $"{controller.ToUpper()} | Hub.Api";
+        }));
     }
 
     private void ConfigureAuthentication(IServiceCollection services)
@@ -313,7 +294,7 @@ public class Startup
         ecdsa.ImportECPrivateKey(keyBytes, out _);
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //.AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null)
+            .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null)
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -422,5 +403,4 @@ public class Startup
             });
         });
     }
-
 }
