@@ -53,7 +53,7 @@ namespace LevelService.Infrastructure.Migrations
 
                     b.HasIndex("StageId");
 
-                    b.ToTable("Configuration");
+                    b.ToTable("Configuration", (string)null);
                 });
 
             modelBuilder.Entity("LevelService.Domain.Entities.DbEnums.Currency", b =>
@@ -67,7 +67,7 @@ namespace LevelService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currencies");
+                    b.ToTable("Currencies", (string)null);
                 });
 
             modelBuilder.Entity("LevelService.Domain.Entities.DbEnums.PrizeType", b =>
@@ -87,7 +87,7 @@ namespace LevelService.Infrastructure.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.ToTable("PrizeTypes");
+                    b.ToTable("PrizeTypes", (string)null);
                 });
 
             modelBuilder.Entity("LevelService.Domain.Entities.Level", b =>
@@ -112,7 +112,7 @@ namespace LevelService.Infrastructure.Migrations
 
                     b.HasIndex("StageId");
 
-                    b.ToTable("Levels");
+                    b.ToTable("Levels", (string)null);
                 });
 
             modelBuilder.Entity("LevelService.Domain.Entities.LevelPrize", b =>
@@ -146,7 +146,7 @@ namespace LevelService.Infrastructure.Migrations
 
                     b.HasIndex("PrizeTypeId");
 
-                    b.ToTable("LevelPrizes");
+                    b.ToTable("LevelPrizes", (string)null);
                 });
 
             modelBuilder.Entity("LevelService.Domain.Entities.Player", b =>
@@ -167,7 +167,7 @@ namespace LevelService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Players");
+                    b.ToTable("Players", (string)null);
                 });
 
             modelBuilder.Entity("LevelService.Domain.Entities.PlayerReward", b =>
@@ -197,7 +197,7 @@ namespace LevelService.Infrastructure.Migrations
 
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("PlayerReward");
+                    b.ToTable("PlayerReward", (string)null);
                 });
 
             modelBuilder.Entity("LevelService.Domain.Entities.Stage", b =>
@@ -237,7 +237,7 @@ namespace LevelService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stages");
+                    b.ToTable("Stages", (string)null);
                 });
 
             modelBuilder.Entity("LevelService.Domain.Entities.Configuration", b =>
