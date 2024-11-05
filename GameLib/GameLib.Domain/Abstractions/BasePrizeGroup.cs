@@ -9,8 +9,7 @@ public abstract class BasePrizeGroup : BaseEntity<int>
 
     public int ConfigurationId { get; set; }
 
-    //todo
-    // leave this not mapped
+    //TODO: leave this not mapped
     //[NotMapped]
     //public GameConfiguration Configuration { get; set; }
 
@@ -19,9 +18,15 @@ public abstract class BasePrizeGroup : BaseEntity<int>
 
 public abstract class BasePrizeGroup<TPrize> : BasePrizeGroup where TPrize : BasePrize
 {
-    new public ICollection<TPrize> Prizes
+    public ICollection<TPrize> Prizes
     {
-        get { return base.Prizes?.Select(x => (TPrize)x).ToList() ?? new List<TPrize>(); }
-        set { base.Prizes = value?.Select(x => (BasePrize)x).ToList() ?? new List<BasePrize>(); }
+        get
+        {
+            return base.Prizes?.Select(x => (TPrize)x).ToList() ?? new List<TPrize>();
+        }
+        set
+        {
+            base.Prizes = value?.Select(x => (BasePrize)x).ToList() ?? new List<BasePrize>();
+        }
     }
 }

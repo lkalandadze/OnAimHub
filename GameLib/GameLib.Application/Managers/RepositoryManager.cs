@@ -37,7 +37,7 @@ internal class PrizeGroupRepositoryProxy(object repository)
 {
     internal IEnumerable<BasePrizeGroup> QueryWithPrizes()
     {
-        var queryMethod = repository.GetType().GetMethod(nameof(IPrizeGroupRepository<BasePrizeGroup>.QueryWithPrizes));
+        var queryMethod = repository.GetType().GetMethod(nameof(IPrizeGroupRepository<BasePrizeGroup>.QueryWithTree));
 
         if (queryMethod != null)
         {

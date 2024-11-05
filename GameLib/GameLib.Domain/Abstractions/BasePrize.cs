@@ -1,4 +1,5 @@
-﻿using GameLib.Domain.Entities;
+﻿#nullable disable
+using GameLib.Domain.Entities;
 using Shared.Domain.Entities;
 
 namespace GameLib.Domain.Abstractions;

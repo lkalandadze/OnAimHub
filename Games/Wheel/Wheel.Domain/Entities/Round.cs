@@ -27,5 +27,9 @@ public class Round : BasePrizeGroup<WheelPrize>
     [JsonIgnore]
     public WheelConfiguration Configuration { get; set; }
 
-    public ICollection<WheelPrize> Prizes { get; set; }
+    new public ICollection<WheelPrize> Prizes
+    {
+        get { return base.Prizes; }
+        set { base.Prizes = value; }
+    }
 }

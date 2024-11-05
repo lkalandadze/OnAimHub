@@ -3,5 +3,5 @@
 public interface IPrizeGroupRepository<TPrizeGroup> : IBaseRepository<TPrizeGroup>
     where TPrizeGroup : BasePrizeGroup
 {
-    List<TPrizeGroup> QueryWithPrizes();
+    List<TPrizeGroup> QueryWithTree();
 }
