@@ -12,7 +12,6 @@ namespace Wheel.Application.Services.Concrete;
 
 public class WheelService : IWheelService
 {
-    private readonly ConfigurationHolder _configurationHolder;
     private readonly IGameConfigurationRepository _configurationRepository;
     private readonly IAuthService _authService;
     private readonly IHubService _hubService;
@@ -23,7 +22,6 @@ public class WheelService : IWheelService
     private readonly ISegmentRepository _segmentRepository;
 
     public WheelService(
-        ConfigurationHolder configurationHolder,
         IGameConfigurationRepository configurationRepository,
         IAuthService authService,
         IHubService hubService,
@@ -33,7 +31,6 @@ public class WheelService : IWheelService
         IWheelPrizeRepository wheelPrizeRepository,
         ISegmentRepository segmentRepository)
     {
-        _configurationHolder = configurationHolder;
         _configurationRepository = configurationRepository;
         _authService = authService;
         _hubService = hubService;
@@ -42,15 +39,6 @@ public class WheelService : IWheelService
         _roundRepository = roundRepository;
         _wheelPrizeRepository = wheelPrizeRepository;
         _segmentRepository = segmentRepository;
-    }
-
-    public InitialDataResponseModel GetInitialData()
-    {
-        return new InitialDataResponseModel
-        {
-            PrizeGroups = _configurationHolder.PrizeGroups,
-            Prices = _configurationHolder.Prices,
-        };
     }
 
     public GameResponseModel GetGame()

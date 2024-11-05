@@ -16,12 +16,6 @@ public class GameController : BaseApiController
         _gameService = gameService;
     }
 
-    [HttpGet(nameof(InitialData))]
-    public ActionResult<InitialDataResponseModel> InitialData()
-    {
-        return Ok(_gameService.GetInitialData());
-    }
-
     [AllowAnonymous]
     [HttpGet(nameof(GameVersion))]
     public ActionResult<GameResponseModel> GameVersion()

@@ -4,6 +4,8 @@ namespace GameLib.Application.Services.Abstract;
 
 public interface IGameService
 {
+    GetInitialDataResponseModel GetInitialData();
+
     Task<GetGameShortInfoModel> GetGameShortInfo();
 
     bool GameStatus();

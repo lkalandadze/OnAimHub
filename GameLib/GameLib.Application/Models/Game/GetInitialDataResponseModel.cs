@@ -3,9 +3,9 @@
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Entities;
 
-namespace Wheel.Application.Models.Game;
+namespace GameLib.Application.Models.Game;
 
-public class InitialDataResponseModel
+public class GetInitialDataResponseModel
 {
     public Dictionary<string, List<BasePrizeGroup>> PrizeGroups { get; set; }
     public IEnumerable<Price> Prices { get; set; }

@@ -6,7 +6,6 @@ namespace Wheel.Application.Services.Abstract;
 
 public interface IWheelService
 {
-    InitialDataResponseModel GetInitialData();
     GameResponseModel GetGame();
     Task UpdateMetadataAsync();
     Task<PlayResponseModel> PlayJackpotAsync(PlayRequestModel command);
