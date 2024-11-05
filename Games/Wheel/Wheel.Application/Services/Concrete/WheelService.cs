@@ -2,6 +2,9 @@
 using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
+using Shared.Infrastructure.Bus;
+using Shared.IntegrationEvents.IntegrationEvents.Player;
+using Shared.IntegrationEvents.IntegrationEvents.Segment;
 using Wheel.Application.Models.Game;
 using Wheel.Application.Models.Player;
 using Wheel.Application.Services.Abstract;
@@ -21,6 +24,7 @@ public class WheelService : IWheelService
     private readonly IRoundRepository _roundRepository;
     private readonly IWheelPrizeRepository _wheelPrizeRepository;
     private readonly ISegmentRepository _segmentRepository;
+    private readonly IMessageBus _messageBus;
 
     public WheelService(
         ConfigurationHolder configurationHolder,
@@ -31,7 +35,8 @@ public class WheelService : IWheelService
         IUnitOfWork unitOfWork,
         IRoundRepository roundRepository,
         IWheelPrizeRepository wheelPrizeRepository,
-        ISegmentRepository segmentRepository)
+        ISegmentRepository segmentRepository,
+        IMessageBus messageBus)
     {
         _configurationHolder = configurationHolder;
         _configurationRepository = configurationRepository;
@@ -42,6 +47,7 @@ public class WheelService : IWheelService
         _roundRepository = roundRepository;
         _wheelPrizeRepository = wheelPrizeRepository;
         _segmentRepository = segmentRepository;
+        _messageBus = messageBus;
     }
 
     public InitialDataResponseModel GetInitialData()
@@ -91,21 +97,25 @@ public class WheelService : IWheelService
         await _hubService.BetTransactionAsync(model.GameId, model.CurrencyId, model.Amount);
 
         //TODO: prioritetis minicheba segmentistvis
-        var prize = GeneratorHolder.GetPrize<TPrize>(_authService.GetCurrentPlayerSegmentIds().ToList()[0]);
+        //var prize = GeneratorHolder.GetPrize<TPrize>(_authService.GetCurrentPlayerSegmentIds().ToList()[0]);
 
-        if (prize == null)
-        {
-            throw new ArgumentNullException(nameof(prize));
-        }
+        //if (prize == null)
+        //{
+        //    throw new ArgumentNullException(nameof(prize));
+        //}
 
-        if (prize.Value > 0)
-        {
-            await _hubService.WinTransactionAsync(model.GameId, model.CurrencyId, model.Amount);
-        }
+        //if (prize.Value > 0)
+        //{
+        //    await _hubService.WinTransactionAsync(model.GameId, model.CurrencyId, model.Amount);
+        //}
+
+        var @event = new UpdatePlayerExperienceEvent(Guid.NewGuid(), model.Amount, model.CurrencyId, 45);
+
+        await _messageBus.Publish(@event);
 
         return new PlayResponseModel
         {
-            PrizeResults = [prize],
+            PrizeResults = null,
             Multiplier = 0,
         };
     }

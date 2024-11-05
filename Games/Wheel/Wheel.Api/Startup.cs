@@ -4,7 +4,11 @@ using GameLib.ServiceRegistry;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Shared.Infrastructure.Bus;
 using Shared.Infrastructure.DataAccess;
+using Shared.Infrastructure.MassTransit;
+using Shared.IntegrationEvents.IntegrationEvents.Player;
+using Shared.IntegrationEvents.IntegrationEvents.Segment;
 using Wheel.Api.Consul;
 using Wheel.Application.Features.ConfigurationFeatures.Queries.GetById;
 using Wheel.Application.Models.Game;
@@ -28,6 +32,7 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        var env = services.BuildServiceProvider().GetRequiredService<IWebHostEnvironment>();
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetConfigurationByIdQueryHandler).Assembly));
 
         services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
@@ -49,13 +54,14 @@ public class Startup
         services.AddScoped<IRoundRepository, RoundRepository>();
         services.AddScoped<IWheelPrizeRepository, WheelPrizeRepository>();
         services.AddScoped<IWheelConfigurationRepository, WheelConfigurationRepository>();
+        services.AddScoped<IMessageBus, MessageBus>();
 
         var prizeGroupTypes = new List<Type> { typeof(Round), typeof(JackpotPrizeGroup) };
         services.Resolve<WheelConfiguration>(Configuration, prizeGroupTypes, "WheelApi");
 
         services.AddScoped<IWheelService, WheelService>();
 
-        ConfigureMassTransit(services);
+        ConfigureMassTransit(services, Configuration, env, consumerAssemblyMarkerType: typeof(Program));
         services.AddMassTransitHostedService();
 
         if (IsRunningInDocker())
@@ -152,24 +158,27 @@ public class Startup
         return !string.IsNullOrEmpty(isDocker) && isDocker == "true";
     }
 
-    private void ConfigureMassTransit(IServiceCollection services)
+    private void ConfigureMassTransit(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env, Type consumerAssemblyMarkerType)
     {
+        var rabbitMqOptions = configuration.GetSection("RabbitMQSettings").Get<RabbitMqOptions>();
+
         services.AddMassTransit(x =>
         {
+            x.AddConsumers(consumerAssemblyMarkerType.Assembly);
+
             x.UsingRabbitMq((context, cfg) =>
             {
-                cfg.Host(Configuration["RabbitMQSettings:Host"], h =>
+                cfg.Host(rabbitMqOptions.Host, h =>
                 {
-                    h.Username(Configuration["RabbitMQSettings:User"]!);
-                    h.Password(Configuration["RabbitMQSettings:Password"]!);
+                    h.Username(rabbitMqOptions.User);
+                    h.Password(rabbitMqOptions.Password);
                 });
 
-                cfg.ReceiveEndpoint($"{Configuration["RabbitMQSettings:QueueName"]}_{"EnvironmentName"}_TEMP", ep =>
+                cfg.Message<UpdatePlayerExperienceEvent>(c => c.SetEntityName("levels.fanout"));
+                cfg.Publish<UpdatePlayerExperienceEvent>(p =>
                 {
-                    // ep.ConfigureConsumer<YourConsumer>(context);
+                    p.ExchangeType = "fanout";
                 });
-
-                cfg.ConfigureEndpoints(context);
             });
         });
     }
