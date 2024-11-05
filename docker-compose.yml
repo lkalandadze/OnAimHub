@@ -45,8 +45,8 @@ services:
     environment:
       - CONSUL_ADDRESS=http://consul:8500
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__GameConfig=Host=gameconfigdb;Port=5432;Database=WheelConfig;Username=postgres;Password=1234
-      - ConnectionStrings__GameHistory=Host=gamehistorydb;Port=5432;Database=WheelHistory;Username=postgres;Password=1234
+      - ConnectionStrings__GameConfig=Host=gameconfigdb;Port=5432;Database=WheelConfig;Username=postgres;Password=Test1234!
+      - ConnectionStrings__GameHistory=Host=gamehistorydb;Port=5432;Database=WheelHistory;Username=postgres;Password=Test1234!
     volumes:
       - ./Games/Wheel/Wheel.Api/appsettings.json:/app/appsettings.json
        
@@ -71,7 +71,7 @@ services:
     ports:
       - "5003:8080"  # Map host port 5002 to container port 8080
     environment:
-      - ConnectionStrings__Connection=Host=admindb;Port=5435;Database=OnAimAdmin;Username=postgres;Password=12345678;Pooling=true;
+      - ConnectionStrings__Connection=Host=admindb;Port=5435;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;
     volumes:
           - ./Admin/OnAim.Admin.API/appsettings.json:/app/appsettings.json
           
@@ -87,7 +87,8 @@ services:
     environment:
       - CONSUL_ADDRESS=http://consul:8500
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__OnAimLevel=Host=leveldb;Port=5432;Database=OnAimLevel;Username=postgres;Password=Test1234!
+      - ConnectionStrings__Connection=Host=leveldb;Port=5439;Database=OnAimLevel;Username=postgres;Password=Test1234!
+    command: ["dotnet", "ef", "database", "update"]
     volumes:
       - ./LevelService/LevelService.Api/appsettings.json:/app/appsettings.json
       
@@ -133,7 +134,7 @@ services:
     environment:
       POSTGRES_DB: WheelConfig
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
+      POSTGRES_PASSWORD: Test1234!
     ports:
       - "5432:5432"
     volumes:
@@ -144,7 +145,7 @@ services:
     environment:
       POSTGRES_DB: WheelHistory
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
+      POSTGRES_PASSWORD: Test1234!
     ports:
       - "5433:5432"
     volumes:
@@ -155,7 +156,7 @@ services:
     environment:
       POSTGRES_DB: OnAimAdmin
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12345678
+      POSTGRES_PASSWORD: Test1234!
     ports:
       - "5435:5432"
     volumes:

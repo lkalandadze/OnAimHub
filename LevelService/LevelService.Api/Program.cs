@@ -8,6 +8,7 @@ using LevelService.Application.Services.Abstract.BackgroundJobs;
 using LevelService.Application.Services.Concrete;
 using LevelService.Application.Services.Concrete.BackgroundJobs;
 using LevelService.Infrastructure;
+using LevelService.Infrastructure.DataAccess;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +34,7 @@ builder.Services
 builder.Services
             .AddApplicationLayer()
             .AddInfrastructureLayer(configuration)
+            .AddMassTransitWithRabbitMqTransport(configuration, consumerAssemblyMarkerType: typeof(Program))
             .AddCustomServices(configuration);
 
 
@@ -56,6 +58,7 @@ var origins = builder.Configuration.GetValue<string>("OriginsToAllow");
 
 builder.Services.AddCors();
 
+
 var app = builder.Build();
 {
     if (app.Environment.IsDevelopment())
@@ -63,6 +66,16 @@ var app = builder.Build();
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+
+    var serviceProvider = builder.Services.BuildServiceProvider();
+
+    var context = serviceProvider.GetService<LevelDbContext>();
+
+    if (context != null)
+    {
+        DbInitializer.InitializeDatabase(app.Services, context);
+    }
+
 
     app.UseHttpsRedirection();
 
@@ -75,5 +88,4 @@ var app = builder.Build();
     app.UseHangfireDashboard();
 
     app.Run();
-
 }
