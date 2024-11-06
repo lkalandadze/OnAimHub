@@ -1,23 +1,10 @@
-﻿using OnAim.Admin.Domain.Entities.Abstract;
-using OnAim.Admin.Contracts.Models;
+﻿using Shared.Domain.Entities;
 
 namespace OnAim.Admin.Domain.Entities;
 
-public class AppSetting : BaseEntity
+public class AppSetting : Setting
 {
-    public AppSetting()
+    public AppSetting(string name, string value) : base(name, value)
     {
-        
     }
-    public AppSetting(string key, string value)
-    {
-        Key = key;
-        Value = value;
-        DateCreated = SystemDate.Now;
-        IsActive = true;
-    }
-
-    public string Key { get; set; }
-    public string Value { get; set; }
-
 }

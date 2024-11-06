@@ -1,4 +1,6 @@
-﻿using Hub.Domain.Absractions.Repository;
+﻿#nullable disable
+
+using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities.DbEnums;
 using Shared.Application;
 using Shared.Lib.Attributes;

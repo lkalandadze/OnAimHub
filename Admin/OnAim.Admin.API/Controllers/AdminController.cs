@@ -8,36 +8,39 @@ using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Contracts.Dtos.EmailDomain;
 using OnAim.Admin.Contracts.Dtos;
 using OnAim.Admin.Contracts.Models;
+using OnAim.Admin.APP.Services.SettingServices;
 
 namespace OnAim.Admin.API.Controllers;
 
 public class AdminController : ApiControllerBase
 {
-    private readonly IAppSettingsService _appSettingsService;
+    private readonly AppSettings _appSettings;
 
-    public AdminController(IAppSettingsService appSettingsService)
+    public AdminController(AppSettings appSettings)
     {
-        _appSettingsService = appSettingsService;
+        _appSettings = appSettings;
     }
 
     [HttpGet(nameof(GetSettings))]
     public IActionResult GetSettings()
     {
-        var domainRestrictionsEnabled = _appSettingsService.GetSettings();
-        return Ok(new { DomainRestrictionsEnabled = domainRestrictionsEnabled });
+        return Ok(new 
+        {
+            DomainRestrictionsEnabled = _appSettings.DomainRestrictionsEnabled.Value,
+            TwoFactorAuth = _appSettings.TwoFactorAuth.Value,
+        });
     }
 
     [HttpPost(nameof(SetDomainRestrictions))]
     public IActionResult SetDomainRestrictions([FromBody] bool enableRestrictions)
     {
-        var settingValue = enableRestrictions ? "true" : "false";
-        _appSettingsService.SetSetting("DomainRestrictionsEnabled", settingValue);
+        _appSettings.SetValue(nameof(_appSettings.DomainRestrictionsEnabled), enableRestrictions);
         return NoContent();
     }
 
     [HttpPost(nameof(SetTwoFactorAuth))]
     public async Task<IActionResult> SetTwoFactorAuth([FromBody] bool twoFactorAuth)
-        => Ok(await _appSettingsService.SetTwoFactorAuth(twoFactorAuth));
+        => Ok(await _appSettings.SetTwoFactorAuth(twoFactorAuth));
 
     [HttpGet(nameof(GetAllDomain))]
     public async Task<IActionResult> GetAllDomain([FromQuery] DomainFilter filter)

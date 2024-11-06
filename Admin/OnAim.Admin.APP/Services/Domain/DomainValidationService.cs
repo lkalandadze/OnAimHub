@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.APP.Services.SettingServices;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 
@@ -9,14 +10,14 @@ namespace OnAim.Admin.APP.Services.Domain;
 public class DomainValidationService : IDomainValidationService
 {
     private readonly IRepository<AllowedEmailDomain> _repository;
-    private readonly IAppSettingsService _appSettingsService;
+    private readonly AppSettings _appSettings;
     private HashSet<string> _cachedAllowedDomains;
     private readonly object _lock = new object();
 
-    public DomainValidationService(IRepository<AllowedEmailDomain> repository, IAppSettingsService appSettingsService)
+    public DomainValidationService(IRepository<AllowedEmailDomain> repository, AppSettings appSettings)
     {
         _repository = repository;
-        _appSettingsService = appSettingsService;
+        _appSettings = appSettings;
     }
 
     public async Task<HashSet<string>> GetAllowedDomainsAsync()
@@ -47,7 +48,7 @@ public class DomainValidationService : IDomainValidationService
 
     private async Task<bool> AreDomainRestrictionsEnabledAsync()
     {
-        var settingValue = _appSettingsService.GetSetting("DomainRestrictionsEnabled");
+        var settingValue = nameof(_appSettings.DomainRestrictionsEnabled);
         return settingValue != "false";
     }
 

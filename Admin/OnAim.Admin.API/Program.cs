@@ -1,11 +1,14 @@
+using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.API.Extensions;
 using OnAim.Admin.API.Middleware;
 using OnAim.Admin.APP;
 using OnAim.Admin.APP.Services.ClientServices;
 using OnAim.Admin.Infrasturcture;
+using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 using Serilog;
 using Serilog.Events;
 
+CreateDatabaseIfNotExists();
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
@@ -25,8 +28,8 @@ builder.Services
                 .AddCustomServices()
                 .AddControllers()
                 .Services.AddCustomSwagger()
-                .AddApp(builder.Configuration, consumerAssemblyMarkerType: typeof(Program))
-                .AddInfrastructure(builder.Configuration);
+                .AddInfrastructure(builder.Configuration)
+                .AddApp(builder.Configuration, consumerAssemblyMarkerType: typeof(Program));
 builder.AddCustomHttpClients();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -59,3 +62,25 @@ app.UseMiddleware<RequestHandlerMiddleware>();
 app.MapControllers();
 
 app.Run();
+
+static void CreateDatabaseIfNotExists()
+{
+    try
+    {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
+
+        string connectionString = configuration.GetConnectionString("DefaultConnectionString");
+
+        var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
+        optionsBuilder.UseNpgsql(connectionString);
+
+        using var dbContext = new DatabaseContext(optionsBuilder.Options);
+        dbContext.Database.EnsureCreated();
+    }
+    catch (Exception ex)
+    {
+    }
+}

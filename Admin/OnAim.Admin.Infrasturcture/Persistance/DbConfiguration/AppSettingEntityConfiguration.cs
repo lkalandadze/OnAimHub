@@ -12,7 +12,7 @@ public class AppSettingEntityConfiguration : IEntityTypeConfiguration<AppSetting
         .HasKey(a => a.Id);
 
         builder
-            .Property(a => a.Key)
+            .Property(a => a.Name)
             .IsRequired()
         .HasMaxLength(100);
 

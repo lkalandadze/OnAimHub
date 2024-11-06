@@ -38,6 +38,7 @@ using Shared.Infrastructure.MassTransit;
 using MassTransit;
 using OnAim.Admin.APP.Services.LeaderBoard;
 using OnAim.Admin.APP.Services.ClientServices;
+using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 
 
 namespace OnAim.Admin.APP;
@@ -58,6 +59,7 @@ public static class Extension
         services
             .AddScoped<IRoleRepository, RoleRepository>()
             .AddScoped<ILogRepository, LogRepository>()
+            .AddScoped<IAppSettingRepository, AppSettingRepository>()
             .AddScoped<IPermissionService, PermissionService>()
             .AddScoped<IPasswordService, PasswordService>()
             .AddScoped<IUserService, UserService>()
@@ -73,7 +75,11 @@ public static class Extension
             .AddHostedService<TokenCleanupService>()
             .Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"))
             .AddScoped<IDomainValidationService, DomainValidationService>()
-            .AddScoped<IAppSettingsService, AppSettingsService>()
+            .AddSingleton<AppSettings>(provider =>
+            {
+                var serviceProvider = provider.CreateScope().ServiceProvider;
+                return new(serviceProvider.GetRequiredService<IAppSettingRepository>(), serviceProvider.GetRequiredService<IRepository<Admin.Domain.Entities.User>>());
+            })
             .AddScoped<IOtpService, OtpService>()
             .AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>))
             .AddScoped(typeof(CommandContext<>), typeof(CommandContext<>));
@@ -87,6 +93,8 @@ public static class Extension
             client.BaseAddress = new Uri("http://ocelotapigateway:8080");
         });
         services.Configure<PostmarkOptions>(configuration.GetSection("Postmark"));
+
+        services.BuildServiceProvider().GetRequiredService<AppSettings>();
 
         services.AddTransient<IEmailService>(sp =>
         {

@@ -33,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
     <ProjectReference Include="..\OnAim.Admin.CrossCuttingConcerns\OnAim.Admin.CrossCuttingConcerns.csproj" />
     <ProjectReference Include="..\OnAim.Admin.Infrasturcture\OnAim.Admin.Infrasturcture.csproj" />
