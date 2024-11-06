@@ -69,7 +69,7 @@ public class Startup
         services.AddScoped<IPlayerBlockedSegmentRepository, PlayerBlockedSegmentRepository>();
         services.AddScoped<IConsulLogRepository, ConsulLogRepository>();
         services.AddScoped<IReferralDistributionRepository, ReferralDistributionRepository>();
-        services.AddScoped<ISettingRepository, SettingRepository>();
+        services.AddScoped<IHubSettingRepository, HubSettingRepository>();
         services.AddScoped<IPlayerBanRepository, PlayerBanRepository>();
         services.AddScoped<IActRepository, ActRepository>();
         services.AddScoped<ILevelRepository, LevelRepository>();
@@ -97,6 +97,12 @@ public class Startup
         services.Configure<BasicAuthConfiguration>(Configuration.GetSection("BasicAuthConfiguration"));
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
         services.Configure<GameApiConfiguration>(Configuration.GetSection("GameApiConfiguration"));
+
+        services.AddSingleton<HubSettings>(provider =>
+        {
+            var settingRepository = provider.CreateScope().ServiceProvider.GetRequiredService<IHubSettingRepository>();
+            return new HubSettings(settingRepository);
+        });
 
         services.AddHangfire(config =>
             config.UsePostgreSqlStorage(Configuration.GetConnectionString("OnAimHub")));
@@ -132,6 +138,8 @@ public class Startup
         services.AddAuthorization();
 
         services.AddHealthChecks();
+
+        HandleInitializations(services);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, IBackgroundJobClient backgroundJobs)
@@ -142,12 +150,6 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-        }
-
-        using (var scope = app.ApplicationServices.CreateScope())
-        {
-            var settingRepository = scope.ServiceProvider.GetRequiredService<ISettingRepository>();
-            DbSettings.Init(settingRepository);
         }
 
         ConfigureSwagger(app);
@@ -173,6 +175,11 @@ public class Startup
         { 
             endpoints.MapControllers();
         });
+    }
+
+    private static void HandleInitializations(IServiceCollection services)
+    {
+        services.BuildServiceProvider().GetRequiredService<HubSettings>();
     }
 
     private void ConfigureLogging()

@@ -8,12 +8,12 @@ public class SettingsDto
     public string SettingName { get; set; }
     public string Value { get; set; }
 
-    public static SettingsDto MapFrom(Setting setting)
+    public static SettingsDto MapFrom(HubSetting setting)
     {
         return new SettingsDto
         {
             Id = setting.Id,
-            SettingName = setting.SettingName,
+            SettingName = setting.Name,
             Value = setting.Value,
         };
     }

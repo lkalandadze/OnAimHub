@@ -1,6 +1,8 @@
 ﻿using Hub.Application.Features.SettingFeatures.Dtos;
-using Hub.Domain.Absractions;
+using Hub.Domain.Absractions.Repository;
+using Hub.Domain.Entities;
 using MediatR;
+using Shared.Domain.Abstractions.Repository;
 using Shared.Lib.Extensions;
 using Shared.Lib.Wrappers;
 
@@ -8,8 +10,9 @@ namespace Hub.Application.Features.SettingFeatures.Queries;
 
 public class GetSettingsQueryHandler : IRequestHandler<GetSettingsQuery, GetSettingsQueryResponse>
 {
-    private readonly ISettingRepository _settingRepository;
-    public GetSettingsQueryHandler(ISettingRepository settingRepository)
+    private readonly IHubSettingRepository _settingRepository;
+
+    public GetSettingsQueryHandler(IHubSettingRepository settingRepository)
     {
         _settingRepository = settingRepository;
     }

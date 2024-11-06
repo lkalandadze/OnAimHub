@@ -17,7 +17,7 @@ public abstract class Settings
     }
 
     private void Initialize()
-    { 
+    {
         var settingsFromDb = _settingRepository.GetSettings();
 
         foreach (var prop in this.GetType().GetProperties())
@@ -28,8 +28,9 @@ public abstract class Settings
                 prop.SetValue(this, settingProperty);
 
                 var settingName = prop.Name;
+                object dbValue;
 
-                if (settingsFromDb.TryGetValue(settingName, out var dbValue))
+                if (settingsFromDb.TryGetValue(settingName, out dbValue))
                 {
                     if (settingProperty is SettingProperty propertyInstance)
                     {
@@ -42,6 +43,7 @@ public abstract class Settings
 
                     if (defaultValue != null && settingProperty is SettingProperty propertyInstance)
                     {
+                        _settingRepository.GetOrCreateValue(settingName, defaultValue);
                         propertyInstance.SetValue(defaultValue);
                     }
                 }

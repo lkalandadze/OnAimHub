@@ -23,6 +23,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
     private readonly IPlayerLogService _playerLogService;
     private readonly ITokenService _tokenService;
     private readonly HttpClient _httpClient;
+    private readonly HubSettings _hubSettings;
     private readonly CasinoApiConfiguration _casinoApiConfiguration;
     private readonly IMediator _mediator;
 
@@ -34,6 +35,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
                                             ITokenService tokenService,
                                             IPlayerLogService playerLogService,
                                             HttpClient httpClient,
+                                            HubSettings hubSettings,
                                             IOptions<CasinoApiConfiguration> casinoApiConfiguration,
                                             IMediator mediator)
     {
@@ -45,6 +47,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
         _tokenService = tokenService;
         _playerLogService = playerLogService;
         _httpClient = httpClient;
+        _hubSettings = hubSettings;
         _casinoApiConfiguration = casinoApiConfiguration.Value;
         _mediator = mediator;
     }
@@ -105,12 +108,12 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
                 var referralDistribution = new ReferralDistribution(
                     referrerId: recommendedById.GetValueOrDefault(),
                     referralId: player.Id,
-                    referrerPrizeId: DbSettings.Instance.ReferrerPrizeCurrencyId,
-                    referrerPrizeValue: DbSettings.Instance.ReferrerPrizeAmount,
-                    referrerPrizeCurrency: Currency.FromId(DbSettings.Instance.ReferrerPrizeCurrencyId),
-                    referralPrizeValue: DbSettings.Instance.ReferralPrizeAmount,
-                    referralPrizeId: DbSettings.Instance.ReferralPrizeCurrencyId,
-                    referralPrizeCurrency: Currency.FromId(DbSettings.Instance.ReferralPrizeCurrencyId)
+                    referrerPrizeId: _hubSettings.ReferrerPrizeCurrencyId.Value,
+                    referrerPrizeValue: _hubSettings.ReferrerPrizeAmount.Value,
+                    referrerPrizeCurrency: Currency.FromId(_hubSettings.ReferrerPrizeCurrencyId.Value),
+                    referralPrizeValue: _hubSettings.ReferralPrizeAmount.Value,
+                    referralPrizeId: _hubSettings.ReferralPrizeCurrencyId.Value,
+                    referralPrizeCurrency: Currency.FromId(_hubSettings.ReferralPrizeCurrencyId.Value)
                 );
             }
 

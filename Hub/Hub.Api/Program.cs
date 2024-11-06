@@ -1,9 +1,10 @@
 using Hub.Infrastructure;
 using Hub.Infrastructure.DataAccess;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
+CreateDatabaseIfNotExists();
 var host = CreateHostBuilder(args).Build();
-CreateDatabaseIfNotExists(host);
 host.Run();
 
 static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -22,14 +23,20 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
             webBuilder.UseStartup<Startup>();
         });
 
-static void CreateDatabaseIfNotExists(IHost host)
+static void CreateDatabaseIfNotExists()
 {
-    using (var scope = host.Services.CreateScope())
-    {
-        var services = scope.ServiceProvider;
-        var dbContext = services.GetRequiredService<HubDbContext>();
-        dbContext.Database.EnsureCreated();
+    var configuration = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json")
+        .Build();
 
-        _ = new DbInitializer(scope);
-    }
+    string connectionString = configuration.GetConnectionString("OnAimHub")!;
+
+    var optionsBuilder = new DbContextOptionsBuilder<HubDbContext>();
+    optionsBuilder.UseNpgsql(connectionString);
+
+    var dbContext = new HubDbContext(optionsBuilder.Options);
+    dbContext.Database.EnsureCreated();
+
+    _ = new DbInitializer(dbContext);
 }

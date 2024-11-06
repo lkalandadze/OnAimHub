@@ -29,7 +29,7 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<Job> Jobs { get; set; }
     public DbSet<ConsulLog> ConsulLogs { get; set; }
     public DbSet<ReferralDistribution> ReferralDistributions { get; set; }
-    public DbSet<Setting> Settings { get; set; }
+    public DbSet<HubSetting> HubSettings { get; set; }
     public DbSet<PlayerBan> PlayerBans { get; set; }
     public DbSet<Act> Acts { get; set; }
     public DbSet<Level> Levels { get; set; }

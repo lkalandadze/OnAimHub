@@ -10,7 +10,6 @@ using Shared.Infrastructure.Bus;
 using Shared.Infrastructure.DataAccess;
 using Shared.Infrastructure.MassTransit;
 using Shared.IntegrationEvents.IntegrationEvents.Player;
-using Shared.IntegrationEvents.IntegrationEvents.Segment;
 using Wheel.Api.Consul;
 using Wheel.Application.Services.Abstract;
 using Wheel.Application.Services.Concrete;
