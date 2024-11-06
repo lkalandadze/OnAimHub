@@ -16,21 +16,46 @@ public abstract class Settings
         Initialize();
     }
 
-    protected void Initialize()
-    {
-        var settingsType = this.GetType();
+    private void Initialize()
+    { 
+        var settingsFromDb = _settingRepository.GetSettings();
 
-        var settingProperties = settingsType.GetProperties().Where(prop =>
-                           prop.PropertyType.GetGenericTypeDefinition() == typeof(SettingProperty<>)).ToList();
-
-        foreach (var property in settingProperties)
+        foreach (var prop in this.GetType().GetProperties())
         {
-            var propertyValue = Activator.CreateInstance(property.PropertyType);
-            property.SetValue(this, propertyValue);
+            if (prop.PropertyType.IsSubclassOf(typeof(SettingProperty)))
+            {
+                var settingProperty = Activator.CreateInstance(prop.PropertyType);
+                prop.SetValue(this, settingProperty);
 
-            var defaultValue = property.GetCustomAttribute<SettingPropertyDefaultValueAttribute>()?.Value;
+                var settingName = prop.Name;
 
-            _settingRepository.GetOrCreateValue(property.Name, defaultValue);
+                if (settingsFromDb.TryGetValue(settingName, out var dbValue))
+                {
+                    if (settingProperty is SettingProperty propertyInstance)
+                    {
+                        propertyInstance.SetValue(dbValue);
+                    }
+                }
+                else
+                {
+                    var defaultValue = prop.GetCustomAttribute<SettingPropertyDefaultValueAttribute>()?.Value;
+
+                    if (defaultValue != null && settingProperty is SettingProperty propertyInstance)
+                    {
+                        propertyInstance.SetValue(defaultValue);
+                    }
+                }
+            }
+        }
+    }
+
+    public void UpdateSetting(string propertyName, object value)
+    {
+        var property = this.GetType().GetProperty(propertyName);
+
+        if (property?.GetValue(this) is SettingProperty settingProperty)
+        {
+            SetValue(settingProperty, propertyName, value);
         }
     }
 

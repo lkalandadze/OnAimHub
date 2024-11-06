@@ -13,6 +13,11 @@ public class GameSettingRepository<T> : ISettingRepository where T : GameConfigu
         _context = context;
     }
 
+    public Dictionary<string, object> GetSettings()
+    {
+        return _context.GameSettings.ToDictionary(setting => setting.Name, setting => (object)setting.Value);
+    }
+
     public object GetOrCreateValue(string dbSettingPropertyName, object defaultValue)
     {
         var setting = _context.GameSettings.FirstOrDefault(s => s.Name == dbSettingPropertyName);
