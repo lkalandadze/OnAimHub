@@ -34,9 +34,5 @@ public class CreateLeaderboardTemplateCommandHandler : IRequestHandler<CreateLea
 
         await _leaderboardTemplateRepository.InsertAsync(leaderboardTemplate);
         await _leaderboardTemplateRepository.SaveChangesAsync(cancellationToken);
-
-        await _jobService.ExecuteLeaderboardRecordGeneration(leaderboardTemplate.Id);
-
-        //_backgroundJobScheduler.ScheduleJob(leaderboardTemplate);
     }
 }

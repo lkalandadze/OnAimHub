@@ -7,7 +7,6 @@ public sealed class CreateLeaderboardTemplateCommand : IRequest
 {
     public string Name { get; set; }
     public string Description { get; set; }
-    public TimeSpan StartTime { get; set; }
     public int AnnounceIn { get; set; }
     public int StartIn { get; set; }
     public int EndIn { get; set; }

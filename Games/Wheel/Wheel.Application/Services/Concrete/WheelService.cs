@@ -54,7 +54,7 @@ public class WheelService : IWheelService
         //    await _hubService.WinTransactionAsync(model.GameId, model.CurrencyId, model.Amount);
         //}
 
-        var @event = new UpdatePlayerExperienceEvent(Guid.NewGuid(), model.Amount, model.CurrencyId, 45);
+        var @event = new UpdatePlayerExperienceEvent(Guid.NewGuid(), model.Amount, model.CurrencyId, _authService.GetCurrentPlayerId());
 
         await _messageBus.Publish(@event);
 
