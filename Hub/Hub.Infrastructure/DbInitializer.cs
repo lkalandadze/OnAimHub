@@ -1,7 +1,6 @@
 ﻿using Hub.Domain.Entities;
 using Hub.Domain.Enum;
 using Hub.Infrastructure.DataAccess;
-using Microsoft.Extensions.DependencyInjection;
 using Shared.Infrastructure;
 using System.Reflection;
 
@@ -9,10 +8,8 @@ namespace Hub.Infrastructure;
 
 public class DbInitializer : BaseDbInitializer
 {
-    public DbInitializer(IServiceScope serviceScope)
+    public DbInitializer(HubDbContext dbContext)
     {
-        var dbContext = serviceScope.ServiceProvider.GetService<HubDbContext>();
-
         if (dbContext == null)
         {
             return;

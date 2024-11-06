@@ -4,6 +4,7 @@ using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Entities;
 using Hub.Domain.Entities.DbEnums;
 using MediatR;
+using Shared.Domain.Abstractions.Repository;
 
 namespace Hub.Application.Features.IdentityFeatures.Commands.ApplyPromoCode;
 
@@ -13,18 +14,22 @@ public class ApplyPromoCodeHandler : IRequestHandler<ApplyPromoCodeCommand, Unit
     private readonly IUnitOfWork _unitOfWork;
     private readonly IAuthService _authService;
     private readonly IReferralDistributionRepository _referralDistributionRepository;
-    private readonly ISettingRepository _settingRepository;
+    private readonly IHubSettingRepository _settingRepository;
+    private readonly HubSettings _hubSettings;
+
     public ApplyPromoCodeHandler(IPlayerRepository playerRepository,
                                            IUnitOfWork unitOfWork,
                                            IAuthService authService,
                                            IReferralDistributionRepository referralDistributionRepository,
-                                           ISettingRepository settingRepository)
+                                           IHubSettingRepository settingRepository,
+                                           HubSettings hubSettings)
     {
         _playerRepository = playerRepository;
         _unitOfWork = unitOfWork;
         _authService = authService;
         _referralDistributionRepository = referralDistributionRepository;
         _settingRepository = settingRepository;
+        _hubSettings = hubSettings;
     }
 
     public async Task<Unit> Handle(ApplyPromoCodeCommand request, CancellationToken cancellationToken)
@@ -61,12 +66,12 @@ public class ApplyPromoCodeHandler : IRequestHandler<ApplyPromoCodeCommand, Unit
         var referralDistribution = new ReferralDistribution(
             referrerId: recommendedByUser.Id,
             referralId: playerId,
-            referrerPrizeId: DbSettings.Instance.ReferrerPrizeCurrencyId,
-            referrerPrizeValue: DbSettings.Instance.ReferrerPrizeAmount,
-            referrerPrizeCurrency: Currency.FromId(DbSettings.Instance.ReferrerPrizeCurrencyId),
-            referralPrizeValue: DbSettings.Instance.ReferralPrizeAmount,
-            referralPrizeId: DbSettings.Instance.ReferralPrizeCurrencyId,
-            referralPrizeCurrency: Currency.FromId(DbSettings.Instance.ReferralPrizeCurrencyId)
+            referrerPrizeId: _hubSettings.ReferrerPrizeCurrencyId.Value,
+            referrerPrizeValue: _hubSettings.ReferrerPrizeAmount.Value,
+            referrerPrizeCurrency: Currency.FromId(_hubSettings.ReferrerPrizeCurrencyId.Value),
+            referralPrizeValue: _hubSettings.ReferralPrizeAmount.Value,
+            referralPrizeId: _hubSettings.ReferralPrizeCurrencyId.Value,
+            referralPrizeCurrency: Currency.FromId(_hubSettings.ReferralPrizeCurrencyId.Value)
         );
 
         await _referralDistributionRepository.InsertAsync(referralDistribution);

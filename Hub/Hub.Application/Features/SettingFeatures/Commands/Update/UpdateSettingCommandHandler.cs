@@ -1,13 +1,14 @@
 ﻿using Hub.Domain.Absractions;
+using Hub.Domain.Absractions.Repository;
 using MediatR;
 
 namespace Hub.Application.Features.SettingFeatures.Commands.Update;
 
 public class UpdateSettingCommandHandler : IRequestHandler<UpdateSettingCommand, Unit>
 {
-    private readonly ISettingRepository _settingRepository;
+    private readonly IHubSettingRepository _settingRepository;
     private readonly IUnitOfWork _unitOfWork;
-    public UpdateSettingCommandHandler(ISettingRepository settingRepository, IUnitOfWork unitOfWork)
+    public UpdateSettingCommandHandler(IHubSettingRepository settingRepository, IUnitOfWork unitOfWork)
     {
         _settingRepository = settingRepository;
         _unitOfWork = unitOfWork;
@@ -18,9 +19,9 @@ public class UpdateSettingCommandHandler : IRequestHandler<UpdateSettingCommand,
         var setting = _settingRepository.Query().FirstOrDefault(x => x.Id == request.Id);
 
         if (setting == default)
-            throw new Exception("Setting not found");
+            throw new Exception("HubSetting not found");
 
-        setting.Update(request.Value);
+        setting.Value = request.Value;
 
         await _unitOfWork.SaveAsync();
 
