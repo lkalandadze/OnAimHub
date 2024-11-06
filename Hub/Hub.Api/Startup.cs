@@ -100,8 +100,7 @@ public class Startup
 
         services.AddSingleton<HubSettings>(provider =>
         {
-            var settingRepository = provider.CreateScope().ServiceProvider.GetRequiredService<IHubSettingRepository>();
-            return new HubSettings(settingRepository);
+            return new(provider.CreateScope().ServiceProvider.GetRequiredService<IHubSettingRepository>());
         });
 
         services.AddHangfire(config =>
@@ -172,7 +171,7 @@ public class Startup
         }
 
         app.UseEndpoints(endpoints =>
-        { 
+        {
             endpoints.MapControllers();
         });
     }
@@ -404,7 +403,7 @@ public class Startup
                 {
                     e.Bind(rabbitMqOptions.ExchangeName, x =>
                     {
-                        x.ExchangeType = "fanout"; 
+                        x.ExchangeType = "fanout";
                     });
                 });
             });

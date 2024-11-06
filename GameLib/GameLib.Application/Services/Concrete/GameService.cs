@@ -84,11 +84,11 @@ public class GameService : IGameService
 
     public void ActivateGame()
     {
-        _gameSettings.SetValue(_gameSettings.IsActive, nameof(_gameSettings.IsActive), true);
+        _gameSettings.SetValue(nameof(_gameSettings.IsActive), true);
     }
 
     public void DeactivateGame()
     {
-        _gameSettings.SetValue(_gameSettings.IsActive, nameof(_gameSettings.IsActive), false);
+        _gameSettings.SetValue(nameof(_gameSettings.IsActive), false);
     }
 }

@@ -53,18 +53,19 @@ public abstract class Settings
 
     public void UpdateSetting(string propertyName, object value)
     {
-        var property = this.GetType().GetProperty(propertyName);
+        var property = GetType().GetProperty(propertyName);
 
         if (property?.GetValue(this) is SettingProperty settingProperty)
         {
-            SetValue(settingProperty, propertyName, value);
+            SetValue(propertyName, value);
         }
     }
 
-    public void SetValue(SettingProperty property, string name, object value)
+    public void SetValue(string name, object value)
     {
+        var property = GetType().GetProperties().First(x => x.Name == name);
         _settingRepository.UpdateValue(name, value);
-        property.SetValue(value);
+        (property.GetValue(this) as SettingProperty).SetValue(value);
     }
 }
 

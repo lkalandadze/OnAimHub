@@ -5,12 +5,8 @@ using Shared.Lib.Attributes;
 
 namespace Hub.Application;
 
-public class HubSettings : Settings
+public class HubSettings(IHubSettingRepository settingRepository) : Settings(settingRepository)
 {
-    public HubSettings(IHubSettingRepository settingRepository) : base(settingRepository)
-    {
-    }
-
     [SettingPropertyDefaultValue(50)]
     public SettingProperty<int> MaxReferralsPerUser { get; set; }
 
