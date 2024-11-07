@@ -39,6 +39,9 @@ using MassTransit;
 using OnAim.Admin.APP.Services.LeaderBoard;
 using OnAim.Admin.APP.Services.ClientServices;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
+using System.Text;
+using System.Net.Http.Headers;
+using MediatR;
 
 
 namespace OnAim.Admin.APP;
@@ -75,11 +78,7 @@ public static class Extension
             .AddHostedService<TokenCleanupService>()
             .Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"))
             .AddScoped<IDomainValidationService, DomainValidationService>()
-            .AddSingleton<AppSettings>(provider =>
-            {
-                var serviceProvider = provider.CreateScope().ServiceProvider;
-                return new(serviceProvider.GetRequiredService<IAppSettingRepository>(), serviceProvider.GetRequiredService<IRepository<Admin.Domain.Entities.User>>());
-            })
+            .AddScoped<AppSettings>()
             .AddScoped<IOtpService, OtpService>()
             .AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>))
             .AddScoped(typeof(CommandContext<>), typeof(CommandContext<>));
@@ -91,10 +90,12 @@ public static class Extension
         services.AddHttpClient("ApiGateway", client =>
         {
             client.BaseAddress = new Uri("http://ocelotapigateway:8080");
+            var basicAuthToken = Convert.ToBase64String(Encoding.ASCII.GetBytes("a:a"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuthToken);
         });
         services.Configure<PostmarkOptions>(configuration.GetSection("Postmark"));
 
-        services.BuildServiceProvider().GetRequiredService<AppSettings>();
+        //services.BuildServiceProvider().GetRequiredService<AppSettings>();
 
         services.AddTransient<IEmailService>(sp =>
         {
@@ -117,7 +118,7 @@ public static class Extension
         var serviceProvider = services.BuildServiceProvider();
         services.AddMessageBus(configuration, consumerAssemblyMarkerType);
         services
-            .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
+            .AddMediatR(Assembly.GetExecutingAssembly())
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         return services;

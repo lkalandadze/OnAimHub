@@ -1,4 +1,4 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
+﻿using OnAim.Admin.APP.Services.Game;
 using OnAim.Admin.Contracts.Dtos.Game;
 
 namespace OnAim.Admin.APP.Services.Abstract;
@@ -9,4 +9,13 @@ public interface IGameService
     Task<object> GetConfigurations();
     Task<object> GetConfiguration(int id);
     Task<string> GetGame();
+    Task<object> GetConfigurationMetadata();
+    Task<object> CreateConfiguration(string configurationJson);
+    Task<object> UpdateConfiguration(string configurationJson);
+    Task<object> ActivateConfiguration(int id);
+    Task<object> DeactivateConfiguration(int id);
+    Task<object> GetPrizeTypes();
+    Task<object> GetPrizeTypeById(int id);
+    Task<object> CreatePrizeType(CreatePrizeTypeDto createPrize);
+    Task<object> UpdatePrizeType(int id, CreatePrizeTypeDto typeDto);
 }

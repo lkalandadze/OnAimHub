@@ -8,6 +8,8 @@ using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
+using MassTransit.Initializers;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 
@@ -34,14 +36,30 @@ public class LeaderBoardService : ILeaderBoardService
         _httpClientService = httpClientService;
     }
 
-    public async Task<ApplicationResult> GetLeaderBoardTemplates(BaseFilter? filter)
+    public async Task<ApplicationResult> GetLeaderBoardTemplates(BaseFilter filter)
     {
+        var sortableFields = new List<string> { "Id", "Name" };
         var leaderboardTemplates = _leaderboardTemplateRepository.Query();
 
         var totalCount = await leaderboardTemplates.CountAsync();
 
         var pageNumber = filter?.PageNumber ?? 1;
         var pageSize = filter?.PageSize ?? 25;
+
+        bool sortDescending = filter?.SortDescending ?? false;
+
+        if (filter?.SortBy == "Id" || filter?.SortBy == "id")
+        {
+            leaderboardTemplates = sortDescending
+                ? leaderboardTemplates.OrderByDescending(x => x.Id)
+                : leaderboardTemplates.OrderBy(x => x.Id);
+        }
+        else if (filter?.SortBy == "name" || filter?.SortBy == "Name")
+        {
+            leaderboardTemplates = sortDescending
+                ? leaderboardTemplates.OrderByDescending(x => x.Name)
+                : leaderboardTemplates.OrderBy(x => x.Name);
+        }
 
         var res = leaderboardTemplates
             .Select(x => new LeaderBoardTemplateDto
@@ -68,8 +86,43 @@ public class LeaderBoardService : ILeaderBoardService
                 PageSize = pageSize,
                 TotalCount = totalCount,
                 Items = await res.ToListAsync(),
+                SortableFields = sortableFields,
             },
         };
+    }
+
+    public async Task<ApplicationResult> GetLeaderboardTemplateById(int id)
+    {
+        var template = await _leaderboardTemplateRepository
+            .Query(x => x.Id == id)
+            .Include(x => x.LeaderboardTemplatePrizes)
+            .ThenInclude(x => x.Prize)
+            .FirstOrDefaultAsync();
+
+        if (template == null)
+            throw new NotFoundException("");
+
+
+        var res = new TemplateDto
+        {
+            Id = template.Id,
+            Name = template.Name,
+            Description = template.Description,
+            StartTime = template.StartTime,
+            StartIn = template.StartIn,
+            EndIn = template.EndIn,
+            AnnounceIn= template.AnnounceIn,
+            Prizes = template.LeaderboardTemplatePrizes.Select(x => new TemplatePrizeDto
+            {
+                Id= x.Id,
+                StartRank = x.StartRank,
+                EndRank = x.EndRank,
+                Prize = x.Prize.Name,
+                Amount = x.Amount,
+            }).ToList(),
+        };
+
+        return new ApplicationResult { Data = res, Success = true };
     }
 
     public async Task<ApplicationResult> GetAllLeaderBoard(LeaderBoardFilter? filter)
@@ -152,6 +205,38 @@ public class LeaderBoardService : ILeaderBoardService
         };
     }
 
+    public async Task<ApplicationResult> GetLeaderboardRecordById(int id)
+    {
+        var leaderboard = await _leaderboardRecordRepository.Query(x => x.Id == id)
+            .Include(x => x.LeaderboardRecordPrizes)
+            .ThenInclude(x => x.Prize)
+            .FirstOrDefaultAsync();
+
+        if (leaderboard == null)
+            throw new NotFoundException("");
+        var res = new LeaderBoardData
+        {
+            Id = leaderboard.Id,
+            Name = leaderboard.Name,
+            Description = leaderboard.Description,
+            CreationDate = leaderboard.CreationDate,
+            AnnouncementDate = leaderboard.AnnouncementDate,
+            StartDate = leaderboard.StartDate,
+            EndDate = leaderboard.EndDate,
+            LeaderboardType = leaderboard.LeaderboardType.ToString(),
+            Prizes = leaderboard.LeaderboardRecordPrizes.Select(x => new TemplatePrizeDto
+            {
+                Id = x.Id,
+                Amount = x.Amount,
+                StartRank = x.StartRank,
+                EndRank = x.EndRank,
+                Prize = x.Prize.Name,
+            }).ToList(),
+        };
+
+        return new ApplicationResult { Data = res, Success = true };
+    }
+
     public async Task<ApplicationResult> GetAllPrizes()
     {
         var prizes = _prizeRepository.Query();
@@ -191,17 +276,92 @@ public class LeaderBoardService : ILeaderBoardService
         return new ApplicationResult { Data = result, Success = true };
     }
 
-    public async Task<ApplicationResult> Schedule(int templateId)
+    public async Task<ApplicationResult> GetCalendar(DateTimeOffset? startDate, DateTimeOffset? endDate)
     {
-        var result = await _httpClientService.PostAsJson($"{_options.Endpoint}schedule/{templateId}", "");
+        var result = await _httpClientService.Get<object>($"{_options.Endpoint}GetCalendar?StartDate={startDate}&EndDate={endDate}");
 
         return new ApplicationResult { Data = result, Success = true };
     }
 
-    public async Task<ApplicationResult> Execute(int templateId)
+    public async Task<ApplicationResult> GetLeaderboardSchedules(int? pageNumber, int? pageSize)
     {
-        var result = await _httpClientService.PostAsJson($"{_options.Endpoint}execute/{templateId}", "");
+        var result = await _httpClientService.Get<object>($"{_options.Endpoint}GetLeaderboardSchedules?PageNumber={pageNumber}&PageSize={pageSize}");
 
         return new ApplicationResult { Data = result, Success = true };
     }
+
+    public async Task<ApplicationResult> CreateLeaderboardSchedule(CreateLeaderboardScheduleDto createLeaderboardSchedule)
+    {
+        var result = await _httpClientService.PostAsJson($"{_options.Endpoint}CreateLeaderboardSchedule", createLeaderboardSchedule);
+
+        return new ApplicationResult { Data = result, Success = true };
+    }
+
+    public async Task<ApplicationResult> UpdateLeaderboardSchedule(UpdateLeaderboardScheduleDto updateLeaderboardSchedule)
+    {
+        var result = await _httpClientService.PostAsJson($"{_options.Endpoint}UpdateLeaderboardSchedule", updateLeaderboardSchedule);
+
+        return new ApplicationResult { Data = result, Success = true };
+    }
+}
+public class TemplateDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public TimeSpan StartTime { get; set; }
+    public int AnnounceIn { get; set; }
+    public int StartIn { get; set; }
+    public int EndIn { get; set; }
+    public List<TemplatePrizeDto> Prizes { get; set; }
+}
+public class TemplatePrizeDto
+{
+    public int Id { get; set; }
+    public int StartRank { get; set; }
+    public int EndRank { get; set; }
+    public string Prize { get; set; }
+    public string PrizeType { get; set; }
+    public int Amount { get; set; }
+}
+public class LeaderBoardData
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public DateTimeOffset CreationDate { get; set; }
+    public DateTimeOffset AnnouncementDate { get; set; }
+    public DateTimeOffset StartDate { get; set; }
+    public DateTimeOffset EndDate { get; set; }
+    public string LeaderboardType { get; set; }
+    public List<TemplatePrizeDto> Prizes { get; set; }
+}
+
+public sealed class CreateLeaderboardScheduleDto
+{
+    public RepeatType RepeatType { get; set; } 
+    public int? RepeatValue { get; set; }
+    public DateOnly? SpecificDate { get; set; }
+    public DateTimeOffset StartDate { get; set; }
+    public DateTimeOffset EndDate { get; set; }
+    public int LeaderboardTemplateId { get; set; }
+}
+public enum RepeatType
+{
+    SingleDate = 0,
+    EveryNDays = 1,
+    DayOfWeek = 2,
+    DayOfMonth = 3
+}
+
+public sealed class UpdateLeaderboardScheduleDto
+{
+    public int Id { get; set; }
+    public LeaderboardScheduleStatus Status { get; set; }
+}
+public enum LeaderboardScheduleStatus
+{
+    Active = 0,
+    Completed = 1,
+    Cancelled = 2,
 }
