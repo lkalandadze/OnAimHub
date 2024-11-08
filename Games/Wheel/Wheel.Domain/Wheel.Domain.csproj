@@ -11,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\GameLib\GameLib.Domain\GameLib.Domain.csproj" />
-    <ProjectReference Include="..\..\..\Lib\CheckMate\Checkmate.csproj" />
-    <ProjectReference Include="..\..\..\Lib\OnAim.Lib.EntityExtension.GlobalAttributes\OnAim.Lib.EntityExtension.GlobalAttributes.csproj" />
+    <ProjectReference Include="..\..\..\Helpers\Lib\CheckMate\Checkmate.csproj" />
+    <ProjectReference Include="..\..\..\Helpers\Lib\OnAim.Lib.EntityExtension.GlobalAttributes\OnAim.Lib.EntityExtension.GlobalAttributes.csproj" />
+    <ProjectReference Include="..\..\GameLib\GameLib.Domain\GameLib.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,30 +12,29 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Admin/OnAim.Admin.API/OnAim.Admin.API.csproj", "Admin/OnAim.Admin.API/"]
-COPY ["Admin/OnAim.Admin.APP/OnAim.Admin.APP.csproj", "Admin/OnAim.Admin.APP/"]
-COPY ["BuildingBlocks/Shared.Application/Shared.Application.csproj", "BuildingBlocks/Shared.Application/"]
+COPY ["CoreModules/Leaderboard/Leaderboard.Api/Leaderboard.Api.csproj", "CoreModules/Leaderboard/Leaderboard.Api/"]
 COPY ["BuildingBlocks/Shared.Domain/Shared.Domain.csproj", "BuildingBlocks/Shared.Domain/"]
 COPY ["BuildingBlocks/Shared.Lib/Shared.Lib.csproj", "BuildingBlocks/Shared.Lib/"]
 COPY ["Helpers/Lib/OnAim.Lib.EntityExtension.GlobalAttributes/OnAim.Lib.EntityExtension.GlobalAttributes.csproj", "Helpers/Lib/OnAim.Lib.EntityExtension.GlobalAttributes/"]
+COPY ["CoreModules/Leaderboard/Leaderboard.Application/Leaderboard.Application.csproj", "CoreModules/Leaderboard/Leaderboard.Application/"]
 COPY ["BuildingBlocks/Shared.Infrastructure/Shared.Infrastructure.csproj", "BuildingBlocks/Shared.Infrastructure/"]
 COPY ["BuildingBlocks/Shared.IntegrationEvents/Shared.IntegrationEvents.csproj", "BuildingBlocks/Shared.IntegrationEvents/"]
-COPY ["Admin/OnAim.Admin.CrossCuttingConcerns/OnAim.Admin.CrossCuttingConcerns.csproj", "Admin/OnAim.Admin.CrossCuttingConcerns/"]
-COPY ["Admin/OnAim.Admin.Contracts/OnAim.Admin.Contracts.csproj", "Admin/OnAim.Admin.Contracts/"]
-COPY ["Admin/OnAim.Admin.Infrasturcture/OnAim.Admin.Infrasturcture.csproj", "Admin/OnAim.Admin.Infrasturcture/"]
-COPY ["Admin/OnAim.Admin.Domain/OnAim.Admin.Domain.csproj", "Admin/OnAim.Admin.Domain/"]
-RUN dotnet restore "./Admin/OnAim.Admin.API/OnAim.Admin.API.csproj"
+COPY ["Core/Hub/Hub.Domain/Hub.Domain.csproj", "Core/Hub/Hub.Domain/"]
+COPY ["Helpers/Lib/OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing/OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing.csproj", "Helpers/Lib/OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing/"]
+COPY ["CoreModules/Leaderboard/Leaderboard.Infrastructure/Leaderboard.Infrastructure.csproj", "CoreModules/Leaderboard/Leaderboard.Infrastructure/"]
+COPY ["CoreModules/Leaderboard/Leaderboard.Domain/Leaderboard.Domain.csproj", "CoreModules/Leaderboard/Leaderboard.Domain/"]
+RUN dotnet restore "./CoreModules/Leaderboard/Leaderboard.Api/Leaderboard.Api.csproj"
 COPY . .
-WORKDIR "/src/Admin/OnAim.Admin.API"
-RUN dotnet build "./OnAim.Admin.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/CoreModules/Leaderboard/Leaderboard.Api"
+RUN dotnet build "./Leaderboard.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./OnAim.Admin.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Leaderboard.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "OnAim.Admin.API.dll"]
+ENTRYPOINT ["dotnet", "Leaderboard.Api.dll"]

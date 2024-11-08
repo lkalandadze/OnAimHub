@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>3c4a5544-dbf4-4e7e-8964-1643e14f35f3</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..</DockerfileContext>
+    <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\GameLib\GameLib.ServiceRegistry\GameLib.ServiceRegistry.csproj" />
+    <ProjectReference Include="..\..\GameLib\GameLib.ServiceRegistry\GameLib.ServiceRegistry.csproj" />
     <ProjectReference Include="..\Wheel.Application\Wheel.Application.csproj" />
     <ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
     <ProjectReference Include="..\Wheel.Infrastructure\Wheel.Infrastructure.csproj" />

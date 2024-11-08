@@ -7,13 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.4.1" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Shared.Domain\Shared.Domain.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\Shared.Lib\Shared.Lib.csproj" />
-    <ProjectReference Include="..\..\GameLib\GameLib.Application\GameLib.Application.csproj" />
-    <ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Helpers\Lib\CheckMate\Checkmate.csproj" />
+    <ProjectReference Include="..\..\..\Helpers\Lib\OnAim.Lib.EntityExtension.GlobalAttributes\OnAim.Lib.EntityExtension.GlobalAttributes.csproj" />
   </ItemGroup>
 
 </Project>

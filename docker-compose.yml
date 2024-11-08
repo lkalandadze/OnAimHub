@@ -20,7 +20,7 @@ services:
   ocelotapigateway:
     build:
       context: .
-      dockerfile: ApiGateway/Dockerfile
+      dockerfile: ApiGateways/ApiGateway/Dockerfile
     ports:
       - "5000:8080"  # Map host port 5000 to container port 8080
     depends_on:
@@ -29,8 +29,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - CONSUL_ADDRESS=http://consul:8500
     volumes:
-      - ./ApiGateway/appsettings.json:/app/appsettings.json
-      - ./ApiGateway/ocelot.json:/app/ocelot.json
+      - ./ApiGateways/ApiGateway/appsettings.json:/app/appsettings.json
+      - ./ApiGateways/ApiGateway/ocelot.json:/app/ocelot.json
 
   wheelapi:
     build:
@@ -53,7 +53,7 @@ services:
   hubapi:
     build:
       context: .
-      dockerfile: Hub/Hub.Api/Dockerfile
+      dockerfile: Core/Hub/Hub.Api/Dockerfile
     ports:
       - "5002:8080"  # Map host port 5002 to container port 8080
     depends_on:
@@ -62,7 +62,7 @@ services:
       - CONSUL_ADDRESS=http://consul:8500
       - ASPNETCORE_ENVIRONMENT=Development
     volumes:
-      - ./Hub/Hub.Api/appsettings.json:/app/appsettings.json
+      - ./Core/Hub/Hub.Api/appsettings.json:/app/appsettings.json
 
   adminapi:
     build:
@@ -78,7 +78,7 @@ services:
   levelapi:
     build:
       context: .
-      dockerfile: LevelService/LevelService.Api/Dockerfile
+      dockerfile: CoreModules/LevelService/LevelService.Api/Dockerfile
     ports:
       - "5008:8080"  # Map host port 5004 to container port 8080
     depends_on:
@@ -90,12 +90,12 @@ services:
       - ConnectionStrings__Connection=Host=leveldb;Port=5439;Database=OnAimLevel;Username=postgres;Password=Test1234!
     command: ["dotnet", "ef", "database", "update"]
     volumes:
-      - ./LevelService/LevelService.Api/appsettings.json:/app/appsettings.json
+      - ./CoreModules/LevelService/LevelService.Api/appsettings.json:/app/appsettings.json
       
   missionapi:
     build:
       context: .
-      dockerfile: MissionService/MissionService.Api/Dockerfile
+      dockerfile: CoreModules/MissionService/MissionService.Api/Dockerfile
     ports:
       - "5009:8080"  # Map host port 5005 to container port 8080
     depends_on:
@@ -106,28 +106,28 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__OnAimMission=Host=missiondb;Port=5432;Database=OnAimMission;Username=postgres;Password=Test1234!
     volumes:
-      - ./MissionService/MissionService.Api/appsettings.json:/app/appsettings.json
+      - ./CoreModules/MissionService/MissionService.Api/appsettings.json:/app/appsettings.json
       
 
   leaderboardapi:
     build:
       context: .
-      dockerfile: Leaderboard/Leaderboard.Api/Dockerfile
+      dockerfile: CoreModules/Leaderboard/Leaderboard.Api/Dockerfile
     ports:
       - "5004:8080"
     environment:
       - ConnectionString__OnAimLeaderboard=Host=leaderboarddb;Port=5436;Database=OnAimLeaderboard;Username=postgres;Password=Test1234!
     volumes:
-      - ./Leaderboard/Leaderboard.Api/appsettings.json:/app/appsettings.json
+      - ./CoreModules/Leaderboard/Leaderboard.Api/appsettings.json:/app/appsettings.json
       
   testapi:
     build:
       context: .
-      dockerfile: Test.Api/Dockerfile
+      dockerfile: Helpers/Test.Api/Dockerfile
     ports:
       - "5005:8080"
     volumes:
-      - ./Test.Api/appsettings.json:/app/appsettings.json
+      - ./Helpers/Test.Api/appsettings.json:/app/appsettings.json
       
   gameconfigdb:
     image: postgres:13

@@ -11,8 +11,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\GameLib\GameLib.Infrastructure\GameLib.Infrastructure.csproj" />
-	  <ProjectReference Include="..\..\..\Shared\Shared.Lib\Shared.Lib.csproj" />
+	  <ProjectReference Include="..\..\..\BuildingBlocks\Shared.Lib\Shared.Lib.csproj" />
+	  <ProjectReference Include="..\..\GameLib\GameLib.Infrastructure\GameLib.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Wheel.Domain\Wheel.Domain.csproj" />
 	</ItemGroup>
 </Project>
