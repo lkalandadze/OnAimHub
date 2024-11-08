@@ -391,7 +391,7 @@ public class Startup
                     p.ExchangeType = "fanout";
                 });
 
-                cfg.ReceiveEndpoint(rabbitMqOptions.Queues["PlayerQueue"].QueueName, e =>
+                cfg.ReceiveEndpoint(rabbitMqOptions.Queues["CreatePlayerQueue"].QueueName, e =>
                 {
                     e.Bind(rabbitMqOptions.ExchangeName, x =>
                     {

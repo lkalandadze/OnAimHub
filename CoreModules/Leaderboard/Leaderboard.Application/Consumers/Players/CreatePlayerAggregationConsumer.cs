@@ -3,7 +3,7 @@ using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Domain.Entities;
 using MassTransit;
 
-namespace Leaderboard.Application.Consumers;
+namespace Leaderboard.Application.Consumers.Players;
 
 public sealed class CreatePlayerAggregationConsumer : IConsumer<CreatePlayerEvent>
 {

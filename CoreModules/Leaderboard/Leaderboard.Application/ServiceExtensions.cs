@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Leaderboard.Application.Behaviours;
-using Leaderboard.Application.Consumers;
+using Leaderboard.Application.Consumers.Players;
 using Leaderboard.Application.Consumers.Segment;
 using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Infrastructure.Repositories;
@@ -57,7 +57,7 @@ public static class ServiceExtensions
                     h.Password(rabbitMqOptions.Password);
                 });
 
-                var playerQueueSettings = rabbitMqOptions.Queues["PlayerQueue"];
+                var playerQueueSettings = rabbitMqOptions.Queues["CreatePlayerQueue"];
                 cfg.ReceiveEndpoint(playerQueueSettings.QueueName, e =>
                 {
                     var rabbitMqEndpoint = e as IRabbitMqReceiveEndpointConfigurator;
