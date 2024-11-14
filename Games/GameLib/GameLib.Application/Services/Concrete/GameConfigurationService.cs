@@ -12,14 +12,12 @@ namespace GameLib.Application.Services.Concrete;
 public class GameConfigurationService : IGameConfigurationService
 {
     private readonly IGameConfigurationRepository _configurationRepository;
-    private readonly ISegmentRepository _segmentRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly EntityGenerator _entityGenerator;
 
-    public GameConfigurationService(IGameConfigurationRepository configurationRepository, ISegmentRepository segmentRepository, IUnitOfWork unitOfWork, EntityGenerator entityGenerator)
+    public GameConfigurationService(IGameConfigurationRepository configurationRepository, IUnitOfWork unitOfWork, EntityGenerator entityGenerator)
     {
         _configurationRepository = configurationRepository;
-        _segmentRepository = segmentRepository;
         _unitOfWork = unitOfWork;
         _entityGenerator = entityGenerator;
     }

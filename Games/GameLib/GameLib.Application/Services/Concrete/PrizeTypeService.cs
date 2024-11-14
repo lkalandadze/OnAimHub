@@ -10,13 +10,11 @@ namespace GameLib.Application.Services.Concrete;
 public class PrizeTypeService : IPrizeTypeService
 {
     private readonly IPrizeTypeRepository _prizeTypeRepository;
-    private readonly ISegmentRepository _segmentRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public PrizeTypeService(IPrizeTypeRepository prizeTypeRepository, ISegmentRepository segmentRepository, IUnitOfWork unitOfWork)
+    public PrizeTypeService(IPrizeTypeRepository prizeTypeRepository, IUnitOfWork unitOfWork)
     {
         _prizeTypeRepository = prizeTypeRepository;
-        _segmentRepository = segmentRepository;
         _unitOfWork = unitOfWork;
     }
 

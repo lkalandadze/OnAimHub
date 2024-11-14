@@ -92,7 +92,7 @@ static void CreateDatabaseIfNotExists()
     optionsBuilder.UseNpgsql(connectionString);
 
     var dbContext = new WheelConfigDbContext(optionsBuilder.Options);
-    dbContext.Database.EnsureCreated();
+    dbContext.Database.Migrate();
 
     _ = new DbInitializer(dbContext);
 }

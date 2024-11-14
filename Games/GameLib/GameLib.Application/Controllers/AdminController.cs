@@ -1,8 +1,6 @@
 ﻿using GameLib.Application.Generators;
 using GameLib.Application.Models.Configuration;
-using GameLib.Application.Models.Game;
 using GameLib.Application.Models.PrizeType;
-using GameLib.Application.Models.Segment;
 using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -16,14 +14,12 @@ public class AdminController : BaseApiController
 {
     private readonly IGameService _gameService;
     private readonly IGameConfigurationService _configurationService;
-    private readonly ISegmentService _segmentService;
     private readonly IPrizeTypeService _prizeTypeService;
 
-    public AdminController(IGameService gameService, IGameConfigurationService configurationService, ISegmentService segmentService, IPrizeTypeService prizeTypeService)
+    public AdminController(IGameService gameService, IGameConfigurationService configurationService, IPrizeTypeService prizeTypeService)
     {
         _gameService = gameService;
         _configurationService = configurationService;
-        _segmentService = segmentService;
         _prizeTypeService = prizeTypeService;
     }
 
@@ -99,36 +95,6 @@ public class AdminController : BaseApiController
     {
         await _configurationService.DeactivateAsync(id);
         return StatusCode(200);
-    }
-
-    #endregion
-
-    #region Segments
-
-    [HttpGet(nameof(Segments))]
-    public async Task<ActionResult<IEnumerable<SegmentBaseGetModel>>> Segments()
-    {
-        return Ok(await _segmentService.GetAllAsync());
-    }
-
-    [HttpGet(nameof(SegmentById))]
-    public async Task<ActionResult<ConfigurationBaseGetModel>> SegmentById(int id)
-    {
-        return Ok(await _segmentService.GetByIdAsync(id));
-    }
-
-    [HttpPost(nameof(CreateSegment))]
-    public async Task<ActionResult> CreateSegment([FromBody] SegmentCreateModel model)
-    {
-        await _segmentService.CreateAsync(model);
-        return StatusCode(201);
-    }
-
-    [HttpPatch(nameof(DeleteSegment))]
-    public async Task<ActionResult> DeleteSegment([FromRoute] int id)
-    {
-        await _segmentService.DeleteAsync(id);
-        return StatusCode(201);
     }
 
     #endregion

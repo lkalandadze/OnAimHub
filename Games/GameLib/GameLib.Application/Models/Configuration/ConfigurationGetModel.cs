@@ -1,15 +1,9 @@
 ﻿#nullable disable
 
-using GameLib.Application.Models.Currency;
-using GameLib.Application.Models.PrizeType;
-using GameLib.Application.Models.Segment;
-
 namespace GameLib.Application.Models.Configuration;
 
 public class ConfigurationGetModel : ConfigurationBaseGetModel
 {
-    public IEnumerable<SegmentBaseGetModel> Segments { get; set; }
-
     public static ConfigurationGetModel MapFrom(Domain.Entities.GameConfiguration configuration, bool includeNavProperties = true)
     {
         var model = new ConfigurationGetModel
@@ -20,10 +14,9 @@ public class ConfigurationGetModel : ConfigurationBaseGetModel
             IsActive = configuration.IsActive,
         };
 
-        if (includeNavProperties)
-        {
-            model.Segments = configuration.Segments != null ? configuration.Segments.Select(s => SegmentBaseGetModel.MapFrom(s)) : default;
-        }
+        //if (includeNavProperties)
+        //{
+        //}
 
         return model;
     }

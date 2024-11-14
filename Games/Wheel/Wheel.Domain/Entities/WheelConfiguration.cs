@@ -11,7 +11,7 @@ public class WheelConfiguration : GameConfiguration<WheelConfiguration>
         
     }
 
-    public WheelConfiguration(string name, int value, IEnumerable<Price>? prices = null, IEnumerable<Segment>? segments = null, IEnumerable<Round> rounds = null) : base(name, value, prices, segments)
+    public WheelConfiguration(string name, int value, IEnumerable<Price>? prices = null, IEnumerable<Round> rounds = null) : base(name, value, prices)
     {
         Rounds = rounds.ToList() ?? [];
     }

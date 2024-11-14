@@ -9,7 +9,6 @@ namespace GameLib.Application.Services.Concrete;
 
 public class GameService : IGameService
 {
-    private readonly ISegmentRepository _segmentRepository;
     private readonly IGameConfigurationRepository _configurationRepository;
     private readonly IConsulGameService _consulGameService;
     private readonly ConfigurationHolder _configurationHolder;
@@ -17,14 +16,12 @@ public class GameService : IGameService
     private readonly GameInfoConfiguration _gameInfoConfig;
 
     public GameService(
-        ISegmentRepository segmentRepository, 
         IGameConfigurationRepository configurationRepository, 
         IConsulGameService consulGameService, 
         ConfigurationHolder configurationHolder, 
         GameSettings gameSettings,
         IOptions<GameInfoConfiguration> gameInfoConfig)
     {
-        _segmentRepository = segmentRepository;
         _configurationRepository = configurationRepository;
         _consulGameService = consulGameService;
         _configurationHolder = configurationHolder;
@@ -66,14 +63,12 @@ public class GameService : IGameService
     public async Task<GameShortInfoResponseModel> GetGameShortInfo()
     {
         var configurations = await _configurationRepository.QueryAsync();
-        var segments = await _segmentRepository.QueryAsync();
 
         return new GameShortInfoResponseModel
         {
             Status = _gameSettings.IsActive.Value,
             Description = _gameSettings.Description.Value,
             ConfigurationCount = configurations.Count(),
-            Segments = segments.Select(s => s.Id),
         };
     }
 

@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -63,14 +62,12 @@ public static class DependencyResolver
         services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
         services.AddScoped<IGameConfigurationRepository, GameConfigurationRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
-        services.AddScoped<ISegmentRepository, SegmentRepository>();
         services.AddScoped<ISettingRepository, GameSettingRepository<TGameConfiguration>>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IConsulClient, ConsulClient>();
         services.AddScoped<IConsulGameService, ConsulGameService>();
         services.AddScoped<IGameConfigurationService, GameConfigurationService>();
-        services.AddScoped<ISegmentService, SegmentService>();
         services.AddScoped<IPrizeTypeService, PrizeTypeService>();
         services.AddScoped<IGameService, GameService>();
 

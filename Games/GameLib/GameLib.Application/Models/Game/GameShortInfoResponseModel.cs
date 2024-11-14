@@ -7,5 +7,4 @@ public class GameShortInfoResponseModel
     public bool Status { get; set; }
     public string Description { get; set; }
     public int ConfigurationCount { get; set; }
-    public IEnumerable<string> Segments { get; set; }
 }

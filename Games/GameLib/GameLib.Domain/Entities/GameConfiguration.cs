@@ -15,12 +15,11 @@ public class GameConfiguration : BaseEntity<int>
 
     }
 
-    public GameConfiguration(string name, int value, IEnumerable<Price> prices = null, IEnumerable<Segment> segments = null)
+    public GameConfiguration(string name, int value, IEnumerable<Price> prices = null)
     {
         Name = name;
         Value = value;
         Prices = prices?.ToList() ?? [];
-        Segments = segments?.ToList() ?? [];
     }
 
     [GlobalDescription("Name of the configuration")]
@@ -32,26 +31,13 @@ public class GameConfiguration : BaseEntity<int>
     [GlobalDescription("IsActive of the configuration")]
     public bool IsActive { get; set; }
 
+    //[IgnoreIncludeAll]
+    public ICollection<Price> Prices { get; set; }
+
     public void ChangeDetails(string name, int value)
     {
         Name = name;
         Value = value;
-    }
-
-    public void AssignSegments(IEnumerable<Segment> segments)
-    {
-        foreach (var segment in segments)
-        {
-            //Segments.Add(segment as Segment<T>);
-        }
-    }
-
-    public void UnassignSegments(IEnumerable<Segment> segments)
-    {
-        foreach (var segment in segments)
-        {
-            //Segments.Remove(segment as Segment<T>);
-        }
     }
 
     public void Activate()
@@ -63,12 +49,6 @@ public class GameConfiguration : BaseEntity<int>
     {
         IsActive = false;
     }
-
-    //[IgnoreIncludeAll]
-    public ICollection<Price> Prices { get; set; }
-
-    //[IgnoreIncludeAll]
-    public ICollection<Segment> Segments { get; set; }
 }
 
 public class GameConfiguration<T> : GameConfiguration where T : GameConfiguration<T>
@@ -78,14 +58,11 @@ public class GameConfiguration<T> : GameConfiguration where T : GameConfiguratio
 
     }
 
-    public GameConfiguration(string name, int value, IEnumerable<Price> prices = null, IEnumerable<Segment> segments = null) : base(name, value, prices, segments)
+    public GameConfiguration(string name, int value, IEnumerable<Price> prices = null) : base(name, value, prices)
     { 
     
     }
 
     //[IgnoreIncludeAll]
     public new ICollection<Price> Prices { get; set; }
-
-    //[IgnoreIncludeAll]
-    public new ICollection<Segment> Segments { get; set; }
 }
