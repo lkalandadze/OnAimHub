@@ -34,12 +34,6 @@ public class TestController : BaseApiController
         //    new Price(3, 15, "OnAimCoin"),
         //};
 
-        //var segments = new List<Segment>
-        //{
-        //    new Segment("Segment 1"),
-        //    new Segment("Segment 2"),
-        //};
-
         //var prizes1 = new List<WheelPrize>
         //{
         //    new WheelPrize("R1 P1", 1) { Value = 1, Probability = 10 },

@@ -14,11 +14,11 @@ public class WheelPrize : BasePrize<Round>
         
     }
 
-    public WheelPrize(string name, int roundId, int? wheelIndex = null) : base()
+    public WheelPrize(string name, int? roundId = null, int? wheelIndex = null) : base()
     {
         Name = name;
         WheelIndex = wheelIndex;
-        PrizeGroupId = roundId;
+        PrizeGroupId = roundId.Value;
     }
 
     public string Name { get; set; }

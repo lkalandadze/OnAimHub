@@ -16,8 +16,6 @@ var host = CreateHostBuilder(args).Build();
 
 ////Clear Configuration Tree
 //c.Database.EnsureCreated();
-//var s = c.Segments.ToList();
-//c.Segments.RemoveRange(s);
 //c.Prices.RemoveRange(c.Prices.ToList());
 //c.WheelPrizes.RemoveRange(c.WheelPrizes.ToList());
 //c.Rounds.RemoveRange(c.Rounds.ToList());
