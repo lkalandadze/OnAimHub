@@ -11,13 +11,13 @@ public class CoinTemplateWithdrawOption : BaseEntity<int>
         
     }
 
-    public CoinTemplateWithdrawOption(string coinTemplateId, int withdrawOptionId)
+    public CoinTemplateWithdrawOption(int coinTemplateId, int withdrawOptionId)
     {
         CoinTemplateId = coinTemplateId;
         WithdrawOptionId = withdrawOptionId;
     }
     
-    public string CoinTemplateId { get; set; }
+    public int CoinTemplateId { get; set; }
     public CoinTemplate CoinTemplate { get; set; }
 
     public int WithdrawOptionId { get; set; }
