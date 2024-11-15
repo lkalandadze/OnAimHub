@@ -71,9 +71,6 @@ public class Startup
         services.AddScoped<IReferralDistributionRepository, ReferralDistributionRepository>();
         services.AddScoped<IHubSettingRepository, HubSettingRepository>();
         services.AddScoped<IPlayerBanRepository, PlayerBanRepository>();
-        services.AddScoped<IActRepository, ActRepository>();
-        services.AddScoped<ILevelRepository, LevelRepository>();
-        services.AddScoped<ILevelPrizeRepository, LevelPrizeRepository>();
         services.AddScoped<IRewardRepository, PrizeClaimRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -89,7 +86,6 @@ public class Startup
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IJobService, JobService>();
-        services.AddScoped<IActSchedulerService, ActSchedulerService>();
         services.AddScoped<IBackgroundJobScheduler, HangfireJobScheduler>();
         services.AddScoped<IMessageBus, MessageBus>();
 
