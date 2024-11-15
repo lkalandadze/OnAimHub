@@ -1,10 +1,17 @@
-﻿using Shared.Domain.Entities;
+﻿#nullable disable
+
+using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;
 
 public class WithdrawOptionGroup : BaseEntity<int>
 {
-    public WithdrawOptionGroup(string title, string? description, string imageUrl)
+    public WithdrawOptionGroup()
+    {
+        
+    }
+
+    public WithdrawOptionGroup(string title, string description, string imageUrl)
     {
         Title = title;
         Description = description;
@@ -12,6 +19,6 @@ public class WithdrawOptionGroup : BaseEntity<int>
     }
 
     public string Title { get; set; }
-    public string? Description { get; set; }    
+    public string Description { get; set; }    
     public string ImageUrl { get; set; }
 }

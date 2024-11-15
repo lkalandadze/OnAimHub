@@ -1,14 +1,22 @@
-﻿using Shared.Domain.Entities;
+﻿#nullable disable
+
+using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;
 
 public class CoinTemplateWithdrawOption : BaseEntity<int>
 {
+    public CoinTemplateWithdrawOption()
+    {
+        
+    }
+
     public CoinTemplateWithdrawOption(string coinTemplateId, int withdrawOptionId)
     {
         CoinTemplateId = coinTemplateId;
         WithdrawOptionId = withdrawOptionId;
     }
+    
     public string CoinTemplateId { get; set; }
     public CoinTemplate CoinTemplate { get; set; }
 

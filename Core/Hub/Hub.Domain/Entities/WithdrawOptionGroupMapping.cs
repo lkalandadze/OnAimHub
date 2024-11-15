@@ -1,9 +1,22 @@
-﻿using Shared.Domain.Entities;
+﻿#nullable disable
+
+using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;
 
 public class WithdrawOptionGroupMapping : BaseEntity<int>
 {
+    public WithdrawOptionGroupMapping()
+    {
+        
+    }
+
+    public WithdrawOptionGroupMapping(int withdrawOptionId, int withdrawOptionGroupId)
+    {
+        WithdrawOptionId = withdrawOptionId;
+        WithdrawOptionGroupId = withdrawOptionGroupId;
+    }
+
     public int WithdrawOptionId { get; set; }
     public WithdrawOption WithdrawOption { get; set; }
 
