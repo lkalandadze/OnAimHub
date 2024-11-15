@@ -38,6 +38,18 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<RewardPrize> RewardPrizes { get; set; }
     public DbSet<PrizeType> PrizeTypes { get; set; }
 
+    public DbSet<Promotion> Promotions { get; set; }
+    public DbSet<PromotionService> PromotionServices { get; set; }
+    public DbSet<PromotionSegment> PromotionSegments { get; set; }
+    public DbSet<CoinTemplate> CoinTemplates { get; set; }
+    public DbSet<PromotionCoin> PromotionCoins { get; set; }
+    public DbSet<WithdrawOption> WithdrawOptions { get; set; }
+    public DbSet<WithdrawEndpointTemplate> WithdrawEndpointTemplates { get; set; }
+    public DbSet<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
+    public DbSet<WithdrawOptionGroupMapping> WithdrawOptionGroupsMappings { get; set; }
+    public DbSet<PromotionCoinWithdrawOption> PromotionCoinWithdrawOptions { get; set; }
+    public DbSet<CoinTemplateWithdrawOption> CoinTemplateWithdrawOptions { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(HubDbContext))!);

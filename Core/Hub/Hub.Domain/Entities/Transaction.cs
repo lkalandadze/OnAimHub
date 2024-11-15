@@ -14,7 +14,7 @@ public class Transaction : BaseEntity<int>
         
     }
 
-    public Transaction(decimal amount, int? gameId, int playerId, AccountType fromAccount, AccountType toAccount, string currencyId, TransactionStatus status, TransactionType type)
+    public Transaction(decimal amount, int? gameId, int playerId, AccountType fromAccount, AccountType toAccount, string currencyId, TransactionStatus status, TransactionType type, int? promotionId)
     {
         Amount = amount;
         GameId = gameId;
@@ -24,6 +24,7 @@ public class Transaction : BaseEntity<int>
         CurrencyId = currencyId;
         StatusId = status.Id;
         TypeId = type.Id;
+        PromotionId = promotionId;
     }
 
     public decimal Amount { get; private set; }
@@ -48,6 +49,9 @@ public class Transaction : BaseEntity<int>
 
     public int TypeId { get; private set; }
     public TransactionType Type { get; private set; }
+
+    public int? PromotionId { get; private set; }
+    public Promotion Promotion { get; private set; }
 
     public void SetStatus(TransactionStatus status)
     {

@@ -93,6 +93,18 @@ public class Startup
         services.AddScoped<IBackgroundJobScheduler, HangfireJobScheduler>();
         services.AddScoped<IMessageBus, MessageBus>();
 
+        services.AddScoped<IPromotionRepository, PromotionRepository>();
+        services.AddScoped<IPromotionServiceRepository, PromotionServiceRepository>();
+        services.AddScoped<IPromotionSegmentRepository, PromotionSegmentRepository>();
+        services.AddScoped<ICoinTemplateRepository, CoinTemplateRepository>();
+        services.AddScoped<IPromotionCoinRepository, PromotionCoinRepository>();
+        services.AddScoped<IWithdrawOptionRepository, WithdrawOptionRepository>();
+        services.AddScoped<IWithdrawEndpointTemplateRepository, WithdrawEndpointTemplateRepository>();
+        services.AddScoped<IWithdrawOptionGroupRepository, WithdrawOptionGroupRepository>();
+        services.AddScoped<IWithdrawOptionGroupMappingRepository, WithdrawOptionGroupMappingRepository>();
+        services.AddScoped<IPromotionCoinWithdrawOptionRepository, PromotionCoinWithdrawOptionRepository>();
+        services.AddScoped<ICoinTemplateWithdrawOptionRepository, CoinTemplateWithdrawOptionRepository>();
+
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<BasicAuthConfiguration>(Configuration.GetSection("BasicAuthConfiguration"));
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));

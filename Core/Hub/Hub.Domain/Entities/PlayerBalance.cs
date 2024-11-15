@@ -1,6 +1,7 @@
 ﻿#nullable disable
 
 using Hub.Domain.Entities.DbEnums;
+using MassTransit.Internals.GraphValidation;
 using OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing.Attributes;
 using Shared.Domain.Entities;
 
@@ -19,6 +20,7 @@ public class PlayerBalance : BaseEntity<int>
         Amount = amount;
         PlayerId = playerId;
         CurrencyId = currencyId;
+        //PromotionId = promotionId;
     }
 
     public decimal Amount { get; private set; }
@@ -28,6 +30,9 @@ public class PlayerBalance : BaseEntity<int>
 
     public string CurrencyId { get; private set; }
     public Currency Currency { get; private set; }
+
+    public int PromotionId { get; private set; }
+    public Promotion Promotion { get; private set; }
 
     public void SetAmount(decimal amount)
     {

@@ -39,7 +39,7 @@ public class TransactionService : ITransactionService
         if (!player.HasPlayed)
             player.UpdateHasPlayed();
 
-        var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, currencyId, TransactionStatus.Created, transactionType);
+        var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, currencyId, TransactionStatus.Created, transactionType, null /* Needs Promotion id */);
 
         await _transactionRepository.InsertAsync(transaction);
         await _unitOfWork.SaveAsync();
