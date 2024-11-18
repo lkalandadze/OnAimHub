@@ -38,7 +38,7 @@ public class HttpClientService : ILeaderBoardApiClient
             .OrResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
             .CircuitBreakerAsync(
                 policyOptions.Value.RetryCount + 1,
-                TimeSpan.FromSeconds(policyOptions.Value.BreakDuration)
+                System.TimeSpan.FromSeconds(policyOptions.Value.BreakDuration)
             );
 
         var combinedPolicy = Policy.WrapAsync(retryPolicy, circuitBreakerPolicy, bulkheadPolicy);

@@ -17,7 +17,7 @@ public class TokenCleanupService : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+            await Task.Delay(System.TimeSpan.FromHours(1), stoppingToken);
 
             using (var scope = _serviceScopeFactory.CreateScope())
             {

@@ -42,6 +42,8 @@ using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 using System.Text;
 using System.Net.Http.Headers;
 using MediatR;
+using OnAim.Admin.APP.Services.Promotion;
+using OnAim.Admin.APP.Services.Coin;
 
 
 namespace OnAim.Admin.APP;
@@ -58,9 +60,15 @@ public static class Extension
         configuration.GetSection(nameof(EmailOptions)).Bind(emailOptions);
         configureOptions?.Invoke(emailOptions);
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
-
+        services.AddSingleton<HubClientService>(sp =>
+        new HubClientService("https://localhost:7069/HubApi", new HttpClient()));
+        services.AddSingleton<LeaderboardClientService>(sp =>
+        new LeaderboardClientService("https://localhost:7041/api/v1/Leaderboard", new HttpClient()));
         services
             .AddScoped<IRoleRepository, RoleRepository>()
+            .AddScoped<IPromotionRepository, PromotionRepository>()
+            .AddScoped<IPromotionService, PromotionService>()
+            .AddScoped<ICoinService, CoinService>()
             .AddScoped<ILogRepository, LogRepository>()
             .AddScoped<IAppSettingRepository, AppSettingRepository>()
             .AddScoped<IPermissionService, PermissionService>()
@@ -116,7 +124,7 @@ public static class Extension
 
         services.AddScoped<ISecurityContextAccessor, SecurityContextAccessor>();
         var serviceProvider = services.BuildServiceProvider();
-        services.AddMessageBus(configuration, consumerAssemblyMarkerType);
+        //services.AddMessageBus(configuration, consumerAssemblyMarkerType);
         services
             .AddMediatR(Assembly.GetExecutingAssembly())
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

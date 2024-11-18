@@ -4,7 +4,7 @@ public class LeaderBoardListDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public string Status { get; set; }
+    public LeaderboardRecordStatus Status { get; set; }
     public ICollection<PrizeDto> Prizes {  get; set; } 
     public DateTimeOffset EndsOn { get; set; }
     public List<PrizeConfigurationsDto> PrizeConfigurations { get; set; }

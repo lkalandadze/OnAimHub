@@ -4,9 +4,7 @@ using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP.Features.DomainFeatures.Commands.Create;
 using OnAim.Admin.APP.Features.DomainFeatures.Commands.Delete;
 using OnAim.Admin.APP.Features.DomainFeatures.Queries.GetAll;
-using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Contracts.Dtos.EmailDomain;
-using OnAim.Admin.Contracts.Dtos;
 using OnAim.Admin.Contracts.Models;
 using OnAim.Admin.APP.Services.SettingServices;
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Infrasturcture.Repositories;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using Shared.Application;
