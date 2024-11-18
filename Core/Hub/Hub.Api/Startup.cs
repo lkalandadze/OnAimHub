@@ -1,4 +1,5 @@
 ﻿using Consul;
+using FluentValidation.AspNetCore;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Hub.Api;
@@ -7,6 +8,7 @@ using Hub.Api.Middlewares;
 using Hub.Application;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
+using Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdrawOption;
 using Hub.Application.Services.Abstract;
 using Hub.Application.Services.Abstract.BackgroundJobs;
 using Hub.Application.Services.Concrete;
@@ -98,8 +100,6 @@ public class Startup
         services.AddScoped<IWithdrawEndpointTemplateRepository, WithdrawEndpointTemplateRepository>();
         services.AddScoped<IWithdrawOptionGroupRepository, WithdrawOptionGroupRepository>();
         services.AddScoped<IWithdrawOptionGroupMappingRepository, WithdrawOptionGroupMappingRepository>();
-        services.AddScoped<IPromotionCoinWithdrawOptionRepository, PromotionCoinWithdrawOptionRepository>();
-        services.AddScoped<ICoinTemplateWithdrawOptionRepository, CoinTemplateWithdrawOptionRepository>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<BasicAuthConfiguration>(Configuration.GetSection("BasicAuthConfiguration"));
@@ -136,7 +136,13 @@ public class Startup
         }
 
         services.AddHttpContextAccessor();
-        services.AddControllers();
+
+        services.AddControllers()
+            .AddFluentValidation(fv =>
+            {
+                fv.RegisterValidatorsFromAssemblyContaining<CreateWithdrawOptionValidator>();
+            });
+
         services.AddEndpointsApiExplorer();
 
         ConfigureSwagger(services);

@@ -1,23 +1,20 @@
-﻿using Hub.Domain.Absractions.Repository;
-using Hub.Domain.Entities;
+﻿using Hub.Domain.Absractions;
+using Hub.Domain.Absractions.Repository;
 using Hub.Domain.Enum;
 using MediatR;
-using Shared.Application.Exceptions.Types;
 using Shared.Application.Exceptions;
-using Hub.Domain.Absractions;
+using Shared.Application.Exceptions.Types;
 
 namespace Hub.Application.Features.WithdrawOptionFeatures.Commands.AssignCoinTemplatesToWithdrawOption;
 
 public class AssignCoinTemplatesToWithdrawOptionHandler : IRequestHandler<AssignCoinTemplatesToWithdrawOption>
 {
-    private readonly ICoinTemplateWithdrawOptionRepository _coinTemplateWithdrawOptionRepository;
     private readonly IWithdrawOptionRepository _withdrawOptionRepository;
     private readonly ICoinTemplateRepository _coinTemplateRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public AssignCoinTemplatesToWithdrawOptionHandler(ICoinTemplateWithdrawOptionRepository coinTemplateWithdrawOptionRepository, IWithdrawOptionRepository withdrawOptionRepository, ICoinTemplateRepository coinTemplateRepository, IUnitOfWork unitOfWork)
+    public AssignCoinTemplatesToWithdrawOptionHandler(IWithdrawOptionRepository withdrawOptionRepository, ICoinTemplateRepository coinTemplateRepository, IUnitOfWork unitOfWork)
     {
-        _coinTemplateWithdrawOptionRepository = coinTemplateWithdrawOptionRepository;
         _withdrawOptionRepository = withdrawOptionRepository;
         _coinTemplateRepository = coinTemplateRepository;
         _unitOfWork = unitOfWork;
@@ -43,13 +40,9 @@ public class AssignCoinTemplatesToWithdrawOptionHandler : IRequestHandler<Assign
             );
         }
 
-        foreach (var coin in coinTemplates)
-        {
-            var coinWithdrawOption = new CoinTemplateWithdrawOption(coin.Id, request.WithdrawOptionId);
+        option.AddCoinTemplates(coinTemplates);
 
-            await _coinTemplateWithdrawOptionRepository.InsertAsync(coinWithdrawOption);
-        }
-
+        _withdrawOptionRepository.Update(option);
         await _unitOfWork.SaveAsync();
 
         return Unit.Value;

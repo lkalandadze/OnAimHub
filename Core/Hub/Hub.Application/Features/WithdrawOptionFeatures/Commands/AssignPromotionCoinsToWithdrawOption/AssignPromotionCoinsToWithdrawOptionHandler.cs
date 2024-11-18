@@ -1,6 +1,5 @@
 ﻿using Hub.Domain.Absractions;
 using Hub.Domain.Absractions.Repository;
-using Hub.Domain.Entities;
 using Hub.Domain.Enum;
 using MediatR;
 using Shared.Application.Exceptions;
@@ -10,14 +9,12 @@ namespace Hub.Application.Features.WithdrawOptionFeatures.Commands.AssignPromoti
 
 public class AssignPromotionCoinsToWithdrawOptionHandler : IRequestHandler<AssignPromotionCoinsToWithdrawOption>
 {
-    private readonly IPromotionCoinWithdrawOptionRepository _promotionCoinWithdrawOptionRepository;
     private readonly IWithdrawOptionRepository _withdrawOptionRepository;
     private readonly IPromotionCoinRepository _promotionCoinRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public AssignPromotionCoinsToWithdrawOptionHandler(IPromotionCoinWithdrawOptionRepository promotionCoinWithdrawOptionRepository, IWithdrawOptionRepository withdrawOptionRepository, IPromotionCoinRepository promotionCoinRepository, IUnitOfWork unitOfWork)
+    public AssignPromotionCoinsToWithdrawOptionHandler(IWithdrawOptionRepository withdrawOptionRepository, IPromotionCoinRepository promotionCoinRepository, IUnitOfWork unitOfWork)
     {
-        _promotionCoinWithdrawOptionRepository = promotionCoinWithdrawOptionRepository;
         _withdrawOptionRepository = withdrawOptionRepository;
         _promotionCoinRepository = promotionCoinRepository;
         _unitOfWork = unitOfWork;
@@ -48,13 +45,9 @@ public class AssignPromotionCoinsToWithdrawOptionHandler : IRequestHandler<Assig
             throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "One or more promotionCoins are not eligible for this operation. Only outgoing promotionCoins are allowed.");
         }
 
-        foreach (var coin in promotionCoins)
-        {
-            var coinWithdrawOption = new PromotionCoinWithdrawOption(coin.Id, request.WithdrawOptionId);
+        option.AddPromotionCoins(promotionCoins);
 
-            await _promotionCoinWithdrawOptionRepository.InsertAsync(coinWithdrawOption);
-        }
-
+        _withdrawOptionRepository.Update(option);
         await _unitOfWork.SaveAsync();
 
         return Unit.Value;

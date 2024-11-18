@@ -11,15 +11,7 @@ public class WithdrawOptionGroupMapping : BaseEntity<int>
         
     }
 
-    public WithdrawOptionGroupMapping(int withdrawOptionId, int withdrawOptionGroupId)
-    {
-        WithdrawOptionId = withdrawOptionId;
-        WithdrawOptionGroupId = withdrawOptionGroupId;
-    }
-
-    public int WithdrawOptionId { get; set; }
-    public WithdrawOption WithdrawOption { get; set; }
-
-    public int WithdrawOptionGroupId { get; set; }
-    public WithdrawOptionGroup WithdrawOptionGroup { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public string ImgUrl { get; set; }
 }

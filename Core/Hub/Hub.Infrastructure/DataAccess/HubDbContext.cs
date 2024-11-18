@@ -44,8 +44,6 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<WithdrawEndpointTemplate> WithdrawEndpointTemplates { get; set; }
     public DbSet<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
     public DbSet<WithdrawOptionGroupMapping> WithdrawOptionGroupsMappings { get; set; }
-    public DbSet<PromotionCoinWithdrawOption> PromotionCoinWithdrawOptions { get; set; }
-    public DbSet<CoinTemplateWithdrawOption> CoinTemplateWithdrawOptions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
