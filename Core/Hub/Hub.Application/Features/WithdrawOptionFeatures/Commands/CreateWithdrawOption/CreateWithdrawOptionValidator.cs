@@ -17,23 +17,20 @@ public class CreateWithdrawOptionValidator : AbstractValidator<CreateWithdrawOpt
             .NotEmpty().WithMessage("ImageUrl is required.")
             .MustBeAValidUrl().WithMessage("ImageUrl must be a valid URL.");
 
-        RuleFor(x => x.PromotionCoinIds)
-            .NotEmpty().WithMessage("PromotionCoinIds is required and must contain at least one item.")
-            .Must(ids => ids.Any()).WithMessage("PromotionCoinIds must contain at least one item.");
+        RuleFor(x => x)
+            .Must(x => x.PromotionCoinIds?.Any() == true || x.CoinTemplateIds?.Any() == true)
+            .WithMessage("At least one of PromotionCoinIds or CoinTemplateIds must be provided.");
+
+        RuleFor(x => x)
+            .Must(x => (!string.IsNullOrWhiteSpace(x.Endpoint) && !string.IsNullOrWhiteSpace(x.EndpointContent)) || x.TemplateId.HasValue)
+            .WithMessage("Either both Endpoint and EndpointContent must be provided, or TemplateId must be specified.");
 
         RuleFor(x => x.Endpoint)
-            .Empty().Null()
             .MustBeAValidUrl().When(x => !string.IsNullOrEmpty(x.Endpoint))
             .WithMessage("Endpoint must be a valid URL.");
 
         RuleFor(x => x.EndpointContent)
-            .Empty().Null()
             .MustBeAValidJson().When(x => !string.IsNullOrEmpty(x.EndpointContent))
             .WithMessage("EndpointContent must be a valid JSON string.");
-
-        RuleFor(x => x.TemplateId)
-            .Null()
-            .GreaterThan(0).When(x => x.TemplateId.HasValue)
-            .WithMessage("TemplateId must be greater than zero if provided.");
     }
 }
