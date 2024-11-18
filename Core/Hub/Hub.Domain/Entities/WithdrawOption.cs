@@ -29,8 +29,8 @@ public class WithdrawOption : BaseEntity<int>
     public string EndpointContent { get; private set; }
 
     public ICollection<PromotionCoin> PromotionCoins { get; private set; }
-
     public ICollection<CoinTemplate> CoinTemplates { get; private set; }
+    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; private set; }
 
     public int? WithdrawEndpointTemplateId { get; private set; }
     public WithdrawEndpointTemplate WithdrawEndpointTemplate { get; private set; }

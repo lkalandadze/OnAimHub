@@ -99,7 +99,6 @@ public class Startup
         services.AddScoped<IWithdrawOptionRepository, WithdrawOptionRepository>();
         services.AddScoped<IWithdrawEndpointTemplateRepository, WithdrawEndpointTemplateRepository>();
         services.AddScoped<IWithdrawOptionGroupRepository, WithdrawOptionGroupRepository>();
-        services.AddScoped<IWithdrawOptionGroupMappingRepository, WithdrawOptionGroupMappingRepository>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<BasicAuthConfiguration>(Configuration.GetSection("BasicAuthConfiguration"));
