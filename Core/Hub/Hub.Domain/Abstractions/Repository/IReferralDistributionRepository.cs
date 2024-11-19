@@ -1,8 +1,8 @@
 ﻿using Hub.Domain.Entities;
-using Shared.Domain.Entities;
+using Shared.Domain.Abstractions.Repository;
 
 namespace Hub.Domain.Abstractions.Repository;
 
-public interface IReferralDistributionRepository : IBaseRepository<ReferralDistribution>
+public interface IReferralDistributionRepository : IBaseEntityRepository<ReferralDistribution>
 {
 }

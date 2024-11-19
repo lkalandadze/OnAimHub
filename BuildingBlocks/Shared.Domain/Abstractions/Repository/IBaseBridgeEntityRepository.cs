@@ -1,12 +1,10 @@
-﻿using System.Linq.Expressions;
+﻿using Shared.Domain.Entities;
+using System.Linq.Expressions;
 
-namespace Shared.Domain.Entities;
+namespace Shared.Domain.Abstractions.Repository;
 
-public interface IBaseRepository<TAggregateRoot>
-    where TAggregateRoot : BaseEntity
+public interface IBaseBridgeEntityRepository<TAggregateRoot> where TAggregateRoot : BaseBridgeEntity
 {
-    Task<TAggregateRoot?> OfIdAsync(int id);
-
     IQueryable<TAggregateRoot> Query(Expression<Func<TAggregateRoot, bool>>? expression = default);
 
     Task<List<TAggregateRoot>> QueryAsync(Expression<Func<TAggregateRoot, bool>>? expression = default);

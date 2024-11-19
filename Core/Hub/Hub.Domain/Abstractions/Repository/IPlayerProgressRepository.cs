@@ -1,9 +1,9 @@
 ﻿using Hub.Domain.Entities;
-using Shared.Domain.Entities;
+using Shared.Domain.Abstractions.Repository;
 
 namespace Hub.Domain.Abstractions.Repository;
 
-public interface IPlayerProgressRepository : IBaseRepository<PlayerProgress>
+public interface IPlayerProgressRepository : IBaseEntityRepository<PlayerProgress>
 {
     void DeleteAll();
 }

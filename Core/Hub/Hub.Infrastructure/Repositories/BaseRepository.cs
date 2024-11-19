@@ -1,11 +1,11 @@
-﻿using Hub.Domain.Abstractions.Repository;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.Domain.Abstractions.Repository;
 using Shared.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace Hub.Infrastructure.Repositories;
 
-public class BaseRepository<TContext, TAggregateRoot>(TContext context) : IBaseRepository<TAggregateRoot>
+public class BaseRepository<TContext, TAggregateRoot>(TContext context) : IBaseEntityRepository<TAggregateRoot>
     where TAggregateRoot : BaseEntity
     where TContext : DbContext
 {
