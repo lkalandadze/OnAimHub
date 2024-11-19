@@ -24,9 +24,9 @@ public class Segment : BaseEntity<string>
     public string Description { get; private set; }
     public int PriorityLevel { get; private set; }
     public int? CreatedByUserId { get; private set; }
-    public bool IsDeleted { get; set; }
+    public bool IsDeleted { get; private set; }
 
-    public ICollection<Player> Players { get; set; }
+    public ICollection<Player> Players { get; private set; }
     public ICollection<Player> BlockedPlayers { get; private set; }
     public ICollection<Promotion> Promotions { get; private set; }
 

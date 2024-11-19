@@ -7,6 +7,7 @@ using Hub.Domain.Entities;
 using Hub.Domain.Entities.DbEnums;
 using Hub.IntegrationEvents.Player;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Shared.Application.Commands;
 using Shared.Infrastructure.Bus;
@@ -104,7 +105,8 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
 
         if (player == null)
         {
-            player = new Player(receivedPlayer.Id, receivedPlayer.UserName, recommendedById, [new Segment() { Id = "default" }]);
+            var segment = await _segmentRepository.Query(s => s.Id == "default").FirstOrDefaultAsync();
+            player = new Player(receivedPlayer.Id, receivedPlayer.UserName, recommendedById, [segment]);
 
             if (request.PromoCode != null)
             {
@@ -129,8 +131,8 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
         var (token, refreshToken) = await _tokenService.GenerateTokenStringAsync(player);
         var response = new CreateAuthenticationTokenResponse(token, refreshToken);
 
-        var @events = new CreatePlayerEvent(Guid.NewGuid(), player.Id, player.UserName);
-        await _messageBus.Publish(@events);
+        //var @events = new CreatePlayerEvent(Guid.NewGuid(), player.Id, player.UserName);
+        //await _messageBus.Publish(@events);
         //await _mediator.Send(events);
 
         return new Response<CreateAuthenticationTokenResponse>(response);
