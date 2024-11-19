@@ -1,5 +1,5 @@
-﻿using Hub.Domain.Absractions;
-using Hub.Domain.Absractions.Repository;
+﻿using Hub.Domain.Abstractions;
+using Hub.Domain.Abstractions.Repository;
 using MediatR;
 using Shared.Application.Exceptions.Types;
 using Shared.Application.Exceptions;

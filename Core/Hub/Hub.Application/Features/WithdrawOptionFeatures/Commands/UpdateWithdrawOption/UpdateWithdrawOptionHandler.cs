@@ -1,10 +1,10 @@
-﻿using Hub.Domain.Absractions.Repository;
+﻿using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
 using Hub.Domain.Enum;
 using MediatR;
 using Shared.Application.Exceptions.Types;
 using Shared.Application.Exceptions;
-using Hub.Domain.Absractions;
+using Hub.Domain.Abstractions;
 
 namespace Hub.Application.Features.WithdrawOptionFeatures.Commands.UpdateWithdrawOption;
 

@@ -1,7 +1,7 @@
 ﻿using Hub.Application.Configurations;
 using Hub.Application.Services.Abstract;
-using Hub.Domain.Absractions;
-using Hub.Domain.Absractions.Repository;
+using Hub.Domain.Abstractions;
+using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

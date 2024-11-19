@@ -1,6 +1,7 @@
 ﻿using Hub.Domain.Entities;
+using Shared.Domain.Entities;
 
-namespace Hub.Domain.Absractions.Repository;
+namespace Hub.Domain.Abstractions.Repository;
 
 public interface IPlayerSegmentActHistoryRepository : IBaseRepository<PlayerSegmentActHistory>
 {

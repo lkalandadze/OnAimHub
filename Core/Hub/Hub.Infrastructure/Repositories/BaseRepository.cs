@@ -1,4 +1,4 @@
-﻿using Hub.Domain.Absractions.Repository;
+﻿using Hub.Domain.Abstractions.Repository;
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Entities;
 using System.Linq.Expressions;

@@ -1,6 +1,6 @@
 ﻿using Hub.Application.Features.PlayerBanFeatures.Commands.Update;
-using Hub.Domain.Absractions.Repository;
-using Hub.Domain.Absractions;
+using Hub.Domain.Abstractions.Repository;
+using Hub.Domain.Abstractions;
 using MediatR;
 
 namespace Hub.Application.Features.PlayerBanFeatures.Commands.Revoke;

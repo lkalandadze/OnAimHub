@@ -1,9 +1,8 @@
-﻿using Shared.Domain.Entities;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
-namespace Hub.Domain.Absractions.Repository;
+namespace Shared.Domain.Entities;
 
-public interface IBaseRepository<TAggregateRoot> 
+public interface IBaseRepository<TAggregateRoot>
     where TAggregateRoot : BaseEntity
 {
     Task<TAggregateRoot?> OfIdAsync(int id);

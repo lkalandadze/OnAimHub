@@ -1,5 +1,5 @@
 ﻿using Hub.Application.Features.ReferralFeatures.ReferralDistributionFeatures.Dtos;
-using Hub.Domain.Absractions.Repository;
+using Hub.Domain.Abstractions.Repository;
 using MediatR;
 
 namespace Hub.Application.Features.ReferralFeatures.ReferralDistributionFeatures.Queries.GetById;

@@ -1,4 +1,4 @@
-﻿namespace Hub.Domain.Absractions;
+﻿namespace Hub.Domain.Abstractions;
 
 public interface IUnitOfWork
 {

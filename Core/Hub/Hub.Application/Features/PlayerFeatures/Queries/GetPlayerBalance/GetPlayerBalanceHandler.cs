@@ -1,7 +1,7 @@
 ﻿using Hub.Application.Configurations;
 using Hub.Application.Features.PlayerFeatures.Dtos;
 using Hub.Application.Services.Abstract;
-using Hub.Domain.Absractions.Repository;
+using Hub.Domain.Abstractions.Repository;
 using MediatR;
 using Microsoft.Extensions.Options;
 using Shared.Application.Exceptions;

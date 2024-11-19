@@ -1,5 +1,5 @@
 ﻿using Hub.Application.Services.Abstract;
-using Hub.Domain.Absractions.Repository;
+using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
 using MediatR;
 

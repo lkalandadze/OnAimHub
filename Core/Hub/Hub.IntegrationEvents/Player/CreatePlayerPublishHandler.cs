@@ -1,4 +1,4 @@
-﻿using Hub.Domain.Absractions.Repository;
+﻿using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

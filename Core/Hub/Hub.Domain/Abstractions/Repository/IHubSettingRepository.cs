@@ -1,7 +1,8 @@
 ﻿using Hub.Domain.Entities;
 using Shared.Domain.Abstractions.Repository;
+using Shared.Domain.Entities;
 
-namespace Hub.Domain.Absractions.Repository;
+namespace Hub.Domain.Abstractions.Repository;
 
 public interface IHubSettingRepository : IBaseRepository<HubSetting>, ISettingRepository
 {

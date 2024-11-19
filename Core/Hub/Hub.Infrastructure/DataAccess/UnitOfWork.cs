@@ -1,4 +1,4 @@
-﻿using Hub.Domain.Absractions;
+﻿using Hub.Domain.Abstractions;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Hub.Infrastructure.DataAccess;
