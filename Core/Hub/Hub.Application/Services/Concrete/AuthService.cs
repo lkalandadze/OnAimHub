@@ -39,10 +39,11 @@ public class AuthService : IAuthService
 
     public Player GetCurrentPlayer()
     {
-        return new Player(GetCurrentPlayerId(), GetCurrentPlayerUserName(), null, GetCurrentPlayerSegments().ToList());
+        //TODO: pass segments
+        return new Player(GetCurrentPlayerId(), GetCurrentPlayerUserName(), null, null);
     }
 
-    public IEnumerable<PlayerSegment> GetCurrentPlayerSegments()
+    public IEnumerable<string> GetCurrentPlayerSegments()
     {
         var playerId = GetCurrentPlayerId();
         var segments = Token.Claims.FirstOrDefault(x => x.Type == "SegmentIds")?.Value;
@@ -55,7 +56,7 @@ public class AuthService : IAuthService
 
         foreach (var segmentId in segmentIds)
         {
-            yield return new PlayerSegment(playerId, segmentId);
+            yield return segmentId;
         }
     }
 

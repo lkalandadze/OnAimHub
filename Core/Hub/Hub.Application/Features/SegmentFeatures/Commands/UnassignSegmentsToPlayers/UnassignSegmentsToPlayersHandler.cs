@@ -1,5 +1,6 @@
 ﻿using Hub.Application.Services.Abstract;
-using Hub.Domain.Absractions;
+using Hub.Domain.Abstractions;
+using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities.DbEnums;
 using MediatR;
 using Shared.Application.Exceptions;
@@ -10,23 +11,35 @@ namespace Hub.Application.Features.SegmentFeatures.Commands.UnassignSegmentsToPl
 
 public class UnassignSegmentsToPlayersHandler : IRequestHandler<UnassignSegmentsToPlayersCommand>
 {
+    private readonly ISegmentRepository _segmentRepository;
+    private readonly IPlayerRepository _playerRepository;
     private readonly IPlayerService _playerService;
-    private readonly IPlayerSegmentService _playerSegmentService;
     private readonly IPlayerSegmentActService _playerSegmentActService;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork _unitOfWork; 
 
-    public UnassignSegmentsToPlayersHandler(IPlayerService playerService, IPlayerSegmentService playerSegmentService, IPlayerSegmentActService playerSegmentActService, IUnitOfWork unitOfWork)
+    public UnassignSegmentsToPlayersHandler(ISegmentRepository segmentRepository, IPlayerRepository playerRepository, IPlayerService playerService, IPlayerSegmentActService playerSegmentActService, IUnitOfWork unitOfWork)
     {
+        _segmentRepository = segmentRepository;
+        _playerRepository = playerRepository;
         _playerService = playerService;
-        _playerSegmentService = playerSegmentService;
         _playerSegmentActService = playerSegmentActService;
         _unitOfWork = unitOfWork;
     }
 
     public async Task<Unit> Handle(UnassignSegmentsToPlayersCommand request, CancellationToken cancellationToken)
     {
-        var playerIds = await request.File.ReadExcelFirstColumnAsync<int>();
+        var segments = (await _segmentRepository.QueryAsync(s => request.SegmentIds.Any(sId => sId == s.Id)));
 
+        if (segments == null || !segments.Any())
+        {
+            throw new ApiException(
+                ApiExceptionCodeTypes.KeyNotFound,
+                "No segments were found for the provided list of IDs. Please ensure the IDs are valid and correspond to existing segments."
+            );
+        }
+
+        var playerIds = await request.File.ReadExcelFirstColumnAsync<int>();
+        
         if (playerIds == null || playerIds.Count == 0)
         {
             throw new ApiException(ApiExceptionCodeTypes.ValidationFailed, "No player IDs could be retrieved from the Excel file.");
@@ -34,10 +47,20 @@ public class UnassignSegmentsToPlayersHandler : IRequestHandler<UnassignSegments
 
         await _playerService.CreatePlayersIfNotExist(playerIds);
 
-        foreach (var segmentId in request.SegmentIds)
+        var players = (await _playerRepository.QueryAsync(p => playerIds.Any(pId => pId == p.Id)));
+
+        if (players == null || !players.Any())
         {
-            _playerSegmentService.UnassignPlayersToSegment(playerIds, segmentId);
-            await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Unassign, playerIds, segmentId, request.ByUserId, true);
+            throw new ApiException(
+                ApiExceptionCodeTypes.KeyNotFound,
+                "No players were found for the provided list of IDs. Please ensure the IDs are valid and correspond to existing players."
+            );
+        }
+
+        foreach (var segment in segments)
+        {
+            segment.RemovePlayers(players);
+            await _playerSegmentActService.CreateActWithHistoryAsync(PlayerSegmentActType.Unassign, playerIds, segment.Id, request.ByUserId, true);
         }
 
         await _unitOfWork.SaveAsync();

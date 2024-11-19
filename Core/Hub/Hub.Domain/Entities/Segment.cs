@@ -10,7 +10,7 @@ public class Segment : BaseEntity<string>
 {
     public Segment()
     {
-        
+
     }
 
     public Segment(string id, string description, int priorityLevel, int? createdByUserId = null)
@@ -26,8 +26,9 @@ public class Segment : BaseEntity<string>
     public int? CreatedByUserId { get; private set; }
     public bool IsDeleted { get; set; }
 
-    public ICollection<PlayerSegment> PlayerSegments { get; set; }
-    public ICollection<PlayerBlockedSegment> PlayerBlockedSegments { get; private set; }
+    public ICollection<Player> Players { get; set; }
+    public ICollection<Player> BlockedPlayers { get; private set; }
+    public ICollection<Promotion> Promotions { get; private set; }
 
     public void ChangeDetails(string description, int priorityLevel)
     {
@@ -38,5 +39,49 @@ public class Segment : BaseEntity<string>
     public void Delete()
     {
         IsDeleted = true;
+    }
+
+    public void AddPlayers(List<Player> players)
+    {
+        foreach (var player in players)
+        {
+            if (!players.Contains(player))
+            {
+                Players.Add(player);
+            }
+        }
+    }
+
+    public void RemovePlayers(List<Player> players)
+    {
+        foreach (var player in players)
+        {
+            if (!players.Contains(player))
+            {
+                Players.Remove(player);
+            }
+        }
+    }
+
+    public void BlockPlayers(List<Player> players)
+    {
+        foreach (var player in players)
+        {
+            if (!players.Contains(player))
+            {
+                BlockedPlayers.Add(player);
+            }
+        }
+    }
+
+    public void UnblockPlayers(List<Player> players)
+    {
+        foreach (var player in players)
+        {
+            if (!players.Contains(player))
+            {
+                BlockedPlayers.Remove(player);
+            }
+        }
     }
 }

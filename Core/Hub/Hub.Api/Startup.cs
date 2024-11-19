@@ -1,4 +1,5 @@
 ﻿using Consul;
+using FluentValidation.AspNetCore;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Hub.Api;
@@ -7,13 +8,14 @@ using Hub.Api.Middlewares;
 using Hub.Application;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
+using Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdrawOption;
 using Hub.Application.Services.Abstract;
 using Hub.Application.Services.Abstract.BackgroundJobs;
 using Hub.Application.Services.Concrete;
 using Hub.Application.Services.Concrete.BackgroundJobs;
 using Hub.Application.Services.Concretel;
-using Hub.Domain.Absractions;
-using Hub.Domain.Absractions.Repository;
+using Hub.Domain.Abstractions;
+using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Events;
 using Hub.Infrastructure.DataAccess;
 using Hub.Infrastructure.Repositories;
@@ -62,11 +64,9 @@ public class Startup
         services.AddScoped<IPlayerProgressRepository, PlayerProgressRepository>();
         services.AddScoped<IPlayerProgressHistoryRepository, PlayerProgressHistoryRepository>();
         services.AddScoped<ISegmentRepository, SegmentRepository>();
-        services.AddScoped<IPlayerSegmentRepository, PlayerSegmentRepository>();
         services.AddScoped<IPlayerLogRepository, PlayerLogRepository>();
         services.AddScoped<IPlayerSegmentActRepository, PlayerSegmentActRepository>();
         services.AddScoped<IPlayerSegmentActHistoryRepository, PlayerSegmentActHistoryRepository>();
-        services.AddScoped<IPlayerBlockedSegmentRepository, PlayerBlockedSegmentRepository>();
         services.AddScoped<IConsulLogRepository, ConsulLogRepository>();
         services.AddScoped<IReferralDistributionRepository, ReferralDistributionRepository>();
         services.AddScoped<IHubSettingRepository, HubSettingRepository>();
@@ -79,9 +79,7 @@ public class Startup
         services.AddScoped<IPlayerBalanceService, PlayerBalanceService>();
         services.AddScoped<IPlayerProgressService, PlayerProgressService>();
         services.AddScoped<ITransactionService, TransactionService>();
-        services.AddScoped<IPlayerSegmentService, PlayerSegmentService>();
         services.AddScoped<IPlayerSegmentActService, PlayerSegmentActService>();
-        services.AddScoped<IPlayerBlockedSegmentService, PlayerBlockedSegmentService>();
         services.AddScoped<IPlayerLogService, PlayerLogService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
@@ -91,15 +89,11 @@ public class Startup
 
         services.AddScoped<IPromotionRepository, PromotionRepository>();
         services.AddScoped<IPromotionServiceRepository, PromotionServiceRepository>();
-        services.AddScoped<IPromotionSegmentRepository, PromotionSegmentRepository>();
         services.AddScoped<ICoinTemplateRepository, CoinTemplateRepository>();
         services.AddScoped<IPromotionCoinRepository, PromotionCoinRepository>();
         services.AddScoped<IWithdrawOptionRepository, WithdrawOptionRepository>();
         services.AddScoped<IWithdrawEndpointTemplateRepository, WithdrawEndpointTemplateRepository>();
         services.AddScoped<IWithdrawOptionGroupRepository, WithdrawOptionGroupRepository>();
-        services.AddScoped<IWithdrawOptionGroupMappingRepository, WithdrawOptionGroupMappingRepository>();
-        services.AddScoped<IPromotionCoinWithdrawOptionRepository, PromotionCoinWithdrawOptionRepository>();
-        services.AddScoped<ICoinTemplateWithdrawOptionRepository, CoinTemplateWithdrawOptionRepository>();
 
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<BasicAuthConfiguration>(Configuration.GetSection("BasicAuthConfiguration"));
@@ -136,7 +130,13 @@ public class Startup
         }
 
         services.AddHttpContextAccessor();
-        services.AddControllers();
+
+        services.AddControllers()
+            .AddFluentValidation(fv =>
+            {
+                fv.RegisterValidatorsFromAssemblyContaining<CreateWithdrawOptionValidator>();
+            });
+
         services.AddEndpointsApiExplorer();
 
         ConfigureSwagger(services);

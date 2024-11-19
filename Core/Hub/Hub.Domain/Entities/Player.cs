@@ -20,14 +20,14 @@ public class Player : BaseEntity<int>
         LastVisitedOn = null;
     }
 
-    public Player(int id, string userName, int? referrerId = null, IEnumerable<PlayerSegment> playerSegments = null, IEnumerable<PlayerBalance> playerBalances = null)
+    public Player(int id, string userName, int? referrerId = null, IEnumerable<Segment> segments = null, IEnumerable<PlayerBalance> playerBalances = null)
     {
         Id = id;
         UserName = userName;
         ReferrerId = referrerId;
         RegistredOn = DateTimeOffset.UtcNow;
         LastVisitedOn = DateTimeOffset.UtcNow;
-        PlayerSegments = playerSegments?.ToList() ?? [];
+        Segments = segments?.ToList() ?? [];
         PlayerBalances = playerBalances?.ToList() ?? [];
     }
 
@@ -41,9 +41,9 @@ public class Player : BaseEntity<int>
     public DateTimeOffset? RegistredOn { get; private set; }
     public DateTimeOffset? LastVisitedOn { get; private set; }
 
+    public ICollection<Segment> Segments { get; private set; }
+    public ICollection<Segment> BlockedSegments { get; private set; }
     public ICollection<PlayerBalance> PlayerBalances { get; private set; }
-    public ICollection<PlayerSegment> PlayerSegments { get; private set; }
-    public ICollection<PlayerBlockedSegment> PlayerBlockedSegments { get; private set; } 
 
     public void ChangeDetails(string userName, List<string> segmentIds = null)
     {

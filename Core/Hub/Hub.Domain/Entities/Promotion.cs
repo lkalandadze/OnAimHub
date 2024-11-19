@@ -26,7 +26,7 @@ public class Promotion : BaseEntity<int>
     public bool IsDeleted { get; private set; }
 
     public ICollection<PromotionService> Services { get; private set; }
-    public ICollection<PlayerSegment> PlayerSegments { get; private set; }
+    public ICollection<Segment> Segments { get; private set; }
     public ICollection<PromotionCoin> Coins { get; private set; }
     public ICollection<Transaction> Transactions { get; private set; }
 

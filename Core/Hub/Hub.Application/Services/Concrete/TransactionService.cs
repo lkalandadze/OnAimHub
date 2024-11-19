@@ -1,7 +1,7 @@
 ﻿using Hub.Application.Models.Tansaction;
 using Hub.Application.Services.Abstract;
-using Hub.Domain.Absractions;
-using Hub.Domain.Absractions.Repository;
+using Hub.Domain.Abstractions;
+using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
 using Hub.Domain.Entities.DbEnums;
 

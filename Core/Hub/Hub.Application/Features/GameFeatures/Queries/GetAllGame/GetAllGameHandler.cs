@@ -4,8 +4,8 @@ using Hub.Application.Models.Game;
 using Hub.Application.Services.Abstract;
 using MediatR;
 using Microsoft.Extensions.Options;
-using Shared.Application.Exceptions.Types;
 using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 using Shared.Lib.Extensions;
 
 namespace Hub.Application.Features.GameFeatures.Queries.GetAllGame;
@@ -46,7 +46,7 @@ public class GetAllGameHandler : IRequestHandler<GetAllGameQuery, GetAllGameResp
 
         if (request.IsAuthorized)
         {
-            var playerSegments = _authService.GetCurrentPlayerSegments().Select(ps => ps.SegmentId);
+            var playerSegments = _authService.GetCurrentPlayerSegments();
 
             allGame = allGame.Where(game => game.Segments.Any(segment => playerSegments.Contains(segment)))
                              .ToList();

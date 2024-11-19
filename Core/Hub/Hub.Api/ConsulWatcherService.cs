@@ -1,8 +1,8 @@
 ﻿using Consul;
 using Hub.Application.Models.Game;
 using Hub.Application.Services.Abstract;
-using Hub.Domain.Absractions;
-using Hub.Domain.Absractions.Repository;
+using Hub.Domain.Abstractions;
+using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
 using System.Collections.Concurrent;
 using System.Text.Json;

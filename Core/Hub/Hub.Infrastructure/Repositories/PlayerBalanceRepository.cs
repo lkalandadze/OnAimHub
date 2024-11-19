@@ -1,4 +1,4 @@
-﻿using Hub.Domain.Absractions.Repository;
+﻿using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
 using Hub.Infrastructure.DataAccess;
 
