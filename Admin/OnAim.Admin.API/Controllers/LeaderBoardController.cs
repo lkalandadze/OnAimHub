@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
-using OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.CreateLeaderboardSchedule;
-using OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.LeaderBoardRecord.Create;
-using OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.LeaderBoardRecord.Update;
-using OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.Template.CreateTemplate;
-using OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.Template.UpdateTemplate;
-using OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.UpdateLeaderboardSchedule;
+using OnAim.Admin.APP;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetAllLeaderBoard;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetAllPrizes;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetAllTemplates;
@@ -13,6 +8,7 @@ using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetCalendar;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetLeaderboardRecordById;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetLeaderboardSchedules;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetLeaderboardTemplateById;
+using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.LeaderBoard;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
@@ -22,6 +18,12 @@ namespace OnAim.Admin.API.Controllers;
 
 public class LeaderBoardController : ApiControllerBase
 {
+    private readonly ILeaderBoardService _leaderBoardService;
+
+    public LeaderBoardController(ILeaderBoardService leaderBoardService)
+    {
+        _leaderBoardService = leaderBoardService;
+    }
     [HttpGet(nameof(GetAllTemplates))]
     public async Task<IActionResult> GetAllTemplates([FromQuery] BaseFilter query)
         => Ok(await Mediator.Send(new GetAllTemplatesQuery(query)));
@@ -39,33 +41,33 @@ public class LeaderBoardController : ApiControllerBase
         => Ok(await Mediator.Send(new GetLeaderboardRecordByIdQuery(id)));
 
     [HttpPost(nameof(CreateTemplate))]
-    public async Task<IActionResult> CreateTemplate([FromBody] CreateLeaderboardTemplateDto command)
-        => Ok(await Mediator.Send(new CreateTemplateCommand(command)));
+    public async Task<IActionResult> CreateTemplate([FromBody] CreateLeaderboardTemplateCommand command)
+        => Ok(await _leaderBoardService.CreateTemplate(command));
 
     [HttpPut(nameof(UpdateTemplate))]
-    public async Task<IActionResult> UpdateTemplate([FromBody] UpdateLeaderboardTemplateDto command)
-        => Ok(await Mediator.Send(new UpdateTemplateCommand(command)));
+    public async Task<IActionResult> UpdateTemplate([FromBody] UpdateLeaderboardTemplateCommand command)
+        => Ok(await _leaderBoardService.UpdateTemplate(command));
 
     [HttpPost(nameof(CreateLeaderBoardRecord))]
-    public async Task<IActionResult> CreateLeaderBoardRecord([FromBody] CreateLeaderboardRecordDto command)
-        => Ok(await Mediator.Send(new CreateLeaderboardRecordCommand(command)));   
+    public async Task<IActionResult> CreateLeaderBoardRecord([FromBody] APP.CreateLeaderboardRecordCommand command)
+        => Ok(await _leaderBoardService.CreateLeaderBoardRecord(command));   
 
     [HttpPost(nameof(CreateLeaderboardSchedule))]
-    public async Task<IActionResult> CreateLeaderboardSchedule([FromBody] CreateLeaderboardScheduleDto command)
-        => Ok(await Mediator.Send(new CreateLeaderboardScheduleCommand(command)));
+    public async Task<IActionResult> CreateLeaderboardSchedule([FromBody] APP.CreateLeaderboardScheduleCommand command)
+        => Ok(await _leaderBoardService.CreateLeaderboardSchedule(command));
 
     [HttpPost(nameof(UpdateLeaderboardSchedule))]
-    public async Task<IActionResult> UpdateLeaderboardSchedule([FromBody] UpdateLeaderboardScheduleDto command)
-    => Ok(await Mediator.Send(new UpdateLeaderboardScheduleCommand(command)));
+    public async Task<IActionResult> UpdateLeaderboardSchedule([FromBody] APP.UpdateLeaderboardScheduleCommand command)
+    => Ok(await _leaderBoardService.UpdateLeaderboardSchedule(command));
 
     [HttpPut(nameof(UpdateLeaderBoardRecord))]
-    public async Task<IActionResult> UpdateLeaderBoardRecord([FromBody] UpdateLeaderboardRecordDto command)
-        => Ok(await Mediator.Send(new UpdateLeaderBoardRecordCommand(command)));
+    public async Task<IActionResult> UpdateLeaderBoardRecord([FromBody] UpdateLeaderboardRecordCommand command)
+        => Ok(await _leaderBoardService.UpdateLeaderBoardRecord(command));
 
     [HttpGet(nameof(GetLeaderboardRecordStatuses))]
     public ActionResult<List<EnumValueDto>> GetLeaderboardRecordStatuses()
     {
-        var statuses = EnumHelper.GetEnumValues<LeaderboardRecordStatus>();
+        var statuses = EnumHelper.GetEnumValues<Contracts.Dtos.LeaderBoard.LeaderboardRecordStatus>();
         return Ok(statuses);
     }
 

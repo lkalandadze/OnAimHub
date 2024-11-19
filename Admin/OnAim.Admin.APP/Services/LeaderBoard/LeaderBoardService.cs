@@ -10,7 +10,6 @@ using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using MassTransit.Initializers;
-using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 
@@ -252,35 +251,24 @@ public class LeaderBoardService : ILeaderBoardService
         };
     }
 
-    public async Task<ApplicationResult> CreateTemplate(CreateLeaderboardTemplateDto createLeaderboardTemplateDto)
+    public async Task<ApplicationResult> CreateTemplate(CreateLeaderboardTemplateCommand createLeaderboardTemplateDto)
     {
-        var request = new CreateLeaderboardTemplateCommand
-        {
-            Name = createLeaderboardTemplateDto.Name,
-            Description = createLeaderboardTemplateDto.Description,
-            AnnounceIn = createLeaderboardTemplateDto.AnnounceIn,
-            EndIn = createLeaderboardTemplateDto.EndIn,
-            LeaderboardPrizes = createLeaderboardTemplateDto.LeaderboardPrizes
-                .Select(prize => new CreateLeaderboardTemplatePrizeCommandItem
-                {
-                    Amount = prize.Amount,
-                    EndRank = prize.EndRank,
-                    PrizeId = prize.PrizeId,
-                    StartRank = prize.StartRank,
-                })
-                .ToList(),
-            StartIn = createLeaderboardTemplateDto.StartIn,
-            StartTime = new TimeSpan
-            {
-                Hours = createLeaderboardTemplateDto.StartTime.Hours,
-                Minutes = createLeaderboardTemplateDto.StartTime.Minutes,
-                Seconds = createLeaderboardTemplateDto.StartTime.Seconds
-            },
-        };
-
         try
         {
-            await _leaderboardClientService.CreateLeaderboardTemplateAsync(request);
+            await _leaderboardClientService.CreateLeaderboardTemplateAsync(createLeaderboardTemplateDto);
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<ApplicationResult> UpdateTemplate(UpdateLeaderboardTemplateCommand updateLeaderboardTemplateDto)
+    {
+        try
+        {
+            await _leaderboardClientService.UpdateLeaderboardTemplatesAsync(updateLeaderboardTemplateDto);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -292,36 +280,11 @@ public class LeaderBoardService : ILeaderBoardService
         }
     }
 
-    public async Task<ApplicationResult> UpdateTemplate(UpdateLeaderboardTemplateDto updateLeaderboardTemplateDto)
+    public async Task<ApplicationResult> CreateLeaderBoardRecord(CreateLeaderboardRecordCommand createLeaderboardRecordDto)
     {
-        var request = new UpdateLeaderboardTemplateCommand
-        {
-            Name = updateLeaderboardTemplateDto.Name,
-            Description = updateLeaderboardTemplateDto.Description,
-            AnnounceIn = updateLeaderboardTemplateDto.AnnouncementLeadTimeInDays,
-            Id = updateLeaderboardTemplateDto.Id,
-            EndIn = updateLeaderboardTemplateDto.EndIn,
-            StartIn = updateLeaderboardTemplateDto.StartIn,
-            StartTime = new TimeSpan
-            {
-                Hours = updateLeaderboardTemplateDto.StartTime.Hours,
-                Minutes = updateLeaderboardTemplateDto.StartTime.Minutes,
-                Seconds = updateLeaderboardTemplateDto.StartTime.Seconds
-            },
-            Prizes = updateLeaderboardTemplateDto.LeaderboardPrizes
-            .Select(prize => new UpdateLeaderboardTemplateCommandCommandItem
-            {
-                Amount = prize.Amount,
-                EndRank = prize.EndRank,
-                PrizeId = prize.PrizeId,
-                StartRank = prize.StartRank,
-            })
-                .ToList(),
-        };
-
         try
         {
-            await _leaderboardClientService.UpdateLeaderboardTemplatesAsync(request);
+            await _leaderboardClientService.CreateLeaderboardRecordAsync(createLeaderboardRecordDto);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -333,55 +296,11 @@ public class LeaderBoardService : ILeaderBoardService
         }
     }
 
-    public async Task<ApplicationResult> CreateLeaderBoardRecord(CreateLeaderboardRecordDto createLeaderboardRecordDto)
+    public async Task<ApplicationResult> UpdateLeaderBoardRecord(UpdateLeaderboardRecordCommand updateLeaderboardRecordDto)
     {
-        var request = new CreateLeaderboardRecordCommand
-        {
-            Name = createLeaderboardRecordDto.Name,
-            AnnouncementDate = createLeaderboardRecordDto.AnnouncementDate,
-            CreationDate = createLeaderboardRecordDto.CreationDate,
-            Description = createLeaderboardRecordDto.Description,
-            EndDate = createLeaderboardRecordDto.EndDate,
-            StartDate = createLeaderboardRecordDto.StartDate,
-            Status = (LeaderboardRecordStatus)createLeaderboardRecordDto.Status,
-            LeaderboardTemplateId = createLeaderboardRecordDto.LeaderboardTemplateId,
-            LeaderboardPrizes = (ICollection<CreateLeaderboardRecordPrizeCommandItem>)createLeaderboardRecordDto.LeaderboardPrizes,
-            LeaderboardType = (LeaderboardType)createLeaderboardRecordDto.LeaderboardType,
-        };
-
         try
         {
-            await _leaderboardClientService.CreateLeaderboardRecordAsync(request);
-            return new ApplicationResult { Success = true };
-        }
-        catch (Exception ex)
-        {
-            return new ApplicationResult
-            {
-                Success = false,
-            };
-        }
-    }
-
-    public async Task<ApplicationResult> UpdateLeaderBoardRecord(UpdateLeaderboardRecordDto updateLeaderboardRecordDto)
-    {
-        var request = new UpdateLeaderboardRecordCommand
-        {
-            Name = updateLeaderboardRecordDto.Name,
-            Description = updateLeaderboardRecordDto.Description,
-            AnnouncementDate = updateLeaderboardRecordDto.AnnouncementDate,
-            CreationDate = updateLeaderboardRecordDto.CreationDate,
-            StartDate = updateLeaderboardRecordDto.StartDate,
-            EndDate = updateLeaderboardRecordDto.EndDate,
-            Id = updateLeaderboardRecordDto.Id,
-            LeaderboardType = (LeaderboardType)updateLeaderboardRecordDto.LeaderboardType,
-            JobType = (JobTypeEnum)updateLeaderboardRecordDto.JobType,
-            Prizes = (ICollection<UpdateLeaderboardRecordCommandItem>)updateLeaderboardRecordDto.Prizes,
-        };
-
-        try
-        {
-            await _leaderboardClientService.UpdateLeaderboardRecordAsync(request);
+            await _leaderboardClientService.UpdateLeaderboardRecordAsync(updateLeaderboardRecordDto);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -416,21 +335,11 @@ public class LeaderBoardService : ILeaderBoardService
         }
     }
 
-    public async Task<ApplicationResult> CreateLeaderboardSchedule(CreateLeaderboardScheduleDto createLeaderboardSchedule)
+    public async Task<ApplicationResult> CreateLeaderboardSchedule(CreateLeaderboardScheduleCommand createLeaderboardSchedule)
     {
-        var request = new CreateLeaderboardScheduleCommand
-        {
-            EndDate = createLeaderboardSchedule.EndDate,
-            LeaderboardTemplateId = createLeaderboardSchedule.LeaderboardTemplateId,
-            RepeatType = (APP.RepeatType)createLeaderboardSchedule.RepeatType,
-            RepeatValue = createLeaderboardSchedule.RepeatValue,
-            //SpecificDate = createLeaderboardSchedule.SpecificDate,
-            StartDate = createLeaderboardSchedule.StartDate,
-        };
-
         try
         {
-            await _leaderboardClientService.CreateLeaderboardScheduleAsync(request);
+            await _leaderboardClientService.CreateLeaderboardScheduleAsync(createLeaderboardSchedule);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -442,17 +351,11 @@ public class LeaderBoardService : ILeaderBoardService
         }
     }
 
-    public async Task<ApplicationResult> UpdateLeaderboardSchedule(UpdateLeaderboardScheduleDto updateLeaderboardSchedule)
+    public async Task<ApplicationResult> UpdateLeaderboardSchedule(UpdateLeaderboardScheduleCommand updateLeaderboardSchedule)
     {
-        var request = new UpdateLeaderboardScheduleCommand
-        {
-            Id = updateLeaderboardSchedule.Id,
-            Status = (APP.LeaderboardScheduleStatus)updateLeaderboardSchedule.Status,
-        };
-
         try
         {
-            await _leaderboardClientService.UpdateLeaderboardScheduleAsync(request);
+            await _leaderboardClientService.UpdateLeaderboardScheduleAsync(updateLeaderboardSchedule);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)

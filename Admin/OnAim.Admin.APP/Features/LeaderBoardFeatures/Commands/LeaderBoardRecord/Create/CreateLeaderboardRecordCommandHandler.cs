@@ -14,8 +14,8 @@ public class CreateLeaderboardRecordCommandHandler : ICommandHandler<CreateLeade
     }
     public async Task<ApplicationResult> Handle(CreateLeaderboardRecordCommand request, CancellationToken cancellationToken)
     {
-        var result = await _leaderBoardService.CreateLeaderBoardRecord(request.CreateLeaderboardRecordDto);
+        //var result = await _leaderBoardService.CreateLeaderBoardRecord(request.CreateLeaderboardRecordDto);
 
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return new ApplicationResult {Data = "" };
     }
 }
