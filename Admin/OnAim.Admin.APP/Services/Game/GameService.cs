@@ -95,7 +95,6 @@ public class GameService : IGameService
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
     }
 
-
     public async Task<object> UpdateConfiguration(string configurationJson)
     {
         var payload = new
@@ -186,7 +185,6 @@ public class GameService : IGameService
 
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
     }
-
 
     public async Task<object> UpdatePrizeType(int id, CreatePrizeTypeDto typeDto)
     {

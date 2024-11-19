@@ -10,7 +10,6 @@ using OnAim.Admin.Domain.HubEntities;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Segment;
-using OnAim.Admin.Contracts.Dtos;
 using System.Net.Http.Headers;
 using OnAim.Admin.Contracts.Paging;
 

@@ -30,6 +30,7 @@ public class ReadOnlyDataContext : DbContext
     public DbSet<AccountType> AccountTypes { get; set; }
     public DbSet<ReferralDistribution> ReferralDistributions { get; set; }
     public DbSet<PlayerBan> PlayerBans { get; set; }
+    public DbSet<Coin> Coins { get; set; }
 
     public IQueryable<TEntity> Set<TEntity>() where TEntity : class
     {

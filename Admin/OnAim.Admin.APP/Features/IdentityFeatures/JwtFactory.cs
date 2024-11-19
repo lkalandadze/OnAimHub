@@ -61,7 +61,7 @@ public class JwtFactory : IJwtFactory
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.Secret)),
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero,
+            ClockSkew = System.TimeSpan.Zero,
         };
 
         JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
@@ -128,7 +128,7 @@ public class JwtFactory : IJwtFactory
 
     private static long ToUnixEpochDate(DateTime date)
       => (long)Math.Round((date.ToUniversalTime() -
-                           new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero))
+                           new DateTimeOffset(1970, 1, 1, 0, 0, 0, System.TimeSpan.Zero))
                           .TotalSeconds);
 
     private static void ThrowIfInvalidOptions(JwtConfiguration options)
@@ -136,7 +136,7 @@ public class JwtFactory : IJwtFactory
         if (options == null)
             throw new ArgumentNullException(nameof(options));
 
-        if (options.ValidFor <= TimeSpan.Zero)
+        if (options.ValidFor <= System.TimeSpan.Zero)
             throw new ArgumentException("Must be a non-zero TimeSpan.");
 
         if (options.SigningCredentials == null)
