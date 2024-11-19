@@ -21,7 +21,6 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
     private readonly IPlayerRepository _playerRepository;
     private readonly IPlayerBanRepository _playerBanRepository;
     private readonly ISegmentRepository _segmentRepository;
-    private readonly IPlayerSegmentRepository _playerSegmentRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPlayerLogService _playerLogService;
     private readonly ITokenService _tokenService;
@@ -35,7 +34,6 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
     public CreateAuthenticationTokenHandler(IPlayerRepository playerRepository,
                                             IPlayerBanRepository playerBanRepository,
                                             ISegmentRepository segmentRepository,
-                                            IPlayerSegmentRepository playerSegmentRepository,
                                             IUnitOfWork unitOfWork,
                                             ITokenService tokenService,
                                             IPlayerLogService playerLogService,
@@ -48,7 +46,6 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
         _playerRepository = playerRepository;
         _playerBanRepository = playerBanRepository;
         _segmentRepository = segmentRepository;
-        _playerSegmentRepository = playerSegmentRepository;
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
         _playerLogService = playerLogService;
@@ -107,8 +104,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
 
         if (player == null)
         {
-            var playerSegment = new PlayerSegment(receivedPlayer.Id, "default");
-            player = new Player(receivedPlayer.Id, receivedPlayer.UserName, recommendedById, [playerSegment]);
+            player = new Player(receivedPlayer.Id, receivedPlayer.UserName, recommendedById, [new Segment() { Id = "default" }]);
 
             if (request.PromoCode != null)
             {

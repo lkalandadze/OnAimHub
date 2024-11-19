@@ -64,11 +64,9 @@ public class Startup
         services.AddScoped<IPlayerProgressRepository, PlayerProgressRepository>();
         services.AddScoped<IPlayerProgressHistoryRepository, PlayerProgressHistoryRepository>();
         services.AddScoped<ISegmentRepository, SegmentRepository>();
-        services.AddScoped<IPlayerSegmentRepository, PlayerSegmentRepository>();
         services.AddScoped<IPlayerLogRepository, PlayerLogRepository>();
         services.AddScoped<IPlayerSegmentActRepository, PlayerSegmentActRepository>();
         services.AddScoped<IPlayerSegmentActHistoryRepository, PlayerSegmentActHistoryRepository>();
-        services.AddScoped<IPlayerBlockedSegmentRepository, PlayerBlockedSegmentRepository>();
         services.AddScoped<IConsulLogRepository, ConsulLogRepository>();
         services.AddScoped<IReferralDistributionRepository, ReferralDistributionRepository>();
         services.AddScoped<IHubSettingRepository, HubSettingRepository>();
@@ -81,9 +79,7 @@ public class Startup
         services.AddScoped<IPlayerBalanceService, PlayerBalanceService>();
         services.AddScoped<IPlayerProgressService, PlayerProgressService>();
         services.AddScoped<ITransactionService, TransactionService>();
-        services.AddScoped<IPlayerSegmentService, PlayerSegmentService>();
         services.AddScoped<IPlayerSegmentActService, PlayerSegmentActService>();
-        services.AddScoped<IPlayerBlockedSegmentService, PlayerBlockedSegmentService>();
         services.AddScoped<IPlayerLogService, PlayerLogService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
@@ -93,7 +89,6 @@ public class Startup
 
         services.AddScoped<IPromotionRepository, PromotionRepository>();
         services.AddScoped<IPromotionServiceRepository, PromotionServiceRepository>();
-        services.AddScoped<IPromotionSegmentRepository, PromotionSegmentRepository>();
         services.AddScoped<ICoinTemplateRepository, CoinTemplateRepository>();
         services.AddScoped<IPromotionCoinRepository, PromotionCoinRepository>();
         services.AddScoped<IWithdrawOptionRepository, WithdrawOptionRepository>();

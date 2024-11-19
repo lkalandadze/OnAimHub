@@ -42,7 +42,7 @@ public class TokenService : ITokenService
         {
             new("PlayerId", player.Id.ToString()),
             new("UserName", player.UserName),
-            new Claim("SegmentIds", string.Join(",", player.PlayerSegments.Select(x => x.SegmentId))),
+            new Claim("SegmentIds", string.Join(",", player.Segments.Select(x => x.Id))),
         };
 
         var ecdsaSecurityKey = GetECDsaKeyFromPrivateKey(_jwtConfig.PrivateKey);

@@ -14,8 +14,6 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<PlayerProgress> PlayerProgresses { get; set; }
     public DbSet<PlayerProgressHistory> PlayerProgressHistories { get; set; }
     public DbSet<Segment> Segments { get; set; }
-    public DbSet<PlayerSegment> PlayerSegments { get; set; }
-    public DbSet<PlayerBlockedSegment> PlayerBlockedSegments { get; set; }
     public DbSet<PlayerSegmentAct> PlayerSegmentActs { get; set; }
     public DbSet<PlayerSegmentActHistory> PlayerSegmentActHistories { get; set; }
     public DbSet<PlayerSegmentActType> PlayerSegmentActTypes { get; set; }
@@ -36,7 +34,6 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<PrizeType> PrizeTypes { get; set; }
     public DbSet<Promotion> Promotions { get; set; }
     public DbSet<PromotionService> PromotionServices { get; set; }
-    public DbSet<PromotionSegment> PromotionSegments { get; set; }
     public DbSet<CoinTemplate> CoinTemplates { get; set; }
     public DbSet<PromotionCoin> PromotionCoins { get; set; }
     public DbSet<WithdrawOption> WithdrawOptions { get; set; }

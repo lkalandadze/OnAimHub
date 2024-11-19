@@ -9,7 +9,7 @@ public class PlayerRepository(HubDbContext context) : BaseRepository<HubDbContex
 {
     public async Task<Player?> GetPlayerWithSegmentsAsync(int id)
     {
-        return await Query(p => p.Id == id).Include(x => x.PlayerSegments).FirstOrDefaultAsync();
+        return await Query(p => p.Id == id).Include(x => x.Segments).FirstOrDefaultAsync();
     }
 
     public async Task<IEnumerable<int>> GetMissingPlayerIdsAsync(IEnumerable<int> playerIds)
