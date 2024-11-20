@@ -32,7 +32,7 @@ public class PromotionCoin : BaseEntity<string>
     public int PromotionId { get; set; }
     public Promotion Promotion { get; set; }
 
-    public ICollection<WithdrawOption> WithdrawOptions { get; set; }
+    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
 
     public void Delete()
     { 

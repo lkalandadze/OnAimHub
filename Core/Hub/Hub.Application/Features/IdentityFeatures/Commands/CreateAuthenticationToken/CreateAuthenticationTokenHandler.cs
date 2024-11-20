@@ -129,8 +129,8 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
         var (token, refreshToken) = await _tokenService.GenerateTokenStringAsync(player);
         var response = new CreateAuthenticationTokenResponse(token, refreshToken);
 
-        var @events = new CreatePlayerEvent(Guid.NewGuid(), player.Id, player.UserName);
-        await _messageBus.Publish(@events);
+        //var @events = new CreatePlayerEvent(Guid.NewGuid(), player.Id, player.UserName);
+        //await _messageBus.Publish(@events);
         //await _mediator.Send(events);
 
         return new Response<CreateAuthenticationTokenResponse>(response);

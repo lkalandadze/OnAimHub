@@ -23,4 +23,5 @@ public class WithdrawOptionGroup : BaseEntity<int>
     public string ImageUrl { get; set; }
 
     public ICollection<WithdrawOption> WithdrawOptions { get; set; }
+    public ICollection<PromotionCoin> PromotionCoins { get; set; }
 }

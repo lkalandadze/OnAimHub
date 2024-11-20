@@ -32,7 +32,7 @@ public class CreateWithdrawOptionHandler : IRequestHandler<CreateWithdrawOption>
             var promotionCoins = (await _promotionCoinRepository.QueryAsync(pc => request.PromotionCoinIds.Any(pcId => pcId == pc.Id)))
                                                                 .Where(c => c.CoinType == CoinType.Outgoing);
 
-            option.AddPromotionCoins(promotionCoins);
+            //option.AddPromotionCoins(promotionCoins);
         }
 
         //Add coin templates if exists
