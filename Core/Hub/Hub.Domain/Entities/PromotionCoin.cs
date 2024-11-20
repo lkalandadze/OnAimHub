@@ -12,15 +12,13 @@ public class PromotionCoin : BaseEntity<string>
         
     }
 
-    public PromotionCoin(string id, string name, string imageUrl, int promotionId, Promotion promotion, bool isDeleted, DateTimeOffset? dateDeleted)
+    public PromotionCoin(string id, string name, string imageUrl, int promotionId, CoinType coinType)
     {
         Id = id;
         Name = name;
         ImageUrl = imageUrl;
         PromotionId = promotionId;
-        Promotion = promotion;
-        IsDeleted = isDeleted;
-        DateDeleted = dateDeleted;
+        CoinType = coinType;
     }
 
     public string Name { get; set; }

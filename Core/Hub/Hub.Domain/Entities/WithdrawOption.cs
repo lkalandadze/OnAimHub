@@ -11,11 +11,20 @@ public class WithdrawOption : BaseEntity<int>
     {
     }
 
-    public WithdrawOption(string title, string description, string imageUrl, string endpoint = null, string endpointContent = null, int? withdrawEndpointTemplateId = null, IEnumerable<CoinTemplate> coinTemplates = null)
+    public WithdrawOption(
+        string title, 
+        string description, 
+        string imageUrl,
+        EndpointContentType contentType,
+        string endpoint = null, 
+        string endpointContent = null, 
+        int? withdrawEndpointTemplateId = null, 
+        IEnumerable<CoinTemplate> coinTemplates = null)
     {
         Title = title;
         Description = description;
         ImageUrl = imageUrl;
+        ContentType = contentType;
         Endpoint = endpoint;
         EndpointContent = endpointContent;
         WithdrawEndpointTemplateId = withdrawEndpointTemplateId;

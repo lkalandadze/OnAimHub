@@ -46,67 +46,67 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
             Coins = new List<PromotionCoin>()
         };
 
+        await _promotionRepository.InsertAsync(promotion);
+        await _unitOfWork.SaveAsync();
+
         foreach (var promotionCoinModel in request.PromotionCoin)
         {
             if (promotionCoinModel.IsTemplate)
             {
-                var coinTemplate = new CoinTemplate
-                {
-                    Name = promotionCoinModel.Name,
-                    ImageUrl = promotionCoinModel.ImageUrl,
-                    CoinType = promotionCoinModel.CoinType
-                };
+                var coinTemplate = new CoinTemplate(
+                    promotionCoinModel.Name,
+                    promotionCoinModel.ImageUrl,
+                    promotionCoinModel.CoinType);
 
                 await _coinTemplateRepository.InsertAsync(coinTemplate);
             }
 
-            var promotionCoin = new PromotionCoin
-            {
-                Id = promotion.Id + "_" + promotionCoinModel.Name,
-                Name = promotionCoinModel.Name,
-                ImageUrl = promotionCoinModel.ImageUrl,
-                CoinType = promotionCoinModel.CoinType,
-                PromotionId = promotion.Id,
-                WithdrawOptionGroups = new List<WithdrawOptionGroup>()
-            };
+            var promotionCoinId = $"{promotion.Id}_{promotionCoinModel.Name}";
+
+            var promotionCoin = new PromotionCoin(
+                promotionCoinId,
+                promotionCoinModel.Name,
+                promotionCoinModel.ImageUrl,
+                promotion.Id,
+                promotionCoinModel.CoinType);
 
             foreach (var groupModel in promotionCoinModel.WithdrawOptionGroups)
             {
-                var withdrawOptionGroup = new WithdrawOptionGroup
-                {
-                    Title = groupModel.Title,
-                    Description = groupModel.Description,
-                    ImageUrl = groupModel.ImageUrl,
-                    WithdrawOptions = new List<WithdrawOption>()
-                };
+                var withdrawOptionGroup = new WithdrawOptionGroup(
+                    groupModel.Title,
+                    groupModel.Description,
+                    groupModel.ImageUrl);
+                //var withdrawOptionGroup = new WithdrawOptionGroup
+                //{
+                //    Title = groupModel.Title,
+                //    Description = groupModel.Description,
+                //    ImageUrl = groupModel.ImageUrl,
+                //    WithdrawOptions = new List<WithdrawOption>()
+                //};
 
                 foreach (var optionModel in groupModel.WithdrawOptions)
                 {
-                    var withdrawOption = new WithdrawOption
-                    {
-                        Title = optionModel.Title,
-                        Description = optionModel.Description,
-                        ImageUrl = optionModel.ImageUrl,
-                        Endpoint = optionModel.Endpoint,
-                        ContentType = optionModel.ContentType,
-                        EndpointContent = optionModel.EndpointContent
-                    };
+                    var withdrawOption = new WithdrawOption(
+                        optionModel.Title,
+                        optionModel.Description,
+                        optionModel.ImageUrl,
+                        optionModel.ContentType,
+                        optionModel.Endpoint,
+                        optionModel.EndpointContent);
 
                     if (optionModel.IsTemplate)
                     {
-                        var endpointTemplate = new WithdrawEndpointTemplate
-                        {
-                            Name = optionModel.Title,
-                            Endpoint = optionModel.Endpoint,
-                            EndpointContent = optionModel.EndpointContent,
-                            ContentType = optionModel.ContentType,
-                        };
+                        var endpointTemplate = new WithdrawEndpointTemplate(
+                            optionModel.Title,
+                            optionModel.Endpoint,
+                            optionModel.EndpointContent,
+                            optionModel.ContentType);
 
                         await _withdrawEndpointTemplateRepository.InsertAsync(endpointTemplate);
                     }
 
                     withdrawOptionGroup.WithdrawOptions.Add(withdrawOption);
-                }
+                }   
 
                 promotionCoin.WithdrawOptionGroups.Add(withdrawOptionGroup);
             }
@@ -114,7 +114,7 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
             promotion.Coins.Add(promotionCoin);
         }
 
-        await _promotionRepository.InsertAsync(promotion);
+        _promotionRepository.Update(promotion);
         await _unitOfWork.SaveAsync();
 
         return Unit.Value;

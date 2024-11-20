@@ -24,7 +24,7 @@ public class CreateWithdrawOptionHandler : IRequestHandler<CreateWithdrawOption>
     public async Task<Unit> Handle(CreateWithdrawOption request, CancellationToken cancellationToken)
     {
         // Create withdraw option
-        var option = new WithdrawOption(request.Title, request.Description, request.ImageUrl, request.Endpoint, request.EndpointContent, request.TemplateId);
+        var option = new WithdrawOption(request.Title, request.Description, request.ImageUrl, request.ContentType, request.Endpoint, request.EndpointContent, request.TemplateId);
 
         // Add promotion coins if exists
         if (request.PromotionCoinIds != null && request.PromotionCoinIds.Any())
