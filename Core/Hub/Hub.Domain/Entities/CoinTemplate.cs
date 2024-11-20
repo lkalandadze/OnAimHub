@@ -23,5 +23,5 @@ public class CoinTemplate : BaseEntity<int>
     public string ImageUrl { get; set; }
     public CoinType CoinType { get; set; }
 
-    public ICollection<WithdrawOption> WithdrawOptions { get; set; }
+    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
 }

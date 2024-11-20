@@ -12,13 +12,14 @@ public class PromotionCoin : BaseEntity<string>
         
     }
 
-    public PromotionCoin(string id, string name, string imageUrl, int promotionId, CoinType coinType)
+    public PromotionCoin(string id, string name, string imageUrl, int promotionId, CoinType coinType, IEnumerable<WithdrawOptionGroup> withdrawOptionGroups = null)
     {
         Id = id;
         Name = name;
         ImageUrl = imageUrl;
         PromotionId = promotionId;
         CoinType = coinType;
+        WithdrawOptionGroups = withdrawOptionGroups?.ToList() ?? [];
     }
 
     public string Name { get; set; }
@@ -36,5 +37,16 @@ public class PromotionCoin : BaseEntity<string>
     { 
         IsDeleted = true;
         DateDeleted = DateTimeOffset.Now;
+    }
+
+    public void AddWithdrawOptionGroup(IEnumerable<WithdrawOptionGroup> withdrawOptionGroups)
+    {
+        foreach(var withdrawOptionGroup in withdrawOptionGroups)
+        {
+            if (!WithdrawOptionGroups.Contains(withdrawOptionGroup))
+            {
+                WithdrawOptionGroups.Add(withdrawOptionGroup);
+            }
+        }
     }
 }

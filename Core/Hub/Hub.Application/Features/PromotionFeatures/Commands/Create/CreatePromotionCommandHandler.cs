@@ -76,6 +76,7 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
                     groupModel.Title,
                     groupModel.Description,
                     groupModel.ImageUrl);
+
                 //var withdrawOptionGroup = new WithdrawOptionGroup
                 //{
                 //    Title = groupModel.Title,
@@ -92,7 +93,10 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
                         optionModel.ImageUrl,
                         optionModel.ContentType,
                         optionModel.Endpoint,
-                        optionModel.EndpointContent);
+                        optionModel.EndpointContent)
+                    {
+                        WithdrawOptionGroups = [withdrawOptionGroup]
+                    };
 
                     if (optionModel.IsTemplate)
                     {
@@ -108,7 +112,7 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
                     withdrawOptionGroup.WithdrawOptions.Add(withdrawOption);
                 }   
 
-                promotionCoin.WithdrawOptionGroups.Add(withdrawOptionGroup);
+                promotionCoin.AddWithdrawOptionGroup([withdrawOptionGroup]);
             }
 
             promotion.Coins.Add(promotionCoin);

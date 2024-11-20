@@ -18,8 +18,7 @@ public class WithdrawOption : BaseEntity<int>
         EndpointContentType contentType,
         string endpoint = null, 
         string endpointContent = null, 
-        int? withdrawEndpointTemplateId = null, 
-        IEnumerable<CoinTemplate> coinTemplates = null)
+        int? withdrawEndpointTemplateId = null)
     {
         Title = title;
         Description = description;
@@ -28,7 +27,6 @@ public class WithdrawOption : BaseEntity<int>
         Endpoint = endpoint;
         EndpointContent = endpointContent;
         WithdrawEndpointTemplateId = withdrawEndpointTemplateId;
-        CoinTemplates = coinTemplates?.ToList() ?? [];
     }
 
     public string Title { get; set; }
@@ -38,13 +36,12 @@ public class WithdrawOption : BaseEntity<int>
     public EndpointContentType ContentType { get; set; }
     public string EndpointContent { get; set; }
 
-    public ICollection<CoinTemplate> CoinTemplates { get; private set; }
-    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; private set; }
+    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
 
     public int? WithdrawEndpointTemplateId { get; private set; }
-    public WithdrawEndpointTemplate WithdrawEndpointTemplate { get; private set; }
+    public WithdrawEndpointTemplate WithdrawEndpointTemplate { get; set; }
 
-    public void Update(string title, string description, string imageUrl, string endpoint = null, string endpointContent = null, int? withdrawEndpointTemplateId = null, IEnumerable<PromotionCoin> promotionCoins = null, IEnumerable<CoinTemplate> coinTemplates = null)
+    public void Update(string title, string description, string imageUrl, string endpoint = null, string endpointContent = null, int? withdrawEndpointTemplateId = null)
     {
         Title = title;
         Description = description;
@@ -52,17 +49,5 @@ public class WithdrawOption : BaseEntity<int>
         Endpoint = endpoint;
         EndpointContent = endpointContent;
         WithdrawEndpointTemplateId = withdrawEndpointTemplateId;
-        CoinTemplates = coinTemplates?.ToList() ?? [];
-    }
-
-    public void AddCoinTemplates(IEnumerable<CoinTemplate> coinTemplates)
-    {
-        foreach (var coinTemplate in coinTemplates)
-        {
-            if (!CoinTemplates.Contains(coinTemplate))
-            {
-                CoinTemplates.Add(coinTemplate);
-            }
-        }
     }
 }

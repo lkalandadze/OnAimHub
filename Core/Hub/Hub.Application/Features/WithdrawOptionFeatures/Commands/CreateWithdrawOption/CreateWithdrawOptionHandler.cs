@@ -41,7 +41,7 @@ public class CreateWithdrawOptionHandler : IRequestHandler<CreateWithdrawOption>
             var coinTemplates = (await _coinTemplateRepository.QueryAsync(ct => request.CoinTemplateIds.Any(ctId => ctId == ct.Id)))
                                                               .Where(c => c.CoinType == CoinType.Outgoing);
 
-            option.AddCoinTemplates(coinTemplates);
+            //option.AddCoinTemplates(coinTemplates);
         }
 
         // Save to database

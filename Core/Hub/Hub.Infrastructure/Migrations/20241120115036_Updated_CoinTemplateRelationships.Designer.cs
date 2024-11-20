@@ -3,6 +3,7 @@ using System;
 using Hub.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hub.Infrastructure.Migrations
 {
     [DbContext(typeof(HubDbContext))]
-    partial class HubDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241120115036_Updated_CoinTemplateRelationships")]
+    partial class Updated_CoinTemplateRelationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -996,7 +999,7 @@ namespace Hub.Infrastructure.Migrations
                     b.ToTable("PromotionSegmentMappings");
                 });
 
-            modelBuilder.Entity("WithdrawOptionGroupCoinTemplateMappings", b =>
+            modelBuilder.Entity("WithdrawOptionCoinTemplateMappings", b =>
                 {
                     b.Property<int>("CoinTemplateId")
                         .HasColumnType("integer");
@@ -1008,7 +1011,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("WithdrawOptionGroupId");
 
-                    b.ToTable("WithdrawOptionGroupCoinTemplateMappings");
+                    b.ToTable("WithdrawOptionCoinTemplateMappings");
                 });
 
             modelBuilder.Entity("WithdrawOptionGroupMappings", b =>
@@ -1377,7 +1380,7 @@ namespace Hub.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WithdrawOptionGroupCoinTemplateMappings", b =>
+            modelBuilder.Entity("WithdrawOptionCoinTemplateMappings", b =>
                 {
                     b.HasOne("Hub.Domain.Entities.CoinTemplate", null)
                         .WithMany()
