@@ -18,7 +18,7 @@ public class WithdrawOption : BaseEntity<int>
         EndpointContentType contentType,
         string endpoint = null, 
         string endpointContent = null, 
-        int? withdrawEndpointTemplate = null,
+        int? endpointTemplate = null,
         IEnumerable<PromotionCoin> promotionCoins = null,
         IEnumerable<CoinTemplate> coinTemplates = null)
     {
@@ -28,7 +28,7 @@ public class WithdrawOption : BaseEntity<int>
         ContentType = contentType;
         Endpoint = endpoint;
         EndpointContent = endpointContent;
-        WithdrawEndpointTemplateId = withdrawEndpointTemplate;
+        WithdrawEndpointTemplateId = endpointTemplate;
         PromotionCoins = promotionCoins?.ToList() ?? [];
         CoinTemplates = coinTemplates?.ToList() ?? [];
     }
@@ -53,7 +53,7 @@ public class WithdrawOption : BaseEntity<int>
         string imageUrl, 
         string endpoint = null, 
         string endpointContent = null, 
-        int? withdrawEndpointTemplate = null, 
+        int? endpointTemplate = null, 
         IEnumerable<PromotionCoin> promotionCoins = null, 
         IEnumerable<CoinTemplate> coinTemplates = null)
     {
@@ -62,7 +62,7 @@ public class WithdrawOption : BaseEntity<int>
         ImageUrl = imageUrl;
         Endpoint = endpoint;
         EndpointContent = endpointContent;
-        WithdrawEndpointTemplateId = withdrawEndpointTemplate;
+        WithdrawEndpointTemplateId = endpointTemplate;
         PromotionCoins = promotionCoins?.ToList() ?? [];
         CoinTemplates = coinTemplates?.ToList() ?? [];
     }
