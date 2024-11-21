@@ -15,7 +15,7 @@ public class GetPromotionByIdQueryHandler : IQueryHandler<GetPromotionByIdQuery,
     }
     public async Task<ApplicationResult> Handle(GetPromotionByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await _promotionService.GetPromotionById(ObjectId.Parse(request.Id));
+        var result = await _promotionService.GetPromotionById(request.Id);
 
         return new ApplicationResult { Data = result.Data, Success = result.Success };
     }

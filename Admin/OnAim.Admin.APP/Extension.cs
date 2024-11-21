@@ -61,12 +61,13 @@ public static class Extension
         configureOptions?.Invoke(emailOptions);
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
         services.AddSingleton<HubClientService>(sp =>
-        new HubClientService("https://localhost:7069/HubApi", new HttpClient()));
+        new HubClientService("http://192.168.10.42:8003", new HttpClient()));
         services.AddSingleton<LeaderboardClientService>(sp =>
         new LeaderboardClientService("http://192.168.10.42:8002", new HttpClient()));
+        services.AddSingleton<SagaClient>(sp =>
+        new SagaClient("http://192.168.10.42:8004", new HttpClient()));
         services
             .AddScoped<IRoleRepository, RoleRepository>()
-            .AddScoped<IPromotionRepository, PromotionRepository>()
             .AddScoped<IPromotionService, PromotionService>()
             .AddScoped<ICoinService, CoinService>()
             .AddScoped<ILogRepository, LogRepository>()
@@ -94,6 +95,7 @@ public static class Extension
             .AddScoped(typeof(IRepository<>), typeof(EfRepository<>))
             .AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>))
             .AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>))
+            .AddScoped(typeof(IPromotionRepository<>), typeof(PromotionRepository<>))
             .AddScoped(typeof(ILeaderBoardReadOnlyRepository<>), typeof(LeaderBoardReadOnlyRepository<>));
         services.AddHttpClient("ApiGateway", client =>
         {

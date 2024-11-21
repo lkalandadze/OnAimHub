@@ -51,7 +51,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CoinTemplates");
+                    b.ToTable("CoinTemplates", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.ConsulLog", b =>
@@ -78,7 +78,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ConsulLogs");
+                    b.ToTable("ConsulLogs", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.DbEnums.AccountType", b =>
@@ -95,7 +95,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AccountTypes");
+                    b.ToTable("AccountTypes", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.DbEnums.Currency", b =>
@@ -109,7 +109,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currencies");
+                    b.ToTable("Currencies", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.DbEnums.PlayerLogType", b =>
@@ -126,7 +126,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PlayerLogTypes");
+                    b.ToTable("PlayerLogTypes", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.DbEnums.PlayerSegmentActType", b =>
@@ -143,7 +143,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PlayerSegmentActTypes");
+                    b.ToTable("PlayerSegmentActTypes", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.DbEnums.PrizeType", b =>
@@ -162,7 +162,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.ToTable("PrizeTypes");
+                    b.ToTable("PrizeTypes", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.DbEnums.RewardSource", b =>
@@ -179,7 +179,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RewardSource");
+                    b.ToTable("RewardSource", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.DbEnums.TransactionStatus", b =>
@@ -196,7 +196,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionStatuses");
+                    b.ToTable("TransactionStatuses", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.DbEnums.TransactionType", b =>
@@ -213,7 +213,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionTypes");
+                    b.ToTable("TransactionTypes", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.Game", b =>
@@ -230,7 +230,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Games");
+                    b.ToTable("Games", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.HubSetting", b =>
@@ -250,7 +250,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HubSettings");
+                    b.ToTable("HubSettings", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.Job", b =>
@@ -291,7 +291,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Jobs");
+                    b.ToTable("Jobs", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.Player", b =>
@@ -323,7 +323,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Players");
+                    b.ToTable("Players", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.PlayerBalance", b =>
@@ -355,7 +355,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("PromotionId");
 
-                    b.ToTable("PlayerBalances");
+                    b.ToTable("PlayerBalances", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.PlayerBan", b =>
@@ -393,7 +393,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("PlayerBans");
+                    b.ToTable("PlayerBans", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.PlayerLog", b =>
@@ -423,7 +423,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("PlayerLogTypeId");
 
-                    b.ToTable("PlayerLogs");
+                    b.ToTable("PlayerLogs", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.PlayerProgress", b =>
@@ -450,7 +450,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("PlayerProgresses");
+                    b.ToTable("PlayerProgresses", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.PlayerProgressHistory", b =>
@@ -477,7 +477,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("PlayerProgressHistories");
+                    b.ToTable("PlayerProgressHistories", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.PlayerSegmentAct", b =>
@@ -510,7 +510,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("SegmentId");
 
-                    b.ToTable("PlayerSegmentActs");
+                    b.ToTable("PlayerSegmentActs", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.PlayerSegmentActHistory", b =>
@@ -534,7 +534,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("PlayerSegmentActId");
 
-                    b.ToTable("PlayerSegmentActHistories");
+                    b.ToTable("PlayerSegmentActHistories", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.Promotion", b =>
@@ -577,7 +577,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Promotions");
+                    b.ToTable("Promotions", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.PromotionCoin", b =>
@@ -614,7 +614,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("PromotionId");
 
-                    b.ToTable("PromotionCoins");
+                    b.ToTable("PromotionCoins", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.PromotionService", b =>
@@ -644,7 +644,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("PromotionId");
 
-                    b.ToTable("PromotionServices");
+                    b.ToTable("PromotionServices", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.ReferralDistribution", b =>
@@ -693,7 +693,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("ReferrerPrizeCurrencyId");
 
-                    b.ToTable("ReferralDistributions");
+                    b.ToTable("ReferralDistributions", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.Reward", b =>
@@ -732,7 +732,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("SourceId");
 
-                    b.ToTable("Rewards");
+                    b.ToTable("Rewards", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.RewardPrize", b =>
@@ -759,7 +759,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("RewardId");
 
-                    b.ToTable("RewardPrizes");
+                    b.ToTable("RewardPrizes", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.Segment", b =>
@@ -782,7 +782,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Segments");
+                    b.ToTable("Segments", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.TokenRecord", b =>
@@ -820,7 +820,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TokenRecords");
+                    b.ToTable("TokenRecords", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.Transaction", b =>
@@ -877,7 +877,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.WithdrawEndpointTemplate", b =>
@@ -903,7 +903,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WithdrawEndpointTemplates");
+                    b.ToTable("WithdrawEndpointTemplates", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.WithdrawOption", b =>
@@ -938,7 +938,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WithdrawOptions");
+                    b.ToTable("WithdrawOptions", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.WithdrawOptionGroup", b =>
@@ -961,7 +961,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WithdrawOptionGroups");
+                    b.ToTable("WithdrawOptionGroups", (string)null);
                 });
 
             modelBuilder.Entity("PlayerBlockedSegmentMappings", b =>
@@ -976,7 +976,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("SegmentId");
 
-                    b.ToTable("PlayerBlockedSegmentMappings");
+                    b.ToTable("PlayerBlockedSegmentMappings", (string)null);
                 });
 
             modelBuilder.Entity("PlayerSegmentMappings", b =>
@@ -991,7 +991,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("SegmentId");
 
-                    b.ToTable("PlayerSegmentMappings");
+                    b.ToTable("PlayerSegmentMappings", (string)null);
                 });
 
             modelBuilder.Entity("PromotionSegmentMappings", b =>
@@ -1006,7 +1006,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("SegmentId");
 
-                    b.ToTable("PromotionSegmentMappings");
+                    b.ToTable("PromotionSegmentMappings", (string)null);
                 });
 
             modelBuilder.Entity("WithdrawOptionCoinTemplateMappings", b =>
@@ -1021,7 +1021,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("WithdrawOptionId");
 
-                    b.ToTable("WithdrawOptionCoinTemplateMappings");
+                    b.ToTable("WithdrawOptionCoinTemplateMappings", (string)null);
                 });
 
             modelBuilder.Entity("WithdrawOptionGroupMappings", b =>
@@ -1036,7 +1036,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("WithdrawOptionId");
 
-                    b.ToTable("WithdrawOptionGroupMappings");
+                    b.ToTable("WithdrawOptionGroupMappings", (string)null);
                 });
 
             modelBuilder.Entity("WithdrawOptionPromotionCoinMappings", b =>
@@ -1051,7 +1051,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("WithdrawOptionId");
 
-                    b.ToTable("WithdrawOptionPromotionCoinMappings");
+                    b.ToTable("WithdrawOptionPromotionCoinMappings", (string)null);
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.DbEnums.PrizeType", b =>

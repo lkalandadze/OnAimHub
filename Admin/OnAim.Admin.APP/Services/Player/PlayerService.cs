@@ -70,10 +70,7 @@ public class PlayerService : IPlayerService
         }
         catch (Exception ex)
         {
-            return new ApplicationResult
-            {
-                Success = false,
-            };
+            throw new Exception(ex.Message, ex);
         }
     }
 
@@ -91,10 +88,7 @@ public class PlayerService : IPlayerService
         }
         catch (Exception ex)
         {
-            return new ApplicationResult
-            {
-                Success = false,
-            };
+            throw new Exception(ex.Message, ex);
         }
     }
 
@@ -114,10 +108,7 @@ public class PlayerService : IPlayerService
         }
         catch (Exception ex)
         {
-            return new ApplicationResult
-            {
-                Success = false,
-            };
+            throw new Exception(ex.Message, ex);
         }
     }
 

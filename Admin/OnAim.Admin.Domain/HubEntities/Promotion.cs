@@ -1,35 +1,20 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
+﻿namespace OnAim.Admin.Domain.HubEntities;
 
-namespace OnAim.Admin.Domain.HubEntities;
-
-public class Promotion
+public class Promotion : BaseEntity<int>
 {
-    [BsonId]
-    public ObjectId Id { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    //public PromotionStatus PromotionStatus { get; set; }
-    public bool IsDeleted { get; set; }
+    public int Id { get; set; }
+    public decimal? TotalCost { get; set; }
+    public PromotionStatus Status { get; set; }
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
     public DateTimeOffset CreateDate { get; set; }
-    public List<Coin> Coins { get; set; } = new List<Coin>();
+    public DateTimeOffset? DateDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
-    public void AddCoin(Coin coin)
-    {
-        if (coin.CoinType == CoinType.CoinIn && Coins.Any(c => c.CoinType == CoinType.CoinIn))
-            throw new BadRequestException("Only one CoinIn is allowed per promotion.");
-        if (coin.CoinType == CoinType.CoinOut && Coins.Any(c => c.CoinType == CoinType.CoinOut))
-            throw new BadRequestException("Only one CoinOut is allowed per promotion.");
-
-        Coins.Add(coin);
-    }
+    public ICollection<PromotionService> Services { get; set; }
+    public ICollection<Segment> Segments { get; set; }
+    public ICollection<PromotionCoin> Coins { get; set; }
+    public ICollection<Transaction> Transactions { get; set; }
 }
-//public class PromotionStatus : DbEnum<string, PromotionStatus>
-//{
-//    public static PromotionStatus Active => FromId(nameof(Active));
-//    public static PromotionStatus Finished => FromId(nameof(Finished));
-//    public static PromotionStatus Cancelled => FromId(nameof(Cancelled));
-//}
