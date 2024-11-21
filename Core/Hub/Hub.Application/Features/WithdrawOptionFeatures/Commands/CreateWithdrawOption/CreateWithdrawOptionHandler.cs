@@ -24,7 +24,7 @@ public class CreateWithdrawOptionHandler : IRequestHandler<CreateWithdrawOption>
     public async Task<Unit> Handle(CreateWithdrawOption request, CancellationToken cancellationToken)
     {
         // Create withdraw option
-        var option = new WithdrawOption(request.Title, request.Description, request.ImageUrl, request.Endpoint, request.EndpointContent, request.TemplateId);
+        var option = new WithdrawOption(request.Title, request.Description, request.ImageUrl, request.ContentType, request.Endpoint, request.EndpointContent, request.TemplateId);
 
         // Add promotion coins if exists
         if (request.PromotionCoinIds != null && request.PromotionCoinIds.Any())
@@ -32,7 +32,7 @@ public class CreateWithdrawOptionHandler : IRequestHandler<CreateWithdrawOption>
             var promotionCoins = (await _promotionCoinRepository.QueryAsync(pc => request.PromotionCoinIds.Any(pcId => pcId == pc.Id)))
                                                                 .Where(c => c.CoinType == CoinType.Outgoing);
 
-            option.AddPromotionCoins(promotionCoins);
+            //option.AddPromotionCoins(promotionCoins);
         }
 
         //Add coin templates if exists
@@ -41,7 +41,7 @@ public class CreateWithdrawOptionHandler : IRequestHandler<CreateWithdrawOption>
             var coinTemplates = (await _coinTemplateRepository.QueryAsync(ct => request.CoinTemplateIds.Any(ctId => ctId == ct.Id)))
                                                               .Where(c => c.CoinType == CoinType.Outgoing);
 
-            option.AddCoinTemplates(coinTemplates);
+            //option.AddCoinTemplates(coinTemplates);
         }
 
         // Save to database

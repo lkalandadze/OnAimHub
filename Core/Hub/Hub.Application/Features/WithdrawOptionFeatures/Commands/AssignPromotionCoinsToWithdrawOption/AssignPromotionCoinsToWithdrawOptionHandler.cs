@@ -45,7 +45,7 @@ public class AssignPromotionCoinsToWithdrawOptionHandler : IRequestHandler<Assig
             throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "One or more promotionCoins are not eligible for this operation. Only outgoing promotionCoins are allowed.");
         }
 
-        option.AddPromotionCoins(promotionCoins);
+        //option.AddPromotionCoins(promotionCoins);
 
         _withdrawOptionRepository.Update(option);
         await _unitOfWork.SaveAsync();

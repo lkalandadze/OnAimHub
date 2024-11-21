@@ -5,6 +5,7 @@ using Hub.Application.Features.IdentityFeatures.Commands.RefreshTokens;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerBalance;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerProgress;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPromoCode;
+using Hub.Application.Features.PromotionFeatures.Commands.Create;
 using Hub.Application.Features.RewardFeatures.Commands.ClaimReward;
 using Hub.Application.Features.RewardFeatures.Dtos;
 using Hub.Application.Features.RewardFeatures.Queries.GetPlayerRewards;
@@ -92,4 +93,11 @@ public class HubController : BaseApiController
     }
 
     #endregion
+
+
+    [HttpPost(nameof(CreatePromotion))]
+    public async Task<Unit> CreatePromotion(CreatePromotionCommand request)
+    {
+        return await Mediator.Send(request);
+    }
 }
