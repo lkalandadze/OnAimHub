@@ -17,7 +17,7 @@ public class WithdrawOption : BaseEntity<int>
         ImageUrl = imageUrl;
         Endpoint = endpoint;
         EndpointContent = endpointContent;
-        WithdrawEndpointTemplateId = withdrawEndpointTemplateId;
+        FromTemplateId = withdrawEndpointTemplateId;
         PromotionCoins = promotionCoins?.ToList() ?? [];
         CoinTemplates = coinTemplates?.ToList() ?? [];
     }
@@ -32,17 +32,17 @@ public class WithdrawOption : BaseEntity<int>
     public ICollection<CoinTemplate> CoinTemplates { get; private set; }
     public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; private set; }
 
-    public int? WithdrawEndpointTemplateId { get; private set; }
+    public int? FromTemplateId { get; private set; }
     public WithdrawEndpointTemplate WithdrawEndpointTemplate { get; private set; }
 
-    public void Update(string title, string description, string imageUrl, string endpoint = null, string endpointContent = null, int? withdrawEndpointTemplateId = null, IEnumerable<PromotionCoin> promotionCoins = null, IEnumerable<CoinTemplate> coinTemplates = null)
+    public void Update(string title, string description, string imageUrl, string endpoint = null, string endpointContent = null, int? fromTemplateId = null, IEnumerable<PromotionCoin> promotionCoins = null, IEnumerable<CoinTemplate> coinTemplates = null)
     {
         Title = title;
         Description = description;
         ImageUrl = imageUrl;
         Endpoint = endpoint;
         EndpointContent = endpointContent;
-        WithdrawEndpointTemplateId = withdrawEndpointTemplateId;
+        FromTemplateId = fromTemplateId;
         PromotionCoins = promotionCoins?.ToList() ?? [];
         CoinTemplates = coinTemplates?.ToList() ?? [];
     }
