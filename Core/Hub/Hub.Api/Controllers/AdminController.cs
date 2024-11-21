@@ -1,5 +1,8 @@
 ﻿using Hub.Api.Models.Games;
 using Hub.Api.Models.Segments;
+using Hub.Application.Features.CoinFeatures.Commands.CreateCoinTemplate;
+using Hub.Application.Features.CoinFeatures.Commands.DeleteCoinTemplate;
+using Hub.Application.Features.CoinFeatures.Commands.UpdateCoinTemplate;
 using Hub.Application.Features.GameFeatures.Dtos;
 using Hub.Application.Features.GameFeatures.Queries.GetAllGame;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Create;
@@ -21,7 +24,6 @@ using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentsForPlayer
 using Hub.Application.Features.SegmentFeatures.Commands.UpdateSegment;
 using Hub.Application.Features.SettingFeatures.Commands.Update;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Lib.Wrappers;
 
@@ -177,6 +179,38 @@ public class AdminController : BaseApiController
 
         return Ok();
     }
+
+    #endregion
+
+    #region Coins
+
+    [HttpPost(nameof(CreateCoinTemplate))]
+    public async Task<IActionResult> CreateCoinTemplate([FromBody] CreateCoinTemplate command)
+    {
+        var result = await Mediator.Send(command);
+
+        return StatusCode(200, result);
+    }
+
+    [HttpPut(nameof(UpdateCoinTemplate))]
+    public async Task<IActionResult> UpdateCoinTemplate([FromBody] UpdateCoinTemplate command)
+    {
+        var result = await Mediator.Send(command);
+
+        return StatusCode(200, result);
+    }
+
+    [HttpPost(nameof(DeleteCoinTemplate))]
+    public async Task<IActionResult> DeleteCoinTemplate([FromBody] DeleteCoinTemplate command)
+    {
+        var result = await Mediator.Send(command);
+
+        return StatusCode(200, result);
+    }
+
+    #endregion
+
+    #region WithdrawOptions
 
     #endregion
 
