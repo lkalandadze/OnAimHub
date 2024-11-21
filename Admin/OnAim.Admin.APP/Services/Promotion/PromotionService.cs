@@ -125,7 +125,7 @@ public class PromotionService : IPromotionService
 
     public async Task<ApplicationResult> GetPromotionById(int id)
     {
-        var promotion = await _promotionRepository.Query().Include(x => x.Coins).ThenInclude(x => x.WithdrawOptions).ThenInclude(x => x.WithdrawOptionGroups).FirstOrDefaultAsync(x => x.Id == id);
+        var promotion = await _promotionRepository.Query().FirstOrDefaultAsync(x => x.Id == id);
 
         if (promotion == null) throw new NotFoundException("promotion not found");
 
@@ -136,18 +136,19 @@ public class PromotionService : IPromotionService
             Description = promotion.Description,
             StartDate = promotion.StartDate,
             EndDate = promotion.EndDate,
-            //Coins = promotion.Coins.Select(x => new PromotionCoinDto {
-            //    PromotionId = x.PromotionId,
-            //    Name = x.Name,
-            //    ImageUrl = x.ImageUrl,
-            //    CoinType = (Contracts.Dtos.Promotion.CoinType)x.CoinType,
-            //    WithdrawOptions = x.WithdrawOptions.Select(xxx => new WithdrawOptionDto
-            //    {
-            //        Title = xxx.Title,
-            //        Description = xxx.Description,
-            //        ImageUrl = xxx.ImageUrl,
-            //    }).ToList()
-            //}).ToList(),
+            Coins = promotion.Coins.Select(x => new PromotionCoinDto
+            {
+                PromotionId = x.PromotionId,
+                Name = x.Name,
+                ImageUrl = x.ImageUrl,
+                CoinType = (Contracts.Dtos.Promotion.CoinType)x.CoinType,
+                WithdrawOptions = x.WithdrawOptions.Select(xxx => new WithdrawOptionDto
+                {
+                    Title = xxx.Title,
+                    Description = xxx.Description,
+                    ImageUrl = xxx.ImageUrl,
+                }).ToList()
+            }).ToList(),
 
             Segments = (List<Contracts.Dtos.Segment.SegmentDto>)promotion.Segments,
         };

@@ -2,6 +2,26 @@
 
 public class Promotion : BaseEntity<int>
 {
+    public Promotion()
+    {
+
+    }
+
+    public Promotion(
+        PromotionStatus status,
+        DateTimeOffset startDate,
+        DateTimeOffset EndDate,
+        string title,
+        string description,
+        IEnumerable<PromotionCoin> promotionCoins = null)
+    {
+        Status = status;
+        StartDate = startDate;
+        this.EndDate = EndDate;
+        Title = title;
+        Description = description;
+        Coins = promotionCoins?.ToList() ?? [];
+    }
     public int Id { get; set; }
     public decimal? TotalCost { get; set; }
     public PromotionStatus Status { get; set; }
