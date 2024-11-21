@@ -3,6 +3,7 @@ using System;
 using Hub.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hub.Infrastructure.Migrations
 {
     [DbContext(typeof(HubDbContext))]
-    partial class HubDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241120115218_Updated_CoinTemplateRelationships-V2")]
+    partial class Updated_CoinTemplateRelationshipsV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,12 +43,7 @@ namespace Hub.Infrastructure.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("text");
 
-                    b.Property<int?>("WithdrawOptionGroupId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("WithdrawOptionGroupId");
 
                     b.ToTable("CoinTemplates");
                 });
@@ -600,14 +598,9 @@ namespace Hub.Infrastructure.Migrations
                     b.Property<int>("PromotionId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("WithdrawOptionGroupId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PromotionId");
-
-                    b.HasIndex("WithdrawOptionGroupId");
 
                     b.ToTable("PromotionCoins");
                 });
@@ -925,25 +918,15 @@ namespace Hub.Infrastructure.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
-                    b.Property<string>("PromotionCoinId")
-                        .HasColumnType("text");
-
                     b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.Property<int?>("WithdrawEndpointTemplateId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("WithdrawOptionId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("PromotionCoinId");
-
                     b.HasIndex("WithdrawEndpointTemplateId");
-
-                    b.HasIndex("WithdrawOptionId");
 
                     b.ToTable("WithdrawOptions");
                 });
@@ -1016,19 +999,19 @@ namespace Hub.Infrastructure.Migrations
                     b.ToTable("PromotionSegmentMappings");
                 });
 
-            modelBuilder.Entity("WithdrawOptionCoinTemplateMappings", b =>
+            modelBuilder.Entity("WithdrawOptionGroupCoinTemplateMappings", b =>
                 {
                     b.Property<int>("CoinTemplateId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("WithdrawOptionId")
+                    b.Property<int>("WithdrawOptionGroupId")
                         .HasColumnType("integer");
 
-                    b.HasKey("CoinTemplateId", "WithdrawOptionId");
+                    b.HasKey("CoinTemplateId", "WithdrawOptionGroupId");
 
-                    b.HasIndex("WithdrawOptionId");
+                    b.HasIndex("WithdrawOptionGroupId");
 
-                    b.ToTable("WithdrawOptionCoinTemplateMappings");
+                    b.ToTable("WithdrawOptionGroupCoinTemplateMappings");
                 });
 
             modelBuilder.Entity("WithdrawOptionGroupMappings", b =>
@@ -1046,11 +1029,19 @@ namespace Hub.Infrastructure.Migrations
                     b.ToTable("WithdrawOptionGroupMappings");
                 });
 
-            modelBuilder.Entity("Hub.Domain.Entities.CoinTemplate", b =>
+            modelBuilder.Entity("WithdrawOptionGroupPromotionCoinMappings", b =>
                 {
-                    b.HasOne("Hub.Domain.Entities.WithdrawOptionGroup", null)
-                        .WithMany("CoinTemplates")
-                        .HasForeignKey("WithdrawOptionGroupId");
+                    b.Property<string>("PromotionCoinId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("WithdrawOptionGroupId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("PromotionCoinId", "WithdrawOptionGroupId");
+
+                    b.HasIndex("WithdrawOptionGroupId");
+
+                    b.ToTable("WithdrawOptionGroupPromotionCoinMappings");
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.DbEnums.PrizeType", b =>
@@ -1192,10 +1183,6 @@ namespace Hub.Infrastructure.Migrations
                         .HasForeignKey("PromotionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Hub.Domain.Entities.WithdrawOptionGroup", null)
-                        .WithMany("PromotionCoins")
-                        .HasForeignKey("WithdrawOptionGroupId");
 
                     b.Navigation("Promotion");
                 });
@@ -1341,17 +1328,9 @@ namespace Hub.Infrastructure.Migrations
 
             modelBuilder.Entity("Hub.Domain.Entities.WithdrawOption", b =>
                 {
-                    b.HasOne("Hub.Domain.Entities.PromotionCoin", null)
-                        .WithMany("WithdrawOptions")
-                        .HasForeignKey("PromotionCoinId");
-
                     b.HasOne("Hub.Domain.Entities.WithdrawEndpointTemplate", "WithdrawEndpointTemplate")
                         .WithMany()
                         .HasForeignKey("WithdrawEndpointTemplateId");
-
-                    b.HasOne("Hub.Domain.Entities.WithdrawOption", null)
-                        .WithMany("WithdrawOptions")
-                        .HasForeignKey("WithdrawOptionId");
 
                     b.Navigation("WithdrawEndpointTemplate");
                 });
@@ -1401,7 +1380,7 @@ namespace Hub.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WithdrawOptionCoinTemplateMappings", b =>
+            modelBuilder.Entity("WithdrawOptionGroupCoinTemplateMappings", b =>
                 {
                     b.HasOne("Hub.Domain.Entities.CoinTemplate", null)
                         .WithMany()
@@ -1409,9 +1388,9 @@ namespace Hub.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hub.Domain.Entities.WithdrawOption", null)
+                    b.HasOne("Hub.Domain.Entities.WithdrawOptionGroup", null)
                         .WithMany()
-                        .HasForeignKey("WithdrawOptionId")
+                        .HasForeignKey("WithdrawOptionGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1431,6 +1410,21 @@ namespace Hub.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WithdrawOptionGroupPromotionCoinMappings", b =>
+                {
+                    b.HasOne("Hub.Domain.Entities.PromotionCoin", null)
+                        .WithMany()
+                        .HasForeignKey("PromotionCoinId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hub.Domain.Entities.WithdrawOptionGroup", null)
+                        .WithMany()
+                        .HasForeignKey("WithdrawOptionGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Hub.Domain.Entities.Player", b =>
                 {
                     b.Navigation("PlayerBalances");
@@ -1445,26 +1439,9 @@ namespace Hub.Infrastructure.Migrations
                     b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("Hub.Domain.Entities.PromotionCoin", b =>
-                {
-                    b.Navigation("WithdrawOptions");
-                });
-
             modelBuilder.Entity("Hub.Domain.Entities.Reward", b =>
                 {
                     b.Navigation("Prizes");
-                });
-
-            modelBuilder.Entity("Hub.Domain.Entities.WithdrawOption", b =>
-                {
-                    b.Navigation("WithdrawOptions");
-                });
-
-            modelBuilder.Entity("Hub.Domain.Entities.WithdrawOptionGroup", b =>
-                {
-                    b.Navigation("CoinTemplates");
-
-                    b.Navigation("PromotionCoins");
                 });
 #pragma warning restore 612, 618
         }

@@ -40,7 +40,7 @@ public class AssignCoinTemplatesToWithdrawOptionHandler : IRequestHandler<Assign
             );
         }
 
-        option.AddCoinTemplates(coinTemplates);
+        //option.AddCoinTemplates(coinTemplates);
 
         _withdrawOptionRepository.Update(option);
         await _unitOfWork.SaveAsync();

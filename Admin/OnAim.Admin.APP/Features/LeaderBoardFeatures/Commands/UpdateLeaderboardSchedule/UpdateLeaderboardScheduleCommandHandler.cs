@@ -14,12 +14,11 @@ public class UpdateLeaderboardScheduleCommandHandler : ICommandHandler<UpdateLea
     }
     public async Task<ApplicationResult> Handle(UpdateLeaderboardScheduleCommand request, CancellationToken cancellationToken)
     {
-        var result = await _leaderBoardService.UpdateLeaderboardSchedule(request.UpdateLeaderboardSchedule);
+        //var result = await _leaderBoardService.UpdateLeaderboardSchedule(request.UpdateLeaderboardSchedule);
 
         return new ApplicationResult
         {
-            Data = result.Data,
-            Success = result.Success,
+            Data = ""
         };
     }
 }

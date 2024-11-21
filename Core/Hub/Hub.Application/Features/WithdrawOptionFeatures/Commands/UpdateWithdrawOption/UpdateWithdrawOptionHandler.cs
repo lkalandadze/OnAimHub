@@ -38,7 +38,7 @@ public class UpdateWithdrawOptionHandler : IRequestHandler<UpdateWithdrawOption>
         var coinTemplates = (await _coinTemplateRepository.QueryAsync(ct => request.CoinTemplateIds.Any(ctId => ctId == ct.Id)))
                                                           .Where(c => c.CoinType == CoinType.Outgoing);
 
-        option.Update(request.Title, request.Description, request.ImageUrl, request.Endpoint, request.EndpointContent, request.TemplateId, promotionCoins, coinTemplates);
+        option.Update(request.Title, request.Description, request.ImageUrl, request.Endpoint, request.EndpointContent, request.TemplateId);
 
         await _withdrawOptionRepository.InsertAsync(option);
         await _unitOfWork.SaveAsync();

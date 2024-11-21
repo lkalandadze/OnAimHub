@@ -13,12 +13,17 @@ public class Segment : BaseEntity<string>
 
     }
 
-    public Segment(string id, string description, int priorityLevel, int? createdByUserId = null)
+    public Segment(string id, 
+        string description, 
+        int priorityLevel, 
+        int? createdByUserId = null, 
+        IEnumerable<Promotion> promotions = null)
     {
         Id = id.ToLower();
         Description = description;
         PriorityLevel = priorityLevel;
         CreatedByUserId = createdByUserId;
+        Promotions= promotions?.ToList() ?? [];
     }
 
     public string Description { get; private set; }
@@ -30,7 +35,7 @@ public class Segment : BaseEntity<string>
     public ICollection<Player> BlockedPlayers { get; private set; }
     public ICollection<Promotion> Promotions { get; private set; }
 
-    public void ChangeDetails(string description, int priorityLevel)
+    public void Update(string description, int priorityLevel)
     {
         Description = description;
         PriorityLevel = priorityLevel;

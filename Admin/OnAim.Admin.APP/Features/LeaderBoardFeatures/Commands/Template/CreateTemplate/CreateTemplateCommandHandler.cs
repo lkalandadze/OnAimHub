@@ -14,8 +14,8 @@ public class CreateTemplateCommandHandler : ICommandHandler<CreateTemplateComman
     }
     public async Task<ApplicationResult> Handle(CreateTemplateCommand request, CancellationToken cancellationToken)
     {
-        var result = await _leaderBoardService.CreateTemplate(request.CreateLeaderboardTemplateDto);
+        //var result = await _leaderBoardService.CreateTemplate(request.CreateLeaderboardTemplateDto);
 
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return new ApplicationResult { Data = "", Success = true };
     }
 }

@@ -63,7 +63,7 @@ public static class Extension
         services.AddSingleton<HubClientService>(sp =>
         new HubClientService("https://localhost:7069/HubApi", new HttpClient()));
         services.AddSingleton<LeaderboardClientService>(sp =>
-        new LeaderboardClientService("https://localhost:7041/api/v1/Leaderboard", new HttpClient()));
+        new LeaderboardClientService("http://192.168.10.42:8002", new HttpClient()));
         services
             .AddScoped<IRoleRepository, RoleRepository>()
             .AddScoped<IPromotionRepository, PromotionRepository>()

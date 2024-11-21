@@ -14,8 +14,8 @@ public class UpdateTemplateCommandHandler : ICommandHandler<UpdateTemplateComman
     }
     public async Task<ApplicationResult> Handle(UpdateTemplateCommand request, CancellationToken cancellationToken)
     {
-        var result = await _leaderBoardService.UpdateTemplate(request.UpdateLeaderboardTemplateDto);
+        //var result = await _leaderBoardService.UpdateTemplate(request.UpdateLeaderboardTemplateDto);
 
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return new ApplicationResult { Data = "" };
     }
 }

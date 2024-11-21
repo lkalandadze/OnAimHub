@@ -8,9 +8,9 @@ public class CreatePromotionCoinValidator : AbstractValidator<CreatePromotionCoi
     public CreatePromotionCoinValidator()
     {
         RuleFor(x => x.Name)
-            .NotEmpty().WithMessage("Name is required.")
-            .MinimumLength(3).WithMessage("Name must be at least 3 characters.")
-            .MaximumLength(50).WithMessage("Name must not exceed 100 characters.");
+            .NotEmpty().WithMessage("Title is required.")
+            .MinimumLength(3).WithMessage("Title must be at least 3 characters.")
+            .MaximumLength(50).WithMessage("Title must not exceed 100 characters.");
 
         RuleFor(x => x.IconUrl)
             .NotEmpty().WithMessage("ImageUrl is required.")

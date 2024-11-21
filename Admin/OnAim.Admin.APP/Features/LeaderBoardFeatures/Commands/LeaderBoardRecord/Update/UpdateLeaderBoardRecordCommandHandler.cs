@@ -14,8 +14,8 @@ public class UpdateLeaderBoardRecordCommandHandler : ICommandHandler<UpdateLeade
     }
     public async Task<ApplicationResult> Handle(UpdateLeaderBoardRecordCommand request, CancellationToken cancellationToken)
     {
-        var result = await _leaderBoardService.UpdateLeaderBoardRecord(request.UpdateLeaderboardRecordDto);
+        //var result = await _leaderBoardService.UpdateLeaderBoardRecord(request.UpdateLeaderboardRecordDto);
 
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return new ApplicationResult {Data = "" };
     }
 }

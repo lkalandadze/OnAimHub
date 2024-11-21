@@ -14,8 +14,8 @@ public class CreateLeaderboardScheduleCommandHandler : ICommandHandler<CreateLea
     }
     public async Task<ApplicationResult> Handle(CreateLeaderboardScheduleCommand request, CancellationToken cancellationToken)
     {
-        var result = await _leaderBoardService.CreateLeaderboardSchedule(request.CreateLeaderboardSchedule);
+        //var result = await _leaderBoardService.CreateLeaderboardSchedule(request.CreateLeaderboardSchedule);
 
-        return new ApplicationResult { Data = result.Data , Success = result.Success };
+        return new ApplicationResult {Data = "" };
     }
 }

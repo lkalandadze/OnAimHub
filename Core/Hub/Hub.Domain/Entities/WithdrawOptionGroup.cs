@@ -8,14 +8,18 @@ public class WithdrawOptionGroup : BaseEntity<int>
 {
     public WithdrawOptionGroup()
     {
-        
     }
 
-    public WithdrawOptionGroup(string title, string description, string imageUrl)
+    public WithdrawOptionGroup(
+        string title, 
+        string description, 
+        string imageUrl,  
+        IEnumerable<WithdrawOption> withdrawOptions = null)
     {
         Title = title;
         Description = description;
         ImageUrl = imageUrl;
+        WithdrawOptions = withdrawOptions?.ToList() ?? [];
     }
 
     public string Title { get; set; }

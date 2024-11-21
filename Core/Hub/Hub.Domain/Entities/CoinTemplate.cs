@@ -30,12 +30,13 @@ public class CoinTemplate : BaseEntity<int>
 
     public ICollection<WithdrawOption> WithdrawOptions { get; private set; }
 
-    public void Update(string name, string description, string imageUrl, CoinType coinType)
+    public void Update(string name, string description, string imageUrl, CoinType coinType, IEnumerable<WithdrawOption> withdrawOptions = null)
     {
         Name = name;
         Description = description;
         ImageUrl = imageUrl;
         CoinType = coinType;
+        WithdrawOptions = withdrawOptions?.ToList() ?? [];
     }
 
     public void SetWithdrawOptions(IEnumerable<WithdrawOption> withdrawOptions)
