@@ -18,7 +18,7 @@ public class WithdrawOption : BaseEntity<int>
         EndpointContentType contentType,
         string endpoint = null, 
         string endpointContent = null, 
-        int? fromTemplateId = null,
+        int? endpointTemplate = null,
         IEnumerable<PromotionCoin> promotionCoins = null,
         IEnumerable<CoinTemplate> coinTemplates = null)
     {
@@ -28,7 +28,7 @@ public class WithdrawOption : BaseEntity<int>
         ContentType = contentType;
         Endpoint = endpoint;
         EndpointContent = endpointContent;
-        FromTemplateId = fromTemplateId;
+        WithdrawEndpointTemplateId = endpointTemplate;
         PromotionCoins = promotionCoins?.ToList() ?? [];
         CoinTemplates = coinTemplates?.ToList() ?? [];
     }
@@ -39,7 +39,9 @@ public class WithdrawOption : BaseEntity<int>
     public string Endpoint { get; set; }
     public EndpointContentType ContentType { get; set; }
     public string EndpointContent { get; set; }
-    public int? FromTemplateId { get; private set; }
+
+    public int? WithdrawEndpointTemplateId { get; private set; }
+    public WithdrawEndpointTemplate WithdrawEndpointTemplate { get; set; }
 
     public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
     public ICollection<PromotionCoin> PromotionCoins { get; set; }
@@ -51,7 +53,7 @@ public class WithdrawOption : BaseEntity<int>
         string imageUrl, 
         string endpoint = null, 
         string endpointContent = null, 
-        int? fromTemplateId = null, 
+        int? endpointTemplate = null, 
         IEnumerable<PromotionCoin> promotionCoins = null, 
         IEnumerable<CoinTemplate> coinTemplates = null)
     {
@@ -60,7 +62,7 @@ public class WithdrawOption : BaseEntity<int>
         ImageUrl = imageUrl;
         Endpoint = endpoint;
         EndpointContent = endpointContent;
-        FromTemplateId = fromTemplateId;
+        WithdrawEndpointTemplateId = endpointTemplate;
         PromotionCoins = promotionCoins?.ToList() ?? [];
         CoinTemplates = coinTemplates?.ToList() ?? [];
     }

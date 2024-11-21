@@ -9,13 +9,11 @@ namespace Hub.Application.Features.CoinFeatures.Commands.DeleteCoinTemplate;
 public class DeleteCoinTemplateHandler : IRequestHandler<DeleteCoinTemplate>
 {
     private readonly ICoinTemplateRepository _coinTemplateRepository;
-    private readonly IWithdrawOptionRepository _withdrawOptionRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public DeleteCoinTemplateHandler(ICoinTemplateRepository coinTemplateRepository, IWithdrawOptionRepository withdrawOptionRepository, IUnitOfWork unitOfWork)
+    public DeleteCoinTemplateHandler(ICoinTemplateRepository coinTemplateRepository, IUnitOfWork unitOfWork)
     {
         _coinTemplateRepository = coinTemplateRepository;
-        _withdrawOptionRepository = withdrawOptionRepository;
         _unitOfWork = unitOfWork;
     }
 

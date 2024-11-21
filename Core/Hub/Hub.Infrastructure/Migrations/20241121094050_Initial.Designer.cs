@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hub.Infrastructure.Migrations
 {
     [DbContext(typeof(HubDbContext))]
-    [Migration("20241119130829_init")]
-    partial class init
+    [Migration("20241121094050_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,10 +37,19 @@ namespace Hub.Infrastructure.Migrations
                     b.Property<int>("CoinType")
                         .HasColumnType("integer");
 
+                    b.Property<DateTimeOffset?>("DateDeleted")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
-                    b.Property<string>("Title")
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -84,7 +93,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -98,7 +107,7 @@ namespace Hub.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnOrder(1);
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -115,7 +124,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -132,7 +141,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -149,7 +158,7 @@ namespace Hub.Infrastructure.Migrations
                     b.Property<string>("CurrencyId")
                         .HasColumnType("text");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -168,7 +177,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -185,7 +194,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -202,7 +211,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -219,7 +228,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -236,7 +245,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.Property<string>("Value")
@@ -277,7 +286,7 @@ namespace Hub.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("LastExecutedTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.Property<int>("Type")
@@ -580,11 +589,17 @@ namespace Hub.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnOrder(1);
 
+                    b.Property<int?>("CoinTemplateId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("CoinType")
                         .HasColumnType("integer");
 
                     b.Property<DateTimeOffset?>("DateDeleted")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
@@ -592,13 +607,15 @@ namespace Hub.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.Property<int>("PromotionId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CoinTemplateId");
 
                     b.HasIndex("PromotionId");
 
@@ -886,7 +903,7 @@ namespace Hub.Infrastructure.Migrations
                     b.Property<string>("EndpointContent")
                         .HasColumnType("text");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -984,21 +1001,6 @@ namespace Hub.Infrastructure.Migrations
                     b.ToTable("PlayerSegmentMappings");
                 });
 
-            modelBuilder.Entity("PromotionCoinWithdrawOptionGroup", b =>
-                {
-                    b.Property<string>("PromotionCoinsId")
-                        .HasColumnType("text");
-
-                    b.Property<int>("WithdrawOptionGroupsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("PromotionCoinsId", "WithdrawOptionGroupsId");
-
-                    b.HasIndex("WithdrawOptionGroupsId");
-
-                    b.ToTable("PromotionCoinWithdrawOptionGroup");
-                });
-
             modelBuilder.Entity("PromotionSegmentMappings", b =>
                 {
                     b.Property<int>("PromotionId")
@@ -1042,6 +1044,21 @@ namespace Hub.Infrastructure.Migrations
                     b.HasIndex("WithdrawOptionId");
 
                     b.ToTable("WithdrawOptionGroupMappings");
+                });
+
+            modelBuilder.Entity("WithdrawOptionPromotionCoinMappings", b =>
+                {
+                    b.Property<string>("PromotionCoinId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("WithdrawOptionId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("PromotionCoinId", "WithdrawOptionId");
+
+                    b.HasIndex("WithdrawOptionId");
+
+                    b.ToTable("WithdrawOptionPromotionCoinMappings");
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.DbEnums.PrizeType", b =>
@@ -1178,11 +1195,17 @@ namespace Hub.Infrastructure.Migrations
 
             modelBuilder.Entity("Hub.Domain.Entities.PromotionCoin", b =>
                 {
+                    b.HasOne("Hub.Domain.Entities.CoinTemplate", "CoinTemplate")
+                        .WithMany()
+                        .HasForeignKey("CoinTemplateId");
+
                     b.HasOne("Hub.Domain.Entities.Promotion", "Promotion")
                         .WithMany("Coins")
                         .HasForeignKey("PromotionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CoinTemplate");
 
                     b.Navigation("Promotion");
                 });
@@ -1365,21 +1388,6 @@ namespace Hub.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PromotionCoinWithdrawOptionGroup", b =>
-                {
-                    b.HasOne("Hub.Domain.Entities.PromotionCoin", null)
-                        .WithMany()
-                        .HasForeignKey("PromotionCoinsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Hub.Domain.Entities.WithdrawOptionGroup", null)
-                        .WithMany()
-                        .HasForeignKey("WithdrawOptionGroupsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PromotionSegmentMappings", b =>
                 {
                     b.HasOne("Hub.Domain.Entities.Promotion", null)
@@ -1415,6 +1423,21 @@ namespace Hub.Infrastructure.Migrations
                     b.HasOne("Hub.Domain.Entities.WithdrawOptionGroup", null)
                         .WithMany()
                         .HasForeignKey("WithdrawOptionGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hub.Domain.Entities.WithdrawOption", null)
+                        .WithMany()
+                        .HasForeignKey("WithdrawOptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("WithdrawOptionPromotionCoinMappings", b =>
+                {
+                    b.HasOne("Hub.Domain.Entities.PromotionCoin", null)
+                        .WithMany()
+                        .HasForeignKey("PromotionCoinId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

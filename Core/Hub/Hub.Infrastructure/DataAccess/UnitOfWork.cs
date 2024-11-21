@@ -8,17 +8,17 @@ public class UnitOfWork(HubDbContext context) : IUnitOfWork, IDisposable
     private readonly HubDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
     private IDbContextTransaction? _currentTransaction;
 
-    public async Task BeginTransactionAsync()
+    public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
         if (_currentTransaction != null)
         {
             throw new InvalidOperationException("There is already an active transaction.");
         }
 
-        _currentTransaction = await _context.Database.BeginTransactionAsync();
+        _currentTransaction = await _context.Database.BeginTransactionAsync(cancellationToken);
     }
 
-    public async Task CommitTransactionAsync()
+    public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
         if (_currentTransaction == null)
         {
@@ -27,12 +27,12 @@ public class UnitOfWork(HubDbContext context) : IUnitOfWork, IDisposable
 
         try
         {
-            await _context.SaveChangesAsync();
-            await _currentTransaction.CommitAsync();
+            await _context.SaveChangesAsync(cancellationToken);
+            await _currentTransaction.CommitAsync(cancellationToken);
         }
         catch
         {
-            await RollbackTransactionAsync();
+            await RollbackTransactionAsync(cancellationToken);
             throw;
         }
         finally
@@ -42,7 +42,7 @@ public class UnitOfWork(HubDbContext context) : IUnitOfWork, IDisposable
         }
     }
 
-    public async Task RollbackTransactionAsync()
+    public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
         if (_currentTransaction == null)
         {
@@ -51,7 +51,7 @@ public class UnitOfWork(HubDbContext context) : IUnitOfWork, IDisposable
 
         try
         {
-            await _currentTransaction.RollbackAsync();
+            await _currentTransaction.RollbackAsync(cancellationToken);
         }
         finally
         {
@@ -60,26 +60,26 @@ public class UnitOfWork(HubDbContext context) : IUnitOfWork, IDisposable
         }
     }
 
-    public async Task SaveAsync()
+    public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
         if (_currentTransaction == null)
         {
-            await using var transaction = await _context.Database.BeginTransactionAsync();
+            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 
             try
             {
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
+                await _context.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
             }
             catch
             {
-                await transaction.RollbackAsync();
+                await transaction.RollbackAsync(cancellationToken);
                 throw;
             }
         }
         else
         {
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 

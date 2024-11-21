@@ -18,7 +18,7 @@ public class PromotionCoin : BaseEntity<string>
         string imageUrl, 
         CoinType coinType, 
         int promotionId, 
-        int? fromTemplateId = null, 
+        int? coinTemplateId = null, 
         IEnumerable<WithdrawOption> withdrawOptions = null)
     {
         Id = id;
@@ -27,7 +27,7 @@ public class PromotionCoin : BaseEntity<string>
         ImageUrl = imageUrl;
         CoinType = coinType;
         PromotionId = promotionId;
-        FromTemplateId = fromTemplateId;
+        CoinTemplateId = coinTemplateId;
         WithdrawOptions = withdrawOptions?.ToList() ?? [];
     }
 
@@ -35,12 +35,14 @@ public class PromotionCoin : BaseEntity<string>
     public string Description { get; set; }
     public string ImageUrl { get; set; }
     public CoinType CoinType { get; set; }
-    public int? FromTemplateId { get; set; }
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DateDeleted { get; set; }
 
     public int PromotionId { get; set; }
     public Promotion Promotion { get; set; }
+
+    public int? CoinTemplateId { get; set; }
+    public CoinTemplate CoinTemplate { get; set; }
 
     public ICollection<WithdrawOption> WithdrawOptions { get; set; }
 

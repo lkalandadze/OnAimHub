@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hub.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,8 +32,11 @@ namespace Hub.Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     ImageUrl = table.Column<string>(type: "text", nullable: true),
-                    CoinType = table.Column<int>(type: "integer", nullable: false)
+                    CoinType = table.Column<int>(type: "integer", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DateDeleted = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -263,8 +266,8 @@ namespace Hub.Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Endpoint = table.Column<string>(type: "text", nullable: true),
-                    EndpointContent = table.Column<string>(type: "text", nullable: true),
-                    ContentType = table.Column<int>(type: "integer", nullable: false)
+                    ContentType = table.Column<int>(type: "integer", nullable: false),
+                    EndpointContent = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -491,15 +494,22 @@ namespace Hub.Infrastructure.Migrations
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     ImageUrl = table.Column<string>(type: "text", nullable: true),
                     CoinType = table.Column<int>(type: "integer", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     DateDeleted = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    PromotionId = table.Column<int>(type: "integer", nullable: false)
+                    PromotionId = table.Column<int>(type: "integer", nullable: false),
+                    CoinTemplateId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PromotionCoins", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PromotionCoins_CoinTemplates_CoinTemplateId",
+                        column: x => x.CoinTemplateId,
+                        principalTable: "CoinTemplates",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PromotionCoins_Promotions_PromotionId",
                         column: x => x.PromotionId,
@@ -751,30 +761,6 @@ namespace Hub.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PromotionCoinWithdrawOptionGroup",
-                columns: table => new
-                {
-                    PromotionCoinsId = table.Column<string>(type: "text", nullable: false),
-                    WithdrawOptionGroupsId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PromotionCoinWithdrawOptionGroup", x => new { x.PromotionCoinsId, x.WithdrawOptionGroupsId });
-                    table.ForeignKey(
-                        name: "FK_PromotionCoinWithdrawOptionGroup_PromotionCoins_PromotionCo~",
-                        column: x => x.PromotionCoinsId,
-                        principalTable: "PromotionCoins",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PromotionCoinWithdrawOptionGroup_WithdrawOptionGroups_Withd~",
-                        column: x => x.WithdrawOptionGroupsId,
-                        principalTable: "WithdrawOptionGroups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RewardPrizes",
                 columns: table => new
                 {
@@ -874,6 +860,30 @@ namespace Hub.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "WithdrawOptionPromotionCoinMappings",
+                columns: table => new
+                {
+                    PromotionCoinId = table.Column<string>(type: "text", nullable: false),
+                    WithdrawOptionId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WithdrawOptionPromotionCoinMappings", x => new { x.PromotionCoinId, x.WithdrawOptionId });
+                    table.ForeignKey(
+                        name: "FK_WithdrawOptionPromotionCoinMappings_PromotionCoins_Promotio~",
+                        column: x => x.PromotionCoinId,
+                        principalTable: "PromotionCoins",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WithdrawOptionPromotionCoinMappings_WithdrawOptions_Withdra~",
+                        column: x => x.WithdrawOptionId,
+                        principalTable: "WithdrawOptions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_PlayerBalances_CurrencyId",
                 table: "PlayerBalances",
@@ -960,14 +970,14 @@ namespace Hub.Infrastructure.Migrations
                 column: "CurrencyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PromotionCoins_CoinTemplateId",
+                table: "PromotionCoins",
+                column: "CoinTemplateId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PromotionCoins_PromotionId",
                 table: "PromotionCoins",
                 column: "PromotionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PromotionCoinWithdrawOptionGroup_WithdrawOptionGroupsId",
-                table: "PromotionCoinWithdrawOptionGroup",
-                column: "WithdrawOptionGroupsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PromotionSegmentMappings_SegmentId",
@@ -1070,6 +1080,11 @@ namespace Hub.Infrastructure.Migrations
                 column: "WithdrawOptionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_WithdrawOptionPromotionCoinMappings_WithdrawOptionId",
+                table: "WithdrawOptionPromotionCoinMappings",
+                column: "WithdrawOptionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WithdrawOptions_WithdrawEndpointTemplateId",
                 table: "WithdrawOptions",
                 column: "WithdrawEndpointTemplateId");
@@ -1112,9 +1127,6 @@ namespace Hub.Infrastructure.Migrations
                 name: "PlayerSegmentMappings");
 
             migrationBuilder.DropTable(
-                name: "PromotionCoinWithdrawOptionGroup");
-
-            migrationBuilder.DropTable(
                 name: "PromotionSegmentMappings");
 
             migrationBuilder.DropTable(
@@ -1139,13 +1151,13 @@ namespace Hub.Infrastructure.Migrations
                 name: "WithdrawOptionGroupMappings");
 
             migrationBuilder.DropTable(
+                name: "WithdrawOptionPromotionCoinMappings");
+
+            migrationBuilder.DropTable(
                 name: "PlayerLogTypes");
 
             migrationBuilder.DropTable(
                 name: "PlayerSegmentActs");
-
-            migrationBuilder.DropTable(
-                name: "PromotionCoins");
 
             migrationBuilder.DropTable(
                 name: "PrizeTypes");
@@ -1166,10 +1178,10 @@ namespace Hub.Infrastructure.Migrations
                 name: "TransactionTypes");
 
             migrationBuilder.DropTable(
-                name: "CoinTemplates");
+                name: "WithdrawOptionGroups");
 
             migrationBuilder.DropTable(
-                name: "WithdrawOptionGroups");
+                name: "PromotionCoins");
 
             migrationBuilder.DropTable(
                 name: "WithdrawOptions");
@@ -1181,9 +1193,6 @@ namespace Hub.Infrastructure.Migrations
                 name: "Segments");
 
             migrationBuilder.DropTable(
-                name: "Promotions");
-
-            migrationBuilder.DropTable(
                 name: "Currencies");
 
             migrationBuilder.DropTable(
@@ -1191,6 +1200,12 @@ namespace Hub.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "RewardSource");
+
+            migrationBuilder.DropTable(
+                name: "CoinTemplates");
+
+            migrationBuilder.DropTable(
+                name: "Promotions");
 
             migrationBuilder.DropTable(
                 name: "WithdrawEndpointTemplates");
