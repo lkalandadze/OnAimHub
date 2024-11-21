@@ -2,6 +2,7 @@
 
 using Hub.Domain.Enum;
 using Shared.Domain.Entities;
+using System.Linq;
 
 namespace Hub.Domain.Entities;
 
@@ -12,14 +13,14 @@ public class PromotionCoin : BaseEntity<string>
         
     }
 
-    public PromotionCoin(string id, string name, string imageUrl, int promotionId, CoinType coinType, IEnumerable<WithdrawOptionGroup> withdrawOptionGroups = null)
+    public PromotionCoin(string id, string name, string imageUrl, int promotionId, CoinType coinType, IEnumerable<WithdrawOption> withdrawOptions = null)
     {
         Id = id;
         Name = name;
         ImageUrl = imageUrl;
         PromotionId = promotionId;
         CoinType = coinType;
-        WithdrawOptionGroups = withdrawOptionGroups?.ToList() ?? [];
+        WithdrawOptions = withdrawOptions?.ToList() ?? [];
     }
 
     public string Name { get; set; }
@@ -31,7 +32,7 @@ public class PromotionCoin : BaseEntity<string>
     public int PromotionId { get; set; }
     public Promotion Promotion { get; set; }
 
-    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
+    public ICollection<WithdrawOption> WithdrawOptions { get; set; }
 
     public void Delete()
     { 
@@ -39,13 +40,23 @@ public class PromotionCoin : BaseEntity<string>
         DateDeleted = DateTimeOffset.Now;
     }
 
-    public void AddWithdrawOptionGroup(IEnumerable<WithdrawOptionGroup> withdrawOptionGroups)
+    //public void AddWithdrawOptionGroup(IEnumerable<WithdrawOption> withdrawOptionGroups)
+    //{
+    //    foreach(var withdrawOptionGroup in withdrawOptionGroups)
+    //    {
+    //        if (!WithdrawOptionGroups.Contains(withdrawOptionGroup))
+    //        {
+    //            WithdrawOptionGroups.Add(withdrawOptionGroup);
+    //        }
+    //    }
+    //}
+    public void AddWithdrawOption(IEnumerable<WithdrawOption> withdrawOptions)
     {
-        foreach(var withdrawOptionGroup in withdrawOptionGroups)
+        foreach (var withdrawOption in withdrawOptions)
         {
-            if (!WithdrawOptionGroups.Contains(withdrawOptionGroup))
+            if (!WithdrawOptions.Contains(withdrawOption))
             {
-                WithdrawOptionGroups.Add(withdrawOptionGroup);
+                WithdrawOptions.Add(withdrawOption);
             }
         }
     }

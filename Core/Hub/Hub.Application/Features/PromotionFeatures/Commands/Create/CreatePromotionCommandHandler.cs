@@ -51,17 +51,26 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
 
         foreach (var promotionCoinModel in request.PromotionCoin)
         {
-            if (promotionCoinModel.IsTemplate)
-            {
-                var coinTemplate = new CoinTemplate(
-                    promotionCoinModel.Name,
-                    promotionCoinModel.ImageUrl,
-                    promotionCoinModel.CoinType);
+            //if (promotionCoinModel.IsTemplate)
+            //{
+            //    var coinTemplate = new CoinTemplate(
+            //        promotionCoinModel.Name,
+            //        promotionCoinModel.ImageUrl,
+            //        promotionCoinModel.CoinType);
 
-                await _coinTemplateRepository.InsertAsync(coinTemplate);
-            }
+            //    await _coinTemplateRepository.InsertAsync(coinTemplate);
+            //}
 
             var promotionCoinId = $"{promotion.Id}_{promotionCoinModel.Name}";
+
+            var coinTemplate = promotionCoinModel.IsTemplate
+                    ? new CoinTemplate(
+                        promotionCoinModel.Name,
+                        promotionCoinModel.ImageUrl,
+                        promotionCoinModel.CoinType)
+                    : null;
+
+            await _coinTemplateRepository.InsertAsync(coinTemplate);
 
             var promotionCoin = new PromotionCoin(
                 promotionCoinId,
@@ -77,14 +86,6 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
                     groupModel.Description,
                     groupModel.ImageUrl);
 
-                //var withdrawOptionGroup = new WithdrawOptionGroup
-                //{
-                //    Title = groupModel.Title,
-                //    Description = groupModel.Description,
-                //    ImageUrl = groupModel.ImageUrl,
-                //    WithdrawOptions = new List<WithdrawOption>()
-                //};
-
                 foreach (var optionModel in groupModel.WithdrawOptions)
                 {
                     var withdrawOption = new WithdrawOption(
@@ -95,7 +96,8 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
                         optionModel.Endpoint,
                         optionModel.EndpointContent)
                     {
-                        WithdrawOptionGroups = [withdrawOptionGroup]
+                        WithdrawOptionGroups = [withdrawOptionGroup],
+                        CoinTemplates = [coinTemplate]
                     };
 
                     if (optionModel.IsTemplate)
@@ -110,9 +112,9 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
                     }
 
                     withdrawOptionGroup.WithdrawOptions.Add(withdrawOption);
-                }   
-
-                promotionCoin.AddWithdrawOptionGroup([withdrawOptionGroup]);
+                    promotionCoin.AddWithdrawOption([withdrawOption]);
+                }
+                //promotionCoin.AddWithdrawOption([withdrawOption]);
             }
 
             promotion.Coins.Add(promotionCoin);

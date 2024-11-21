@@ -12,16 +12,21 @@ public class CoinTemplate : BaseEntity<int>
         
     }
 
-    public CoinTemplate(string name, string imageUrl, CoinType coinType)
+    public CoinTemplate(
+        string name, 
+        string imageUrl, 
+        CoinType coinType,
+        IEnumerable<WithdrawOption> withdrawOptions = null)
     {
         Name = name;
         ImageUrl = imageUrl;
         CoinType = coinType;
+        WithdrawOptions = withdrawOptions?.ToList() ?? [];
     }
 
     public string Name { get; set; }
     public string ImageUrl { get; set; }
     public CoinType CoinType { get; set; }
 
-    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
+    public ICollection<WithdrawOption> WithdrawOptions { get; set; }
 }

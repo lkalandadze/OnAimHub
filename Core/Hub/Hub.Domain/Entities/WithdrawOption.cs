@@ -18,7 +18,8 @@ public class WithdrawOption : BaseEntity<int>
         EndpointContentType contentType,
         string endpoint = null, 
         string endpointContent = null, 
-        int? withdrawEndpointTemplateId = null)
+        int? withdrawEndpointTemplateId = null,
+        IEnumerable<CoinTemplate> coinTemplates = null)
     {
         Title = title;
         Description = description;
@@ -27,6 +28,7 @@ public class WithdrawOption : BaseEntity<int>
         Endpoint = endpoint;
         EndpointContent = endpointContent;
         WithdrawEndpointTemplateId = withdrawEndpointTemplateId;
+        CoinTemplates = coinTemplates?.ToList() ?? [];
     }
 
     public string Title { get; set; }
@@ -37,6 +39,7 @@ public class WithdrawOption : BaseEntity<int>
     public string EndpointContent { get; set; }
 
     public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
+    public ICollection<CoinTemplate> CoinTemplates { get; set; }
 
     public int? WithdrawEndpointTemplateId { get; private set; }
     public WithdrawEndpointTemplate WithdrawEndpointTemplate { get; set; }
@@ -49,5 +52,17 @@ public class WithdrawOption : BaseEntity<int>
         Endpoint = endpoint;
         EndpointContent = endpointContent;
         WithdrawEndpointTemplateId = withdrawEndpointTemplateId;
+    }
+
+
+    public void AddCoinTemplates(IEnumerable<CoinTemplate> coinTemplates)
+    {
+        foreach (var coinTemplate in coinTemplates)
+        {
+            if (!CoinTemplates.Contains(coinTemplate))
+            {
+                CoinTemplates.Add(coinTemplate);
+            }
+        }
     }
 }
