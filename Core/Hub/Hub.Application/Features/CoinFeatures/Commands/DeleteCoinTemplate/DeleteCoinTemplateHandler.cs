@@ -25,7 +25,7 @@ public class DeleteCoinTemplateHandler : IRequestHandler<DeleteCoinTemplate>
 
         if (coinTemplate == null)
         {
-            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Coin template with the specified ID: [{request.Id}] was not found.");
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Coin template with the specified ID: [{request.CoinTemplateId}] was not found.");
         }
 
         coinTemplate.Delete();

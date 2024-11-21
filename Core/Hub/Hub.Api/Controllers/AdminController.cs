@@ -7,6 +7,7 @@ using Hub.Application.Features.PlayerBanFeatures.Commands.Revoke;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Update;
 using Hub.Application.Features.PrizeClaimFeatures.Commands.CreateReward;
 using Hub.Application.Features.PrizeClaimFeatures.Commands.DeleteReward;
+using Hub.Application.Features.PromotionFeatures.Commands.Create;
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentsToPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentToPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.BlockSegmentForPlayer;
@@ -30,6 +31,16 @@ namespace Hub.Api.Controllers;
 [ApiExplorerSettings(GroupName = "admin")]
 public class AdminController : BaseApiController
 {
+    #region Promotions
+
+    [HttpPost(nameof(CreatePromotion))]
+    public async Task<Unit> CreatePromotion(CreatePromotionCommand request)
+    {
+        return await Mediator.Send(request);
+    }
+
+    #endregion
+
     #region Games
 
     [HttpGet(nameof(AllGames))]

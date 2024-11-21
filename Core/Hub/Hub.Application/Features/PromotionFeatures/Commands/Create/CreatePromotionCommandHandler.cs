@@ -66,6 +66,7 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
             var coinTemplate = promotionCoinModel.IsTemplate
                     ? new CoinTemplate(
                         promotionCoinModel.Name,
+                        promotionCoinModel.Description,
                         promotionCoinModel.ImageUrl,
                         promotionCoinModel.CoinType)
                     : null;
@@ -75,9 +76,10 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
             var promotionCoin = new PromotionCoin(
                 promotionCoinId,
                 promotionCoinModel.Name,
+                promotionCoinModel.Description,
                 promotionCoinModel.ImageUrl,
-                promotion.Id,
-                promotionCoinModel.CoinType);
+                promotionCoinModel.CoinType,
+                promotion.Id);
 
             foreach (var groupModel in promotionCoinModel.WithdrawOptionGroups)
             {

@@ -6,6 +6,7 @@ namespace Hub.Application.Models.PromotionCoin;
 public class CreatePromotionCoinModel
 {
     public string Name { get; set; }
+    public string? Description { get; set; }
     public string ImageUrl { get; set; }
     public CoinType CoinType { get; set; }
     public bool IsTemplate { get; set; }
