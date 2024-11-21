@@ -39,12 +39,9 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
             request.StartDate,
             request.EndDate,
             request.Title,
-            request.Description
-        )
-        {
-            Segments = segments,
-            Coins = new List<PromotionCoin>()
-        };
+            request.Description,
+            segments: segments
+        );
 
         await _promotionRepository.InsertAsync(promotion);
         await _unitOfWork.SaveAsync();
