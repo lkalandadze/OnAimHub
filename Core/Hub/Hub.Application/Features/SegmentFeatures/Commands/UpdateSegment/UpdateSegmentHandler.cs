@@ -37,7 +37,7 @@ public class UpdateSegmentHandler : IRequestHandler<UpdateSegmentCommand>
             throw new ApiException(ApiExceptionCodeTypes.DuplicateEntry, "A segment with the same priority level already exists.");
         }
 
-        segment.ChangeDetails(request.Description, request.PriorityLevel);
+        segment.Update(request.Description, request.PriorityLevel);
 
         _segmentRepository.Update(segment);
         await _unitOfWork.SaveAsync();

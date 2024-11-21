@@ -13,16 +13,12 @@ public class WithdrawOptionGroup : BaseEntity<int>
     public WithdrawOptionGroup(
         string title, 
         string description, 
-        string imageUrl, 
-        IEnumerable<PromotionCoin> promotionCoins = null, 
-        IEnumerable<CoinTemplate> coinTemplates = null, 
+        string imageUrl,  
         IEnumerable<WithdrawOption> withdrawOptions = null)
     {
         Title = title;
         Description = description;
         ImageUrl = imageUrl;
-        PromotionCoins = promotionCoins?.ToList() ?? [];
-        CoinTemplates = coinTemplates?.ToList() ?? [];
         WithdrawOptions = withdrawOptions?.ToList() ?? [];
     }
 
@@ -31,7 +27,4 @@ public class WithdrawOptionGroup : BaseEntity<int>
     public string ImageUrl { get; set; }
 
     public ICollection<WithdrawOption> WithdrawOptions { get; set; }
-    public ICollection<PromotionCoin> PromotionCoins { get; set; }
-    public ICollection<CoinTemplate> CoinTemplates { get; set; }
-    
 }

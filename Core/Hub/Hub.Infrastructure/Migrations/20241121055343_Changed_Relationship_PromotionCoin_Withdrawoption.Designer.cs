@@ -40,7 +40,7 @@ namespace Hub.Infrastructure.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.Property<int?>("WithdrawOptionGroupId")
@@ -89,7 +89,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -103,7 +103,7 @@ namespace Hub.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnOrder(1);
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -120,7 +120,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -137,7 +137,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -154,7 +154,7 @@ namespace Hub.Infrastructure.Migrations
                     b.Property<string>("CurrencyId")
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -173,7 +173,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -190,7 +190,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -207,7 +207,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -224,7 +224,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -241,7 +241,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.Property<string>("Value")
@@ -282,7 +282,7 @@ namespace Hub.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("LastExecutedTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.Property<int>("Type")
@@ -597,7 +597,7 @@ namespace Hub.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.Property<int>("PromotionId")
@@ -896,7 +896,7 @@ namespace Hub.Infrastructure.Migrations
                     b.Property<string>("EndpointContent")
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
