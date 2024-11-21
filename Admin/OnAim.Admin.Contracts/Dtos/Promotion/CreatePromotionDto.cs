@@ -71,7 +71,7 @@ public class PromotionDto
 
     public ICollection<PromotionServiceDto> Services { get; set; }
     public ICollection<SegmentDto> Segments { get; set; }
-    public ICollection<PromotionCoinDto> Coins { get; set; }
+    public ICollection<PromotionCoinDto> PromotionCoins { get; set; }
     public ICollection<TransactionDto> Transactions { get; set; }
 }
 public class PromotionCoinDto
@@ -101,7 +101,7 @@ public class WithdrawOptionDto
     public string EndpointContent { get; set; }
     public int? FromTemplateId { get; private set; }
 
-    //public ICollection<WithdrawOptionGroupDto> WithdrawOptionGroups { get; set; }
+    public ICollection<WithdrawOptionGroupDto> WithdrawOptionGroups { get; set; }
 }
 public class WithdrawOptionGroupDto
 {

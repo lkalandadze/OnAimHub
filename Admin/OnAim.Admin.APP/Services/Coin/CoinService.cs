@@ -7,9 +7,9 @@ namespace OnAim.Admin.APP.Services.Coin;
 
 public class CoinService : ICoinService
 {
-    private readonly IReadOnlyRepository<Admin.Domain.HubEntities.Coin> _repository;
+    private readonly IReadOnlyRepository<Admin.Domain.HubEntities.PromotionCoin> _repository;
 
-    public CoinService(IReadOnlyRepository<OnAim.Admin.Domain.HubEntities.Coin> repository)
+    public CoinService(IReadOnlyRepository<OnAim.Admin.Domain.HubEntities.PromotionCoin> repository)
     {
         _repository = repository;
     }

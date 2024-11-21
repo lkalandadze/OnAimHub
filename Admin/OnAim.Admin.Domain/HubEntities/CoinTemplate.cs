@@ -1,4 +1,6 @@
-﻿namespace OnAim.Admin.Domain.HubEntities;
+﻿using OnAim.Admin.Contracts.Dtos.Promotion;
+
+namespace OnAim.Admin.Domain.HubEntities;
 
 public class CoinTemplate : BaseEntity<int>
 {
@@ -7,16 +9,21 @@ public class CoinTemplate : BaseEntity<int>
 
     }
 
-    public CoinTemplate(string name, string imageUrl, CoinType coinType)
+    public CoinTemplate(string name, string description, string imageUrl, CoinType coinType, IEnumerable<WithdrawOption> withdrawOptions = null)
     {
         Name = name;
+        Description = description;
         ImageUrl = imageUrl;
         CoinType = coinType;
+        WithdrawOptions = withdrawOptions?.ToList() ?? [];
     }
 
-    public string Name { get; set; }
-    public string ImageUrl { get; set; }
-    public CoinType CoinType { get; set; }
+    public string Name { get; private set; }
+    public string Description { get; set; }
+    public string ImageUrl { get; private set; }
+    public CoinType CoinType { get; private set; }
+    public bool IsDeleted { get; set; }
+    public DateTimeOffset? DateDeleted { get; set; }
 
-    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
+    public ICollection<WithdrawOption> WithdrawOptions { get; private set; }
 }

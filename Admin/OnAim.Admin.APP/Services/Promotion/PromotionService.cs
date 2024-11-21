@@ -12,16 +12,19 @@ namespace OnAim.Admin.APP.Services.Promotion;
 public class PromotionService : IPromotionService
 {
     private readonly IPromotionRepository<Admin.Domain.HubEntities.Promotion> _promotionRepository;
+    private readonly IPromotionRepository<Admin.Domain.HubEntities.PromotionCoin> _coinRepo;
     private readonly HubClientService _hubClientService;
     private readonly SagaClient _sagaClient;
 
     public PromotionService(
         IPromotionRepository<OnAim.Admin.Domain.HubEntities.Promotion> promotionRepository,
+        IPromotionRepository<OnAim.Admin.Domain.HubEntities.PromotionCoin> coinRepo,
         HubClientService hubClientService,
         SagaClient sagaClient
         )
     {
         _promotionRepository = promotionRepository;
+        _coinRepo = coinRepo;
         _hubClientService = hubClientService;
         _sagaClient = sagaClient;
     }
@@ -91,12 +94,12 @@ public class PromotionService : IPromotionService
                 Status = (Contracts.Dtos.Promotion.PromotionStatus)(PromotionStatus)x.Status,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
-                Coins = x.Coins.Select(xx => new PromotionCoinDto
+                PromotionCoins = x.Coins.Select(xx => new PromotionCoinDto
                 {
                     PromotionId = xx.PromotionId,
                     Name = xx.Name,
                     ImageUrl = xx.ImageUrl,
-                    CoinType = (Contracts.Dtos.Promotion.CoinType)xx.CoinType,
+                    CoinType = xx.CoinType,
                     WithdrawOptions = xx.WithdrawOptions.Select(xxx => new WithdrawOptionDto
                     {
                         Title = xxx.Title,
@@ -125,7 +128,9 @@ public class PromotionService : IPromotionService
 
     public async Task<ApplicationResult> GetPromotionById(int id)
     {
-        var promotion = await _promotionRepository.Query().FirstOrDefaultAsync(x => x.Id == id);
+        var promotion = await _promotionRepository.Query().Include(x => x.Coins).ThenInclude(x => x.WithdrawOptions).FirstOrDefaultAsync(x => x.Id == id);
+
+        var coins = await _coinRepo.Query(x => x.PromotionId == id).Include(x => x.WithdrawOptions).ToListAsync();
 
         if (promotion == null) throw new NotFoundException("promotion not found");
 
@@ -136,7 +141,7 @@ public class PromotionService : IPromotionService
             Description = promotion.Description,
             StartDate = promotion.StartDate,
             EndDate = promotion.EndDate,
-            Coins = promotion.Coins.Select(x => new PromotionCoinDto
+            PromotionCoins = promotion.Coins.Select(x => new PromotionCoinDto
             {
                 PromotionId = x.PromotionId,
                 Name = x.Name,

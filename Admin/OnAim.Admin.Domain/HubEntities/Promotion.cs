@@ -10,31 +10,39 @@ public class Promotion : BaseEntity<int>
     public Promotion(
         PromotionStatus status,
         DateTimeOffset startDate,
-        DateTimeOffset EndDate,
+        DateTimeOffset endDate,
         string title,
         string description,
-        IEnumerable<PromotionCoin> promotionCoins = null)
+        IEnumerable<PromotionService> services = null,
+        IEnumerable<Segment> segments = null,
+        IEnumerable<PromotionCoin> coins = null,
+        IEnumerable<PromotionView> views = null)
     {
         Status = status;
         StartDate = startDate;
-        this.EndDate = EndDate;
+        EndDate = endDate;
         Title = title;
         Description = description;
-        Coins = promotionCoins?.ToList() ?? [];
+        CreateDate = DateTimeOffset.UtcNow;
+        Services = services?.ToList() ?? [];
+        Segments = segments?.ToList() ?? [];
+        Coins = coins?.ToList() ?? [];
+        Views = views?.ToList() ?? [];
     }
-    public int Id { get; set; }
-    public decimal? TotalCost { get; set; }
-    public PromotionStatus Status { get; set; }
-    public DateTimeOffset StartDate { get; set; }
-    public DateTimeOffset EndDate { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public DateTimeOffset CreateDate { get; set; }
-    public DateTimeOffset? DateDeleted { get; set; }
-    public bool IsDeleted { get; set; }
 
-    public ICollection<PromotionService> Services { get; set; }
-    public ICollection<Segment> Segments { get; set; }
-    public ICollection<PromotionCoin> Coins { get; set; }
-    public ICollection<Transaction> Transactions { get; set; }
+    public decimal? TotalCost { get; private set; }
+    public PromotionStatus Status { get; private set; }
+    public DateTimeOffset StartDate { get; private set; }
+    public DateTimeOffset EndDate { get; private set; }
+    public string Title { get; private set; }
+    public string Description { get; private set; }
+    public DateTimeOffset CreateDate { get; private set; }
+    public DateTimeOffset? DateDeleted { get; private set; }
+    public bool IsDeleted { get; private set; }
+
+    public ICollection<PromotionService> Services { get; private set; }
+    public ICollection<Segment> Segments { get; private set; }
+    public ICollection<PromotionCoin> Coins { get; private set; }
+    public ICollection<Transaction> Transactions { get; private set; }
+    public ICollection<PromotionView> Views { get; private set; }
 }
