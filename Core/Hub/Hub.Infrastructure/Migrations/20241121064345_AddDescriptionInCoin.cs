@@ -66,7 +66,7 @@ namespace Hub.Infrastructure.Migrations
             migrationBuilder.RenameColumn(
                 name: "WithdrawOptionId",
                 table: "WithdrawOptions",
-                newName: "FromTemplateId");
+                newName: "CoinTemplateId");
 
             migrationBuilder.RenameColumn(
                 name: "Title",
@@ -91,7 +91,7 @@ namespace Hub.Infrastructure.Migrations
             migrationBuilder.RenameColumn(
                 name: "WithdrawOptionGroupId",
                 table: "PromotionCoins",
-                newName: "FromTemplateId");
+                newName: "CoinTemplateId");
 
             migrationBuilder.RenameColumn(
                 name: "Title",
@@ -221,7 +221,7 @@ namespace Hub.Infrastructure.Migrations
                 table: "CoinTemplates");
 
             migrationBuilder.RenameColumn(
-                name: "FromTemplateId",
+                name: "CoinTemplateId",
                 table: "WithdrawOptions",
                 newName: "WithdrawOptionId");
 
@@ -251,7 +251,7 @@ namespace Hub.Infrastructure.Migrations
                 newName: "Title");
 
             migrationBuilder.RenameColumn(
-                name: "FromTemplateId",
+                name: "CoinTemplateId",
                 table: "PromotionCoins",
                 newName: "WithdrawOptionGroupId");
 
