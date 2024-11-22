@@ -36,7 +36,6 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
             throw new Exception("One or more Segment IDs are invalid.");
 
         var promotion = new Promotion(
-            request.Status,
             request.StartDate,
             request.EndDate,
             request.Title,

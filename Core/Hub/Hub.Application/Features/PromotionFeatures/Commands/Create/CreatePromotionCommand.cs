@@ -6,7 +6,6 @@ namespace Hub.Application.Features.PromotionFeatures.Commands.Create;
 
 public record CreatePromotionCommand(
     string Title,
-    PromotionStatus Status,
     DateTimeOffset StartDate,
     DateTimeOffset EndDate,
     string Description,

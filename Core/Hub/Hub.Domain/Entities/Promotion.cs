@@ -13,7 +13,6 @@ public class Promotion : BaseEntity<int>
     }
 
     public Promotion(
-        PromotionStatus status, 
         DateTimeOffset startDate, 
         DateTimeOffset endDate, 
         string title, 
@@ -23,7 +22,7 @@ public class Promotion : BaseEntity<int>
         IEnumerable<PromotionCoin> coins = null,
         IEnumerable<PromotionView> views = null)
     {
-        Status = status;
+        Status = PromotionStatus.ToLaunch;
         StartDate = startDate;
         EndDate = endDate;
         Title = title;
