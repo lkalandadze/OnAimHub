@@ -40,7 +40,6 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
         }
 
         var promotion = new Promotion(
-            request.Status,
             request.StartDate,
             request.EndDate,
             request.Title,
