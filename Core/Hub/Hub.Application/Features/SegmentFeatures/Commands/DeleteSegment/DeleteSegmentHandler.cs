@@ -1,6 +1,8 @@
 ﻿using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
 using MediatR;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 using Shared.Infrastructure.Bus;
 using Shared.IntegrationEvents.IntegrationEvents.Segment;
 
@@ -25,7 +27,7 @@ public class DeleteSegmentHandler : IRequestHandler<DeleteSegmentCommand>
 
         if (segment == null)
         {
-            throw new KeyNotFoundException($"Segment not fount for Id: {request.Id}");
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Segment with the specified ID: [{request.Id}] was not found.");
         }
 
         segment.Delete();

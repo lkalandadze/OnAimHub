@@ -2,6 +2,8 @@
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
 using MediatR;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 
 namespace Hub.Application.Features.PlayerBanFeatures.Commands.Create;
 
@@ -23,12 +25,16 @@ public class CreatePlayerBanCommandHandler : IRequestHandler<CreatePlayerBanComm
         var player = _playerRepository.Query().FirstOrDefault(x => x.Id == request.PlayerId);
 
         if (player == default)
-            throw new Exception("Player not found");
+        {
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Player with the specified ID: [{request.PlayerId}] was not found.");
+        }
 
         var isPlayerBanned = _playerBanRepository.Query().FirstOrDefault(x => x.PlayerId == request.PlayerId && !x.IsRevoked);
 
         if (isPlayerBanned != default)
-            throw new Exception("Player already banned");
+        {
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Promotion with the specified ID: [{request.PlayerId}] is already banned.");
+        }
 
         var playerBan = new PlayerBan(request.PlayerId, request.ExpireDate, request.IsPermanent, request.Description);
 

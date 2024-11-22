@@ -3,6 +3,8 @@ using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
 using Hub.Domain.Entities.Templates;
 using MediatR;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 
 namespace Hub.Application.Features.PromotionFeatures.Commands.Create;
 
@@ -26,14 +28,16 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
     public async Task<Unit> Handle(CreatePromotionCommand request, CancellationToken cancellationToken)
     {
         if (request.EndDate <= request.StartDate)
-            throw new Exception("EndDate must be later than StartDate.");
+        {
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"EndDate must be later than StartDate.");
+        }
 
-        var segments = _segmentRepository.Query()
-            .Where(s => request.SegmentIds.Contains(s.Id))
-            .ToList();
+        var segments = await _segmentRepository.QueryAsync(s => request.SegmentIds.Any(sId => sId == s.Id));
 
         if (segments.Count != request.SegmentIds.Count())
-            throw new Exception("One or more Segment IDs are invalid.");
+        {
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "One or more Segment IDs are invalid.");
+        }
 
         var promotion = new Promotion(
             request.Status,

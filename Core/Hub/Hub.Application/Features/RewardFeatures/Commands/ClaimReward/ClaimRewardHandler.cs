@@ -5,6 +5,8 @@ using Hub.Domain.Entities;
 using Hub.Domain.Entities.DbEnums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 
 namespace Hub.Application.Features.RewardFeatures.Commands.ClaimReward;
 
@@ -36,12 +38,13 @@ public class ClaimRewardHandler : IRequestHandler<ClaimRewardCommand>
 
         if (reward == null)
         {
-            throw new KeyNotFoundException($"Reward not fount for Id: {request.RewardId}");
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Reward with the specified ID: [{request.RewardId}] was not found.");
+
         }
 
         if (reward.IsClaimed || reward.IsDeleted || reward.ExpirationDate < DateTime.UtcNow)
         {
-            throw new KeyNotFoundException($"Reward is unavailable for Id: {request.RewardId}");
+            throw new ApiException(ApiExceptionCodeTypes.ValidationFailed, $"Reward with the specified ID: [{request.RewardId}] is unavailable.");
         }
 
         //TODO: prizes with actions (no currency)

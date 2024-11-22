@@ -4,7 +4,8 @@ using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
 using Hub.Domain.Entities.DbEnums;
 using MediatR;
-using Shared.Domain.Abstractions.Repository;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 
 namespace Hub.Application.Features.IdentityFeatures.Commands.ApplyPromoCode;
 
@@ -17,12 +18,13 @@ public class ApplyPromoCodeHandler : IRequestHandler<ApplyPromoCodeCommand, Unit
     private readonly IHubSettingRepository _settingRepository;
     private readonly HubSettings _hubSettings;
 
-    public ApplyPromoCodeHandler(IPlayerRepository playerRepository,
-                                           IUnitOfWork unitOfWork,
-                                           IAuthService authService,
-                                           IReferralDistributionRepository referralDistributionRepository,
-                                           IHubSettingRepository settingRepository,
-                                           HubSettings hubSettings)
+    public ApplyPromoCodeHandler(
+        IPlayerRepository playerRepository,
+        IUnitOfWork unitOfWork,
+        IAuthService authService,
+        IReferralDistributionRepository referralDistributionRepository,
+        IHubSettingRepository settingRepository,
+        HubSettings hubSettings)
     {
         _playerRepository = playerRepository;
         _unitOfWork = unitOfWork;
@@ -42,19 +44,33 @@ public class ApplyPromoCodeHandler : IRequestHandler<ApplyPromoCodeCommand, Unit
                                                  .FirstOrDefault(x => x.Id == referrerId);
 
         if (recommendedByUser == null)
-            throw new Exception("Recommended by user not found");
+        {
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Recommended by user with the specified Code: [{request.ReferralCode}] was not found.");
+        }
 
         var player = _playerRepository.Query()
                                       .FirstOrDefault(x => x.Id == playerId);
 
         if (player == default)
-            throw new Exception("Player not found");
+        {
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Player with the specified ID: [{playerId}] was not found.");
+        }
 
         if (player.HasPlayed)
-            throw new Exception("Played has already made transaction, unable to redeem promo come");
+        {
+            throw new ApiException(
+                ApiExceptionCodeTypes.BusinessRuleViolation,
+                $"Played with the specified ID: [{playerId}] has already made transaction, unable to redeem promo come."
+            );
+        }
 
         if (player.ReferrerId != null)
-            throw new Exception("Player already applied referral code");
+        {
+            throw new ApiException(
+                ApiExceptionCodeTypes.BusinessRuleViolation,
+                $"Player with the specified ID: [{playerId}] already applied referral code."
+            );
+        }
 
         var settings = _settingRepository.Query().ToList();
 

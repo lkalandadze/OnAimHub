@@ -27,14 +27,15 @@ public class UpdateSegmentHandler : IRequestHandler<UpdateSegmentCommand>
 
         if (segment == null)
         {
-            throw new KeyNotFoundException($"Segment not fount for Id: {request.Id}");
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Segment with the specified ID: [{request.Id}] was not found.");
+
         }
 
-        var segments = _segmentRepository.Query(x => x.PriorityLevel == request.PriorityLevel);
+        var segments = _segmentRepository.Query(x => x.Id == request.Id || x.PriorityLevel == request.PriorityLevel);
 
         if (segments != null && segments.Any())
         {
-            throw new ApiException(ApiExceptionCodeTypes.DuplicateEntry, "A segment with the same priority level already exists.");
+            throw new ApiException(ApiExceptionCodeTypes.DuplicateEntry, "A segment with the same Id or priority level already exists.");
         }
 
         segment.Update(request.Description, request.PriorityLevel);

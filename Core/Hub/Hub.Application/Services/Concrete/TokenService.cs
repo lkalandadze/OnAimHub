@@ -5,6 +5,8 @@ using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -74,7 +76,12 @@ public class TokenService : ITokenService
             .FirstOrDefault(tr => tr.RefreshToken == refreshToken);
 
         if (tokenRecord == null || tokenRecord.IsRevoked || tokenRecord.RefreshTokenExpiryDate <= DateTime.UtcNow)
-            throw new SecurityTokenException("Invalid or expired refresh token.");
+        {
+            throw new ApiException(
+                ApiExceptionCodeTypes.BusinessRuleViolation,
+                "Invalid or expired refresh token: The token is either missing, revoked, or has expired."
+            );
+        }
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var jwtToken = tokenHandler.ReadJwtToken(accessToken);
@@ -82,7 +89,12 @@ public class TokenService : ITokenService
         int playerIdFromToken = int.Parse(jwtToken.Claims.First(c => c.Type == "PlayerId").Value);
 
         if (jwtToken == null || !jwtToken.Claims.Any() || tokenRecord.PlayerId != playerIdFromToken)
-            throw new SecurityTokenException("Invalid access token.");
+        {
+            throw new ApiException(
+                ApiExceptionCodeTypes.BusinessRuleViolation,
+                $"Invalid access token: The token is either missing, contains no claims, or does not match the provided player ID."
+            );
+        }
 
         tokenRecord.SetRevoked();
 
@@ -91,7 +103,9 @@ public class TokenService : ITokenService
         var player = await _playerRepository.OfIdAsync(tokenRecord.PlayerId);
 
         if (player == null)
-            throw new ArgumentNullException("Player not found.");
+        {
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Player with the specified ID: [{tokenRecord.PlayerId}] was not found.");
+        }
 
         (string newAccessToken, string newRefreshToken) = await GenerateTokenStringAsync(player);
 

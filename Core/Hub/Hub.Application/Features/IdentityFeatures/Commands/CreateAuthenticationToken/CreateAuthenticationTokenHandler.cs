@@ -10,6 +10,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Shared.Application.Commands;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 using Shared.Infrastructure.Bus;
 using Shared.IntegrationEvents.IntegrationEvents.Player;
 using Shared.Lib.Extensions;
@@ -32,17 +34,18 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
     private readonly IMessageBus _messageBus;
 
 
-    public CreateAuthenticationTokenHandler(IPlayerRepository playerRepository,
-                                            IPlayerBanRepository playerBanRepository,
-                                            ISegmentRepository segmentRepository,
-                                            IUnitOfWork unitOfWork,
-                                            ITokenService tokenService,
-                                            IPlayerLogService playerLogService,
-                                            HttpClient httpClient,
-                                            HubSettings hubSettings,
-                                            IOptions<CasinoApiConfiguration> casinoApiConfiguration,
-                                            IMediator mediator,
-                                            IMessageBus messageBus)
+    public CreateAuthenticationTokenHandler(
+        IPlayerRepository playerRepository,
+        IPlayerBanRepository playerBanRepository,
+        ISegmentRepository segmentRepository,
+        IUnitOfWork unitOfWork,
+        ITokenService tokenService,
+        IPlayerLogService playerLogService,
+        HttpClient httpClient,
+        HubSettings hubSettings,
+        IOptions<CasinoApiConfiguration> casinoApiConfiguration,
+        IMediator mediator,
+        IMessageBus messageBus)
     {
         _playerRepository = playerRepository;
         _playerBanRepository = playerBanRepository;
@@ -64,7 +67,12 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
         var receivedPlayer = await _httpClient.CustomGetAsync<PlayerGetModel>(_casinoApiConfiguration.Host, endpoint);
 
         if (receivedPlayer == null)
-            throw new ArgumentNullException();
+        {
+            throw new ApiException(
+                ApiExceptionCodeTypes.KeyNotFound,
+                $"Player not found for CasinoToken: [{request.CasinoToken}]. Ensure the player exists or verify the token."
+                );
+        }
 
         var player = await _playerRepository.GetPlayerWithSegmentsAsync(receivedPlayer.Id);
 
@@ -86,7 +94,12 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
             var bannedPlayer = _playerBanRepository.Query().FirstOrDefault(x => x.PlayerId == player.Id && !x.IsRevoked && x.ExpireDate > DateTimeOffset.UtcNow && x.IsPermanent);
 
             if (bannedPlayer != null)
-                throw new Exception("You have been banned");
+            {
+                throw new ApiException(
+                    ApiExceptionCodeTypes.BusinessRuleViolation,
+                    $"Operation not allowed: Player with ID [{bannedPlayer.Id}] is banned and cannot participate in this action."
+                );
+            }
         }
 
         int? recommendedById = null;
@@ -98,7 +111,12 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
             var referringPlayer = _playerRepository.Query().FirstOrDefault(x => x.Id == referrerId);
 
             if (referringPlayer == default)
-                throw new Exception("Invalid referral code provided.");
+            {
+                throw new ApiException(
+                    ApiExceptionCodeTypes.BusinessRuleViolation,
+                    $"Invalid referral code provided: [{request.PromoCode}]."
+                );
+            }
 
             recommendedById = referringPlayer.Id;
         }

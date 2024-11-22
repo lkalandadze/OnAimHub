@@ -2,6 +2,8 @@
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Abstractions;
 using MediatR;
+using Shared.Application.Exceptions.Types;
+using Shared.Application.Exceptions;
 
 namespace Hub.Application.Features.PlayerBanFeatures.Commands.Revoke;
 
@@ -21,10 +23,14 @@ public class RevokePlayerBanCommandHandler : IRequestHandler<RevokePlayerBanComm
         var playerBan = _playerBanRepository.Query().FirstOrDefault(x => x.Id == request.Id);
 
         if (playerBan == default)
-            throw new Exception("Player ban not found");
+        {
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Player ban with the specified ID: [{request.Id}] was not found.");
+        }
 
         if (playerBan.IsRevoked)
-            throw new Exception("Player already revoked");
+        {
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Player with the specified ID: [{playerBan.PlayerId}] is already revoked.");
+        }
 
         playerBan.Revoke();
 

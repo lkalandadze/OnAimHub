@@ -28,7 +28,7 @@ public class UnassignSegmentsToPlayersHandler : IRequestHandler<UnassignSegments
 
     public async Task<Unit> Handle(UnassignSegmentsToPlayersCommand request, CancellationToken cancellationToken)
     {
-        var segments = (await _segmentRepository.QueryAsync(s => request.SegmentIds.Any(sId => sId == s.Id)));
+        var segments = await _segmentRepository.QueryAsync(s => request.SegmentIds.Any(sId => sId == s.Id));
 
         if (segments == null || !segments.Any())
         {

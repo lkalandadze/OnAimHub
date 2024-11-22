@@ -1,6 +1,5 @@
 ﻿using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
-using Hub.Domain.Entities;
 using Hub.Domain.Entities.Templates;
 using Hub.Domain.Enum;
 using MediatR;

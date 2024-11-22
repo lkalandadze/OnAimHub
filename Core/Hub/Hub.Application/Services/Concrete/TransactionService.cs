@@ -4,6 +4,8 @@ using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
 using Hub.Domain.Entities.DbEnums;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 
 namespace Hub.Application.Services.Concrete;
 
@@ -34,7 +36,9 @@ public class TransactionService : ITransactionService
         var player = await _playerRepository.OfIdAsync(playerId);
 
         if (player == null)
-            throw new Exception("Player not found");
+        {
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Player with the specified ID: [{playerId}] was not found.");
+        }
 
         if (!player.HasPlayed)
             player.UpdateHasPlayed();
