@@ -4,7 +4,6 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 
 namespace OnAim.Admin.APP.Services.Promotion;
@@ -34,9 +33,10 @@ public class PromotionService : IPromotionService
         var promotions = _promotionRepository.Query(x =>
                          string.IsNullOrEmpty(filter.Name) || EF.Functions.Like(x.Title, $"{filter.Name}%"))
              //.Include(x => x.Coins)
-             //.ThenInclude(x => x.WithdrawOptionGroups)
              //.ThenInclude(x => x.WithdrawOptions)
              .AsNoTracking();
+
+        var promList = promotions.ToList();
 
         if (filter.Status.HasValue)
             promotions = promotions.Where(x => x.Status == (Admin.Domain.HubEntities.PromotionStatus)filter.Status.Value);
@@ -96,8 +96,10 @@ public class PromotionService : IPromotionService
                 EndDate = x.EndDate,
                 PromotionCoins = x.Coins.Select(xx => new PromotionCoinDto
                 {
+                    Id = xx.Id,
                     PromotionId = xx.PromotionId,
                     Name = xx.Name,
+                    Description = xx.Description,
                     ImageUrl = xx.ImageUrl,
                     CoinType = (Contracts.Dtos.Promotion.CoinType)xx.CoinType,
                     WithdrawOptions = xx.WithdrawOptions.Select(xxx => new WithdrawOptionDto
@@ -130,8 +132,6 @@ public class PromotionService : IPromotionService
     {
         var promotion = await _promotionRepository.Query().Include(x => x.Coins).ThenInclude(x => x.WithdrawOptions).FirstOrDefaultAsync(x => x.Id == id);
 
-        var coins = await _coinRepo.Query(x => x.PromotionId == id).Include(x => x.WithdrawOptions).ToListAsync();
-
         if (promotion == null) throw new NotFoundException("promotion not found");
 
         var result = new PromotionDto
@@ -143,6 +143,8 @@ public class PromotionService : IPromotionService
             EndDate = promotion.EndDate,
             PromotionCoins = promotion.Coins.Select(x => new PromotionCoinDto
             {
+                Description = x.Description,
+                Id = x.Id,
                 PromotionId = x.PromotionId,
                 Name = x.Name,
                 ImageUrl = x.ImageUrl,

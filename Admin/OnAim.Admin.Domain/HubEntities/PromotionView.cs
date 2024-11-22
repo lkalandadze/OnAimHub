@@ -19,4 +19,7 @@ public class PromotionView : BaseEntity<int>
 
     public int PromotionId { get; private set; }
     public Promotion Promotion { get; private set; }
+
+    public int PromotionViewTemplateId { get; private set; }
+    public PromotionViewTemplate PromotionViewTemplate { get; private set; }
 }

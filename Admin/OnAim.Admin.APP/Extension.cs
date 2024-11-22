@@ -105,8 +105,6 @@ public static class Extension
         });
         services.Configure<PostmarkOptions>(configuration.GetSection("Postmark"));
 
-        //services.BuildServiceProvider().GetRequiredService<AppSettings>();
-
         services.AddTransient<IEmailService>(sp =>
         {
             var options = sp.GetRequiredService<IOptions<PostmarkOptions>>().Value;

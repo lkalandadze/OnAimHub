@@ -1,6 +1,4 @@
-﻿using OnAim.Admin.Contracts.Dtos.Promotion;
-
-namespace OnAim.Admin.Domain.HubEntities;
+﻿namespace OnAim.Admin.Domain.HubEntities;
 
 public class PromotionCoin : BaseEntity<string>
 {
