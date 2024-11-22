@@ -46,7 +46,7 @@ public class CreatePromotionViewHandler : IRequestHandler<CreatePromotionView, R
         var filePath = Path.Combine(uploadsDir, fileName);
         Directory.CreateDirectory(uploadsDir);
 
-        File.WriteAllText(filePath, request.viewContent);
+        File.WriteAllText(filePath, request.ViewContent);
 
         var viewUrl = $"{_viewConfig.Host}/{_viewConfig.Directory}/{fileName}";
 
