@@ -14,8 +14,8 @@ public class UpdateCoinForPromotionsCommandHandler : ICommandHandler<UpdateCoinF
     }
     public async Task<ApplicationResult> Handle(UpdateCoinForPromotionsCommand request, CancellationToken cancellationToken)
     {
-        var result = await _coinService.UpdateCoinForPromotion(request.PromotionIds, request.CoinId, request.UpdatedCoin);
+        //var result = await _coinService.UpdateCoinForPromotion(request.PromotionIds, request.CoinId, request.UpdatedCoin);
 
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return new ApplicationResult { Data = "" };
     }
 }

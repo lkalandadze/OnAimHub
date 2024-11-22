@@ -17,8 +17,6 @@ public class ReadOnlyDataContext : DbContext
     public DbSet<PlayerProgress> PlayerProgresses { get; set; }
     public DbSet<PlayerProgressHistory> PlayerProgressHistories { get; set; }
     public DbSet<Segment> Segments { get; set; }
-    public DbSet<PlayerSegment> PlayerSegments { get; set; }
-    public DbSet<PlayerBlockedSegment> PlayerBlockedSegments { get; set; }
     public DbSet<PlayerSegmentAct> PlayerSegmentActs { get; set; }
     public DbSet<PlayerSegmentActHistory> PlayerSegmentActHistories { get; set; }
     public DbSet<PlayerSegmentActType> PlayerSegmentActTypes { get; set; }
@@ -30,6 +28,13 @@ public class ReadOnlyDataContext : DbContext
     public DbSet<AccountType> AccountTypes { get; set; }
     public DbSet<ReferralDistribution> ReferralDistributions { get; set; }
     public DbSet<PlayerBan> PlayerBans { get; set; }
+    public DbSet<Promotion> Promotions { get; set; }
+    public DbSet<PromotionService> PromotionServices { get; set; }
+    public DbSet<CoinTemplate> CoinTemplates { get; set; }
+    public DbSet<PromotionCoin> PromotionCoins { get; set; }
+    public DbSet<WithdrawOption> WithdrawOptions { get; set; }
+    public DbSet<WithdrawEndpointTemplate> WithdrawEndpointTemplates { get; set; }
+    public DbSet<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
 
     public IQueryable<TEntity> Set<TEntity>() where TEntity : class
     {
@@ -38,29 +43,94 @@ public class ReadOnlyDataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<PlayerSegment>().Ignore(e => e.Id);
+        modelBuilder.Entity<WithdrawOption>().HasMany(w => w.WithdrawOptionGroups)
+               .WithMany(g => g.WithdrawOptions)
+               .UsingEntity<Dictionary<string, object>>(
+                    $"{nameof(WithdrawOptionGroup)}Mappings",
+                    j => j.HasOne<WithdrawOptionGroup>()
+                        .WithMany()
+                        .HasForeignKey($"{nameof(WithdrawOptionGroup)}{nameof(WithdrawOptionGroup.Id)}")
+                        .OnDelete(DeleteBehavior.Cascade),
+                    j => j.HasOne<WithdrawOption>()
+                        .WithMany()
+                        .HasForeignKey($"{nameof(WithdrawOption)}{nameof(WithdrawOption.Id)}")
+                        .OnDelete(DeleteBehavior.Cascade)
+               );
 
-        modelBuilder.Entity<PlayerSegment>().HasKey(ps => new { ps.PlayerId, ps.SegmentId });
+        // Many-to-Many Relationship between WithdrawOption and CoinTemplates
+        //modelBuilder.Entity<WithdrawOption>().HasMany(w => w.CoinTemplates)
+        //   .WithMany(c => c.WithdrawOptions)
+        //   .UsingEntity<Dictionary<string, object>>(
+        //        $"{nameof(WithdrawOption)}{nameof(CoinTemplate)}Mappings",
+        //        j => j.HasOne<CoinTemplate>()
+        //            .WithMany()
+        //            .HasForeignKey($"{nameof(CoinTemplate)}{nameof(CoinTemplate.Id)}")
+        //            .OnDelete(DeleteBehavior.Cascade),
+        //        j => j.HasOne<WithdrawOption>()
+        //            .WithMany()
+        //            .HasForeignKey($"{nameof(WithdrawOption)}{nameof(WithdrawOption.Id)}")
+        //            .OnDelete(DeleteBehavior.Cascade)
+        //   );
 
-        modelBuilder.Entity<PlayerSegment>().HasOne(ps => ps.Player)
-               .WithMany(p => p.PlayerSegments)
-               .HasForeignKey(ps => ps.PlayerId);
+        // Many-to-Many Relationship between WithdrawOption and PromotionCoins
+        modelBuilder.Entity<WithdrawOption>().HasMany(w => w.PromotionCoins)
+          .WithMany(c => c.WithdrawOptions)
+          .UsingEntity<Dictionary<string, object>>(
+               $"{nameof(WithdrawOption)}{nameof(PromotionCoin)}Mappings",
+               j => j.HasOne<PromotionCoin>()
+                   .WithMany()
+                   .HasForeignKey($"{nameof(PromotionCoin)}{nameof(PromotionCoin.Id)}")
+                   .OnDelete(DeleteBehavior.Cascade),
+               j => j.HasOne<WithdrawOption>()
+                   .WithMany()
+                   .HasForeignKey($"{nameof(WithdrawOption)}{nameof(WithdrawOption.Id)}")
+                   .OnDelete(DeleteBehavior.Cascade)
+          );
 
-        modelBuilder.Entity<PlayerSegment>().HasOne(ps => ps.Segment)
-               .WithMany(s => s.PlayerSegments)
-               .HasForeignKey(ps => ps.SegmentId);
+        // Many-to-Many Relationship between Segment and Players
+        modelBuilder.Entity<Segment>().HasMany(s => s.Players)
+               .WithMany(p => p.Segments)
+               .UsingEntity<Dictionary<string, object>>(
+                    $"{nameof(Player)}{nameof(Segment)}Mappings",
+                    j => j.HasOne<Player>()
+                          .WithMany()
+                          .HasForeignKey($"{nameof(Player)}{nameof(Player.Id)}")
+                          .OnDelete(DeleteBehavior.Cascade),
+                    j => j.HasOne<Segment>()
+                          .WithMany()
+                          .HasForeignKey($"{nameof(Segment)}{nameof(Segment.Id)}")
+                          .OnDelete(DeleteBehavior.Cascade)
+                );
 
-        modelBuilder.Entity<PlayerBlockedSegment>().Ignore(e => e.Id);
+        // Many-to-Many Relationship for BlockedPlayers
+        modelBuilder.Entity<Segment>().HasMany(s => s.BlockedPlayers)
+               .WithMany(p => p.BlockedSegments)
+               .UsingEntity<Dictionary<string, object>>(
+                    $"{nameof(Player)}Blocked{nameof(Segment)}Mappings",
+                    j => j.HasOne<Player>()
+                          .WithMany()
+                          .HasForeignKey($"{nameof(Player)}{nameof(Player.Id)}")
+                          .OnDelete(DeleteBehavior.Cascade),
+                    j => j.HasOne<Segment>()
+                          .WithMany()
+                          .HasForeignKey($"{nameof(Segment)}{nameof(Segment.Id)}")
+                          .OnDelete(DeleteBehavior.Cascade)
+                );
 
-        modelBuilder.Entity<PlayerBlockedSegment>().HasKey(ps => new { ps.PlayerId, ps.SegmentId });
-
-        modelBuilder.Entity<PlayerBlockedSegment>().HasOne(ps => ps.Player)
-               .WithMany(p => p.PlayerBlockedSegments)
-               .HasForeignKey(ps => ps.PlayerId);
-
-        modelBuilder.Entity<PlayerBlockedSegment>().HasOne(ps => ps.Segment)
-               .WithMany(s => s.PlayerBlockedSegments)
-               .HasForeignKey(ps => ps.SegmentId);
+        // Many-to-Many Relationship between Segments and Promotions
+        modelBuilder.Entity<Segment>().HasMany(s => s.Promotions)
+               .WithMany(p => p.Segments)
+               .UsingEntity<Dictionary<string, object>>(
+                    $"{nameof(Promotion)}{nameof(Segment)}Mappings",
+                    j => j.HasOne<Promotion>()
+                          .WithMany()
+                          .HasForeignKey($"{nameof(Promotion)}{nameof(Promotion.Id)}")
+                          .OnDelete(DeleteBehavior.Cascade),
+                    j => j.HasOne<Segment>()
+                          .WithMany()
+                          .HasForeignKey($"{nameof(Segment)}{nameof(Segment.Id)}")
+                          .OnDelete(DeleteBehavior.Cascade)
+                );
 
         base.OnModelCreating(modelBuilder);
     }

@@ -10,6 +10,7 @@ using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using MassTransit.Initializers;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 
@@ -273,10 +274,7 @@ public class LeaderBoardService : ILeaderBoardService
         }
         catch (Exception ex)
         {
-            return new ApplicationResult
-            {
-                Success = false,
-            };
+            throw new Exception(ex.Message, ex);
         }
     }
 
@@ -289,10 +287,7 @@ public class LeaderBoardService : ILeaderBoardService
         }
         catch (Exception ex)
         {
-            return new ApplicationResult
-            {
-                Success = false,
-            };
+            throw new Exception(ex.Message, ex);
         }
     }
 
@@ -305,18 +300,24 @@ public class LeaderBoardService : ILeaderBoardService
         }
         catch (Exception ex)
         {
-            return new ApplicationResult
-            {
-                Success = false,
-            };
+            throw new Exception(ex.Message, ex);
         }
     }
 
     public async Task<ApplicationResult> GetCalendar(DateTimeOffset? startDate, DateTimeOffset? endDate)
     {
-        var result = await _httpClientService.Get<object>($"{_options.Endpoint}GetCalendar?StartDate={startDate}&EndDate={endDate}");
+        try
+        {
+            await _leaderboardClientService.GetCalendarAsync(startDate, endDate);
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+        //var result = await _httpClientService.Get<object>($"{_options.Endpoint}GetCalendar?StartDate={startDate}&EndDate={endDate}");
 
-        return new ApplicationResult { Data = result, Success = true };
+        //return new ApplicationResult { Data = result, Success = true };
     }
 
     public async Task<ApplicationResult> GetLeaderboardSchedules(int? pageNumber, int? pageSize)
@@ -328,10 +329,7 @@ public class LeaderBoardService : ILeaderBoardService
         }
         catch (Exception ex)
         {
-            return new ApplicationResult
-            {
-                Success = false,
-            };
+            throw new Exception(ex.Message, ex);
         }
     }
 
@@ -344,10 +342,7 @@ public class LeaderBoardService : ILeaderBoardService
         }
         catch (Exception ex)
         {
-            return new ApplicationResult
-            {
-                Success = false,
-            };
+            throw new Exception(ex.Message, ex);
         }
     }
 
@@ -360,10 +355,7 @@ public class LeaderBoardService : ILeaderBoardService
         }
         catch (Exception ex)
         {
-            return new ApplicationResult
-            {
-                Success = false,
-            };
+            throw new Exception(ex.Message, ex);
         }
     }
 }

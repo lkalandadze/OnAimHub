@@ -45,6 +45,7 @@
     <ProjectReference Include="..\..\BuildingBlocks\Shared.Application\Shared.Application.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Shared.Infrastructure\Shared.Infrastructure.csproj" />
     <ProjectReference Include="..\OnAim.Admin.CrossCuttingConcerns\OnAim.Admin.CrossCuttingConcerns.csproj" />
+    <ProjectReference Include="..\OnAim.Admin.Domain\OnAim.Admin.Domain.csproj" />
     <ProjectReference Include="..\OnAim.Admin.Infrasturcture\OnAim.Admin.Infrasturcture.csproj" />
   </ItemGroup>
 
@@ -58,6 +59,9 @@
     </OpenApiReference>
     <OpenApiReference Include="OpenAPIs\swagger1.json" CodeGenerator="NSwagCSharp" Options="LeaderboardClientService" ClassName="LeaderboardClientService">
       <SourceUri>https://localhost:7041/swagger/v1/swagger.json</SourceUri>
+    </OpenApiReference>
+    <OpenApiReference Include="OpenAPIs\swagger2.json" CodeGenerator="NSwagCSharp" Options="SagaClient" ClassName="SagaClient">
+      <SourceUri>https://localhost:7084/swagger/v1/swagger.json</SourceUri>
     </OpenApiReference>
   </ItemGroup>
 

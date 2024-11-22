@@ -24,7 +24,7 @@ public class CreatePromotionViewTemplateHandler : IRequestHandler<CreatePromotio
     }
 
     public async Task<Response<CreatePromotionViewTemplateResponse>> Handle(CreatePromotionViewTemplate request, CancellationToken cancellationToken)
-    {
+{
         return null;
     }
 }

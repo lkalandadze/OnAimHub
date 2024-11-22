@@ -70,10 +70,7 @@ public class PlayerService : IPlayerService
         }
         catch (Exception ex)
         {
-            return new ApplicationResult
-            {
-                Success = false,
-            };
+            throw new Exception(ex.Message, ex);
         }
     }
 
@@ -91,10 +88,7 @@ public class PlayerService : IPlayerService
         }
         catch (Exception ex)
         {
-            return new ApplicationResult
-            {
-                Success = false,
-            };
+            throw new Exception(ex.Message, ex);
         }
     }
 
@@ -114,10 +108,7 @@ public class PlayerService : IPlayerService
         }
         catch (Exception ex)
         {
-            return new ApplicationResult
-            {
-                Success = false,
-            };
+            throw new Exception(ex.Message, ex);
         }
     }
 
@@ -132,7 +123,7 @@ public class PlayerService : IPlayerService
             palyers = palyers.Where(x => x.IsBanned == filter.IsBanned.Value);
 
         if (filter.SegmentIds?.Any() == true)
-            palyers = palyers.Where(x => x.PlayerSegments.Any(ur => filter.SegmentIds.Contains(ur.SegmentId)));
+            palyers = palyers.Where(x => x.Segments.Any(ur => filter.SegmentIds.Contains(ur.Id)));
 
         if (filter.DateFrom.HasValue)
             palyers = palyers.Where(x => x.LastVisitedOn >= filter.DateFrom.Value);
@@ -166,9 +157,9 @@ public class PlayerService : IPlayerService
                 UserName = x.UserName ?? null,
                 RegistrationDate = null,
                 LastVisit = null,
-                Segment = x.PlayerSegments
-                            .OrderByDescending(ps => ps.Segment.PriorityLevel)
-                            .Select(ps => ps.Segment.Id)
+                Segment = x.Segments
+                            .OrderByDescending(ps => ps.PriorityLevel)
+                            .Select(ps => ps.Id)
                             .FirstOrDefault(),
                 IsBanned = x.IsBanned,
             })
@@ -194,8 +185,7 @@ public class PlayerService : IPlayerService
     {
         var player = await _playerRepository
            .Query(x => x.Id == id)
-           .Include(x => x.PlayerSegments)
-               .ThenInclude(x => x.Segment)
+           .Include(x => x.Segments)
            .FirstOrDefaultAsync();
 
         if (player == null)
@@ -238,10 +228,10 @@ public class PlayerService : IPlayerService
             Id = player.Id,
             PlayerName = player.UserName,
             IsBanned = player.IsBanned,
-            Segments = player.PlayerSegments.Select(x => new SegmentListDto
+            Segments = player.Segments.Select(x => new SegmentListDto
             {
-                Id = x.Segment.Id,
-                Description = x.Segment.Description,
+                Id = x.Id,
+                Description = x.Description,
             }).ToList(),
             Transactions = res,
             RegistrationDate = null,
