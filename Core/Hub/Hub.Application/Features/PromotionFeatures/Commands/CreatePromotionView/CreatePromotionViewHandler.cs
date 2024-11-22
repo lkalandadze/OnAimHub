@@ -14,13 +14,20 @@ public class CreatePromotionViewHandler : IRequestHandler<CreatePromotionView, R
 {
     private readonly IPromotionRepository _promotionRepository;
     private readonly IPromotionViewRepository _promotionViewRepository;
+    private readonly IPromotionViewTemplateRepository _promotionViewTemplateRepository;
     private readonly PromotionViewConfiguration _viewConfig;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreatePromotionViewHandler(IPromotionRepository promotionRepository, IPromotionViewRepository promotionViewRepository, IOptions<PromotionViewConfiguration> viewConfig, IUnitOfWork unitOfWork)
+    public CreatePromotionViewHandler(
+        IPromotionRepository promotionRepository, 
+        IPromotionViewRepository promotionViewRepository,
+        IPromotionViewTemplateRepository promotionViewTemplateRepository,
+        IOptions<PromotionViewConfiguration> viewConfig, 
+        IUnitOfWork unitOfWork)
     {
         _promotionRepository = promotionRepository;
         _promotionViewRepository = promotionViewRepository;
+        _promotionViewTemplateRepository = promotionViewTemplateRepository;
         _viewConfig = viewConfig.Value;
         _unitOfWork = unitOfWork;
     }
@@ -39,24 +46,25 @@ public class CreatePromotionViewHandler : IRequestHandler<CreatePromotionView, R
         var filePath = Path.Combine(uploadsDir, fileName);
         Directory.CreateDirectory(uploadsDir);
 
-        try
-        {
-            File.WriteAllText(filePath, request.viewContent);
-        }
-        catch (Exception ex)
-        {
-            // return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
+        File.WriteAllText(filePath, request.viewContent);
 
         var viewUrl = $"{_viewConfig.Host}/{_viewConfig.Directory}/{fileName}";
 
-        //var promotionView = new PromotionView(request.Name, viewUrl, request.PromotionId);
+        var promotionView = new PromotionView(request.Name, viewUrl, request.PromotionId);
 
-        //await _promotionViewRepository.InsertAsync(promotionView);
-        //await _unitOfWork.SaveAsync();
+        await _promotionViewRepository.InsertAsync(promotionView);
 
-        //var response = new CreatePromotionViewResponse(viewUrl);
+        if (request.SaveAsTemplate)
+        {
+            // TODO: ცალკე უნდა შეექმნას ფოლდერი და ფაილიც!!!
+            //var promotionViewTemplate = new PromotionViewTemplate(request.Name, viewUrl, [promotionView]);
+            //await _promotionViewTemplateRepository.InsertAsync(promotionViewTemplate);
+        }
 
-        return new Response<CreatePromotionViewResponse>();
+        await _unitOfWork.SaveAsync();
+
+        var response = new CreatePromotionViewResponse(viewUrl);
+
+        return new Response<CreatePromotionViewResponse>(response);
     }
 }

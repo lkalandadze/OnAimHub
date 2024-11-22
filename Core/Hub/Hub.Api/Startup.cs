@@ -76,6 +76,7 @@ public class Startup
         services.AddScoped<IPromotionRepository, PromotionRepository>();
         services.AddScoped<IPromotionServiceRepository, PromotionServiceRepository>();
         services.AddScoped<IPromotionViewRepository, PromotionViewRepository>();
+        services.AddScoped<IPromotionViewTemplateRepository, PromotionViewTemplateRepository>();
         services.AddScoped<ICoinTemplateRepository, CoinTemplateRepository>();
         services.AddScoped<IPromotionCoinRepository, PromotionCoinRepository>();
         services.AddScoped<IWithdrawOptionRepository, WithdrawOptionRepository>();

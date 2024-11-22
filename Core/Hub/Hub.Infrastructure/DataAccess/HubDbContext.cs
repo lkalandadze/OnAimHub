@@ -1,5 +1,6 @@
 ﻿using Hub.Domain.Entities;
 using Hub.Domain.Entities.DbEnums;
+using Hub.Domain.Entities.Templates;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -35,6 +36,7 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<Promotion> Promotions { get; set; }
     public DbSet<PromotionService> PromotionServices { get; set; }
     public DbSet<PromotionView> PromotionViews { get; set; }
+    public DbSet<PromotionViewTemplate> PromotionViewTemplates { get; set; }
     public DbSet<CoinTemplate> CoinTemplates { get; set; }
     public DbSet<PromotionCoin> PromotionCoins { get; set; }
     public DbSet<WithdrawOption> WithdrawOptions { get; set; }
