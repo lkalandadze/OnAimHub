@@ -1,35 +1,48 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
+﻿namespace OnAim.Admin.Domain.HubEntities;
 
-namespace OnAim.Admin.Domain.HubEntities;
-
-public class Promotion
+public class Promotion : BaseEntity<int>
 {
-    [BsonId]
-    public ObjectId Id { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    //public PromotionStatus PromotionStatus { get; set; }
-    public bool IsDeleted { get; set; }
-    public DateTimeOffset StartDate { get; set; }
-    public DateTimeOffset EndDate { get; set; }
-    public DateTimeOffset CreateDate { get; set; }
-    public List<Coin> Coins { get; set; } = new List<Coin>();
-
-    public void AddCoin(Coin coin)
+    public Promotion()
     {
-        if (coin.CoinType == CoinType.CoinIn && Coins.Any(c => c.CoinType == CoinType.CoinIn))
-            throw new BadRequestException("Only one CoinIn is allowed per promotion.");
-        if (coin.CoinType == CoinType.CoinOut && Coins.Any(c => c.CoinType == CoinType.CoinOut))
-            throw new BadRequestException("Only one CoinOut is allowed per promotion.");
 
-        Coins.Add(coin);
     }
+
+    public Promotion(
+        PromotionStatus status,
+        DateTimeOffset startDate,
+        DateTimeOffset endDate,
+        string title,
+        string description,
+        IEnumerable<PromotionService> services = null,
+        IEnumerable<Segment> segments = null,
+        IEnumerable<PromotionCoin> coins = null,
+        IEnumerable<PromotionView> views = null)
+    {
+        Status = status;
+        StartDate = startDate;
+        EndDate = endDate;
+        Title = title;
+        Description = description;
+        CreateDate = DateTimeOffset.UtcNow;
+        Services = services?.ToList() ?? [];
+        Segments = segments?.ToList() ?? [];
+        Coins = coins?.ToList() ?? [];
+        Views = views?.ToList() ?? [];
+    }
+
+    public decimal? TotalCost { get; private set; }
+    public PromotionStatus Status { get; private set; }
+    public DateTimeOffset StartDate { get; private set; }
+    public DateTimeOffset EndDate { get; private set; }
+    public string Title { get; private set; }
+    public string Description { get; private set; }
+    public DateTimeOffset CreateDate { get; private set; }
+    public DateTimeOffset? DateDeleted { get; private set; }
+    public bool IsDeleted { get; private set; }
+
+    public ICollection<PromotionService> Services { get; private set; }
+    public ICollection<Segment> Segments { get; private set; }
+    public ICollection<PromotionCoin> Coins { get; private set; }
+    public ICollection<Transaction> Transactions { get; private set; }
+    public ICollection<PromotionView> Views { get; private set; }
 }
-//public class PromotionStatus : DbEnum<string, PromotionStatus>
-//{
-//    public static PromotionStatus Active => FromId(nameof(Active));
-//    public static PromotionStatus Finished => FromId(nameof(Finished));
-//    public static PromotionStatus Cancelled => FromId(nameof(Cancelled));
-//}

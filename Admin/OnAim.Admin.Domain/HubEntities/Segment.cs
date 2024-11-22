@@ -1,13 +1,31 @@
-namespace OnAim.Admin.Domain.HubEntities
-{
-	// Generated Code
+namespace OnAim.Admin.Domain.HubEntities;
 
-	public class Segment : BaseEntity<String>	{
-		public string Description { get; set; }
-		public Int32 PriorityLevel { get; set; }
-		public Nullable<Int32> CreatedByUserId { get; set; }
-		public Boolean IsDeleted { get; set; }
-		public ICollection<PlayerSegment> PlayerSegments { get; set; }
-		public ICollection<PlayerBlockedSegment> PlayerBlockedSegments { get; set; }
-	}
+public class Segment : BaseEntity<string>
+{
+    public Segment()
+    {
+
+    }
+
+    public Segment(string id,
+        string description,
+        int priorityLevel,
+        int? createdByUserId = null,
+        IEnumerable<Promotion> promotions = null)
+    {
+        Id = id.ToLower();
+        Description = description;
+        PriorityLevel = priorityLevel;
+        CreatedByUserId = createdByUserId;
+        Promotions = promotions?.ToList() ?? [];
+    }
+
+    public string Description { get; private set; }
+    public int PriorityLevel { get; private set; }
+    public int? CreatedByUserId { get; private set; }
+    public bool IsDeleted { get; private set; }
+
+    public ICollection<Player> Players { get; private set; }
+    public ICollection<Player> BlockedPlayers { get; private set; }
+    public ICollection<Promotion> Promotions { get; private set; }
 }

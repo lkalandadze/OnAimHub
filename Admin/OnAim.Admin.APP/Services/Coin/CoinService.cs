@@ -1,19 +1,17 @@
-﻿using MongoDB.Bson;
-using OnAim.Admin.APP.Services.Abstract;
+﻿using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.Coin;
 using OnAim.Admin.Domain.Interfaces;
 
 namespace OnAim.Admin.APP.Services.Coin;
 
 public class CoinService : ICoinService
 {
-    private readonly IPromotionRepository _promotionRepository;
+    private readonly IReadOnlyRepository<Admin.Domain.HubEntities.Coin> _repository;
 
-    public CoinService(IPromotionRepository promotionRepository)
+    public CoinService(IReadOnlyRepository<OnAim.Admin.Domain.HubEntities.Coin> repository)
     {
-        _promotionRepository = promotionRepository;
+        _repository = repository;
     }
     public async Task<ApplicationResult> GetAllCoins(BaseFilter baseFilter)
     {
@@ -55,24 +53,12 @@ public class CoinService : ICoinService
         return new ApplicationResult();
     }
 
-    public async Task<ApplicationResult> GetById(ObjectId id)
+    public async Task<ApplicationResult> GetById(string id)
     {
         //var coin = await _coinRepository.Query().FirstOrDefaultAsync(x => x.Id == id);
 
         //if (coin == null) throw new NotFoundException("Coin Not Found");
 
         return new ApplicationResult { Success = true, Data = "" };
-    }
-
-    public async Task<ApplicationResult> CreateCoin(OnAim.Admin.Domain.HubEntities.Coin coin)
-    {
-        return new ApplicationResult(); 
-    }
-
-    public async Task<ApplicationResult> UpdateCoinForPromotion(List<string> promotionIds, string coinId, CoinDto updatedCoin)
-    {
-        await _promotionRepository.UpdateCoinForPromotionsAsync(promotionIds, coinId, updatedCoin);
-
-        return new ApplicationResult { Success = true, Data = "Coin updated successfully" };
     }
 }

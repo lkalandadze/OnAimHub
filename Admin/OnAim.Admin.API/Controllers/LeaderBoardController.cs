@@ -77,7 +77,7 @@ public class LeaderBoardController : ApiControllerBase
     
     [HttpGet(nameof(GetCalendar))]
     public async Task<IActionResult> GetCalendar([FromQuery] GetCalendarQuery getCalendar)
-        => Ok(await Mediator.Send(getCalendar));  
+        => Ok(await _leaderBoardService.GetCalendar(getCalendar.StartDate, getCalendar.EndDate));  
     
     [HttpGet(nameof(GetLeaderboardSchedules))]
     public async Task<IActionResult> GetLeaderboardSchedules([FromQuery] GetLeaderboardSchedulesQuery query)

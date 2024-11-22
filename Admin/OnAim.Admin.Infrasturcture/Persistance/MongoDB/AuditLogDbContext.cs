@@ -12,11 +12,9 @@ public class AuditLogDbContext : MongoDbContext
         AuditLogs = GetCollection<AuditLog>();
         AccessDeniedLogs = GetCollection<AccessDeniedLog>();
         OperationFailedLogs = GetCollection<OperationFailedLog>();
-        Promotions = GetCollection<Promotion>();
     }
 
     public IMongoCollection<AuditLog> AuditLogs { get; }
     public IMongoCollection<AccessDeniedLog> AccessDeniedLogs { get; }
     public IMongoCollection<OperationFailedLog> OperationFailedLogs { get; }
-    public IMongoCollection<Promotion> Promotions { get; }
 }

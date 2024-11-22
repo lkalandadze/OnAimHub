@@ -19,8 +19,6 @@ public class SegmentService : ISegmentService
 {
     private readonly IHubApiClient _hubApiClient;
     private readonly IReadOnlyRepository<Admin.Domain.HubEntities.Segment> _segmentRepository;
-    private readonly IReadOnlyRepository<PlayerBlockedSegment> _playerBlockedSegmentRepository;
-    private readonly IReadOnlyRepository<PlayerSegment> _playerSegmentRepository;
     private readonly IReadOnlyRepository<PlayerSegmentAct> _playerSegmentActRepository;
     private readonly IReadOnlyRepository<PlayerSegmentActHistory> _playerSegmentActHistoryRepository;
     private readonly ISecurityContextAccessor _securityContextAccessor;
@@ -30,8 +28,6 @@ public class SegmentService : ISegmentService
         IHubApiClient hubApiClient,
         IOptions<HubApiClientOptions> options,
         IReadOnlyRepository<OnAim.Admin.Domain.HubEntities.Segment> segmentRepository,
-        IReadOnlyRepository<PlayerBlockedSegment> _playerBlockedSegmentRepository,
-        IReadOnlyRepository<PlayerSegment> _playerSegmentRepository,
         IReadOnlyRepository<PlayerSegmentAct> _playerSegmentActRepository,
         IReadOnlyRepository<PlayerSegmentActHistory> _playerSegmentActHistoryRepository,
         ISecurityContextAccessor securityContextAccessor
@@ -39,8 +35,6 @@ public class SegmentService : ISegmentService
     {
         _hubApiClient = hubApiClient;
         _segmentRepository = segmentRepository;
-        this._playerBlockedSegmentRepository = _playerBlockedSegmentRepository;
-        this._playerSegmentRepository = _playerSegmentRepository;
         this._playerSegmentActRepository = _playerSegmentActRepository;
         this._playerSegmentActHistoryRepository = _playerSegmentActHistoryRepository;
         _securityContextAccessor = securityContextAccessor;
@@ -295,7 +289,7 @@ public class SegmentService : ISegmentService
 
     public async Task<ApplicationResult> GetAll(int? pageNumber, int? pageSize)
     {
-        var segments = _segmentRepository.Query().Include(x => x.PlayerSegments).AsNoTracking();
+        var segments = _segmentRepository.Query().AsNoTracking();
 
         var totalCount = await segments.CountAsync();
 
@@ -311,7 +305,7 @@ public class SegmentService : ISegmentService
            Priority = x.PriorityLevel,
            IsDeleted = x.IsDeleted,
            CreatedBy = x.CreatedByUserId,
-           TotalPlayers = x.PlayerSegments.Count(),
+           TotalPlayers = x.Players.Count(),
            LastUpdate = null,
        })
        .Skip((pageNumberr - 1) * pageSizee)
@@ -324,7 +318,7 @@ public class SegmentService : ISegmentService
             {
                 PageNumber = pageNumberr,
                 PageSize = pageSizee,
-                TotalCount = totalCount,
+                //TotalCount = totalCount,
                 Items = await res.ToListAsync()
             },
         };
@@ -360,29 +354,36 @@ public class SegmentService : ISegmentService
         if (segmentId == null)
             throw new BadRequestException("Segment Not Found");
 
-        var blacklistedPlayerIds = await _playerBlockedSegmentRepository
-            .Query(x => x.SegmentId == segmentId)
-            .Select(x => x.PlayerId)
-            .ToListAsync();
+        var blacklistedPlayerIds = await _segmentRepository.Query()
+               .Where(segment => segment.Id == segmentId)
+               .SelectMany(segment => segment.BlockedPlayers.Select(player => player.Id))
+               .ToListAsync();
 
-        var activePlayers = _playerSegmentRepository
-            .Query(x => x.SegmentId == segmentId && !blacklistedPlayerIds.Contains(x.PlayerId));
+        var activePlayersQuery = _segmentRepository.Query()
+                .Where(segment => segment.Id == segmentId)
+                .SelectMany(segment => segment.Players)
+                .Where(player => !blacklistedPlayerIds.Contains(player.Id));
 
-        if (filter.UserName != null)
-            activePlayers = activePlayers.Where(x => x.Player.UserName == filter.UserName);
+        if (!string.IsNullOrEmpty(filter.UserName))
+        {
+            activePlayersQuery = activePlayersQuery.Where(player => player.UserName.Contains(filter.UserName));
+        }
 
-        var totalCount = activePlayers.Count();
+        var totalCount = await activePlayersQuery.CountAsync();
 
         var pageNumber = filter.PageNumber ?? 1;
         var pageSize = filter.PageSize ?? 25;
 
-        var paged = await activePlayers
-            .Select(x => new SegmentPlayerDto
-            {
-                PlayerId = x.PlayerId,
-                PlayerName = x.Player.UserName
-            })
+        var pagedPlayers = await activePlayersQuery
+            .OrderBy(player => player.UserName)
             .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(player => new SegmentPlayerDto
+            {
+                PlayerId = player.Id,
+                PlayerName = player.UserName
+            })
+            .Skip(pageNumber)
             .Take(pageSize)
             .ToListAsync();
 
@@ -394,50 +395,42 @@ public class SegmentService : ISegmentService
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalCount = totalCount,
-                Items = paged
-            },
+                Items = pagedPlayers
+            }
         };
     }
 
     public async Task<ApplicationResult> GetBlackListedPlayers(string segmentId, FilterBy filter)
     {
-        if (segmentId == null)
-            throw new BadRequestException("Segment Not Found");
+        if (string.IsNullOrEmpty(segmentId))
+            throw new BadRequestException("Segment ID is required.");
 
-        var blacklistedPlayerIds = await _playerBlockedSegmentRepository
-            .Query(x => x.SegmentId == segmentId)
-            .Select(x => x.PlayerId)
-            .ToListAsync();
-        var activePlayers = await _playerSegmentRepository
-            .Query(x => x.SegmentId == segmentId && !blacklistedPlayerIds.Contains(x.PlayerId))
-            .Select(x => new SegmentPlayerDto
-            {
-                PlayerId = x.PlayerId,
-                PlayerName = x.Player.UserName
-            })
-            .ToListAsync();
+        var blacklistedPlayersQuery = _segmentRepository.Query()
+            .Where(segment => segment.Id == segmentId)
+            .SelectMany(segment => segment.BlockedPlayers);
 
-        var blacklistedPlayers = _playerBlockedSegmentRepository
-            .Query(x => x.SegmentId == segmentId);
+        if (!string.IsNullOrEmpty(filter.UserName))
+        {
+            blacklistedPlayersQuery = blacklistedPlayersQuery
+                .Where(player => player.UserName.Contains(filter.UserName));
+        }
 
-        if (filter.UserName != null)
-            blacklistedPlayers = blacklistedPlayers.Where(x => x.Player.UserName == filter.UserName);
-        var totalCount = blacklistedPlayers.Count();
+        var totalCount = await blacklistedPlayersQuery.CountAsync();
 
         var pageNumber = filter.PageNumber ?? 1;
         var pageSize = filter.PageSize ?? 25;
 
-        var pagedList = await blacklistedPlayers
-         .Select(bp => new SegmentPlayerDto
-         {
-             PlayerId = bp.Player.Id,
-             PlayerName = bp.Player.UserName,
-             ReasonNote = null
-         })
-         .Skip((pageNumber - 1) * pageSize)
-         .Take(pageSize)
-         .ToListAsync();
-
+        var pagedList = await blacklistedPlayersQuery
+            .OrderBy(player => player.UserName)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(player => new SegmentPlayerDto
+            {
+                PlayerId = player.Id,
+                PlayerName = player.UserName,
+                ReasonNote = null
+            })
+            .ToListAsync();
 
         return new ApplicationResult
         {
@@ -448,7 +441,7 @@ public class SegmentService : ISegmentService
                 PageSize = pageSize,
                 TotalCount = totalCount,
                 Items = pagedList
-            },
+            }
         };
     }
 
@@ -570,7 +563,7 @@ public class SegmentService : ISegmentService
 
         if (filter.SegmentId != null)
         {
-            query = query.Where(x => x.Player.PlayerSegments.Any(ur => filter.SegmentId.Contains(ur.SegmentId)));
+            query = query.Where(x => x.Player.Segments.Any(ur => filter.SegmentId.Contains(ur.Id)));
         }
 
         if (filter.UserId.HasValue && filter.UserId.Value != 0)

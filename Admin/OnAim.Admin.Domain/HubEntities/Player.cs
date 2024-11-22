@@ -10,7 +10,7 @@ namespace OnAim.Admin.Domain.HubEntities
 		public Nullable<DateTimeOffset> LastVisitedOn { get; set; }
         public bool IsBanned { get; private set; }
         public ICollection<PlayerBalance> PlayerBalances { get; set; }
-		public ICollection<PlayerSegment> PlayerSegments { get; set; }
-		public ICollection<PlayerBlockedSegment> PlayerBlockedSegments { get; set; }
-	}
+        public ICollection<Segment> Segments { get; private set; }
+        public ICollection<Segment> BlockedSegments { get; private set; }
+    }
 }
