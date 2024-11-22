@@ -32,7 +32,9 @@ public class PromotionViewService : IPromotionViewService
             fileName = $"{additionalFileName}_{fileName}";
         }
 
-        var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), directory);
+        var localPath = new Uri(_viewConfig.Host).LocalPath;
+        var uploadsDir = Path.Combine(localPath, directory);
+
         var filePath = Path.Combine(uploadsDir, fileName);
         Directory.CreateDirectory(uploadsDir);
 
