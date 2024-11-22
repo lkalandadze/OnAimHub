@@ -9,7 +9,7 @@ public class WithdrawOptionTypeConfiguration : IEntityTypeConfiguration<Withdraw
 {
     public void Configure(EntityTypeBuilder<WithdrawOption> builder)
     {
-        // Configuration for WithdrawOptionGroups
+        // Many-to-Many Relationship between WithdrawOption and WithdrawOptionGroups
         builder.HasMany(w => w.WithdrawOptionGroups)
                .WithMany(g => g.WithdrawOptions)
                .UsingEntity<Dictionary<string, object>>(
