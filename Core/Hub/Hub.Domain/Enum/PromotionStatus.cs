@@ -2,7 +2,10 @@
 
 public enum PromotionStatus
 {
-    NotStarted = 0,
-    InProgress = 1,
-    Finished = 2,
+    ToLaunch = 0,
+    UpComing = 1,
+    Started = 2,
+    Paused = 3,
+    Cancelled = 4,
+    Finished = 5,
 }
