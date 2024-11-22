@@ -182,25 +182,9 @@ public class Startup
             ConfigureConsulLifetime(app, lifetime);
         }
 
-        ConfigureStaticFiles(app);
-
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
-        });
-    }
-
-    private void ConfigureStaticFiles(IApplicationBuilder app)
-    {
-        var directory = Configuration.GetSection("PromotionViewConfiguration:Directory").Value!;
-
-        app.UseStaticFiles();
-
-        app.UseStaticFiles(new StaticFileOptions
-        {
-            FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), directory)),
-            RequestPath = $"/{directory}"
         });
     }
 
