@@ -1,6 +1,7 @@
 ﻿using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
+using Hub.Domain.Entities.Templates;
 using MediatR;
 
 namespace Hub.Application.Features.PromotionFeatures.Commands.Create;

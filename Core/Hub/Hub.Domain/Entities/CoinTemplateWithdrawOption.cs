@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using Hub.Domain.Entities.Templates;
 using Shared.Domain.Entities;
 
 namespace Hub.Domain.Entities;

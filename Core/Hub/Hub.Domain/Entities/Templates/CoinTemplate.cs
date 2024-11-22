@@ -1,15 +1,16 @@
 ﻿#nullable disable
 
+using Hub;
 using Hub.Domain.Enum;
 using Shared.Domain.Entities;
 
-namespace Hub.Domain.Entities;
+namespace Hub.Domain.Entities.Templates;
 
 public class CoinTemplate : BaseEntity<int>
 {
     public CoinTemplate()
     {
-        
+
     }
 
     public CoinTemplate(string name, string description, string imageUrl, CoinType coinType, IEnumerable<WithdrawOption> withdrawOptions = null)

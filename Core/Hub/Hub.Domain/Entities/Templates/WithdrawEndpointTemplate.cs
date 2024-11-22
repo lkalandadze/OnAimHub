@@ -1,15 +1,16 @@
 ﻿#nullable disable
 
+using Hub;
 using Hub.Domain.Enum;
 using Shared.Domain.Entities;
 
-namespace Hub.Domain.Entities;
+namespace Hub.Domain.Entities.Templates;
 
 public class WithdrawEndpointTemplate : BaseEntity<int>
 {
     public WithdrawEndpointTemplate()
     {
-        
+
     }
 
     public WithdrawEndpointTemplate(string name, string endpoint, string endpointContent, EndpointContentType contentType)

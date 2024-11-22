@@ -24,11 +24,11 @@ public class CreateSegmentHandler : IRequestHandler<CreateSegmentCommand>
 
     public async Task<Unit> Handle(CreateSegmentCommand request, CancellationToken cancellationToken)
     {
-        var segments = _segmentRepository.Query(x => x.PriorityLevel == request.PriorityLevel);
+        var segments = _segmentRepository.Query(x => x.Id == request.Id || x.PriorityLevel == request.PriorityLevel);
 
         if (segments != null && segments.Any())
         {
-            throw new ApiException(ApiExceptionCodeTypes.DuplicateEntry, "A segment with the same priority level already exists.");
+            throw new ApiException(ApiExceptionCodeTypes.DuplicateEntry, "A segment with the same Id or priority level already exists.");
         }
 
         var segment = new Segment(request.Id, request.Description, request.PriorityLevel, request.CreatedByUserId);
@@ -36,9 +36,9 @@ public class CreateSegmentHandler : IRequestHandler<CreateSegmentCommand>
         await _segmentRepository.InsertAsync(segment);
         await _unitOfWork.SaveAsync();
 
-        var @event = new CreateSegmentEvent(request.Id, Guid.NewGuid(), request.Description, request.PriorityLevel, false);
+        //var @event = new CreateSegmentEvent(request.Id, Guid.NewGuid(), request.Description, request.PriorityLevel, false);
 
-        await _messageBus.Publish(@event);
+        //await _messageBus.Publish(@event);
 
         return Unit.Value;
     }

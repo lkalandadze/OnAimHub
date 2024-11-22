@@ -25,6 +25,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -72,6 +73,15 @@ public class Startup
         services.AddScoped<IHubSettingRepository, HubSettingRepository>();
         services.AddScoped<IPlayerBanRepository, PlayerBanRepository>();
         services.AddScoped<IRewardRepository, PrizeClaimRepository>();
+        services.AddScoped<IPromotionRepository, PromotionRepository>();
+        services.AddScoped<IPromotionServiceRepository, PromotionServiceRepository>();
+        services.AddScoped<IPromotionViewRepository, PromotionViewRepository>();
+        services.AddScoped<IPromotionViewTemplateRepository, PromotionViewTemplateRepository>();
+        services.AddScoped<ICoinTemplateRepository, CoinTemplateRepository>();
+        services.AddScoped<IPromotionCoinRepository, PromotionCoinRepository>();
+        services.AddScoped<IWithdrawOptionRepository, WithdrawOptionRepository>();
+        services.AddScoped<IWithdrawEndpointTemplateRepository, WithdrawEndpointTemplateRepository>();
+        services.AddScoped<IWithdrawOptionGroupRepository, WithdrawOptionGroupRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddSingleton<IGameService, GameService>();
@@ -87,18 +97,11 @@ public class Startup
         services.AddScoped<IBackgroundJobScheduler, HangfireJobScheduler>();
         services.AddScoped<IMessageBus, MessageBus>();
 
-        services.AddScoped<IPromotionRepository, PromotionRepository>();
-        services.AddScoped<IPromotionServiceRepository, PromotionServiceRepository>();
-        services.AddScoped<ICoinTemplateRepository, CoinTemplateRepository>();
-        services.AddScoped<IPromotionCoinRepository, PromotionCoinRepository>();
-        services.AddScoped<IWithdrawOptionRepository, WithdrawOptionRepository>();
-        services.AddScoped<IWithdrawEndpointTemplateRepository, WithdrawEndpointTemplateRepository>();
-        services.AddScoped<IWithdrawOptionGroupRepository, WithdrawOptionGroupRepository>();
-
         services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
         services.Configure<BasicAuthConfiguration>(Configuration.GetSection("BasicAuthConfiguration"));
         services.Configure<CasinoApiConfiguration>(Configuration.GetSection("CasinoApiConfiguration"));
         services.Configure<GameApiConfiguration>(Configuration.GetSection("GameApiConfiguration"));
+        services.Configure<PromotionViewConfiguration>(Configuration.GetSection("PromotionViewConfiguration"));
 
         services.AddSingleton<HubSettings>(provider =>
         {
@@ -178,9 +181,25 @@ public class Startup
             ConfigureConsulLifetime(app, lifetime);
         }
 
+        ConfigureStaticFiles(app);
+
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+        });
+    }
+
+    private void ConfigureStaticFiles(IApplicationBuilder app)
+    {
+        var directory = Configuration.GetSection("PromotionViewConfiguration:Directory").Value!;
+
+        app.UseStaticFiles();
+
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), directory)),
+            RequestPath = $"/{directory}"
         });
     }
 
