@@ -1,11 +1,8 @@
-﻿using Hub.Application.Configurations;
-using Hub.Application.Features.PromotionFeatures.Commands.CreatePromotionView;
-using Hub.Application.Services.Abstract;
+﻿using Hub.Application.Services.Abstract;
 using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities.Templates;
 using MediatR;
-using Microsoft.Extensions.Options;
 using Shared.Lib.Wrappers;
 
 namespace Hub.Application.Features.PromotionFeatures.Commands.CreatePromotionViewTemplate;

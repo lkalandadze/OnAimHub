@@ -1,11 +1,9 @@
-﻿using Hub.Application.Configurations;
-using Hub.Application.Services.Abstract;
+﻿using Hub.Application.Services.Abstract;
 using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
 using Hub.Domain.Entities.Templates;
 using MediatR;
-using Microsoft.Extensions.Options;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
 using Shared.Lib.Wrappers;

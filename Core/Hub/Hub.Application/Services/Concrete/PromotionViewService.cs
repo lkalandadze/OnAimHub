@@ -29,7 +29,7 @@ public class PromotionViewService : IPromotionViewService
 
         if (!string.IsNullOrEmpty(additionalFileName))
         {
-            fileName = $"{fileName}_{additionalFileName}";
+            fileName = $"{additionalFileName}_{fileName}";
         }
 
         var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), directory);
