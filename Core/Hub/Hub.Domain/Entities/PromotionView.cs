@@ -12,11 +12,12 @@ public class PromotionView : BaseEntity<int>
         
     }
 
-    public PromotionView(string name, string url, int promotionId)
+    public PromotionView(string name, string url, int promotionId, int? templateId = null)
     {
         Name = name;
         Url = url;
         PromotionId = promotionId;
+        PromotionViewTemplateId = templateId;
     }
 
     public string Name { get; private set; }
@@ -25,6 +26,6 @@ public class PromotionView : BaseEntity<int>
     public int PromotionId { get; private set; }
     public Promotion Promotion { get; private set; }
 
-    public int PromotionViewTemplateId { get; private set; }
+    public int? PromotionViewTemplateId { get; private set; }
     public PromotionViewTemplate PromotionViewTemplate { get; private set; }
 }

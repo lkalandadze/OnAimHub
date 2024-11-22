@@ -94,6 +94,7 @@ public class Startup
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IJobService, JobService>();
+        services.AddScoped<IPromotionViewService, PromotionViewService>();
         services.AddScoped<IBackgroundJobScheduler, HangfireJobScheduler>();
         services.AddScoped<IMessageBus, MessageBus>();
 

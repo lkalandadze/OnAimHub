@@ -12,6 +12,7 @@ using Hub.Application.Features.PrizeClaimFeatures.Commands.CreateReward;
 using Hub.Application.Features.PrizeClaimFeatures.Commands.DeleteReward;
 using Hub.Application.Features.PromotionFeatures.Commands.Create;
 using Hub.Application.Features.PromotionFeatures.Commands.CreatePromotionView;
+using Hub.Application.Features.PromotionFeatures.Commands.CreatePromotionViewTemplate;
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentsToPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentToPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.BlockSegmentForPlayer;
@@ -44,6 +45,12 @@ public class AdminController : BaseApiController
 
     [HttpPost(nameof(CreatePromotionView))]
     public async Task<ActionResult> CreatePromotionView(CreatePromotionView command)
+    {
+        return Ok(await Mediator.Send(command));
+    }
+
+    [HttpPost(nameof(CreatePromotionViewTemplate))]
+    public async Task<ActionResult> CreatePromotionViewTemplate(CreatePromotionViewTemplate command)
     {
         return Ok(await Mediator.Send(command));
     }
