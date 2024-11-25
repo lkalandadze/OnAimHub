@@ -1,6 +1,5 @@
 ﻿#nullable disable
 
-using Hub;
 using Hub.Domain.Enum;
 using Shared.Domain.Entities;
 
@@ -37,7 +36,11 @@ public class CoinTemplate : BaseEntity<int>
         Description = description;
         ImageUrl = imageUrl;
         CoinType = coinType;
-        WithdrawOptions = withdrawOptions?.ToList() ?? [];
+
+        if (withdrawOptions != null)
+        {
+            SetWithdrawOptions(withdrawOptions);
+        }
     }
 
     public void SetWithdrawOptions(IEnumerable<WithdrawOption> withdrawOptions)

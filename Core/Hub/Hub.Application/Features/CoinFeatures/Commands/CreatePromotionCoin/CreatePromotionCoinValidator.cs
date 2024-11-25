@@ -12,7 +12,7 @@ public class CreatePromotionCoinValidator : AbstractValidator<CreatePromotionCoi
             .MinimumLength(3).WithMessage("Title must be at least 3 characters.")
             .MaximumLength(50).WithMessage("Title must not exceed 100 characters.");
 
-        RuleFor(x => x.IconUrl)
+        RuleFor(x => x.ImageUrl)
             .NotEmpty().WithMessage("ImageUrl is required.")
             .MustBeAValidUrl().WithMessage("ImageUrl must be a valid URL.");
 

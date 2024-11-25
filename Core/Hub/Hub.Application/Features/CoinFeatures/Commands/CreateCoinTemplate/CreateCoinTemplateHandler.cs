@@ -21,7 +21,7 @@ public class CreateCoinTemplateHandler : IRequestHandler<CreateCoinTemplate>
 
     public async Task<Unit> Handle(CreateCoinTemplate request, CancellationToken cancellationToken)
     {
-        var coinTemplate = new CoinTemplate(request.Name, request.Description, request.IconUrl, request.CoinType);
+        var coinTemplate = new CoinTemplate(request.Name, request.Description, request.ImageUrl, request.CoinType);
 
         if (request.WithdrawOptionIds != null && request.WithdrawOptionIds.Any() && request.CoinType == CoinType.Outgoing)
         {
