@@ -7,7 +7,7 @@ public class UnblockSegmentForPlayerValidator : AbstractValidator<UnblockSegment
     public UnblockSegmentForPlayerValidator()
     {
         RuleFor(x => x.SegmentId).NotNull().NotEmpty();
+
         RuleFor(x => x.PlayerId).NotNull();
-        RuleFor(x => x.ByUserId).Null();
     }
 }

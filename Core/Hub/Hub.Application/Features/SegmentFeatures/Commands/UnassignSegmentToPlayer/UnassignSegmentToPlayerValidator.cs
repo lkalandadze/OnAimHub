@@ -7,7 +7,7 @@ public class UnassignSegmentToPlayerValidator : AbstractValidator<UnassignSegmen
     public UnassignSegmentToPlayerValidator()
     {
         RuleFor(x => x.SegmentId).NotNull().NotEmpty();
+
         RuleFor(x => x.PlayerId).NotNull();
-        RuleFor(x => x.ByUserId).Null();
     }
 }

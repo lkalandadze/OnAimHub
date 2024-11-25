@@ -7,7 +7,7 @@ public class BlockSegmentsForPlayersValidator : AbstractValidator<BlockSegmentsF
     public BlockSegmentsForPlayersValidator()
     {
         RuleFor(x => x.SegmentIds).NotNull().NotEmpty();
+
         RuleFor(x => x.File).NotNull();
-        RuleFor(x => x.ByUserId).Null();
     }
 }

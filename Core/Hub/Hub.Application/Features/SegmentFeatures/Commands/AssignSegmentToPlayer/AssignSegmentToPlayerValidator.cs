@@ -7,7 +7,7 @@ public class AssignSegmentToPlayerValidator : AbstractValidator<AssignSegmentToP
     public AssignSegmentToPlayerValidator()
     {
         RuleFor(x => x.SegmentId).NotNull().NotEmpty();
+
         RuleFor(x => x.PlayerId).NotNull();
-        RuleFor(x => x.ByUserId).Null();
     }
 }
