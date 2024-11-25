@@ -62,6 +62,39 @@ public class JobService : IJobService
         }
     }
 
+    public async Task CreatePromotionJobsAsync(Promotion promotion)
+    {
+        if (promotion.Status == PromotionStatus.ToLaunch || promotion.Status == PromotionStatus.Cancelled || promotion.Status == PromotionStatus.Paused)
+            return;
+
+        var startJob = new Job(
+            name: $"Promotion-{promotion.Id}-Start",
+            description: $"Start promotion {promotion.Title}",
+            isActive: true,
+            jobType: JobType.Custom,
+            jobCategory: JobCategory.PromotionStatusUpdate,
+            executionTime: promotion.StartDate.TimeOfDay,
+            intervalInDays: null);
+
+        await _jobRepository.InsertAsync(startJob);
+
+        var finishJob = new Job(
+            name: $"Promotion-{promotion.Id}-Finish",
+            description: $"Finish promotion {promotion.Title}",
+            isActive: true,
+            jobType: JobType.Custom,
+            jobCategory: JobCategory.PromotionStatusUpdate,
+            executionTime: promotion.EndDate.TimeOfDay,
+            intervalInDays: null);
+
+        await _jobRepository.InsertAsync(finishJob);
+
+        await _unitOfWork.SaveAsync();
+
+        _jobScheduler.ScheduleJob(startJob, GenerateCronExpression(promotion.StartDate));
+        _jobScheduler.ScheduleJob(finishJob, GenerateCronExpression(promotion.EndDate));
+    }
+
     public async Task DeleteJobAsync(int jobId)
     {
         var job = _jobRepository.Query().Where(x => x.Id == jobId).FirstOrDefault();
@@ -107,5 +140,10 @@ public class JobService : IJobService
         int minute = executionTime.Minutes;
 
         return $"0 {minute} {hour} */{intervalInDays} * ?";
+    }
+
+    private string GenerateCronExpression(DateTimeOffset date)
+    {
+        return $"{date.Minute} {date.Hour} {date.Day} {date.Month} ? {date.Year}";
     }
 }

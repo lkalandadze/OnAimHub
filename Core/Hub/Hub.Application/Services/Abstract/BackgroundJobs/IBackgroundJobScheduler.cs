@@ -9,4 +9,6 @@ public interface IBackgroundJobScheduler
     void RemoveScheduledJob(int jobId);
 
     Task ExecuteJobs(Job job);
+
+    Task HandlePromotionStatusUpdateAsync(Job job);
 }

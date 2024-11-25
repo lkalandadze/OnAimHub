@@ -69,4 +69,9 @@ public class Promotion : BaseEntity<int>
         IsDeleted = true;
         DateDeleted = DateTimeOffset.UtcNow;
     }
+
+    public void UpdateStatus(PromotionStatus status)
+    {
+        Status = status;
+    }
 }
