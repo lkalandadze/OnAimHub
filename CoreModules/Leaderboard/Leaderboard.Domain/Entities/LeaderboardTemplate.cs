@@ -21,6 +21,7 @@ public class LeaderboardTemplate : BaseEntity<int>
     public int AnnounceIn { get; set; }
     public int StartIn { get; set; }
     public int EndIn { get; set; }
+    public Guid CorrelationId { get; set; }
     public ICollection<LeaderboardTemplatePrize> LeaderboardTemplatePrizes { get; set; } = new List<LeaderboardTemplatePrize>();
 
     public void AddLeaderboardTemplatePrizes(int startRank, int endRank, string prizeId, int amount)

@@ -1,4 +1,5 @@
 ﻿using Leaderboard.Application.Features.LeaderboardRecordFeatures.Commands.Create;
+using Leaderboard.Application.Features.LeaderboardRecordFeatures.Commands.Delete;
 using Leaderboard.Application.Features.LeaderboardRecordFeatures.Commands.Update;
 using Leaderboard.Application.Features.LeaderboardRecordFeatures.Queries.Get;
 using Leaderboard.Application.Features.LeaderboardRecordFeatures.Queries.GetById;
@@ -7,6 +8,7 @@ using Leaderboard.Application.Features.LeaderboardScheduleFeatures.Commands.Crea
 using Leaderboard.Application.Features.LeaderboardScheduleFeatures.Commands.Update;
 using Leaderboard.Application.Features.LeaderboardScheduleFeatures.Queries.Get;
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.Create;
+using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.Delete;
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.Update;
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Queries.Get;
 using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Queries.GetById;
@@ -33,6 +35,9 @@ public class LeaderboardController : BaseApiController
     [HttpPost(nameof(CreateLeaderboardRecord))]
     public async Task CreateLeaderboardRecord(CreateLeaderboardRecordCommand request) => await Mediator.Send(request);
 
+    [HttpPost(nameof(DeleteLeaderboardRecord))]
+    public async Task DeleteLeaderboardRecord(DeleteLeaderboardRecordCommand request) => await Mediator.Send(request);
+
     [HttpPut(nameof(UpdateLeaderboardRecord))]
     public async Task UpdateLeaderboardRecord(UpdateLeaderboardRecordCommand request) => await Mediator.Send(request);
 
@@ -51,6 +56,9 @@ public class LeaderboardController : BaseApiController
 
     [HttpPost(nameof(CreateLeaderboardTemplate))]
     public async Task CreateLeaderboardTemplate(CreateLeaderboardTemplateCommand request) => await Mediator.Send(request);
+
+    [HttpPost(nameof(DeleteLeaderboardTemplate))]
+    public async Task DeleteLeaderboardTemplate(DeleteLeaderboardTemplateCommand request) => await Mediator.Send(request);
 
     [HttpPut(nameof(UpdateLeaderboardTemplates))]
     public async Task UpdateLeaderboardTemplates(UpdateLeaderboardTemplateCommand request) => await Mediator.Send(request);
