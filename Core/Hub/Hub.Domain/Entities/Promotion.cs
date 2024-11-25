@@ -17,6 +17,7 @@ public class Promotion : BaseEntity<int>
         DateTimeOffset endDate, 
         string title, 
         string description,
+        Guid correlationId,
         IEnumerable<PromotionService> services = null,
         IEnumerable<Segment> segments = null,
         IEnumerable<PromotionCoin> coins = null,
@@ -27,6 +28,7 @@ public class Promotion : BaseEntity<int>
         EndDate = endDate;
         Title = title;
         Description = description;
+        Correlationid = correlationId;
         CreateDate = DateTimeOffset.UtcNow;
         Services = services?.ToList() ?? [];
         Segments = segments?.ToList() ?? [];

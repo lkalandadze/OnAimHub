@@ -122,7 +122,8 @@ public class JobService : IJobService
             //schedule.RepeatType,
             schedule.LeaderboardTemplateId,
             LeaderboardRecordStatus.Created,
-            true
+            true,
+            null
         );
 
         foreach (var prize in leaderboardTemplate.LeaderboardTemplatePrizes)

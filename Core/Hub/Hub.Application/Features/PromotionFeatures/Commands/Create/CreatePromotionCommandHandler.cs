@@ -50,6 +50,7 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
             request.EndDate,
             request.Title,
             request.Description,
+            request.CorrelationId,
             segments: segments
         );
 

@@ -30,7 +30,8 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
             //request.JobType,
             request.LeaderboardTemplateId,
             request.Status,
-            false
+            false,
+            request.CorrelationId
             );
 
         foreach (var prize in request.LeaderboardPrizes)

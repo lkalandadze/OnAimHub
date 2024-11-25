@@ -15,6 +15,7 @@ public sealed class CreateLeaderboardRecordCommand : IRequest
     public LeaderboardType LeaderboardType { get; set; }
     //public JobTypeEnum JobType { get; set; }
     public LeaderboardRecordStatus Status { get; set; }
+    public Guid CorrelationId { get; set; }
     public List<CreateLeaderboardRecordPrizeCommandItem> LeaderboardPrizes { get; set; }
 }
 

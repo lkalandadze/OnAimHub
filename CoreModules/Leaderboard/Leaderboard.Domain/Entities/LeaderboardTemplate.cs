@@ -5,7 +5,7 @@ namespace Leaderboard.Domain.Entities;
 
 public class LeaderboardTemplate : BaseEntity<int>
 {
-    public LeaderboardTemplate(string name, string description, TimeSpan startTime, int announceIn, int startIn, int endIn)
+    public LeaderboardTemplate(string name, string description, TimeSpan startTime, int announceIn, int startIn, int endIn, Guid correlationId)
     {
         Name = name;
         Description = description;
@@ -13,6 +13,7 @@ public class LeaderboardTemplate : BaseEntity<int>
         AnnounceIn = announceIn;
         StartIn = startIn;
         EndIn = endIn;
+        CorrelationId = correlationId;
     }
 
     public string Name { get; set; }
