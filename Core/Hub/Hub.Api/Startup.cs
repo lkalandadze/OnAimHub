@@ -4,7 +4,6 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using Hub.Api;
 using Hub.Api.Common.Consul;
-using Hub.Api.Middlewares;
 using Hub.Application;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
@@ -25,13 +24,13 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.PostgreSQL;
 using Shared.Application;
 using Shared.Application.Configurations;
+using Shared.Application.Middlewares;
 using Shared.Infrastructure.Bus;
 using Shared.Infrastructure.MassTransit;
 using Shared.IntegrationEvents.IntegrationEvents.Segment;
@@ -128,6 +127,17 @@ public class Startup
         services.AddLogging();
         ConfigureLogging();
 
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll",
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+        });
+
         if (IsRunningInDocker())
         {
             ConfigureConsul(services);
@@ -155,7 +165,8 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, IBackgroundJobClient backgroundJobs)
     {
-        app.UseCors("AllowAnyOrigin");
+        app.UseCors("AllowAll");
+
         app.UseHttpsRedirection();
 
         if (env.IsDevelopment())

@@ -1,9 +1,10 @@
-﻿using Shared.Application.Exceptions;
+﻿using Microsoft.AspNetCore.Http;
+using Shared.Application.Exceptions;
 using Shared.Lib.Wrappers;
 using System.Net;
 using System.Text.Json;
 
-namespace Hub.Api.Middlewares;
+namespace Shared.Application.Middlewares;
 
 public class ErrorHandlerMiddleware
 {
