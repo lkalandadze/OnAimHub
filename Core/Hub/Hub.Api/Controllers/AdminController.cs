@@ -14,6 +14,7 @@ using Hub.Application.Features.PromotionFeatures.Commands.Create;
 using Hub.Application.Features.PromotionFeatures.Commands.CreatePromotionView;
 using Hub.Application.Features.PromotionFeatures.Commands.CreatePromotionViewTemplate;
 using Hub.Application.Features.PromotionFeatures.Commands.Delete;
+using Hub.Application.Features.PromotionFeatures.Commands.SoftDelete;
 using Hub.Application.Features.PromotionFeatures.Commands.UpdateStatus;
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentsToPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.AssignSegmentToPlayer;
@@ -71,6 +72,9 @@ public class AdminController : BaseApiController
 
     [HttpDelete(nameof(DeletePromotion))]
     public async Task<Unit> DeletePromotion(DeletePromotionCommand command) => await Mediator.Send(command);
+
+    [HttpPut(nameof(SoftDeletePromotion))]
+    public async Task<Unit> SoftDeletePromotion(SoftDeletePromotionCommand command) => await Mediator.Send(command);
 
     #endregion
 
