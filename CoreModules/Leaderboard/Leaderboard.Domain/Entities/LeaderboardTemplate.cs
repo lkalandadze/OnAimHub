@@ -31,13 +31,20 @@ public class LeaderboardTemplate : BaseEntity<int>
         LeaderboardTemplatePrizes.Add(prize);
     }
 
-    public void UpdateLeaderboardPrizes(int id, int startRank, int endRank, string prizeId, int amount)
+    public void UpdateLeaderboardPrizes(int? id, int startRank, int endRank, string prizeId, int amount)
     {
-        var prize = LeaderboardTemplatePrizes.FirstOrDefault(x => x.Id == id);
+        if (id.HasValue)
+        {
+            var existingPrize = LeaderboardTemplatePrizes.FirstOrDefault(x => x.Id == id.Value);
+            if (existingPrize != null)
+            {
+                existingPrize.Update(startRank, endRank, prizeId, amount);
+                return;
+            }
+        }
 
-        if (prize != null) return;
-
-        prize.Update(startRank, endRank, prizeId, amount);
+        var newPrize = new LeaderboardTemplatePrize(startRank, endRank, prizeId, amount);
+        LeaderboardTemplatePrizes.Add(newPrize);
     }
 
     public void Update(string name, string description, TimeSpan startTime, int announceIn, int startIn, int endIn)
