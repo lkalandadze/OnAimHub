@@ -25,7 +25,8 @@ public class CreateLeaderboardTemplateCommandHandler : IRequestHandler<CreateLea
             request.StartTime,
             request.EndIn,
             request.StartIn,
-            request.AnnounceIn);
+            request.AnnounceIn,
+            request.CorrelationId);
 
         foreach (var prize in request.LeaderboardPrizes)
         {

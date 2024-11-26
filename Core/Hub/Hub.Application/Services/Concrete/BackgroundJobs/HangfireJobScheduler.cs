@@ -15,14 +15,16 @@ public class HangfireJobScheduler : IBackgroundJobScheduler
     private readonly IPlayerBalanceService _playerBalanceService;
     private readonly IPlayerProgressService _playerProgressService;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IPromotionService _promotionService;
 
-    public HangfireJobScheduler(IRecurringJobManager recurringJobManager, IJobRepository jobRepository, IPlayerBalanceService playerBalanceService, IPlayerProgressService playerProgressService, IUnitOfWork unitOfWork)
+    public HangfireJobScheduler(IRecurringJobManager recurringJobManager, IJobRepository jobRepository, IPlayerBalanceService playerBalanceService, IPlayerProgressService playerProgressService, IUnitOfWork unitOfWork, IPromotionService promotionService)
     {
         _recurringJobManager = recurringJobManager;
         _jobRepository = jobRepository;
         _playerBalanceService = playerBalanceService;
         _playerProgressService = playerProgressService;
         _unitOfWork = unitOfWork;
+        _promotionService = promotionService;
     }
 
     public void ScheduleJob(Job job, string cronExpression)
@@ -53,6 +55,10 @@ public class HangfireJobScheduler : IBackgroundJobScheduler
                 case JobCategory.DailyProgressReset:
                     await ResetProgressesDailyAsync(currentJob);
                     break;
+
+                case JobCategory.PromotionStatusUpdate:
+                    await HandlePromotionStatusUpdateAsync(currentJob);
+                    break;
             }
         }
     }
@@ -75,5 +81,29 @@ public class HangfireJobScheduler : IBackgroundJobScheduler
 
         _jobRepository.Update(job);
         await _unitOfWork.SaveAsync();
+    }
+
+    public async Task HandlePromotionStatusUpdateAsync(Job job)
+    {
+        var promotionId = ExtractPromotionIdFromJobName(job.Name);
+
+        if (job.Name.Contains("Start"))
+        {
+            await _promotionService.UpdatePromotionStatus(promotionId, PromotionStatus.Started);
+        }
+        else if (job.Name.Contains("Finish"))
+        {
+            await _promotionService.UpdatePromotionStatus(promotionId, PromotionStatus.Finished);
+        }
+
+        job.SetLastExecutedTime();
+        _jobRepository.Update(job);
+        await _unitOfWork.SaveAsync();
+    }
+
+    private int ExtractPromotionIdFromJobName(string jobName)
+    {
+        var parts = jobName.Split('-');
+        return int.Parse(parts[1]); // Assuming "Promotion-{Id}-Start"
     }
 }

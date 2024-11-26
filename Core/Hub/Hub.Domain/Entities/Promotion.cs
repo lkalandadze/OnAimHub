@@ -17,6 +17,7 @@ public class Promotion : BaseEntity<int>
         DateTimeOffset endDate, 
         string title, 
         string description,
+        Guid correlationId,
         IEnumerable<PromotionService> services = null,
         IEnumerable<Segment> segments = null,
         IEnumerable<PromotionCoin> coins = null,
@@ -27,6 +28,7 @@ public class Promotion : BaseEntity<int>
         EndDate = endDate;
         Title = title;
         Description = description;
+        Correlationid = correlationId;
         CreateDate = DateTimeOffset.UtcNow;
         Services = services?.ToList() ?? [];
         Segments = segments?.ToList() ?? [];
@@ -43,6 +45,7 @@ public class Promotion : BaseEntity<int>
     public DateTimeOffset CreateDate { get; private set; }
     public DateTimeOffset? DateDeleted { get; private set; }
     public bool IsDeleted { get; private set; }
+    public Guid Correlationid { get; private set; }
 
     public ICollection<PromotionService> Services { get; private set; }
     public ICollection<Segment> Segments { get; private set; }
@@ -68,5 +71,10 @@ public class Promotion : BaseEntity<int>
     {
         IsDeleted = true;
         DateDeleted = DateTimeOffset.UtcNow;
+    }
+
+    public void UpdateStatus(PromotionStatus status)
+    {
+        Status = status;
     }
 }

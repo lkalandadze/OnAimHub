@@ -81,6 +81,7 @@ public class Startup
         services.AddScoped<IWithdrawOptionRepository, WithdrawOptionRepository>();
         services.AddScoped<IWithdrawEndpointTemplateRepository, WithdrawEndpointTemplateRepository>();
         services.AddScoped<IWithdrawOptionGroupRepository, WithdrawOptionGroupRepository>();
+        services.AddScoped<IPromotionService, PromotionService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddSingleton<IGameService, GameService>();

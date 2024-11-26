@@ -20,7 +20,8 @@ public class LeaderboardRecord : BaseEntity<int>
                              //JobTypeEnum jobType,
                              int? leaderboardTemplateId,
                              LeaderboardRecordStatus status,
-                             bool isGenerated)
+                             bool isGenerated,
+                             Guid? correlationId)
     {
         Name = name;
         Description = description;
@@ -33,6 +34,7 @@ public class LeaderboardRecord : BaseEntity<int>
         LeaderboardTemplateId = leaderboardTemplateId;
         Status = status;
         IsGenerated = isGenerated;
+        CorrelationId = correlationId;
     }
 
     public string Name { get; set; }
@@ -47,6 +49,7 @@ public class LeaderboardRecord : BaseEntity<int>
     //public JobTypeEnum JobType { get; set; }
     public LeaderboardRecordStatus Status { get; set; }
     public bool IsGenerated { get; set; }
+    public Guid? CorrelationId { get; set; }
     public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; } = new List<LeaderboardProgress>();
     public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; } = new List<LeaderboardRecordPrize>();
 
