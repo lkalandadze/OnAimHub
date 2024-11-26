@@ -1,13 +1,13 @@
 ﻿namespace SagaOrchestrationStateMachine.Models;
 
-public record CreatePromotionCommand(
-    string Title,
-    PromotionStatus Status,
-    DateTimeOffset StartDate,
-    DateTimeOffset EndDate,
-    string Description,
-    IEnumerable<string> SegmentIds,
-    IEnumerable<CreatePromotionCoinModel> PromotionCoin);
+//public record CreatePromotionCommand(
+//    string Title,
+//    PromotionStatus Status,
+//    DateTimeOffset StartDate,
+//    DateTimeOffset EndDate,
+//    string Description,
+//    IEnumerable<string> SegmentIds,
+//    IEnumerable<CreatePromotionCoinModel> PromotionCoin);
 public enum PromotionStatus
 {
     NotStarted = 0,
@@ -50,4 +50,16 @@ public enum CoinType
     Outgoing = 1,
     Internal = 2,
     Prize = 3,
+}
+
+public class CreatePromotionDto
+{
+    public CreatePromotionCommand Promotion { get; set; }
+    public LeaderboardCreationDto? Leaderboard { get; set; }
+    public ConfigurationCreateModel? GameConfiguration { get; set; }
+}
+public class LeaderboardCreationDto
+{
+    public CreateLeaderboardTemplateCommand? LeaderboardTemplate { get; set; }
+    public CreateLeaderboardRecordCommand LeaderboardRecord { get; set; }
 }

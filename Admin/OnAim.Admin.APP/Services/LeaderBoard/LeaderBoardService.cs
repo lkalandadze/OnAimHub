@@ -10,7 +10,6 @@ using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using MassTransit.Initializers;
-using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 
@@ -72,7 +71,7 @@ public class LeaderBoardService : ILeaderBoardService
                 Name = x.Name,
                 AnnounceIn = x.AnnounceIn,
                 Description = x.Description,
-                StartTime = x.StartTime,
+                //StartTime = x.StartTime,
                 StartIn = x.StartIn,
                 EndIn = x.EndIn,
                 Segments = 0,
@@ -112,7 +111,7 @@ public class LeaderBoardService : ILeaderBoardService
             Id = template.Id,
             Name = template.Name,
             Description = template.Description,
-            StartTime = template.StartTime,
+            //StartTime = template.StartTime,
             StartIn = template.StartIn,
             EndIn = template.EndIn,
             AnnounceIn = template.AnnounceIn,

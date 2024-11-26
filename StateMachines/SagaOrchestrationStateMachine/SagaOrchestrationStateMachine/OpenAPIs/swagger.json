@@ -36,37 +36,6 @@
         }
       }
     },
-    "/api/v1/Leaderboard/DeleteLeaderboardRecord": {
-      "post": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteLeaderboardRecordCommand"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteLeaderboardRecordCommand"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteLeaderboardRecordCommand"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
     "/api/v1/Leaderboard/UpdateLeaderboardRecord": {
       "put": {
         "tags": [
@@ -204,37 +173,6 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateLeaderboardTemplateCommand"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/v1/Leaderboard/DeleteLeaderboardTemplate": {
-      "post": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteLeaderboardTemplateCommand"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteLeaderboardTemplateCommand"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteLeaderboardTemplateCommand"
               }
             }
           }
@@ -866,10 +804,6 @@
           "status": {
             "$ref": "#/components/schemas/LeaderboardRecordStatus"
           },
-          "correlationId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "leaderboardPrizes": {
             "type": "array",
             "items": {
@@ -957,10 +891,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "correlationId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "leaderboardPrizes": {
             "type": "array",
             "items": {
@@ -1036,26 +966,6 @@
         ],
         "type": "integer",
         "format": "int32"
-      },
-      "DeleteLeaderboardRecordCommand": {
-        "type": "object",
-        "properties": {
-          "correlationId": {
-            "type": "string",
-            "format": "uuid"
-          }
-        },
-        "additionalProperties": false
-      },
-      "DeleteLeaderboardTemplateCommand": {
-        "type": "object",
-        "properties": {
-          "correlationId": {
-            "type": "string",
-            "format": "uuid"
-          }
-        },
-        "additionalProperties": false
       },
       "GetCalendarQueryResponse": {
         "type": "object",

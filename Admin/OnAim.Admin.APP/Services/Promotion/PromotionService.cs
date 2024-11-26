@@ -4,6 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
+using OnAim.Admin.Domain;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 
 namespace OnAim.Admin.APP.Services.Promotion;
@@ -16,8 +17,8 @@ public class PromotionService : IPromotionService
     private readonly SagaClient _sagaClient;
 
     public PromotionService(
-        IPromotionRepository<OnAim.Admin.Domain.HubEntities.Promotion> promotionRepository,
-        IPromotionRepository<OnAim.Admin.Domain.HubEntities.PromotionCoin> coinRepo,
+        IPromotionRepository<Admin.Domain.HubEntities.Promotion> promotionRepository,
+        IPromotionRepository<Admin.Domain.HubEntities.PromotionCoin> coinRepo,
         HubClientService hubClientService,
         SagaClient sagaClient
         )
@@ -91,7 +92,7 @@ public class PromotionService : IPromotionService
                 Title = x.Title,
                 Description = x.Description,
                 TotalCost = x.TotalCost,
-                Status = (Contracts.Dtos.Promotion.PromotionStatus)(PromotionStatus)x.Status,
+                Status = (Contracts.Dtos.Promotion.PromotionStatus)x.Status,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
                 PromotionCoins = x.Coins.Select(xx => new PromotionCoinDto
@@ -164,7 +165,7 @@ public class PromotionService : IPromotionService
         return new ApplicationResult { Success = true, Data = promotion };
     }
 
-    public async Task<ApplicationResult> CreatePromotion(CreatePromotionCommand create)
+    public async Task<ApplicationResult> CreatePromotion(Admin.Domain.CreatePromotionDto create)
     {
         try
         {
@@ -176,4 +177,79 @@ public class PromotionService : IPromotionService
             throw new Exception(ex.Message, ex);
         }
     }
+
+    public async Task<ApplicationResult> CreatePromotionView(CreatePromotionView create)
+    {
+        try
+        {
+            await _hubClientService.CreatePromotionViewAsync(create);
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<ApplicationResult> CreatePromotionViewTemplate(CreatePromotionViewTemplate create)
+    {
+        try
+        {
+            await _hubClientService.CreatePromotionViewTemplateAsync(create);
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<ApplicationResult> CreateCoinTemplate(CreateCoinTemplate create)
+    {
+        try
+        {
+            await _hubClientService.CreateCoinTemplateAsync(create);
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<ApplicationResult> UpdateCoinTemplate(UpdateCoinTemplate update)
+    {
+        try
+        {
+            await _hubClientService.UpdateCoinTemplateAsync(update);
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<ApplicationResult> DeleteCoinTemplate(DeleteCoinTemplate delete)
+    {
+        try
+        {
+            await _hubClientService.DeleteCoinTemplateAsync(delete);
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+}
+public class CreatePromotionDto
+{
+    public CreatePromotionCommand Promotion { get; set; }
+    public LeaderboardCreationDto Leaderboard { get; set; }
+}
+public class LeaderboardCreationDto
+{
+    public CreateLeaderboardTemplateCommand LeaderboardTemplate { get; set; }
+    public CreateLeaderboardRecordCommand LeaderboardRecord { get; set; }
 }

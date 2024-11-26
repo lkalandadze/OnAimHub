@@ -44,6 +44,7 @@ using System.Net.Http.Headers;
 using MediatR;
 using OnAim.Admin.APP.Services.Promotion;
 using OnAim.Admin.APP.Services.Coin;
+using OnAim.Admin.Domain;
 
 
 namespace OnAim.Admin.APP;
