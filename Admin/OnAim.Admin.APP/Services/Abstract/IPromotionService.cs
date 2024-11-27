@@ -9,8 +9,6 @@ public interface IPromotionService
     Task<ApplicationResult> GetPromotionById(int id);
     Task<ApplicationResult> CreatePromotion(Admin.Domain.CreatePromotionDto create);
     Task<ApplicationResult> CreatePromotionView(CreatePromotionView create);
-    Task<ApplicationResult> CreatePromotionViewTemplate(CreatePromotionViewTemplate create);
-    Task<ApplicationResult> CreateCoinTemplate(CreateCoinTemplate create);
-    Task<ApplicationResult> UpdateCoinTemplate(UpdateCoinTemplate update);
-    Task<ApplicationResult> DeleteCoinTemplate(DeleteCoinTemplate delete);
+    Task<ApplicationResult> UpdatePromotionStatus(UpdatePromotionStatusCommand update);
+    Task<ApplicationResult> DeletePromotion(SoftDeletePromotionCommand command);
 }

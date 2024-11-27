@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Promotion;
@@ -191,11 +192,11 @@ public class PromotionService : IPromotionService
         }
     }
 
-    public async Task<ApplicationResult> CreatePromotionViewTemplate(CreatePromotionViewTemplate create)
+    public async Task<ApplicationResult> UpdatePromotionStatus(UpdatePromotionStatusCommand update)
     {
         try
         {
-            await _hubClientService.CreatePromotionViewTemplateAsync(create);
+            await _hubClientService.UpdatePromotionStatusAsync(update);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -204,37 +205,11 @@ public class PromotionService : IPromotionService
         }
     }
 
-    public async Task<ApplicationResult> CreateCoinTemplate(CreateCoinTemplate create)
+    public async Task<ApplicationResult> DeletePromotion(SoftDeletePromotionCommand command)
     {
         try
         {
-            await _hubClientService.CreateCoinTemplateAsync(create);
-            return new ApplicationResult { Success = true };
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
-    }
-
-    public async Task<ApplicationResult> UpdateCoinTemplate(UpdateCoinTemplate update)
-    {
-        try
-        {
-            await _hubClientService.UpdateCoinTemplateAsync(update);
-            return new ApplicationResult { Success = true };
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
-    }
-
-    public async Task<ApplicationResult> DeleteCoinTemplate(DeleteCoinTemplate delete)
-    {
-        try
-        {
-            await _hubClientService.DeleteCoinTemplateAsync(delete);
+            await _hubClientService.SoftDeletePromotionAsync(command);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -243,13 +218,3 @@ public class PromotionService : IPromotionService
         }
     }
 }
-//public class CreatePromotionDto
-//{
-//    public CreatePromotionCommand Promotion { get; set; }
-//    public LeaderboardCreationDto Leaderboard { get; set; }
-//}
-//public class LeaderboardCreationDto
-//{
-//    public CreateLeaderboardTemplateCommand LeaderboardTemplate { get; set; }
-//    public CreateLeaderboardRecordCommand LeaderboardRecord { get; set; }
-//}

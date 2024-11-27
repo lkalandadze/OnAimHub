@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
@@ -54,6 +55,7 @@ public class PromotionViewTemplateService : IPromotionViewTemplateService
     {
         return GenerateUrl(viewContent, _viewConfig.TemplateDirectory);
     }
+
     private string GenerateUrl(string viewContent, string directory, string? additionalFileName = null)
     {
         var fileName = $"{Guid.NewGuid()}.html";
@@ -73,11 +75,4 @@ public class PromotionViewTemplateService : IPromotionViewTemplateService
 
         return $"{_viewConfig.Host}/{directory}/{fileName}";
     }
-}
-public record CreatePromotionViewTemplateAsyncDto(string Name, string ViewContent);
-public class PromotionViewConfiguration
-{
-    public string Host { get; set; }
-    public string Directory { get; set; }
-    public string TemplateDirectory { get; set; }
 }

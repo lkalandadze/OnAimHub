@@ -1,4 +1,5 @@
 using OnAim.Admin.API.Extensions;
+using OnAim.Admin.API.Middleware;
 using OnAim.Admin.APP;
 using OnAim.Admin.APP.Services.ClientServices;
 using OnAim.Admin.Infrasturcture;
@@ -40,9 +41,6 @@ var app = builder.Build();
 
 app.UseSerilogRequestLogging();
 
-//if (app.Environment.IsDevelopment())
-//{
-//}
 app.UseSwagger();
 app.UseSwaggerUI();
 app.ApplyMigrations();
@@ -53,7 +51,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-//app.UseMiddleware<PermissionMiddleware>();
+app.UseMiddleware<PermissionMiddleware>();
 app.UseMiddleware<RequestHandlerMiddleware>();
 
 app.MapControllers();

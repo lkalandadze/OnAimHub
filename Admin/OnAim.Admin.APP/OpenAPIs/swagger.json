@@ -211,6 +211,54 @@
         }
       }
     },
+    "/HubApi/Admin/SoftDeletePromotion": {
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SoftDeletePromotionCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SoftDeletePromotionCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SoftDeletePromotionCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/HubApi/Admin/AllGames": {
       "get": {
         "tags": [
@@ -1746,6 +1794,16 @@
         "format": "int32"
       },
       "RevokePlayerBanCommand": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SoftDeletePromotionCommand": {
         "type": "object",
         "properties": {
           "id": {

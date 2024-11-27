@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using OnAim.Admin.API.Controllers.Abstract;
+using OnAim.Admin.APP;
 using OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetById;
 using OnAim.Admin.APP.Services.Abstract;
-using OnAim.Admin.APP.Services.PromotionViewTemplateService;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 
 namespace OnAim.Admin.API.Controllers;
@@ -29,12 +29,26 @@ public class PromotionController : ApiControllerBase
         => Ok(await Mediator.Send(new GetPromotionByIdQuery(id)));
 
     [HttpPost(nameof(CreatePromotion))]
-    public async Task<IActionResult> CreatePromotion([FromBody] Admin.Domain.CreatePromotionDto create)
+    public async Task<IActionResult> CreatePromotion([FromBody] Domain.CreatePromotionDto create)
         => Ok(await _promotionService.CreatePromotion(create));
 
     [HttpPost(nameof(CreatePromotionView))]
     public async Task<IActionResult> CreatePromotionView([FromBody] APP.CreatePromotionView create)
         => Ok(await _promotionService.CreatePromotionView(create));
+
+    [HttpPut(nameof(UpdatePromotionStatus))]
+    public async Task<IActionResult> UpdatePromotionStatus([FromBody] APP.UpdatePromotionStatusCommand update)
+    {
+        await _promotionService.UpdatePromotionStatus(update);
+        return Ok();
+    }
+
+    [HttpPut(nameof(DeletePromotion))]
+    public async Task<IActionResult> DeletePromotion([FromBody] SoftDeletePromotionCommand command)
+    {
+        await _promotionService.DeletePromotion(command);
+        return Ok();
+    }
 
     //Template
 
