@@ -45,6 +45,8 @@ using MediatR;
 using OnAim.Admin.APP.Services.Promotion;
 using OnAim.Admin.APP.Services.Coin;
 using OnAim.Admin.Domain;
+using OnAim.Admin.APP.Services.WithdrawEndpointTemplate;
+using OnAim.Admin.APP.Services.PromotionViewTemplateService;
 
 
 namespace OnAim.Admin.APP;
@@ -71,12 +73,15 @@ public static class Extension
             .AddScoped<IRoleRepository, RoleRepository>()
             .AddScoped<ICoinRepository, CoinRepository>()
             .AddScoped<IPromotionViewTemplateRepository, PromotionViewTemplateRepository>()
+            .AddScoped<IWithdrawEndpointTemplateRepository, WithdrawEndpointTemplateRepository>()
             .AddScoped<IPromotionService, PromotionService>()
             .AddScoped<ICoinService, CoinService>()
             .AddScoped<ILogRepository, LogRepository>()
             .AddScoped<IAppSettingRepository, AppSettingRepository>()
             .AddScoped<IPermissionService, PermissionService>()
             .AddScoped<IPasswordService, PasswordService>()
+            .AddScoped<IPromotionViewTemplateService, PromotionViewTemplateService>()
+            .AddScoped<IWithdrawEndpointTemplateService, WithdrawEndpointTemplateService>()
             .AddScoped<IUserService, UserService>()
             .AddScoped<IEndpointService, EndpointService>()
             .AddScoped<IEndpointGroupService, EndpointGroupService>()

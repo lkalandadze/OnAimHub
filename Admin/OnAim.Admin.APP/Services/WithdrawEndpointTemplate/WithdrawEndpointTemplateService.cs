@@ -48,7 +48,11 @@ public class WithdrawEndpointTemplateService : IWithdrawEndpointTemplateService
 
     public async Task<ApplicationResult> UpdateWithdrawEndpointTemplate(UpdateWithdrawEndpointTemplateDto update)
     {
-        var template = await _withdrawEndpointTemplateRepository.GetWithdrawEndpointTemplateByIdAsync(update.Id);
+        if (!ObjectId.TryParse(update.Id, out var objectId))
+        {
+            throw new Exception("Invalid CoinTemplateId format.");
+        }
+        var template = await _withdrawEndpointTemplateRepository.GetWithdrawEndpointTemplateByIdAsync(objectId);
 
         if (template == null)
         {
@@ -57,10 +61,10 @@ public class WithdrawEndpointTemplateService : IWithdrawEndpointTemplateService
 
         template.Update(update.Name, update.Endpoint, update.Content, (Admin.Domain.EndpointContentType)update.ContentType);
 
-        await _withdrawEndpointTemplateRepository.UpdateWithdrawEndpointTemplateAsync(update.Id, template);
+        await _withdrawEndpointTemplateRepository.UpdateWithdrawEndpointTemplateAsync(objectId, template);
 
         return new ApplicationResult { Success = true };
     }
 }
 public record CreateWithdrawEndpointTemplateDto(string Name, string Endpoint, string Content, EndpointContentType ContentType);
-public record UpdateWithdrawEndpointTemplateDto(ObjectId Id, string Name, string Endpoint, string Content, EndpointContentType ContentType);
+public record UpdateWithdrawEndpointTemplateDto(string Id, string Name, string Endpoint, string Content, EndpointContentType ContentType);
