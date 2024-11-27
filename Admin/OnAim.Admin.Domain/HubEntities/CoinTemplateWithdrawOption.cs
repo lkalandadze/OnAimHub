@@ -1,4 +1,6 @@
-﻿namespace OnAim.Admin.Domain.HubEntities;
+﻿using OnAim.Admin.Domain.Entities.Templates;
+
+namespace OnAim.Admin.Domain.HubEntities;
 
 public class CoinTemplateWithdrawOption : BaseEntity<int>
 {

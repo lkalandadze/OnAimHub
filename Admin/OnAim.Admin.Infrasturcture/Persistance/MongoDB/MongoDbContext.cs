@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using OnAim.Admin.Domain.Entities;
+using OnAim.Admin.Domain.Entities.Templates;
 
 namespace OnAim.Admin.Infrasturcture.Persistance.MongoDB;
 
@@ -22,7 +23,9 @@ public abstract class MongoDbContext
 
     public IMongoCollection<AuditLog> AuditLogs { get; }
     public IMongoCollection<FailureLog> FailureLogs { get; }
-
+    public IMongoCollection<CoinTemplate> CoinTemplates { get; }
+    public IMongoCollection<PromotionViewTemplate> PromotionViews { get; }
+    public IMongoCollection<WithdrawEndpointTemplate> WithdrawEndpointTemplates { get; }
     public IMongoCollection<TEntity> GetCollection<TEntity>(string name = "")
     {
         if (string.IsNullOrEmpty(name))

@@ -30,10 +30,8 @@ public class ReadOnlyDataContext : DbContext
     public DbSet<PlayerBan> PlayerBans { get; set; }
     public DbSet<Promotion> Promotions { get; set; }
     public DbSet<PromotionService> PromotionServices { get; set; }
-    public DbSet<CoinTemplate> CoinTemplates { get; set; }
     public DbSet<PromotionCoin> PromotionCoins { get; set; }
     public DbSet<WithdrawOption> WithdrawOptions { get; set; }
-    public DbSet<WithdrawEndpointTemplate> WithdrawEndpointTemplates { get; set; }
     public DbSet<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
 
     public IQueryable<TEntity> Set<TEntity>() where TEntity : class

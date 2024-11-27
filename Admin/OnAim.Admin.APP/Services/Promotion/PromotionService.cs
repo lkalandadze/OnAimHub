@@ -243,13 +243,13 @@ public class PromotionService : IPromotionService
         }
     }
 }
-public class CreatePromotionDto
-{
-    public CreatePromotionCommand Promotion { get; set; }
-    public LeaderboardCreationDto Leaderboard { get; set; }
-}
-public class LeaderboardCreationDto
-{
-    public CreateLeaderboardTemplateCommand LeaderboardTemplate { get; set; }
-    public CreateLeaderboardRecordCommand LeaderboardRecord { get; set; }
-}
+//public class CreatePromotionDto
+//{
+//    public CreatePromotionCommand Promotion { get; set; }
+//    public LeaderboardCreationDto Leaderboard { get; set; }
+//}
+//public class LeaderboardCreationDto
+//{
+//    public CreateLeaderboardTemplateCommand LeaderboardTemplate { get; set; }
+//    public CreateLeaderboardRecordCommand LeaderboardRecord { get; set; }
+//}

@@ -69,6 +69,8 @@ public static class Extension
         new SagaClient("http://192.168.10.42:8004", new HttpClient()));
         services
             .AddScoped<IRoleRepository, RoleRepository>()
+            .AddScoped<ICoinRepository, CoinRepository>()
+            .AddScoped<IPromotionViewTemplateRepository, PromotionViewTemplateRepository>()
             .AddScoped<IPromotionService, PromotionService>()
             .AddScoped<ICoinService, CoinService>()
             .AddScoped<ILogRepository, LogRepository>()

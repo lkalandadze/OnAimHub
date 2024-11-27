@@ -61,5 +61,5 @@ public class CreatePromotionDto
 public class LeaderboardCreationDto
 {
     public CreateLeaderboardTemplateCommand? LeaderboardTemplate { get; set; }
-    public CreateLeaderboardRecordCommand LeaderboardRecord { get; set; }
+    public CreateLeaderboardRecordCommand? LeaderboardRecord { get; set; }
 }

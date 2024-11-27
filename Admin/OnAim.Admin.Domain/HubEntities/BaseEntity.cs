@@ -1,3 +1,4 @@
+using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnAim.Admin.Domain.HubEntities
@@ -7,7 +8,7 @@ namespace OnAim.Admin.Domain.HubEntities
     public abstract class BaseEntity<T> : BaseEntity
     {
         private T _id;
-
+        [BsonId]
         [Column(Order = 1)]
         public new T Id
         {
