@@ -8,10 +8,10 @@ namespace Hub.Application.Features.WithdrawOptionFeatures.Commands.UpdateWithdra
 
 public class UpdateWithdrawEndpointTemplateHandler : IRequestHandler<UpdateWithdrawEndpointTemplate>
 {
-    private readonly IWithdrawEndpointTemplateRepository _endpointTemplateRepository;
+    private readonly IWithdrawOptionEndpointRepository _endpointTemplateRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateWithdrawEndpointTemplateHandler(IWithdrawEndpointTemplateRepository endpointTemplateRepository, IUnitOfWork unitOfWork)
+    public UpdateWithdrawEndpointTemplateHandler(IWithdrawOptionEndpointRepository endpointTemplateRepository, IUnitOfWork unitOfWork)
     {
         _endpointTemplateRepository = endpointTemplateRepository;
         _unitOfWork = unitOfWork;

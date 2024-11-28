@@ -8,6 +8,7 @@ using Hub.Application;
 using Hub.Application.Configurations;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdrawOption;
+using Hub.Application.Models.PromotionCoin;
 using Hub.Application.Services.Abstract;
 using Hub.Application.Services.Abstract.BackgroundJobs;
 using Hub.Application.Services.Concrete;
@@ -36,6 +37,7 @@ using Shared.Infrastructure.MassTransit;
 using Shared.IntegrationEvents.IntegrationEvents.Segment;
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Text.Json;
 
 public class Startup
 {
@@ -79,7 +81,7 @@ public class Startup
         services.AddScoped<ICoinTemplateRepository, CoinTemplateRepository>();
         services.AddScoped<IPromotionCoinRepository, PromotionCoinRepository>();
         services.AddScoped<IWithdrawOptionRepository, WithdrawOptionRepository>();
-        services.AddScoped<IWithdrawEndpointTemplateRepository, WithdrawEndpointTemplateRepository>();
+        services.AddScoped<IWithdrawOptionEndpointRepository, WithdrawOptionEndpointRepository>();
         services.AddScoped<IWithdrawOptionGroupRepository, WithdrawOptionGroupRepository>();
         services.AddScoped<IPromotionService, PromotionService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -108,6 +110,8 @@ public class Startup
         {
             return new(provider.CreateScope().ServiceProvider.GetRequiredService<IHubSettingRepository>());
         });
+
+        ConfigureJsonSerializerOptions(services);
 
         services.AddHangfire(config =>
             config.UsePostgreSqlStorage(Configuration.GetConnectionString("OnAimHub")));
@@ -432,5 +436,18 @@ public class Startup
                 });
             });
         });
+    }
+
+    private void ConfigureJsonSerializerOptions(IServiceCollection services)
+    {
+        var jsonSerializerOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true
+        };
+
+        jsonSerializerOptions.Converters.Add(new PromotionCoinModelJsonConverter());
+
+        services.AddSingleton(jsonSerializerOptions);
     }
 }

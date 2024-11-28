@@ -1,5 +1,6 @@
 ﻿using Hub.Domain.Entities;
 using Hub.Domain.Entities.DbEnums;
+using Hub.Domain.Entities.PromotionCoins;
 using Hub.Domain.Entities.Templates;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -40,7 +41,7 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<CoinTemplate> CoinTemplates { get; set; }
     public DbSet<PromotionCoin> PromotionCoins { get; set; }
     public DbSet<WithdrawOption> WithdrawOptions { get; set; }
-    public DbSet<WithdrawEndpointTemplate> WithdrawEndpointTemplates { get; set; }
+    public DbSet<WithdrawOptionEndpoint> WithdrawOptionEndpoints { get; set; }
     public DbSet<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

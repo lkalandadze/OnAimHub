@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using Hub.Domain.Entities.PromotionCoins;
 using Hub.Domain.Entities.Templates;
 using Hub.Domain.Enum;
 using Shared.Domain.Entities;
@@ -20,7 +21,7 @@ public class WithdrawOption : BaseEntity<int>
         string endpoint = null, 
         string endpointContent = null, 
         int? endpointTemplate = null,
-        IEnumerable<PromotionCoin> promotionCoins = null,
+        IEnumerable<PromotionOutgoingCoin> promotionCoins = null,
         IEnumerable<CoinTemplate> coinTemplates = null)
     {
         Title = title;
@@ -42,10 +43,10 @@ public class WithdrawOption : BaseEntity<int>
     public string EndpointContent { get; set; }
 
     public int? WithdrawEndpointTemplateId { get; private set; }
-    public WithdrawEndpointTemplate WithdrawEndpointTemplate { get; set; }
+    public WithdrawOptionEndpoint WithdrawEndpointTemplate { get; set; }
 
     public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
-    public ICollection<PromotionCoin> PromotionCoins { get; set; }
+    public ICollection<PromotionOutgoingCoin> PromotionCoins { get; set; }
     public ICollection<CoinTemplate> CoinTemplates { get; set; }
 
     public void Update(
@@ -55,7 +56,7 @@ public class WithdrawOption : BaseEntity<int>
         string endpoint = null, 
         string endpointContent = null, 
         int? endpointTemplate = null, 
-        IEnumerable<PromotionCoin> promotionCoins = null, 
+        IEnumerable<PromotionOutgoingCoin> promotionCoins = null, 
         IEnumerable<CoinTemplate> coinTemplates = null)
     {
         Title = title;

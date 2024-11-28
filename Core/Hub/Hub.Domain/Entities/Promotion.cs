@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using Hub.Domain.Entities.PromotionCoins;
 using Hub.Domain.Enum;
 using Shared.Domain.Entities;
 
@@ -76,5 +77,29 @@ public class Promotion : BaseEntity<int>
     public void UpdateStatus(PromotionStatus status)
     {
         Status = status;
+    }
+
+    public void SetCoins(IEnumerable<PromotionCoin> coins)
+    {
+        if (coins != null)
+        {
+            Coins.Clear();
+
+            foreach (var option in coins)
+            {
+                Coins.Add(option);
+            }
+        }
+    }
+
+    public void AddCoins(IEnumerable<PromotionCoin> coins)
+    {
+        foreach (var coin in coins)
+        {
+            if (!Coins.Contains(coin))
+            {
+                Coins.Add(coin);
+            }
+        }
     }
 }

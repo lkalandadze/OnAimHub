@@ -1,4 +1,5 @@
 ﻿using Hub.Domain.Entities;
+using Hub.Domain.Entities.PromotionCoins;
 using Hub.Domain.Entities.Templates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -43,10 +44,10 @@ public class WithdrawOptionTypeConfiguration : IEntityTypeConfiguration<Withdraw
         builder.HasMany(w => w.PromotionCoins)
           .WithMany(c => c.WithdrawOptions)
           .UsingEntity<Dictionary<string, object>>(
-               $"{nameof(WithdrawOption)}{nameof(PromotionCoin)}Mappings",
-               j => j.HasOne<PromotionCoin>()
+               $"{nameof(PromotionCoin)}{nameof(WithdrawOption)}Mappings",
+               j => j.HasOne<PromotionOutgoingCoin>()
                    .WithMany()
-                   .HasForeignKey($"{nameof(PromotionCoin)}{nameof(PromotionCoin.Id)}")
+                   .HasForeignKey($"{nameof(PromotionOutgoingCoin)}{nameof(PromotionOutgoingCoin.Id)}")
                    .OnDelete(DeleteBehavior.Cascade),
                j => j.HasOne<WithdrawOption>()
                    .WithMany()

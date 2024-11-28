@@ -1,8 +1,8 @@
-﻿using Hub.Application.Services.Abstract.BackgroundJobs;
+﻿using Hub.Application.Models.PromotionCoin;
+using Hub.Application.Services.Abstract.BackgroundJobs;
 using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
-using Hub.Domain.Entities.Templates;
 using Hub.Domain.Enum;
 using MediatR;
 using Shared.Application.Exceptions;
@@ -15,12 +15,12 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
     private readonly IUnitOfWork _unitOfWork;
     private readonly ISegmentRepository _segmentRepository;
     private readonly ICoinTemplateRepository _coinTemplateRepository;
-    private readonly IWithdrawEndpointTemplateRepository _withdrawEndpointTemplateRepository;
+    private readonly IWithdrawOptionEndpointRepository _withdrawEndpointTemplateRepository;
     private readonly IPromotionRepository _promotionRepository;
     private readonly IBackgroundJobScheduler _jobScheduler;
     private readonly IJobRepository _jobRepository;
 
-    public CreatePromotionCommandHandler(IUnitOfWork unitOfWork, ISegmentRepository segmentRepository, ICoinTemplateRepository coinTemplateRepository, IWithdrawEndpointTemplateRepository withdrawEndpointTemplateRepository, IPromotionRepository promotionRepository, IBackgroundJobScheduler jobScheduler, IJobRepository jobRepository)
+    public CreatePromotionCommandHandler(IUnitOfWork unitOfWork, ISegmentRepository segmentRepository, ICoinTemplateRepository coinTemplateRepository, IWithdrawOptionEndpointRepository withdrawEndpointTemplateRepository, IPromotionRepository promotionRepository, IBackgroundJobScheduler jobScheduler, IJobRepository jobRepository)
     {
         _unitOfWork = unitOfWork;
         _segmentRepository = segmentRepository;
@@ -45,6 +45,11 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
             throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "One or more Segment IDs are invalid.");
         }
 
+        //TODO: ქოინების ვალიდაციები
+        if (request.PromotionCoins.Where(c => c.CoinType == CoinType.Incomming).Count() != 1)
+        {
+        }
+
         var promotion = new Promotion(
             request.StartDate,
             request.EndDate,
@@ -59,68 +64,8 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
 
         SchedulePromotionStatusJobs(promotion);
 
-        foreach (var promotionCoinModel in request.PromotionCoin)
-        {
-            var promotionCoinId = $"{promotion.Id}_{promotionCoinModel.Name}";
-
-            var coinTemplate = promotionCoinModel.IsTemplate
-                    ? new CoinTemplate(
-                        promotionCoinModel.Name,
-                        promotionCoinModel.Description,
-                        promotionCoinModel.ImageUrl,
-                        promotionCoinModel.CoinType)
-                    : null;
-
-            await _coinTemplateRepository.InsertAsync(coinTemplate);
-
-            var promotionCoin = new PromotionCoin(
-                promotionCoinId,
-                promotionCoinModel.Name,
-                promotionCoinModel.Description,
-                promotionCoinModel.ImageUrl,
-                promotionCoinModel.CoinType,
-                promotion.Id);
-
-            foreach (var groupModel in promotionCoinModel.WithdrawOptionGroups)
-            {
-                var withdrawOptionGroup = new WithdrawOptionGroup(
-                    groupModel.Title,
-                    groupModel.Description,
-                    groupModel.ImageUrl);
-
-                foreach (var optionModel in groupModel.WithdrawOptions)
-                {
-                    var withdrawOption = new WithdrawOption(
-                        optionModel.Title,
-                        optionModel.Description,
-                        optionModel.ImageUrl,
-                        optionModel.ContentType,
-                        optionModel.Endpoint,
-                        optionModel.EndpointContent)
-                    {
-                        WithdrawOptionGroups = [withdrawOptionGroup],
-                        CoinTemplates = [coinTemplate]
-                    };
-
-                    if (optionModel.IsTemplate)
-                    {
-                        var endpointTemplate = new WithdrawEndpointTemplate(
-                            optionModel.Title,
-                            optionModel.Endpoint,
-                            optionModel.EndpointContent,
-                            optionModel.ContentType);
-
-                        await _withdrawEndpointTemplateRepository.InsertAsync(endpointTemplate);
-                    }
-
-                    withdrawOptionGroup.WithdrawOptions.Add(withdrawOption);
-                    promotionCoin.AddWithdrawOption([withdrawOption]);
-                }
-                //promotionCoin.AddWithdrawOption([withdrawOption]);
-            }
-
-            promotion.Coins.Add(promotionCoin);
-        }
+        var mappedCoins = request.PromotionCoins.Select(coin => BaseCreatePromotionCoinModel.ConvertToEntity(coin, promotion.Id)).ToList();
+        promotion.SetCoins(mappedCoins);
 
         _promotionRepository.Update(promotion);
         await _unitOfWork.SaveAsync();

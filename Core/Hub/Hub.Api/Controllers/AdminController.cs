@@ -37,6 +37,7 @@ using Hub.Application.Features.WithdrawOptionFeatures.Commands.UpdateWithdrawOpt
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Lib.Wrappers;
+using System.Text.Json;
 
 namespace Hub.Api.Controllers;
 
@@ -47,9 +48,16 @@ public class AdminController : BaseApiController
     #region Promotions
 
     [HttpPost(nameof(CreatePromotion))]
-    public async Task<Unit> CreatePromotion(CreatePromotionCommand request)
+    public async Task<ActionResult<Unit>> CreatePromotion([FromBody] JsonElement payload)
     {
-        return await Mediator.Send(request);
+        var command = JsonSerializer.Deserialize<CreatePromotionCommand>(payload.GetRawText(), JsonSerializerOptions);
+
+        if (command == null)
+        {
+            return BadRequest("Invalid data received for creating promotion.");
+        }
+
+        return StatusCode(201, await Mediator.Send(command));
     }
 
     [HttpPost(nameof(UpdatePromotionStatus))]
