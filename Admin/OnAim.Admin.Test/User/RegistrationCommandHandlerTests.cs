@@ -2,7 +2,7 @@
 using Moq;
 using OnAim.Admin.APP.Feature.UserFeature.Commands.Registration;
 using OnAim.Admin.APP.Services.Abstract;
-using OnAim.Admin.APP.Services.AuthServices.Auth;
+using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.Contracts.Enums;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 

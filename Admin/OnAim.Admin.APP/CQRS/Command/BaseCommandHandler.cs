@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using OnAim.Admin.APP.CQRS.Command;
-using OnAim.Admin.APP.Services.AuthServices.Auth;
+using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 
 public abstract class BaseCommandHandler<TCommand, TResponse> : ICommandHandler<TCommand, TResponse>
     where TCommand : ICommand<TResponse>

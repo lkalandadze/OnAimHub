@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Moq;
-using OnAim.Admin.APP.Services.AuthServices.Auth;
+using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 
 namespace OnAim.Admin.Test;

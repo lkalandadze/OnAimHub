@@ -1,12 +1,12 @@
 ﻿using Moq;
 using OnAim.Admin.APP.Features.DomainFeatures.Commands.Create;
 using FluentValidation;
-using OnAim.Admin.APP.Services.AuthServices.Auth;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Contracts.Dtos.EmailDomain;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 namespace OnAim.Admin.Test.Domain;
 
 public class CreateEmailDomainCommandHandlerTests

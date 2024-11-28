@@ -2,16 +2,16 @@
 
 namespace OnAim.Admin.Contracts.Dtos.Promotion;
 
-public class CreatePromotionDto
-{
-    public string Title { get; set; }
-    public PromotionStatus Status { get; set; }
-    public DateTimeOffset StartDate { get; set; }
-    public DateTimeOffset EndDate { get; set; }
-    public string Description { get; set; }
-    public IEnumerable<string> SegmentIds { get; set; }
-    public IEnumerable<CreatePromotionCoinModel> PromotionCoin { get; set; }
-}
+//public class CreatePromotionDto
+//{
+//    public string Title { get; set; }
+//    public PromotionStatus Status { get; set; }
+//    public DateTimeOffset StartDate { get; set; }
+//    public DateTimeOffset EndDate { get; set; }
+//    public string Description { get; set; }
+//    public IEnumerable<string> SegmentIds { get; set; }
+//    public IEnumerable<CreatePromotionCoinModel> PromotionCoin { get; set; }
+//}
 public class CreatePromotionCoinModel
 {
     public string Name { get; set; }
