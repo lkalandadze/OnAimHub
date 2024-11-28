@@ -10,6 +10,7 @@ public class CreateCoinTemplateDto
     public string ImageUrl { get; set; }
     public   CoinType CoinType { get; set; }
     public IEnumerable<int>? WithdrawOptionIds { get; set; }
+    public IEnumerable<int>? WithdrawOptionGroupIds { get; set; }
 }
 public class WithdrawOptionDto
 {

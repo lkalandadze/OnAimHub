@@ -2,7 +2,7 @@
 using Moq;
 using OnAim.Admin.APP.Features.EndpointFeatures.Commands.Create;
 using OnAim.Admin.APP.Services.Abstract;
-using OnAim.Admin.APP.Services.AuthServices.Auth;
+using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Endpoint;
 using OnAim.Admin.Contracts.Enums;

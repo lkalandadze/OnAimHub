@@ -1,16 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetAllLeaderBoard;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetAllPrizes;
-using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetAllTemplates;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetCalendar;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetLeaderboardRecordById;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetLeaderboardSchedules;
-using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetLeaderboardTemplateById;
 using OnAim.Admin.APP.Services.Abstract;
-using OnAim.Admin.APP.Services.LeaderBoard;
-using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.Helpers;
 
@@ -19,18 +16,28 @@ namespace OnAim.Admin.API.Controllers;
 public class LeaderBoardController : ApiControllerBase
 {
     private readonly ILeaderBoardService _leaderBoardService;
+    private readonly ILeaderboardTemplateService _leaderboardTemplateService;
 
-    public LeaderBoardController(ILeaderBoardService leaderBoardService)
+    public LeaderBoardController(ILeaderBoardService leaderBoardService, ILeaderboardTemplateService leaderboardTemplateService)
     {
         _leaderBoardService = leaderBoardService;
+        _leaderboardTemplateService = leaderboardTemplateService;
     }
+
     [HttpGet(nameof(GetAllTemplates))]
-    public async Task<IActionResult> GetAllTemplates([FromQuery] BaseFilter query)
-        => Ok(await Mediator.Send(new GetAllTemplatesQuery(query)));
+    public async Task<IActionResult> GetAllTemplates()
+        => Ok(await _leaderboardTemplateService.GetAllLeaderboardTemplate());
 
     [HttpGet(nameof(GetLeaderboardTemplateById))]
-    public async Task<IActionResult> GetLeaderboardTemplateById([FromQuery] int id)
-        => Ok(await Mediator.Send(new GetLeaderboardTemplateByIdQuery(id)));
+    public async Task<IActionResult> GetLeaderboardTemplateById([FromQuery] string id)
+    {
+        if (!ObjectId.TryParse(id, out var objectId))
+        {
+            return BadRequest("Invalid Id format.");
+        }
+        await _leaderboardTemplateService.GetById(objectId);
+        return Ok();
+    }
 
     [HttpGet(nameof(GetAllLeaderBoards))]
     public async Task<IActionResult> GetAllLeaderBoards([FromQuery] LeaderBoardFilter query)
@@ -41,12 +48,12 @@ public class LeaderBoardController : ApiControllerBase
         => Ok(await Mediator.Send(new GetLeaderboardRecordByIdQuery(id)));
 
     [HttpPost(nameof(CreateTemplate))]
-    public async Task<IActionResult> CreateTemplate([FromBody] CreateLeaderboardTemplateCommand command)
-        => Ok(await _leaderBoardService.CreateTemplate(command));
+    public async Task<IActionResult> CreateTemplate([FromBody] CreateLeaderboardTemplateDto command)
+        => Ok(await _leaderboardTemplateService.CreateLeaderboardTemplate(command));
 
     [HttpPut(nameof(UpdateTemplate))]
-    public async Task<IActionResult> UpdateTemplate([FromBody] UpdateLeaderboardTemplateCommand command)
-        => Ok(await _leaderBoardService.UpdateTemplate(command));
+    public async Task<IActionResult> UpdateTemplate([FromBody] UpdateLeaderboardTemplateDto command)
+        => Ok(await _leaderboardTemplateService.UpdateCoinTemplate(command));
 
     [HttpPost(nameof(CreateLeaderBoardRecord))]
     public async Task<IActionResult> CreateLeaderBoardRecord([FromBody] APP.CreateLeaderboardRecordCommand command)

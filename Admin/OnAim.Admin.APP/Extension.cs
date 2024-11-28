@@ -7,29 +7,17 @@ using OnAim.Admin.Contracts.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using OnAim.Admin.APP.Services.Email;
 using OnAim.Admin.APP.Feature.Identity;
 using OnAim.Admin.Contracts.Helpers.Csv;
 using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
-using OnAim.Admin.APP.Services.AuthServices;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories;
-using OnAim.Admin.APP.Services.SettingServices;
-using OnAim.Admin.APP.Services.AuthServices.Auth;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using OnAim.Admin.APP.Services.ClientService;
 using Autofac;
 using System.Reflection;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.APP.Services.Domain;
-using OnAim.Admin.APP.Services.User;
-using OnAim.Admin.APP.Services.Endpoint;
-using OnAim.Admin.APP.Services.EndpointGroup;
-using OnAim.Admin.APP.Services.Role;
-using OnAim.Admin.APP.Services.Segment;
-using OnAim.Admin.APP.Services.Player;
 using OnAim.Admin.APP.Services.Game;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using ValidationException = OnAim.Admin.CrossCuttingConcerns.Exceptions.ValidationException;
@@ -37,16 +25,29 @@ using Shared.Infrastructure.Bus;
 using Shared.Infrastructure.MassTransit;
 using MassTransit;
 using OnAim.Admin.APP.Services.LeaderBoard;
-using OnAim.Admin.APP.Services.ClientServices;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 using System.Text;
 using System.Net.Http.Headers;
 using MediatR;
-using OnAim.Admin.APP.Services.Promotion;
-using OnAim.Admin.APP.Services.Coin;
 using OnAim.Admin.Domain;
-using OnAim.Admin.APP.Services.WithdrawEndpointTemplate;
-using OnAim.Admin.APP.Services.PromotionViewTemplateService;
+using OnAim.Admin.Infrasturcture.Repositories.Promotion;
+using OnAim.Admin.Infrasturcture.Repositories.Leaderboard;
+using OnAim.Admin.APP.Services.Admin.Domain;
+using OnAim.Admin.APP.Services.Admin.EmailServices;
+using OnAim.Admin.APP.Services.Admin.Endpoint;
+using OnAim.Admin.APP.Services.Admin.EndpointGroup;
+using OnAim.Admin.APP.Services.Admin.Role;
+using OnAim.Admin.APP.Services.Admin.SettingServices;
+using OnAim.Admin.APP.Services.Admin.User;
+using OnAim.Admin.APP.Services.Admin.AuthServices;
+using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
+using OnAim.Admin.APP.Services.Hub.Player;
+using OnAim.Admin.APP.Services.Hub.Promotion;
+using OnAim.Admin.APP.Services.Hub.Segment;
+using OnAim.Admin.APP.Services.Hub.Coin;
+using OnAim.Admin.APP.Services.Hub.ClientServices;
+using OnAim.Admin.APP.Services.Admin.PromotionViewTemplateService;
+using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
 
 
 namespace OnAim.Admin.APP;
@@ -72,16 +73,17 @@ public static class Extension
         services
             .AddScoped<IRoleRepository, RoleRepository>()
             .AddScoped<ICoinRepository, CoinRepository>()
+            .AddScoped<ILeaderboardTemplateRepository , LeaderboardTemplateRepository>()
             .AddScoped<IPromotionViewTemplateRepository, PromotionViewTemplateRepository>()
-            .AddScoped<IWithdrawEndpointTemplateRepository, WithdrawEndpointTemplateRepository>()
+            .AddScoped<ILeaderboardTemplateRepository, LeaderboardTemplateRepository>()
             .AddScoped<IPromotionService, PromotionService>()
             .AddScoped<ICoinService, CoinService>()
             .AddScoped<ILogRepository, LogRepository>()
             .AddScoped<IAppSettingRepository, AppSettingRepository>()
             .AddScoped<IPermissionService, PermissionService>()
+            .AddScoped<ILeaderboardTemplateService, LeaderboardTemplateService>()
             .AddScoped<IPasswordService, PasswordService>()
             .AddScoped<IPromotionViewTemplateService, PromotionViewTemplateService>()
-            .AddScoped<IWithdrawEndpointTemplateService, WithdrawEndpointTemplateService>()
             .AddScoped<IUserService, UserService>()
             .AddScoped<IEndpointService, EndpointService>()
             .AddScoped<IEndpointGroupService, EndpointGroupService>()

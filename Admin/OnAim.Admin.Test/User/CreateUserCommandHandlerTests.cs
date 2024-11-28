@@ -2,7 +2,7 @@
 using OnAim.Admin.APP.Feature.UserFeature.Commands.Create;
 using OnAim.Admin.APP.Services.Abstract;
 using FluentValidation;
-using OnAim.Admin.APP.Services.AuthServices.Auth;
+using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 
 namespace OnAim.Admin.Test.User;
 

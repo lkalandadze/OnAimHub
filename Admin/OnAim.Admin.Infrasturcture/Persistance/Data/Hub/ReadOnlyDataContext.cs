@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Domain.HubEntities;
 
 namespace OnAim.Admin.Infrasturcture.Persistance.Data.Hub;
@@ -57,18 +58,19 @@ public class ReadOnlyDataContext : DbContext
 
         // Many-to-Many Relationship between WithdrawOption and CoinTemplates
         //modelBuilder.Entity<WithdrawOption>().HasMany(w => w.CoinTemplates)
-        //   .WithMany(c => c.WithdrawOptions)
-        //   .UsingEntity<Dictionary<string, object>>(
+        //    .WithMany(c => c.WithdrawOptions)
+        //    .UsingEntity<Dictionary<string, object>>(
         //        $"{nameof(WithdrawOption)}{nameof(CoinTemplate)}Mappings",
         //        j => j.HasOne<CoinTemplate>()
         //            .WithMany()
-        //            .HasForeignKey($"{nameof(CoinTemplate)}{nameof(CoinTemplate.Id)}")
+        //            .HasForeignKey($"{nameof(CoinTemplate)}{nameof(CoinTemplate.CoinTemplateId)}")
         //            .OnDelete(DeleteBehavior.Cascade),
         //        j => j.HasOne<WithdrawOption>()
         //            .WithMany()
         //            .HasForeignKey($"{nameof(WithdrawOption)}{nameof(WithdrawOption.Id)}")
         //            .OnDelete(DeleteBehavior.Cascade)
-        //   );
+        //    );
+
 
         // Many-to-Many Relationship between WithdrawOption and PromotionCoins
         modelBuilder.Entity<WithdrawOption>().HasMany(w => w.PromotionCoins)

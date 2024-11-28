@@ -20,9 +20,11 @@ public class CoinTemplate
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DateDeleted { get; set; }
 
-    public ICollection<WithdrawOptionAdmin>? WithdrawOptions { get;  set; }
+    public ICollection<WithdrawOption>? WithdrawOptions { get;  set; }
 
-    public void Update(string name, string description, string imageUrl, CoinType coinType, IEnumerable<WithdrawOptionAdmin> withdrawOptions = null)
+    public ICollection<WithdrawOptionGroup>? WithdrawOptionGroups { get; set; }
+
+    public void Update(string name, string description, string imageUrl, CoinType coinType, IEnumerable<WithdrawOption> withdrawOptions = null)
     {
         Name = name;
         Description = description;
@@ -35,7 +37,7 @@ public class CoinTemplate
         }
     }
 
-    public void SetWithdrawOptions(IEnumerable<WithdrawOptionAdmin> withdrawOptions)
+    public void SetWithdrawOptions(IEnumerable<WithdrawOption> withdrawOptions)
     {
         if (withdrawOptions != null)
         {
@@ -48,14 +50,39 @@ public class CoinTemplate
         }
     }
 
-    public void AddWithdrawOptions(IEnumerable<WithdrawOptionAdmin> withdrawOptions)
+    public void AddWithdrawOptions(IEnumerable<WithdrawOption> withdrawOptions)
     {
-        WithdrawOptions ??= new List<WithdrawOptionAdmin>();
+        WithdrawOptions ??= new List<WithdrawOption>();
         foreach (var withdrawOption in withdrawOptions)
         {
             if (!WithdrawOptions.Contains(withdrawOption))
             {
                 WithdrawOptions.Add(withdrawOption);
+            }
+        }
+    }
+
+    public void AddWithdrawOptionGroups(IEnumerable<WithdrawOptionGroup> withdrawOptionGroups)
+    {
+        WithdrawOptionGroups ??= new List<WithdrawOptionGroup>();
+        foreach (var withdrawOptionGroup in withdrawOptionGroups)
+        {
+            if (!WithdrawOptionGroups.Contains(withdrawOptionGroup))
+            {
+                WithdrawOptionGroups.Add(withdrawOptionGroup);
+            }
+        }
+    }
+
+    public void SetWithdrawOptionGroups(IEnumerable<WithdrawOptionGroup> withdrawOptionGroups)
+    {
+        if (withdrawOptionGroups != null)
+        {
+            WithdrawOptionGroups.Clear();
+
+            foreach (var option in withdrawOptionGroups)
+            {
+                WithdrawOptionGroups.Add(option);
             }
         }
     }

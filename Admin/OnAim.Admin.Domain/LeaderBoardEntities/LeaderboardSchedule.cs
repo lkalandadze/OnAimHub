@@ -1,4 +1,5 @@
 ﻿using OnAim.Admin.Contracts.Dtos.LeaderBoard;
+using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Domain.HubEntities;
 
 namespace OnAim.Admin.Domain.LeaderBoradEntities;

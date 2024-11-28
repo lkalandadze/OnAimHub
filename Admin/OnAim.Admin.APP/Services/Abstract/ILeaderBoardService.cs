@@ -6,13 +6,11 @@ namespace OnAim.Admin.APP.Services.Abstract;
 
 public interface ILeaderBoardService
 {
-    Task<ApplicationResult> GetLeaderBoardTemplates(BaseFilter filter);
-    Task<ApplicationResult> GetLeaderboardTemplateById(int id);
+    //Task<ApplicationResult> GetLeaderBoardTemplates(BaseFilter filter);
+    //Task<ApplicationResult> GetLeaderboardTemplateById(int id);
     Task<ApplicationResult> GetAllLeaderBoard(LeaderBoardFilter? filter);
     Task<ApplicationResult> GetLeaderboardRecordById(int id);
     Task<ApplicationResult> GetAllPrizes();
-    Task<ApplicationResult> CreateTemplate(CreateLeaderboardTemplateCommand createLeaderboardTemplateDto);
-    Task<ApplicationResult> UpdateTemplate(UpdateLeaderboardTemplateCommand updateLeaderboardTemplateDto);
     Task<ApplicationResult> CreateLeaderBoardRecord(CreateLeaderboardRecordCommand createLeaderboardRecordDto);
     Task<ApplicationResult> UpdateLeaderBoardRecord(UpdateLeaderboardRecordCommand updateLeaderboardRecordDto);
     Task<ApplicationResult> GetCalendar(DateTimeOffset? startDate, DateTimeOffset? endDate);

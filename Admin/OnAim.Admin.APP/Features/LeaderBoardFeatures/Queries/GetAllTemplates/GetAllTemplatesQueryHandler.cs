@@ -14,8 +14,8 @@ public class GetAllTemplatesQueryHandler : IQueryHandler<GetAllTemplatesQuery, A
     }
     public async Task<ApplicationResult> Handle(GetAllTemplatesQuery request, CancellationToken cancellationToken)
     {
-        var result = await _leaderBoardService.GetLeaderBoardTemplates(request.Filter);
+        //var result = await _leaderBoardService.GetLeaderBoardTemplates(request.Filter);
 
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return new ApplicationResult { Data = ""};
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 
 namespace OnAim.Admin.Infrasturcture.Persistance.Data.LeaderBoard;

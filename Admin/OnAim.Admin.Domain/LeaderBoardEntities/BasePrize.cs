@@ -1,9 +1,8 @@
-﻿using OnAim.Admin.Domain.HubEntities;
+﻿namespace OnAim.Admin.Domain.LeaderBoradEntities;
 
-namespace OnAim.Admin.Domain.LeaderBoradEntities;
-
-public class BasePrize : BaseEntity<int>
+public class BasePrize 
 {
+    public int Id { get; set; }
     public int StartRank { get; set; }
     public int EndRank { get; set; }
     public string PrizeId { get; set; }

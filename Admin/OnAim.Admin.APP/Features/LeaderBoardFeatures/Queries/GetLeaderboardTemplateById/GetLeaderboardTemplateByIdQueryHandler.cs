@@ -14,8 +14,8 @@ public class GetLeaderboardTemplateByIdQueryHandler : IQueryHandler<GetLeaderboa
     }
     public async Task<ApplicationResult> Handle(GetLeaderboardTemplateByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await _leaderBoardService.GetLeaderboardTemplateById(request.Id);
+        //var result = await _leaderBoardService.GetLeaderboardTemplateById(request.Id);
 
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return new ApplicationResult {Data = "" };
     }
 }
