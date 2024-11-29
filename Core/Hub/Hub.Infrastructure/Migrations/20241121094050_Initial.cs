@@ -489,7 +489,7 @@ namespace Hub.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PromotionCoins",
+                name: "Coins",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
@@ -873,7 +873,7 @@ namespace Hub.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_WithdrawOptionPromotionCoinMappings_PromotionCoins_Promotio~",
                         column: x => x.PromotionCoinId,
-                        principalTable: "PromotionCoins",
+                        principalTable: "Coins",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -971,12 +971,12 @@ namespace Hub.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_PromotionCoins_CoinTemplateId",
-                table: "PromotionCoins",
+                table: "Coins",
                 column: "CoinTemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PromotionCoins_PromotionId",
-                table: "PromotionCoins",
+                table: "Coins",
                 column: "PromotionId");
 
             migrationBuilder.CreateIndex(
@@ -1181,7 +1181,7 @@ namespace Hub.Infrastructure.Migrations
                 name: "WithdrawOptionGroups");
 
             migrationBuilder.DropTable(
-                name: "PromotionCoins");
+                name: "Coins");
 
             migrationBuilder.DropTable(
                 name: "WithdrawOptions");

@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-using Hub.Domain.Entities.PromotionCoins;
+using Hub.Domain.Entities.Coins;
 using Hub.Domain.Enum;
 using Shared.Domain.Entities;
 
@@ -21,7 +21,7 @@ public class Promotion : BaseEntity<int>
         Guid correlationId,
         IEnumerable<PromotionService> services = null,
         IEnumerable<Segment> segments = null,
-        IEnumerable<PromotionCoin> coins = null,
+        IEnumerable<Coin> coins = null,
         IEnumerable<PromotionView> views = null)
     {
         Status = PromotionStatus.ToLaunch;
@@ -50,7 +50,7 @@ public class Promotion : BaseEntity<int>
 
     public ICollection<PromotionService> Services { get; private set; }
     public ICollection<Segment> Segments { get; private set; }
-    public ICollection<PromotionCoin> Coins { get; private set; }
+    public ICollection<Coin> Coins { get; private set; }
     public ICollection<Transaction> Transactions { get; private set; }
     public ICollection<PromotionView> Views { get; private set; }
 
@@ -79,7 +79,7 @@ public class Promotion : BaseEntity<int>
         Status = status;
     }
 
-    public void SetCoins(IEnumerable<PromotionCoin> coins)
+    public void SetCoins(IEnumerable<Coin> coins)
     {
         if (coins != null)
         {
@@ -92,7 +92,7 @@ public class Promotion : BaseEntity<int>
         }
     }
 
-    public void AddCoins(IEnumerable<PromotionCoin> coins)
+    public void AddCoins(IEnumerable<Coin> coins)
     {
         foreach (var coin in coins)
         {

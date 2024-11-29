@@ -3,16 +3,16 @@
 using Hub.Domain.Enum;
 using Shared.Domain.Entities;
 
-namespace Hub.Domain.Entities.PromotionCoins;
+namespace Hub.Domain.Entities.Coins;
 
-public class PromotionCoin : BaseEntity<string>
+public abstract class Coin : BaseEntity<string>
 {
-    public PromotionCoin()
+    public Coin()
     {
 
     }
 
-    public PromotionCoin(string id,
+    public Coin(string id,
         string name,
         string description,
         string imageUrl,

@@ -6,9 +6,10 @@ using Hub.Api;
 using Hub.Api.Common.Consul;
 using Hub.Application;
 using Hub.Application.Configurations;
+using Hub.Application.Converters;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdrawOption;
-using Hub.Application.Models.PromotionCoin;
+using Hub.Application.Models.Coin;
 using Hub.Application.Services.Abstract;
 using Hub.Application.Services.Abstract.BackgroundJobs;
 using Hub.Application.Services.Concrete;
@@ -38,7 +39,6 @@ using Shared.IntegrationEvents.IntegrationEvents.Segment;
 using Shared.Lib;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Text.Json;
 
 public class Startup
 {
@@ -80,7 +80,7 @@ public class Startup
         services.AddScoped<IPromotionViewRepository, PromotionViewRepository>();
         services.AddScoped<IPromotionViewTemplateRepository, PromotionViewTemplateRepository>();
         services.AddScoped<ICoinTemplateRepository, CoinTemplateRepository>();
-        services.AddScoped<IPromotionCoinRepository, PromotionCoinRepository>();
+        services.AddScoped<ICoinRepository, CoinRepository>();
         services.AddScoped<IWithdrawOptionRepository, WithdrawOptionRepository>();
         services.AddScoped<IWithdrawOptionEndpointRepository, WithdrawOptionEndpointRepository>();
         services.AddScoped<IWithdrawOptionGroupRepository, WithdrawOptionGroupRepository>();
@@ -307,7 +307,7 @@ public class Startup
                 },
             });
 
-            c.SchemaFilter<PolymorphismSchemaFilter<BaseCreatePromotionCoinModel>>();
+            c.SchemaFilter<PolymorphismSchemaFilter<CreateCoinModel>>();
         });
     }
 

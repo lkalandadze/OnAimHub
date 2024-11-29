@@ -1,4 +1,4 @@
-﻿using Hub.Application.Models.PromotionCoin;
+﻿using Hub.Application.Models.Coin;
 using MediatR;
 
 namespace Hub.Application.Features.PromotionFeatures.Commands.Create;
@@ -10,7 +10,7 @@ public record CreatePromotionCommand(
     string Description,
     Guid CorrelationId,
     IEnumerable<string> SegmentIds,
-    IEnumerable<BaseCreatePromotionCoinModel> PromotionCoins) : IRequest;
+    IEnumerable<CreateCoinModel> Coins) : IRequest;
 
 
 //{

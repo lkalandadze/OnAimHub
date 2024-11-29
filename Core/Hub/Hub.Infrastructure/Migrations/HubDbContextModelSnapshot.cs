@@ -549,7 +549,7 @@ namespace Hub.Infrastructure.Migrations
                     b.ToTable("Promotions");
                 });
 
-            modelBuilder.Entity("Hub.Domain.Entities.PromotionCoin", b =>
+            modelBuilder.Entity("Hub.Domain.Entities.Coin", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -585,7 +585,7 @@ namespace Hub.Infrastructure.Migrations
 
                     b.HasIndex("PromotionId");
 
-                    b.ToTable("PromotionCoins");
+                    b.ToTable("Coins");
                 });
 
             modelBuilder.Entity("Hub.Domain.Entities.PromotionService", b =>
@@ -1241,7 +1241,7 @@ namespace Hub.Infrastructure.Migrations
                     b.Navigation("PlayerSegmentAct");
                 });
 
-            modelBuilder.Entity("Hub.Domain.Entities.PromotionCoin", b =>
+            modelBuilder.Entity("Hub.Domain.Entities.Coin", b =>
                 {
                     b.HasOne("Hub.Domain.Entities.Templates.CoinTemplate", "CoinTemplate")
                         .WithMany()
@@ -1500,7 +1500,7 @@ namespace Hub.Infrastructure.Migrations
 
             modelBuilder.Entity("WithdrawOptionPromotionCoinMappings", b =>
                 {
-                    b.HasOne("Hub.Domain.Entities.PromotionCoin", null)
+                    b.HasOne("Hub.Domain.Entities.Coin", null)
                         .WithMany()
                         .HasForeignKey("PromotionCoinId")
                         .OnDelete(DeleteBehavior.Cascade)

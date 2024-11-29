@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-using Hub.Domain.Entities.PromotionCoins;
+using Hub.Domain.Entities.Coins;
 using Hub.Domain.Entities.Templates;
 using Hub.Domain.Enum;
 using Shared.Domain.Entities;
@@ -21,8 +21,7 @@ public class WithdrawOption : BaseEntity<int>
         string endpoint = null, 
         string endpointContent = null, 
         int? endpointTemplate = null,
-        IEnumerable<PromotionOutgoingCoin> promotionCoins = null,
-        IEnumerable<CoinTemplate> coinTemplates = null)
+        IEnumerable<OutCoin> outCoins = null)
     {
         Title = title;
         Description = description;
@@ -31,8 +30,7 @@ public class WithdrawOption : BaseEntity<int>
         Endpoint = endpoint;
         EndpointContent = endpointContent;
         WithdrawEndpointTemplateId = endpointTemplate;
-        PromotionCoins = promotionCoins?.ToList() ?? [];
-        CoinTemplates = coinTemplates?.ToList() ?? [];
+        OutCoins = outCoins?.ToList() ?? [];
     }
 
     public string Title { get; set; }
@@ -46,8 +44,7 @@ public class WithdrawOption : BaseEntity<int>
     public WithdrawOptionEndpoint WithdrawEndpointTemplate { get; set; }
 
     public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
-    public ICollection<PromotionOutgoingCoin> PromotionCoins { get; set; }
-    public ICollection<CoinTemplate> CoinTemplates { get; set; }
+    public ICollection<OutCoin> OutCoins { get; set; }
 
     public void Update(
         string title, 
@@ -56,8 +53,7 @@ public class WithdrawOption : BaseEntity<int>
         string endpoint = null, 
         string endpointContent = null, 
         int? endpointTemplate = null, 
-        IEnumerable<PromotionOutgoingCoin> promotionCoins = null, 
-        IEnumerable<CoinTemplate> coinTemplates = null)
+        IEnumerable<OutCoin> outCoins = null)
     {
         Title = title;
         Description = description;
@@ -65,18 +61,6 @@ public class WithdrawOption : BaseEntity<int>
         Endpoint = endpoint;
         EndpointContent = endpointContent;
         WithdrawEndpointTemplateId = endpointTemplate;
-        PromotionCoins = promotionCoins?.ToList() ?? [];
-        CoinTemplates = coinTemplates?.ToList() ?? [];
-    }
-
-    public void AddCoinTemplates(IEnumerable<CoinTemplate> coinTemplates)
-    {
-        foreach (var coinTemplate in coinTemplates)
-        {
-            if (!CoinTemplates.Contains(coinTemplate))
-            {
-                CoinTemplates.Add(coinTemplate);
-            }
-        }
+        OutCoins = outCoins?.ToList() ?? [];
     }
 }

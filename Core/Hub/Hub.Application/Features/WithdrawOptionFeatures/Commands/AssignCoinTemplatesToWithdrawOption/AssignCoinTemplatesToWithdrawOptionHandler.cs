@@ -30,7 +30,7 @@ public class AssignCoinTemplatesToWithdrawOptionHandler : IRequestHandler<Assign
         }
 
         var coinTemplates = (await _coinTemplateRepository.QueryAsync(pc => request.CoinTemplateIds.Any(ctId => ctId == pc.Id)))
-                                                          .Where(c => c.CoinType == CoinType.Outgoing);
+                                                          .Where(c => c.CoinType == CoinType.Out);
 
         if (coinTemplates == null || !coinTemplates.Any())
         {

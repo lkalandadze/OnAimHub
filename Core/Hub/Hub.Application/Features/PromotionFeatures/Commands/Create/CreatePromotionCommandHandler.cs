@@ -1,4 +1,4 @@
-﻿using Hub.Application.Models.PromotionCoin;
+﻿using Hub.Application.Models.Coin;
 using Hub.Application.Services.Abstract.BackgroundJobs;
 using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
@@ -14,18 +14,14 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ISegmentRepository _segmentRepository;
-    private readonly ICoinTemplateRepository _coinTemplateRepository;
-    private readonly IWithdrawOptionEndpointRepository _withdrawEndpointTemplateRepository;
     private readonly IPromotionRepository _promotionRepository;
     private readonly IBackgroundJobScheduler _jobScheduler;
     private readonly IJobRepository _jobRepository;
 
-    public CreatePromotionCommandHandler(IUnitOfWork unitOfWork, ISegmentRepository segmentRepository, ICoinTemplateRepository coinTemplateRepository, IWithdrawOptionEndpointRepository withdrawEndpointTemplateRepository, IPromotionRepository promotionRepository, IBackgroundJobScheduler jobScheduler, IJobRepository jobRepository)
+    public CreatePromotionCommandHandler(IUnitOfWork unitOfWork, ISegmentRepository segmentRepository, IPromotionRepository promotionRepository, IBackgroundJobScheduler jobScheduler, IJobRepository jobRepository)
     {
         _unitOfWork = unitOfWork;
         _segmentRepository = segmentRepository;
-        _coinTemplateRepository = coinTemplateRepository;
-        _withdrawEndpointTemplateRepository = withdrawEndpointTemplateRepository;
         _promotionRepository = promotionRepository;
         _jobScheduler = jobScheduler;
         _jobRepository = jobRepository;
@@ -46,7 +42,7 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
         }
 
         //TODO: ქოინების ვალიდაციები
-        if (request.PromotionCoins.Where(c => c.CoinType == CoinType.Incomming).Count() != 1)
+        if (request.Coins.Where(c => c.CoinType == CoinType.In).Count() != 1)
         {
         }
 
@@ -64,7 +60,7 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
 
         SchedulePromotionStatusJobs(promotion);
 
-        var mappedCoins = request.PromotionCoins.Select(coin => BaseCreatePromotionCoinModel.ConvertToEntity(coin, promotion.Id)).ToList();
+        var mappedCoins = request.Coins.Select(coin => CreateCoinModel.ConvertToEntity(coin, promotion.Id)).ToList();
         promotion.SetCoins(mappedCoins);
 
         _promotionRepository.Update(promotion);

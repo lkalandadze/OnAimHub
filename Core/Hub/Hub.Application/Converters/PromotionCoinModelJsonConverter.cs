@@ -1,15 +1,15 @@
 ﻿#nullable disable
 
-using Hub.Application.Models.PromotionCoin;
+using Hub.Application.Models.Coin;
 using Hub.Domain.Enum;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Hub.Application.Converters;
 
-public class PromotionCoinModelJsonConverter : JsonConverter<BaseCreatePromotionCoinModel>
+public class PromotionCoinModelJsonConverter : JsonConverter<CreateCoinModel>
 {
-    public override BaseCreatePromotionCoinModel Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override CreateCoinModel Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         using var jsonDocument = JsonDocument.ParseValue(ref reader);
         var rootElement = jsonDocument.RootElement;
@@ -24,14 +24,14 @@ public class PromotionCoinModelJsonConverter : JsonConverter<BaseCreatePromotion
 
         return coinType switch
         {
-            CoinType.Incomming => JsonSerializer.Deserialize<CreatePromotionIncomingCoinModel>(json, options),
-            CoinType.Internal => JsonSerializer.Deserialize<CreatePromotionInternalCoinModel>(json, options),
-            CoinType.Prize => JsonSerializer.Deserialize<CreatePromotionPrizeCoinModel>(json, options),
-            CoinType.Outgoing => JsonSerializer.Deserialize<CreatePromotionOutgoingCoinModel>(json, options),
+            CoinType.In => JsonSerializer.Deserialize<CreateInCoinModel>(json, options),
+            CoinType.Internal => JsonSerializer.Deserialize<CreateInternalCoinModel>(json, options),
+            CoinType.Asset => JsonSerializer.Deserialize<CreateAssetCoinModel>(json, options),
+            CoinType.Out => JsonSerializer.Deserialize<CreateOutCoinModel>(json, options),
         };
     }
 
-    public override void Write(Utf8JsonWriter writer, BaseCreatePromotionCoinModel value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, CreateCoinModel value, JsonSerializerOptions options)
     {
         JsonSerializer.Serialize(writer, value, value.GetType(), options);
     }

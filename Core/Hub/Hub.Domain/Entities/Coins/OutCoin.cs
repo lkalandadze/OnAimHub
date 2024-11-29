@@ -2,17 +2,17 @@
 
 using Hub.Domain.Enum;
 
-namespace Hub.Domain.Entities.PromotionCoins;
+namespace Hub.Domain.Entities.Coins;
 
-public class PromotionOutgoingCoin : PromotionCoin
+public class OutCoin : Coin
 {
-    public PromotionOutgoingCoin()
+    public OutCoin()
     {
         
     }
 
-    public PromotionOutgoingCoin(string id, string name, string description, string imageUrl, int promotionId, IEnumerable<WithdrawOption> withdrawOptions = null) 
-        : base(id, name, description, imageUrl, CoinType.Outgoing, promotionId)
+    public OutCoin(string id, string name, string description, string imageUrl, int promotionId, IEnumerable<WithdrawOption> withdrawOptions = null) 
+        : base(id, name, description, imageUrl, CoinType.Out, promotionId)
     {
         WithdrawOptions = withdrawOptions?.ToList() ?? [];
     }

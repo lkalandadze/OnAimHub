@@ -3,8 +3,8 @@
 public enum CoinType
 {
     Default = 0,
-    Incomming = 1,
-    Outgoing = 2,
+    In = 1,
+    Out = 2,
     Internal = 3,
-    Prize = 4,
+    Asset = 4,
 }

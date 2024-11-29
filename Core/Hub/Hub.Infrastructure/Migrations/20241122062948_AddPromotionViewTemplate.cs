@@ -43,7 +43,7 @@ namespace Hub.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_PromotionCoinWithdrawOption_PromotionCoins_PromotionCoinsId",
                         column: x => x.PromotionCoinsId,
-                        principalTable: "PromotionCoins",
+                        principalTable: "Coins",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -157,7 +157,7 @@ namespace Hub.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_WithdrawOptionPromotionCoinMappings_PromotionCoins_Promotio~",
                         column: x => x.PromotionCoinId,
-                        principalTable: "PromotionCoins",
+                        principalTable: "Coins",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(

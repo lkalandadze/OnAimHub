@@ -23,12 +23,12 @@ public class CreateCoinTemplateHandler : IRequestHandler<CreateCoinTemplate>
     {
         var coinTemplate = new CoinTemplate(request.Name, request.Description, request.ImageUrl, request.CoinType);
 
-        if (request.WithdrawOptionIds != null && request.WithdrawOptionIds.Any() && request.CoinType == CoinType.Outgoing)
-        {
-            var withdrawOptions = (await _withdrawOptionRepository.QueryAsync(wo => request.WithdrawOptionIds.Any(woId => woId == wo.Id)));
+        //if (request.WithdrawOptionIds != null && request.WithdrawOptionIds.Any() && request.CoinType == CoinType.Out)
+        //{
+        //    var withdrawOptions = (await _withdrawOptionRepository.QueryAsync(wo => request.WithdrawOptionIds.Any(woId => woId == wo.Id)));
 
-            coinTemplate.AddWithdrawOptions(withdrawOptions);
-        }
+        //    coinTemplate.AddWithdrawOptions(withdrawOptions);
+        //}
 
         await _coinTemplateRepository.InsertAsync(coinTemplate);
         await _unitOfWork.SaveAsync();

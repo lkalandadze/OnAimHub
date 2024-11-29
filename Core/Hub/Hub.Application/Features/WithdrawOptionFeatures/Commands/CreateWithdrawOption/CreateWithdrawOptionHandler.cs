@@ -9,11 +9,11 @@ namespace Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdra
 public class CreateWithdrawOptionHandler : IRequestHandler<CreateWithdrawOption>
 {
     private readonly IWithdrawOptionRepository _withdrawOptionRepository;
-    private readonly IPromotionCoinRepository _promotionCoinRepository;
+    private readonly ICoinRepository _promotionCoinRepository;
     private readonly ICoinTemplateRepository _coinTemplateRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateWithdrawOptionHandler(IWithdrawOptionRepository withdrawOptionRepository, IPromotionCoinRepository promotionCoinRepository, ICoinTemplateRepository coinTemplateRepository, IUnitOfWork unitOfWork)
+    public CreateWithdrawOptionHandler(IWithdrawOptionRepository withdrawOptionRepository, ICoinRepository promotionCoinRepository, ICoinTemplateRepository coinTemplateRepository, IUnitOfWork unitOfWork)
     {
         _withdrawOptionRepository = withdrawOptionRepository;
         _promotionCoinRepository = promotionCoinRepository;
@@ -30,7 +30,7 @@ public class CreateWithdrawOptionHandler : IRequestHandler<CreateWithdrawOption>
         if (request.PromotionCoinIds != null && request.PromotionCoinIds.Any())
         {
             var promotionCoins = (await _promotionCoinRepository.QueryAsync(pc => request.PromotionCoinIds.Any(pcId => pcId == pc.Id)))
-                                                                .Where(c => c.CoinType == CoinType.Outgoing);
+                                                                .Where(c => c.CoinType == CoinType.Out);
 
             //option.AddPromotionCoins(promotionCoins);
         }
@@ -39,7 +39,7 @@ public class CreateWithdrawOptionHandler : IRequestHandler<CreateWithdrawOption>
         if (request.CoinTemplateIds != null && request.CoinTemplateIds.Any())
         {
             var coinTemplates = (await _coinTemplateRepository.QueryAsync(ct => request.CoinTemplateIds.Any(ctId => ctId == ct.Id)))
-                                                              .Where(c => c.CoinType == CoinType.Outgoing);
+                                                              .Where(c => c.CoinType == CoinType.Out);
 
             //option.AddCoinTemplates(coinTemplates);
         }

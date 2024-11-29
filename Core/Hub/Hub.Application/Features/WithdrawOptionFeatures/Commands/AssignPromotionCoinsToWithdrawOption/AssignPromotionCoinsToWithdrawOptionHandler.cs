@@ -10,10 +10,10 @@ namespace Hub.Application.Features.WithdrawOptionFeatures.Commands.AssignPromoti
 public class AssignPromotionCoinsToWithdrawOptionHandler : IRequestHandler<AssignPromotionCoinsToWithdrawOption>
 {
     private readonly IWithdrawOptionRepository _withdrawOptionRepository;
-    private readonly IPromotionCoinRepository _promotionCoinRepository;
+    private readonly ICoinRepository _promotionCoinRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public AssignPromotionCoinsToWithdrawOptionHandler(IWithdrawOptionRepository withdrawOptionRepository, IPromotionCoinRepository promotionCoinRepository, IUnitOfWork unitOfWork)
+    public AssignPromotionCoinsToWithdrawOptionHandler(IWithdrawOptionRepository withdrawOptionRepository, ICoinRepository promotionCoinRepository, IUnitOfWork unitOfWork)
     {
         _withdrawOptionRepository = withdrawOptionRepository;
         _promotionCoinRepository = promotionCoinRepository;
@@ -30,7 +30,7 @@ public class AssignPromotionCoinsToWithdrawOptionHandler : IRequestHandler<Assig
         }
 
         var promotionCoins = (await _promotionCoinRepository.QueryAsync(pc => request.PromotionCoinIds.Contains(pc.Id)))
-                                                            .Where(c => c.CoinType == CoinType.Outgoing);
+                                                            .Where(c => c.CoinType == CoinType.Out);
 
         if (promotionCoins == null || !promotionCoins.Any())
         {
@@ -40,7 +40,7 @@ public class AssignPromotionCoinsToWithdrawOptionHandler : IRequestHandler<Assig
             );
         }
 
-        if (promotionCoins == null || promotionCoins.Any(c => c.CoinType != CoinType.Outgoing))
+        if (promotionCoins == null || promotionCoins.Any(c => c.CoinType != CoinType.Out))
         {
             throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "One or more promotionCoins are not eligible for this operation. Only outgoing promotionCoins are allowed.");
         }
