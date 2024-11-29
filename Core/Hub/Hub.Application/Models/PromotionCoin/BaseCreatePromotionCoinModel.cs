@@ -3,6 +3,7 @@
 using Hub.Domain.Entities;
 using Hub.Domain.Entities.PromotionCoins;
 using Hub.Domain.Enum;
+using Newtonsoft.Json;
 
 namespace Hub.Application.Models.PromotionCoin;
 

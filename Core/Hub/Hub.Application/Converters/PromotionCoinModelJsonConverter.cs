@@ -1,10 +1,11 @@
 ﻿#nullable disable
 
+using Hub.Application.Models.PromotionCoin;
 using Hub.Domain.Enum;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Hub.Application.Models.PromotionCoin;
+namespace Hub.Application.Converters;
 
 public class PromotionCoinModelJsonConverter : JsonConverter<BaseCreatePromotionCoinModel>
 {

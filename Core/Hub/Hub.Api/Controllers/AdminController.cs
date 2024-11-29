@@ -48,15 +48,8 @@ public class AdminController : BaseApiController
     #region Promotions
 
     [HttpPost(nameof(CreatePromotion))]
-    public async Task<ActionResult<Unit>> CreatePromotion([FromBody] JsonElement payload)
+    public async Task<ActionResult<Unit>> CreatePromotion(CreatePromotionCommand command)
     {
-        var command = JsonSerializer.Deserialize<CreatePromotionCommand>(payload.GetRawText(), JsonSerializerOptions);
-
-        if (command == null)
-        {
-            return BadRequest("Invalid data received for creating promotion.");
-        }
-
         return StatusCode(201, await Mediator.Send(command));
     }
 

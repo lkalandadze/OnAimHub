@@ -35,6 +35,7 @@ using Shared.Application.Middlewares;
 using Shared.Infrastructure.Bus;
 using Shared.Infrastructure.MassTransit;
 using Shared.IntegrationEvents.IntegrationEvents.Segment;
+using Shared.Lib;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -111,8 +112,6 @@ public class Startup
             return new(provider.CreateScope().ServiceProvider.GetRequiredService<IHubSettingRepository>());
         });
 
-        ConfigureJsonSerializerOptions(services);
-
         services.AddHangfire(config =>
             config.UsePostgreSqlStorage(Configuration.GetConnectionString("OnAimHub")));
         services.AddHangfireServer();
@@ -154,6 +153,11 @@ public class Startup
             .AddFluentValidation(fv =>
             {
                 fv.RegisterValidatorsFromAssemblyContaining<CreateWithdrawOptionValidator>();
+            })
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                options.JsonSerializerOptions.Converters.Add(new PromotionCoinModelJsonConverter());
             });
 
         services.AddEndpointsApiExplorer();
@@ -302,6 +306,8 @@ public class Startup
                     new List<string>()
                 },
             });
+
+            c.SchemaFilter<PolymorphismSchemaFilter<BaseCreatePromotionCoinModel>>();
         });
     }
 
@@ -436,18 +442,5 @@ public class Startup
                 });
             });
         });
-    }
-
-    private void ConfigureJsonSerializerOptions(IServiceCollection services)
-    {
-        var jsonSerializerOptions = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = true
-        };
-
-        jsonSerializerOptions.Converters.Add(new PromotionCoinModelJsonConverter());
-
-        services.AddSingleton(jsonSerializerOptions);
     }
 }
