@@ -5,27 +5,21 @@ namespace Leaderboard.Domain.Entities;
 
 public class LeaderboardSchedule : BaseEntity<int>
 {
-    public LeaderboardSchedule(string name, RepeatType repeatType, int? repeatValue, DateTimeOffset startDate, DateTimeOffset endDate, int leaderboardTemplateId)
+    public LeaderboardSchedule(string title, RepeatType repeatType, int? repeatValue, int leaderboardRecordId)
     {
-        Name = name;
+        Title = title;
         RepeatType = repeatType;
         RepeatValue = repeatValue;
-        StartDate = startDate;
-        EndDate = endDate;
-        LeaderboardTemplateId = leaderboardTemplateId;
+        LeaderboardRecordId = leaderboardRecordId;
         Status = LeaderboardScheduleStatus.Active;
     }
 
-    public string Name { get; set; } //Template name
+    public string Title { get; set; }  //R
     public RepeatType RepeatType { get; set; } // when should job execute 
     public int? RepeatValue { get; set; } // Holds the repeat interval or day information
-    public DateOnly? SpecificDate { get; set; }
-    public TimeSpan StartTime { get; set; }
-    public DateTimeOffset StartDate { get; set; }
-    public DateTimeOffset EndDate { get; set; }
-    public LeaderboardScheduleStatus Status { get; set; }
-    public int LeaderboardTemplateId { get; set; }
-    public LeaderboardTemplate LeaderboardTemplate { get; set; }
+    public LeaderboardScheduleStatus Status { get; set; } //R? Need logic if we need it
+    public int LeaderboardRecordId { get; set; }
+    public LeaderboardRecord LeaderboardRecord { get; set; }
 
 
     //SingleDate: RepeatValue might be unused in this case, as you would rely on StartDate to determine the job's execution date.

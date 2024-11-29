@@ -1,4 +1,5 @@
 ﻿using Leaderboard.Domain.Enum;
+using MassTransit.Middleware;
 using Shared.Domain.Entities;
 
 namespace Leaderboard.Domain.Entities;
@@ -10,74 +11,71 @@ public class LeaderboardRecord : BaseEntity<int>
 
     }
 
-    public LeaderboardRecord(string name,
+    public LeaderboardRecord(int promotionId,
+                             string title,
                              string description,
-                             DateTimeOffset creationDate,
+                             EventType eventType,
                              DateTimeOffset announcementDate,
                              DateTimeOffset startDate,
                              DateTimeOffset endDate,
-                             LeaderboardType leaderboardType,
-                             //JobTypeEnum jobType,
-                             int? leaderboardTemplateId,
-                             LeaderboardRecordStatus status,
                              bool isGenerated,
+                             int? templateId,
+                             int? scheduleId,
                              Guid? correlationId)
     {
-        Name = name;
+        PromotionId = promotionId;
+        Title = title;
         Description = description;
-        CreationDate = creationDate;
+        EventType = eventType;
         AnnouncementDate = announcementDate;
         StartDate = startDate;
         EndDate = endDate;
-        LeaderboardType = leaderboardType;
-        //JobType = jobType;
-        LeaderboardTemplateId = leaderboardTemplateId;
-        Status = status;
         IsGenerated = isGenerated;
+        TemplateId = templateId;
+        ScheduleId = scheduleId;
         CorrelationId = correlationId;
+        CreationDate = DateTimeOffset.UtcNow;
+        Status = LeaderboardRecordStatus.Created;
     }
-
-    public string Name { get; set; }
+    public int PromotionId { get; set; }
+    public string Title { get; set; }
     public string Description { get; set; }
-    public int? LeaderboardTemplateId { get; set; }
-    public LeaderboardTemplate LeaderboardTemplate { get; set; }
-    public DateTimeOffset CreationDate { get; set; }
+    public EventType EventType { get; set; }
+    public DateTimeOffset CreationDate { get; set; } // datetimenow
     public DateTimeOffset AnnouncementDate { get; set; }
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
-    public LeaderboardType LeaderboardType { get; set; }
-    //public JobTypeEnum JobType { get; set; }
     public LeaderboardRecordStatus Status { get; set; }
     public bool IsGenerated { get; set; }
+    public int? TemplateId { get; set; }
+    public int? ScheduleId { get; set; }
     public Guid? CorrelationId { get; set; }
     public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; } = new List<LeaderboardProgress>();
     public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; } = new List<LeaderboardRecordPrize>();
 
-    public void Update(string name, string description, DateTimeOffset creationDate, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate, LeaderboardType leaderboardType)
+    public void Update(string title, string description, EventType eventType, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate)
     {
-        Name = name;
+        Title = title;
         Description = description;
-        CreationDate = creationDate;
+        EventType = eventType;
         AnnouncementDate = announcementDate;
         StartDate = startDate;
         EndDate = endDate;
-        LeaderboardType = leaderboardType;
-        //JobType = jobType;
     }
 
-    public void AddLeaderboardRecordPrizes(int startRank, int endRank, string prizeId, int amount)
+    public void AddLeaderboardRecordPrizes(int startRank, int endRank, string coinId, int amount)
     {
-        var prize = new LeaderboardRecordPrize(startRank, endRank, prizeId, amount);
+        var prize = new LeaderboardRecordPrize(startRank, endRank, coinId, amount);
         LeaderboardRecordPrizes.Add(prize);
     }
 
-    public void UpdateLeaderboardPrizes(int id, int startRank, int endRank, string prizeId, int amount)
+    public void UpdateLeaderboardRecordPrizes(int id, int startRank, int endRank, string coinId, int amount)
     {
         var prize = LeaderboardRecordPrizes.FirstOrDefault(x => x.Id == id);
 
         if (prize == null) return;
 
-        prize.Update(startRank, endRank, prizeId, amount);
+        prize.Update(startRank, endRank, coinId, amount);
     }
 
     public void InsertProgress(int playerId, string playerUsername, int amount)

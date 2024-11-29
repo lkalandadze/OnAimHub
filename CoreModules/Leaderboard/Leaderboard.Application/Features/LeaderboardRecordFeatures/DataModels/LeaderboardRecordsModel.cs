@@ -6,14 +6,15 @@ namespace Leaderboard.Application.Features.LeaderboardRecordFeatures.DataModels;
 public sealed record LeaderboardRecordsModel
 {
     public int Id { get; set; }
-    public string Name { get; set; }
+    public string Title { get; set; }
     public string Description { get; set; }
+    public EventType EventType { get; set; }
     public DateTimeOffset CreationDate { get; set; }
     public DateTimeOffset AnnouncementDate { get; set; }
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
-    public LeaderboardType LeaderboardType { get; set; }
     public LeaderboardRecordStatus Status { get; set; }
+    public bool IsGenerated { get; set; }
 
 
     public static LeaderboardRecordsModel MapFrom(LeaderboardRecord leaderboardRecord)
@@ -21,14 +22,15 @@ public sealed record LeaderboardRecordsModel
         return new LeaderboardRecordsModel
         {
             Id = leaderboardRecord.Id,
-            Name = leaderboardRecord.Name,
+            Title = leaderboardRecord.Title,
             Description = leaderboardRecord.Description,
+            EventType = leaderboardRecord.EventType,
             CreationDate = leaderboardRecord.CreationDate,
             AnnouncementDate = leaderboardRecord.AnnouncementDate,
             StartDate = leaderboardRecord.StartDate,
             EndDate = leaderboardRecord.EndDate,
-            LeaderboardType = leaderboardRecord.LeaderboardType,
-            Status = leaderboardRecord.Status
+            Status = leaderboardRecord.Status,
+            IsGenerated = leaderboardRecord.IsGenerated
         };
     }
 }

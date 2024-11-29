@@ -24,7 +24,7 @@ public class UpdateLeaderboardScheduleCommandHandler : IRequestHandler<UpdateLea
         if (leaderboardSchedule == default)
             throw new Exception("Leaderboard schedule not found");
 
-        leaderboardSchedule.UpdateStatus(request.Status);
+        //leaderboardSchedule.UpdateStatus(request.Status);
 
         if (request.Status == LeaderboardScheduleStatus.Cancelled)
             _backgroundJobScheduler.RemoveScheduledJob(leaderboardSchedule.Id);

@@ -7,6 +7,6 @@ namespace Leaderboard.Application.Services.Abstract;
 public interface ICalendarService
 {
     List<LeaderboardRecordsModel> GenerateFutureLeaderboards(GetCalendarQuery request);
-    DateTimeOffset CalculateNextStartDate(DateTimeOffset current, LeaderboardSchedule schedule);
+    DateTimeOffset CalculateNextStartDate(DateTimeOffset current, LeaderboardRecord record, LeaderboardSchedule schedule);
     DateTimeOffset CalculateNextInterval(DateTimeOffset startDate, LeaderboardSchedule schedule);
 }

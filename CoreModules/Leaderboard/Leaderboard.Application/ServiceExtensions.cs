@@ -2,7 +2,6 @@
 using FluentValidation.AspNetCore;
 using Leaderboard.Application.Behaviours;
 using Leaderboard.Application.Consumers.Players;
-using Leaderboard.Application.Consumers.Segment;
 using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Infrastructure.Repositories;
 using MassTransit;
@@ -45,9 +44,6 @@ public static class ServiceExtensions
         services.AddMassTransit(x =>
         {
             x.AddConsumer<CreatePlayerAggregationConsumer>();
-            x.AddConsumer<CreateSegmentAggregationConsumer>();
-            x.AddConsumer<DeleteSegmentAggregationConsumer>();
-            x.AddConsumer<UpdateSegmentAggregationConsumer>();
 
             x.UsingRabbitMq((context, cfg) =>
             {
@@ -70,25 +66,6 @@ public static class ServiceExtensions
                         });
                     }
                     e.ConfigureConsumer<CreatePlayerAggregationConsumer>(context);
-                });
-
-                var segmentQueueSettings = rabbitMqOptions.Queues["SegmentQueue"];
-                cfg.ReceiveEndpoint(segmentQueueSettings.QueueName, e =>
-                {
-                    var rabbitMqEndpoint = e as IRabbitMqReceiveEndpointConfigurator;
-
-                    foreach (var routingKey in segmentQueueSettings.RoutingKeys)
-                    {
-                        rabbitMqEndpoint?.Bind(rabbitMqOptions.ExchangeName, x =>
-                        {
-                            x.RoutingKey = routingKey;
-                            x.ExchangeType = "fanout";
-                        });
-                    }
-
-                    e.ConfigureConsumer<CreateSegmentAggregationConsumer>(context);
-                    e.ConfigureConsumer<DeleteSegmentAggregationConsumer>(context);
-                    e.ConfigureConsumer<UpdateSegmentAggregationConsumer>(context);
                 });
             });
         });

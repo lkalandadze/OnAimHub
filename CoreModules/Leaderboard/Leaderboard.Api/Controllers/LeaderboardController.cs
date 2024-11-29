@@ -7,13 +7,7 @@ using Leaderboard.Application.Features.LeaderboardRecordFeatures.Queries.GetCale
 using Leaderboard.Application.Features.LeaderboardScheduleFeatures.Commands.Create;
 using Leaderboard.Application.Features.LeaderboardScheduleFeatures.Commands.Update;
 using Leaderboard.Application.Features.LeaderboardScheduleFeatures.Queries.Get;
-using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.Create;
-using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.Delete;
-using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.Update;
-using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Queries.Get;
-using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Queries.GetById;
 using Leaderboard.Application.Services.Abstract.BackgroundJobs;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Leaderboard.Api.Controllers;
@@ -51,30 +45,6 @@ public class LeaderboardController : BaseApiController
     #endregion
 
 
-
-    #region LeaderboardTemplate
-
-    [HttpPost(nameof(CreateLeaderboardTemplate))]
-    public async Task CreateLeaderboardTemplate(CreateLeaderboardTemplateCommand request) => await Mediator.Send(request);
-
-    [HttpPost(nameof(DeleteLeaderboardTemplate))]
-    public async Task DeleteLeaderboardTemplate(DeleteLeaderboardTemplateCommand request) => await Mediator.Send(request);
-
-    [HttpPut(nameof(UpdateLeaderboardTemplates))]
-    public async Task UpdateLeaderboardTemplates(UpdateLeaderboardTemplateCommand request) => await Mediator.Send(request);
-
-    [HttpGet(nameof(GetLeaderboardTemplates))]
-    public async Task<ActionResult<GetLeaderboardTemplatesQueryResponse>> GetLeaderboardTemplates([FromQuery] GetLeaderboardTemplatesQuery request) => await Mediator.Send(request);
-
-    [HttpGet(nameof(GetCalendar))]
-    public async Task<ActionResult<GetCalendarQueryResponse>> GetCalendar([FromQuery] GetCalendarQuery request) => await Mediator.Send(request);
-
-    [HttpGet(nameof(GetLeaderboardTemplateById))]
-    public async Task<ActionResult<GetLeaderboardTemplateByIdQueryResponse>> GetLeaderboardTemplateById([FromQuery] GetLeaderboardTemplateByIdQuery request) => await Mediator.Send(request);
-
-    #endregion
-
-
     #region LeaderboardSchedule
 
     [HttpPost(nameof(CreateLeaderboardSchedule))]
@@ -87,4 +57,7 @@ public class LeaderboardController : BaseApiController
     public async Task<ActionResult<GetLeaderboardSchedulesQueryResponse>> GetLeaderboardSchedules([FromQuery] GetLeaderboardSchedulesQuery request) => await Mediator.Send(request);
 
     #endregion
+    [HttpGet(nameof(GetCalendar))]
+    public async Task<ActionResult<GetCalendarQueryResponse>> GetCalendar([FromQuery] GetCalendarQuery request) => await Mediator.Send(request);
+
 }

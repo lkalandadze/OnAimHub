@@ -12,7 +12,6 @@ public sealed class UpdateLeaderboardRecordCommand : IRequest
     public DateTimeOffset AnnouncementDate { get; set; }
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
-    public LeaderboardType LeaderboardType { get; set; }
     public JobTypeEnum JobType { get; set; }
     public List<UpdateLeaderboardRecordCommandItem> Prizes { get; set; }
 }
@@ -21,6 +20,6 @@ public class UpdateLeaderboardRecordCommandItem
     public int Id { get; set; }
     public int StartRank { get; set; }
     public int EndRank { get; set; }
-    public string PrizeId { get; set; }
+    public string CoinId { get; set; }
     public int Amount { get; set; }
 }
