@@ -8,6 +8,7 @@ using Leaderboard.Application.Services.Abstract.BackgroundJobs;
 using Leaderboard.Application.Services.Concrete;
 using Leaderboard.Application.Services.Concrete.BackgroundJobs;
 using Leaderboard.Infrastructure;
+using Leaderboard.Infrastructure.DataAccess;
 using MassTransit;
 using System.Globalization;
 
@@ -72,6 +73,15 @@ var app = builder.Build();
     //}
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    var serviceProvider = builder.Services.BuildServiceProvider();
+
+    var context = serviceProvider.GetService<LeaderboardDbContext>();
+
+    if (context != null)
+    {
+        DbInitializer.InitializeDatabase(app.Services, context);
+    }
 
     app.UseHttpsRedirection();
 

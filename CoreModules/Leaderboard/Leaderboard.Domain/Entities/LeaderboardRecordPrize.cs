@@ -4,21 +4,21 @@ namespace Leaderboard.Domain.Entities;
 
 public class LeaderboardRecordPrize : BasePrize
 {
-    public LeaderboardRecordPrize(int startRank, int endRank, string prizeId, int amount)
+    public LeaderboardRecordPrize(int startRank, int endRank, string coinId, int amount)
     {
         StartRank = startRank;
         EndRank = endRank;
-        PrizeId = prizeId;
+        CoinId = coinId;
         Amount = amount;
     }
     public int LeaderboardRecordId { get; set; }
     public LeaderboardRecord LeaderboardRecord { get; set; }
 
-    public void Update(int startRank, int endRank, string prizeId, int amount)
+    public void Update(int startRank, int endRank, string coinId, int amount)
     {
         StartRank = startRank;
         EndRank = endRank;
-        PrizeId = prizeId;
+        CoinId = coinId;
         Amount = amount;
     }
     public void Delete()

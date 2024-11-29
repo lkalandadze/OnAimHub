@@ -1,5 +1,4 @@
-﻿using Leaderboard.Application.Features.LeaderboardTemplateFeatures.Commands.Delete;
-using Leaderboard.Domain.Abstractions.Repository;
+﻿using Leaderboard.Domain.Abstractions.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

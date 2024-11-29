@@ -2,8 +2,8 @@
 
 public enum RepeatType
 {
-    SingleDate = 0,
+    None = 0,
     EveryNDays = 1,
-    DayOfWeek = 2,
-    DayOfMonth = 3
+    DayOfWeek = 2, 
+    DayOfMonth = 3 
 }

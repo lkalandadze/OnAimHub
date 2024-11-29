@@ -22,7 +22,7 @@ public class LeaderboardScheduleStatusUpdaterService : BackgroundService
                 var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
 
                 // Update the status of completed schedules
-                await jobService.UpdateScheduleStatusesAsync();
+                //await jobService.UpdateScheduleStatusesAsync();
             }
 
             await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken); // Run every 5 minutes
