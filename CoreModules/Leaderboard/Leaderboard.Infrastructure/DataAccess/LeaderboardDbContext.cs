@@ -1,9 +1,6 @@
 ﻿using Leaderboard.Domain.Entities;
-using Leaderboard.Infrastructure.EntityConfiguration;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.Extensions.Configuration;
 
 namespace Leaderboard.Infrastructure.DataAccess;
 
@@ -20,19 +17,14 @@ public class LeaderboardDbContext : DbContext
     {
         base.OnModelCreating(builder);
 
-        builder.ApplyConfigurationsFromAssembly(typeof(LeaderboardTemplateConfiguration).Assembly);
     }
 
-    public DbSet<LeaderboardTemplate> LeaderboardTemplate { get; set; }
     public DbSet<LeaderboardSchedule> LeaderboardSchedules { get; set; }
     public DbSet<LeaderboardRecord> LeaderboardRecords { get; set; }
     public DbSet<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; }
-    public DbSet<LeaderboardTemplatePrize> LeaderboardTemplatePrize { get; set; }
     public DbSet<LeaderboardProgress> LeaderboardProgresses { get; set; }
     public DbSet<LeaderboardResult> LeaderboardResults { get; set; }
-    public DbSet<Currency> Currencies { get; set; }
     public DbSet<Player> Players { get; set; }
-    public DbSet<Segment> Segments { get; set; }
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken)
     {

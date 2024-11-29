@@ -27,13 +27,10 @@ public static class ServiceRegistration
 
     public static IServiceCollection AddCustomServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<ILeaderboardTemplateRepository, LeaderboardTemplateRepository>();
         services.AddScoped<ILeaderboardScheduleRepository, LeaderboardScheduleRepository>();
         services.AddScoped<ILeaderboardRecordRepository, LeaderboardRecordRepository>();
-        services.AddScoped<ILeaderboardPrizeRepository, LeaderboardPrizeRepository>();
         services.AddScoped<ILeaderboardProgressRepository, LeaderboardProgressRepository>();
         services.AddScoped<ILeaderboardResultRepository, LeaderboardResultRepository>();
-        services.AddScoped<ISegmentRepository, SegmentRepository>();
         return services;
     }
 }

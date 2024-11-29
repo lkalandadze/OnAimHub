@@ -13,7 +13,8 @@ public class PromotionCoin : BaseEntity<string>
         
     }
 
-    public PromotionCoin(string id, 
+    public PromotionCoin(
+        string id, 
         string name, 
         string description, 
         string imageUrl, 

@@ -10,32 +10,30 @@ public class CreateLeaderboardScheduleCommandHandler : IRequestHandler<CreateLea
 {
     private readonly ILeaderboardScheduleRepository _leaderboardScheduleRepository;
     private readonly IBackgroundJobScheduler _backgroundJobScheduler;
-    private readonly ILeaderboardTemplateRepository _leaderboardTemplateRepository;
-    public CreateLeaderboardScheduleCommandHandler(ILeaderboardScheduleRepository leaderboardScheduleRepository, IBackgroundJobScheduler backgroundJobScheduler, ILeaderboardTemplateRepository leaderboardTemplateRepository)
+    public CreateLeaderboardScheduleCommandHandler(ILeaderboardScheduleRepository leaderboardScheduleRepository, IBackgroundJobScheduler backgroundJobScheduler)
     {
         _leaderboardScheduleRepository = leaderboardScheduleRepository;
         _backgroundJobScheduler = backgroundJobScheduler;
-        _leaderboardTemplateRepository = leaderboardTemplateRepository;
     }
 
     public async Task Handle(CreateLeaderboardScheduleCommand request, CancellationToken cancellationToken)
     {
-        var template = await _leaderboardTemplateRepository.Query().FirstOrDefaultAsync(x => x.Id == request.LeaderboardTemplateId);
+        //var template = await _leaderboardTemplateRepository.Query().FirstOrDefaultAsync(x => x.Id == request.LeaderboardTemplateId);
 
-        if (template == default)
-            throw new Exception("Leaderboard template not found");
+        //if (template == default)
+        //    throw new Exception("Leaderboard template not found");
 
-        var leaderboardSchedule = new LeaderboardSchedule(
-            template.Name,
-            request.RepeatType,
-            request.RepeatValue,
-            request.StartDate,
-            request.EndDate,
-            request.LeaderboardTemplateId);
+        //var leaderboardSchedule = new LeaderboardSchedule(
+        //    template.Name,
+        //    request.RepeatType,
+        //    request.RepeatValue,
+        //    request.StartDate,
+        //    request.EndDate,
+        //    request.LeaderboardTemplateId);
 
-        await _leaderboardScheduleRepository.InsertAsync(leaderboardSchedule);
-        await _leaderboardScheduleRepository.SaveChangesAsync(cancellationToken);
+        //await _leaderboardScheduleRepository.InsertAsync(leaderboardSchedule);
+        //await _leaderboardScheduleRepository.SaveChangesAsync(cancellationToken);
 
-        _backgroundJobScheduler.ScheduleJob(leaderboardSchedule);
+        //_backgroundJobScheduler.ScheduleJob(leaderboardSchedule);
     }
 }

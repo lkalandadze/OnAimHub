@@ -14,27 +14,27 @@ public class UpdateLeaderboardRecordCommandHandler : IRequestHandler<UpdateLeade
 
     public async Task Handle(UpdateLeaderboardRecordCommand request, CancellationToken cancellationToken)
     {
-        var leaderboard = await _leaderboardRecordRepository.Query().Include(x => x.LeaderboardRecordPrizes).FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        //var leaderboard = await _leaderboardRecordRepository.Query().Include(x => x.LeaderboardRecordPrizes).FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-        if (leaderboard == default)
-            throw new Exception("Leaderboard not found");
+        //if (leaderboard == default)
+        //    throw new Exception("Leaderboard not found");
 
-        leaderboard.Update(request.Name,
-                           request.Description,
-                           request.CreationDate.ToUniversalTime(), 
-                           request.AnnouncementDate.ToUniversalTime(), 
-                           request.StartDate.ToUniversalTime(),
-                           request.EndDate.ToUniversalTime(),
-                           request.LeaderboardType
-                           //request.JobType
-                           );
+        //leaderboard.Update(request.Name,
+        //                   request.Description,
+        //                   request.CreationDate.ToUniversalTime(), 
+        //                   request.AnnouncementDate.ToUniversalTime(), 
+        //                   request.StartDate.ToUniversalTime(),
+        //                   request.EndDate.ToUniversalTime(),
+        //                   request.LeaderboardType
+        //                   //request.JobType
+        //                   );
 
-        foreach(var prize in request.Prizes)
-        {
-            leaderboard.UpdateLeaderboardPrizes(prize.Id, prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
-        }
+        //foreach(var prize in request.Prizes)
+        //{
+        //    leaderboard.UpdateLeaderboardPrizes(prize.Id, prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
+        //}
 
-        _leaderboardRecordRepository.Update(leaderboard);
-        await _leaderboardRecordRepository.SaveChangesAsync(cancellationToken);
+        //_leaderboardRecordRepository.Update(leaderboard);
+        //await _leaderboardRecordRepository.SaveChangesAsync(cancellationToken);
     }
 }
