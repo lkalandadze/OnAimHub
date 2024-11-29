@@ -10,19 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="OpenAPIs\swagger.json" ClassName="LeaderboardService" />
-    <OpenApiReference Include="OpenAPIs\swagger1.json" CodeGenerator="NSwagCSharp" Options="HubService" ClassName="HubService">
-      <SourceUri>https://localhost:7069/swagger/admin/swagger.json</SourceUri>
-    </OpenApiReference>
-    <OpenApiReference Include="OpenAPIs\swagger2.json" CodeGenerator="NSwagCSharp" Options="WheelService" ClassName="WheelService">
-      <SourceUri>https://localhost:7217/swagger/admin/swagger.json</SourceUri>
-    </OpenApiReference>
-    <OpenApiReference Include="OpenAPIs\swagger3.json" CodeGenerator="NSwagCSharp" Options="LeaderboardService" ClassName="LeaderboardService">
-      <SourceUri>https://localhost:7041/swagger/v1/swagger.json</SourceUri>
-    </OpenApiReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MassTransit" Version="8.3.1" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
     <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.3.1" />
@@ -51,6 +38,16 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\Shared.IntegrationEvents\Shared.IntegrationEvents.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\Shared.Lib\Shared.Lib.csproj" />
+    <ProjectReference Include="..\..\..\Core\Hub\Hub.Domain\Hub.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" Options="LeaderBoardService" ClassName="LeaderBoardService">
+      <SourceUri>https://localhost:7041/swagger/v1/swagger.json</SourceUri>
+    </OpenApiReference>
+    <OpenApiReference Include="OpenAPIs\swagger1.json" CodeGenerator="NSwagCSharp" Options="HubService" ClassName="HubService">
+      <SourceUri>https://localhost:7069/swagger/admin/swagger.json</SourceUri>
+    </OpenApiReference>
   </ItemGroup>
 
 </Project>

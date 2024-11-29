@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Entities.Templates;
+using OnAim.Admin.Domain;
 using OnAim.Admin.Domain.HubEntities;
 
 namespace OnAim.Admin.Infrasturcture.Persistance.Data.Hub;
@@ -31,8 +31,8 @@ public class ReadOnlyDataContext : DbContext
     public DbSet<PlayerBan> PlayerBans { get; set; }
     public DbSet<Promotion> Promotions { get; set; }
     public DbSet<PromotionService> PromotionServices { get; set; }
-    public DbSet<PromotionCoin> PromotionCoins { get; set; }
-    public DbSet<WithdrawOption> WithdrawOptions { get; set; }
+    public DbSet<OnAim.Admin.Domain.HubEntities.PromotionCoin> PromotionCoins { get; set; }
+    public DbSet<OnAim.Admin.Domain.HubEntities.WithdrawOption> WithdrawOptions { get; set; }
     public DbSet<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
 
     public IQueryable<TEntity> Set<TEntity>() where TEntity : class
@@ -42,10 +42,10 @@ public class ReadOnlyDataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<WithdrawOption>().HasMany(w => w.WithdrawOptionGroups)
+        modelBuilder.Entity<OnAim.Admin.Domain.HubEntities.WithdrawOption>().HasMany(w => w.WithdrawOptionGroups)
                .WithMany(g => g.WithdrawOptions)
                .UsingEntity<Dictionary<string, object>>(
-                    $"{nameof(WithdrawOptionGroup)}Mappings",
+                    $"{nameof(OnAim.Admin.Domain.HubEntities.WithdrawOptionGroup)}Mappings",
                     j => j.HasOne<WithdrawOptionGroup>()
                         .WithMany()
                         .HasForeignKey($"{nameof(WithdrawOptionGroup)}{nameof(WithdrawOptionGroup.Id)}")
@@ -73,19 +73,19 @@ public class ReadOnlyDataContext : DbContext
 
 
         // Many-to-Many Relationship between WithdrawOption and PromotionCoins
-        modelBuilder.Entity<WithdrawOption>().HasMany(w => w.PromotionCoins)
-          .WithMany(c => c.WithdrawOptions)
-          .UsingEntity<Dictionary<string, object>>(
-               $"{nameof(WithdrawOption)}{nameof(PromotionCoin)}Mappings",
-               j => j.HasOne<PromotionCoin>()
-                   .WithMany()
-                   .HasForeignKey($"{nameof(PromotionCoin)}{nameof(PromotionCoin.Id)}")
-                   .OnDelete(DeleteBehavior.Cascade),
-               j => j.HasOne<WithdrawOption>()
-                   .WithMany()
-                   .HasForeignKey($"{nameof(WithdrawOption)}{nameof(WithdrawOption.Id)}")
-                   .OnDelete(DeleteBehavior.Cascade)
-          );
+        //modelBuilder.Entity<WithdrawOption>().HasMany(w => w.PromotionCoins)
+        //  .WithMany(c => c.WithdrawOptions)
+        //  .UsingEntity<Dictionary<string, object>>(
+        //       $"{nameof(WithdrawOption)}{nameof(PromotionCoin)}Mappings",
+        //       j => j.HasOne<PromotionCoin>()
+        //           .WithMany()
+        //           .HasForeignKey($"{nameof(PromotionCoin)}{nameof(PromotionCoin.Id)}")
+        //           .OnDelete(DeleteBehavior.Cascade),
+        //       j => j.HasOne<WithdrawOption>()
+        //           .WithMany()
+        //           .HasForeignKey($"{nameof(WithdrawOption)}{nameof(WithdrawOption.Id)}")
+        //           .OnDelete(DeleteBehavior.Cascade)
+        //  );
 
         // Many-to-Many Relationship between Segment and Players
         modelBuilder.Entity<Segment>().HasMany(s => s.Players)

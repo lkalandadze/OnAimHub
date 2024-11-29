@@ -8,7 +8,7 @@ public class LeaderboardTemplatePrize : BasePrize
     {
         StartRank = startRank;
         EndRank = endRank;
-        PrizeId = prizeId;
+        //PrizeId = prizeId;
         Amount = amount;
     }
     public int LeaderboardTemplateId { get; set; }
@@ -18,7 +18,7 @@ public class LeaderboardTemplatePrize : BasePrize
     {
         StartRank = startRank;
         EndRank = endRank;
-        PrizeId = prizeId;
+        //PrizeId = prizeId;
         Amount = amount;
     }
     public void Delete()

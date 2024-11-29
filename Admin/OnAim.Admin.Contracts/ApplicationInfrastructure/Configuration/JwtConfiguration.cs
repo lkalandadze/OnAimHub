@@ -9,7 +9,7 @@ public class JwtConfiguration
     public string Subject { get; set; }
     public string Secret { get; set; } = null!;
     public string Audience { get; set; }
-    public TimeSpan ValidFor { get; set; } = TimeSpan.FromDays(1);
+    public System.TimeSpan ValidFor { get; set; } = System.TimeSpan.FromDays(1);
     public Func<string> JtiGenerator =>
       () => Guid.NewGuid().ToString();
     public SigningCredentials SigningCredentials

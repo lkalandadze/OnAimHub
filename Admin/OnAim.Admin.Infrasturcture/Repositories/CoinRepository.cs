@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Infrasturcture.Persistance.MongoDB;
@@ -26,13 +25,13 @@ public class CoinRepository : ICoinRepository
         return await _dbContext.CoinTemplates.Find(_ => true).ToListAsync();
     }
 
-    public async Task<CoinTemplate?> GetCoinTemplateByIdAsync(ObjectId id)
+    public async Task<CoinTemplate?> GetCoinTemplateByIdAsync(string id)
     {
         var filter = Builders<CoinTemplate>.Filter.Eq(ct => ct.Id, id);
         return await _dbContext.CoinTemplates.Find(filter).FirstOrDefaultAsync();
     }
 
-    public async Task<CoinTemplate?> UpdateCoinTemplateAsync(ObjectId id, CoinTemplate updatedCoinTemplate)
+    public async Task<CoinTemplate?> UpdateCoinTemplateAsync(string id, CoinTemplate updatedCoinTemplate)
     {
         var filter = Builders<CoinTemplate>.Filter.Eq(ct => ct.Id, id);
         var result = await _dbContext.CoinTemplates.ReplaceOneAsync(filter, updatedCoinTemplate);

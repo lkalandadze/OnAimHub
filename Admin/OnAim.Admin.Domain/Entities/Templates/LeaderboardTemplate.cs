@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using OnAim.Admin.Domain.LeaderBoradEntities;
 
 namespace OnAim.Admin.Domain.Entities.Templates;
 
@@ -28,6 +29,8 @@ public class LeaderboardTemplate
     public int StartIn { get; set; }
     public int EndIn { get; set; }
     public ICollection<LeaderboardTemplatePrize> LeaderboardTemplatePrizes { get; set; } = new List<LeaderboardTemplatePrize>();
+    public ICollection<LeaderboardRecord> LeaderboardRecords { get; set; } = new List<LeaderboardRecord>();
+    public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; } = new List<LeaderboardRecordPrize>();
 
     public void AddLeaderboardTemplatePrizes(int startRank, int endRank, string prizeId, int amount)
     {

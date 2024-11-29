@@ -1,24 +1,27 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using OnAim.Admin.Domain.HubEntities;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 
 namespace OnAim.Admin.Domain.Entities.Templates;
 
-public class CoinTemplate
+public class CoinTemplate : PromotionCoin
 {
-    [BsonId]
-    [NotMapped]
-    public ObjectId Id { get; set; }
-    public string Name { get; set; }
-    [Key]
-    public int CoinTemplateId { get; set; }
-    public string Description { get; set; }
-    public string ImageUrl { get;  set; }
-    public CoinType CoinType { get;  set; }
-    public bool IsDeleted { get; set; }
-    public DateTimeOffset? DateDeleted { get; set; }
+    public CoinTemplate(){}
+
+    public CoinTemplate(
+        string name,
+        string description,
+        string imageUrl,
+        CoinType coinType,
+        IEnumerable<WithdrawOption> withdrawOptions = null
+        )
+    {
+        Id = ObjectId.GenerateNewId().ToString();
+        Name = name;
+        Description = description;
+        ImageUrl = imageUrl;
+        CoinType = coinType;
+        WithdrawOptions = withdrawOptions?.ToList() ?? [];
+    }
 
     public ICollection<WithdrawOption>? WithdrawOptions { get;  set; }
 

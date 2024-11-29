@@ -9,7 +9,7 @@ public class CreateLeaderboardRecordDto
     public DateTimeOffset AnnouncementDate { get; set; }
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
-    public LeaderboardType LeaderboardType { get; set; }
+    //public LeaderboardType LeaderboardType { get; set; }
     //public JobTypeEnum JobType { get; set; }
     public LeaderboardRecordStatus Status { get; set; }
     public List<CreateLeaderboardRecordPrizeCommandItem> LeaderboardPrizes { get; set; }

@@ -111,10 +111,3 @@ public class WithdrawOptionGroupDto
     public string Description { get; set; }
     public string ImageUrl { get; set; }
 }
-public enum CoinType
-{
-    Incomming = 0,
-    Outgoing = 1,
-    Internal = 2,
-    Prize = 3,
-}

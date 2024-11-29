@@ -74,7 +74,7 @@ public class LeaderBoardController : ApiControllerBase
     [HttpGet(nameof(GetLeaderboardRecordStatuses))]
     public ActionResult<List<EnumValueDto>> GetLeaderboardRecordStatuses()
     {
-        var statuses = EnumHelper.GetEnumValues<Contracts.Dtos.LeaderBoard.LeaderboardRecordStatus>();
+        var statuses = EnumHelper.GetEnumValues<LeaderboardRecordStatus>();
         return Ok(statuses);
     }
 

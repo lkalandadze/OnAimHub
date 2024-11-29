@@ -24,11 +24,7 @@ public class CoinTemplateController : ApiControllerBase
     [HttpGet(nameof(GetCoinTemplateById))]
     public async Task<IActionResult> GetCoinTemplateById([FromQuery] string CoinTemplateId)
     {
-        if (!ObjectId.TryParse(CoinTemplateId, out var objectId))
-        {
-            return BadRequest("Invalid CoinTemplateId format.");
-        }
-        return Ok(await _coinService.GetById(objectId));
+        return Ok(await _coinService.GetById(CoinTemplateId));
     }
 
     [HttpPost(nameof(CreateCoinTemplate))]
@@ -48,12 +44,7 @@ public class CoinTemplateController : ApiControllerBase
     [HttpDelete(nameof(DeleteCoinTemplate))]
     public async Task<IActionResult> DeleteCoinTemplate([FromQuery] string CoinTemplateId)
     {
-        if (!ObjectId.TryParse(CoinTemplateId, out var objectId))
-        {
-            return BadRequest("Invalid CoinTemplateId format.");
-        }
-
-        await _coinService.DeleteCoinTemplate(objectId);
+        await _coinService.DeleteCoinTemplate(CoinTemplateId);
 
         return Ok();
     }

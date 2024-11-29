@@ -32,5 +32,5 @@ public class Endpoint : BaseEntity
     public int? CreatedBy { get; set; }
     public EndpointType? Type { get; set; }
     public string Description { get; set; }
-    public List<EndpointGroupEndpoint> EndpointGroupEndpoints { get; set; }
+    public ICollection<EndpointGroupEndpoint> EndpointGroupEndpoints { get; set; }
 }

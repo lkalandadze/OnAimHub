@@ -7,6 +7,6 @@ public interface ICoinRepository
 {
     Task AddCoinTemplateAsync(CoinTemplate coinTemplate);
     Task<List<CoinTemplate>> GetCoinTemplates();
-    Task<CoinTemplate?> GetCoinTemplateByIdAsync(ObjectId id);
-    Task<CoinTemplate?> UpdateCoinTemplateAsync(ObjectId id, CoinTemplate updatedCoinTemplate);
+    Task<CoinTemplate?> GetCoinTemplateByIdAsync(string id);
+    Task<CoinTemplate?> UpdateCoinTemplateAsync(string id, CoinTemplate updatedCoinTemplate);
 }

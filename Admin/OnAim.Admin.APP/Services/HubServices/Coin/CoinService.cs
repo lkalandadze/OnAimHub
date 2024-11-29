@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MongoDB.Bson;
 using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
@@ -36,7 +35,7 @@ public class CoinService : ICoinService
         return new ApplicationResult { Data = temps, Success = true };
     }
 
-    public async Task<ApplicationResult> GetById(ObjectId id)
+    public async Task<ApplicationResult> GetById(string id)
     {
         var coin = await _coinRepository.GetCoinTemplateByIdAsync(id);
 
@@ -50,13 +49,13 @@ public class CoinService : ICoinService
         var temp = new CoinTemplate
         {
             Name = coinTemplate.Name,
-            CoinType = (Domain.CoinType)coinTemplate.CoinType,
+            CoinType = (Domain.HubEntities.CoinType)coinTemplate.CoinType,
             Description = coinTemplate.Description,
             ImageUrl = coinTemplate.ImageUrl,
         };
 
         if (coinTemplate.WithdrawOptionIds != null && coinTemplate.WithdrawOptionIds.Any() &&
-        (Domain.CoinType)coinTemplate.CoinType == Domain.CoinType._1)
+        (Contracts.CoinType)coinTemplate.CoinType == Contracts.CoinType._1)
         {
             var withdrawOptions = _withdrawOptionRepository.Query
                 (wo => coinTemplate.WithdrawOptionIds.Contains(wo.Id))
@@ -66,7 +65,7 @@ public class CoinService : ICoinService
         }
 
         if (coinTemplate.WithdrawOptionGroupIds != null && coinTemplate.WithdrawOptionGroupIds.Any() &&
-        (Domain.CoinType)coinTemplate.CoinType == Domain.CoinType._1)
+        (Contracts.CoinType)coinTemplate.CoinType == Contracts.CoinType._1)
         {
             var withdrawOptionGroupss = _withdrawOptionGroupRepository.Query
                 (wo => coinTemplate.WithdrawOptionGroupIds.Contains(wo.Id))
@@ -80,7 +79,7 @@ public class CoinService : ICoinService
         return new ApplicationResult { Success = true };
     }
 
-    public async Task<ApplicationResult> DeleteCoinTemplate(ObjectId CoinTemplateId)
+    public async Task<ApplicationResult> DeleteCoinTemplate(string CoinTemplateId)
     {
         var coinTemplate = await _coinRepository.GetCoinTemplateByIdAsync(CoinTemplateId);
 
@@ -98,25 +97,24 @@ public class CoinService : ICoinService
 
     public async Task<ApplicationResult> UpdateCoinTemplate(UpdateCoinTemplateDto update)
     {
-        ObjectId.TryParse(update.Id, out var objectId);
-        var coinTemplate = await _coinRepository.GetCoinTemplateByIdAsync(objectId);
+        var coinTemplate = await _coinRepository.GetCoinTemplateByIdAsync(update.Id);
 
         if (coinTemplate == null || coinTemplate.IsDeleted)
         {
             throw new NotFoundException($"Coin template with the specified ID: [{update.Id}] was not found.");
         }
 
-        coinTemplate.Update(update.Name, update.Description, update.ImageUrl, (Domain.CoinType)update.CoinType);
+        coinTemplate.Update(update.Name, update.Description, update.ImageUrl, (Domain.HubEntities.CoinType)update.CoinType);
 
         if (update.WithdrawOptionIds != null && update.WithdrawOptionIds.Any() &&
-        (Domain.CoinType)coinTemplate.CoinType == Domain.CoinType._1)
+        (Contracts.CoinType)coinTemplate.CoinType == Contracts.CoinType._1)
         {
             var withdrawOptions = _withdrawOptionRepository.Query(wo => update.WithdrawOptionIds.Any(woId => woId == wo.Id));
 
             coinTemplate.SetWithdrawOptions(withdrawOptions);
         }
 
-        await _coinRepository.UpdateCoinTemplateAsync(objectId, coinTemplate);
+        await _coinRepository.UpdateCoinTemplateAsync(update.Id, coinTemplate);
 
         return new ApplicationResult { Success = true };
     }

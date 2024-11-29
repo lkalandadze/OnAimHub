@@ -184,232 +184,6 @@
         }
       }
     },
-    "/api/v1/Leaderboard/CreateLeaderboardTemplate": {
-      "post": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateLeaderboardTemplateCommand"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateLeaderboardTemplateCommand"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateLeaderboardTemplateCommand"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/v1/Leaderboard/DeleteLeaderboardTemplate": {
-      "post": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteLeaderboardTemplateCommand"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteLeaderboardTemplateCommand"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteLeaderboardTemplateCommand"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/v1/Leaderboard/UpdateLeaderboardTemplates": {
-      "put": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateLeaderboardTemplateCommand"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateLeaderboardTemplateCommand"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateLeaderboardTemplateCommand"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/v1/Leaderboard/GetLeaderboardTemplates": {
-      "get": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "parameters": [
-          {
-            "name": "PageNumber",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "PageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetLeaderboardTemplatesQueryResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetLeaderboardTemplatesQueryResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetLeaderboardTemplatesQueryResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/Leaderboard/GetCalendar": {
-      "get": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "parameters": [
-          {
-            "name": "StartDate",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "EndDate",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCalendarQueryResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCalendarQueryResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetCalendarQueryResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/Leaderboard/GetLeaderboardTemplateById": {
-      "get": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "parameters": [
-          {
-            "name": "Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetLeaderboardTemplateByIdQueryResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetLeaderboardTemplateByIdQueryResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetLeaderboardTemplateByIdQueryResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/Leaderboard/CreateLeaderboardSchedule": {
       "post": {
         "tags": [
@@ -512,6 +286,53 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetLeaderboardSchedulesQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Leaderboard/GetCalendar": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "parameters": [
+          {
+            "name": "StartDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "EndDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCalendarQueryResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCalendarQueryResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCalendarQueryResponse"
                 }
               }
             }
@@ -831,12 +652,11 @@
       "CreateLeaderboardRecordCommand": {
         "type": "object",
         "properties": {
-          "leaderboardTemplateId": {
+          "promotionId": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
-          "name": {
+          "title": {
             "type": "string",
             "nullable": true
           },
@@ -844,9 +664,16 @@
             "type": "string",
             "nullable": true
           },
-          "creationDate": {
-            "type": "string",
-            "format": "date-time"
+          "eventType": {
+            "$ref": "#/components/schemas/EventType"
+          },
+          "repeatType": {
+            "$ref": "#/components/schemas/RepeatType"
+          },
+          "repeatValue": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           },
           "announcementDate": {
             "type": "string",
@@ -860,11 +687,21 @@
             "type": "string",
             "format": "date-time"
           },
-          "leaderboardType": {
-            "$ref": "#/components/schemas/LeaderboardType"
-          },
           "status": {
             "$ref": "#/components/schemas/LeaderboardRecordStatus"
+          },
+          "isGenerated": {
+            "type": "boolean"
+          },
+          "scheduleId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "templateId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           },
           "correlationId": {
             "type": "string",
@@ -891,7 +728,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "prizeId": {
+          "coinId": {
             "type": "string",
             "nullable": true
           },
@@ -925,68 +762,6 @@
             "format": "date-time"
           },
           "leaderboardTemplateId": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateLeaderboardTemplateCommand": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "startTime": {
-            "$ref": "#/components/schemas/TimeSpan"
-          },
-          "announceIn": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "startIn": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "endIn": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "correlationId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "leaderboardPrizes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CreateLeaderboardTemplatePrizeCommandItem"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateLeaderboardTemplatePrizeCommandItem": {
-        "type": "object",
-        "properties": {
-          "startRank": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "endRank": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "prizeId": {
-            "type": "string",
-            "nullable": true
-          },
-          "amount": {
             "type": "integer",
             "format": "int32"
           }
@@ -1047,15 +822,13 @@
         },
         "additionalProperties": false
       },
-      "DeleteLeaderboardTemplateCommand": {
-        "type": "object",
-        "properties": {
-          "correlationId": {
-            "type": "string",
-            "format": "uuid"
-          }
-        },
-        "additionalProperties": false
+      "EventType": {
+        "enum": [
+          0,
+          1
+        ],
+        "type": "integer",
+        "format": "int32"
       },
       "GetCalendarQueryResponse": {
         "type": "object",
@@ -1319,68 +1092,6 @@
         },
         "additionalProperties": false
       },
-      "GetLeaderboardTemplateByIdQueryResponse": {
-        "type": "object",
-        "properties": {
-          "succeeded": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "error": {
-            "type": "string",
-            "nullable": true
-          },
-          "validationErrors": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "nullable": true
-            },
-            "nullable": true
-          },
-          "data": {
-            "$ref": "#/components/schemas/LeaderboardTemplateByIdModel"
-          }
-        },
-        "additionalProperties": false
-      },
-      "GetLeaderboardTemplatesQueryResponse": {
-        "type": "object",
-        "properties": {
-          "succeeded": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "error": {
-            "type": "string",
-            "nullable": true
-          },
-          "validationErrors": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "nullable": true
-            },
-            "nullable": true
-          },
-          "data": {
-            "$ref": "#/components/schemas/LeaderboardTemplatesModelPagedResponse"
-          }
-        },
-        "additionalProperties": false
-      },
       "GetPlayerResultsQueryResponse": {
         "type": "object",
         "properties": {
@@ -1437,7 +1148,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "prizeId": {
+          "coinId": {
             "type": "string",
             "nullable": true
           },
@@ -1508,13 +1219,16 @@
             "type": "integer",
             "format": "int32"
           },
-          "name": {
+          "title": {
             "type": "string",
             "nullable": true
           },
           "description": {
             "type": "string",
             "nullable": true
+          },
+          "eventType": {
+            "$ref": "#/components/schemas/EventType"
           },
           "creationDate": {
             "type": "string",
@@ -1531,9 +1245,6 @@
           "endDate": {
             "type": "string",
             "format": "date-time"
-          },
-          "leaderboardType": {
-            "$ref": "#/components/schemas/LeaderboardType"
           },
           "prizes": {
             "type": "array",
@@ -1564,13 +1275,16 @@
             "type": "integer",
             "format": "int32"
           },
-          "name": {
+          "title": {
             "type": "string",
             "nullable": true
           },
           "description": {
             "type": "string",
             "nullable": true
+          },
+          "eventType": {
+            "$ref": "#/components/schemas/EventType"
           },
           "creationDate": {
             "type": "string",
@@ -1588,11 +1302,11 @@
             "type": "string",
             "format": "date-time"
           },
-          "leaderboardType": {
-            "$ref": "#/components/schemas/LeaderboardType"
-          },
           "status": {
             "$ref": "#/components/schemas/LeaderboardRecordStatus"
+          },
+          "isGenerated": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -1697,7 +1411,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "name": {
+          "title": {
             "type": "string",
             "nullable": true
           },
@@ -1708,17 +1422,6 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
-          },
-          "specificDate": {
-            "$ref": "#/components/schemas/DateOnly"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time"
           },
           "status": {
             "$ref": "#/components/schemas/LeaderboardScheduleStatus"
@@ -1752,113 +1455,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "LeaderboardTemplateByIdModel": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "startTime": {
-            "$ref": "#/components/schemas/TimeSpan"
-          },
-          "announceIn": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "startIn": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "endIn": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "prizes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LeaderboardPrizeModel"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "LeaderboardTemplatesModel": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "startTime": {
-            "$ref": "#/components/schemas/TimeSpan"
-          },
-          "announceIn": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "startIn": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "endIn": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "LeaderboardTemplatesModelPagedResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LeaderboardTemplatesModel"
-            },
-            "nullable": true
-          },
-          "pageNumber": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "LeaderboardType": {
-        "enum": [
-          0
-        ],
-        "type": "integer",
-        "format": "int32"
       },
       "PlayerResultModel": {
         "type": "object",
@@ -1919,86 +1515,6 @@
         "type": "integer",
         "format": "int32"
       },
-      "TimeSpan": {
-        "type": "object",
-        "properties": {
-          "ticks": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "days": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "hours": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "milliseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "microseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "nanoseconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "minutes": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "seconds": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "totalDays": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalHours": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalMilliseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalMicroseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalNanoseconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalMinutes": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          },
-          "totalSeconds": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
       "UpdateLeaderboardRecordCommand": {
         "type": "object",
         "properties": {
@@ -2030,9 +1546,6 @@
             "type": "string",
             "format": "date-time"
           },
-          "leaderboardType": {
-            "$ref": "#/components/schemas/LeaderboardType"
-          },
           "jobType": {
             "$ref": "#/components/schemas/JobTypeEnum"
           },
@@ -2061,7 +1574,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "prizeId": {
+          "coinId": {
             "type": "string",
             "nullable": true
           },
@@ -2081,72 +1594,6 @@
           },
           "status": {
             "$ref": "#/components/schemas/LeaderboardScheduleStatus"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateLeaderboardTemplateCommand": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "startTime": {
-            "$ref": "#/components/schemas/TimeSpan"
-          },
-          "announceIn": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "startIn": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "endIn": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "prizes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UpdateLeaderboardTemplateCommandCommandItem"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateLeaderboardTemplateCommandCommandItem": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "startRank": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "endRank": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "prizeId": {
-            "type": "string",
-            "nullable": true
-          },
-          "amount": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false

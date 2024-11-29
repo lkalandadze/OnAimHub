@@ -48,6 +48,7 @@ using OnAim.Admin.APP.Services.Hub.Coin;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.APP.Services.Admin.PromotionViewTemplateService;
 using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
+using OnAim.Admin.Contracts;
 
 
 namespace OnAim.Admin.APP;
@@ -65,11 +66,11 @@ public static class Extension
         configureOptions?.Invoke(emailOptions);
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
         services.AddSingleton<HubClientService>(sp =>
-        new HubClientService("http://192.168.10.42:8003", new HttpClient()));
+        new HubClientService("https://localhost:7069", new HttpClient()));
         services.AddSingleton<LeaderboardClientService>(sp =>
-        new LeaderboardClientService("http://192.168.10.42:8002", new HttpClient()));
+        new LeaderboardClientService("https://localhost:7041", new HttpClient()));
         services.AddSingleton<SagaClient>(sp =>
-        new SagaClient("http://192.168.10.42:8004", new HttpClient()));
+        new SagaClient("https://localhost:7084", new HttpClient()));
         services
             .AddScoped<IRoleRepository, RoleRepository>()
             .AddScoped<ICoinRepository, CoinRepository>()

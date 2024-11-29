@@ -14,7 +14,7 @@ public class AuditLogDbContext : MongoDbContext
         OperationFailedLogs = GetCollection<OperationFailedLog>();
         CoinTemplates = GetCollection<CoinTemplate>();
         PromotionViews = GetCollection<PromotionViewTemplate>();
-        WithdrawEndpointTemplates = GetCollection<WithdrawEndpointTemplate>();
+        //WithdrawEndpointTemplates = GetCollection<WithdrawEndpointTemplate>();
         LeaderboardTemplates = GetCollection<LeaderboardTemplate>();
         LeaderboardTemplatePrizes = GetCollection<LeaderboardTemplatePrize>();
     }
@@ -24,7 +24,7 @@ public class AuditLogDbContext : MongoDbContext
     public IMongoCollection<OperationFailedLog> OperationFailedLogs { get; }
     public IMongoCollection<CoinTemplate> CoinTemplates { get; }
     public IMongoCollection<PromotionViewTemplate> PromotionViews { get; }
-    public IMongoCollection<WithdrawEndpointTemplate> WithdrawEndpointTemplates { get; }
+    //public IMongoCollection<WithdrawEndpointTemplate> WithdrawEndpointTemplates { get; }
     public IMongoCollection<LeaderboardTemplate> LeaderboardTemplates { get; }
     public IMongoCollection<LeaderboardTemplatePrize> LeaderboardTemplatePrizes { get; }
 }

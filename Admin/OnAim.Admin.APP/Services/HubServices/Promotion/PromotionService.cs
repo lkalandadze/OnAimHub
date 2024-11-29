@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.Contracts;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Domain;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 
 namespace OnAim.Admin.APP.Services.Hub.Promotion;
@@ -99,17 +98,17 @@ public class PromotionService : IPromotionService
                 PromotionCoins = x.Coins.Select(xx => new PromotionCoinDto
                 {
                     Id = xx.Id,
-                    PromotionId = xx.PromotionId,
+                    //PromotionId = xx.PromotionId,
                     Name = xx.Name,
                     Description = xx.Description,
                     ImageUrl = xx.ImageUrl,
-                    CoinType = (Contracts.Dtos.Promotion.CoinType)xx.CoinType,
-                    WithdrawOptions = xx.WithdrawOptions.Select(xxx => new WithdrawOptionDto
-                    {
-                        Title = xxx.Title,
-                        Description = xxx.Description,
-                        ImageUrl = xxx.ImageUrl,
-                    }).ToList()
+                    CoinType = (Contracts.CoinType)xx.CoinType,
+                    //WithdrawOptions = xx.WithdrawOptions.Select(xxx => new WithdrawOptionDto
+                    //{
+                    //    Title = xxx.Title,
+                    //    Description = xxx.Description,
+                    //    ImageUrl = xxx.ImageUrl,
+                    //}).ToList()
                 }).ToList()
             })
             .Skip((pageNumber - 1) * pageSize)
@@ -132,7 +131,7 @@ public class PromotionService : IPromotionService
 
     public async Task<ApplicationResult> GetPromotionById(int id)
     {
-        var promotion = await _promotionRepository.Query().Include(x => x.Coins).ThenInclude(x => x.WithdrawOptions).FirstOrDefaultAsync(x => x.Id == id);
+        var promotion = await _promotionRepository.Query().Include(x => x.Coins).FirstOrDefaultAsync(x => x.Id == id);
 
         if (promotion == null) throw new NotFoundException("promotion not found");
 
@@ -147,16 +146,16 @@ public class PromotionService : IPromotionService
             {
                 Description = x.Description,
                 Id = x.Id,
-                PromotionId = x.PromotionId,
+                //PromotionId = x.PromotionId,
                 Name = x.Name,
                 ImageUrl = x.ImageUrl,
-                CoinType = (Contracts.Dtos.Promotion.CoinType)x.CoinType,
-                WithdrawOptions = x.WithdrawOptions.Select(xxx => new WithdrawOptionDto
-                {
-                    Title = xxx.Title,
-                    Description = xxx.Description,
-                    ImageUrl = xxx.ImageUrl,
-                }).ToList()
+                CoinType = (Contracts.CoinType)x.CoinType,
+                //WithdrawOptions = x.WithdrawOptions.Select(xxx => new WithdrawOptionDto
+                //{
+                //    Title = xxx.Title,
+                //    Description = xxx.Description,
+                //    ImageUrl = xxx.ImageUrl,
+                //}).ToList()
             }).ToList(),
 
             Segments = (List<Contracts.Dtos.Segment.SegmentDto>)promotion.Segments,

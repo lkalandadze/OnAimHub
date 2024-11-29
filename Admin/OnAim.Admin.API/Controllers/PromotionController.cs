@@ -5,6 +5,7 @@ using OnAim.Admin.APP;
 using OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetById;
 using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.Contracts;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 
 namespace OnAim.Admin.API.Controllers;
@@ -29,7 +30,7 @@ public class PromotionController : ApiControllerBase
         => Ok(await Mediator.Send(new GetPromotionByIdQuery(id)));
 
     [HttpPost(nameof(CreatePromotion))]
-    public async Task<IActionResult> CreatePromotion([FromBody] Domain.CreatePromotionDto create)
+    public async Task<IActionResult> CreatePromotion([FromBody] CreatePromotionDto create)
         => Ok(await _promotionService.CreatePromotion(create));
 
     [HttpPost(nameof(CreatePromotionView))]
