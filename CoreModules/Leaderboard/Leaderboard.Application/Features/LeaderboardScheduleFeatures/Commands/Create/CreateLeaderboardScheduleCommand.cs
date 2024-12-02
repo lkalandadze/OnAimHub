@@ -10,5 +10,5 @@ public sealed class CreateLeaderboardScheduleCommand : IRequest
     public DateOnly? SpecificDate { get; set; }
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
-    public int LeaderboardTemplateId { get; set; }
+    public string LeaderboardTemplateId { get; set; }
 }
