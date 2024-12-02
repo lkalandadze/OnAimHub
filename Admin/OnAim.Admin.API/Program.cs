@@ -5,6 +5,7 @@ using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.Infrasturcture;
 using Serilog;
 using Serilog.Events;
+using Shared.Lib;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,15 @@ builder.Services
 builder.AddCustomHttpClients();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    options.JsonSerializerOptions.Converters.Add(new PromotionCoinModelJsonConverter());
+});
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SchemaFilter<PolymorphismSchemaFilter<CreateCoinModel>>();
+});
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore

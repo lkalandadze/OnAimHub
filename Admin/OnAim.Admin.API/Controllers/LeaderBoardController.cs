@@ -24,9 +24,54 @@ public class LeaderBoardController : ApiControllerBase
         _leaderboardTemplateService = leaderboardTemplateService;
     }
 
+    [HttpGet(nameof(GetAllLeaderBoards))]
+    public async Task<IActionResult> GetAllLeaderBoards([FromQuery] LeaderBoardFilter query)
+        => Ok(await Mediator.Send(new GetAllLeaderBoardQuery(query)));    
+
+    [HttpGet(nameof(GetLeaderboardRecordById))]
+    public async Task<IActionResult> GetLeaderboardRecordById([FromQuery] int id)
+        => Ok(await Mediator.Send(new GetLeaderboardRecordByIdQuery(id)));
+
+    [HttpPost(nameof(CreateLeaderBoardRecord))]
+    public async Task<IActionResult> CreateLeaderBoardRecord([FromBody] APP.CreateLeaderboardRecordCommand command)
+        => Ok(await _leaderBoardService.CreateLeaderBoardRecord(command));
+
+    [HttpPut(nameof(UpdateLeaderBoardRecord))]
+    public async Task<IActionResult> UpdateLeaderBoardRecord([FromBody] UpdateLeaderboardRecordCommand command)
+        => Ok(await _leaderBoardService.UpdateLeaderBoardRecord(command));
+
+    [HttpPost(nameof(CreateLeaderboardSchedule))]
+    public async Task<IActionResult> CreateLeaderboardSchedule([FromBody] APP.CreateLeaderboardScheduleCommand command)
+        => Ok(await _leaderBoardService.CreateLeaderboardSchedule(command));
+
+    [HttpPut(nameof(UpdateLeaderboardSchedule))]
+    public async Task<IActionResult> UpdateLeaderboardSchedule([FromBody] APP.UpdateLeaderboardScheduleCommand command)
+    => Ok(await _leaderBoardService.UpdateLeaderboardSchedule(command));
+
+    [HttpGet(nameof(GetLeaderboardSchedules))]
+    public async Task<IActionResult> GetLeaderboardSchedules([FromQuery] GetLeaderboardSchedulesQuery query)
+        => Ok(await Mediator.Send(query));
+
+    [HttpGet(nameof(GetLeaderboardRecordStatuses))]
+    public ActionResult<List<EnumValueDto>> GetLeaderboardRecordStatuses()
+    {
+        var statuses = EnumHelper.GetEnumValues<APP.LeaderboardRecordStatus>();
+        return Ok(statuses);
+    }
+
+    [HttpGet(nameof(GetAllPrizes))]
+    public async Task<IActionResult> GetAllPrizes()
+        => Ok(await Mediator.Send(new GetAllPrizesQuery())); 
+    
+    [HttpGet(nameof(GetCalendar))]
+    public async Task<IActionResult> GetCalendar([FromQuery] GetCalendarQuery getCalendar)
+        => Ok(await _leaderBoardService.GetCalendar(getCalendar.StartDate, getCalendar.EndDate));  
+    
+
+    ///Template
     [HttpGet(nameof(GetAllTemplates))]
     public async Task<IActionResult> GetAllTemplates()
-        => Ok(await _leaderboardTemplateService.GetAllLeaderboardTemplate());
+    => Ok(await _leaderboardTemplateService.GetAllLeaderboardTemplate());
 
     [HttpGet(nameof(GetLeaderboardTemplateById))]
     public async Task<IActionResult> GetLeaderboardTemplateById([FromQuery] string id)
@@ -39,54 +84,11 @@ public class LeaderBoardController : ApiControllerBase
         return Ok();
     }
 
-    [HttpGet(nameof(GetAllLeaderBoards))]
-    public async Task<IActionResult> GetAllLeaderBoards([FromQuery] LeaderBoardFilter query)
-        => Ok(await Mediator.Send(new GetAllLeaderBoardQuery(query)));    
-
-    [HttpGet(nameof(GetLeaderboardRecordById))]
-    public async Task<IActionResult> GetLeaderboardRecordById([FromQuery] int id)
-        => Ok(await Mediator.Send(new GetLeaderboardRecordByIdQuery(id)));
-
     [HttpPost(nameof(CreateTemplate))]
     public async Task<IActionResult> CreateTemplate([FromBody] CreateLeaderboardTemplateDto command)
-        => Ok(await _leaderboardTemplateService.CreateLeaderboardTemplate(command));
+    => Ok(await _leaderboardTemplateService.CreateLeaderboardTemplate(command));
 
     [HttpPut(nameof(UpdateTemplate))]
     public async Task<IActionResult> UpdateTemplate([FromBody] UpdateLeaderboardTemplateDto command)
         => Ok(await _leaderboardTemplateService.UpdateCoinTemplate(command));
-
-    [HttpPost(nameof(CreateLeaderBoardRecord))]
-    public async Task<IActionResult> CreateLeaderBoardRecord([FromBody] APP.CreateLeaderboardRecordCommand command)
-        => Ok(await _leaderBoardService.CreateLeaderBoardRecord(command));   
-
-    [HttpPost(nameof(CreateLeaderboardSchedule))]
-    public async Task<IActionResult> CreateLeaderboardSchedule([FromBody] APP.CreateLeaderboardScheduleCommand command)
-        => Ok(await _leaderBoardService.CreateLeaderboardSchedule(command));
-
-    [HttpPost(nameof(UpdateLeaderboardSchedule))]
-    public async Task<IActionResult> UpdateLeaderboardSchedule([FromBody] APP.UpdateLeaderboardScheduleCommand command)
-    => Ok(await _leaderBoardService.UpdateLeaderboardSchedule(command));
-
-    [HttpPut(nameof(UpdateLeaderBoardRecord))]
-    public async Task<IActionResult> UpdateLeaderBoardRecord([FromBody] UpdateLeaderboardRecordCommand command)
-        => Ok(await _leaderBoardService.UpdateLeaderBoardRecord(command));
-
-    [HttpGet(nameof(GetLeaderboardRecordStatuses))]
-    public ActionResult<List<EnumValueDto>> GetLeaderboardRecordStatuses()
-    {
-        var statuses = EnumHelper.GetEnumValues<LeaderboardRecordStatus>();
-        return Ok(statuses);
-    }
-
-    [HttpGet(nameof(GetAllPrizes))]
-    public async Task<IActionResult> GetAllPrizes()
-        => Ok(await Mediator.Send(new GetAllPrizesQuery())); 
-    
-    [HttpGet(nameof(GetCalendar))]
-    public async Task<IActionResult> GetCalendar([FromQuery] GetCalendarQuery getCalendar)
-        => Ok(await _leaderBoardService.GetCalendar(getCalendar.StartDate, getCalendar.EndDate));  
-    
-    [HttpGet(nameof(GetLeaderboardSchedules))]
-    public async Task<IActionResult> GetLeaderboardSchedules([FromQuery] GetLeaderboardSchedulesQuery query)
-        => Ok(await Mediator.Send(query));
 }

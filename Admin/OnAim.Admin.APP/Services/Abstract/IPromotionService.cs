@@ -2,6 +2,7 @@
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Domain;
+using OnAim.Admin.Infrasturcture;
 
 namespace OnAim.Admin.APP.Services.Abstract;
 

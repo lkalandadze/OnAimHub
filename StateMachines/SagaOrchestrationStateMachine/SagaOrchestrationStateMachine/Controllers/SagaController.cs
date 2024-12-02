@@ -41,11 +41,11 @@ public class SagaController : ControllerBase
         try
         {
             request.Promotion.CorrelationId = correlationId;
-
+            int promotionId;
             try
             {
-                var promotionResponse = await CreatePromotionAsync(request.Promotion);
-                _logger.LogInformation("Promotion created successfully: {PromotionId}", promotionResponse);
+                promotionId = await CreatePromotionAsync(request.Promotion);
+                _logger.LogInformation("Promotion created successfully: {PromotionId}", promotionId);
             }
             catch
             {
@@ -53,27 +53,32 @@ public class SagaController : ControllerBase
                 throw;
             }
 
-            if (request.Leaderboard != null)
+            if (request.Leaderboards != null)
             {
                 try
                 {
-                    request.Leaderboard.CorrelationId = correlationId;
-
-                    if (request.Leaderboard != null)
+                    foreach (var leaderboard in request.Leaderboards)
                     {
-                        try
-                        {
-                            var leaderboardResponse = await CreateLeaderboardRecordAsync(request.Leaderboard);
-                            _logger.LogInformation("LeaderboardRecord created successfully: {LeaderboardRecord}", leaderboardResponse);
-                        }
-                        catch
-                        {
-                            await CompensateAsync(correlationId);
-                            throw;
-                        }
-                    }                  
+                        leaderboard.CorrelationId = correlationId;
+                        leaderboard.PromotionId = promotionId;
 
-                    _logger.LogInformation("Leaderboard created successfully: {Leaderboard}");
+                        if (leaderboard != null)
+                        {
+                            try
+                            {
+                                var leaderboardResponse = await CreateLeaderboardRecordAsync(leaderboard);
+                                _logger.LogInformation("LeaderboardRecord created successfully: {LeaderboardRecord}", leaderboardResponse);
+                            }
+                            catch
+                            {
+                                await CompensateAsync(correlationId);
+                                throw;
+                            }
+                        }
+
+                        _logger.LogInformation("Leaderboard created successfully: {Leaderboard}");
+                    }
+
                 }
                 catch
                 {
@@ -105,12 +110,12 @@ public class SagaController : ControllerBase
         }
     }
 
-    private async Task<IActionResult> CreatePromotionAsync(CreatePromotionCommand request)
+    private async Task<int> CreatePromotionAsync(CreatePromotionCommand request)
     {
         try
         {
-            await _hubService.CreatePromotionAsync(request);
-            return Ok();
+            var promotionId = await _hubService.CreatePromotionAsync(request);
+            return promotionId;
         }
         catch (Exception ex)
         {
@@ -118,6 +123,7 @@ public class SagaController : ControllerBase
             throw new Exception(ex.Message, ex);
         }
     }
+
     private async Task<IActionResult> CreateLeaderboardRecordAsync(CreateLeaderboardRecordCommand leaderboard)
     {
         try

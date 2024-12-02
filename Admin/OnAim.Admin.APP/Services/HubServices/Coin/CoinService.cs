@@ -55,7 +55,7 @@ public class CoinService : ICoinService
         };
 
         if (coinTemplate.WithdrawOptionIds != null && coinTemplate.WithdrawOptionIds.Any() &&
-        (Contracts.CoinType)coinTemplate.CoinType == Contracts.CoinType._1)
+        (Infrasturcture.CoinType)coinTemplate.CoinType == Infrasturcture.CoinType._1)
         {
             var withdrawOptions = _withdrawOptionRepository.Query
                 (wo => coinTemplate.WithdrawOptionIds.Contains(wo.Id))
@@ -65,7 +65,7 @@ public class CoinService : ICoinService
         }
 
         if (coinTemplate.WithdrawOptionGroupIds != null && coinTemplate.WithdrawOptionGroupIds.Any() &&
-        (Contracts.CoinType)coinTemplate.CoinType == Contracts.CoinType._1)
+        (Infrasturcture.CoinType)coinTemplate.CoinType == Infrasturcture.CoinType._1)
         {
             var withdrawOptionGroupss = _withdrawOptionGroupRepository.Query
                 (wo => coinTemplate.WithdrawOptionGroupIds.Contains(wo.Id))
@@ -107,7 +107,7 @@ public class CoinService : ICoinService
         coinTemplate.Update(update.Name, update.Description, update.ImageUrl, (Domain.HubEntities.CoinType)update.CoinType);
 
         if (update.WithdrawOptionIds != null && update.WithdrawOptionIds.Any() &&
-        (Contracts.CoinType)coinTemplate.CoinType == Contracts.CoinType._1)
+        (Infrasturcture.CoinType)coinTemplate.CoinType == Infrasturcture.CoinType._1)
         {
             var withdrawOptions = _withdrawOptionRepository.Query(wo => update.WithdrawOptionIds.Any(woId => woId == wo.Id));
 

@@ -1,4 +1,5 @@
-﻿using OnAim.Admin.Contracts.Dtos.Segment;
+﻿using OnAim.Admin.Contracts.Dtos.Coin;
+using OnAim.Admin.Contracts.Dtos.Segment;
 
 namespace OnAim.Admin.Contracts.Dtos.Promotion;
 

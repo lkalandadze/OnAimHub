@@ -157,7 +157,7 @@ public class Startup
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                options.JsonSerializerOptions.Converters.Add(new PromotionCoinModelJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new CoinModelJsonConverter());
             });
 
         services.AddEndpointsApiExplorer();

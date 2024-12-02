@@ -10,7 +10,7 @@ using Shared.Application.Exceptions.Types;
 
 namespace Hub.Application.Features.PromotionFeatures.Commands.Create;
 
-public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionCommand>
+public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionCommand, int>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ISegmentRepository _segmentRepository;
@@ -27,7 +27,7 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
         _jobRepository = jobRepository;
     }
 
-    public async Task<Unit> Handle(CreatePromotionCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(CreatePromotionCommand request, CancellationToken cancellationToken)
     {
         if (request.EndDate <= request.StartDate)
         {
@@ -74,7 +74,7 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
             throw;
         }
 
-        return Unit.Value;
+        return promotion.Id;
     }
 
     private void SchedulePromotionStatusJobs(Promotion promotion)

@@ -55,3 +55,11 @@ public class UpdateCoinTemplateDto
     public CoinType CoinType { get; set; }
     public IEnumerable<int>? WithdrawOptionIds { get; set; }
 }
+public enum CoinType
+{
+    Default = 0,
+    In = 1,
+    Out = 2,
+    Internal = 3,
+    Asset = 4,
+}

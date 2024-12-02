@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Services.Abstract;
-using OnAim.Admin.Contracts;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
+using OnAim.Admin.Infrasturcture;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 
 namespace OnAim.Admin.APP.Services.Hub.Promotion;
@@ -102,7 +102,7 @@ public class PromotionService : IPromotionService
                     Name = xx.Name,
                     Description = xx.Description,
                     ImageUrl = xx.ImageUrl,
-                    CoinType = (Contracts.CoinType)xx.CoinType,
+                    CoinType = (Contracts.Dtos.Coin.CoinType)xx.CoinType,
                     //WithdrawOptions = xx.WithdrawOptions.Select(xxx => new WithdrawOptionDto
                     //{
                     //    Title = xxx.Title,
@@ -149,7 +149,7 @@ public class PromotionService : IPromotionService
                 //PromotionId = x.PromotionId,
                 Name = x.Name,
                 ImageUrl = x.ImageUrl,
-                CoinType = (Contracts.CoinType)x.CoinType,
+                CoinType = (Contracts.Dtos.Coin.CoinType)x.CoinType,
                 //WithdrawOptions = x.WithdrawOptions.Select(xxx => new WithdrawOptionDto
                 //{
                 //    Title = xxx.Title,

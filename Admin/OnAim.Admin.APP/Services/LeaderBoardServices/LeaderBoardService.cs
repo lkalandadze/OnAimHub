@@ -69,9 +69,9 @@ public class LeaderBoardService : ILeaderBoardService
            {
                Id = x.Id,
                Ttile = x.Title,
-               Status = (Contracts.LeaderboardRecordStatus)x.Status,
+               Status = (Contracts.Dtos.LeaderBoard.LeaderboardRecordStatus)x.Status,
                Description = x.Description,
-               EventType = (Contracts.EventType)x.EventType,
+               EventType = (Contracts.Dtos.LeaderBoard.EventType)x.EventType,
                CreationDate = x.CreationDate,
                AnnouncementDate = x.AnnouncementDate,
                StartDate = x.StartDate,

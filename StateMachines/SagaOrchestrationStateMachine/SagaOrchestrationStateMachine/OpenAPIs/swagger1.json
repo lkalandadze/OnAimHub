@@ -35,17 +35,20 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Unit"
+                  "type": "integer",
+                  "format": "int32"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Unit"
+                  "type": "integer",
+                  "format": "int32"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Unit"
+                  "type": "integer",
+                  "format": "int32"
                 }
               }
             }
@@ -1314,20 +1317,52 @@
         },
         "additionalProperties": false
       },
-      "BaseCreatePromotionCoinModel": {
+      "CoinType": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "CreateAssetCoinModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "coinType": {
+            "$ref": "#/components/schemas/CoinType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateCoinModel": {
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/CreatePromotionIncomingCoinModel"
+            "$ref": "#/components/schemas/CreateAssetCoinModel"
           },
           {
-            "$ref": "#/components/schemas/CreatePromotionInternalCoinModel"
+            "$ref": "#/components/schemas/CreateInCoinModel"
           },
           {
-            "$ref": "#/components/schemas/CreatePromotionOutgoingCoinModel"
+            "$ref": "#/components/schemas/CreateInternalCoinModel"
           },
           {
-            "$ref": "#/components/schemas/CreatePromotionPrizeCoinModel"
+            "$ref": "#/components/schemas/CreateOutCoinModel"
           }
         ],
         "properties": {
@@ -1343,10 +1378,6 @@
             "type": "string",
             "nullable": true
           },
-          "promotionId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "coinType": {
             "$ref": "#/components/schemas/CoinType"
           }
@@ -1355,23 +1386,12 @@
         "discriminator": {
           "propertyName": "Discriminator",
           "mapping": {
-            "CreatePromotionIncomingCoinModel": "#/components/schemas/CreatePromotionIncomingCoinModel",
-            "CreatePromotionInternalCoinModel": "#/components/schemas/CreatePromotionInternalCoinModel",
-            "CreatePromotionOutgoingCoinModel": "#/components/schemas/CreatePromotionOutgoingCoinModel",
-            "CreatePromotionPrizeCoinModel": "#/components/schemas/CreatePromotionPrizeCoinModel"
+            "CreateAssetCoinModel": "#/components/schemas/CreateAssetCoinModel",
+            "CreateInCoinModel": "#/components/schemas/CreateInCoinModel",
+            "CreateInternalCoinModel": "#/components/schemas/CreateInternalCoinModel",
+            "CreateOutCoinModel": "#/components/schemas/CreateOutCoinModel"
           }
         }
-      },
-      "CoinType": {
-        "enum": [
-          0,
-          1,
-          2,
-          3,
-          4
-        ],
-        "type": "integer",
-        "format": "int32"
       },
       "CreateCoinTemplate": {
         "type": "object",
@@ -1396,6 +1416,76 @@
             "items": {
               "type": "integer",
               "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateInCoinModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "coinType": {
+            "$ref": "#/components/schemas/CoinType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateInternalCoinModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "coinType": {
+            "$ref": "#/components/schemas/CoinType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateOutCoinModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "coinType": {
+            "$ref": "#/components/schemas/CoinType"
+          },
+          "withdrawOptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateWithdrawOptionModel"
             },
             "nullable": true
           }
@@ -1454,119 +1544,12 @@
             },
             "nullable": true
           },
-          "promotionCoins": {
+          "coins": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/BaseCreatePromotionCoinModel"
+              "$ref": "#/components/schemas/CreateCoinModel"
             },
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreatePromotionIncomingCoinModel": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "imageUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "promotionId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "coinType": {
-            "$ref": "#/components/schemas/CoinType"
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreatePromotionInternalCoinModel": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "imageUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "promotionId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "coinType": {
-            "$ref": "#/components/schemas/CoinType"
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreatePromotionOutgoingCoinModel": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "imageUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "promotionId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "coinType": {
-            "$ref": "#/components/schemas/CoinType"
-          },
-          "withdrawOptions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CreateWithdrawOptionModel"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreatePromotionPrizeCoinModel": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "imageUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "promotionId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "coinType": {
-            "$ref": "#/components/schemas/CoinType"
           }
         },
         "additionalProperties": false
@@ -1769,9 +1752,6 @@
           "endpointContent": {
             "type": "string",
             "nullable": true
-          },
-          "isTemplate": {
-            "type": "boolean"
           }
         },
         "additionalProperties": false

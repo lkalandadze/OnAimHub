@@ -10,7 +10,7 @@ public record CreatePromotionCommand(
     string Description,
     Guid CorrelationId,
     IEnumerable<string> SegmentIds,
-    IEnumerable<CreateCoinModel> Coins) : IRequest;
+    IEnumerable<CreateCoinModel> Coins) : IRequest<int>;
 
 
 //{

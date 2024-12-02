@@ -38,6 +38,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\Shared.IntegrationEvents\Shared.IntegrationEvents.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\Shared.Lib\Shared.Lib.csproj" />
+    <ProjectReference Include="..\..\..\Core\Hub\Hub.Application\Hub.Application.csproj" />
     <ProjectReference Include="..\..\..\Core\Hub\Hub.Domain\Hub.Domain.csproj" />
   </ItemGroup>
 

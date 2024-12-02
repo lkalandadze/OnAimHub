@@ -48,9 +48,9 @@ public class AdminController : BaseApiController
     #region Promotions
 
     [HttpPost(nameof(CreatePromotion))]
-    public async Task<ActionResult<Unit>> CreatePromotion(CreatePromotionCommand command)
+    public async Task<ActionResult<int>> CreatePromotion(CreatePromotionCommand command)
     {
-        return StatusCode(201, await Mediator.Send(command));
+        return Ok(await Mediator.Send(command));
     }
 
     [HttpPost(nameof(UpdatePromotionStatus))]

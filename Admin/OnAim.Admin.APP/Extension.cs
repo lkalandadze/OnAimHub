@@ -29,7 +29,6 @@ using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 using System.Text;
 using System.Net.Http.Headers;
 using MediatR;
-using OnAim.Admin.Domain;
 using OnAim.Admin.Infrasturcture.Repositories.Promotion;
 using OnAim.Admin.Infrasturcture.Repositories.Leaderboard;
 using OnAim.Admin.APP.Services.Admin.Domain;
@@ -48,7 +47,9 @@ using OnAim.Admin.APP.Services.Hub.Coin;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.APP.Services.Admin.PromotionViewTemplateService;
 using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
-using OnAim.Admin.Contracts;
+using OnAim.Admin.Infrasturcture;
+using OnAim.Admin.APP.Services.HubServices.Promotion;
+using OnAim.Admin.APP.Services.FileServices;
 
 
 namespace OnAim.Admin.APP;
@@ -75,6 +76,7 @@ public static class Extension
             .AddScoped<IRoleRepository, RoleRepository>()
             .AddScoped<ICoinRepository, CoinRepository>()
             .AddScoped<ILeaderboardTemplateRepository , LeaderboardTemplateRepository>()
+            .AddScoped<IPromotionTemplateRepository , PromotionTemplateRepository>()
             .AddScoped<IPromotionViewTemplateRepository, PromotionViewTemplateRepository>()
             .AddScoped<ILeaderboardTemplateRepository, LeaderboardTemplateRepository>()
             .AddScoped<IPromotionService, PromotionService>()
@@ -90,7 +92,9 @@ public static class Extension
             .AddScoped<IEndpointGroupService, EndpointGroupService>()
             .AddScoped<IRoleService, RoleService>()
             .AddScoped<IDomainService, DomainService>()
+            .AddScoped<IFileManagementService, FileManagementService>()
             .AddScoped<IGameService, GameService>()
+            .AddScoped<IPromotionTemplateService, PromotionTemplateService>()
             .AddScoped<ISegmentService, SegmentService>()
             .AddScoped<ILeaderBoardService, LeaderBoardService>()
             .AddScoped<IPlayerService, PlayerService>()
