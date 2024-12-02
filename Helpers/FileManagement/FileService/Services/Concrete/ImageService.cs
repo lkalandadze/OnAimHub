@@ -21,43 +21,18 @@ public class ImageService : IImageService
 
     public async Task<Response<ImageResponseModel>> UploadImageAsync(IFormFile file)
     {
-        if (file == null || file.Length == 0)
-        {
-            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "File is null or empty.");
-        }
-
-        var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
-
-        if (!_imageStorageConfig.AllowedExtensions.Contains(fileExtension))
-        {
-            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "Invalid file type.");
-        }
-
-        string sanitizedFileName = Path.GetFileName(file.FileName);
-        string uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
-
-        var localPath = new Uri(_fileServiceConfig.Host).LocalPath;
-        var uploadPath = Path.Combine(localPath, _imageStorageConfig.Directory);
-
         try
         {
-            if (!Directory.Exists(uploadPath))
-            {
-                Directory.CreateDirectory(uploadPath);
-            }
-
-            string filePath = Path.Combine(uploadPath, uniqueFileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            return new Response<ImageResponseModel>()
+            string imageUrl = await UploadFileAsync(file);
+            return new Response<ImageResponseModel>
             {
                 Succeeded = true,
-                Data = new ImageResponseModel { Image = $"{_fileServiceConfig.Host}/{_imageStorageConfig.Directory}/{uniqueFileName}" },
+                Data = new ImageResponseModel { Image = imageUrl }
             };
+        }
+        catch (ApiException)
+        {
+            throw;
         }
         catch (Exception)
         {
@@ -72,16 +47,58 @@ public class ImageService : IImageService
             throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "No files to upload.");
         }
 
-        var imageUploadTasks = files.Select(file => UploadImageAsync(file));
-        var responses = await Task.WhenAll(imageUploadTasks);
+        var uploadedImageUrls = new List<string>();
 
-        var uploadedImages = responses.Where(response => response.Data != null && string.IsNullOrEmpty(response.Data.Image))
-                                      .Select(response => response.Data!.Image);
+        foreach (var file in files)
+        {
+            try
+            {
+                string imageUrl = await UploadFileAsync(file);
+                uploadedImageUrls.Add(imageUrl);
+            }
+            catch (ApiException)
+            {
+                // TODO: Log(ex);
+            }
+        }
 
         return new Response<ImagesResponseModel>
         {
             Succeeded = true,
-            Data = new ImagesResponseModel { Images = uploadedImages }
+            Data = new ImagesResponseModel { Images = uploadedImageUrls }
         };
+    }
+
+    private async Task<string> UploadFileAsync(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+        {
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "File is null or empty.");
+        }
+
+        var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+        if (!_imageStorageConfig.AllowedExtensions.Contains(fileExtension))
+        {
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "Invalid file type.");
+        }
+
+        string uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+        var localPath = new Uri(_fileServiceConfig.Host).LocalPath;
+        var uploadPath = Path.Combine(localPath, _imageStorageConfig.Directory);
+
+        if (!Directory.Exists(uploadPath))
+        {
+            Directory.CreateDirectory(uploadPath);
+        }
+
+        string filePath = Path.Combine(uploadPath, uniqueFileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        return $"{_fileServiceConfig.Host}/{_imageStorageConfig.Directory}/{uniqueFileName}";
     }
 }
