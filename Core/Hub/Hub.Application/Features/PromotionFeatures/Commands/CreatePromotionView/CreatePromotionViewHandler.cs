@@ -2,11 +2,12 @@
 using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
-using Hub.Domain.Entities.Templates;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
 using Shared.Lib.Wrappers;
+using System.IO;
 
 namespace Hub.Application.Features.PromotionFeatures.Commands.CreatePromotionView;
 
@@ -14,20 +15,17 @@ public class CreatePromotionViewHandler : IRequestHandler<CreatePromotionView, R
 {
     private readonly IPromotionRepository _promotionRepository;
     private readonly IPromotionViewRepository _promotionViewRepository;
-    private readonly IPromotionViewTemplateRepository _promotionViewTemplateRepository;
     private readonly IPromotionViewService _promotionViewService;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreatePromotionViewHandler(
         IPromotionRepository promotionRepository, 
         IPromotionViewRepository promotionViewRepository,
-        IPromotionViewTemplateRepository promotionViewTemplateRepository,
         IPromotionViewService promotionViewService,
         IUnitOfWork unitOfWork)
     {
         _promotionRepository = promotionRepository;
         _promotionViewRepository = promotionViewRepository;
-        _promotionViewTemplateRepository = promotionViewTemplateRepository;
         _promotionViewService = promotionViewService;
         _unitOfWork = unitOfWork;
     }
@@ -46,15 +44,6 @@ public class CreatePromotionViewHandler : IRequestHandler<CreatePromotionView, R
         var promotionView = new PromotionView(request.Name, viewUrl, request.PromotionId, request.TemplateId);
 
         await _promotionViewRepository.InsertAsync(promotionView);
-
-        if (request.SaveAsTemplate != null && request.SaveAsTemplate.Value)
-        {
-            var templateViewUrl = _promotionViewService.GenerateTemplateViewUrl(request.ViewContent);
-
-            var promotionViewTemplate = new PromotionViewTemplate(request.Name, templateViewUrl, [promotionView]);
-
-            await _promotionViewTemplateRepository.InsertAsync(promotionViewTemplate);
-        }
 
         await _unitOfWork.SaveAsync();
 

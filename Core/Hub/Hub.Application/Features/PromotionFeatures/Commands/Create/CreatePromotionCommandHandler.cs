@@ -64,7 +64,15 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
         promotion.SetCoins(mappedCoins);
 
         _promotionRepository.Update(promotion);
-        await _unitOfWork.SaveAsync();
+
+        try
+        {
+            await _unitOfWork.SaveAsync();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
 
         return Unit.Value;
     }

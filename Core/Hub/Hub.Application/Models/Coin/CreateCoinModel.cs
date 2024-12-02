@@ -12,6 +12,7 @@ public abstract class CreateCoinModel
     public string Description { get; set; }
     public string ImageUrl { get; set; }
     public CoinType CoinType { get; set; }
+    public int? TemplateId { get; set; }
 
     public static Domain.Entities.Coins.Coin ConvertToEntity(CreateCoinModel model, int promotionId)
     {
@@ -24,21 +25,24 @@ public abstract class CreateCoinModel
                 incoming.Name,
                 incoming.Description,
                 incoming.ImageUrl,
-                promotionId),
+                promotionId,
+                incoming.TemplateId),
 
             CreateInternalCoinModel internalCoin => new InternalCoin(
                 coinId,
                 internalCoin.Name,
                 internalCoin.Description,
                 internalCoin.ImageUrl,
-                promotionId),
+                promotionId,
+                internalCoin.TemplateId),
 
             CreateAssetCoinModel prize => new AssetCoin(
                 coinId,
                 prize.Name,
                 prize.Description,
                 prize.ImageUrl,
-                promotionId),
+                promotionId,
+                prize.TemplateId),
 
             CreateOutCoinModel outgoing => new OutCoin(
                 coinId,
@@ -46,6 +50,7 @@ public abstract class CreateCoinModel
                 outgoing.Description,
                 outgoing.ImageUrl,
                 promotionId,
+                outgoing.TemplateId,
                 withdrawOptions: outgoing.WithdrawOptions.Select(w => CreateWithdrawOptionModel.ConvertToEntity(w)).ToList()),
 
             _ => throw new ArgumentException("Invalid coin type", nameof(model))

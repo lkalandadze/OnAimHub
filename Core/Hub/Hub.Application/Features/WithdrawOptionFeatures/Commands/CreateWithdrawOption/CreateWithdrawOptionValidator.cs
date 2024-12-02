@@ -23,7 +23,7 @@ public class CreateWithdrawOptionValidator : AbstractValidator<CreateWithdrawOpt
 
         RuleFor(x => x)
             .Must(x => (!string.IsNullOrWhiteSpace(x.Endpoint) && !string.IsNullOrWhiteSpace(x.EndpointContent)) || x.TemplateId.HasValue)
-            .WithMessage("Either both Endpoint and EndpointContent must be provided, or TemplateId must be specified.");
+            .WithMessage("Either both Endpoint and EndpointContent must be provided, or FromTemplateId must be specified.");
 
         RuleFor(x => x.Endpoint)
             .MustBeAValidUrl().When(x => !string.IsNullOrEmpty(x.Endpoint))

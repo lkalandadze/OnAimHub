@@ -9,8 +9,8 @@ public class AssetCoin : Coin
         
     }
 
-    public AssetCoin(string id, string name, string description, string imageUrl, int promotionId)
-        : base(id, name, description, imageUrl, CoinType.Asset, promotionId)
+    public AssetCoin(string id, string name, string description, string imageUrl, int promotionId, int? templateId = null)
+        : base(id, name, description, imageUrl, CoinType.Asset, promotionId, templateId)
     {
     }
 }

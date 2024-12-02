@@ -11,8 +11,8 @@ public class OutCoin : Coin
         
     }
 
-    public OutCoin(string id, string name, string description, string imageUrl, int promotionId, IEnumerable<WithdrawOption> withdrawOptions = null) 
-        : base(id, name, description, imageUrl, CoinType.Out, promotionId)
+    public OutCoin(string id, string name, string description, string imageUrl, int promotionId, int? templateId = null, IEnumerable<WithdrawOption> withdrawOptions = null) 
+        : base(id, name, description, imageUrl, CoinType.Out, promotionId, templateId)
     {
         WithdrawOptions = withdrawOptions?.ToList() ?? [];
     }

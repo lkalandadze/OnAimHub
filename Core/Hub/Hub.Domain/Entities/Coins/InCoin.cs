@@ -9,12 +9,8 @@ public class InCoin : Coin
         
     }
 
-    public InCoin(
-        string id,
-        string name,
-        string description,
-        string imageUrl,
-        int promotionId) : base(id, name, description, imageUrl, CoinType.In, promotionId)
+    public InCoin(string id, string name, string description, string imageUrl, int promotionId, int? templateId = null) 
+        : base(id, name, description, imageUrl, CoinType.In, promotionId, templateId)
     {
     }
 }
