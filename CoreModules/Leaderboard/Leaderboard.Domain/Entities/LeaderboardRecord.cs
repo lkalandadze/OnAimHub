@@ -19,7 +19,7 @@ public class LeaderboardRecord : BaseEntity<int>
                              DateTimeOffset startDate,
                              DateTimeOffset endDate,
                              bool isGenerated,
-                             int? templateId,
+                             string? templateId,
                              int? scheduleId,
                              Guid? correlationId)
     {
@@ -47,7 +47,7 @@ public class LeaderboardRecord : BaseEntity<int>
     public DateTimeOffset EndDate { get; set; }
     public LeaderboardRecordStatus Status { get; set; }
     public bool IsGenerated { get; set; }
-    public int? TemplateId { get; set; }
+    public string? TemplateId { get; set; }
     public int? ScheduleId { get; set; }
     public Guid? CorrelationId { get; set; }
     public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; } = new List<LeaderboardProgress>();
