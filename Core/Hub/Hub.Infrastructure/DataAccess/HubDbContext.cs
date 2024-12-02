@@ -38,7 +38,6 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<PromotionService> PromotionServices { get; set; }
     public DbSet<PromotionView> PromotionViews { get; set; }
     public DbSet<PromotionViewTemplate> PromotionViewTemplates { get; set; }
-    public DbSet<CoinTemplate> CoinTemplates { get; set; }
     public DbSet<Coin> Coins { get; set; }
     public DbSet<WithdrawOption> WithdrawOptions { get; set; }
     public DbSet<WithdrawOptionEndpoint> WithdrawOptionEndpoints { get; set; }
