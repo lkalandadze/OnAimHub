@@ -28,16 +28,15 @@ using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentForPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentsForPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.UpdateSegment;
 using Hub.Application.Features.SettingFeatures.Commands.Update;
-using Hub.Application.Features.WithdrawOptionFeatures.Commands.AssignCoinTemplatesToWithdrawOption;
-using Hub.Application.Features.WithdrawOptionFeatures.Commands.AssignPromotionCoinsToWithdrawOption;
-using Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdrawEndpointTemplate;
 using Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdrawOption;
-using Hub.Application.Features.WithdrawOptionFeatures.Commands.UpdateWithdrawEndpointTemplate;
+using Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdrawOptionEndpoint;
+using Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdrawOptionGroup;
 using Hub.Application.Features.WithdrawOptionFeatures.Commands.UpdateWithdrawOption;
+using Hub.Application.Features.WithdrawOptionFeatures.Commands.UpdateWithdrawOptionEndpoint;
+using Hub.Application.Features.WithdrawOptionFeatures.Commands.UpdateWithdrawOptionGroup;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Lib.Wrappers;
-using System.Text.Json;
 
 namespace Hub.Api.Controllers;
 
@@ -264,32 +263,36 @@ public class AdminController : BaseApiController
         return StatusCode(200, result);
     }
 
-    [HttpPost(nameof(CreateWithdrawEndpointTemplate))]
-    public async Task<IActionResult> CreateWithdrawEndpointTemplate([FromBody] CreateWithdrawEndpointTemplate command)
+    [HttpPost(nameof(CreateWithdrawOptionEndpoint))]
+    public async Task<IActionResult> CreateWithdrawOptionEndpoint([FromBody] CreateWithdrawOptionEndpoint command)
     {
         var result = await Mediator.Send(command);
 
         return StatusCode(201, result);
     }
 
-    [HttpPut(nameof(UpdateWithdrawEndpointTemplate))]
-    public async Task<IActionResult> UpdateWithdrawEndpointTemplate([FromBody] UpdateWithdrawEndpointTemplate command)
+    [HttpPut(nameof(UpdateWithdrawOptionEndpoint))]
+    public async Task<IActionResult> UpdateWithdrawOptionEndpoint([FromBody] UpdateWithdrawOptionEndpoint command)
     {
         var result = await Mediator.Send(command);
 
         return StatusCode(200, result);
     }
 
-    [HttpPost(nameof(AssignCoinTemplatesToWithdrawOption))]
-    public async Task<IActionResult> AssignCoinTemplatesToWithdrawOption([FromBody] AssignCoinTemplatesToWithdrawOption command)
+    [HttpPost(nameof(CreateWithdrawOptionGroup))]
+    public async Task<IActionResult> CreateWithdrawOptionGroup([FromBody] CreateWithdrawOptionGroup command)
     {
-        return StatusCode(200, await Mediator.Send(command));
+        var result = await Mediator.Send(command);
+
+        return StatusCode(201, result);
     }
 
-    [HttpPost(nameof(AssignPromotionCoinsToWithdrawOption))]
-    public async Task<IActionResult> AssignPromotionCoinsToWithdrawOption([FromBody] AssignPromotionCoinsToWithdrawOption command)
+    [HttpPut(nameof(UpdateWithdrawOptionGroup))]
+    public async Task<IActionResult> UpdateWithdrawOptionGroup([FromBody] UpdateWithdrawOptionGroup command)
     {
-        return StatusCode(200, await Mediator.Send(command));
+        var result = await Mediator.Send(command);
+
+        return StatusCode(200, result);
     }
 
     #endregion

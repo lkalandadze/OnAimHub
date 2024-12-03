@@ -1,6 +1,7 @@
 ﻿using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
+using Hub.Domain.Entities.Coins;
 using Hub.Domain.Enum;
 using MediatR;
 
@@ -9,42 +10,37 @@ namespace Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdra
 public class CreateWithdrawOptionHandler : IRequestHandler<CreateWithdrawOption>
 {
     private readonly IWithdrawOptionRepository _withdrawOptionRepository;
-    private readonly ICoinRepository _promotionCoinRepository;
-    private readonly ICoinTemplateRepository _coinTemplateRepository;
+    private readonly IWithdrawOptionGroupRepository _withdrawOptionGroupRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateWithdrawOptionHandler(IWithdrawOptionRepository withdrawOptionRepository, ICoinRepository promotionCoinRepository, ICoinTemplateRepository coinTemplateRepository, IUnitOfWork unitOfWork)
+    public CreateWithdrawOptionHandler(
+        IWithdrawOptionRepository withdrawOptionRepository,
+        IWithdrawOptionGroupRepository withdrawOptionGroupRepository,
+        IUnitOfWork unitOfWork)
     {
         _withdrawOptionRepository = withdrawOptionRepository;
-        _promotionCoinRepository = promotionCoinRepository;
-        _coinTemplateRepository = coinTemplateRepository;
+        _withdrawOptionGroupRepository = withdrawOptionGroupRepository;
         _unitOfWork = unitOfWork;
     }
 
     public async Task<Unit> Handle(CreateWithdrawOption request, CancellationToken cancellationToken)
     {
-        // Create withdraw option
-        var option = new WithdrawOption(request.Title, request.Description, request.ImageUrl, request.ContentType, request.Endpoint, request.EndpointContent, request.TemplateId);
+        var option = new WithdrawOption(
+            request.Title, 
+            request.Description, 
+            request.ImageUrl, 
+            request.Endpoint, 
+            request.EndpointContentType,
+            request.EndpointContent, 
+            request.WithdrawOptionEndpointId);
 
-        // Add promotion coins if exists
-        if (request.PromotionCoinIds != null && request.PromotionCoinIds.Any())
+        if (request.WithdrawOptionGroupIds != null && request.WithdrawOptionGroupIds.Any())
         {
-            var promotionCoins = (await _promotionCoinRepository.QueryAsync(pc => request.PromotionCoinIds.Any(pcId => pcId == pc.Id)))
-                                                                .Where(c => c.CoinType == CoinType.Out);
+            var withdrawOptionGroups = (await _withdrawOptionGroupRepository.QueryAsync(wog => request.WithdrawOptionGroupIds.Any(wogId => wogId == wog.Id)));
 
-            //option.AddPromotionCoins(promotionCoins);
+            option.AddWithdrawOptionGroups(withdrawOptionGroups);
         }
 
-        //Add coin templates if exists
-        if (request.CoinTemplateIds != null && request.CoinTemplateIds.Any())
-        {
-            var coinTemplates = (await _coinTemplateRepository.QueryAsync(ct => request.CoinTemplateIds.Any(ctId => ctId == ct.Id)))
-                                                              .Where(c => c.CoinType == CoinType.Out);
-
-            //option.AddCoinTemplates(coinTemplates);
-        }
-
-        // Save to database
         await _withdrawOptionRepository.InsertAsync(option);
         await _unitOfWork.SaveAsync();
 

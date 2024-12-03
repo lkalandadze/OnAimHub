@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using Shared.Lib.Extensions;
 
-namespace Hub.Application.Features.WithdrawOptionFeatures.Commands.UpdateWithdrawEndpointTemplate;
+namespace Hub.Application.Features.WithdrawOptionFeatures.Commands.UpdateWithdrawOptionEndpoint;
 
-public class UpdateWithdrawEndpointTemplateValidator : AbstractValidator<UpdateWithdrawEndpointTemplate>
+public class UpdateWithdrawOptionEndpointValidator : AbstractValidator<UpdateWithdrawOptionEndpoint>
 {
-    public UpdateWithdrawEndpointTemplateValidator()
+    public UpdateWithdrawOptionEndpointValidator()
     {
         RuleFor(x => x.Id)
             .NotNull().WithMessage("Id is required.");
