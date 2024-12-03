@@ -1,6 +1,8 @@
-﻿namespace OnAim.Admin.Domain.HubEntities;
+﻿using OnAim.Admin.Domain.HubEntities.Enum;
 
-public class Promotion : BaseEntity<int>
+namespace OnAim.Admin.Domain.HubEntities;
+
+public class Promotion
 {
     public Promotion()
     {
@@ -8,21 +10,22 @@ public class Promotion : BaseEntity<int>
     }
 
     public Promotion(
-        PromotionStatus status,
-        DateTimeOffset startDate,
-        DateTimeOffset endDate,
-        string title,
-        string description,
-        IEnumerable<PromotionService> services = null,
-        IEnumerable<Segment> segments = null,
-        IEnumerable<PromotionCoin> coins = null,
-        IEnumerable<PromotionView> views = null)
+          DateTimeOffset startDate,
+          DateTimeOffset endDate,
+          string title,
+          string description,
+          Guid correlationId,
+          IEnumerable<PromotionService> services = null,
+          IEnumerable<Segment> segments = null,
+          IEnumerable<Coin.Coin> coins = null,
+          IEnumerable<PromotionView> views = null)
     {
-        Status = status;
+        Status = PromotionStatus.ToLaunch;
         StartDate = startDate;
         EndDate = endDate;
         Title = title;
         Description = description;
+        Correlationid = correlationId;
         CreateDate = DateTimeOffset.UtcNow;
         Services = services?.ToList() ?? [];
         Segments = segments?.ToList() ?? [];
@@ -30,6 +33,7 @@ public class Promotion : BaseEntity<int>
         Views = views?.ToList() ?? [];
     }
 
+    public int Id { get; set; }
     public decimal? TotalCost { get; private set; }
     public PromotionStatus Status { get; private set; }
     public DateTimeOffset StartDate { get; private set; }
@@ -39,10 +43,11 @@ public class Promotion : BaseEntity<int>
     public DateTimeOffset CreateDate { get; private set; }
     public DateTimeOffset? DateDeleted { get; private set; }
     public bool IsDeleted { get; private set; }
+    public Guid Correlationid { get; private set; }
 
     public ICollection<PromotionService> Services { get; private set; }
     public ICollection<Segment> Segments { get; private set; }
-    public ICollection<PromotionCoin> Coins { get; private set; }
+    public ICollection<Coin.Coin> Coins { get; private set; }
     public ICollection<Transaction> Transactions { get; private set; }
     public ICollection<PromotionView> Views { get; private set; }
 }

@@ -1,5 +1,4 @@
-﻿using OnAim.Admin.Domain.HubEntities;
-
+﻿namespace OnAim.Admin.Domain.HubEntities.Coin;
 public class InCoin : Coin
 {
     public InCoin()
@@ -12,7 +11,7 @@ public class InCoin : Coin
         string name,
         string description,
         string imageUrl,
-        int promotionId) : base(id, name, description, imageUrl, CoinType.In, promotionId)
+        int promotionId) : base(id, name, description, imageUrl, Enum.CoinType.In, promotionId)
     {
     }
 }

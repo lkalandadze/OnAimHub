@@ -11,12 +11,13 @@ using OnAim.Admin.Contracts.Dtos.Transaction;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
+using OnAim.Admin.Domain.HubEntities.PlayerEntities;
 
 namespace OnAim.Admin.APP.Services.Hub.Player;
 
 public class PlayerService : IPlayerService
 {
-    private readonly IReadOnlyRepository<OnAim.Admin.Domain.HubEntities.Player> _playerRepository;
+    private readonly IReadOnlyRepository<Domain.HubEntities.PlayerEntities.Player> _playerRepository;
     private readonly IReadOnlyRepository<PlayerBalance> _playerBalanceRepository;
     private readonly IReadOnlyRepository<PlayerBan> _playerBanRepository;
     private readonly IReadOnlyRepository<Transaction> _transactionRepository;
@@ -29,7 +30,7 @@ public class PlayerService : IPlayerService
     private readonly HubClientService _hubClientService;
 
     public PlayerService(
-        IReadOnlyRepository<Domain.HubEntities.Player> playerRepository,
+        IReadOnlyRepository<Domain.HubEntities.PlayerEntities.Player> playerRepository,
         IReadOnlyRepository<PlayerBalance> playerBalanceRepository,
         IReadOnlyRepository<PlayerBan> playerBanRepository,
         IReadOnlyRepository<Transaction> transactionRepository,
@@ -216,7 +217,7 @@ public class PlayerService : IPlayerService
             })
             .ToListAsync();
 
-        Domain.HubEntities.Player refPlayer = null;
+        Domain.HubEntities.PlayerEntities.Player refPlayer = null;
 
         if (referee != null)
             refPlayer = await _playerRepository.Query(x => x.ReferrerId == referee.ReferrerId).FirstOrDefaultAsync();

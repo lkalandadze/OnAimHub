@@ -25,13 +25,13 @@ public class LeaderboardTemplateRepository : ILeaderboardTemplateRepository
         return await _dbContext.LeaderboardTemplates.Find(_ => true).ToListAsync();
     }
 
-    public async Task<LeaderboardTemplate?> GetLeaderboardTemplateByIdAsync(ObjectId id)
+    public async Task<LeaderboardTemplate?> GetLeaderboardTemplateByIdAsync(string id)
     {
         var filter = Builders<LeaderboardTemplate>.Filter.Eq(ct => ct.Id, id);
         return await _dbContext.LeaderboardTemplates.Find(filter).FirstOrDefaultAsync();
     }
 
-    public async Task<LeaderboardTemplate?> UpdateLeaderboardTemplateAsync(ObjectId id, LeaderboardTemplate updated)
+    public async Task<LeaderboardTemplate?> UpdateLeaderboardTemplateAsync(string id, LeaderboardTemplate updated)
     {
         var filter = Builders<LeaderboardTemplate>.Filter.Eq(ct => ct.Id, id);
         var result = await _dbContext.LeaderboardTemplates.ReplaceOneAsync(filter, updated);

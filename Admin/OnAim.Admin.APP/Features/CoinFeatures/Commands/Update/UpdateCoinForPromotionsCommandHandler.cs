@@ -6,9 +6,9 @@ namespace OnAim.Admin.APP.Features.CoinFeatures.Commands.Update;
 
 public class UpdateCoinForPromotionsCommandHandler : ICommandHandler<UpdateCoinForPromotionsCommand, ApplicationResult>
 {
-    private readonly ICoinService _coinService;
+    private readonly ICoinTemplateService _coinService;
 
-    public UpdateCoinForPromotionsCommandHandler(ICoinService coinService)
+    public UpdateCoinForPromotionsCommandHandler(ICoinTemplateService coinService)
     {
         _coinService = coinService;
     }

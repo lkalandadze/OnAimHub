@@ -45,7 +45,6 @@ public class CoinTemplateDto
 
     public ICollection<WithdrawOptionDto>? WithdrawOptions { get; set; }
 }
-
 public class UpdateCoinTemplateDto
 {
     public string Id { get; set; }
@@ -54,6 +53,7 @@ public class UpdateCoinTemplateDto
     public string ImageUrl { get; set; }
     public CoinType CoinType { get; set; }
     public IEnumerable<int>? WithdrawOptionIds { get; set; }
+    public IEnumerable<int>? WithdrawOptionGroupIds { get; set; }
 }
 public enum CoinType
 {

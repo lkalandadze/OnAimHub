@@ -4,23 +4,25 @@ namespace OnAim.Admin.Domain.Entities.Templates;
 
 public class LeaderboardTemplatePrize : BasePrize
 {
-    public LeaderboardTemplatePrize(int startRank, int endRank, string prizeId, int amount)
+    public LeaderboardTemplatePrize(int startRank, int endRank, string coinId, int amount)
     {
         StartRank = startRank;
         EndRank = endRank;
-        //PrizeId = prizeId;
+        CoinId = coinId;
         Amount = amount;
     }
+
     public int LeaderboardTemplateId { get; set; }
     public LeaderboardTemplate LeaderboardTemplate { get; set; }
 
-    public void Update(int startRank, int endRank, string prizeId, int amount)
+    public void Update(int startRank, int endRank, string coinId, int amount)
     {
         StartRank = startRank;
         EndRank = endRank;
-        //PrizeId = prizeId;
+        CoinId = coinId;
         Amount = amount;
     }
+
     public void Delete()
     {
         IsDeleted = true;

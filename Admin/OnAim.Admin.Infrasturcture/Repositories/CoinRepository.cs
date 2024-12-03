@@ -22,7 +22,9 @@ public class CoinRepository : ICoinRepository
 
     public async Task<List<CoinTemplate>> GetCoinTemplates()
     {
-        return await _dbContext.CoinTemplates.Find(_ => true).ToListAsync();
+        return await _dbContext.CoinTemplates
+            .Find(template => !template.IsDeleted)
+            .ToListAsync();
     }
 
     public async Task<CoinTemplate?> GetCoinTemplateByIdAsync(string id)

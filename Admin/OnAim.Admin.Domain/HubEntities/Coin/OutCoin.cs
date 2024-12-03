@@ -1,14 +1,11 @@
-﻿using OnAim.Admin.Domain.HubEntities;
+﻿namespace OnAim.Admin.Domain.HubEntities.Coin;
 
 public class OutCoin : Coin
 {
-    public OutCoin()
-    {
-
-    }
+    public OutCoin(){}
 
     public OutCoin(string id, string name, string description, string imageUrl, int promotionId, IEnumerable<WithdrawOption> withdrawOptions = null)
-        : base(id, name, description, imageUrl, CoinType.Out, promotionId)
+        : base(id, name, description, imageUrl, Enum.CoinType.Out, promotionId)
     {
         WithdrawOptions = withdrawOptions?.ToList() ?? [];
     }

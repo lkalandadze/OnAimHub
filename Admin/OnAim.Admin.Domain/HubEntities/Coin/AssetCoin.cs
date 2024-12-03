@@ -1,4 +1,4 @@
-﻿using OnAim.Admin.Domain.HubEntities;
+﻿namespace OnAim.Admin.Domain.HubEntities.Coin;
 
 public class AssetCoin : Coin
 {
@@ -8,7 +8,7 @@ public class AssetCoin : Coin
     }
 
     public AssetCoin(string id, string name, string description, string imageUrl, int promotionId)
-        : base(id, name, description, imageUrl, CoinType.Asset, promotionId)
+        : base(id, name, description, imageUrl, Enum.CoinType.Asset, promotionId)
     {
     }
 }

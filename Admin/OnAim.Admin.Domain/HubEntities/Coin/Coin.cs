@@ -1,27 +1,31 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
+using OnAim.Admin.Domain.HubEntities.Enum;
 
-namespace OnAim.Admin.Domain.HubEntities;
-
-public class PromotionCoin
+namespace OnAim.Admin.Domain.HubEntities.Coin;
+public abstract class Coin
 {
-    public PromotionCoin() {}
+    public Coin()
+    {
 
-    public PromotionCoin(
-        string id,
-        string name,
-        string description,
-        string imageUrl,
-        CoinType coinType,
-        int promotionId)
+    }
+
+    public Coin(string id,
+         string name,
+         string description,
+         string imageUrl,
+         CoinType coinType,
+         int promotionId,
+         int? templateId = null)
     {
         Id = id;
         Name = name;
         Description = description;
         ImageUrl = imageUrl;
         CoinType = coinType;
+        PromotionId = promotionId;
+        FromTemplateId = templateId;
     }
-
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
@@ -31,31 +35,13 @@ public class PromotionCoin
     public CoinType CoinType { get; set; }
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DateDeleted { get; set; }
+    public int? FromTemplateId { get; private set; }
+    public int PromotionId { get; set; }
+    public Promotion Promotion { get; set; }
 
     public void Delete()
     {
         IsDeleted = true;
         DateDeleted = DateTimeOffset.Now;
     }
-}
-public enum CoinType
-{
-    Default = 0,
-    In = 1,
-    Out = 2,
-    Internal = 3,
-    Asset = 4,
-}
-public class PromotionIncomingCoin : PromotionCoin
-{
-}
-public class PromotionInternalCoin : PromotionCoin
-{
-}
-public class PromotionOutgoingCoin : PromotionCoin
-{
-    public ICollection<WithdrawOption> WithdrawOptions { get; private set; }
-}
-public class PromotionPrizeCoin : PromotionCoin
-{
 }

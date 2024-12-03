@@ -5,7 +5,7 @@ using OnAim.Admin.Contracts.Dtos.Coin;
 
 namespace OnAim.Admin.APP.Services.Abstract;
 
-public interface ICoinService
+public interface ICoinTemplateService
 {
     Task<ApplicationResult> GetAllCoins(BaseFilter baseFilter);
     Task<ApplicationResult> GetById(string id);

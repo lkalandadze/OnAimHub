@@ -1,4 +1,6 @@
-namespace OnAim.Admin.Domain.HubEntities
+using OnAim.Admin.Domain.HubEntities.Enum;
+
+namespace OnAim.Admin.Domain.HubEntities.PlayerEntities
 {
     // Generated Code
 

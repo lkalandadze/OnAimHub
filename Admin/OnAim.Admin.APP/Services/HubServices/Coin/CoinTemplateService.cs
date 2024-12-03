@@ -12,13 +12,13 @@ using System.Collections.Immutable;
 
 namespace OnAim.Admin.APP.Services.Hub.Coin;
 
-public class CoinService : ICoinService
+public class CoinTemplateService : ICoinTemplateService
 {
     private readonly IReadOnlyRepository<WithdrawOption> _withdrawOptionRepository;
     private readonly IReadOnlyRepository<WithdrawOptionGroup> _withdrawOptionGroupRepository;
     private readonly ICoinRepository _coinRepository;
 
-    public CoinService(
+    public CoinTemplateService(
         IReadOnlyRepository<WithdrawOption> withdrawOptionRepository,
         IReadOnlyRepository<WithdrawOptionGroup> withdrawOptionGroupRepository,
         ICoinRepository coinRepository
@@ -49,29 +49,41 @@ public class CoinService : ICoinService
         var temp = new CoinTemplate
         {
             Name = coinTemplate.Name,
-            CoinType = (Domain.HubEntities.CoinType)coinTemplate.CoinType,
+            CoinType = (Domain.HubEntities.Enum.CoinType)coinTemplate.CoinType,
             Description = coinTemplate.Description,
             ImageUrl = coinTemplate.ImageUrl,
         };
 
         if (coinTemplate.WithdrawOptionIds != null && coinTemplate.WithdrawOptionIds.Any() &&
-        (Infrasturcture.CoinType)coinTemplate.CoinType == Infrasturcture.CoinType._1)
+        (Infrasturcture.CoinType)coinTemplate.CoinType == Infrasturcture.CoinType._2)
         {
             var withdrawOptions = _withdrawOptionRepository.Query
                 (wo => coinTemplate.WithdrawOptionIds.Contains(wo.Id))
                 .ToList();
 
-            temp.AddWithdrawOptions(withdrawOptions);
+            var template = withdrawOptions.Select(x => new CoinTemplateWithdrawOption
+            {
+                WithdrawOption = x,
+                WithdrawOptionId = x.Id,
+            }).ToList();
+
+            temp.AddWithdrawOptions(template);
         }
 
         if (coinTemplate.WithdrawOptionGroupIds != null && coinTemplate.WithdrawOptionGroupIds.Any() &&
-        (Infrasturcture.CoinType)coinTemplate.CoinType == Infrasturcture.CoinType._1)
+        (Infrasturcture.CoinType)coinTemplate.CoinType == Infrasturcture.CoinType._2)
         {
             var withdrawOptionGroupss = _withdrawOptionGroupRepository.Query
                 (wo => coinTemplate.WithdrawOptionGroupIds.Contains(wo.Id))
                 .ToList();
 
-            temp.AddWithdrawOptionGroups(withdrawOptionGroupss);
+            var groupTemplate = withdrawOptionGroupss.Select(x => new CoinTemplateWithdrawOptionGroup
+            {
+                WithdrawOptionGroup = x,
+                WithdrawOptionGroupId = x.Id,
+            }).ToList();
+
+            temp.AddWithdrawOptionGroups(groupTemplate);
         }
 
         await _coinRepository.AddCoinTemplateAsync(temp);
@@ -104,14 +116,34 @@ public class CoinService : ICoinService
             throw new NotFoundException($"Coin template with the specified ID: [{update.Id}] was not found.");
         }
 
-        coinTemplate.Update(update.Name, update.Description, update.ImageUrl, (Domain.HubEntities.CoinType)update.CoinType);
+        coinTemplate.Update(update.Name, update.Description, update.ImageUrl, (Domain.HubEntities.Enum.CoinType)update.CoinType);
 
         if (update.WithdrawOptionIds != null && update.WithdrawOptionIds.Any() &&
         (Infrasturcture.CoinType)coinTemplate.CoinType == Infrasturcture.CoinType._1)
         {
             var withdrawOptions = _withdrawOptionRepository.Query(wo => update.WithdrawOptionIds.Any(woId => woId == wo.Id));
 
-            coinTemplate.SetWithdrawOptions(withdrawOptions);
+            var upd = withdrawOptions.Select(x => new CoinTemplateWithdrawOption
+            {
+                WithdrawOption = x,
+                WithdrawOptionId = x.Id,
+            }).ToList();
+
+            coinTemplate.UpdateWithdrawOptions(upd);
+        }
+
+        if (update.WithdrawOptionGroupIds != null && update.WithdrawOptionGroupIds.Any() &&
+        (Infrasturcture.CoinType)coinTemplate.CoinType == Infrasturcture.CoinType._1)
+        {
+            var withdrawOptionGroups = _withdrawOptionGroupRepository.Query(wo => update.WithdrawOptionGroupIds.Any(woId => woId == wo.Id));
+
+            var upd = withdrawOptionGroups.Select(x => new CoinTemplateWithdrawOptionGroup
+            {
+                WithdrawOptionGroup = x,
+                WithdrawOptionGroupId = x.Id,
+            }).ToList();
+
+            coinTemplate.UpdateWithdrawOptionGroups(upd);
         }
 
         await _coinRepository.UpdateCoinTemplateAsync(update.Id, coinTemplate);

@@ -1,4 +1,4 @@
-namespace OnAim.Admin.Domain.HubEntities
+namespace OnAim.Admin.Domain.HubEntities.Enum
 {
     // Generated Code
 

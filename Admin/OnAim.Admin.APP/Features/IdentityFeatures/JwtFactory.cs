@@ -7,6 +7,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using OnAim.Admin.APP.Extensions;
 
 namespace OnAim.Admin.APP.Feature.Identity;
 

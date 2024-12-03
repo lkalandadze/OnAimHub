@@ -6,9 +6,9 @@ namespace OnAim.Admin.APP.Features.CoinFeatures.Queries.GetById;
 
 public class GetCoinByIdQueryHandler : IQueryHandler<GetCoinByIdQuery, ApplicationResult>
 {
-    private readonly ICoinService _coinService;
+    private readonly ICoinTemplateService _coinService;
 
-    public GetCoinByIdQueryHandler(ICoinService coinService)
+    public GetCoinByIdQueryHandler(ICoinTemplateService coinService)
     {
         _coinService = coinService;
     }

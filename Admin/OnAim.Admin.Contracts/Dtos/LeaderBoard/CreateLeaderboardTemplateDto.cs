@@ -2,11 +2,11 @@
 
 public class CreateLeaderboardTemplateDto
 {
-    public string Name { get; set; }
+    public string Title { get; set; }
     public string Description { get; set; }
-    public System.TimeSpan StartTime { get; set; }
-    public int AnnounceIn { get; set; }
-    public int StartIn { get; set; }
-    public int EndIn { get; set; }
+    public EventType EventType { get; set; }
+    public DateTimeOffset AnnouncementDate { get; set; }
+    public DateTimeOffset StartDate { get; set; }
+    public DateTimeOffset EndDate { get; set; }
     public List<CreateLeaderboardTemplatePrizeCommandItem> LeaderboardPrizes { get; set; }
 }
