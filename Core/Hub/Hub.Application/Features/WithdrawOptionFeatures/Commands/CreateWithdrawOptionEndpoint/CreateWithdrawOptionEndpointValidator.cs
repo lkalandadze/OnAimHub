@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using Shared.Lib.Extensions;
 
-namespace Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdrawEndpointTemplate;
+namespace Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdrawOptionEndpoint;
 
-public class CreateWithdrawEndpointTemplateValidator : AbstractValidator<CreateWithdrawEndpointTemplate>
+public class CreateWithdrawOptionEndpointValidator : AbstractValidator<CreateWithdrawOptionEndpoint>
 {
-    public CreateWithdrawEndpointTemplateValidator()
+    public CreateWithdrawOptionEndpointValidator()
     {
         RuleFor(x => x.Endpoint)
             .NotEmpty().WithMessage("Endpoint is required.")

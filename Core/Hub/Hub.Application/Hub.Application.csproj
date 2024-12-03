@@ -28,4 +28,9 @@
     <ProjectReference Include="..\Hub.IntegrationEvents\Hub.IntegrationEvents.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\WithdrawOptionFeatures\Dto\" />
+    <Folder Include="Features\WithdrawOptionFeatures\Queries\GetWithdrawOptions\" />
+  </ItemGroup>
+
 </Project>

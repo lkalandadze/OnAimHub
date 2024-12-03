@@ -1,7 +1,6 @@
 ﻿#nullable disable
 
 using Hub.Domain.Entities.Coins;
-using Hub.Domain.Entities.Templates;
 using Hub.Domain.Enum;
 using Shared.Domain.Entities;
 
@@ -17,20 +16,20 @@ public class WithdrawOption : BaseEntity<int>
         string title, 
         string description, 
         string imageUrl,
-        EndpointContentType contentType,
-        string endpoint = null, 
+        string endpoint = null,
+        EndpointContentType? contentType = null,
         string endpointContent = null, 
-        int? endpointTemplate = null,
-        IEnumerable<OutCoin> outCoins = null)
+        int? withdrawOptionEndpointId = null,
+        IEnumerable<WithdrawOptionGroup> withdrawOptionGroups = null)
     {
         Title = title;
         Description = description;
         ImageUrl = imageUrl;
-        ContentType = contentType;
         Endpoint = endpoint;
+        ContentType = contentType.Value;
         EndpointContent = endpointContent;
-        WithdrawEndpointTemplateId = endpointTemplate;
-        OutCoins = outCoins?.ToList() ?? [];
+        WithdrawOptionEndpointId = withdrawOptionEndpointId;
+        WithdrawOptionGroups = withdrawOptionGroups?.ToList();
     }
 
     public string Title { get; set; }
@@ -40,27 +39,45 @@ public class WithdrawOption : BaseEntity<int>
     public EndpointContentType ContentType { get; set; }
     public string EndpointContent { get; set; }
 
-    public int? WithdrawEndpointTemplateId { get; private set; }
-    public WithdrawOptionEndpoint WithdrawEndpointTemplate { get; set; }
+    public int? WithdrawOptionEndpointId { get; private set; }
+    public WithdrawOptionEndpoint WithdrawOptionEndpoint { get; private set; }
 
-    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
-    public ICollection<OutCoin> OutCoins { get; set; }
+    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; private set; }
+    public ICollection<OutCoin> OutCoins { get; private set; }
 
     public void Update(
-        string title, 
-        string description, 
-        string imageUrl, 
-        string endpoint = null, 
-        string endpointContent = null, 
-        int? endpointTemplate = null, 
-        IEnumerable<OutCoin> outCoins = null)
+        string title,
+        string description,
+        string imageUrl,
+        string endpoint = null,
+        EndpointContentType? contentType = null,
+        string endpointContent = null,
+        int? withdrawOptionEndpointId = null,
+        IEnumerable<WithdrawOptionGroup> withdrawOptionGroups = null)
     {
         Title = title;
         Description = description;
         ImageUrl = imageUrl;
         Endpoint = endpoint;
+        ContentType = contentType.Value;
         EndpointContent = endpointContent;
-        WithdrawEndpointTemplateId = endpointTemplate;
-        OutCoins = outCoins?.ToList() ?? [];
+        WithdrawOptionEndpointId = withdrawOptionEndpointId;
+        WithdrawOptionGroups = withdrawOptionGroups?.ToList();
+    }
+
+    public void AddWithdrawOptionGroups(IEnumerable<WithdrawOptionGroup> withdrawOptionGroups)
+    {
+        if (WithdrawOptionGroups == null)
+        {
+            WithdrawOptionGroups = [];
+        }
+
+        foreach (var withdrawOptionGroup in withdrawOptionGroups)
+        {
+            if (!WithdrawOptionGroups.Contains(withdrawOptionGroup))
+            {
+                WithdrawOptionGroups.Add(withdrawOptionGroup);
+            }
+        }
     }
 }

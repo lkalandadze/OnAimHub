@@ -1,13 +1,13 @@
 ﻿#nullable disable
 
-using Hub.Application.Models.Withdraw.WithdrawOption;
 using Hub.Domain.Enum;
 
 namespace Hub.Application.Models.Coin;
 
 public class CreateOutCoinModel : CreateCoinModel
 {
-    public IEnumerable<CreateWithdrawOptionModel> WithdrawOptions { get; set; }
+    public IEnumerable<int> WithdrawOptionIds { get; set; }
+    public IEnumerable<int> WithdrawOptionGroupIds { get; set; }
 
     public CreateOutCoinModel()
     {

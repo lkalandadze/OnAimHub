@@ -94,6 +94,7 @@ public class Startup
         services.AddScoped<ITransactionService, TransactionService>();
         services.AddScoped<IPlayerSegmentActService, PlayerSegmentActService>();
         services.AddScoped<IPlayerLogService, PlayerLogService>();
+        services.AddScoped<ICoinService, CoinService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IJobService, JobService>();

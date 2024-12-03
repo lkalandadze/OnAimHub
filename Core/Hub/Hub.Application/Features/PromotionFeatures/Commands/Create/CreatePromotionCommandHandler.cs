@@ -1,4 +1,5 @@
 ﻿using Hub.Application.Models.Coin;
+using Hub.Application.Services.Abstract;
 using Hub.Application.Services.Abstract.BackgroundJobs;
 using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
@@ -12,19 +13,27 @@ namespace Hub.Application.Features.PromotionFeatures.Commands.Create;
 
 public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionCommand, int>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ISegmentRepository _segmentRepository;
     private readonly IPromotionRepository _promotionRepository;
     private readonly IBackgroundJobScheduler _jobScheduler;
     private readonly IJobRepository _jobRepository;
+    private readonly ICoinService _coinService;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreatePromotionCommandHandler(IUnitOfWork unitOfWork, ISegmentRepository segmentRepository, IPromotionRepository promotionRepository, IBackgroundJobScheduler jobScheduler, IJobRepository jobRepository)
+    public CreatePromotionCommandHandler(
+        ISegmentRepository segmentRepository,
+        IPromotionRepository promotionRepository,
+        IBackgroundJobScheduler jobScheduler,
+        IJobRepository jobRepository,
+        ICoinService coinService,
+        IUnitOfWork unitOfWork)
     {
-        _unitOfWork = unitOfWork;
         _segmentRepository = segmentRepository;
         _promotionRepository = promotionRepository;
         _jobScheduler = jobScheduler;
         _jobRepository = jobRepository;
+        _coinService = coinService;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<int> Handle(CreatePromotionCommand request, CancellationToken cancellationToken)
@@ -41,11 +50,6 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
             throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "One or more Segment IDs are invalid.");
         }
 
-        //TODO: ქოინების ვალიდაციები
-        if (request.Coins.Where(c => c.CoinType == CoinType.In).Count() != 1)
-        {
-        }
-
         var promotion = new Promotion(
             request.StartDate,
             request.EndDate,
@@ -58,21 +62,23 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
         await _promotionRepository.InsertAsync(promotion);
         await _unitOfWork.SaveAsync();
 
-        SchedulePromotionStatusJobs(promotion);
+        var outCoinModel = request.Coins.First(c => c.CoinType == CoinType.Out) as CreateOutCoinModel;
+        var withdrawOptions = await _coinService.GetWithdrawOptions(outCoinModel);
+        var withdrawOptionGroups = await _coinService.GetWithdrawOptionGroups(outCoinModel);
 
-        var mappedCoins = request.Coins.Select(coin => CreateCoinModel.ConvertToEntity(coin, promotion.Id)).ToList();
+        var mappedCoins = request.Coins.Select(coin => CreateCoinModel.ConvertToEntity(
+            coin,
+            promotion.Id,
+            withdrawOptions: coin is CreateOutCoinModel ? withdrawOptions : null,
+            withdrawOptionGroups: coin is CreateOutCoinModel ? withdrawOptionGroups : null)
+        );
+
         promotion.SetCoins(mappedCoins);
 
         _promotionRepository.Update(promotion);
+        await _unitOfWork.SaveAsync();
 
-        try
-        {
-            await _unitOfWork.SaveAsync();
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
+        SchedulePromotionStatusJobs(promotion);
 
         return promotion.Id;
     }
