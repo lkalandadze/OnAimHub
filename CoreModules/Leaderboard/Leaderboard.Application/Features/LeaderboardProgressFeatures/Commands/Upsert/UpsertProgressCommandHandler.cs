@@ -1,4 +1,5 @@
 ﻿using Leaderboard.Domain.Abstractions.Repository;
+using Leaderboard.Domain.Entities;
 using Leaderboard.Domain.Enum;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +13,7 @@ public class UpsertProgressCommandHandler : IRequestHandler<UpsertProgressComman
     private readonly ILeaderboardRecordRepository _leaderboardRecordRepository;
     private readonly ILeaderboardProgressRepository _leaderboardProgressRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
+
     public UpsertProgressCommandHandler(ILeaderboardRecordRepository leaderboardRecordRepository,
                                         ILeaderboardProgressRepository leaderboardProgressRepository,
                                         IHttpContextAccessor httpContextAccessor)
@@ -29,27 +31,35 @@ public class UpsertProgressCommandHandler : IRequestHandler<UpsertProgressComman
         if (userId == null || username == null)
             throw new Exception("User is not authenticated.");
 
-        var leaderboard = await _leaderboardRecordRepository.Query().FirstOrDefaultAsync(x => x.Id == request.LeaderboardRecordId, cancellationToken);
+        // Check leaderboard status in the database
+        var leaderboard = await _leaderboardRecordRepository
+            .Query()
+            .FirstOrDefaultAsync(x => x.Id == request.LeaderboardRecordId, cancellationToken);
 
         if (leaderboard == default || leaderboard.Status != LeaderboardRecordStatus.InProgress)
-            throw new Exception("Leaderboard not found or is not in progress");
+            throw new Exception("Leaderboard not found or is not in progress.");
 
         int playerId = int.Parse(userId);
 
+        // Check existing progress in Redis
         var existingProgress = await _leaderboardProgressRepository
-            .Query()
-            .FirstOrDefaultAsync(x => x.LeaderboardRecordId == request.LeaderboardRecordId && x.PlayerId == playerId, cancellationToken);
+            .GetProgressAsync(playerId, request.LeaderboardRecordId, cancellationToken);
 
         if (existingProgress != null)
         {
+            // Update existing progress
             existingProgress.Amount += request.GeneratedAmount;
-            _leaderboardProgressRepository.Update(existingProgress);
-            await _leaderboardProgressRepository.SaveChangesAsync(cancellationToken);
+            await _leaderboardProgressRepository.SaveProgressAsync(existingProgress, TimeSpan.FromDays(7), cancellationToken);
         }
         else
         {
-            leaderboard.InsertProgress(playerId, username, request.GeneratedAmount);
-            await _leaderboardRecordRepository.SaveChangesAsync(cancellationToken);
+            // Create new progress and save to Redis
+            var newProgress = new LeaderboardProgress(playerId, username, request.GeneratedAmount)
+            {
+                LeaderboardRecordId = request.LeaderboardRecordId
+            };
+
+            await _leaderboardProgressRepository.SaveProgressAsync(newProgress, TimeSpan.FromDays(7), cancellationToken);
         }
     }
 }
