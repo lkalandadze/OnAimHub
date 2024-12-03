@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-using Hub.Application.Models.Withdraw.WithdrawOption;
+using Hub.Domain.Entities;
 using Hub.Domain.Entities.Coins;
 using Hub.Domain.Enum;
 
@@ -14,7 +14,11 @@ public abstract class CreateCoinModel
     public CoinType CoinType { get; set; }
     public int? TemplateId { get; set; }
 
-    public static Domain.Entities.Coins.Coin ConvertToEntity(CreateCoinModel model, int promotionId)
+    public static Domain.Entities.Coins.Coin ConvertToEntity(
+        CreateCoinModel model,
+        int promotionId,
+        IEnumerable<WithdrawOption> withdrawOptions = null,
+        IEnumerable<WithdrawOptionGroup> withdrawOptionGroups = null)
     {
         var coinId = $"{promotionId}_{model.Name}";
 
@@ -51,7 +55,8 @@ public abstract class CreateCoinModel
                 outgoing.ImageUrl,
                 promotionId,
                 outgoing.TemplateId,
-                withdrawOptions: outgoing.WithdrawOptions.Select(w => CreateWithdrawOptionModel.ConvertToEntity(w)).ToList()),
+                withdrawOptions: withdrawOptions,
+                withdrawOptionGroups: withdrawOptionGroups),
 
             _ => throw new ArgumentException("Invalid coin type", nameof(model))
         };
