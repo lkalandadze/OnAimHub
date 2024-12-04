@@ -39,10 +39,8 @@ public class PromotionTemplateService : IPromotionTemplateService
             StartDate = template.StartDate,
             Description = template.Description,
             EndDate = template.EndDate,
-            CoinIds = template.CoinIds,
+            Coins = template.Coins,
             SegmentIds = template.SegmentIds,
-            Status = template.Status,
-            TotalCost = template.TotalCost,
         };
 
        

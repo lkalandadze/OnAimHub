@@ -1,7 +1,9 @@
+using OnAim.Admin.Domain.HubEntities.Enum;
+
 namespace OnAim.Admin.Domain.HubEntities
 {
-	// Generated Code
+    // Generated Code
 
-	public class TransactionStatus : DbEnum<Int32, TransactionStatus>	{
+    public class TransactionStatus : DbEnum<Int32, TransactionStatus>	{
 	}
 }

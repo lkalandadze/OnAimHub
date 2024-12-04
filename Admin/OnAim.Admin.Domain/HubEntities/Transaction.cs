@@ -1,8 +1,11 @@
+using OnAim.Admin.Domain.HubEntities.Enum;
+using OnAim.Admin.Domain.HubEntities.PlayerEntities;
+
 namespace OnAim.Admin.Domain.HubEntities
 {
-	// Generated Code
+    // Generated Code
 
-	public class Transaction : BaseEntity<Int32>	{
+    public class Transaction : BaseEntity<Int32>	{
 		public Decimal Amount { get; set; }
 		public Nullable<Int32> GameId { get; set; }
 		public Game Game { get; set; }

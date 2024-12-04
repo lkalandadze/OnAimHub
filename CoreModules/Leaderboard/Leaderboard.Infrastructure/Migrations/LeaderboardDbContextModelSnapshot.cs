@@ -22,35 +22,6 @@ namespace Leaderboard.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardProgress", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnOrder(1);
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Amount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("LeaderboardRecordId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PlayerId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("PlayerUsername")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LeaderboardRecordId");
-
-                    b.ToTable("LeaderboardProgresses");
-                });
-
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardRecord", b =>
                 {
                     b.Property<int>("Id")
@@ -226,17 +197,6 @@ namespace Leaderboard.Infrastructure.Migrations
                     b.ToTable("Players");
                 });
 
-            modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardProgress", b =>
-                {
-                    b.HasOne("Leaderboard.Domain.Entities.LeaderboardRecord", "LeaderboardRecord")
-                        .WithMany("LeaderboardProgresses")
-                        .HasForeignKey("LeaderboardRecordId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LeaderboardRecord");
-                });
-
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardRecordPrize", b =>
                 {
                     b.HasOne("Leaderboard.Domain.Entities.LeaderboardRecord", "LeaderboardRecord")
@@ -272,8 +232,6 @@ namespace Leaderboard.Infrastructure.Migrations
 
             modelBuilder.Entity("Leaderboard.Domain.Entities.LeaderboardRecord", b =>
                 {
-                    b.Navigation("LeaderboardProgresses");
-
                     b.Navigation("LeaderboardRecordPrizes");
                 });
 #pragma warning restore 612, 618

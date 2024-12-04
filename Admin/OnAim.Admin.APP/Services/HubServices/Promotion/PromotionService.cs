@@ -12,13 +12,13 @@ namespace OnAim.Admin.APP.Services.Hub.Promotion;
 public class PromotionService : IPromotionService
 {
     private readonly IPromotionRepository<Domain.HubEntities.Promotion> _promotionRepository;
-    private readonly IPromotionRepository<Domain.HubEntities.PromotionCoin> _coinRepo;
+    private readonly IPromotionRepository<Domain.HubEntities.Coin.Coin> _coinRepo;
     private readonly HubClientService _hubClientService;
     private readonly SagaClient _sagaClient;
 
     public PromotionService(
         IPromotionRepository<Domain.HubEntities.Promotion> promotionRepository,
-        IPromotionRepository<Domain.HubEntities.PromotionCoin> coinRepo,
+        IPromotionRepository<Domain.HubEntities.Coin.Coin> coinRepo,
         HubClientService hubClientService,
         SagaClient sagaClient
         )
@@ -40,7 +40,7 @@ public class PromotionService : IPromotionService
         var promList = promotions.ToList();
 
         if (filter.Status.HasValue)
-            promotions = promotions.Where(x => x.Status == (Domain.HubEntities.PromotionStatus)filter.Status.Value);
+            promotions = promotions.Where(x => x.Status == (Domain.HubEntities.Enum.PromotionStatus)filter.Status.Value);
 
         if (filter.StartDate.HasValue)
             promotions = promotions.Where(x => x.StartDate >= filter.StartDate.Value);

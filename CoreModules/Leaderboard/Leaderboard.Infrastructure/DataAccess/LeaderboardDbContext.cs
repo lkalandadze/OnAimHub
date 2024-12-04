@@ -1,6 +1,7 @@
 ﻿using Leaderboard.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Reflection.Emit;
 
 namespace Leaderboard.Infrastructure.DataAccess;
 
@@ -17,12 +18,12 @@ public class LeaderboardDbContext : DbContext
     {
         base.OnModelCreating(builder);
 
+        builder.Ignore<LeaderboardProgress>();
     }
 
     public DbSet<LeaderboardSchedule> LeaderboardSchedules { get; set; }
     public DbSet<LeaderboardRecord> LeaderboardRecords { get; set; }
     public DbSet<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; }
-    public DbSet<LeaderboardProgress> LeaderboardProgresses { get; set; }
     public DbSet<LeaderboardResult> LeaderboardResults { get; set; }
     public DbSet<Player> Players { get; set; }
 

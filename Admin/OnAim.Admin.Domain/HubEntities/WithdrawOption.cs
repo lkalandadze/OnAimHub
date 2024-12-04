@@ -1,4 +1,5 @@
-﻿using OnAim.Admin.Domain.Entities.Templates;
+﻿using OnAim.Admin.Domain.HubEntities.Coin;
+using OnAim.Admin.Domain.HubEntities.Enum;
 
 namespace OnAim.Admin.Domain.HubEntities;
 
@@ -16,6 +17,5 @@ public class WithdrawOption
     public WithdrawOptionEndpoint WithdrawEndpointTemplate { get; set; }
 
     public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
-    public ICollection<PromotionOutgoingCoin> PromotionCoins { get; set; }
-    public ICollection<CoinTemplate> CoinTemplates { get; set; }
+    public ICollection<OutCoin> OutCoins { get; set; }
 }

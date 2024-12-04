@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP.Features.CoinFeatures.Queries.GetAllCoin;
 using OnAim.Admin.APP.Services.Abstract;
@@ -10,9 +9,9 @@ namespace OnAim.Admin.API.Controllers;
 
 public class CoinTemplateController : ApiControllerBase
 {
-    private readonly ICoinService _coinService;
+    private readonly ICoinTemplateService _coinService;
 
-    public CoinTemplateController(ICoinService coinService)
+    public CoinTemplateController(ICoinTemplateService coinService)
     {
         _coinService = coinService;
     }

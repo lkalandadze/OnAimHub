@@ -1,6 +1,15 @@
 version: '3.9'
 
 services:
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
   rabbitmq:
     image: docker.io/masstransit/rabbitmq:latest
     container_name: "rabbitmq"
@@ -116,7 +125,7 @@ services:
     ports:
       - "5004:8080"
     environment:
-      - ConnectionString__OnAimLeaderboard=Host=leaderboarddb;Port=5436;Database=OnAimLeaderboard;Username=postgres;Password=Test1234!
+      - ConnectionString__OnAimLeaderboard=Host=leaderboarddb;Port=5436;Database=OnAimLeaderboard2;Username=postgres;Password=Test1234!
     volumes:
       - ./CoreModules/Leaderboard/Leaderboard.Api/appsettings.json:/app/appsettings.json
       
@@ -222,6 +231,8 @@ volumes:
   leveldb_data:
     driver: local
   leaderboarddb_data:
+    driver: local
+  redis_data:
     driver: local
 
 networks:

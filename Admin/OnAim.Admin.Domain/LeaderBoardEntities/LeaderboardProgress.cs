@@ -1,9 +1,8 @@
-﻿using OnAim.Admin.Domain.HubEntities;
+﻿namespace OnAim.Admin.Domain.LeaderBoradEntities;
 
-namespace OnAim.Admin.Domain.LeaderBoradEntities;
-
-public class LeaderboardProgress : BaseEntity<int>
+public class LeaderboardProgress
 {
+    public int Id { get; set; }
     public int LeaderboardRecordId { get; set; }
     public LeaderboardRecord LeaderboardRecord { get; set; }
     public int PlayerId { get; set; }

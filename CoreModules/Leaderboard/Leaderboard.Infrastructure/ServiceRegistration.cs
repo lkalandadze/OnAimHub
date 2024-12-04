@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 
 namespace Leaderboard.Infrastructure;
 
@@ -21,6 +22,10 @@ public static class ServiceRegistration
                 x.CommandTimeout((int)TimeSpan.FromMinutes(3).TotalSeconds);
             }).LogTo(Console.WriteLine, LogLevel.Information);
         }, ServiceLifetime.Transient);
+
+        var redisConnectionString = configuration.GetConnectionString("Redis");
+        var connectionMultiplexer = ConnectionMultiplexer.Connect(redisConnectionString);
+        services.AddSingleton<IConnectionMultiplexer>(connectionMultiplexer);
 
         return services;
     }

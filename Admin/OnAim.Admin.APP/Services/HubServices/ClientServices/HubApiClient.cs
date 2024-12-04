@@ -6,6 +6,7 @@ using System.Text;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
+using OnAim.Admin.APP.Extensions;
 
 namespace OnAim.Admin.APP.Services.Hub.ClientServices;
 

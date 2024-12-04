@@ -10,57 +10,72 @@ public class LeaderboardTemplate
     {
         
     }
-    public LeaderboardTemplate(string name, string description, System.TimeSpan startTime, int announceIn, int startIn, int endIn)
+    public LeaderboardTemplate(
+        string title, 
+        string description, 
+        DateTimeOffset announcementDate,
+        DateTimeOffset startDate,
+        DateTimeOffset endDate)
     {
-        Name = name;
+        Id = ObjectId.GenerateNewId().ToString();
+        Title = title;
         Description = description;
-        StartTime = startTime;
-        AnnounceIn = announceIn;
-        StartIn = startIn;
-        EndIn = endIn;
+        AnnouncementDate = announcementDate;
+        StartDate = startDate;
+        EndDate = endDate;
+        CreationDate = DateTimeOffset.UtcNow;
     }
 
     [BsonId]
-    public ObjectId Id { get; set; }
-    public string Name { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
+    public string Title { get; set; }
     public string Description { get; set; }
-    public System.TimeSpan StartTime { get; set; }
-    public int AnnounceIn { get; set; }
-    public int StartIn { get; set; }
-    public int EndIn { get; set; }
-    public ICollection<LeaderboardTemplatePrize> LeaderboardTemplatePrizes { get; set; } = new List<LeaderboardTemplatePrize>();
-    public ICollection<LeaderboardRecord> LeaderboardRecords { get; set; } = new List<LeaderboardRecord>();
-    public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; } = new List<LeaderboardRecordPrize>();
+    public EventType EventType { get; set; }
+    public DateTimeOffset CreationDate { get; set; }
+    public DateTimeOffset AnnouncementDate { get; set; }
+    public DateTimeOffset StartDate { get; set; }
+    public DateTimeOffset EndDate { get; set; }
+    public bool IsDeleted { get; set; } 
+    public DateTimeOffset DateDeleted { get; set; }
 
-    public void AddLeaderboardTemplatePrizes(int startRank, int endRank, string prizeId, int amount)
+    public ICollection<LeaderboardTemplatePrize> LeaderboardTemplatePrizes { get; set; } = new List<LeaderboardTemplatePrize>();
+
+    public void AddLeaderboardTemplatePrizes(int startRank, int endRank, string coinId, int amount)
     {
-        var prize = new LeaderboardTemplatePrize(startRank, endRank, prizeId, amount);
+        var prize = new LeaderboardTemplatePrize(startRank, endRank, coinId, amount);
         LeaderboardTemplatePrizes.Add(prize);
     }
 
-    public void UpdateLeaderboardPrizes(int? id, int startRank, int endRank, string prizeId, int amount)
+    public void UpdateLeaderboardPrizes(int? id, int startRank, int endRank, string coinId, int amount)
     {
         if (id.HasValue)
         {
             var existingPrize = LeaderboardTemplatePrizes.FirstOrDefault(x => x.Id == id.Value);
             if (existingPrize != null)
             {
-                existingPrize.Update(startRank, endRank, prizeId, amount);
+                existingPrize.Update(startRank, endRank, coinId, amount);
                 return;
             }
         }
 
-        var newPrize = new LeaderboardTemplatePrize(startRank, endRank, prizeId, amount);
+        var newPrize = new LeaderboardTemplatePrize(startRank, endRank, coinId, amount);
         LeaderboardTemplatePrizes.Add(newPrize);
     }
 
-    public void Update(string name, string description, System.TimeSpan startTime, int announceIn, int startIn, int endIn)
+    public void Update(string title, string description, EventType eventType, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate)
     {
-        Name = name;
+        Title = title;
         Description = description;
-        StartTime = startTime;
-        AnnounceIn = announceIn;
-        StartIn = startIn;
-        EndIn = endIn;
+        EventType = eventType;
+        AnnouncementDate = announcementDate;
+        StartDate = startDate;
+        EndDate = endDate;
+    }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+        DateDeleted = DateTimeOffset.UtcNow;
     }
 }

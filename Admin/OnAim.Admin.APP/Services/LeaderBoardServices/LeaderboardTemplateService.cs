@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using OnAim.Admin.APP.Services.Abstract;
+﻿using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
@@ -20,12 +19,11 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
     public async Task<ApplicationResult> CreateLeaderboardTemplate(CreateLeaderboardTemplateDto create)
     {
         var leaderboardTemplate = new LeaderboardTemplate(
-            create.Name, 
+            create.Title, 
             create.Description, 
-            create.StartTime, 
-            create.AnnounceIn, 
-            create.StartIn,
-            create.EndIn
+            create.AnnouncementDate, 
+            create.StartDate, 
+            create.EndDate
             );
 
         foreach (var prize in create.LeaderboardPrizes)
@@ -44,7 +42,7 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
         return new ApplicationResult { Data = temps, Success = true };
     }
 
-    public async Task<ApplicationResult> GetById(ObjectId id)
+    public async Task<ApplicationResult> GetById(string id)
     {
         var coin = await _leaderboardTemplateRepository.GetLeaderboardTemplateByIdAsync(id);
 
@@ -53,26 +51,25 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
         return new ApplicationResult { Success = true, Data = coin };
     }
 
-    //public async Task<ApplicationResult> DeleteCoinTemplate(ObjectId temp)
-    //{
-    //    var template = await _leaderboardTemplateRepository.GetLeaderboardTemplateByIdAsync(temp);
+    public async Task<ApplicationResult> DeleteLeaderboardTemplate(string temp)
+    {
+        var template = await _leaderboardTemplateRepository.GetLeaderboardTemplateByIdAsync(temp);
 
-    //    if (template == null)
-    //    {
-    //        throw new NotFoundException("Coin Template Not Found");
-    //    }
+        if (template == null)
+        {
+            throw new NotFoundException("Coin Template Not Found");
+        }
 
-    //    template.Delete();
+        template.Delete();
 
-    //    await _leaderboardTemplateRepository.UpdateLeaderboardTemplateAsync(temp, template);
+        await _leaderboardTemplateRepository.UpdateLeaderboardTemplateAsync(temp, template);
 
-    //    return new ApplicationResult { Success = true };
-    //}
+        return new ApplicationResult { Success = true };
+    }
 
     public async Task<ApplicationResult> UpdateCoinTemplate(UpdateLeaderboardTemplateDto update)
     {
-        ObjectId.TryParse(update.Id, out var objectId);
-        var template = await _leaderboardTemplateRepository.GetLeaderboardTemplateByIdAsync(objectId);
+        var template = await _leaderboardTemplateRepository.GetLeaderboardTemplateByIdAsync(update.Id);
 
         if (template == null)
         {
@@ -81,11 +78,11 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
 
         template.Update(
             update.Name, 
-            update.Description, 
-            update.StartTime,
-            update.AnnouncementLeadTimeInDays,
-            update.StartIn, 
-            update.EndIn
+            update.Description,
+            (Domain.LeaderBoradEntities.EventType)update.EventType,
+            update.AnnouncementDate,
+            update.StartDate,
+            update.EndDate
             );
 
         foreach (var prize in update.LeaderboardPrizes)
@@ -93,7 +90,7 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
             template.UpdateLeaderboardPrizes(prize.Id, prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
         }
 
-        await _leaderboardTemplateRepository.UpdateLeaderboardTemplateAsync(objectId, template);
+        await _leaderboardTemplateRepository.UpdateLeaderboardTemplateAsync(update.Id, template);
 
         return new ApplicationResult { Success = true };
     }

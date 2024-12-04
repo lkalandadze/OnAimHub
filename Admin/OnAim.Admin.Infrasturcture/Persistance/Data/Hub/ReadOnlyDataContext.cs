@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.Domain;
 using OnAim.Admin.Domain.HubEntities;
+using OnAim.Admin.Domain.HubEntities.Coin;
+using OnAim.Admin.Domain.HubEntities.PlayerEntities;
 
 namespace OnAim.Admin.Infrasturcture.Persistance.Data.Hub;
 
@@ -31,7 +33,7 @@ public class ReadOnlyDataContext : DbContext
     public DbSet<PlayerBan> PlayerBans { get; set; }
     public DbSet<Promotion> Promotions { get; set; }
     public DbSet<PromotionService> PromotionServices { get; set; }
-    public DbSet<OnAim.Admin.Domain.HubEntities.PromotionCoin> PromotionCoins { get; set; }
+    public DbSet<Coin> PromotionCoins { get; set; }
     public DbSet<OnAim.Admin.Domain.HubEntities.WithdrawOption> WithdrawOptions { get; set; }
     public DbSet<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
 

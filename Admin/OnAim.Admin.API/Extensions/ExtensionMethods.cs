@@ -1,4 +1,4 @@
-﻿using OnAim.Admin.Domain.HubEntities;
+﻿using OnAim.Admin.Domain.HubEntities.Models;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -36,7 +36,7 @@ public class PromotionCoinModelJsonConverter : JsonConverter<CreateCoinModel>
             throw new JsonException("Missing 'coinType' property in a promotion coin.");
         }
 
-        var coinType = (CoinType)coinTypeProperty.Value.GetInt32();
+        var coinType = (Domain.HubEntities.Enum.CoinType)coinTypeProperty.Value.GetInt32();
 
         //if (!rootElement.TryGetProperty("coinType", out var coinTypeProperty))
         //{
@@ -48,10 +48,10 @@ public class PromotionCoinModelJsonConverter : JsonConverter<CreateCoinModel>
 
         return coinType switch
         {
-            CoinType.In => JsonSerializer.Deserialize<CreateInCoinModel>(json, options),
-            CoinType.Internal => JsonSerializer.Deserialize<CreateInternalCoinModel>(json, options),
-            CoinType.Asset => JsonSerializer.Deserialize<CreateAssetCoinModel>(json, options),
-            CoinType.Out => JsonSerializer.Deserialize<CreateOutCoinModel>(json, options),
+            Domain.HubEntities.Enum.CoinType.In => JsonSerializer.Deserialize<CreateInCoinModel>(json, options),
+            Domain.HubEntities.Enum.CoinType.Internal => JsonSerializer.Deserialize<CreateInternalCoinModel>(json, options),
+            Domain.HubEntities.Enum.CoinType.Asset => JsonSerializer.Deserialize<CreateAssetCoinModel>(json, options),
+            Domain.HubEntities.Enum.CoinType.Out => JsonSerializer.Deserialize<CreateOutCoinModel>(json, options),
         };
     }
 

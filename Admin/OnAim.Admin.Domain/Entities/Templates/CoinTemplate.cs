@@ -1,9 +1,11 @@
 ﻿using MongoDB.Bson;
-using OnAim.Admin.Domain.HubEntities;
+using MongoDB.Bson.Serialization.Attributes;
+using OnAim.Admin.Domain.HubEntities.Coin;
+using OnAim.Admin.Domain.HubEntities.Enum;
 
 namespace OnAim.Admin.Domain.Entities.Templates;
 
-public class CoinTemplate : PromotionCoin
+public class CoinTemplate : Coin
 {
     public CoinTemplate(){}
 
@@ -12,7 +14,8 @@ public class CoinTemplate : PromotionCoin
         string description,
         string imageUrl,
         CoinType coinType,
-        IEnumerable<WithdrawOption> withdrawOptions = null
+        IEnumerable<CoinTemplateWithdrawOption> withdrawOptions = null,
+        IEnumerable<CoinTemplateWithdrawOptionGroup>? withdrawOptionGroups = null
         )
     {
         Id = ObjectId.GenerateNewId().ToString();
@@ -21,13 +24,16 @@ public class CoinTemplate : PromotionCoin
         ImageUrl = imageUrl;
         CoinType = coinType;
         WithdrawOptions = withdrawOptions?.ToList() ?? [];
+        WithdrawOptionGroups = withdrawOptionGroups?.ToList();
     }
 
-    public ICollection<WithdrawOption>? WithdrawOptions { get;  set; }
+    [BsonIgnoreIfNull]
+    public ICollection<CoinTemplateWithdrawOption>? WithdrawOptions { get;  set; }
 
-    public ICollection<WithdrawOptionGroup>? WithdrawOptionGroups { get; set; }
+    [BsonIgnoreIfNull]
+    public ICollection<CoinTemplateWithdrawOptionGroup>? WithdrawOptionGroups { get; set; }
 
-    public void Update(string name, string description, string imageUrl, CoinType coinType, IEnumerable<WithdrawOption> withdrawOptions = null)
+    public void Update(string name, string description, string imageUrl, CoinType coinType, IEnumerable<CoinTemplateWithdrawOption> withdrawOptions = null)
     {
         Name = name;
         Description = description;
@@ -36,11 +42,11 @@ public class CoinTemplate : PromotionCoin
 
         if (withdrawOptions != null)
         {
-            SetWithdrawOptions(withdrawOptions);
+            UpdateWithdrawOptions(withdrawOptions);
         }
     }
 
-    public void SetWithdrawOptions(IEnumerable<WithdrawOption> withdrawOptions)
+    public void UpdateWithdrawOptions(IEnumerable<CoinTemplateWithdrawOption> withdrawOptions)
     {
         if (withdrawOptions != null)
         {
@@ -53,21 +59,24 @@ public class CoinTemplate : PromotionCoin
         }
     }
 
-    public void AddWithdrawOptions(IEnumerable<WithdrawOption> withdrawOptions)
+    public void AddWithdrawOptions(IEnumerable<CoinTemplateWithdrawOption> withdrawOptions)
     {
-        WithdrawOptions ??= new List<WithdrawOption>();
-        foreach (var withdrawOption in withdrawOptions)
+        if (CoinType == CoinType.Out)
         {
-            if (!WithdrawOptions.Contains(withdrawOption))
+            WithdrawOptions ??= new List<CoinTemplateWithdrawOption>();
+            foreach (var withdrawOption in withdrawOptions)
             {
-                WithdrawOptions.Add(withdrawOption);
+                if (!WithdrawOptions.Contains(withdrawOption))
+                {
+                    WithdrawOptions.Add(withdrawOption);
+                }
             }
         }
     }
 
-    public void AddWithdrawOptionGroups(IEnumerable<WithdrawOptionGroup> withdrawOptionGroups)
+    public void AddWithdrawOptionGroups(IEnumerable<CoinTemplateWithdrawOptionGroup> withdrawOptionGroups)
     {
-        WithdrawOptionGroups ??= new List<WithdrawOptionGroup>();
+        WithdrawOptionGroups ??= new List<CoinTemplateWithdrawOptionGroup>();
         foreach (var withdrawOptionGroup in withdrawOptionGroups)
         {
             if (!WithdrawOptionGroups.Contains(withdrawOptionGroup))
@@ -77,7 +86,7 @@ public class CoinTemplate : PromotionCoin
         }
     }
 
-    public void SetWithdrawOptionGroups(IEnumerable<WithdrawOptionGroup> withdrawOptionGroups)
+    public void UpdateWithdrawOptionGroups(IEnumerable<CoinTemplateWithdrawOptionGroup> withdrawOptionGroups)
     {
         if (withdrawOptionGroups != null)
         {

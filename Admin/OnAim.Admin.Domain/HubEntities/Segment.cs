@@ -1,3 +1,5 @@
+using OnAim.Admin.Domain.HubEntities.PlayerEntities;
+
 namespace OnAim.Admin.Domain.HubEntities;
 
 public class Segment : BaseEntity<string>

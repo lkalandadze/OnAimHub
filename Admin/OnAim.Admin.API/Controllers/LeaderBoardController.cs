@@ -76,11 +76,7 @@ public class LeaderBoardController : ApiControllerBase
     [HttpGet(nameof(GetLeaderboardTemplateById))]
     public async Task<IActionResult> GetLeaderboardTemplateById([FromQuery] string id)
     {
-        if (!ObjectId.TryParse(id, out var objectId))
-        {
-            return BadRequest("Invalid Id format.");
-        }
-        await _leaderboardTemplateService.GetById(objectId);
+        await _leaderboardTemplateService.GetById(id);
         return Ok();
     }
 
