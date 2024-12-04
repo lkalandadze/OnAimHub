@@ -4,12 +4,13 @@ using Hub.Application.Services.Abstract.BackgroundJobs;
 using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
+using Hub.Domain.Entities.Coins;
 using Hub.Domain.Enum;
 using MediatR;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
 
-namespace Hub.Application.Features.PromotionFeatures.Commands.Create;
+namespace Hub.Application.Features.PromotionFeatures.Commands.CreatePromotion;
 
 public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionCommand, int>
 {
@@ -62,16 +63,26 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
         await _promotionRepository.InsertAsync(promotion);
         await _unitOfWork.SaveAsync();
 
-        var outCoinModel = request.Coins.First(c => c.CoinType == CoinType.Out) as CreateOutCoinModel;
-        var withdrawOptions = await _coinService.GetWithdrawOptions(outCoinModel);
-        var withdrawOptionGroups = await _coinService.GetWithdrawOptionGroups(outCoinModel);
+        var mappedCoins = request.Coins.Select(coin => CreateCoinModel.ConvertToEntity(coin, promotion.Id))
+                                       .ToList();
 
-        var mappedCoins = request.Coins.Select(coin => CreateCoinModel.ConvertToEntity(
-            coin,
-            promotion.Id,
-            withdrawOptions: coin is CreateOutCoinModel ? withdrawOptions : null,
-            withdrawOptionGroups: coin is CreateOutCoinModel ? withdrawOptionGroups : null)
-        );
+        if (request.Coins.FirstOrDefault(c => c.CoinType == CoinType.Out) is CreateOutCoinModel outCoinModel)
+        {
+            var withdrawOptions = await _coinService.GetWithdrawOptions(outCoinModel);
+            var withdrawOptionGroups = await _coinService.GetWithdrawOptionGroups(outCoinModel);
+
+            var outCoin = mappedCoins.OfType<OutCoin>()
+                                     .FirstOrDefault(c => c.CoinType == CoinType.Out);
+
+            if (outCoin != null)
+            {
+                if (withdrawOptions.Any())
+                    outCoin.AddWithdrawOptions(withdrawOptions);
+
+                if (withdrawOptionGroups.Any())
+                    outCoin.AddWithdrawOptionGroups(withdrawOptionGroups);
+            }
+        }
 
         promotion.SetCoins(mappedCoins);
 

@@ -1,7 +1,7 @@
 ﻿using Hub.Application.Models.Coin;
 using MediatR;
 
-namespace Hub.Application.Features.PromotionFeatures.Commands.Create;
+namespace Hub.Application.Features.PromotionFeatures.Commands.CreatePromotion;
 
 public record CreatePromotionCommand(
     string Title,

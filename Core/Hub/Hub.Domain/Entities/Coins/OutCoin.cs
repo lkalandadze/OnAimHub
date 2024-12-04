@@ -21,13 +21,24 @@ public class OutCoin : Coin
     public ICollection<WithdrawOption> WithdrawOptions { get; private set; }
     public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; private set; }
 
-    public void AddWithdrawOption(IEnumerable<WithdrawOption> withdrawOptions)
+    public void AddWithdrawOptions(IEnumerable<WithdrawOption> withdrawOptions)
     {
         foreach (var withdrawOption in withdrawOptions)
         {
             if (!WithdrawOptions.Contains(withdrawOption))
             {
                 WithdrawOptions.Add(withdrawOption);
+            }
+        }
+    }
+
+    public void AddWithdrawOptionGroups(IEnumerable<WithdrawOptionGroup> withdrawOptionGroups)
+    {
+        foreach (var withdrawOptionGroup in withdrawOptionGroups)
+        {
+            if (!WithdrawOptionGroups.Contains(withdrawOptionGroup))
+            {
+                WithdrawOptionGroups.Add(withdrawOptionGroup);
             }
         }
     }

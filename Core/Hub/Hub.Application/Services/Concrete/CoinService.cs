@@ -51,16 +51,6 @@ public class CoinService : ICoinService
             );
         }
 
-        var withdrawOptionGroups = await _withdrawOptionGroupRepository.QueryAsync(wog => outCoinModel.WithdrawOptionGroupIds.Any(wogId => wogId == wog.Id));
-
-        if (withdrawOptionGroups == null || !withdrawOptionGroups.Any())
-        {
-            throw new ApiException(
-                ApiExceptionCodeTypes.KeyNotFound,
-                "No withdraw option groups were found for the provided list of IDs. Please ensure the IDs are valid and correspond to existing segments."
-            );
-        }
-
-        return withdrawOptionGroups;
+        return await _withdrawOptionGroupRepository.QueryAsync(wog => outCoinModel.WithdrawOptionGroupIds.Any(wogId => wogId == wog.Id));
     }
 }

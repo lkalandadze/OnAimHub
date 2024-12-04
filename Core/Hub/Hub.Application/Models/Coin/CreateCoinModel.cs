@@ -12,7 +12,6 @@ public abstract class CreateCoinModel
     public string Description { get; set; }
     public string ImageUrl { get; set; }
     public CoinType CoinType { get; set; }
-    public int? TemplateId { get; set; }
 
     public static Domain.Entities.Coins.Coin ConvertToEntity(
         CreateCoinModel model,

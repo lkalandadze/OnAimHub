@@ -10,7 +10,7 @@ using Hub.Application.Features.PlayerBanFeatures.Commands.Revoke;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Update;
 using Hub.Application.Features.PrizeClaimFeatures.Commands.CreateReward;
 using Hub.Application.Features.PrizeClaimFeatures.Commands.DeleteReward;
-using Hub.Application.Features.PromotionFeatures.Commands.Create;
+using Hub.Application.Features.PromotionFeatures.Commands.CreatePromotion;
 using Hub.Application.Features.PromotionFeatures.Commands.CreatePromotionView;
 using Hub.Application.Features.PromotionFeatures.Commands.CreatePromotionViewTemplate;
 using Hub.Application.Features.PromotionFeatures.Commands.Delete;
