@@ -3,4 +3,7 @@ using Shared.Lib.Wrappers;
 
 namespace Leaderboard.Application.Features.LeaderboardProgressFeatures.Queries.Get;
 
-public class GetLeaderboardProgressQuery : PagedRequest, IRequest<GetLeaderboardProgressQueryResponse>;
+public class GetLeaderboardProgressQuery : PagedRequest, IRequest<GetLeaderboardProgressQueryResponse>
+{
+    public int LeaderboardRecordId { get; set; }
+}

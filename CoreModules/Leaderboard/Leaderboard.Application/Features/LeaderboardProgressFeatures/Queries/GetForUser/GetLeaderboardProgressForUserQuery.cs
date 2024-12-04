@@ -6,5 +6,4 @@ namespace Leaderboard.Application.Features.LeaderboardProgressFeatures.Queries.G
 public class GetLeaderboardProgressForUserQuery : PagedRequest, IRequest<GetLeaderboardProgressForUserQueryResponse>
 {
     public int LeaderboardRecordId { get; set; }
-    public int PlayerId { get; set; }
 }

@@ -2,7 +2,7 @@
 
 namespace Leaderboard.Domain.Entities;
 
-public class LeaderboardProgress : BaseEntity<int>
+public class LeaderboardProgress
 {
     public LeaderboardProgress(int playerId, string playerUsername, int amount)
     {
@@ -12,7 +12,6 @@ public class LeaderboardProgress : BaseEntity<int>
     }
 
     public int LeaderboardRecordId { get; set; }
-    public LeaderboardRecord LeaderboardRecord { get; set; }
     public int PlayerId { get; set; }
     public string PlayerUsername { get; set; }
     public int Amount { get; set; }

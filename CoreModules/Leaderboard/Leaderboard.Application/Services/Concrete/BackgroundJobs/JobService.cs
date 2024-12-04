@@ -178,6 +178,7 @@ public class JobService : IJobService
 
     public async Task ProcessLeaderboardResults(int leaderboardRecordId)
     {
+        // Fetch the leaderboard record from the database
         var leaderboardRecord = await _leaderboardRecordRepository.Query()
             .FirstOrDefaultAsync(x => x.Id == leaderboardRecordId);
 
@@ -186,9 +187,8 @@ public class JobService : IJobService
             throw new Exception($"Leaderboard record with ID {leaderboardRecordId} is not finished.");
         }
 
-        var leaderboardProgress = await _leaderboardProgressRepository.Query()
-            .Where(x => x.LeaderboardRecordId == leaderboardRecordId)
-            .ToListAsync();
+        // Fetch all progress from Redis
+        var leaderboardProgress = await _leaderboardProgressRepository.GetAllProgressAsync(leaderboardRecordId, CancellationToken.None);
 
         if (!leaderboardProgress.Any())
         {
@@ -215,12 +215,7 @@ public class JobService : IJobService
 
         await _leaderboardResultRepository.SaveChangesAsync();
 
-        foreach (var progress in leaderboardProgress)
-        {
-            _leaderboardProgressRepository.Delete(progress);
-        }
-
-        await _leaderboardProgressRepository.SaveChangesAsync();
+        await _leaderboardProgressRepository.ClearLeaderboardProgressAsync(leaderboardRecordId, CancellationToken.None);
     }
 
     private DateTimeOffset CalculateNextStartDate(DateTimeOffset startDate, LeaderboardRecord record, LeaderboardSchedule schedule)
