@@ -8,7 +8,6 @@ using System.Text.Json.Serialization;
 namespace Wheel.Domain.Entities;
 
 [CheckMate<RoundChecker>]
-
 public class Round : BasePrizeGroup<WheelPrize>
 {
     public Round()
@@ -26,10 +25,4 @@ public class Round : BasePrizeGroup<WheelPrize>
 
     [JsonIgnore]
     public WheelConfiguration Configuration { get; set; }
-
-    new public ICollection<WheelPrize> Prizes
-    {
-        get { return base.Prizes; }
-        set { base.Prizes = value; }
-    }
 }

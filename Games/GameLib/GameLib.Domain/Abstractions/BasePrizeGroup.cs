@@ -1,4 +1,6 @@
-﻿using Shared.Domain.Entities;
+﻿#nullable disable
+
+using Shared.Domain.Entities;
 
 namespace GameLib.Domain.Abstractions;
 
@@ -13,20 +15,13 @@ public abstract class BasePrizeGroup : BaseEntity<int>
     //[NotMapped]
     //public GameConfiguration Configuration { get; set; }
 
-    public ICollection<BasePrize> Prizes { get; set; }
+    public virtual List<BasePrize> GetBasePrizes() => [];
 }
 
 public abstract class BasePrizeGroup<TPrize> : BasePrizeGroup where TPrize : BasePrize
 {
-    public ICollection<TPrize> Prizes
-    {
-        get
-        {
-            return base.Prizes?.Select(x => (TPrize)x).ToList() ?? new List<TPrize>();
-        }
-        set
-        {
-            base.Prizes = value?.Select(x => (BasePrize)x).ToList() ?? new List<BasePrize>();
-        }
-    }
+    public ICollection<TPrize> Prizes { get; set; }
+
+    public override List<BasePrize> GetBasePrizes() =>
+        Prizes.Select(x => x as BasePrize).ToList();
 }

@@ -51,8 +51,8 @@ public class GeneratorHolder
         lock (_sync)
         {
             return Generators
-                .Where(x => x.Key.Prizes.Any() && x.Value.Prizes.Any())
-                .Where(x => x.Key.Prizes.First().GetType() == typeof(TPrize))
+                .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any())
+                .Where(x => x.Key.GetBasePrizes().First().GetType() == typeof(TPrize))
                 .First(x => predicate?.Invoke(x.Key) ?? true)
                 .Value!;
         }

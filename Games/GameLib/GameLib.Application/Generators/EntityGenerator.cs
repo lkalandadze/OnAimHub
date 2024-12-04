@@ -150,22 +150,22 @@ public class ConfigurationMetadata
     public Dictionary<string, EntityMetadata> NavigationPropertyCache { get; set; }
 }
 
-[Description("This is a round description!")]
-public class Round : BasePrizeGroup<TestPrize>
-{
-    [Description("Round index")]
-    public int Index { get; set; }
+//[Description("This is a round description!")]
+//public class Round : BasePrizeGroup<TestPrize>
+//{
+//    [Description("Round index")]
+//    public int Index { get; set; }
 
-    public ICollection<TestPrize> Prizes { get; set; }
-}
+//    public ICollection<TestPrize> Prizes { get; set; }
+//}
 
-public class TestPrize : BasePrize<Round>
-{
-    [Description("This is a description of RoundId!")]
-    public int RoundId { get; set; }
+//public class TestPrize : BasePrize<Round>
+//{
+//    [Description("This is a description of RoundId!")]
+//    public int RoundId { get; set; }
 
-    public Round Round { get; set; }
-}
+//    public Round Round { get; set; }
+//}
 
 public static class IQueryableExtensions
 {

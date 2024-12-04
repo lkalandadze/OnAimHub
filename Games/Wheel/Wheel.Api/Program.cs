@@ -1,4 +1,5 @@
 using GameLib.Application.Services.Abstract;
+using GameLib.Domain.Entities;
 using GameLib.Infrastructure;
 using GameLib.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +13,9 @@ var host = CreateHostBuilder(args).Build();
 
 #region Configuration Tests
 
-//var c = host.Services.CreateScope().ServiceProvider.GetRequiredService<WheelConfigDbContext>();
+var c = host.Services.CreateScope().ServiceProvider.GetRequiredService<WheelConfigDbContext>();
 
-////Clear Configuration Tree
+//Clear Configuration Tree
 //c.Database.EnsureCreated();
 //c.Prices.RemoveRange(c.Prices.ToList());
 //c.WheelPrizes.RemoveRange(c.WheelPrizes.ToList());
@@ -22,15 +23,15 @@ var host = CreateHostBuilder(args).Build();
 //c.GameConfigurations.RemoveRange(c.GameConfigurations.ToList());
 //c.SaveChanges();
 
-////Create New Configuration
-//var newConfigJson = "{ \"Name\": \"Hardcoded Wheel Configuration\", \"Value\": 1000, \"IsActive\": true, \"Rounds\": [ { \"Name\": \"Hardcoded Round 1\", \"Sequence\": [1, 2, 3], \"Prizes\": [ { \"Name\": \"Prize A\", \"Value\": 100, \"Probability\": 50, \"PrizeTypeId\": 1, \"WheelIndex\": 0 }, { \"Name\": \"Prize B\", \"Value\": 200, \"Probability\": 30, \"PrizeTypeId\": 2, \"WheelIndex\": 1 } ] }, { \"Name\": \"Hardcoded Round 2\", \"Sequence\": [1, 2, 3], \"Prizes\": [ { \"Name\": \"Prize C\", \"Value\": 150, \"Probability\": 40, \"PrizeTypeId\": 1, \"WheelIndex\": 2 }, { \"Name\": \"Prize D\", \"Value\": 250, \"Probability\": 20, \"PrizeTypeId\": 3, \"WheelIndex\": 3 } ] } ], \"Prices\": [ { \"Id\": \"Price5\", \"Value\": 200.50, \"Multiplier\": 1.5, \"CurrencyId\": \"OnAimCoin\" }, { \"Id\": \"Price6\", \"Value\": 350.75, \"Multiplier\": 2.0, \"CurrencyId\": \"OnAimCoin\" } ], \"Segments\": [ { \"Id\": \"Segment5\", \"IsDeleted\": true }, { \"Id\": \"Segment6\", \"IsDeleted\": false } ] }";
+//Create New Configuration
+//var newConfigJson = "{ \"Name\": \"Hardcoded Wheel Configuration\", \"Value\": 1000, \"IsActive\": true, \"Rounds\": [ { \"Name\": \"Hardcoded Round 1\", \"Sequence\": [1, 2, 3], \"Prizes\": [ { \"Name\": \"Prize A\", \"Value\": 100, \"Probability\": 50, \"PrizeTypeId\": 1, \"WheelIndex\": 0 }, { \"Name\": \"Prize B\", \"Value\": 200, \"Probability\": 30, \"PrizeTypeId\": 2, \"WheelIndex\": 1 } ] }, { \"Name\": \"Hardcoded Round 2\", \"Sequence\": [1, 2, 3], \"Prizes\": [ { \"Name\": \"Prize C\", \"Value\": 150, \"Probability\": 40, \"PrizeTypeId\": 1, \"WheelIndex\": 2 }, { \"Name\": \"Prize D\", \"Value\": 250, \"Probability\": 20, \"PrizeTypeId\": 3, \"WheelIndex\": 3 } ] } ], \"Prices\": [ { \"Id\": \"Price1\", \"Value\": 200.50, \"Multiplier\": 1.5, \"CurrencyId\": \"OnAimCoin\" }, { \"Id\": \"Price2\", \"Value\": 350.75, \"Multiplier\": 2.0, \"CurrencyId\": \"OnAimCoin\" } ] }";
 //await host.Services.ExecuteAsync<IGameConfigurationService>(async x => await x.CreateAsync(newConfigJson));
 //c.SaveChanges();
 
-////Get Configuration
+//Get Configuration
 //var config = await host.Services.ExecuteAsync<IGameConfigurationService>(async x => await x.GetByIdAsync(c.GameConfigurations.First().Id)) as WheelConfiguration;
 
-////Update Configuration
+//Update Configuration
 //if (config != null)
 //{
 //    config.Name = DateTime.Now.ToString();
