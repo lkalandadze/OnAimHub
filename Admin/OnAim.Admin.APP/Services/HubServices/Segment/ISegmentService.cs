@@ -3,7 +3,7 @@ using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPlayer
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Segment;
 
-namespace OnAim.Admin.APP.Services.Abstract;
+namespace OnAim.Admin.APP.Services.HubServices.Segment;
 
 public interface ISegmentService
 {

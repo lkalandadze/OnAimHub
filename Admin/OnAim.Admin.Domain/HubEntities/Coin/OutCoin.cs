@@ -2,23 +2,42 @@
 
 public class OutCoin : Coin
 {
-    public OutCoin(){}
-
-    public OutCoin(string id, string name, string description, string imageUrl, int promotionId, IEnumerable<WithdrawOption> withdrawOptions = null)
-        : base(id, name, description, imageUrl, Enum.CoinType.Out, promotionId)
+    public OutCoin()
     {
-        WithdrawOptions = withdrawOptions?.ToList() ?? [];
+
     }
 
+    public OutCoin(string id, string name, string description, string imageUrl, int promotionId, int? templateId = null, IEnumerable<WithdrawOption> withdrawOptions = null, IEnumerable<WithdrawOptionGroup> withdrawOptionGroups = null)
+        : base(id, name, description, imageUrl, Domain.HubEntities.Enum.CoinType.Out)
+    {
+        WithdrawOptions = withdrawOptions?.ToList() ?? [];
+        WithdrawOptionGroups = withdrawOptionGroups?.ToList() ?? [];
+        FromTemplateId = templateId;
+        PromotionId = promotionId;
+    }
+    public int? FromTemplateId { get; private set; }
+    public int PromotionId { get; set; }
     public ICollection<WithdrawOption> WithdrawOptions { get; private set; }
+    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; private set; }
 
-    public void AddWithdrawOption(IEnumerable<WithdrawOption> withdrawOptions)
+    public void AddWithdrawOptions(IEnumerable<WithdrawOption> withdrawOptions)
     {
         foreach (var withdrawOption in withdrawOptions)
         {
             if (!WithdrawOptions.Contains(withdrawOption))
             {
                 WithdrawOptions.Add(withdrawOption);
+            }
+        }
+    }
+
+    public void AddWithdrawOptionGroups(IEnumerable<WithdrawOptionGroup> withdrawOptionGroups)
+    {
+        foreach (var withdrawOptionGroup in withdrawOptionGroups)
+        {
+            if (!WithdrawOptionGroups.Contains(withdrawOptionGroup))
+            {
+                WithdrawOptionGroups.Add(withdrawOptionGroup);
             }
         }
     }

@@ -2,8 +2,8 @@
 using MockQueryable;
 using Moq;
 using OnAim.Admin.APP.Features.EndpointFeatures.Commands.Delete;
-using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
+using OnAim.Admin.APP.Services.AdminServices.Endpoint;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Endpoint;
 

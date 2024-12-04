@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.APP.CQRS.Query;
-using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.APP.Services.AdminServices.Role;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Queries.GetAll;
 

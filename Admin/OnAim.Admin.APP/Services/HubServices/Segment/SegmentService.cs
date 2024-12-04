@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPlayers;
-using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
@@ -12,6 +11,7 @@ using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.Domain.HubEntities.PlayerEntities;
+using OnAim.Admin.APP.Services.HubServices.Segment;
 
 namespace OnAim.Admin.APP.Services.Hub.Segment;
 

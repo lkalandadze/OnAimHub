@@ -1,7 +1,7 @@
 ﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Player;
 
-namespace OnAim.Admin.APP.Services.Abstract;
+namespace OnAim.Admin.APP.Services.HubServices.Player;
 
 public interface IPlayerService
 {

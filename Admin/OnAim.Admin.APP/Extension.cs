@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Infrasturcture.Repository;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
@@ -41,6 +40,17 @@ using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
 using OnAim.Admin.Infrasturcture;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.APP.Services.FileServices;
+using OnAim.Admin.APP.Services.HubServices.Coin;
+using OnAim.Admin.APP.Services.HubServices.Player;
+using OnAim.Admin.APP.Services.HubServices.Segment;
+using OnAim.Admin.APP.Services.LeaderBoardServices;
+using OnAim.Admin.APP.Services.GameServices;
+using OnAim.Admin.APP.Services.AdminServices.Domain;
+using OnAim.Admin.APP.Services.AdminServices.EmailServices;
+using OnAim.Admin.APP.Services.AdminServices.Endpoint;
+using OnAim.Admin.APP.Services.AdminServices.EndpointGroup;
+using OnAim.Admin.APP.Services.AdminServices.Role;
+using OnAim.Admin.APP.Services.AdminServices.User;
 
 
 namespace OnAim.Admin.APP;
@@ -82,6 +92,7 @@ public static class Extension
             .AddScoped<IEndpointService, EndpointService>()
             .AddScoped<IEndpointGroupService, EndpointGroupService>()
             .AddScoped<IRoleService, RoleService>()
+            .AddScoped<ICoinService, CoinService>()
             .AddScoped<IDomainService, DomainService>()
             .AddScoped<IFileManagementService, FileManagementService>()
             .AddScoped<IGameService, GameService>()

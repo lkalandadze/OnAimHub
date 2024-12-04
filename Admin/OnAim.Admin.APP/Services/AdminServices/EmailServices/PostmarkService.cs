@@ -1,4 +1,4 @@
-﻿using OnAim.Admin.APP.Services.Abstract;
+﻿using OnAim.Admin.APP.Services.AdminServices.EmailServices;
 using PostmarkDotNet;
 
 namespace OnAim.Admin.APP.Services.Admin.EmailServices;

@@ -1045,7 +1045,7 @@
         }
       }
     },
-    "/HubApi/Admin/CreateWithdrawEndpointTemplate": {
+    "/HubApi/Admin/CreateWithdrawOptionEndpoint": {
       "post": {
         "tags": [
           "Admin"
@@ -1054,17 +1054,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateWithdrawEndpointTemplate"
+                "$ref": "#/components/schemas/CreateWithdrawOptionEndpoint"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateWithdrawEndpointTemplate"
+                "$ref": "#/components/schemas/CreateWithdrawOptionEndpoint"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateWithdrawEndpointTemplate"
+                "$ref": "#/components/schemas/CreateWithdrawOptionEndpoint"
               }
             }
           }
@@ -1076,7 +1076,7 @@
         }
       }
     },
-    "/HubApi/Admin/UpdateWithdrawEndpointTemplate": {
+    "/HubApi/Admin/UpdateWithdrawOptionEndpoint": {
       "put": {
         "tags": [
           "Admin"
@@ -1085,17 +1085,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateWithdrawEndpointTemplate"
+                "$ref": "#/components/schemas/UpdateWithdrawOptionEndpoint"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateWithdrawEndpointTemplate"
+                "$ref": "#/components/schemas/UpdateWithdrawOptionEndpoint"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateWithdrawEndpointTemplate"
+                "$ref": "#/components/schemas/UpdateWithdrawOptionEndpoint"
               }
             }
           }
@@ -1107,7 +1107,7 @@
         }
       }
     },
-    "/HubApi/Admin/AssignCoinTemplatesToWithdrawOption": {
+    "/HubApi/Admin/CreateWithdrawOptionGroup": {
       "post": {
         "tags": [
           "Admin"
@@ -1116,17 +1116,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AssignCoinTemplatesToWithdrawOption"
+                "$ref": "#/components/schemas/CreateWithdrawOptionGroup"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AssignCoinTemplatesToWithdrawOption"
+                "$ref": "#/components/schemas/CreateWithdrawOptionGroup"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AssignCoinTemplatesToWithdrawOption"
+                "$ref": "#/components/schemas/CreateWithdrawOptionGroup"
               }
             }
           }
@@ -1138,8 +1138,8 @@
         }
       }
     },
-    "/HubApi/Admin/AssignPromotionCoinsToWithdrawOption": {
-      "post": {
+    "/HubApi/Admin/UpdateWithdrawOptionGroup": {
+      "put": {
         "tags": [
           "Admin"
         ],
@@ -1147,17 +1147,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AssignPromotionCoinsToWithdrawOption"
+                "$ref": "#/components/schemas/UpdateWithdrawOptionGroup"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AssignPromotionCoinsToWithdrawOption"
+                "$ref": "#/components/schemas/UpdateWithdrawOptionGroup"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AssignPromotionCoinsToWithdrawOption"
+                "$ref": "#/components/schemas/UpdateWithdrawOptionGroup"
               }
             }
           }
@@ -1282,41 +1282,6 @@
   },
   "components": {
     "schemas": {
-      "AssignCoinTemplatesToWithdrawOption": {
-        "type": "object",
-        "properties": {
-          "withdrawOptionId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "coinTemplateIds": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "AssignPromotionCoinsToWithdrawOption": {
-        "type": "object",
-        "properties": {
-          "withdrawOptionId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "promotionCoinIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "CoinType": {
         "enum": [
           0,
@@ -1385,11 +1350,6 @@
           },
           "coinType": {
             "$ref": "#/components/schemas/CoinType"
-          },
-          "templateId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -1507,10 +1467,19 @@
             "format": "int32",
             "nullable": true
           },
-          "withdrawOptions": {
+          "withdrawOptionIds": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CreateWithdrawOptionModel"
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "withdrawOptionGroupIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
             },
             "nullable": true
           }
@@ -1678,7 +1647,49 @@
         },
         "additionalProperties": false
       },
-      "CreateWithdrawEndpointTemplate": {
+      "CreateWithdrawOption": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "endpoint": {
+            "type": "string",
+            "nullable": true
+          },
+          "endpointContentType": {
+            "$ref": "#/components/schemas/EndpointContentType"
+          },
+          "endpointContent": {
+            "type": "string",
+            "nullable": true
+          },
+          "withdrawOptionEndpointId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "withdrawOptionGroupIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateWithdrawOptionEndpoint": {
         "type": "object",
         "properties": {
           "name": {
@@ -1699,7 +1710,7 @@
         },
         "additionalProperties": false
       },
-      "CreateWithdrawOption": {
+      "CreateWithdrawOptionGroup": {
         "type": "object",
         "properties": {
           "title": {
@@ -1714,64 +1725,17 @@
             "type": "string",
             "nullable": true
           },
-          "contentType": {
-            "$ref": "#/components/schemas/EndpointContentType"
-          },
-          "promotionCoinIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
+          "priorityIndex": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
-          "coinTemplateIds": {
+          "withdrawOptionIds": {
             "type": "array",
             "items": {
               "type": "integer",
               "format": "int32"
             },
-            "nullable": true
-          },
-          "endpoint": {
-            "type": "string",
-            "nullable": true
-          },
-          "endpointContent": {
-            "type": "string",
-            "nullable": true
-          },
-          "templateId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateWithdrawOptionModel": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "imageUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "endpoint": {
-            "type": "string",
-            "nullable": true
-          },
-          "contentType": {
-            "$ref": "#/components/schemas/EndpointContentType"
-          },
-          "endpointContent": {
-            "type": "string",
             "nullable": true
           }
         },
@@ -2018,7 +1982,53 @@
         },
         "additionalProperties": false
       },
-      "UpdateWithdrawEndpointTemplate": {
+      "UpdateWithdrawOption": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "endpoint": {
+            "type": "string",
+            "nullable": true
+          },
+          "endpointContentType": {
+            "$ref": "#/components/schemas/EndpointContentType"
+          },
+          "endpointContent": {
+            "type": "string",
+            "nullable": true
+          },
+          "withdrawOptionEndpointId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "withdrawOptionGroupIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateWithdrawOptionEndpoint": {
         "type": "object",
         "properties": {
           "id": {
@@ -2043,7 +2053,7 @@
         },
         "additionalProperties": false
       },
-      "UpdateWithdrawOption": {
+      "UpdateWithdrawOptionGroup": {
         "type": "object",
         "properties": {
           "id": {
@@ -2062,32 +2072,17 @@
             "type": "string",
             "nullable": true
           },
-          "promotionCoinIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
+          "priorityIndex": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
-          "coinTemplateIds": {
+          "withdrawOptionIds": {
             "type": "array",
             "items": {
               "type": "integer",
               "format": "int32"
             },
-            "nullable": true
-          },
-          "endpoint": {
-            "type": "string",
-            "nullable": true
-          },
-          "endpointContent": {
-            "type": "string",
-            "nullable": true
-          },
-          "templateId": {
-            "type": "integer",
-            "format": "int32",
             "nullable": true
           }
         },

@@ -1,7 +1,7 @@
 ﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.APP.CQRS.Command;
 using FluentValidation;
-using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.APP.Services.AdminServices.EndpointGroup;
 
 namespace OnAim.Admin.APP.Features.EndpointGroupFeatures.Commands.Delete;
 

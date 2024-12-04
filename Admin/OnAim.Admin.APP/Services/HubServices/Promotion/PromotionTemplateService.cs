@@ -1,8 +1,10 @@
-﻿using OnAim.Admin.APP.Services.Abstract;
+﻿using OnAim.Admin.APP.Services.HubServices.Coin;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Coin;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
+using OnAim.Admin.Domain.HubEntities.Coin;
+using OnAim.Admin.Domain.HubEntities.Models;
 using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
 
 namespace OnAim.Admin.APP.Services.HubServices.Promotion;
@@ -10,10 +12,14 @@ namespace OnAim.Admin.APP.Services.HubServices.Promotion;
 public class PromotionTemplateService : IPromotionTemplateService
 {
     private readonly IPromotionTemplateRepository _promotionTemplateRepository;
+    private readonly ICoinService _coinService;
 
-    public PromotionTemplateService(IPromotionTemplateRepository promotionTemplateRepository)
+    public PromotionTemplateService(IPromotionTemplateRepository promotionTemplateRepository,
+        ICoinService coinService
+        )
     {
         _promotionTemplateRepository = promotionTemplateRepository;
+        _coinService = coinService;
     }
 
     public async Task<ApplicationResult> GetAllTemplates()
@@ -31,19 +37,40 @@ public class PromotionTemplateService : IPromotionTemplateService
         return new ApplicationResult { Success = true, Data = coin };
     }
 
-    public async Task<ApplicationResult> CreatePromotionTemplate(PromotionTemplate template)
+    public async Task<ApplicationResult> CreatePromotionTemplate(CreatePromotionTemplate template)
     {
         var temp = new PromotionTemplate
         {
-            Title = template.Title,
             StartDate = template.StartDate,
-            Description = template.Description,
             EndDate = template.EndDate,
-            Coins = template.Coins,
+            Title = template.Title,
+            Description = template.Description,
             SegmentIds = template.SegmentIds,
         };
 
-       
+        var mappedCoins = template.Coins
+            .Select(coin => CreateCoinModel.ConvertToEntity(coin, template.PromotionId))
+                                       .ToList();
+
+        if (template.Coins.FirstOrDefault(c => c.CoinType == Domain.HubEntities.Enum.CoinType.Out) is Domain.HubEntities.Models.CreateOutCoinModel outCoinModel)
+        {
+            var withdrawOptions = await _coinService.GetWithdrawOptions(outCoinModel);
+            var withdrawOptionGroups = await _coinService.GetWithdrawOptionGroups(outCoinModel);
+
+            var outCoin = mappedCoins.OfType<OutCoin>()
+                                     .FirstOrDefault(c => c.CoinType == Domain.HubEntities.Enum.CoinType.Out);
+
+            if (outCoin != null)
+            {
+                if (withdrawOptions.Any())
+                    outCoin.AddWithdrawOptions(withdrawOptions);
+
+                if (withdrawOptionGroups.Any())
+                    outCoin.AddWithdrawOptionGroups(withdrawOptionGroups);
+            }
+        }
+
+        temp.SetCoins(mappedCoins);
 
         await _promotionTemplateRepository.AddPromotionTemplateAsync(temp);
 
@@ -78,3 +105,12 @@ public class PromotionTemplateService : IPromotionTemplateService
         return new ApplicationResult { Success = true };
     }
 }
+
+public record CreatePromotionTemplate(
+    string Title,
+    DateTime StartDate,
+    DateTime EndDate,
+    string Description,
+    int PromotionId,
+    IEnumerable<string> SegmentIds,
+    IEnumerable<CreateCoinModel> Coins);

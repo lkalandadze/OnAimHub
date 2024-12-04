@@ -1,8 +1,9 @@
 ﻿using Moq;
 using OnAim.Admin.APP.Feature.UserFeature.Commands.Create;
-using OnAim.Admin.APP.Services.Abstract;
 using FluentValidation;
 using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
+using OnAim.Admin.APP.Services.AdminServices.EmailServices;
+using OnAim.Admin.APP.Services.AdminServices.User;
 
 namespace OnAim.Admin.Test.User;
 

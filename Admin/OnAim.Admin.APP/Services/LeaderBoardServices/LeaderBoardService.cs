@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.Domain.Interfaces;
@@ -9,6 +8,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using MassTransit.Initializers;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
+using OnAim.Admin.APP.Services.LeaderBoardServices;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 

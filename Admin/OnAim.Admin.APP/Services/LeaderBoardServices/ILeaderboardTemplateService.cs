@@ -1,7 +1,7 @@
 ﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 
-namespace OnAim.Admin.APP.Services.Abstract;
+namespace OnAim.Admin.APP.Services.LeaderBoardServices;
 
 public interface ILeaderboardTemplateService
 {

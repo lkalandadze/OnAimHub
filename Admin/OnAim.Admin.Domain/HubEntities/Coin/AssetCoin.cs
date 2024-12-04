@@ -7,8 +7,14 @@ public class AssetCoin : Coin
 
     }
 
-    public AssetCoin(string id, string name, string description, string imageUrl, int promotionId)
-        : base(id, name, description, imageUrl, Enum.CoinType.Asset, promotionId)
+    public AssetCoin(string id, string name, string description, string imageUrl, int promotionId, int? templateId = null)
+        : base(id, name, description, imageUrl, Enum.CoinType.Asset)
     {
+        PromotionId = promotionId;
+        FromTemplateId = templateId;
     }
+
+    public int? FromTemplateId { get; private set; }
+    public int PromotionId { get; set; }
+    public Promotion Promotion { get; set; }
 }

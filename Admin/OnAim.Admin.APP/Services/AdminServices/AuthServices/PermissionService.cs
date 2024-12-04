@@ -1,4 +1,4 @@
-﻿using OnAim.Admin.APP.Services.Abstract;
+﻿using OnAim.Admin.APP.Services.AdminServices.Endpoint;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;

@@ -3,7 +3,7 @@ using OnAim.Admin.APP.Feature.UserFeature.Queries.GetUserLogs;
 using OnAim.Admin.Contracts.Dtos.User;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
-namespace OnAim.Admin.APP.Services.Abstract;
+namespace OnAim.Admin.APP.Services.AdminServices.User;
 
 public interface IUserService
 {

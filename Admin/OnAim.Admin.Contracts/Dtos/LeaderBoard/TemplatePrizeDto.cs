@@ -2,7 +2,7 @@
 
 public class TemplatePrizeDto
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
     public int StartRank { get; set; }
     public int EndRank { get; set; }
     public string CoinId { get; set; }

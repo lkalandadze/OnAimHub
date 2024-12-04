@@ -2,7 +2,7 @@
 using OnAim.Admin.Contracts.Dtos.EmailDomain;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
-namespace OnAim.Admin.APP.Services.Abstract;
+namespace OnAim.Admin.APP.Services.AdminServices.Domain;
 
 public interface IDomainService
 {

@@ -2,7 +2,7 @@
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 
-namespace OnAim.Admin.APP.Services.Abstract;
+namespace OnAim.Admin.APP.Services.HubServices.Promotion;
 
 public interface IPromotionViewTemplateService
 {

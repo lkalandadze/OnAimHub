@@ -1,7 +1,7 @@
 ﻿using OnAim.Admin.Contracts.Dtos.EndpointGroup;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
-namespace OnAim.Admin.APP.Services.Abstract;
+namespace OnAim.Admin.APP.Services.AdminServices.EndpointGroup;
 
 public interface IEndpointGroupService
 {

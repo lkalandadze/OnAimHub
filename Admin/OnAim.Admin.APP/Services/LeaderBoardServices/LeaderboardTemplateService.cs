@@ -1,4 +1,4 @@
-﻿using OnAim.Admin.APP.Services.Abstract;
+﻿using OnAim.Admin.APP.Services.LeaderBoardServices;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
@@ -28,7 +28,7 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
 
         foreach (var prize in create.LeaderboardPrizes)
         {
-            leaderboardTemplate.AddLeaderboardTemplatePrizes(prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
+            leaderboardTemplate.AddLeaderboardTemplatePrizes(prize.StartRank, prize.EndRank, prize.CoinId, prize.Amount);
         }
 
         await _leaderboardTemplateRepository.AddLeaderboardTemplateAsync(leaderboardTemplate);
@@ -87,7 +87,7 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
 
         foreach (var prize in update.LeaderboardPrizes)
         {
-            template.UpdateLeaderboardPrizes(prize.Id, prize.StartRank, prize.EndRank, prize.PrizeId, prize.Amount);
+            template.UpdateLeaderboardPrizes(prize.Id, prize.StartRank, prize.EndRank, prize.CoinId, prize.Amount);
         }
 
         await _leaderboardTemplateRepository.UpdateLeaderboardTemplateAsync(update.Id, template);

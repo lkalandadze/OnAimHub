@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using OnAim.Admin.APP.CQRS.Command;
-using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.APP.Services.HubServices.Player;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Commands.UpdatePlayerBan;

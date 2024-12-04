@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.API.Extensions;
 using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.APP.Services.AdminServices.Endpoint;
 
 namespace OnAim.Admin.API.Attributes;
 

@@ -2,10 +2,11 @@
 using MockQueryable;
 using Moq;
 using OnAim.Admin.APP.Feature.UserFeature.Commands.Activate;
-using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.Admin.AuthServices;
 using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.Admin.User;
+using OnAim.Admin.APP.Services.AdminServices.Domain;
+using OnAim.Admin.APP.Services.AdminServices.EmailServices;
 using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities;

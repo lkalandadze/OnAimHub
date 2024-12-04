@@ -1,4 +1,4 @@
-﻿namespace OnAim.Admin.APP.Services.Abstract;
+﻿namespace OnAim.Admin.APP.Services.AdminServices.EmailServices;
 
 public interface IEmailService
 {

@@ -1,7 +1,7 @@
 ﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.APP.CQRS.Command;
-using OnAim.Admin.APP.Services.Abstract;
 using FluentValidation;
+using OnAim.Admin.APP.Services.AdminServices.Role;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Commands.Delete;
 

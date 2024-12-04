@@ -1,7 +1,7 @@
 ﻿using OnAim.Admin.APP.Services.Game;
 using OnAim.Admin.Contracts.Dtos.Game;
 
-namespace OnAim.Admin.APP.Services.Abstract;
+namespace OnAim.Admin.APP.Services.GameServices;
 
 public interface IGameService
 {

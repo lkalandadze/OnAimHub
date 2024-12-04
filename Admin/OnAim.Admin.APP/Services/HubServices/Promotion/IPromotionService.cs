@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Domain;
 using OnAim.Admin.Infrasturcture;
 
-namespace OnAim.Admin.APP.Services.Abstract;
+namespace OnAim.Admin.APP.Services.HubServices.Promotion;
 
 public interface IPromotionService
 {

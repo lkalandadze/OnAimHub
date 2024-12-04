@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 using OnAim.Admin.APP.CQRS.Query;
-using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetById;

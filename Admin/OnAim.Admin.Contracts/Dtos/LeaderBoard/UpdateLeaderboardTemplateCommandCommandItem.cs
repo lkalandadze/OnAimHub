@@ -2,9 +2,9 @@
 
 public class UpdateLeaderboardTemplateCommandCommandItem
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
     public int StartRank { get; set; }
     public int EndRank { get; set; }
-    public string PrizeId { get; set; }
+    public string CoinId { get; set; }
     public int Amount { get; set; }
 }

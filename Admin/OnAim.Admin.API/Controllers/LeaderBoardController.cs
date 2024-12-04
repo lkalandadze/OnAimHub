@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetAllLeaderBoard;
@@ -7,7 +6,7 @@ using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetAllPrizes;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetCalendar;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetLeaderboardRecordById;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetLeaderboardSchedules;
-using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.APP.Services.LeaderBoardServices;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.Helpers;
 
@@ -24,6 +23,14 @@ public class LeaderBoardController : ApiControllerBase
         _leaderboardTemplateService = leaderboardTemplateService;
     }
 
+    [HttpPost(nameof(CreateLeaderBoardRecord))]
+    public async Task<IActionResult> CreateLeaderBoardRecord([FromBody] APP.CreateLeaderboardRecordCommand command)
+    => Ok(await _leaderBoardService.CreateLeaderBoardRecord(command));
+
+    [HttpPut(nameof(UpdateLeaderBoardRecord))]
+    public async Task<IActionResult> UpdateLeaderBoardRecord([FromBody] UpdateLeaderboardRecordCommand command)
+        => Ok(await _leaderBoardService.UpdateLeaderBoardRecord(command));
+
     [HttpGet(nameof(GetAllLeaderBoards))]
     public async Task<IActionResult> GetAllLeaderBoards([FromQuery] LeaderBoardFilter query)
         => Ok(await Mediator.Send(new GetAllLeaderBoardQuery(query)));    
@@ -31,14 +38,6 @@ public class LeaderBoardController : ApiControllerBase
     [HttpGet(nameof(GetLeaderboardRecordById))]
     public async Task<IActionResult> GetLeaderboardRecordById([FromQuery] int id)
         => Ok(await Mediator.Send(new GetLeaderboardRecordByIdQuery(id)));
-
-    [HttpPost(nameof(CreateLeaderBoardRecord))]
-    public async Task<IActionResult> CreateLeaderBoardRecord([FromBody] APP.CreateLeaderboardRecordCommand command)
-        => Ok(await _leaderBoardService.CreateLeaderBoardRecord(command));
-
-    [HttpPut(nameof(UpdateLeaderBoardRecord))]
-    public async Task<IActionResult> UpdateLeaderBoardRecord([FromBody] UpdateLeaderboardRecordCommand command)
-        => Ok(await _leaderBoardService.UpdateLeaderBoardRecord(command));
 
     [HttpPost(nameof(CreateLeaderboardSchedule))]
     public async Task<IActionResult> CreateLeaderboardSchedule([FromBody] APP.CreateLeaderboardScheduleCommand command)
@@ -65,13 +64,22 @@ public class LeaderBoardController : ApiControllerBase
     
     [HttpGet(nameof(GetCalendar))]
     public async Task<IActionResult> GetCalendar([FromQuery] GetCalendarQuery getCalendar)
-        => Ok(await _leaderBoardService.GetCalendar(getCalendar.StartDate, getCalendar.EndDate));  
-    
+        => Ok(await _leaderBoardService.GetCalendar(getCalendar.StartDate, getCalendar.EndDate));
 
-    ///Template
+
+    ///Template <summary>
+
+    [HttpPost(nameof(CreateTemplate))]
+    public async Task<IActionResult> CreateTemplate([FromBody] CreateLeaderboardTemplateDto command)
+        => Ok(await _leaderboardTemplateService.CreateLeaderboardTemplate(command));
+
+    [HttpPut(nameof(UpdateTemplate))]
+    public async Task<IActionResult> UpdateTemplate([FromBody] UpdateLeaderboardTemplateDto command)
+        => Ok(await _leaderboardTemplateService.UpdateCoinTemplate(command));
+
     [HttpGet(nameof(GetAllTemplates))]
     public async Task<IActionResult> GetAllTemplates()
-    => Ok(await _leaderboardTemplateService.GetAllLeaderboardTemplate());
+        => Ok(await _leaderboardTemplateService.GetAllLeaderboardTemplate());
 
     [HttpGet(nameof(GetLeaderboardTemplateById))]
     public async Task<IActionResult> GetLeaderboardTemplateById([FromQuery] string id)
@@ -79,12 +87,4 @@ public class LeaderBoardController : ApiControllerBase
         await _leaderboardTemplateService.GetById(id);
         return Ok();
     }
-
-    [HttpPost(nameof(CreateTemplate))]
-    public async Task<IActionResult> CreateTemplate([FromBody] CreateLeaderboardTemplateDto command)
-    => Ok(await _leaderboardTemplateService.CreateLeaderboardTemplate(command));
-
-    [HttpPut(nameof(UpdateTemplate))]
-    public async Task<IActionResult> UpdateTemplate([FromBody] UpdateLeaderboardTemplateDto command)
-        => Ok(await _leaderboardTemplateService.UpdateCoinTemplate(command));
 }

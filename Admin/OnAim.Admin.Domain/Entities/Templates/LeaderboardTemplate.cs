@@ -47,11 +47,11 @@ public class LeaderboardTemplate
         LeaderboardTemplatePrizes.Add(prize);
     }
 
-    public void UpdateLeaderboardPrizes(int? id, int startRank, int endRank, string coinId, int amount)
+    public void UpdateLeaderboardPrizes(string? id, int startRank, int endRank, string coinId, int amount)
     {
-        if (id.HasValue)
+        if (id != null)
         {
-            var existingPrize = LeaderboardTemplatePrizes.FirstOrDefault(x => x.Id == id.Value);
+            var existingPrize = LeaderboardTemplatePrizes.FirstOrDefault(x => x.Id == id);
             if (existingPrize != null)
             {
                 existingPrize.Update(startRank, endRank, coinId, amount);

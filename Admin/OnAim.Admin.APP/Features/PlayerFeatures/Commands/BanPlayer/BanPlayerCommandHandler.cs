@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Features.PlayerFeatures.Commands.BanPlayer;
-using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.APP.Services.HubServices.Player;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 public class BanPlayerCommandHandler : ICommandHandler<BanPlayerCommand, ApplicationResult>

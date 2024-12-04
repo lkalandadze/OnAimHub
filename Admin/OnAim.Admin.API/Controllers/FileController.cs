@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
-using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.APP.Services.FileServices;
 
 namespace OnAim.Admin.API.Controllers;

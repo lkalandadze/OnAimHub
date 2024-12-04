@@ -11,7 +11,14 @@ public class InCoin : Coin
         string name,
         string description,
         string imageUrl,
-        int promotionId) : base(id, name, description, imageUrl, Enum.CoinType.In, promotionId)
+        int promotionId,
+        int? templateId = null) : base(id, name, description, imageUrl, Enum.CoinType.In)
     {
+        PromotionId = promotionId;
+        FromTemplateId = templateId;
     }
+
+    public int? FromTemplateId { get; private set; }
+    public int PromotionId { get; set; }
+    public Promotion Promotion { get; set; }
 }

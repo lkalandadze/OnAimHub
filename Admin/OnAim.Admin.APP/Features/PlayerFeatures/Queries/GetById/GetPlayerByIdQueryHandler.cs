@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.APP.CQRS.Query;
-using OnAim.Admin.APP.Services.Abstract;
+using OnAim.Admin.APP.Services.HubServices.Player;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetById;
 

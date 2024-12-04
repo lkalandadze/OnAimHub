@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Services.Abstract;
 using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
@@ -8,6 +7,7 @@ using OnAim.Admin.Contracts.Dtos.EmailDomain;
 using OnAim.Admin.Contracts.Enums;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
+using OnAim.Admin.APP.Services.AdminServices.Domain;
 
 namespace OnAim.Admin.APP.Services.Admin.Domain;
 
