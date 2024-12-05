@@ -13,13 +13,20 @@ public class PlayerBalance : BaseEntity<int>
     {
         
     }
-
+    //Player balances need to be reconfigured. added nullable promotionId so it can work
     public PlayerBalance(decimal amount, int playerId, string coinId, int? promotionId)
     {
         Amount = amount;
         PlayerId = playerId;
         CoinId = coinId;
-        PromotionId = promotionId.Value;
+        if (promotionId.HasValue)
+        {
+            PromotionId = promotionId.Value;
+        }
+        else
+        {
+            PromotionId = 1;
+        }
     }
 
     public decimal Amount { get; private set; }

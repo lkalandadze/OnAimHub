@@ -59,14 +59,15 @@ public sealed class ReceiveLeaderboardRewardAggregationConsumer : IConsumer<Rece
                 await _playerBalanceRepository.InsertAsync(playerBalance);
             }
 
-            await _transactionService.CreateTransactionAndApplyBalanceAsync(
-                reward.PlayerId,
+            await _transactionService.CreateLeaderboardTransactionAndApplyBalanceAsync(
+                null,
                 reward.CoinId,
                 reward.TotalAmount,
                 AccountType.Casino,
                 AccountType.Player,
                 TransactionType.Reward,
-                null);
+                null,
+                reward.PlayerId);
         }
 
         await _unitOfWork.SaveAsync();
