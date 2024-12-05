@@ -19,4 +19,6 @@ public interface IGameConfigurationService
     Task ActivateAsync(int id);
 
     Task DeactivateAsync(int id);
+
+    Task DeleteAsync(int id);
 }

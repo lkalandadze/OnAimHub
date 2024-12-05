@@ -24,8 +24,51 @@ var c = host.Services.CreateScope().ServiceProvider.GetRequiredService<WheelConf
 //c.SaveChanges();
 
 //Create New Configuration
-//var newConfigJson = "{ \"Name\": \"Hardcoded Wheel Configuration\", \"Value\": 1000, \"IsActive\": true, \"Rounds\": [ { \"Name\": \"Hardcoded Round 1\", \"Sequence\": [1, 2, 3], \"Prizes\": [ { \"Name\": \"Prize A\", \"Value\": 100, \"Probability\": 50, \"PrizeTypeId\": 1, \"WheelIndex\": 0 }, { \"Name\": \"Prize B\", \"Value\": 200, \"Probability\": 30, \"PrizeTypeId\": 2, \"WheelIndex\": 1 } ] }, { \"Name\": \"Hardcoded Round 2\", \"Sequence\": [1, 2, 3], \"Prizes\": [ { \"Name\": \"Prize C\", \"Value\": 150, \"Probability\": 40, \"PrizeTypeId\": 1, \"WheelIndex\": 2 }, { \"Name\": \"Prize D\", \"Value\": 250, \"Probability\": 20, \"PrizeTypeId\": 3, \"WheelIndex\": 3 } ] } ], \"Prices\": [ { \"Id\": \"Price1\", \"Value\": 200.50, \"Multiplier\": 1.5, \"CurrencyId\": \"OnAimCoin\" }, { \"Id\": \"Price2\", \"Value\": 350.75, \"Multiplier\": 2.0, \"CurrencyId\": \"OnAimCoin\" } ] }";
+//var prizeType = new PrizeType("Prize Type 2", true, "OnAimCoin");
+
+//var newConfig = new WheelConfiguration()
+//{
+//    Name = "Wheel Configuration 1",
+//    Value = 1000,
+//    Prices = new List<Price>
+//    {
+//        new Price() { Id = Random.Shared.Next(1, 1000).ToString(), Value = 1, Multiplier = 10, CurrencyId = "OnAimCoin" },
+//    },
+//    Rounds = new List<Round>
+//    {
+//        new Round()
+//        {
+//            Name = "Round 1",
+//            NextPrizeIndex = 1,
+//            Sequence = [ 1, 2, 3, 4, 5 ],
+//            Prizes = new List<WheelPrize>
+//            {
+//                new WheelPrize() { Name = "Prize A", PrizeType = prizeType, Value = 1, Probability = 10, WheelIndex= 1 },
+//                new WheelPrize() { Name = "Prize B", PrizeType = prizeType, Probability = 20, WheelIndex= 2 },
+//                new WheelPrize() { Name = "Prize C", PrizeType = prizeType, Probability = 30, WheelIndex= 3 },
+//            }
+//        },
+//        new Round()
+//        {
+//            Name = "Round 2",
+//            NextPrizeIndex = 2,
+//            Sequence = [ 21, 22, 23 ],
+//            Prizes = new List<WheelPrize>
+//            {
+//                new WheelPrize() { Name = "Prize D", PrizeType = prizeType, Value = 21, Probability = 210, WheelIndex= 21 },
+//                new WheelPrize() { Name = "Prize F", PrizeType = prizeType, Value = 22, Probability = 220, WheelIndex= 22 },
+//                new WheelPrize() { Name = "Prize G", PrizeType = prizeType, Value = 23, Probability = 230, WheelIndex= 23 },
+//            }
+//        },
+//    },
+//    IsActive = true,
+//    CorrelationId = Guid.NewGuid(),
+//    FromTemplateId = 999,
+//};
+
+//string newConfigJson = JsonConvert.SerializeObject(newConfig);
 //await host.Services.ExecuteAsync<IGameConfigurationService>(async x => await x.CreateAsync(newConfigJson));
+
 //c.SaveChanges();
 
 //Get Configuration
@@ -91,7 +134,7 @@ static void CreateDatabaseIfNotExists()
     optionsBuilder.UseNpgsql(connectionString);
 
     var dbContext = new WheelConfigDbContext(optionsBuilder.Options);
-    dbContext.Database.Migrate();
+    dbContext.Database.EnsureCreated();
 
     _ = new DbInitializer(dbContext);
 }

@@ -8,6 +8,8 @@ public interface IGameConfigurationRepository : IBaseRepository<GameConfiguratio
 
     Task UpdateConfigurationTreeAsync(GameConfiguration updatedEntity);
 
+    void DeleteConfigurationTree(GameConfiguration aggregateRoot);
+
     //[Obsolete("This method is obsolete and should not be used. Please use InsertConfigurationTree(GameConfiguration aggregateRoot) instead.", true)]
     //new Task InsertAsync(GameConfiguration aggregateRoot);
 
