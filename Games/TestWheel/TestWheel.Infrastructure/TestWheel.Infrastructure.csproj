@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BuildingBlocks\Shared.Lib\Shared.Lib.csproj" />
-    <ProjectReference Include="..\Games\GameLib\GameLib.Infrastructure\GameLib.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Shared.Lib\Shared.Lib.csproj" />
+    <ProjectReference Include="..\..\GameLib\GameLib.Infrastructure\GameLib.Infrastructure.csproj" />
     <ProjectReference Include="..\TestWheel.Domain\TestWheel.Domain.csproj" />
   </ItemGroup>
 

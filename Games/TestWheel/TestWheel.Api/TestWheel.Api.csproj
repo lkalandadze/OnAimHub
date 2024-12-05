@@ -12,10 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\TestWheel.Application\TestWheel.Application.csproj" />
-    <ProjectReference Include="..\..\..\TestWheel.Domain\TestWheel.Domain.csproj" />
-    <ProjectReference Include="..\..\..\TestWheel.Infrastructure\TestWheel.Infrastructure.csproj" />
     <ProjectReference Include="..\..\GameLib\GameLib.ServiceRegistry\GameLib.ServiceRegistry.csproj" />
+    <ProjectReference Include="..\TestWheel.Application\TestWheel.Application.csproj" />
+    <ProjectReference Include="..\TestWheel.Domain\TestWheel.Domain.csproj" />
+    <ProjectReference Include="..\TestWheel.Infrastructure\TestWheel.Infrastructure.csproj" />
   </ItemGroup>
-
+	
 </Project>
