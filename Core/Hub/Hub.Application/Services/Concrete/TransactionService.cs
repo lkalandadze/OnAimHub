@@ -26,12 +26,12 @@ public class TransactionService : ITransactionService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<TransactionResponseModel> CreateTransactionAndApplyBalanceAsync(int? gameId, string currencyId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType)
+    public async Task<TransactionResponseModel> CreateTransactionAndApplyBalanceAsync(int? gameId, string currencyId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType, int? promotionId)
     {
         var playerId = _authService.GetCurrentPlayerId();
 
         // check and apply player balances
-        await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, currencyId, fromAccount, toAccount, amount);
+        await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, currencyId, fromAccount, toAccount, amount, promotionId);
 
         var player = await _playerRepository.OfIdAsync(playerId);
 

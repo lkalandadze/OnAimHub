@@ -35,7 +35,7 @@ public class PlayerProgressService : IPlayerProgressService
                 var newProgress = new PlayerProgress(progress.Value, playerId, progress.Key);
 
                 await _playerProgressRepository.InsertAsync(newProgress);
-                await _transactionService.CreateTransactionAndApplyBalanceAsync(null, progress.Key, progress.Value, AccountType.Casino, AccountType.Player, TransactionType.Progress);
+                await _transactionService.CreateTransactionAndApplyBalanceAsync(null, progress.Key, progress.Value, AccountType.Casino, AccountType.Player, TransactionType.Progress, null /* PromotionId */);
             }
             else
             {
@@ -46,7 +46,7 @@ public class PlayerProgressService : IPlayerProgressService
 
                 if (newProgress > 0)
                 {
-                    await _transactionService.CreateTransactionAndApplyBalanceAsync(null, progress.Key, newProgress, AccountType.Casino, AccountType.Player, TransactionType.Progress);
+                    await _transactionService.CreateTransactionAndApplyBalanceAsync(null, progress.Key, newProgress, AccountType.Casino, AccountType.Player, TransactionType.Progress, null /* PromotionId */);
                 }
             }
         }

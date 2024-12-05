@@ -5,9 +5,9 @@ namespace Hub.Application.Services.Abstract;
 
 public interface IPlayerBalanceService
 {
-    Task<PlayerBalance> GetOrCreatePlayerBalanceAsync(int playerId, string currencyId);
+    Task<PlayerBalance> GetOrCreatePlayerBalanceAsync(int playerId, string currencyId, int? promotionId);
 
-    Task ApplyPlayerBalanceOperationAsync(int playerId, string currencyId, AccountType fromAccount, AccountType toAccount, decimal amount);
+    Task ApplyPlayerBalanceOperationAsync(int playerId, string currencyId, AccountType fromAccount, AccountType toAccount, decimal amount, int? promotionId);
 
     Task ResetBalancesByCurrencyIdAsync(string currencyId);
 }
