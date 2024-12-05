@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Shared.Infrastructure.Bus;
 using StackExchange.Redis;
 
 namespace Leaderboard.Infrastructure;
@@ -36,6 +37,7 @@ public static class ServiceRegistration
         services.AddScoped<ILeaderboardRecordRepository, LeaderboardRecordRepository>();
         services.AddScoped<ILeaderboardProgressRepository, LeaderboardProgressRepository>();
         services.AddScoped<ILeaderboardResultRepository, LeaderboardResultRepository>();
+        services.AddScoped<IMessageBus, MessageBus>();
         return services;
     }
 }
