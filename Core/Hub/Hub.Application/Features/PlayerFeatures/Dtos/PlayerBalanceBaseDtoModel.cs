@@ -6,7 +6,7 @@ public class PlayerBalanceBaseDtoModel
 {
     public int Id { get; set; }
     public decimal Amount { get; set; }
-    public string CurrencyId { get; set; }
+    public string CoinId { get; set; }
 
     public static PlayerBalanceBaseDtoModel MapFrom(PlayerBalance balance)
     {
@@ -14,7 +14,7 @@ public class PlayerBalanceBaseDtoModel
         {
             Id = balance.Id,
             Amount = balance.Amount,
-            CurrencyId = balance.CurrencyId,
+            CoinId = balance.CoinId,
         };
     }
 }

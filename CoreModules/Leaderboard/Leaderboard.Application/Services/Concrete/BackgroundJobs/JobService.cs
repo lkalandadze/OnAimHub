@@ -4,6 +4,8 @@ using Leaderboard.Domain.Entities;
 using Leaderboard.Domain.Enum;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Shared.Infrastructure.Bus;
+using Shared.IntegrationEvents.IntegrationEvents.Reward.Leaderboard;
 
 namespace Leaderboard.Application.Services.Concrete.BackgroundJobs;
 
@@ -14,17 +16,20 @@ public class JobService : IJobService
     private readonly ILeaderboardResultRepository _leaderboardResultRepository;
     private readonly ILeaderboardScheduleRepository _leaderboardScheduleRepository;
     private readonly IMediator _mediator;
+    private readonly IMessageBus _messageBus;
     public JobService(ILeaderboardRecordRepository leaderboardRecordRepository,
                      ILeaderboardProgressRepository leaderboardProgressRepository,
                      ILeaderboardResultRepository leaderboardResultRepository,
                      ILeaderboardScheduleRepository leaderboardScheduleRepository,
-                     IMediator mediator)
+                     IMediator mediator,
+                     IMessageBus messageBus)
     {
         _leaderboardRecordRepository = leaderboardRecordRepository;
         _leaderboardProgressRepository = leaderboardProgressRepository;
         _leaderboardResultRepository = leaderboardResultRepository;
         _leaderboardScheduleRepository = leaderboardScheduleRepository;
         _mediator = mediator;
+        _messageBus = messageBus;
     }
 
     public async Task<List<LeaderboardRecord>> GetAllJobsAsync()
@@ -178,8 +183,8 @@ public class JobService : IJobService
 
     public async Task ProcessLeaderboardResults(int leaderboardRecordId)
     {
-        // Fetch the leaderboard record from the database
         var leaderboardRecord = await _leaderboardRecordRepository.Query()
+            .Include(x => x.LeaderboardRecordPrizes)
             .FirstOrDefaultAsync(x => x.Id == leaderboardRecordId);
 
         if (leaderboardRecord == null || leaderboardRecord.Status != LeaderboardRecordStatus.Finished)
@@ -187,7 +192,6 @@ public class JobService : IJobService
             throw new Exception($"Leaderboard record with ID {leaderboardRecordId} is not finished.");
         }
 
-        // Fetch all progress from Redis
         var leaderboardProgress = await _leaderboardProgressRepository.GetAllProgressAsync(leaderboardRecordId, CancellationToken.None);
 
         if (!leaderboardProgress.Any())
@@ -199,9 +203,25 @@ public class JobService : IJobService
             .OrderByDescending(x => x.Amount)
             .ToList();
 
+        var rewardDetails = new List<RewardDetail>();
         int placement = 1;
+
         foreach (var progress in sortedProgress)
         {
+            // Find the prize for the current placement
+            var prize = leaderboardRecord.LeaderboardRecordPrizes
+                .FirstOrDefault(p => placement >= p.StartRank && placement <= p.EndRank);
+
+            if (prize != null)
+            {
+                rewardDetails.Add(new RewardDetail(
+                    progress.PlayerId,
+                    prize.CoinId,
+                    prize.Amount,
+                    leaderboardRecord.PromotionId
+                ));
+            }
+
             var leaderboardResult = new LeaderboardResult(
                 leaderboardRecordId,
                 progress.PlayerId,
@@ -215,7 +235,13 @@ public class JobService : IJobService
 
         await _leaderboardResultRepository.SaveChangesAsync();
 
+        // Clear the leaderboard progress from Redis
         await _leaderboardProgressRepository.ClearLeaderboardProgressAsync(leaderboardRecordId, CancellationToken.None);
+
+        // Publish the event to RabbitMQ
+        var @events = new ReceiveLeaderboardRewardEvent(Guid.NewGuid(), rewardDetails, DateTime.UtcNow);
+
+        await _messageBus.Publish(@events);
     }
 
     private DateTimeOffset CalculateNextStartDate(DateTimeOffset startDate, LeaderboardRecord record, LeaderboardSchedule schedule)

@@ -1,6 +1,8 @@
 ﻿using Leaderboard.Application.Features.LeaderboardProgressFeatures.Commands.Upsert;
 using Leaderboard.Application.Features.LeaderboardProgressFeatures.Queries.Get;
 using Leaderboard.Application.Features.LeaderboardProgressFeatures.Queries.GetForUser;
+using Leaderboard.Application.Features.LeaderboardRecordFeatures.Queries.GetCalendar;
+using Leaderboard.Application.Features.LeaderboardScheduleFeatures.Commands.Test;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,4 +21,7 @@ public class LeaderboardProgressController : BaseApiController
 
     [HttpGet(nameof(GetLeaderboardProgressForUser))]
     public async Task<ActionResult<GetLeaderboardProgressForUserQueryResponse>> GetLeaderboardProgressForUser([FromQuery] GetLeaderboardProgressForUserQuery request) => await Mediator.Send(request);
+
+    [HttpPost(nameof(FiniishLeaderboard))]
+    public async Task FiniishLeaderboard([FromQuery] FinishLeaderboardCommand request) => await Mediator.Send(request);
 }
