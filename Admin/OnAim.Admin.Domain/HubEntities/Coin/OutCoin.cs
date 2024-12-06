@@ -8,15 +8,12 @@ public class OutCoin : Coin
     }
 
     public OutCoin(string id, string name, string description, string imageUrl, int promotionId, int? templateId = null, IEnumerable<WithdrawOption> withdrawOptions = null, IEnumerable<WithdrawOptionGroup> withdrawOptionGroups = null)
-        : base(id, name, description, imageUrl, Domain.HubEntities.Enum.CoinType.Out)
+        : base(id, name, description, imageUrl, Domain.HubEntities.Enum.CoinType.Out, promotionId, templateId)
     {
         WithdrawOptions = withdrawOptions?.ToList() ?? [];
         WithdrawOptionGroups = withdrawOptionGroups?.ToList() ?? [];
-        FromTemplateId = templateId;
-        PromotionId = promotionId;
     }
-    public int? FromTemplateId { get; private set; }
-    public int PromotionId { get; set; }
+
     public ICollection<WithdrawOption> WithdrawOptions { get; private set; }
     public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; private set; }
 

@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
-using OnAim.Admin.Domain.HubEntities.Coin;
 
 namespace OnAim.Admin.Domain.Entities.Templates;
 
@@ -14,9 +13,11 @@ public class PromotionTemplate
     public DateTime StartDate { get;  set; }
     public DateTime EndDate { get;  set; }
     public IEnumerable<string> SegmentIds { get;  set; }
-    public ICollection<Coin> Coins { get;  set; }
+    public ICollection<CoinTemplate>? Coins { get; set; } = new List<CoinTemplate>();
+    public ICollection<LeaderboardTemplate>? Leaderboards { get; set; } = new List<LeaderboardTemplate>();
+    public ICollection<GameConfigurationTemplate> Games { get; set; } = new List<GameConfigurationTemplate>();
 
-    public void SetCoins(IEnumerable<Coin> coins)
+    public void UpdateCoins(IEnumerable<CoinTemplate> coins)
     {
         if (coins != null)
         {
@@ -29,13 +30,24 @@ public class PromotionTemplate
         }
     }
 
-    public void AddCoins(IEnumerable<Coin> coins)
+    public void AddCoins(IEnumerable<CoinTemplate> coins)
     {
         foreach (var coin in coins)
         {
             if (!Coins.Contains(coin))
             {
                 Coins.Add(coin);
+            }
+        }
+    }
+
+    public void AddLeaderboard(IEnumerable<LeaderboardTemplate> leaderboards)
+    {
+        foreach (var item in leaderboards)
+        {
+            if (!Leaderboards.Contains(item))
+            {
+                Leaderboards.Add(item);
             }
         }
     }

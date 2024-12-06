@@ -49,6 +49,9 @@
     <OpenApiReference Include="OpenAPIs\swagger1.json" CodeGenerator="NSwagCSharp" Options="HubService" ClassName="HubService">
       <SourceUri>https://localhost:7069/swagger/admin/swagger.json</SourceUri>
     </OpenApiReference>
+    <OpenApiReference Include="OpenAPIs\swagger2.json" CodeGenerator="NSwagCSharp" Options="WheelService" ClassName="WheelService">
+      <SourceUri>https://localhost:7217/swagger/admin/swagger.json</SourceUri>
+    </OpenApiReference>
   </ItemGroup>
 
 </Project>

@@ -33,9 +33,8 @@ public class PromotionService : IPromotionService
     {
         var promotions = _promotionRepository.Query(x =>
                          string.IsNullOrEmpty(filter.Name) || EF.Functions.Like(x.Title, $"{filter.Name}%"))
-             //.Include(x => x.Coins)
-             //.ThenInclude(x => x.WithdrawOptions)
-             .AsNoTracking();
+            .Include(x => x.Coins)
+            .AsNoTracking();
 
         var promList = promotions.ToList();
 

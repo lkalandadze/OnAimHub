@@ -16,7 +16,7 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
         _leaderboardTemplateRepository = leaderboardTemplateRepository;
     }
 
-    public async Task<ApplicationResult> CreateLeaderboardTemplate(CreateLeaderboardTemplateDto create)
+    public async Task<LeaderboardTemplate> CreateLeaderboardTemplate(CreateLeaderboardTemplateDto create)
     {
         var leaderboardTemplate = new LeaderboardTemplate(
             create.Title, 
@@ -33,7 +33,7 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
 
         await _leaderboardTemplateRepository.AddLeaderboardTemplateAsync(leaderboardTemplate);
 
-        return new ApplicationResult { Success = true };
+        return leaderboardTemplate;
     }
 
     public async Task<ApplicationResult> GetAllLeaderboardTemplate()

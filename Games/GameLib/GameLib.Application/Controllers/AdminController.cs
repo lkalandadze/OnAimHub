@@ -73,7 +73,7 @@ public class AdminController : BaseApiController
     public async Task<ActionResult> CreateConfiguration(ConfigurationCreateModel model)
     {
         await _configurationService.CreateAsync(model.ConfigurationJson);
-        return StatusCode(201);
+        return StatusCode(200);
     }
 
     [HttpPut(nameof(UpdateConfiguration))]

@@ -1,10 +1,11 @@
-﻿using OnAim.Admin.APP.Services.HubServices.Coin;
+﻿using OnAim.Admin.APP.Services.GameServices;
+using OnAim.Admin.APP.Services.HubServices.Coin;
+using OnAim.Admin.APP.Services.LeaderBoardServices;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Coin;
+using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
-using OnAim.Admin.Domain.HubEntities.Coin;
-using OnAim.Admin.Domain.HubEntities.Models;
 using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
 
 namespace OnAim.Admin.APP.Services.HubServices.Promotion;
@@ -13,13 +14,22 @@ public class PromotionTemplateService : IPromotionTemplateService
 {
     private readonly IPromotionTemplateRepository _promotionTemplateRepository;
     private readonly ICoinService _coinService;
+    private readonly ICoinTemplateService _coinTemplateService;
+    private readonly ILeaderboardTemplateService _leaderboardTemplateService;
+    private readonly IGameTemplateService _gameTemplateService;
 
     public PromotionTemplateService(IPromotionTemplateRepository promotionTemplateRepository,
-        ICoinService coinService
+        ICoinService coinService,
+        ICoinTemplateService coinTemplateService,
+        ILeaderboardTemplateService leaderboardTemplateService,
+        IGameTemplateService gameTemplateService
         )
     {
         _promotionTemplateRepository = promotionTemplateRepository;
         _coinService = coinService;
+        _coinTemplateService = coinTemplateService;
+        _leaderboardTemplateService = leaderboardTemplateService;
+        _gameTemplateService = gameTemplateService;
     }
 
     public async Task<ApplicationResult> GetAllTemplates()
@@ -48,29 +58,29 @@ public class PromotionTemplateService : IPromotionTemplateService
             SegmentIds = template.SegmentIds,
         };
 
-        var mappedCoins = template.Coins
-            .Select(coin => CreateCoinModel.ConvertToEntity(coin, template.PromotionId))
-                                       .ToList();
-
-        if (template.Coins.FirstOrDefault(c => c.CoinType == Domain.HubEntities.Enum.CoinType.Out) is Domain.HubEntities.Models.CreateOutCoinModel outCoinModel)
+        var coinTemplates = new List<CoinTemplate>();
+        foreach (var item in template.Coins)
         {
-            var withdrawOptions = await _coinService.GetWithdrawOptions(outCoinModel);
-            var withdrawOptionGroups = await _coinService.GetWithdrawOptionGroups(outCoinModel);
-
-            var outCoin = mappedCoins.OfType<OutCoin>()
-                                     .FirstOrDefault(c => c.CoinType == Domain.HubEntities.Enum.CoinType.Out);
-
-            if (outCoin != null)
-            {
-                if (withdrawOptions.Any())
-                    outCoin.AddWithdrawOptions(withdrawOptions);
-
-                if (withdrawOptionGroups.Any())
-                    outCoin.AddWithdrawOptionGroups(withdrawOptionGroups);
-            }
+            var coinTemplate = await _coinTemplateService.CreateCoinTemplate(item);
+            coinTemplates.Add(coinTemplate);
+            temp.UpdateCoins(coinTemplates);
+        }  
+        
+        var leaderboards = new List<LeaderboardTemplate>();
+        foreach(var leaderboard in template.Leaderboards)
+        {
+            var leadTemp = await _leaderboardTemplateService.CreateLeaderboardTemplate(leaderboard);
+            leaderboards.Add(leadTemp);
+            temp.Leaderboards = leaderboards;
         }
 
-        temp.SetCoins(mappedCoins);
+        var games = new List<GameConfigurationTemplate>();
+        foreach (var item in template.Games)
+        {
+            var conf = await _gameTemplateService.CreateGameConfigurationTemplate(item);
+            games.Add(conf);
+            temp.Games = games;
+        }
 
         await _promotionTemplateRepository.AddPromotionTemplateAsync(temp);
 
@@ -111,6 +121,8 @@ public record CreatePromotionTemplate(
     DateTime StartDate,
     DateTime EndDate,
     string Description,
-    int PromotionId,
     IEnumerable<string> SegmentIds,
-    IEnumerable<CreateCoinModel> Coins);
+    IEnumerable<CreateCoinTemplateDto>? Coins,
+    IEnumerable<CreateLeaderboardTemplateDto>? Leaderboards,
+    IEnumerable<CreateGameConfigurationTemplateDto> Games
+    );

@@ -28,6 +28,7 @@ public abstract class MongoDbContext
     public IMongoCollection<PromotionTemplate> PromotionTemplates { get; }
     public IMongoCollection<LeaderboardTemplate> LeaderboardTemplates { get; }
     public IMongoCollection<LeaderboardTemplatePrize> LeaderboardTemplatePrizes { get; }
+    public IMongoCollection<GameConfigurationTemplate> GameConfigurationTemplates { get; }
     public IMongoCollection<TEntity> GetCollection<TEntity>(string name = "")
     {
         if (string.IsNullOrEmpty(name))

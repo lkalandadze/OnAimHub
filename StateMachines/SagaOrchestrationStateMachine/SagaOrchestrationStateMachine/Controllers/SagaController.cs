@@ -13,21 +13,21 @@ public class SagaController : ControllerBase
     private readonly ILogger<SagaController> _logger;
     private readonly LeaderBoardService _leaderboardService;
     private readonly HubService _hubService;
-    //private readonly WheelService _wheelService;
+    private readonly WheelService _wheelService;
     private readonly AsyncRetryPolicy<HttpResponseMessage> _retryPolicy;
     public SagaController(
         HttpClient httpClient, 
         ILogger<SagaController> logger, 
         LeaderBoardService leaderboardService,
-        HubService hubService
-        //WheelService wheelService
+        HubService hubService,
+        WheelService wheelService
         )
     {
         _httpClient = httpClient;
         _logger = logger;
         _leaderboardService = leaderboardService;
         _hubService = hubService;
-        //_wheelService = wheelService;
+        _wheelService = wheelService;
         _retryPolicy = Policy
                    .Handle<HttpRequestException>()
                    .OrResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
@@ -87,19 +87,19 @@ public class SagaController : ControllerBase
                 }
             }
 
-            //if (request.GameConfiguration.ConfigurationJson != null)
-            //{
-            //    try
-            //    {
-            //        var gameResponse = await CreateGameConfiguration(request.GameConfiguration);
-            //        _logger.LogInformation("Configuration created successfully: {ConfigId}", gameResponse);
-            //    }
-            //    catch
-            //    {
-            //        await CompensateAsync(correlationId);
-            //        throw;
-            //    }
-            //}
+            if (request.GameConfiguration.ConfigurationJson != null)
+            {
+                try
+                {
+                    var gameResponse = await CreateGameConfiguration(request.GameConfiguration);
+                    _logger.LogInformation("Configuration created successfully: {ConfigId}", gameResponse);
+                }
+                catch
+                {
+                    await CompensateAsync(correlationId);
+                    throw;
+                }
+            }
 
             _logger.LogInformation("Saga completed successfully.");
         }
@@ -136,18 +136,20 @@ public class SagaController : ControllerBase
             throw new Exception(ex.Message, ex);
         }
     }
-    //private async Task<IActionResult> CreateGameConfiguration(ConfigurationCreateModel model)
-    //{
-    //    try
-    //    {
-    //        await _wheelService.CreateConfigurationAsync(model);
-    //        return Ok();
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new Exception(ex.Message, ex);
-    //    }
-    //}
+
+    private async Task<IActionResult> CreateGameConfiguration(ConfigurationCreateModel model)
+    {
+        try
+        {
+            await _wheelService.CreateConfigurationAsync(model);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
     private async Task CompensateAsync(Guid request)
     {
         try

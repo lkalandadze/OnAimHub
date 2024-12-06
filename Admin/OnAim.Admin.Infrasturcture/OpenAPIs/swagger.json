@@ -50,6 +50,16 @@
         "type": "integer",
         "format": "int32"
       },
+      "ConfigurationCreateModel": {
+        "type": "object",
+        "properties": {
+          "configurationJson": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateAssetCoinModel": {
         "type": "object",
         "properties": {
@@ -107,11 +117,6 @@
           },
           "coinType": {
             "$ref": "#/components/schemas/CoinType"
-          },
-          "templateId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -289,10 +294,19 @@
             "format": "int32",
             "nullable": true
           },
-          "withdrawOptions": {
+          "withdrawOptionIds": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CreateWithdrawOptionModel"
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "withdrawOptionGroupIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
             },
             "nullable": true
           }
@@ -351,46 +365,12 @@
               "$ref": "#/components/schemas/CreateLeaderboardRecordCommand"
             },
             "nullable": true
+          },
+          "gameConfiguration": {
+            "$ref": "#/components/schemas/ConfigurationCreateModel"
           }
         },
         "additionalProperties": false
-      },
-      "CreateWithdrawOptionModel": {
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "imageUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "endpoint": {
-            "type": "string",
-            "nullable": true
-          },
-          "contentType": {
-            "$ref": "#/components/schemas/EndpointContentType"
-          },
-          "endpointContent": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "EndpointContentType": {
-        "enum": [
-          0,
-          1
-        ],
-        "type": "integer",
-        "format": "int32"
       },
       "EventType": {
         "enum": [

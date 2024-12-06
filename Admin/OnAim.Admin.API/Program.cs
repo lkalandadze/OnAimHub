@@ -37,7 +37,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-    options.JsonSerializerOptions.Converters.Add(new PromotionCoinModelJsonConverter());
+    options.JsonSerializerOptions.Converters.Add(new CoinModelJsonConverter());
 });
 builder.Services.AddSwaggerGen(c =>
 {

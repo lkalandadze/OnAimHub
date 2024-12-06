@@ -17,6 +17,7 @@ public class AuditLogDbContext : MongoDbContext
         PromotionTemplates = GetCollection<PromotionTemplate>();
         LeaderboardTemplates = GetCollection<LeaderboardTemplate>();
         LeaderboardTemplatePrizes = GetCollection<LeaderboardTemplatePrize>();
+        GameConfigurationTemplates = GetCollection<GameConfigurationTemplate>();
     }
 
     public IMongoCollection<AuditLog> AuditLogs { get; }
@@ -27,4 +28,5 @@ public class AuditLogDbContext : MongoDbContext
     public IMongoCollection<PromotionTemplate> PromotionTemplates { get; }
     public IMongoCollection<LeaderboardTemplate> LeaderboardTemplates { get; }
     public IMongoCollection<LeaderboardTemplatePrize> LeaderboardTemplatePrizes { get; }
+    public IMongoCollection<GameConfigurationTemplate> GameConfigurationTemplates { get; }
 }

@@ -6,7 +6,6 @@ using OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetById;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.Dtos.Promotion;
-using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Infrasturcture;
 
 namespace OnAim.Admin.API.Controllers;
@@ -65,6 +64,14 @@ public class PromotionController : ApiControllerBase
     {
         return Ok(await _promotionTemplateService.CreatePromotionTemplate(promotionTemplate));
     }
+
+    [HttpGet(nameof(GetAllPromotionTemplates))]
+    public async Task<IActionResult> GetAllPromotionTemplates()
+    => Ok(await _promotionTemplateService.GetAllTemplates());
+
+    [HttpGet(nameof(GetPromotionTemplateById))]
+    public async Task<IActionResult> GetPromotionTemplateById([FromQuery] string id)
+        => Ok(await _promotionTemplateService.GetById(id));
 
     [HttpGet(nameof(GetAllPromotionViewTemplates))]
     public async Task<IActionResult> GetAllPromotionViewTemplates()
