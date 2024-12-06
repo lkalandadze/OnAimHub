@@ -1,5 +1,6 @@
 using FluentValidation.AspNetCore;
 using Hangfire;
+using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 using Leaderboard.Api.Extensions;
 using Leaderboard.Application;
@@ -91,8 +92,19 @@ var app = builder.Build();
 
     app.MapControllers();
 
-    app.UseHangfireDashboard();
+    app.UseHangfireDashboard("/hangfire", new DashboardOptions
+    {
+        Authorization = new[] { new AllowAllAuthorizationFilter() }
+    });
 
     app.Run();
 
+}
+
+public class AllowAllAuthorizationFilter : IDashboardAuthorizationFilter
+{
+    public bool Authorize(DashboardContext context)
+    {
+        return true; // Allow all access
+    }
 }

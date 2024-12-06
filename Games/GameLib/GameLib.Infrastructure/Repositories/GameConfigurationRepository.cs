@@ -2,16 +2,9 @@
 using GameLib.Domain.Entities;
 using GameLib.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Shared.Domain.Entities;
 using Shared.Lib.Helpers;
-using System;
-using System.Collections;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 
 namespace GameLib.Infrastructure.Repositories;
 
@@ -39,6 +32,20 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
         return await Query(expression).ToListAsync();
     }
 
+    public void DeleteConfigurationTree(GameConfiguration aggregateRoot)
+    {
+        var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
+        var removeMethod = dbSet.GetType().GetMethod(nameof(DbSet<object>.Remove));
+
+        if (removeMethod == null)
+        {
+            throw new ArgumentNullException(nameof(removeMethod));
+        }
+
+        var parameters = new object[] { aggregateRoot };
+
+        removeMethod.Invoke(dbSet, parameters);
+    }
     public void InsertConfigurationTree(GameConfiguration aggregateRoot)
     {
         var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
@@ -69,7 +76,7 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
         }
 
         RepositoryHelper.UpdateEntityTreeRecursive(context, existingConfig, updatedConfig);
-        
+
         base.Update(existingConfig);
     }
 }

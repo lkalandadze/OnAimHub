@@ -6,6 +6,8 @@ using GameLib.Domain.Abstractions.Repository;
 using GameLib.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 
 namespace GameLib.Application.Services.Concrete;
 
@@ -41,7 +43,7 @@ public class GameConfigurationService : IGameConfigurationService
 
         if (configuration == null)
         {
-            throw new KeyNotFoundException($"Configuration not found for Id: {id}");
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Configuration with the specified ID: [{id}] was not found.");
         }
 
         return configuration;
@@ -53,7 +55,7 @@ public class GameConfigurationService : IGameConfigurationService
 
         if (configurationTree == null)
         {
-            throw new ArgumentException("Invalid JSON configurationTree for configuration create.");
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Invalid JSON configurationTree for configuration create.");
         }
 
         try
@@ -72,14 +74,14 @@ public class GameConfigurationService : IGameConfigurationService
     {
         if (string.IsNullOrWhiteSpace(configurationJson))
         {
-            throw new ArgumentException("Configuration JSON cannot be null or empty.", nameof(configurationJson));
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Configuration JSON cannot be null or empty.");
         }
 
         var updatedConfiguration = JsonConvert.DeserializeObject(configurationJson, Globals.ConfigurationType) as GameConfiguration;
 
         if (updatedConfiguration == null)
         {
-            throw new ArgumentException("Invalid JSON configuration for update.");
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Invalid JSON configuration for update.");
         }
 
         try
@@ -100,7 +102,7 @@ public class GameConfigurationService : IGameConfigurationService
 
         if (configuration == null)
         {
-            throw new KeyNotFoundException($"Configuration not found for Id: {id}");
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Configuration with the specified ID: [{id}] was not found.");
         }
 
         configuration.Activate();
@@ -115,12 +117,25 @@ public class GameConfigurationService : IGameConfigurationService
 
         if (configuration == null)
         {
-            throw new KeyNotFoundException($"Configuration not found for Id: {id}");
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Configuration with the specified ID: [{id}] was not found.");
         }
 
         configuration.Deactivate();
 
         _configurationRepository.Update(configuration);
+        await _unitOfWork.SaveAsync();
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        var configuration = await _configurationRepository.OfIdAsync(id);
+
+        if (configuration == null)
+        {
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Configuration with the specified ID: [{id}] was not found.");
+        }
+
+        _configurationRepository.DeleteConfigurationTree(configuration);
         await _unitOfWork.SaveAsync();
     }
 }

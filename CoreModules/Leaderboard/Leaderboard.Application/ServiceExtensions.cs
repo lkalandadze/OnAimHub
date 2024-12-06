@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Infrastructure.MassTransit;
+using Shared.IntegrationEvents.IntegrationEvents.Reward.Leaderboard;
 using System.Reflection;
 
 namespace Leaderboard.Application;
@@ -51,6 +52,20 @@ public static class ServiceExtensions
                 {
                     h.Username(rabbitMqOptions.User);
                     h.Password(rabbitMqOptions.Password);
+                });
+
+                cfg.Message<ReceiveLeaderboardRewardEvent>(c => c.SetEntityName("leaderboard.fanout"));
+                cfg.Publish<ReceiveLeaderboardRewardEvent>(p =>
+                {
+                    p.ExchangeType = "fanout";
+                });
+
+                cfg.ReceiveEndpoint(rabbitMqOptions.Queues["ReceiveLeaderboardRewardQueue"].QueueName, e =>
+                {
+                    e.Bind(rabbitMqOptions.ExchangeName, x =>
+                    {
+                        x.ExchangeType = "fanout";
+                    });
                 });
 
                 var playerQueueSettings = rabbitMqOptions.Queues["CreatePlayerQueue"];

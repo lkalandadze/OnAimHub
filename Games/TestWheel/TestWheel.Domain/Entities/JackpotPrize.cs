@@ -1,6 +1,6 @@
 ﻿using GameLib.Domain.Abstractions;
 
-namespace Wheel.Domain.Entities;
+namespace TestWheel.Domain.Entities;
 
 public class JackpotPrize : BasePrize<JackpotPrizeGroup>
 {

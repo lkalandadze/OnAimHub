@@ -17,6 +17,6 @@ public class CreateWinTransactionHandler : IRequestHandler<CreateWinTransactionC
     public async Task<TransactionResponseModel> Handle(CreateWinTransactionCommand request, CancellationToken cancellationToken)
     {
         return await _transactionService.CreateTransactionAndApplyBalanceAsync(request.GameId, request.CurrencyId, request.Amount,
-                                                           AccountType.Game, AccountType.Player, TransactionType.Win);
+                                                           AccountType.Game, AccountType.Player, TransactionType.Win, null /* PromotionId */);
     }
 }

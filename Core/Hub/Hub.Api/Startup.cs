@@ -6,6 +6,7 @@ using Hub.Api;
 using Hub.Api.Common.Consul;
 using Hub.Application;
 using Hub.Application.Configurations;
+using Hub.Application.Consumers.Rewards;
 using Hub.Application.Converters;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdrawOption;
@@ -405,7 +406,7 @@ public class Startup
         services.AddMassTransit(x =>
         {
             x.AddConsumers(consumerAssemblyMarkerType.Assembly);
-
+            x.AddConsumer<ReceiveLeaderboardRewardAggregationConsumer>();
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host(rabbitMqOptions.Host, h =>
@@ -440,6 +441,21 @@ public class Startup
                     {
                         x.ExchangeType = "fanout";
                     });
+                });
+
+                var playerQueueSettings = rabbitMqOptions.Queues["ReceiveLeaderboardRewardQueue"];
+                cfg.ReceiveEndpoint(playerQueueSettings.QueueName, e =>
+                {
+                    var rabbitMqEndpoint = e as IRabbitMqReceiveEndpointConfigurator;
+                    foreach (var routingKey in playerQueueSettings.RoutingKeys)
+                    {
+                        rabbitMqEndpoint?.Bind(rabbitMqOptions.ExchangeName, x =>
+                        {
+                            x.RoutingKey = routingKey;
+                            x.ExchangeType = "fanout";
+                        });
+                    }
+                    e.ConfigureConsumer<ReceiveLeaderboardRewardAggregationConsumer>(context);
                 });
             });
         });

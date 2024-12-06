@@ -14,13 +14,7 @@ public class GameController : BaseApiController
     {
         _gameService = gameService;
     }
-     
-    [HttpPost(nameof(PlayJackpot))]
-    public async Task<ActionResult<PlayResponseModel>> PlayJackpot([FromBody] PlayRequestModel model)
-    {
-        return Ok(await _gameService.PlayJackpotAsync(model));
-    }
-
+    
     [HttpPost(nameof(PlayWheel))]
     public async Task<ActionResult<PlayResponseModel>> PlayWheel([FromBody] PlayRequestModel model)
     {

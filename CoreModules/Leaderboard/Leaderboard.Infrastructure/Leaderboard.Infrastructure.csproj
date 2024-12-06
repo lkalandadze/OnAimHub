@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\Shared.Domain\Shared.Domain.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Shared.Infrastructure\Shared.Infrastructure.csproj" />
     <ProjectReference Include="..\Leaderboard.Domain\Leaderboard.Domain.csproj" />
   </ItemGroup>
 

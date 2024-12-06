@@ -19,15 +19,15 @@ public class PlayerBalanceService : IPlayerBalanceService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<PlayerBalance> GetOrCreatePlayerBalanceAsync(int playerId, string currencyId)
+    public async Task<PlayerBalance> GetOrCreatePlayerBalanceAsync(int playerId, string coinId, int? promotionId)
     {
         var playerBalance = (await _playerBalanceRepository.QueryAsync(x => x.PlayerId == playerId &&
-                                                                            x.CurrencyId == currencyId))
+                                                                            x.CoinId == coinId))
                                                            .FirstOrDefault();
 
         if (playerBalance == null)
         {
-            playerBalance = new PlayerBalance(0, playerId, currencyId);
+            playerBalance = new PlayerBalance(0, playerId, coinId, promotionId);
 
             await _playerBalanceRepository.InsertAsync(playerBalance);
 
@@ -45,9 +45,9 @@ public class PlayerBalanceService : IPlayerBalanceService
         return playerBalance;
     }
 
-    public async Task ApplyPlayerBalanceOperationAsync(int playerId, string currencyId, AccountType fromAccount, AccountType toAccount, decimal amount)
+    public async Task ApplyPlayerBalanceOperationAsync(int playerId, string coinId, AccountType fromAccount, AccountType toAccount, decimal amount, int? promotionId)
     {
-        var balance = await GetOrCreatePlayerBalanceAsync(playerId, currencyId);
+        var balance = await GetOrCreatePlayerBalanceAsync(playerId, coinId, promotionId);
 
         if (fromAccount == AccountType.Player)
         {
@@ -67,9 +67,9 @@ public class PlayerBalanceService : IPlayerBalanceService
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task ResetBalancesByCurrencyIdAsync(string currencyId)
+    public async Task ResetBalancesByCurrencyIdAsync(string coinId)
     {
-        var balances = _playerBalanceRepository.Query().Where(x => x.CurrencyId == currencyId);
+        var balances = _playerBalanceRepository.Query().Where(x => x.CoinId == coinId);
 
         foreach (var balance in balances)
         {

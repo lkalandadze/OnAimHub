@@ -77,23 +77,30 @@ public class AdminController : BaseApiController
     }
 
     [HttpPut(nameof(UpdateConfiguration))]
-    public async Task<ActionResult> UpdateConfiguration([FromBody] ConfigurationUpdateModel model)
+    public async Task<ActionResult> UpdateConfiguration(ConfigurationUpdateModel model)
     {
         await _configurationService.UpdateAsync(model.ConfigurationJson);
         return StatusCode(200);
     }
 
     [HttpPatch(nameof(ActivateConfiguration))]
-    public async Task<ActionResult> ActivateConfiguration([FromRoute] int id)
+    public async Task<ActionResult> ActivateConfiguration(int id)
     {
         await _configurationService.ActivateAsync(id);
         return StatusCode(200);
     }
 
     [HttpPatch(nameof(DeactivateConfiguration))]
-    public async Task<ActionResult> DeactivateConfiguration([FromRoute] int id)
+    public async Task<ActionResult> DeactivateConfiguration(int id)
     {
         await _configurationService.DeactivateAsync(id);
+        return StatusCode(200);
+    }
+
+    [HttpDelete(nameof(DeleteConfiguration))]
+    public async Task<ActionResult> DeleteConfiguration(int id)
+    {
+        await _configurationService.DeleteAsync(id);
         return StatusCode(200);
     }
 

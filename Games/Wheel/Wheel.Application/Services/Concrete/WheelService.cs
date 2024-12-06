@@ -26,11 +26,6 @@ public class WheelService : IWheelService
         _messageBus = messageBus;
     }
 
-    public async Task<PlayResponseModel> PlayJackpotAsync(PlayRequestModel model)
-    {
-        return await PlayAsync<JackpotPrize>(model);
-    }
-
     public async Task<PlayResponseModel> PlayWheelAsync(PlayRequestModel model)
     {
         return await PlayAsync<WheelPrize>(model);
