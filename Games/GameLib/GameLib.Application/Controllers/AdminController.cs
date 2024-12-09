@@ -72,7 +72,7 @@ public class AdminController : BaseApiController
     [HttpPost(nameof(CreateConfiguration))]
     public async Task<ActionResult> CreateConfiguration(GameConfiguration configuration)
     {
-        await _configurationService.CreateAsync(model.ConfigurationJson);
+        await _configurationService.CreateAsync(configuration);
         return StatusCode(200);
     }
 
