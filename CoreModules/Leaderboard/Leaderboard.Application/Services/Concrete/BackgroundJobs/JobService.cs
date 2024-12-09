@@ -52,62 +52,67 @@ public class JobService : IJobService
         if (schedule == null)
             throw new Exception("Leaderboard schedule not found.");
 
-        var leaderboardRecord = schedule.LeaderboardRecord;
-
-        if (leaderboardRecord == null)
-            throw new Exception("Associated leaderboard record not found.");
-
         var now = DateTimeOffset.UtcNow;
 
-        // Calculate the first start date based on the schedule's repeat type
-        var nextStartDate = CalculateNextStartDate(leaderboardRecord.StartDate, leaderboardRecord, schedule);
-
-        // Ensure the calculated start date is in the future
-        if (nextStartDate <= now)
+        try
         {
-            nextStartDate = CalculateNextInterval(nextStartDate, schedule);
-        }
+            // Calculate the first set of dates
+            var (nextAnnouncementDate, nextStartDate, nextEndDate) = schedule.CalculateNextDates(now);
 
-        while (nextStartDate <= leaderboardRecord.EndDate)
-        {
-            // Calculate the duration of the leaderboard
-            var durationDays = (leaderboardRecord.EndDate - leaderboardRecord.StartDate).Days;
+            // Validate that the calculated dates are within bounds
+            if (nextStartDate > schedule.CalculateEndDate(now) || nextEndDate > DateTimeOffset.MaxValue)
+            {
+                Console.WriteLine("Calculated dates are out of range. Stopping.");
+                return;
+            }
 
-            // Calculate the corresponding end date
-            var endDate = nextStartDate.AddDays(durationDays);
-
-            // Calculate the announcement date
-            var announcementDate = nextStartDate.AddDays(-leaderboardRecord.StartDate.Subtract(leaderboardRecord.AnnouncementDate).Days);
-
-            // Create a new leaderboard record
+            // Create the record
             var newRecord = new LeaderboardRecord(
-                leaderboardRecord.PromotionId,
-                leaderboardRecord.Title,
-                leaderboardRecord.Description,
-                leaderboardRecord.EventType,
-                announcementDate.ToUniversalTime(),
+                schedule.LeaderboardRecord.PromotionId,
+                schedule.LeaderboardRecord.Title,
+                schedule.LeaderboardRecord.Description,
+                schedule.LeaderboardRecord.EventType,
+                nextAnnouncementDate.ToUniversalTime(),
                 nextStartDate.ToUniversalTime(),
-                endDate.ToUniversalTime(),
+                nextEndDate.ToUniversalTime(),
                 true,
-                leaderboardRecord.TemplateId,
+                schedule.LeaderboardRecord.TemplateId,
                 scheduleId,
                 null
             );
 
-            // Copy prizes from the original record
-            foreach (var prize in leaderboardRecord.LeaderboardRecordPrizes)
+            // Add prizes to the record
+            foreach (var prize in schedule.LeaderboardRecord.LeaderboardRecordPrizes)
             {
                 newRecord.AddLeaderboardRecordPrizes(prize.StartRank, prize.EndRank, prize.CoinId, prize.Amount);
             }
 
-            await _leaderboardRecordRepository.InsertAsync(newRecord);
+            // Save the record
+            try
+            {
+                await _leaderboardRecordRepository.InsertAsync(newRecord);
+                await _leaderboardRecordRepository.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save leaderboard record: {ex.Message}");
+                throw;
+            }
 
-            // Move to the next interval
-            nextStartDate = CalculateNextInterval(nextStartDate, schedule);
+            // Progress the interval and handle the next calculation if required
+            now = nextStartDate.AddHours(schedule.RepeatValue ?? 24);
+            (nextAnnouncementDate, nextStartDate, nextEndDate) = schedule.CalculateNextDates(now);
+
+            Console.WriteLine($"Processed: AnnouncementDate={nextAnnouncementDate}, StartDate={nextStartDate}, EndDate={nextEndDate}");
         }
-
-        await _leaderboardRecordRepository.SaveChangesAsync();
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in job execution: {ex.Message}");
+            throw;
+        }
     }
+
+
 
     public async Task UpdateLeaderboardRecordStatusAsync()
     {
