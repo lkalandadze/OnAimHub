@@ -7,6 +7,7 @@ using GameLib.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
+using Shared.Lib.Wrappers;
 
 namespace GameLib.Application.Services.Concrete;
 
@@ -29,20 +30,20 @@ public class GameConfigurationService : IGameConfigurationService
         _entityGenerator = entityGenerator;
     }
 
-    public EntityMetadata? GetConfigurationMetaData()
+    public Response<EntityMetadata?> GetConfigurationMetaData()
     {
-        return _entityGenerator.GenerateEntityMetadata(Globals.ConfigurationType);
+        return new Response<EntityMetadata?> { Data = _entityGenerator.GenerateEntityMetadata(Globals.ConfigurationType) };
     }
 
-    public async Task<IEnumerable<ConfigurationBaseGetModel>> GetAllAsync()
+    public async Task<Response<IEnumerable<ConfigurationBaseGetModel>>> GetAllAsync()
     {
         var configurations = await _configurationRepository.Query().ToListAsync();
         var mappedConfigurations = configurations.Select(c => ConfigurationBaseGetModel.MapFrom(c));
 
-        return mappedConfigurations == null ? Enumerable.Empty<ConfigurationBaseGetModel>() : mappedConfigurations;
+        return new Response<IEnumerable<ConfigurationBaseGetModel>>() { Data = mappedConfigurations };
     }
 
-    public async Task<GameConfiguration> GetByIdAsync(int id)
+    public async Task<Response<GameConfiguration>> GetByIdAsync(int id)
     {
         var configuration = await _configurationRepository.OfIdAsync(id);
 
@@ -51,7 +52,7 @@ public class GameConfigurationService : IGameConfigurationService
             throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Configuration with the specified ID: [{id}] was not found.");
         }
 
-        return configuration;
+        return new Response<GameConfiguration> { Data = configuration };
     }
 
     public async Task CreateAsync(GameConfiguration configuration)

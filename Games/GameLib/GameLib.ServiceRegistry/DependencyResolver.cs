@@ -23,6 +23,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Shared.Application;
 using Shared.Application.Configurations;
+using Shared.Application.Middlewares;
 using Shared.Domain.Abstractions.Repository;
 using Shared.Lib;
 using System.Reflection;
@@ -114,6 +115,9 @@ public static class DependencyResolver
         app.UseHttpsRedirection();
 
         app.UseRouting();
+
+        app.UseMiddleware<ErrorHandlerMiddleware>();
+
         app.UseAuthentication();
         app.UseAuthorization();
 

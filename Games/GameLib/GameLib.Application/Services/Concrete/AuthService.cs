@@ -1,6 +1,8 @@
 ﻿using GameLib.Application.Services.Abstract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace GameLib.Application.Services.Concrete;
@@ -17,17 +19,24 @@ public class AuthService : IAuthService
 
             if (string.IsNullOrEmpty(authHeader))
             {
-                throw new InvalidOperationException();
+                throw new ApiException(ApiExceptionCodeTypes.AuthenticationFailed, "Authorization header is missing.");
             }
 
             var token = authHeader.Replace("Bearer ", string.Empty, StringComparison.OrdinalIgnoreCase);
 
             if (string.IsNullOrEmpty(token))
             {
-                throw new ArgumentException();
+                throw new ApiException(ApiExceptionCodeTypes.AuthenticationFailed, "Authorization token is missing or invalid.");
             }
 
-            return new JwtSecurityToken(jwtEncodedString: token);
+            try
+            {
+                return new JwtSecurityToken(jwtEncodedString: token);
+            }
+            catch (Exception ex)
+            {
+                throw new ApiException(ApiExceptionCodeTypes.InvalidInputData, $"Failed to parse token: {ex.Message}");
+            }
         }
     }
 
