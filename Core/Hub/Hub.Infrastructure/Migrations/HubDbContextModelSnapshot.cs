@@ -514,7 +514,7 @@ namespace Hub.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("Correlationid")
+                    b.Property<Guid>("CorrelationId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("CreateDate")

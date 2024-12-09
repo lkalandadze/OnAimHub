@@ -16,7 +16,7 @@ public class DeletePromotionCommandHandler : IRequestHandler<DeletePromotionComm
     }
     public async Task<Unit> Handle(DeletePromotionCommand request, CancellationToken cancellationToken)
     {
-        var promotion = await _promotionRepository.Query().FirstOrDefaultAsync(x => x.Correlationid == request.CorrelationId, cancellationToken);
+        var promotion = await _promotionRepository.Query().FirstOrDefaultAsync(x => x.CorrelationId == request.CorrelationId, cancellationToken);
 
         if (promotion == default)
             throw new Exception("Promotion not found with this correlationId");

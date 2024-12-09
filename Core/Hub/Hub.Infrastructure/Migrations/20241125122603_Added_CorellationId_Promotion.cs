@@ -27,7 +27,7 @@ namespace Hub.Infrastructure.Migrations
                 oldType: "integer");
 
             migrationBuilder.AddColumn<Guid>(
-                name: "Correlationid",
+                name: "CorrelationId",
                 table: "Promotions",
                 type: "uuid",
                 nullable: false,
@@ -81,7 +81,7 @@ namespace Hub.Infrastructure.Migrations
                 name: "WithdrawOptionPromotionCoinMappings");
 
             migrationBuilder.DropColumn(
-                name: "Correlationid",
+                name: "CorrelationId",
                 table: "Promotions");
 
             migrationBuilder.AlterColumn<int>(
