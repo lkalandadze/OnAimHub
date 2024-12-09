@@ -1,12 +1,13 @@
 ﻿using GameLib.Application.Models.PrizeType;
+using Shared.Lib.Wrappers;
 
 namespace GameLib.Application.Services.Abstract;
 
 public interface IPrizeTypeService
 {
-    Task<IEnumerable<PrizeTypeGetModel>> GetAllAsync();
+    Task<Response<IEnumerable<PrizeTypeGetModel>>> GetAllAsync();
 
-    Task<PrizeTypeGetModel> GetByIdAsync(int id);
+    Task<Response<PrizeTypeGetModel>> GetByIdAsync(int id);
 
     Task CreateAsync(PrizeTypeCreateModel model);
 

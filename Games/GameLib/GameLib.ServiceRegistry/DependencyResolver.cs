@@ -59,7 +59,7 @@ public static class DependencyResolver
         services.AddHttpClient();
         services.AddSingleton<IAuthService, AuthService>();
         services.AddScoped<IHubService, HubService>();
-        services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+        services.AddScoped<ICoinRepository, CoinRepository>();
         services.AddScoped<IPriceRepository, PriceRepository>();
         services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
         services.AddScoped<IGameConfigurationRepository, GameConfigurationRepository>();

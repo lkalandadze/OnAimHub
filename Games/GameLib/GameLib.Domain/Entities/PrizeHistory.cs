@@ -8,7 +8,7 @@ public class PrizeHistory : BaseEntity<int>
     public int PrizeId { get; set; }
     public int Value { get; set; }
     public int GameVersionId { get; set; }
-    public int CurrencyId { get; set; }
+    public int CoinId { get; set; }
     public int PrizeTypeId { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
 }

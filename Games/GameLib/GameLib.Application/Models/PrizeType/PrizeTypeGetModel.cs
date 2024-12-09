@@ -1,12 +1,12 @@
 ﻿#nullable disable
 
-using GameLib.Application.Models.Currency;
+using GameLib.Application.Models.Coin;
 
 namespace GameLib.Application.Models.PrizeType;
 
 public class PrizeTypeGetModel : PrizeTypeBaseGetModel
 {
-    public CurrencyBaseGetModel Currency { get; set; }
+    public CoinBaseGetModel Coin { get; set; }
 
     public static PrizeTypeGetModel MapFrom(Domain.Entities.PrizeType prizeType, bool includeNavProperties = true)
     {
@@ -19,7 +19,7 @@ public class PrizeTypeGetModel : PrizeTypeBaseGetModel
 
         if (includeNavProperties)
         {
-            model.Currency = prizeType.Currency != null ? CurrencyBaseGetModel.MapFrom(prizeType.Currency) : default;
+            model.Coin = prizeType.Coin != null ? CoinBaseGetModel.MapFrom(prizeType.Coin) : default;
         }
 
         return model;

@@ -15,11 +15,11 @@ public class Price : BaseEntity<string>
 
     }
 
-    public Price(decimal value, decimal multiplier, string currencyId)
+    public Price(decimal value, decimal multiplier, string coinId)
     {
         Value = value;
         Multiplier = multiplier;
-        CurrencyId = currencyId;
+        CoinId = coinId;
     }
 
     public decimal Value { get; set; }
@@ -27,8 +27,8 @@ public class Price : BaseEntity<string>
 
 
     [JsonIgnore]
-    public Currency Currency { get; set; }
-    public string CurrencyId { get; set; }
+    public Coin Coin { get; set; }
+    public string CoinId { get; set; }
 }
 
 public class Price<T> : Price where T : Price<T> 
@@ -37,7 +37,7 @@ public class Price<T> : Price where T : Price<T>
     {
         
     }
-    public Price(decimal value, decimal multiplier, string currencyId, int configurationId) : base(value, multiplier, currencyId)
+    public Price(decimal value, decimal multiplier, string coinId, int configurationId) : base(value, multiplier, coinId)
     {
         // Initialization logic for the generic segment, if any
     }

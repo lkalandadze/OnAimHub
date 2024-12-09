@@ -13,7 +13,7 @@ namespace Wheel.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Currencies",
+                name: "Coins",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
@@ -84,7 +84,7 @@ namespace Wheel.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_PrizeTypes_Currencies_CurrencyId",
                         column: x => x.CurrencyId,
-                        principalTable: "Currencies",
+                        principalTable: "Coins",
                         principalColumn: "Id");
                 });
 
@@ -104,7 +104,7 @@ namespace Wheel.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Prices_Currencies_CurrencyId",
                         column: x => x.CurrencyId,
-                        principalTable: "Currencies",
+                        principalTable: "Coins",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Prices_GameConfigurations_WheelConfigurationId",
@@ -207,7 +207,7 @@ namespace Wheel.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Prices_CurrencyId",
                 table: "Prices",
-                column: "CurrencyId");
+                column: "CoinId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Prices_WheelConfigurationId",
@@ -217,7 +217,7 @@ namespace Wheel.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_PrizeTypes_CurrencyId",
                 table: "PrizeTypes",
-                column: "CurrencyId");
+                column: "CoinId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Rounds_ConfigurationId",
@@ -260,7 +260,7 @@ namespace Wheel.Infrastructure.Migrations
                 name: "Rounds");
 
             migrationBuilder.DropTable(
-                name: "Currencies");
+                name: "Coins");
 
             migrationBuilder.DropTable(
                 name: "GameConfigurations");

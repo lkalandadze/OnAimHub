@@ -4,10 +4,10 @@ using Shared.Domain.Entities;
 
 namespace GameLib.Domain.Entities;
 
-public class Currency : DbEnum<string, Currency>
+public class Coin : DbEnum<string, Coin>
 {
-    public static Currency OnAimCoin => FromId(nameof(OnAimCoin));
-    public static Currency FreeSpin => FromId(nameof(FreeSpin));
+    public static Coin OnAimCoin => FromId(nameof(OnAimCoin));
+    public static Coin FreeSpin => FromId(nameof(FreeSpin));
 
     public ICollection<Price> Prices { get; private set; } = [];
     public ICollection<PrizeType> PrizeTypes { get; private set; } = [];

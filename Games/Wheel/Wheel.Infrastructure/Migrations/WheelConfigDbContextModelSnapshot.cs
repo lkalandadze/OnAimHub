@@ -23,7 +23,7 @@ namespace Wheel.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("GameLib.Domain.Entities.Currency", b =>
+            modelBuilder.Entity("GameLib.Domain.Entities.Coin", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -34,7 +34,7 @@ namespace Wheel.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currencies");
+                    b.ToTable("Coins");
                 });
 
             modelBuilder.Entity("GameLib.Domain.Entities.GameSetting", b =>
@@ -63,7 +63,7 @@ namespace Wheel.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnOrder(1);
 
-                    b.Property<string>("CurrencyId")
+                    b.Property<string>("CoinId")
                         .HasColumnType("text");
 
                     b.Property<decimal>("Multiplier")
@@ -77,7 +77,7 @@ namespace Wheel.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CurrencyId");
+                    b.HasIndex("CoinId");
 
                     b.HasIndex("WheelConfigurationId");
 
@@ -93,7 +93,7 @@ namespace Wheel.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CurrencyId")
+                    b.Property<string>("CoinId")
                         .HasColumnType("text");
 
                     b.Property<bool>("IsMultiplied")
@@ -104,7 +104,7 @@ namespace Wheel.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CurrencyId");
+                    b.HasIndex("CoinId");
 
                     b.ToTable("PrizeTypes");
                 });
@@ -256,24 +256,24 @@ namespace Wheel.Infrastructure.Migrations
 
             modelBuilder.Entity("GameLib.Domain.Entities.Price", b =>
                 {
-                    b.HasOne("GameLib.Domain.Entities.Currency", "Currency")
+                    b.HasOne("GameLib.Domain.Entities.Coin", "Coin")
                         .WithMany("Prices")
-                        .HasForeignKey("CurrencyId");
+                        .HasForeignKey("CoinId");
 
                     b.HasOne("Wheel.Domain.Entities.WheelConfiguration", null)
                         .WithMany("Prices")
                         .HasForeignKey("WheelConfigurationId");
 
-                    b.Navigation("Currency");
+                    b.Navigation("Coin");
                 });
 
             modelBuilder.Entity("GameLib.Domain.Entities.PrizeType", b =>
                 {
-                    b.HasOne("GameLib.Domain.Entities.Currency", "Currency")
+                    b.HasOne("GameLib.Domain.Entities.Coin", "Coin")
                         .WithMany("PrizeTypes")
-                        .HasForeignKey("CurrencyId");
+                        .HasForeignKey("CoinId");
 
-                    b.Navigation("Currency");
+                    b.Navigation("Coin");
                 });
 
             modelBuilder.Entity("Wheel.Domain.Entities.JackpotPrize", b =>
@@ -325,7 +325,7 @@ namespace Wheel.Infrastructure.Migrations
                     b.Navigation("PrizeType");
                 });
 
-            modelBuilder.Entity("GameLib.Domain.Entities.Currency", b =>
+            modelBuilder.Entity("GameLib.Domain.Entities.Coin", b =>
                 {
                     b.Navigation("Prices");
 
