@@ -2,16 +2,13 @@
 
 public class InternalCoin : Coin
 {
-    public InternalCoin(){}
-
-    public InternalCoin(string id, string name, string description, string imageUrl, int promotionId, int? templateId = null)
-        : base(id, name, description, imageUrl, Enum.CoinType.Internal)
+    public InternalCoin()
     {
-        PromotionId = promotionId;
-        FromTemplateId = templateId;
+
     }
 
-    public int? FromTemplateId { get; private set; }
-    public int PromotionId { get; set; }
-    public Promotion Promotion { get; set; }
+    public InternalCoin(string id, string name, string description, string imageUrl, int promotionId, int? templateId = null)
+        : base(id, name, description, imageUrl, Domain.HubEntities.Enum.CoinType.Internal, promotionId, templateId)
+    {
+    }
 }

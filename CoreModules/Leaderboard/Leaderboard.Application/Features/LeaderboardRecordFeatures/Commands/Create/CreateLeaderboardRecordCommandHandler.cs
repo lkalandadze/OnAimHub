@@ -1,4 +1,5 @@
-﻿using Leaderboard.Application.Services.Abstract.BackgroundJobs;
+﻿using Leaderboard.Application.Services.Abstract;
+using Leaderboard.Application.Services.Abstract.BackgroundJobs;
 using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Domain.Entities;
 using Leaderboard.Domain.Enum;
@@ -13,17 +14,20 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
     private readonly ILeaderboardScheduleRepository _leaderboardScheduleRepository;
     private readonly IBackgroundJobScheduler _backgroundJobScheduler;
     private readonly IJobService _jobService;
-    public CreateLeaderboardRecordCommandHandler(ILeaderboardRecordRepository leaderboardRecordRepository, IBackgroundJobScheduler backgroundJobScheduler, IJobService jobService, ILeaderboardScheduleRepository leaderboardScheduleRepository)
+    private readonly ILeaderboardService _leaderboardService;
+    public CreateLeaderboardRecordCommandHandler(ILeaderboardRecordRepository leaderboardRecordRepository, IBackgroundJobScheduler backgroundJobScheduler, IJobService jobService, ILeaderboardScheduleRepository leaderboardScheduleRepository, ILeaderboardService leaderboardService)
     {
         _leaderboardRecordRepository = leaderboardRecordRepository;
         _backgroundJobScheduler = backgroundJobScheduler;
         _jobService = jobService;
         _leaderboardScheduleRepository = leaderboardScheduleRepository;
+        _leaderboardService = leaderboardService;
     }
 
     public async Task Handle(CreateLeaderboardRecordCommand request, CancellationToken cancellationToken)
     {
-        // Create the LeaderboardRecord
+        _leaderboardService.ValidateLeaderboardPrizes(request.LeaderboardPrizes);
+
         var leaderboard = new LeaderboardRecord(
             request.PromotionId,
             request.Title,
@@ -38,7 +42,6 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
             request.CorrelationId
         );
 
-        // Add prizes
         foreach (var prize in request.LeaderboardPrizes)
         {
             leaderboard.AddLeaderboardRecordPrizes(prize.StartRank, prize.EndRank, prize.CoinId, prize.Amount);
@@ -47,7 +50,6 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
         await _leaderboardRecordRepository.InsertAsync(leaderboard);
         await _leaderboardRecordRepository.SaveChangesAsync(cancellationToken);
 
-        // Schedule job only for applicable RepeatTypes
         if (request.RepeatType != RepeatType.None)
         {
             var schedule = new LeaderboardSchedule(
@@ -60,7 +62,6 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
             await _leaderboardScheduleRepository.InsertAsync(schedule);
             await _leaderboardScheduleRepository.SaveChangesAsync(cancellationToken);
 
-            // Schedule the job using the BackgroundJobScheduler
             _backgroundJobScheduler.ScheduleJob(schedule);
         }
     }

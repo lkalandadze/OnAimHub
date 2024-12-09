@@ -6,19 +6,8 @@ public class InCoin : Coin
 
     }
 
-    public InCoin(
-        string id,
-        string name,
-        string description,
-        string imageUrl,
-        int promotionId,
-        int? templateId = null) : base(id, name, description, imageUrl, Enum.CoinType.In)
+    public InCoin(string id, string name, string description, string imageUrl, int promotionId, int? templateId = null)
+        : base(id, name, description, imageUrl, Domain.HubEntities.Enum.CoinType.In, promotionId, templateId)
     {
-        PromotionId = promotionId;
-        FromTemplateId = templateId;
     }
-
-    public int? FromTemplateId { get; private set; }
-    public int PromotionId { get; set; }
-    public Promotion Promotion { get; set; }
 }

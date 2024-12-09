@@ -12,7 +12,7 @@ public static class ExtensionMethods
         return user.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
     }
 }
-public class PromotionCoinModelJsonConverter : JsonConverter<CreateCoinModel>
+public class CoinModelJsonConverter : JsonConverter<CreateCoinModel>
 {
     public override CreateCoinModel Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -24,7 +24,7 @@ public class PromotionCoinModelJsonConverter : JsonConverter<CreateCoinModel>
         // Iterate through all properties to find one with a case-insensitive match
         foreach (var property in rootElement.EnumerateObject())
         {
-            if (string.Equals(property.Name, "coinType", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(property.Name, nameof(CreateCoinModel.CoinType), StringComparison.OrdinalIgnoreCase))
             {
                 coinTypeProperty = property.Value;
                 break;

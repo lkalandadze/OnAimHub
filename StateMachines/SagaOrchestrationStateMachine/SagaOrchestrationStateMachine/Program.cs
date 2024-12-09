@@ -2,6 +2,8 @@ using Hub.Application.Converters;
 using Hub.Application.Models.Coin;
 using SagaOrchestrationStateMachine;
 using Shared.Lib;
+using System.Net.Http.Headers;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +13,18 @@ builder.Services.AddSingleton<HubService>(sp =>
 new HubService("https://localhost:7069", new HttpClient()));
 builder.Services.AddSingleton<LeaderBoardService>(sp =>
 new LeaderBoardService("https://localhost:7041", new HttpClient()));
-//builder.Services.AddSingleton<WheelService>(sp =>
-//new WheelService("http://192.168.10.42:8005", new HttpClient()));
+builder.Services.AddSingleton<WheelService>(sp =>
+{
+    var httpClient = new HttpClient
+    {
+        BaseAddress = new Uri("https://localhost:7217")
+    };
+
+    var authHeader = Convert.ToBase64String(Encoding.ASCII.GetBytes($"a:a"));
+    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeader);
+
+    return new WheelService("https://localhost:7217",httpClient);
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();

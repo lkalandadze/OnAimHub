@@ -76,6 +76,8 @@ public static class Extension
         services
             .AddScoped<IRoleRepository, RoleRepository>()
             .AddScoped<ICoinRepository, CoinRepository>()
+            .AddScoped<IGameConfigurationTemplateRepository, GameConfigurationTemplateRepository>()
+            .AddScoped<IGameTemplateService, GameTemplateService>()
             .AddScoped<ILeaderboardTemplateRepository , LeaderboardTemplateRepository>()
             .AddScoped<IPromotionTemplateRepository , PromotionTemplateRepository>()
             .AddScoped<IPromotionViewTemplateRepository, PromotionViewTemplateRepository>()

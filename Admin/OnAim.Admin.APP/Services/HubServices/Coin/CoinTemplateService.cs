@@ -44,7 +44,7 @@ public class CoinTemplateService : ICoinTemplateService
         return new ApplicationResult { Success = true, Data = coin };
     }
 
-    public async Task<ApplicationResult> CreateCoinTemplate(CreateCoinTemplateDto coinTemplate)
+    public async Task<CoinTemplate> CreateCoinTemplate(CreateCoinTemplateDto coinTemplate)
     {
         var temp = new CoinTemplate
         {
@@ -88,7 +88,7 @@ public class CoinTemplateService : ICoinTemplateService
 
         await _coinRepository.AddCoinTemplateAsync(temp);
 
-        return new ApplicationResult { Success = true };
+        return temp;
     }
 
     public async Task<ApplicationResult> DeleteCoinTemplate(string CoinTemplateId)

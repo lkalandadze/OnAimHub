@@ -72,8 +72,8 @@ public class AdminController : BaseApiController
     [HttpPost(nameof(CreateConfiguration))]
     public async Task<ActionResult> CreateConfiguration(GameConfiguration configuration)
     {
-        await _configurationService.CreateAsync(configuration);
-        return StatusCode(201);
+        await _configurationService.CreateAsync(model.ConfigurationJson);
+        return StatusCode(200);
     }
 
     [HttpPut(nameof(UpdateConfiguration))]

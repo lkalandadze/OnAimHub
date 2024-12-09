@@ -8,13 +8,7 @@ public class AssetCoin : Coin
     }
 
     public AssetCoin(string id, string name, string description, string imageUrl, int promotionId, int? templateId = null)
-        : base(id, name, description, imageUrl, Enum.CoinType.Asset)
+        : base(id, name, description, imageUrl, Domain.HubEntities.Enum.CoinType.Asset, promotionId, templateId)
     {
-        PromotionId = promotionId;
-        FromTemplateId = templateId;
     }
-
-    public int? FromTemplateId { get; private set; }
-    public int PromotionId { get; set; }
-    public Promotion Promotion { get; set; }
 }

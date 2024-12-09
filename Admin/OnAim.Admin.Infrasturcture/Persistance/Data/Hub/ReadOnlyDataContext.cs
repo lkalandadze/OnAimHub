@@ -33,7 +33,7 @@ public class ReadOnlyDataContext : DbContext
     public DbSet<PlayerBan> PlayerBans { get; set; }
     public DbSet<Promotion> Promotions { get; set; }
     public DbSet<PromotionService> PromotionServices { get; set; }
-    public DbSet<Coin> PromotionCoins { get; set; }
+    public DbSet<Coin> Coins { get; set; }
     public DbSet<OnAim.Admin.Domain.HubEntities.WithdrawOption> WithdrawOptions { get; set; }
     public DbSet<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
 
@@ -89,6 +89,13 @@ public class ReadOnlyDataContext : DbContext
         //           .OnDelete(DeleteBehavior.Cascade)
         //  );
 
+        modelBuilder.Entity<Coin>().HasDiscriminator<Domain.HubEntities.Enum.CoinType>(nameof(Domain.HubEntities.Enum.CoinType))
+             .HasValue<Coin>(Domain.HubEntities.Enum.CoinType.Default) // Default value for the base type
+             .HasValue<InCoin>(Domain.HubEntities.Enum.CoinType.In)
+             .HasValue<OutCoin>(Domain.HubEntities.Enum.CoinType.Out)
+             .HasValue<InternalCoin>(Domain.HubEntities.Enum.CoinType.Internal)
+             .HasValue<AssetCoin>(Domain.HubEntities.Enum.CoinType.Asset);
+
         // Many-to-Many Relationship between Segment and Players
         modelBuilder.Entity<Segment>().HasMany(s => s.Players)
                .WithMany(p => p.Segments)
@@ -133,6 +140,49 @@ public class ReadOnlyDataContext : DbContext
                           .HasForeignKey($"{nameof(Segment)}{nameof(Segment.Id)}")
                           .OnDelete(DeleteBehavior.Cascade)
                 );
+
+        modelBuilder.Entity<WithdrawOptionGroup>().HasMany(w => w.OutCoins)
+              .WithMany(oc => oc.WithdrawOptionGroups)
+              .UsingEntity<Dictionary<string, object>>(
+                   $"{nameof(Coin)}{nameof(WithdrawOptionGroup)}Mappings",
+                   join => join.HasOne<OutCoin>()
+                               .WithMany()
+                               .HasForeignKey($"{nameof(Coin)}{nameof(Coin.Id)}")
+                               .OnDelete(DeleteBehavior.Cascade),
+                   join => join.HasOne<WithdrawOptionGroup>()
+                               .WithMany()
+                               .HasForeignKey($"{nameof(WithdrawOptionGroup)}{nameof(WithdrawOptionGroup.Id)}")
+                               .OnDelete(DeleteBehavior.Cascade)
+               );
+
+        modelBuilder.Entity<WithdrawOption>().HasMany(w => w.WithdrawOptionGroups)
+               .WithMany(g => g.WithdrawOptions)
+               .UsingEntity<Dictionary<string, object>>(
+                    $"{nameof(WithdrawOptionGroup)}Mappings",
+                    j => j.HasOne<WithdrawOptionGroup>()
+                        .WithMany()
+                        .HasForeignKey($"{nameof(WithdrawOptionGroup)}{nameof(WithdrawOptionGroup.Id)}")
+                        .OnDelete(DeleteBehavior.Cascade),
+                    j => j.HasOne<WithdrawOption>()
+                        .WithMany()
+                        .HasForeignKey($"{nameof(WithdrawOption)}{nameof(WithdrawOption.Id)}")
+                        .OnDelete(DeleteBehavior.Cascade)
+                );
+
+        // Many-to-Many Relationship between WithdrawOption and PromotionCoins
+        modelBuilder.Entity<WithdrawOption>().HasMany(w => w.OutCoins)
+          .WithMany(c => c.WithdrawOptions)
+          .UsingEntity<Dictionary<string, object>>(
+               $"{nameof(Coin)}{nameof(WithdrawOption)}Mappings",
+               j => j.HasOne<OutCoin>()
+                   .WithMany()
+                   .HasForeignKey($"{nameof(Coin)}{nameof(Coin.Id)}")
+                   .OnDelete(DeleteBehavior.Cascade),
+               j => j.HasOne<WithdrawOption>()
+                   .WithMany()
+                   .HasForeignKey($"{nameof(WithdrawOption)}{nameof(WithdrawOption.Id)}")
+                   .OnDelete(DeleteBehavior.Cascade)
+          );
 
         base.OnModelCreating(modelBuilder);
     }
