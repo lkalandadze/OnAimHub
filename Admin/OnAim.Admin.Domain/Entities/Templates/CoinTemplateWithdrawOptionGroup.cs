@@ -6,7 +6,7 @@ namespace OnAim.Admin.Domain.Entities.Templates;
 
 public class CoinTemplateWithdrawOptionGroup
 {
-    public CoinTemplateWithdrawOptionGroup(){ }
+    public CoinTemplateWithdrawOptionGroup(){}
 
     public CoinTemplateWithdrawOptionGroup(string coinTemplateId, int withdrawOptionGroupId)
     {

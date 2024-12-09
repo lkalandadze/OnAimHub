@@ -1,7 +1,6 @@
 ﻿using OnAim.Admin.APP.CQRS.Command;
-using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.LeaderBoardRecord.Update;
 
-public record UpdateLeaderBoardRecordCommand(UpdateLeaderboardRecordDto UpdateLeaderboardRecordDto) : ICommand<ApplicationResult>;
+public record UpdateLeaderBoardCommand(UpdateLeaderboardRecordCommand Update) : ICommand<ApplicationResult>;

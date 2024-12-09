@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
-using OnAim.Admin.APP.Features.CoinFeatures.Queries.GetAllCoin;
+using OnAim.Admin.APP.Features.CoinFeatures.Template.Commands.Create;
+using OnAim.Admin.APP.Features.CoinFeatures.Template.Commands.Delete;
+using OnAim.Admin.APP.Features.CoinFeatures.Template.Commands.Update;
+using OnAim.Admin.APP.Features.CoinFeatures.Template.Queries.GetAll;
+using OnAim.Admin.APP.Features.CoinFeatures.Template.Queries.GetById;
 using OnAim.Admin.APP.Services.HubServices.Coin;
-using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.Coin;
 
 namespace OnAim.Admin.API.Controllers;
 
@@ -48,34 +50,22 @@ public class CoinController : ApiControllerBase
     //Template
 
     [HttpPost(nameof(CreateCoinTemplate))]
-    public async Task<IActionResult> CreateCoinTemplate([FromBody] CreateCoinTemplateDto coinTemplate)
-    {
-        await _coinTemplateService.CreateCoinTemplate(coinTemplate);
-        return Ok();
-    }
+    public async Task<IActionResult> CreateCoinTemplate([FromBody] CreateCoinTemplateCommand coinTemplate)
+        => Ok(await Mediator.Send(coinTemplate));
 
     [HttpPut(nameof(UpdateCoinTemplate))]
-    public async Task<IActionResult> UpdateCoinTemplate([FromBody] UpdateCoinTemplateDto coinTemplate)
-    {
-        await _coinTemplateService.UpdateCoinTemplate(coinTemplate);
-        return Ok();
-    }
+    public async Task<IActionResult> UpdateCoinTemplate([FromBody] UpdateCoinTemplateCommand coinTemplate)
+        => Ok(await Mediator.Send(coinTemplate));
 
     [HttpDelete(nameof(DeleteCoinTemplate))]
-    public async Task<IActionResult> DeleteCoinTemplate([FromQuery] string CoinTemplateId)
-    {
-        await _coinTemplateService.DeleteCoinTemplate(CoinTemplateId);
-
-        return Ok();
-    }
+    public async Task<IActionResult> DeleteCoinTemplate([FromQuery] DeleteCoinTemplateCommand command)
+        => Ok(await Mediator.Send(command));
 
     [HttpGet(nameof(GetAllCoinTemplates))]
-    public async Task<IActionResult> GetAllCoinTemplates([FromQuery] BaseFilter filter)
-        => Ok(await Mediator.Send(new GetAllCoinQuery(filter)));
+    public async Task<IActionResult> GetAllCoinTemplates()
+        => Ok(await Mediator.Send(new GetAllCoinTemplatesQuery()));
 
     [HttpGet(nameof(GetCoinTemplateById))]
-    public async Task<IActionResult> GetCoinTemplateById([FromQuery] string CoinTemplateId)
-    {
-        return Ok(await _coinTemplateService.GetById(CoinTemplateId));
-    }
+    public async Task<IActionResult> GetCoinTemplateById([FromQuery] string id)
+        => Ok(await Mediator.Send(new GetCoinTemplateByIdQuery(id)));
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Infrasturcture.Persistance.MongoDB;
@@ -26,13 +25,13 @@ public class PromotionViewTemplateRepository : IPromotionViewTemplateRepository
         return await _dbContext.PromotionViews.Find(_ => true).ToListAsync();
     }
 
-    public async Task<PromotionViewTemplate?> GetPromotionViewTemplateByIdAsync(ObjectId id)
+    public async Task<PromotionViewTemplate?> GetPromotionViewTemplateByIdAsync(string id)
     {
         var filter = Builders<PromotionViewTemplate>.Filter.Eq(ct => ct.Id, id);
         return await _dbContext.PromotionViews.Find(filter).FirstOrDefaultAsync();
     }
 
-    public async Task<PromotionViewTemplate?> UpdatePromotionViewTemplateAsync(ObjectId id, PromotionViewTemplate updatedCoinTemplate)
+    public async Task<PromotionViewTemplate?> UpdatePromotionViewTemplateAsync(string id, PromotionViewTemplate updatedCoinTemplate)
     {
         var filter = Builders<PromotionViewTemplate>.Filter.Eq(ct => ct.Id, id);
         var result = await _dbContext.PromotionViews.ReplaceOneAsync(filter, updatedCoinTemplate);

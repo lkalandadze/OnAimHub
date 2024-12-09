@@ -1,4 +1,4 @@
-﻿using OnAim.Admin.Domain.Interfaces;
+﻿using OnAim.Admin.Infrasturcture.Interfaces;
 using System.Linq.Expressions;
 
 namespace OnAim.Admin.Infrasturcture.Repositories.Abstract;

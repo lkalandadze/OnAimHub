@@ -1,4 +1,4 @@
-﻿using OnAim.Admin.Domain.Interfaces;
+﻿using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 using System.Linq.Expressions;
 

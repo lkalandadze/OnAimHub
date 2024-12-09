@@ -50,10 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\CoinFeatures\Commands\Create\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" Options="HubClientService" ClassName="HubClientService">
       <SourceUri>https://localhost:7069/swagger/admin/swagger.json</SourceUri>
     </OpenApiReference>

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
+using OnAim.Admin.APP.Features.GameFeatures.Commands.ActivateConfiguration;
 using OnAim.Admin.APP.Features.GameFeatures.Commands.CreateConfiguration;
 using OnAim.Admin.APP.Features.GameFeatures.Commands.CreatePrizeType;
+using OnAim.Admin.APP.Features.GameFeatures.Commands.DeactivateConfiguration;
 using OnAim.Admin.APP.Features.GameFeatures.Commands.UpdateConfiguration;
 using OnAim.Admin.APP.Features.GameFeatures.Commands.UpdatePrizeType;
 using OnAim.Admin.APP.Features.GameFeatures.Queries.GetAllGames;
@@ -11,7 +13,11 @@ using OnAim.Admin.APP.Features.GameFeatures.Queries.GetById.GetGameConfiguration
 using OnAim.Admin.APP.Features.GameFeatures.Queries.GetById.GetGameConfigurations.GetConfiguration;
 using OnAim.Admin.APP.Features.GameFeatures.Queries.GetPrizeTypeById;
 using OnAim.Admin.APP.Features.GameFeatures.Queries.GetPrizeTypes;
+using OnAim.Admin.APP.Features.GameFeatures.Template.Commands.Create;
+using OnAim.Admin.APP.Features.GameFeatures.Template.Commands.Delete;
+using OnAim.Admin.APP.Features.GameFeatures.Template.Queries.GetAll;
 using OnAim.Admin.APP.Services.Game;
+using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Game;
 
 namespace OnAim.Admin.API.Controllers;
@@ -54,13 +60,13 @@ public class GamesController : ApiControllerBase
     public async Task<IActionResult> UpdateConfiguration([FromBody] ConfigurationRequest configurationJson)
         => Ok(await Mediator.Send(new UpdateConfigurationCommand(configurationJson.ConfigurationJson)));
 
-    //[HttpPatch(nameof(ActivateConfiguration))]
-    //public async Task<IActionResult> ActivateConfiguration([FromQuery] int id)
-    //    => Ok(await Mediator.Send(new ActivateConfigurationCommand(id))); 
-    
-    //[HttpPatch(nameof(DeactivateConfiguration))]
-    //public async Task<IActionResult> DeactivateConfiguration([FromQuery] int id)
-    //    => Ok(await Mediator.Send(new DeactivateConfigurationCommand(id)));
+    [HttpPut(nameof(ActivateConfiguration))]
+    public async Task<IActionResult> ActivateConfiguration([FromQuery] int id)
+        => Ok(await Mediator.Send(new ActivateConfigurationCommand(id)));
+
+    [HttpPut(nameof(DeactivateConfiguration))]
+    public async Task<IActionResult> DeactivateConfiguration([FromQuery] int id)
+        => Ok(await Mediator.Send(new DeactivateConfigurationCommand(id)));
 
     [HttpPost(nameof(CreatePrizeType))]
     public async Task<IActionResult> CreatePrizeType([FromBody] CreatePrizeTypeDto createPrizeType)
@@ -69,4 +75,18 @@ public class GamesController : ApiControllerBase
     [HttpPut(nameof(UpdatePrizeType))]
     public async Task<IActionResult> UpdatePrizeType([FromQuery] int id,[FromBody] CreatePrizeTypeDto createPrizeType)
     => Ok(await Mediator.Send(new UpdatePrizeTypeCommand(id,createPrizeType)));
+
+    //Game Configuration Template
+
+    [HttpPost(nameof(CreateGameConfigurationTemplate))]
+    public async Task<IActionResult> CreateGameConfigurationTemplate([FromBody] CreateGameConfigurationTemplateCommand command)
+        => Ok(await Mediator.Send(command));
+
+    [HttpDelete(nameof(DeleteGameConfigurationTemplate))]
+    public async Task<IActionResult> DeleteGameConfigurationTemplate([FromQuery] DeleteGameConfigurationTemplateCommand command)
+        => Ok(await Mediator.Send(command));
+
+    [HttpGet(nameof(GetAllGameConfigurationTemplates))]
+    public async Task<IActionResult> GetAllGameConfigurationTemplates([FromQuery] BaseFilter filter)
+        => Ok(await Mediator.Send(new GetAllGameConfigurationTemplatesQuery(filter)));
 }

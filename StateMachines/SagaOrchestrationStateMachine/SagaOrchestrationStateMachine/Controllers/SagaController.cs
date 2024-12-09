@@ -87,12 +87,31 @@ public class SagaController : ControllerBase
                 }
             }
 
-            if (request.GameConfiguration.ConfigurationJson != null)
+            if (request.GameConfiguration != null)
             {
                 try
                 {
-                    var gameResponse = await CreateGameConfiguration(request.GameConfiguration);
-                    _logger.LogInformation("Configuration created successfully: {ConfigId}", gameResponse);
+                    foreach (var config in request.GameConfiguration)
+                    {
+                        //config.CorrelationId = correlationId;
+                        //config.PromotionId = promotionId;
+
+                        if (config != null)
+                        {
+                            try
+                            {
+                                var gameResponse = await CreateGameConfiguration(config);
+                                _logger.LogInformation("Configuration created successfully: {ConfigId}", gameResponse);
+                            }
+                            catch
+                            {
+                                await CompensateAsync(correlationId);
+                                throw;
+                            }
+                        }
+
+                        _logger.LogInformation("Configuration created successfully: {Configuration}");
+                    }
                 }
                 catch
                 {

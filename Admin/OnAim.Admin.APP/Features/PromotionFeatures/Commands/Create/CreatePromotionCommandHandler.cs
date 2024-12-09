@@ -14,8 +14,8 @@ public class CreatePromotionCommandHandler : ICommandHandler<CreatePromotionComm
     }
     public async Task<ApplicationResult> Handle(CreatePromotionCommand request, CancellationToken cancellationToken)
     {
-        //var result = await _promotionService.CreatePromotion(request.Command);
+        var result = await _promotionService.CreatePromotion(request.Command);
 
-        return new ApplicationResult { Data = "" };
+        return new ApplicationResult { Data = result.Data, Success = result.Success };
     }
 }

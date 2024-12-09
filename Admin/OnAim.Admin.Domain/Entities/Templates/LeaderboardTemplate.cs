@@ -6,13 +6,11 @@ namespace OnAim.Admin.Domain.Entities.Templates;
 
 public class LeaderboardTemplate
 {
-    public LeaderboardTemplate()
-    {
-        
-    }
+    public LeaderboardTemplate(){}
+
     public LeaderboardTemplate(
         string title, 
-        string description, 
+        string description,
         DateTimeOffset announcementDate,
         DateTimeOffset startDate,
         DateTimeOffset endDate)
@@ -63,7 +61,13 @@ public class LeaderboardTemplate
         LeaderboardTemplatePrizes.Add(newPrize);
     }
 
-    public void Update(string title, string description, EventType eventType, DateTimeOffset announcementDate, DateTimeOffset startDate, DateTimeOffset endDate)
+    public void Update(
+        string title, 
+        string description,
+        EventType eventType,
+        DateTimeOffset announcementDate,
+        DateTimeOffset startDate,
+        DateTimeOffset endDate)
     {
         Title = title;
         Description = description;

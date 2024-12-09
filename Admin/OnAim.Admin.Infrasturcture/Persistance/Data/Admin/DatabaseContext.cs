@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Domain.Interfaces;
+using OnAim.Admin.Infrasturcture.Interfaces;
 using System.Data;
 
 namespace OnAim.Admin.Infrasturcture.Persistance.Data.Admin;

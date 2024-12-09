@@ -4,6 +4,8 @@ using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
+using OnAim.Admin.Contracts.Dtos.Base;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 
@@ -16,14 +18,49 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
         _leaderboardTemplateRepository = leaderboardTemplateRepository;
     }
 
+    public async Task<ApplicationResult> GetAllLeaderboardTemplates(BaseFilter filter)
+    {
+        var temps = await _leaderboardTemplateRepository.GetLeaderboardTemplates();
+
+        var totalCount = temps.Count();
+
+        var pageNumber = filter?.PageNumber ?? 1;
+        var pageSize = filter?.PageSize ?? 25;
+
+        var res = temps
+           .Skip((pageNumber - 1) * pageSize)
+           .Take(pageSize);
+
+        return new ApplicationResult
+        {
+            Success = true,
+            Data = new PaginatedResult<LeaderboardTemplate>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = res.ToList(),
+            },
+        };
+    }
+
+    public async Task<ApplicationResult> GetLeaderboardTemplateById(string id)
+    {
+        var template = await _leaderboardTemplateRepository.GetLeaderboardTemplateByIdAsync(id);
+
+        if (template == null) throw new NotFoundException("template Not Found");
+
+        return new ApplicationResult { Success = true, Data = template };
+    }
+
     public async Task<LeaderboardTemplate> CreateLeaderboardTemplate(CreateLeaderboardTemplateDto create)
     {
         var leaderboardTemplate = new LeaderboardTemplate(
-            create.Title, 
-            create.Description, 
-            create.AnnouncementDate, 
-            create.StartDate, 
-            create.EndDate
+            create.Title,
+            create.Description,
+            create.AnnouncementDuration,
+            create.StartDuration,
+            create.EndDuration
             );
 
         foreach (var prize in create.LeaderboardPrizes)
@@ -36,29 +73,12 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
         return leaderboardTemplate;
     }
 
-    public async Task<ApplicationResult> GetAllLeaderboardTemplate()
-    {
-        var temps = await _leaderboardTemplateRepository.GetLeaderboardTemplates();
-        return new ApplicationResult { Data = temps, Success = true };
-    }
-
-    public async Task<ApplicationResult> GetById(string id)
-    {
-        var coin = await _leaderboardTemplateRepository.GetLeaderboardTemplateByIdAsync(id);
-
-        if (coin == null) throw new NotFoundException("Coin Not Found");
-
-        return new ApplicationResult { Success = true, Data = coin };
-    }
-
     public async Task<ApplicationResult> DeleteLeaderboardTemplate(string temp)
     {
         var template = await _leaderboardTemplateRepository.GetLeaderboardTemplateByIdAsync(temp);
 
         if (template == null)
-        {
-            throw new NotFoundException("Coin Template Not Found");
-        }
+            throw new NotFoundException("Template Not Found");
 
         template.Delete();
 
@@ -67,22 +87,20 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
         return new ApplicationResult { Success = true };
     }
 
-    public async Task<ApplicationResult> UpdateCoinTemplate(UpdateLeaderboardTemplateDto update)
+    public async Task<ApplicationResult> UpdateLeaderboardTemplate(UpdateLeaderboardTemplateDto update)
     {
         var template = await _leaderboardTemplateRepository.GetLeaderboardTemplateByIdAsync(update.Id);
 
         if (template == null)
-        {
-            throw new NotFoundException($"Coin template with the specified ID: [{update.Id}] was not found.");
-        }
+            throw new NotFoundException($"template with the specified ID: [{update.Id}] was not found.");
 
         template.Update(
-            update.Name, 
+            update.Name,
             update.Description,
             (Domain.LeaderBoradEntities.EventType)update.EventType,
-            update.AnnouncementDate,
-            update.StartDate,
-            update.EndDate
+            update.AnnouncementDuration,
+            update.StartDuration,
+            update.EndDuration
             );
 
         foreach (var prize in update.LeaderboardPrizes)

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Domain.Interfaces;
+using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Persistance.Data.Hub;
 using System.Linq.Expressions;
 

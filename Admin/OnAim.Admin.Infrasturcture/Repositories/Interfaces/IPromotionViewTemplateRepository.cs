@@ -7,6 +7,6 @@ public interface IPromotionViewTemplateRepository
 {
     Task AddPromotionViewTemplateAsync(PromotionViewTemplate template);
     Task<List<PromotionViewTemplate>> GetPromotionViewTemplates();
-    Task<PromotionViewTemplate?> GetPromotionViewTemplateByIdAsync(ObjectId id);
-    Task<PromotionViewTemplate?> UpdatePromotionViewTemplateAsync(ObjectId id, PromotionViewTemplate updatedCoinTemplate);
+    Task<PromotionViewTemplate?> GetPromotionViewTemplateByIdAsync(string id);
+    Task<PromotionViewTemplate?> UpdatePromotionViewTemplateAsync(string id, PromotionViewTemplate updatedCoinTemplate);
 }

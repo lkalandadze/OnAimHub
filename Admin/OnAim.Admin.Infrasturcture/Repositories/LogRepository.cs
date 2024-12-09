@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
 using OnAim.Admin.Contracts.Models;
 using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Domain.Interfaces;
+using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Persistance.MongoDB;
 
 namespace OnAim.Admin.Infrasturcture.Repositories;

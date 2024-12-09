@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.API.Extensions;
 using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.AdminServices.Endpoint;
 using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Domain.Interfaces;
+using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 using System.Text;
 

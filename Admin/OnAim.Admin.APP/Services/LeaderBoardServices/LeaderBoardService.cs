@@ -1,14 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using MassTransit.Initializers;
-using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.APP.Services.LeaderBoardServices;
+using OnAim.Admin.Infrasturcture.Interfaces;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 
@@ -17,22 +15,16 @@ public class LeaderBoardService : ILeaderBoardService
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecord> _leaderboardRecordRepository;
     private readonly ILeaderBoardReadOnlyRepository<Prize> _prizeRepository;
     private readonly LeaderboardClientService _leaderboardClientService;
-    private readonly LeaderBoardApiClientOptions _options;
-    private readonly ILeaderBoardApiClient _httpClientService;
 
     public LeaderBoardService(
         ILeaderBoardReadOnlyRepository<LeaderboardRecord> leaderboardRecordRepository,
         ILeaderBoardReadOnlyRepository<Prize> prizeRepository,
-        LeaderboardClientService leaderboardClientService,
-        IOptions<LeaderBoardApiClientOptions> options,
-        ILeaderBoardApiClient httpClientService
+        LeaderboardClientService leaderboardClientService
         )
     {
         _leaderboardRecordRepository = leaderboardRecordRepository;
         _prizeRepository = prizeRepository;
         _leaderboardClientService = leaderboardClientService;
-        _options = options.Value;
-        _httpClientService = httpClientService;
     }
 
     public async Task<ApplicationResult> GetAllLeaderBoard(LeaderBoardFilter? filter)
@@ -125,17 +117,6 @@ public class LeaderBoardService : ILeaderBoardService
         return new ApplicationResult { Data = res, Success = true };
     }
 
-    public async Task<ApplicationResult> GetAllPrizes()
-    {
-        var prizes = _prizeRepository.Query();
-
-        return new ApplicationResult
-        {
-            Success = true,
-            Data = await prizes.ToListAsync(),
-        };
-    }
-
     public async Task<ApplicationResult> CreateLeaderBoardRecord(CreateLeaderboardRecordCommand createLeaderboardRecordDto)
     {
         try
@@ -162,20 +143,17 @@ public class LeaderBoardService : ILeaderBoardService
         }
     }
 
-    public async Task<ApplicationResult> GetCalendar(DateTimeOffset? startDate, DateTimeOffset? endDate)
+    public async Task<ApplicationResult> DeleteLeaderBoardRecord(DeleteLeaderboardRecordCommand delete)
     {
         try
         {
-            await _leaderboardClientService.GetCalendarAsync(startDate, endDate);
+            await _leaderboardClientService.DeleteLeaderboardRecordAsync(delete);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
         {
             throw new Exception(ex.Message, ex);
         }
-        //var result = await _httpClientService.Get<object>($"{_options.Endpoint}GetCalendar?StartDate={startDate}&EndDate={endDate}");
-
-        //return new ApplicationResult { Data = result, Success = true };
     }
 
     public async Task<ApplicationResult> GetLeaderboardSchedules(int? pageNumber, int? pageSize)
@@ -215,5 +193,29 @@ public class LeaderBoardService : ILeaderBoardService
         {
             throw new Exception(ex.Message, ex);
         }
+    }
+
+    public async Task<ApplicationResult> GetCalendar(DateTimeOffset? startDate, DateTimeOffset? endDate)
+    {
+        try
+        {
+            await _leaderboardClientService.GetCalendarAsync(startDate, endDate);
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<ApplicationResult> GetAllPrizes()
+    {
+        var prizes = _prizeRepository.Query();
+
+        return new ApplicationResult
+        {
+            Success = true,
+            Data = await prizes.ToListAsync(),
+        };
     }
 }

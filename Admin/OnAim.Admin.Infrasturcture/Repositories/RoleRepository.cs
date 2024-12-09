@@ -3,7 +3,7 @@ using OnAim.Admin.Contracts.Dtos.Endpoint;
 using OnAim.Admin.Contracts.Dtos.EndpointGroup;
 using OnAim.Admin.Contracts.Dtos.Role;
 using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.Domain.Interfaces;
+using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 
 namespace OnAim.Admin.Infrasturcture.Repository;

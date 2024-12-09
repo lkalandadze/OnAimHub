@@ -9,6 +9,7 @@ public class CreateCoinModel
     public string Description { get; set; }
     public string ImageUrl { get; set; }
     public CoinType CoinType { get; set; }
+    public string? TemplateId { get; set; }
 
     public static Coin.Coin ConvertToEntity(
         CreateCoinModel model,

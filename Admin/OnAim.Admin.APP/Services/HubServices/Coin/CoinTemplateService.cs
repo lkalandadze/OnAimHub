@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Services.HubServices.Coin;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Coin;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Domain.Interfaces;
+using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 using System.Collections.Immutable;
 
@@ -29,13 +28,13 @@ public class CoinTemplateService : ICoinTemplateService
         _coinRepository = coinRepository;
     }
 
-    public async Task<ApplicationResult> GetAllCoins(BaseFilter baseFilter)
+    public async Task<ApplicationResult> GetAllCoinTemplates()
     {
         var temps = await _coinRepository.GetCoinTemplates();
         return new ApplicationResult { Data = temps, Success = true };
     }
 
-    public async Task<ApplicationResult> GetById(string id)
+    public async Task<ApplicationResult> GetCoinTemplateById(string id)
     {
         var coin = await _coinRepository.GetCoinTemplateByIdAsync(id);
 

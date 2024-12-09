@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.APP.Services.AdminServices.Endpoint;
 using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Domain.Interfaces;
+using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 
 namespace OnAim.Admin.APP.Services.Admin.AuthServices;
