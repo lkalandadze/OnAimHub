@@ -1,5 +1,4 @@
-﻿using GameLib.Domain.Abstractions;
-using GameLib.Domain.Entities;
+﻿using GameLib.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

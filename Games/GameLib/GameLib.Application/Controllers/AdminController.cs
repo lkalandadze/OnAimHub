@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GameLib.Application.Controllers;
 
-[Authorize(AuthenticationSchemes = "BasicAuthentication")]
+//[Authorize(AuthenticationSchemes = "BasicAuthentication")]
 [ApiExplorerSettings(GroupName = "admin")]
 public class AdminController : BaseApiController
 {
@@ -70,16 +70,16 @@ public class AdminController : BaseApiController
     }
 
     [HttpPost(nameof(CreateConfiguration))]
-    public async Task<ActionResult> CreateConfiguration(ConfigurationCreateModel model)
+    public async Task<ActionResult> CreateConfiguration(GameConfiguration configuration)
     {
-        await _configurationService.CreateAsync(model.ConfigurationJson);
+        await _configurationService.CreateAsync(configuration);
         return StatusCode(201);
     }
 
     [HttpPut(nameof(UpdateConfiguration))]
-    public async Task<ActionResult> UpdateConfiguration(ConfigurationUpdateModel model)
+    public async Task<ActionResult> UpdateConfiguration(GameConfiguration configuration)
     {
-        await _configurationService.UpdateAsync(model.ConfigurationJson);
+        await _configurationService.UpdateAsync(configuration);
         return StatusCode(200);
     }
 

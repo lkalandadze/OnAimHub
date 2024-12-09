@@ -12,9 +12,9 @@ public interface IGameConfigurationService
 
     Task<GameConfiguration> GetByIdAsync(int id);
 
-    Task CreateAsync(string configurationJson);
+    Task CreateAsync(GameConfiguration configuration);
 
-    Task UpdateAsync(string configurationJson);
+    Task UpdateAsync(GameConfiguration configuration);
 
     Task ActivateAsync(int id);
 

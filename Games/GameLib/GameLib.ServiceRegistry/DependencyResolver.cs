@@ -24,6 +24,7 @@ using Microsoft.OpenApi.Models;
 using Shared.Application;
 using Shared.Application.Configurations;
 using Shared.Domain.Abstractions.Repository;
+using Shared.Lib;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.Json.Serialization;
@@ -92,6 +93,7 @@ public static class DependencyResolver
             .AddApplicationPart(typeof(BaseApiController).Assembly).AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            options.JsonSerializerOptions.Converters.Add(new GameConfigurationJsonConverter<TGameConfiguration>());
         });
 
         services.AddEndpointsApiExplorer();
@@ -197,6 +199,8 @@ public static class DependencyResolver
                     new List<string>()
                 },
             });
+
+            c.SchemaFilter<PolymorphismSchemaFilter<GameConfiguration>>();
         });
     }
 

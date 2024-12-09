@@ -15,10 +15,11 @@ public class GameConfiguration : BaseEntity<int>
 
     }
 
-    public GameConfiguration(string name, int value, Guid? correlationId = null, int? templateId = null, IEnumerable<Price> prices = null)
+    public GameConfiguration(string name, int value, int promotionId, Guid? correlationId = null, string templateId = null, IEnumerable<Price> prices = null)
     {
         Name = name;
         Value = value;
+        PromotionId = promotionId;
         CorrelationId = correlationId;
         FromTemplateId = templateId;
         Prices = prices?.ToList() ?? [];
@@ -33,11 +34,14 @@ public class GameConfiguration : BaseEntity<int>
     [GlobalDescription("IsActive of the configuration")]
     public bool IsActive { get; set; }
 
+    [GlobalDescription("Promotion Id of the configuration")]
+    public int PromotionId { get; set; }
+
     [GlobalDescription("Correlation Id of the configuration")]
     public Guid? CorrelationId { get; set; }
 
     [GlobalDescription("Template Id of the configuration")]
-    public int? FromTemplateId { get; set; }
+    public string FromTemplateId { get; set; }
 
     //[IgnoreIncludeAll]
     public ICollection<Price> Prices { get; set; }
@@ -66,8 +70,8 @@ public class GameConfiguration<T> : GameConfiguration where T : GameConfiguratio
 
     }
 
-    public GameConfiguration(string name, int value, Guid? correlationId = null, int? templateId = null, IEnumerable<Price> prices = null)
-        : base(name, value, correlationId, templateId, prices)
+    public GameConfiguration(string name, int value, int promotionId, Guid? correlationId = null, string templateId = null, IEnumerable<Price> prices = null)
+        : base(name, value, promotionId, correlationId, templateId, prices)
     { 
     
     }
