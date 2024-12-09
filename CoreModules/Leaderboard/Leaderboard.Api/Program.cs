@@ -46,6 +46,7 @@ builder.Services.Configure<HostOptions>(options =>
 
 //needs to be taken to custom services
 builder.Services.AddScoped<ICalendarService, CalendarService>();
+builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IBackgroundJobScheduler, BackgroundJobScheduler>();
 
