@@ -1,20 +1,21 @@
 ﻿using GameLib.Application.Generators;
 using GameLib.Application.Models.Configuration;
 using GameLib.Domain.Entities;
+using Shared.Lib.Wrappers;
 
 namespace GameLib.Application.Services.Abstract;
 
 public interface IGameConfigurationService
 {
-    EntityMetadata? GetConfigurationMetaData();
+    Response<EntityMetadata?> GetConfigurationMetaData();
 
-    Task<IEnumerable<ConfigurationBaseGetModel>> GetAllAsync();
+    Task<Response<IEnumerable<ConfigurationBaseGetModel>>> GetAllAsync();
 
-    Task<GameConfiguration> GetByIdAsync(int id);
+    Task<Response<GameConfiguration>> GetByIdAsync(int id);
 
-    Task CreateAsync(string configurationJson);
+    Task CreateAsync(GameConfiguration configuration);
 
-    Task UpdateAsync(string configurationJson);
+    Task UpdateAsync(GameConfiguration configuration);
 
     Task ActivateAsync(int id);
 

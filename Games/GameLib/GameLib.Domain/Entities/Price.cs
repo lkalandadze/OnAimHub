@@ -24,8 +24,11 @@ public class Price : BaseEntity<string>
 
     public decimal Value { get; set; }
     public decimal Multiplier { get; set; }
-    public string CurrencyId { get; set; }
+
+
+    [JsonIgnore]
     public Currency Currency { get; set; }
+    public string CurrencyId { get; set; }
 }
 
 public class Price<T> : Price where T : Price<T> 

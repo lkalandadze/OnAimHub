@@ -4,6 +4,8 @@ using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
 using GameLib.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 
 namespace GameLib.Application.Services.Concrete;
 
@@ -35,7 +37,7 @@ public class PrizeTypeService : IPrizeTypeService
 
         if (prizeType == null)
         {
-            throw new KeyNotFoundException($"PrizeType not found for Id: {id}");
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"PrizeType with the specified ID: [{id}] was not found.");
         }
 
         return PrizeTypeGetModel.MapFrom(prizeType);
@@ -55,7 +57,7 @@ public class PrizeTypeService : IPrizeTypeService
 
         if (prizeType == null)
         {
-            throw new KeyNotFoundException($"PrizeType not found for Id: {id}");
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"PrizeType with the specified ID: [{id}] was not found.");
         }
 
         prizeType.ChangeDetails(model.Name, model.IsMultiplied, model.CurrencyId);

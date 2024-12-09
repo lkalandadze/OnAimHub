@@ -1,8 +1,10 @@
 using GameLib.Application.Services.Abstract;
+using GameLib.Domain.Abstractions;
 using GameLib.Domain.Entities;
 using GameLib.Infrastructure;
 using GameLib.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Validations;
 using Newtonsoft.Json;
 using Wheel.Api;
 using Wheel.Domain.Entities;
@@ -71,24 +73,24 @@ var c = host.Services.CreateScope().ServiceProvider.GetRequiredService<WheelConf
 
 //c.SaveChanges();
 
-//Get Configuration
-//var config = await host.Services.ExecuteAsync<IGameConfigurationService>(async x => await x.GetByIdAsync(c.GameConfigurations.First().Id)) as WheelConfiguration;
+////Get Configuration
+//var existingConfig = await host.Services.ExecuteAsync<IGameConfigurationService>(async x => await x.GetByIdAsync(c.GameConfigurations.First().Id)) as WheelConfiguration;
 
-//Update Configuration
-//if (config != null)
+////Update Configuration
+//if (existingConfig != null)
 //{
-//    config.Name = DateTime.Now.ToString();
+//    existingConfig.Name = DateTime.Now.ToString();
 
-//    config.Rounds.Last().Prizes.First().Probability = 321;
+//    existingConfig.Rounds.Last().Prizes.First().Probability = 321;
 
-//    //config.Rounds.Remove(config.Rounds.First());
-//    //config.Rounds.First().Prizes.Remove(config.Rounds.First().Prizes.First());
+//    //existingConfig.Rounds.Remove(existingConfig.Rounds.First());
+//    //existingConfig.Rounds.First().Prizes.Remove(existingConfig.Rounds.First().Prizes.First());
 
-//    config.Rounds.First().Prizes.First().Name += " UPDATED";
-//    config.Rounds.Last().Prizes.First().Name += " UPDATED";
-//    config.Rounds.Last().Prizes.First().Probability = 999;
+//    existingConfig.Rounds.First().Prizes.First().Name += " UPDATED";
+//    existingConfig.Rounds.Last().Prizes.First().Name += " UPDATED";
+//    existingConfig.Rounds.Last().Prizes.First().Probability = 999;
 
-//    config.Rounds.Add(new Round()
+//    existingConfig.Rounds.Add(new Round()
 //    {
 //        Id = 0,
 //        NextPrizeIndex = 0,
@@ -98,12 +100,12 @@ var c = host.Services.CreateScope().ServiceProvider.GetRequiredService<WheelConf
 //    });
 //}
 
-//var configJson = JsonConvert.SerializeObject(config, new JsonSerializerSettings
+//var configJson = JsonConvert.SerializeObject(existingConfig, new JsonSerializerSettings
 //{
 //    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
 //});
 
-//await host.Services.ExecuteAsync<IGameConfigurationService>(async x => await x.UpdateAsync(configJson));
+//await host.Services.ExecuteAsync<IGameConfigurationService>(async x => await x.UpdateAsync(existingConfig));
 
 #endregion
 

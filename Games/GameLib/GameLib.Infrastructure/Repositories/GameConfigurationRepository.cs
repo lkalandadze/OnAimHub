@@ -68,6 +68,7 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
         var type = RepositoryHelper.GetDbSetEntityType<GameConfiguration>(context);
 
         var existingConfig = await dbSet.IncludeNotHiddenAll(type)
+            .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == updatedConfig.Id);
 
         if (existingConfig == null)

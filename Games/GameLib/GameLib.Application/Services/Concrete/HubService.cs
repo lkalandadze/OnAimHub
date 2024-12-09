@@ -6,6 +6,8 @@ using GameLib.Application.Models.Transaction;
 using GameLib.Application.Services.Abstract;
 using Shared.Lib.Extensions;
 using System.Net.Http.Headers;
+using Shared.Application.Exceptions.Types;
+using Shared.Application.Exceptions;
 
 namespace GameLib.Application.Services.Concrete;
 
@@ -34,9 +36,15 @@ public class HubService : IHubService
 
         var betTransaction = await _httpClient.CustomPostAsync<TransactionResponseModel>(_hubApiConfig.Host, _hubApiConfig.Endpoints.BetTransaction, transactionPost);
 
-        if (betTransaction == null || !betTransaction.Success)
+        if (betTransaction == null)
         {
-            throw new Exception();
+            throw new ApiException(ApiExceptionCodeTypes.DependencyFailure, "Failed to process bet transaction due to null response from the service.");
+        }
+
+        if (!betTransaction.Success)
+        {
+            var reason = /*betTransaction.ErrorCode ?? */"Unknown error";
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Bet transaction failed: {reason}.");
         }
     }
 
@@ -52,9 +60,15 @@ public class HubService : IHubService
 
         var winTransaction = await _httpClient.CustomPostAsync<TransactionResponseModel>(_hubApiConfig.Host, _hubApiConfig.Endpoints.WinTransaction, transactionPost);
 
-        if (winTransaction == null || !winTransaction.Success)
+        if (winTransaction == null)
         {
-            throw new Exception();
+            throw new ApiException(ApiExceptionCodeTypes.DependencyFailure, "Failed to process win transaction due to null response from the service.");
+        }
+
+        if (!winTransaction.Success)
+        {
+            var reason = /*winTransaction.ErrorCode ?? */"Unknown error";
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Win transaction failed: {reason}.");
         }
     }
 
@@ -64,14 +78,14 @@ public class HubService : IHubService
 
         if (string.IsNullOrEmpty(authHeader))
         {
-            throw new InvalidOperationException();
+            throw new ApiException(ApiExceptionCodeTypes.AuthenticationFailed, "Authorization header is missing.");
         }
 
         var token = authHeader.Replace("Bearer ", string.Empty, StringComparison.OrdinalIgnoreCase);
 
         if (string.IsNullOrEmpty(token))
         {
-            throw new ArgumentException();
+            throw new ApiException(ApiExceptionCodeTypes.AuthenticationFailed, "Authorization token is missing or invalid.");
         }
 
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
