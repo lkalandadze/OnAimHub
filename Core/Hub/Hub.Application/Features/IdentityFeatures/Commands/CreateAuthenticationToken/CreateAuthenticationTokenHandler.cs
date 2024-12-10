@@ -126,7 +126,7 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
             var segment = await _segmentRepository.Query(s => s.Id == "default").FirstOrDefaultAsync();
             player = new Player(receivedPlayer.Id, receivedPlayer.UserName, recommendedById, [segment]);
 
-            //if (request.PromoCode != null)
+            //if (request.PromoCode != null) 
             //{
             //    var referralDistribution = new ReferralDistribution(
             //        referrerId: recommendedById.GetValueOrDefault(),
