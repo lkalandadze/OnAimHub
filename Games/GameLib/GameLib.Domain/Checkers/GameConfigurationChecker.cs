@@ -9,13 +9,13 @@ public class GameConfigurationChecker : Checkmate<GameConfiguration>
     public GameConfigurationChecker() : base()
     {
         Check(x => x.Name.Length)
-            .GreaterThan(5)
-            .WithMessage("The length of the name must be at least 5.")
+            .GreaterThan(10)
+            .WithMessage("The length of the configuration name must be at least 10.")
             .LessThan(30)
-            .WithMessage("The length of the name must be more than 30.");
+            .WithMessage("The length of the configuration name must be less than 30.");
 
         Check(x => x.Value)
            .GreaterThan(0)
-           .WithMessage("The value must be positive");
+           .WithMessage("The configuration value must be positive");
     }
 }

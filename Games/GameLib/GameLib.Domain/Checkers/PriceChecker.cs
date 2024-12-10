@@ -10,10 +10,10 @@ public class PriceChecker : Checkmate<Price>
     {
         Check(x => x.Value)
             .GreaterThan(0)
-            .WithMessage("The value must be positive.");
+            .WithMessage("The value of price must be positive.");
 
         Check(x => x.Multiplier)
             .GreaterThan(0)
-            .WithMessage("The Multiplier must be positive.");
+            .WithMessage("The multiplier of price must be positive.");
     }
 }

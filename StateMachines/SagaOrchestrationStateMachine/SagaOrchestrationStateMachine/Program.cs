@@ -1,7 +1,7 @@
 using Hub.Application.Converters;
 using Hub.Application.Models.Coin;
 using SagaOrchestrationStateMachine;
-using Shared.Lib;
+using Shared.Lib.SwaggerFilters;
 using System.Net.Http.Headers;
 using System.Text;
 

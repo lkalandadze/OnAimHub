@@ -25,7 +25,7 @@ using Shared.Application;
 using Shared.Application.Configurations;
 using Shared.Application.Middlewares;
 using Shared.Domain.Abstractions.Repository;
-using Shared.Lib;
+using Shared.Lib.SwaggerFilters;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.Json.Serialization;

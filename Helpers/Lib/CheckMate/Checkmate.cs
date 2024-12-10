@@ -47,7 +47,8 @@ public class Checkmate
         }
 
         var type = obj.GetType();
-        var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                             .Where(p => !p.GetMethod.IsStatic && p.GetIndexParameters().Length == 0);
         var containers = new List<CheckContainerWithInstance>();
 
         if (GetRootCheckContainers(type) != null)
@@ -59,28 +60,36 @@ public class Checkmate
                 Path = path,
             }));
         }
-        
+
         if (isTree)
         {
             foreach (var property in properties)
             {
-                var propertyValue = property.GetValue(obj);
-                if (propertyValue is IEnumerable enumerable && propertyValue.GetType() != typeof(string))
+                try
                 {
-                    foreach (var item in enumerable)
+                    var propertyValue = property.GetValue(obj);
+                    if (propertyValue is IEnumerable enumerable && propertyValue.GetType() != typeof(string))
                     {
-                        containers.AddRange(GetCheckContainersWithInstance(item, $"{path}.{property.Name}", true));
+                        foreach (var item in enumerable)
+                        {
+                            containers.AddRange(GetCheckContainersWithInstance(item, $"{path}.{property.Name}", true));
+                        }
+                    }
+                    else if (propertyValue != null)
+                    {
+                        containers.AddRange(GetCheckContainersWithInstance(propertyValue, $"{path}.{property.Name}", true));
                     }
                 }
-                else if (propertyValue != null)
+                catch
                 {
-                    containers.AddRange(GetCheckContainersWithInstance(propertyValue, $"{path}.{property.Name}", true));
+                    // Handle or log errors
                 }
             }
         }
 
         return containers;
     }
+
 
     public static List<CheckContainer> GetRootCheckContainers(Type type)
     {

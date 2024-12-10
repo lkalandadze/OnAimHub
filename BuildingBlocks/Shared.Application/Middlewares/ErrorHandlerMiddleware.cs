@@ -36,6 +36,17 @@ public class ErrorHandlerMiddleware
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     break;
 
+                case CheckmateException e:
+                    // Custom validation error
+                    response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    responseModel.Message = "Validation failed.";
+                    responseModel.ValidationErrors = e.FailedChecks
+                        .GroupBy(fc => fc.Path)
+                        .ToDictionary(
+                            g => g.Key,
+                            g => g.Select(fc => fc.Message).ToArray()
+                        );
+                    break;
 
                 //For future fluentvalidation
 

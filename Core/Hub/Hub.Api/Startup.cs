@@ -37,7 +37,7 @@ using Shared.Application.Middlewares;
 using Shared.Infrastructure.Bus;
 using Shared.Infrastructure.MassTransit;
 using Shared.IntegrationEvents.IntegrationEvents.Segment;
-using Shared.Lib;
+using Shared.Lib.SwaggerFilters;
 using System.Reflection;
 using System.Security.Cryptography;
 

@@ -1,5 +1,4 @@
 using OnAim.Admin.API.Extensions;
-using OnAim.Admin.API.Middleware;
 using OnAim.Admin.APP;
 using OnAim.Admin.APP.Extensions;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
@@ -7,7 +6,7 @@ using OnAim.Admin.Domain.HubEntities.Models;
 using OnAim.Admin.Infrasturcture;
 using Serilog;
 using Serilog.Events;
-using Shared.Lib;
+using Shared.Lib.SwaggerFilters;
 
 var builder = WebApplication.CreateBuilder(args);
 

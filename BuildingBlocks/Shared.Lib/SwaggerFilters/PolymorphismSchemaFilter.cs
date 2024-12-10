@@ -1,7 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Shared.Lib;
+namespace Shared.Lib.SwaggerFilters;
 
 public class PolymorphismSchemaFilter<TBaseType> : ISchemaFilter
 {

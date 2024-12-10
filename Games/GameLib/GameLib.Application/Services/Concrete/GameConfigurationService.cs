@@ -57,6 +57,11 @@ public class GameConfigurationService : IGameConfigurationService
 
     public async Task CreateAsync(GameConfiguration configuration)
     {
+        if (!CheckmateValidations.Checkmate.IsValid(configuration, true))
+        {
+            throw new CheckmateException(CheckmateValidations.Checkmate.GetFailedChecks(configuration, true));
+        }
+
         try
         {
             _configurationRepository.InsertConfigurationTree(configuration);
@@ -71,6 +76,11 @@ public class GameConfigurationService : IGameConfigurationService
 
     public async Task UpdateAsync(GameConfiguration configuration)
     {
+        if (!CheckmateValidations.Checkmate.IsValid(configuration, true))
+        {
+            throw new CheckmateException(CheckmateValidations.Checkmate.GetFailedChecks(configuration, true));
+        }
+
         try
         {
             await _configurationRepository.UpdateConfigurationTreeAsync(configuration);
