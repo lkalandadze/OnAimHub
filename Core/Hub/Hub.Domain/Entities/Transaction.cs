@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using Hub.Domain.Entities.Coins;
 using Hub.Domain.Entities.DbEnums;
 using OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing.Attributes;
 using Shared.Domain.Entities;
@@ -14,14 +15,14 @@ public class Transaction : BaseEntity<int>
         
     }
 
-    public Transaction(decimal amount, int? gameId, int playerId, AccountType fromAccount, AccountType toAccount, string currencyId, TransactionStatus status, TransactionType type, int? promotionId)
+    public Transaction(decimal amount, int? gameId, int playerId, AccountType fromAccount, AccountType toAccount, string coinId, TransactionStatus status, TransactionType type, int? promotionId)
     {
         Amount = amount;
         GameId = gameId;
         PlayerId = playerId;
         FromAccountId = fromAccount.Id;
         ToAccountId = toAccount.Id;
-        CurrencyId = currencyId;
+        CoinId = coinId;
         StatusId = status.Id;
         TypeId = type.Id;
         PromotionId = promotionId;
@@ -41,8 +42,8 @@ public class Transaction : BaseEntity<int>
     public int ToAccountId { get; private set; }
     public AccountType ToAccount { get; private set; }
 
-    public string CurrencyId { get; private set; }
-    public Currency Currency { get; private set; }
+    public string CoinId { get; private set; }
+    public Coin Coin { get; private set; }
 
     public int StatusId { get; private set; }
     public TransactionStatus Status { get; private set; }

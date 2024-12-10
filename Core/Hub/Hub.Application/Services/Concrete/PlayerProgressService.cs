@@ -22,37 +22,37 @@ public class PlayerProgressService : IPlayerProgressService
         _transactionService = transactionService;
     }
 
-    public async Task InsertOrUpdateProgressesAsync(PlayerProgressGetModel progressModel, int playerId)
-    {
-        var currentProgresses = _playerProgressRepository.Query(x => x.PlayerId == playerId);
+    //public async Task InsertOrUpdateProgressesAsync(PlayerProgressGetModel progressModel, int playerId)
+    //{
+    //    var currentProgresses = _playerProgressRepository.Query(x => x.PlayerId == playerId);
 
-        foreach (var progress in progressModel.Progress!)
-        {
-            var currentProgress = currentProgresses.FirstOrDefault(x => x.CurrencyId == progress.Key);
+    //    foreach (var progress in progressModel.Progress!)
+    //    {
+    //        var currentProgress = currentProgresses.FirstOrDefault(x => x.CoinId == progress.Key);
 
-            if (currentProgress == null)
-            {
-                var newProgress = new PlayerProgress(progress.Value, playerId, progress.Key);
+    //        if (currentProgress == null)
+    //        {
+    //            var newProgress = new PlayerProgress(progress.Value, playerId, progress.Key);
 
-                await _playerProgressRepository.InsertAsync(newProgress);
-                await _transactionService.CreateTransactionAndApplyBalanceAsync(null, progress.Key, progress.Value, AccountType.Casino, AccountType.Player, TransactionType.Progress, null /* PromotionId */);
-            }
-            else
-            {
-                var newProgress = progress.Value - currentProgress.Progress;
-                currentProgress.SetProgress(progress.Value);
+    //            await _playerProgressRepository.InsertAsync(newProgress);
+    //            await _transactionService.CreateTransactionAndApplyBalanceAsync(null, progress.Key, progress.Value, AccountType.Casino, AccountType.Player, TransactionType.Progress, null /* PromotionId */);
+    //        }
+    //        else
+    //        {
+    //            var newProgress = progress.Value - currentProgress.Progress;
+    //            currentProgress.SetProgress(progress.Value);
 
-                _playerProgressRepository.Update(currentProgress);
+    //            _playerProgressRepository.Update(currentProgress);
 
-                if (newProgress > 0)
-                {
-                    await _transactionService.CreateTransactionAndApplyBalanceAsync(null, progress.Key, newProgress, AccountType.Casino, AccountType.Player, TransactionType.Progress, null /* PromotionId */);
-                }
-            }
-        }
+    //            if (newProgress > 0)
+    //            {
+    //                await _transactionService.CreateTransactionAndApplyBalanceAsync(null, progress.Key, newProgress, AccountType.Casino, AccountType.Player, TransactionType.Progress, null /* PromotionId */);
+    //            }
+    //        }
+    //    }
 
-        await _unitOfWork.SaveAsync();
-    }
+    //    await _unitOfWork.SaveAsync();
+    //}
 
     public async Task ResetPlayerProgressesAndSaveHistoryAsync()
     {
@@ -62,7 +62,7 @@ public class PlayerProgressService : IPlayerProgressService
 
         _playerProgressRepository.DeleteAll();
 
-        var playerProgressHistories = playerProgresses.Select(pp => new PlayerProgressHistory(pp.Progress, pp.PlayerId, pp.CurrencyId));
+        var playerProgressHistories = playerProgresses.Select(pp => new PlayerProgressHistory(pp.Progress, pp.PlayerId, pp.CoinId));
 
         await _playerProgressHistoryRepository.InsertRangeAsync(playerProgressHistories);
         await _unitOfWork.SaveAsync();

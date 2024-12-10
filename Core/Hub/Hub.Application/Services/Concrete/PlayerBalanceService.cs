@@ -19,7 +19,7 @@ public class PlayerBalanceService : IPlayerBalanceService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<PlayerBalance> GetOrCreatePlayerBalanceAsync(int playerId, string coinId, int? promotionId)
+    public async Task<PlayerBalance> GetOrCreatePlayerBalanceAsync(int playerId, string coinId, int promotionId)
     {
         var playerBalance = (await _playerBalanceRepository.QueryAsync(x => x.PlayerId == playerId &&
                                                                             x.CoinId == coinId))
@@ -45,7 +45,7 @@ public class PlayerBalanceService : IPlayerBalanceService
         return playerBalance;
     }
 
-    public async Task ApplyPlayerBalanceOperationAsync(int playerId, string coinId, AccountType fromAccount, AccountType toAccount, decimal amount, int? promotionId)
+    public async Task ApplyPlayerBalanceOperationAsync(int playerId, string coinId, AccountType fromAccount, AccountType toAccount, decimal amount, int promotionId)
     {
         var balance = await GetOrCreatePlayerBalanceAsync(playerId, coinId, promotionId);
 

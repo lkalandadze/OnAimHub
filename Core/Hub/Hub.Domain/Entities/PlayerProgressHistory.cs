@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using Hub.Domain.Entities.Coins;
 using Hub.Domain.Entities.DbEnums;
 using OnAim.Lib.CodeGeneration.GloballyVisibleClassSharing.Attributes;
 using Shared.Domain.Entities;
@@ -14,11 +15,11 @@ public class PlayerProgressHistory : BaseEntity<int>
 
     }
 
-    public PlayerProgressHistory(int progress, int playerId, string currencyId)
+    public PlayerProgressHistory(int progress, int playerId, string coinId)
     {
         Progress = progress;
         PlayerId = playerId;
-        CurrencyId = currencyId;
+        CoinId = coinId;
     }
 
     public int Progress { get; private set; }
@@ -26,6 +27,6 @@ public class PlayerProgressHistory : BaseEntity<int>
     public int PlayerId { get; private set; }
     public Player Player { get; private set; }
 
-    public string CurrencyId { get; private set; }
-    public Currency Currency { get; private set; }
+    public string CoinId { get; private set; }
+    public Coin Coin { get; private set; }
 }

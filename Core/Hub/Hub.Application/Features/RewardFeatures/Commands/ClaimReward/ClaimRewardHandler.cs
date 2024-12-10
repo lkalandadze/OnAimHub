@@ -33,7 +33,7 @@ public class ClaimRewardHandler : IRequestHandler<ClaimRewardCommand>
                                       .Include(r => r.Source)
                                       .Include(r => r.Prizes)
                                       .ThenInclude(p => p.PrizeType)
-                                      .ThenInclude(pt => pt.Currency)
+                                      .ThenInclude(pt => pt.Coin)
                                       .FirstOrDefault();
 
         if (reward == null)
@@ -51,11 +51,11 @@ public class ClaimRewardHandler : IRequestHandler<ClaimRewardCommand>
 
         foreach (var prize in reward.Prizes)
         {
-            if (prize.PrizeType.Currency != null)
+            if (prize.PrizeType.Coin != null)
             {
                 var transactionType = DetermineTransactionType(reward.Source);
 
-                await _transactionService.CreateTransactionAndApplyBalanceAsync(null, prize.PrizeType.CurrencyId, prize.Value, AccountType.Casino, AccountType.Player, transactionType, null);
+                await _transactionService.CreateTransactionAndApplyBalanceAsync(null, prize.PrizeType.CoinId, prize.Value, AccountType.Casino, AccountType.Player, transactionType, prize.PrizeType.Coin.PromotionId);
             }
         }
 

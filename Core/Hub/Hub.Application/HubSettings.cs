@@ -12,11 +12,11 @@ public class HubSettings(IHubSettingRepository settingRepository) : Settings(set
     [SettingPropertyDefaultValue(50)]
     public SettingProperty<int> MaxReferralsPerUser { get; set; }
 
-    [SettingPropertyDefaultValue(nameof(Currency.FreeSpin))]
-    public SettingProperty<string> ReferrerPrizeCurrencyId { get; set; }
+    //[SettingPropertyDefaultValue(nameof(Currency.FreeSpin))]
+    //public SettingProperty<string> ReferrerPrizeCoinId { get; set; }
 
-    [SettingPropertyDefaultValue(nameof(Currency.FreeSpin))]
-    public SettingProperty<string> ReferralPrizeCurrencyId { get; set; }
+    //[SettingPropertyDefaultValue(nameof(Currency.FreeSpin))]
+    //public SettingProperty<string> ReferralPrizeCoinId { get; set; }
 
     [SettingPropertyDefaultValue(100)]
     public SettingProperty<int> ReferrerPrizeAmount { get; set; }

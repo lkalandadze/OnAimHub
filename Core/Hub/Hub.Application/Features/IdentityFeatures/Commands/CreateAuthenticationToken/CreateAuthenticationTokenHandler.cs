@@ -126,19 +126,19 @@ public class CreateAuthenticationTokenHandler : IRequestHandler<CreateAuthentica
             var segment = await _segmentRepository.Query(s => s.Id == "default").FirstOrDefaultAsync();
             player = new Player(receivedPlayer.Id, receivedPlayer.UserName, recommendedById, [segment]);
 
-            if (request.PromoCode != null)
-            {
-                var referralDistribution = new ReferralDistribution(
-                    referrerId: recommendedById.GetValueOrDefault(),
-                    referralId: player.Id,
-                    referrerPrizeId: _hubSettings.ReferrerPrizeCurrencyId.Value,
-                    referrerPrizeValue: _hubSettings.ReferrerPrizeAmount.Value,
-                    referrerPrizeCurrency: Currency.FromId(_hubSettings.ReferrerPrizeCurrencyId.Value),
-                    referralPrizeValue: _hubSettings.ReferralPrizeAmount.Value,
-                    referralPrizeId: _hubSettings.ReferralPrizeCurrencyId.Value,
-                    referralPrizeCurrency: Currency.FromId(_hubSettings.ReferralPrizeCurrencyId.Value)
-                );
-            }
+            //if (request.PromoCode != null)
+            //{
+            //    var referralDistribution = new ReferralDistribution(
+            //        referrerId: recommendedById.GetValueOrDefault(),
+            //        referralId: player.Id,
+            //        referrerPrizeId: _hubSettings.ReferrerPrizeCurrencyId.Value,
+            //        referrerPrizeValue: _hubSettings.ReferrerPrizeAmount.Value,
+            //        referrerPrizeCurrency: Currency.FromId(_hubSettings.ReferrerPrizeCurrencyId.Value),
+            //        referralPrizeValue: _hubSettings.ReferralPrizeAmount.Value,
+            //        referralPrizeId: _hubSettings.ReferralPrizeCurrencyId.Value,
+            //        referralPrizeCurrency: Currency.FromId(_hubSettings.ReferralPrizeCurrencyId.Value)
+            //    );
+            //}
 
             await _playerRepository.InsertAsync(player);
         }

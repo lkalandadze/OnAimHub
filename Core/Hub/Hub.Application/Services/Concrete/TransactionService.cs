@@ -26,7 +26,7 @@ public class TransactionService : ITransactionService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<TransactionResponseModel> CreateTransactionAndApplyBalanceAsync(int? gameId, string currencyId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType, int? promotionId)
+    public async Task<TransactionResponseModel> CreateTransactionAndApplyBalanceAsync(int? gameId, string currencyId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType, int promotionId)
     {
         var playerId = _authService.GetCurrentPlayerId();
 
@@ -55,7 +55,7 @@ public class TransactionService : ITransactionService
         };
     }
 
-    public async Task<TransactionResponseModel> CreateLeaderboardTransactionAndApplyBalanceAsync(int? gameId, string currencyId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType, int? promotionId, int playerId)
+    public async Task<TransactionResponseModel> CreateLeaderboardTransactionAndApplyBalanceAsync(int? gameId, string currencyId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType, int promotionId, int playerId)
     {
         await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, currencyId, fromAccount, toAccount, amount, promotionId);
 

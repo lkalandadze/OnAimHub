@@ -4,7 +4,7 @@ namespace Hub.Application.Services.Abstract;
 
 public interface IPlayerProgressService
 {
-    Task InsertOrUpdateProgressesAsync(PlayerProgressGetModel model, int playerId);
+    //Task InsertOrUpdateProgressesAsync(PlayerProgressGetModel model, int playerId);
 
     Task ResetPlayerProgressesAndSaveHistoryAsync();
 }

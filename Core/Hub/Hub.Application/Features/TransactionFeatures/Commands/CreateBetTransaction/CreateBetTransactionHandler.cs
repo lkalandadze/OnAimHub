@@ -16,7 +16,7 @@ public class CreateBetTransactionHandler : IRequestHandler<CreateBetTransactionC
 
     public async Task<TransactionResponseModel> Handle(CreateBetTransactionCommand request, CancellationToken cancellationToken)
     {
-        return await _transactionService.CreateTransactionAndApplyBalanceAsync(request.GameId, request.CurrencyId, request.Amount,
-                                                           AccountType.Player, AccountType.Game, TransactionType.Bet, null /* PromotionId */);
+        return await _transactionService.CreateTransactionAndApplyBalanceAsync(request.GameId, request.CoinId, request.Amount,
+                                                           AccountType.Player, AccountType.Game, TransactionType.Bet, request.PromotionId /* PromotionId */);
     }
 }

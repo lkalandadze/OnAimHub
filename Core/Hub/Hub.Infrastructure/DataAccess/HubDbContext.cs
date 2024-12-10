@@ -9,7 +9,6 @@ namespace Hub.Infrastructure.DataAccess;
 
 public class HubDbContext(DbContextOptions options) : DbContext(options)
 {
-    public DbSet<Currency> Currencies { get; set; }
     public DbSet<Game> Games { get; set; }
     public DbSet<Player> Players { get; set; }
     public DbSet<PlayerBalance> PlayerBalances { get; set; }
