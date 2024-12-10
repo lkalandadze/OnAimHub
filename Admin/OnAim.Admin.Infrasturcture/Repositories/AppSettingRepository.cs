@@ -13,9 +13,7 @@ public class AppSettingRepository : IAppSettingRepository
         context = databaseContext;
     }
     public Dictionary<string, object> GetSettings()
-    {
-        return context.AppSettings.ToDictionary(setting => setting.Name, setting => (object)setting.Value);
-    }
+        => context.AppSettings.ToDictionary(setting => setting.Name, setting => (object)setting.Value);
 
     public object GetOrCreateValue(string dbSettingPropertyName, object defaultValue)
     {

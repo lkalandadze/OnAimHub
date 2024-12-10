@@ -1,5 +1,10 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
+using OnAim.Admin.Domain.HubEntities.Coin;
+using OnAim.Admin.Domain.LeaderBoradEntities;
+using OnAim.Admin.Contracts.Dtos.LeaderBoard;
+using OnAim.Admin.Contracts.Dtos.Promotion;
+using OnAim.Admin.Domain.HubEntities.Models;
 
 namespace OnAim.Admin.Domain.Entities.Templates;
 
@@ -12,12 +17,14 @@ public class PromotionTemplate
     public string Description { get; set; }
     public DateTime StartDate { get;  set; }
     public DateTime EndDate { get;  set; }
-    public IEnumerable<string> SegmentIds { get;  set; }
-    public ICollection<CoinTemplate>? Coins { get; set; } = new List<CoinTemplate>();
-    public ICollection<LeaderboardTemplate>? Leaderboards { get; set; } = new List<LeaderboardTemplate>();
-    public ICollection<GameConfigurationTemplate> Games { get; set; } = new List<GameConfigurationTemplate>();
+    public IEnumerable<string>? SegmentIds { get;  set; }
+    public ICollection<Coin>? Coins { get; set; } = new List<Coin>(); //coin with cointemplate id
+    public ICollection<LeaderboardRecord>? Leaderboards { get; set; } = new List<LeaderboardRecord>(); //Leaderboard
+    public ICollection<GameConfigurationTemplate>? Games { get; set; } = new List<GameConfigurationTemplate>();
+    public bool IsDeleted { get; set; }
+    public DateTimeOffset? DateDeleted { get; set; }
 
-    public void UpdateCoins(IEnumerable<CoinTemplate> coins)
+    public void UpdateCoins(IEnumerable<Coin> coins)
     {
         if (coins != null)
         {
@@ -30,7 +37,7 @@ public class PromotionTemplate
         }
     }
 
-    public void AddCoins(IEnumerable<CoinTemplate> coins)
+    public void AddCoins(IEnumerable<Coin> coins)
     {
         foreach (var coin in coins)
         {
@@ -41,7 +48,7 @@ public class PromotionTemplate
         }
     }
 
-    public void AddLeaderboard(IEnumerable<LeaderboardTemplate> leaderboards)
+    public void AddLeaderboard(IEnumerable<LeaderboardRecord> leaderboards)
     {
         foreach (var item in leaderboards)
         {
@@ -51,4 +58,21 @@ public class PromotionTemplate
             }
         }
     }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+        DateDeleted = DateTimeOffset.UtcNow;
+    }
 }
+public record CreatePromotionTemplate(
+    int PromotionId,
+    string Title,
+    DateTime StartDate,
+    DateTime EndDate,
+    string Description,
+    IEnumerable<string> SegmentIds,
+    IEnumerable<CreateCoinModel>? Coins,
+    IEnumerable<CreateLeaderboardTemplateDto>? Leaderboards,
+    IEnumerable<CreateGameConfigurationTemplateDto> Games
+    );

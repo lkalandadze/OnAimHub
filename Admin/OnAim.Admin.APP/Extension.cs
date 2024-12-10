@@ -1,27 +1,20 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using OnAim.Admin.Infrasturcture.Repository;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using OnAim.Admin.Contracts.Models;
 using OnAim.Admin.APP.Feature.Identity;
 using OnAim.Admin.Contracts.Helpers.Csv;
 using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
-using OnAim.Admin.Domain.Interfaces;
-using OnAim.Admin.Infrasturcture.Repositories;
 using Microsoft.Extensions.Options;
 using System.Reflection;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.APP.Services.Game;
 using Shared.Infrastructure.Bus;
 using Shared.Infrastructure.MassTransit;
 using MassTransit;
 using OnAim.Admin.APP.Services.LeaderBoard;
-using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 using System.Text;
 using System.Net.Http.Headers;
 using MediatR;
-using OnAim.Admin.Infrasturcture.Repositories.Promotion;
-using OnAim.Admin.Infrasturcture.Repositories.Leaderboard;
 using OnAim.Admin.APP.Services.Admin.Domain;
 using OnAim.Admin.APP.Services.Admin.EmailServices;
 using OnAim.Admin.APP.Services.Admin.Endpoint;
@@ -35,8 +28,6 @@ using OnAim.Admin.APP.Services.Hub.Player;
 using OnAim.Admin.APP.Services.Hub.Promotion;
 using OnAim.Admin.APP.Services.Hub.Segment;
 using OnAim.Admin.APP.Services.Hub.Coin;
-using OnAim.Admin.APP.Services.Admin.PromotionViewTemplateService;
-using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
 using OnAim.Admin.Infrasturcture;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.APP.Services.FileServices;
@@ -51,6 +42,7 @@ using OnAim.Admin.APP.Services.AdminServices.Endpoint;
 using OnAim.Admin.APP.Services.AdminServices.EndpointGroup;
 using OnAim.Admin.APP.Services.AdminServices.Role;
 using OnAim.Admin.APP.Services.AdminServices.User;
+using OnAim.Admin.Contracts.Dtos.Promotion;
 
 
 namespace OnAim.Admin.APP;
@@ -74,18 +66,9 @@ public static class Extension
         services.AddSingleton<SagaClient>(sp =>
         new SagaClient("https://localhost:7084", new HttpClient()));
         services
-            .AddScoped<IRoleRepository, RoleRepository>()
-            .AddScoped<ICoinRepository, CoinRepository>()
-            .AddScoped<IGameConfigurationTemplateRepository, GameConfigurationTemplateRepository>()
             .AddScoped<IGameTemplateService, GameTemplateService>()
-            .AddScoped<ILeaderboardTemplateRepository , LeaderboardTemplateRepository>()
-            .AddScoped<IPromotionTemplateRepository , PromotionTemplateRepository>()
-            .AddScoped<IPromotionViewTemplateRepository, PromotionViewTemplateRepository>()
-            .AddScoped<ILeaderboardTemplateRepository, LeaderboardTemplateRepository>()
             .AddScoped<IPromotionService, PromotionService>()
             .AddScoped<ICoinTemplateService, CoinTemplateService>()
-            .AddScoped<ILogRepository, LogRepository>()
-            .AddScoped<IAppSettingRepository, AppSettingRepository>()
             .AddScoped<IPermissionService, PermissionService>()
             .AddScoped<ILeaderboardTemplateService, LeaderboardTemplateService>()
             .AddScoped<IPasswordService, PasswordService>()
@@ -110,12 +93,7 @@ public static class Extension
             .AddScoped<IOtpService, OtpService>()
             .AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>))
             .AddScoped(typeof(CommandContext<>), typeof(CommandContext<>));
-        services
-            .AddScoped(typeof(IRepository<>), typeof(EfRepository<>))
-            .AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>))
-            .AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>))
-            .AddScoped(typeof(IPromotionRepository<>), typeof(PromotionRepository<>))
-            .AddScoped(typeof(ILeaderBoardReadOnlyRepository<>), typeof(LeaderBoardReadOnlyRepository<>));
+
         services.AddHttpClient("ApiGateway", client =>
         {
             client.BaseAddress = new Uri("http://ocelotapigateway:8080");
@@ -123,7 +101,7 @@ public static class Extension
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuthToken);
         });
         services.Configure<PostmarkOptions>(configuration.GetSection("Postmark"));
-
+        services.Configure<PromotionViewConfiguration>(configuration.GetSection("PromotionViewConfiguration"));
         services.AddTransient<IEmailService>(sp =>
         {
             var options = sp.GetRequiredService<IOptions<PostmarkOptions>>().Value;
@@ -143,7 +121,7 @@ public static class Extension
 
         services.AddScoped<ISecurityContextAccessor, SecurityContextAccessor>();
         var serviceProvider = services.BuildServiceProvider();
-        //services.AddMessageBus(configuration, consumerAssemblyMarkerType);
+
         services
             .AddMediatR(Assembly.GetExecutingAssembly())
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

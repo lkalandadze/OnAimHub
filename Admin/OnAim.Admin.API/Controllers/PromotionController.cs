@@ -1,10 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP;
 using OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetById;
+using OnAim.Admin.APP.Features.PromotionFeatures.Template.Commands.Create;
+using OnAim.Admin.APP.Features.PromotionFeatures.Template.Commands.Delete;
+using OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Commands.Create;
+using OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Commands.Delete;
+using OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Queries.GetAll;
+using OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Queries.GetById;
+using OnAim.Admin.APP.Features.PromotionFeatures.Template.Queries.GetAll;
+using OnAim.Admin.APP.Features.PromotionFeatures.Template.Queries.GetById;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
+using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Infrasturcture;
 
@@ -13,19 +21,13 @@ namespace OnAim.Admin.API.Controllers;
 public class PromotionController : ApiControllerBase
 {
     private readonly IPromotionService _promotionService;
-    private readonly IPromotionViewTemplateService _promotionViewTemplateService;
-    private readonly IPromotionTemplateService _promotionTemplateService;
 
-    public PromotionController(
-        IPromotionService promotionService, 
-        IPromotionViewTemplateService promotionViewTemplateService,
-        IPromotionTemplateService promotionTemplateService
-        )
+    public PromotionController(IPromotionService promotionService)
     {
         _promotionService = promotionService;
-        _promotionViewTemplateService = promotionViewTemplateService;
-        _promotionTemplateService = promotionTemplateService;
     }
+
+    //Promotion
 
     [HttpGet(nameof(GetAllPromotion))]
     public async Task<IActionResult> GetAllPromotion([FromQuery] PromotionFilter filter)
@@ -45,55 +47,45 @@ public class PromotionController : ApiControllerBase
 
     [HttpPut(nameof(UpdatePromotionStatus))]
     public async Task<IActionResult> UpdatePromotionStatus([FromBody] APP.UpdatePromotionStatusCommand update)
-    {
-        await _promotionService.UpdatePromotionStatus(update);
-        return Ok();
-    }
+        => Ok(await _promotionService.UpdatePromotionStatus(update));
 
-    [HttpPut(nameof(DeletePromotion))]
+    [HttpDelete(nameof(DeletePromotion))]
     public async Task<IActionResult> DeletePromotion([FromBody] SoftDeletePromotionCommand command)
-    {
-        await _promotionService.DeletePromotion(command);
-        return Ok();
-    }
+        => Ok(await _promotionService.DeletePromotion(command));
 
-    //Template
+    //Promotion Template
 
     [HttpPost(nameof(CreatePromotionTemplate))]
-    public async Task<IActionResult> CreatePromotionTemplate([FromBody] CreatePromotionTemplate promotionTemplate)
-    {
-        return Ok(await _promotionTemplateService.CreatePromotionTemplate(promotionTemplate));
-    }
+    public async Task<IActionResult> CreatePromotionTemplate([FromBody] CreatePromotionTemplateCommand command)
+        => Ok(await Mediator.Send(command));
 
     [HttpGet(nameof(GetAllPromotionTemplates))]
-    public async Task<IActionResult> GetAllPromotionTemplates()
-    => Ok(await _promotionTemplateService.GetAllTemplates());
+    public async Task<IActionResult> GetAllPromotionTemplates([FromQuery] BaseFilter filter)
+        => Ok(await Mediator.Send(new GetAllPromotionTemplatesQuery(filter)));
 
     [HttpGet(nameof(GetPromotionTemplateById))]
     public async Task<IActionResult> GetPromotionTemplateById([FromQuery] string id)
-        => Ok(await _promotionTemplateService.GetById(id));
+        => Ok(await Mediator.Send(new GetPromotionTemplateByIdQuery(id)));
+
+    [HttpDelete(nameof(DeletePromotionTemplate))]
+    public async Task<IActionResult> DeletePromotionTemplate([FromQuery] DeletePromotionTemplateCommand command)
+        => Ok(await Mediator.Send(command));
+
+    //Promotion View Template
 
     [HttpGet(nameof(GetAllPromotionViewTemplates))]
-    public async Task<IActionResult> GetAllPromotionViewTemplates()
-    {
-        return Ok(await _promotionViewTemplateService.GetAllWithdrawEndpointTemplates());
-    }
+    public async Task<IActionResult> GetAllPromotionViewTemplates(BaseFilter filter)
+        => Ok(await Mediator.Send(new GetAllPromotionViewTemplatesQuery(filter)));
 
     [HttpGet(nameof(GetPromotionViewTemplateById))]
     public async Task<IActionResult> GetPromotionViewTemplateById([FromQuery] string id)
-    {
-        if (!ObjectId.TryParse(id, out var objectId))
-        {
-            return BadRequest("Invalid Id format.");
-        }
-        return Ok(await _promotionViewTemplateService.GetById(objectId));
-    }
+        => Ok(await Mediator.Send(new GetPromotionViewTemplateByIdQuery(id)));
 
     [HttpPost(nameof(CreatePromotionViewTemplate))]
-    public async Task<IActionResult> CreatePromotionViewTemplate([FromBody] CreatePromotionViewTemplateAsyncDto create)
-    {
-        await _promotionViewTemplateService.CreatePromotionViewTemplateAsync(create);
+    public async Task<IActionResult> CreatePromotionViewTemplate([FromBody] CreatePromotionViewTemplateCommand command)
+        => Ok(await Mediator.Send(command));
 
-        return Ok();
-    }
+    [HttpDelete(nameof(DeletePromotionViewTemplate))]
+    public async Task<IActionResult> DeletePromotionViewTemplate([FromQuery] DeletePromotionViewTemplateCommand command)
+        => Ok(await Mediator.Send(command));
 }

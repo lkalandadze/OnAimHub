@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.LeaderBoardRecord.Update;
 
-public class UpdateLeaderBoardRecordCommandHandler : ICommandHandler<UpdateLeaderBoardRecordCommand, ApplicationResult>
+public class UpdateLeaderBoardRecordCommandHandler : ICommandHandler<UpdateLeaderBoardCommand, ApplicationResult>
 {
     private readonly ILeaderBoardService _leaderBoardService;
 
@@ -12,10 +12,10 @@ public class UpdateLeaderBoardRecordCommandHandler : ICommandHandler<UpdateLeade
     {
         _leaderBoardService = leaderBoardService;
     }
-    public async Task<ApplicationResult> Handle(UpdateLeaderBoardRecordCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult> Handle(UpdateLeaderBoardCommand request, CancellationToken cancellationToken)
     {
-        //var result = await _leaderBoardService.UpdateLeaderBoardRecord(request.UpdateLeaderboardRecordDto);
+        var result = await _leaderBoardService.UpdateLeaderBoardRecord(request.Update);
 
-        return new ApplicationResult {Data = "" };
+        return new ApplicationResult {Data = result.Data, Success = result.Success };
     }
 }

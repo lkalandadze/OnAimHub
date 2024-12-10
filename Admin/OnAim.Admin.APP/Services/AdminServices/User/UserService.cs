@@ -4,7 +4,6 @@ using OnAim.Admin.APP.Feature.UserFeature.Commands.ProfileUpdate;
 using OnAim.Admin.APP.Feature.UserFeature.Commands.Registration;
 using OnAim.Admin.APP.Feature.UserFeature.Queries.GetUserLogs;
 using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Domain.Interfaces;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
 using OnAim.Admin.Contracts.Dtos.AuditLog;
@@ -26,6 +25,7 @@ using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.AdminServices.Domain;
 using OnAim.Admin.APP.Services.AdminServices.EmailServices;
 using OnAim.Admin.APP.Services.AdminServices.User;
+using OnAim.Admin.Infrasturcture.Interfaces;
 
 namespace OnAim.Admin.APP.Services.Admin.User;
 

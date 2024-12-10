@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.LeaderBoardRecord.Create;
 
-public class CreateLeaderboardRecordCommandHandler : ICommandHandler<CreateLeaderboardRecordCommand, ApplicationResult>
+public class CreateLeaderboardRecordCommandHandler : ICommandHandler<CreateLeaderboardCommand, ApplicationResult>
 {
     private readonly ILeaderBoardService _leaderBoardService;
 
@@ -12,10 +12,10 @@ public class CreateLeaderboardRecordCommandHandler : ICommandHandler<CreateLeade
     {
         _leaderBoardService = leaderBoardService;
     }
-    public async Task<ApplicationResult> Handle(CreateLeaderboardRecordCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult> Handle(CreateLeaderboardCommand request, CancellationToken cancellationToken)
     {
-        //var result = await _leaderBoardService.CreateLeaderBoardRecord(request.CreateLeaderboardRecordDto);
+        var result = await _leaderBoardService.CreateLeaderBoardRecord(request.Create);
 
-        return new ApplicationResult {Data = "" };
+        return new ApplicationResult {Data = result.Data, Success = result.Success };
     }
 }

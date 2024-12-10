@@ -17,7 +17,7 @@ public abstract class Coin
         string imageUrl,
         CoinType coinType,
         int promotionId,
-        int? templateId = null)
+        string? templateId = null)
     {
         Id = id;
         Name = name;
@@ -27,8 +27,8 @@ public abstract class Coin
         PromotionId = promotionId;
         FromTemplateId = templateId;
     }
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
+    //[BsonId]
+    //[BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
@@ -36,7 +36,7 @@ public abstract class Coin
     public CoinType CoinType { get; set; }
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DateDeleted { get; set; }
-    public int? FromTemplateId { get; private set; }
+    public string? FromTemplateId { get; private set; }
 
     public int PromotionId { get; set; }
     public Promotion Promotion { get; set; }

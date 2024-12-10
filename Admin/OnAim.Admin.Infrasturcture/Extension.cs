@@ -6,6 +6,14 @@ using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 using OnAim.Admin.Infrasturcture.Persistance.Data.Hub;
 using OnAim.Admin.Infrasturcture.Persistance.Data.LeaderBoard;
 using OnAim.Admin.Infrasturcture.Persistance.MongoDB;
+using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
+using OnAim.Admin.Infrasturcture.Repositories;
+using OnAim.Admin.Infrasturcture.Repository;
+using OnAim.Admin.Infrasturcture.Repositories.Abstract;
+using OnAim.Admin.Infrasturcture.Repositories.Leaderboard;
+using OnAim.Admin.Infrasturcture.Repositories.Promotion;
+using OnAim.Admin.Infrasturcture.Repository.Abstract;
+using OnAim.Admin.Infrasturcture.Interfaces;
 
 namespace OnAim.Admin.Infrasturcture;
 
@@ -22,12 +30,30 @@ public static class Extension
         {
             options.UseNpgsql(configuration.GetConnectionString("HubDefaultConnectionString"));
         });
+
         services.AddDbContext<LeaderBoardReadOnlyDataContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("LeaderBoardDefaultConnectionString"));
         });
 
         services.AddMongoDbContext(configuration);
+
+        services
+            .AddScoped<IRoleRepository, RoleRepository>()
+            .AddScoped<ICoinRepository, CoinRepository>()
+            .AddScoped<IGameConfigurationTemplateRepository, GameConfigurationTemplateRepository>()
+            .AddScoped<ILeaderboardTemplateRepository, LeaderboardTemplateRepository>()
+            .AddScoped<IPromotionTemplateRepository, PromotionTemplateRepository>()
+            .AddScoped<IPromotionViewTemplateRepository, PromotionViewTemplateRepository>()
+            .AddScoped<ILeaderboardTemplateRepository, LeaderboardTemplateRepository>()
+            .AddScoped<ILogRepository, LogRepository>()
+            .AddScoped<IAppSettingRepository, AppSettingRepository>()
+            .AddScoped(typeof(IRepository<>), typeof(EfRepository<>))
+            .AddScoped(typeof(IConfigurationRepository<>), typeof(ConfigurationRepository<>))
+            .AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>))
+            .AddScoped(typeof(IPromotionRepository<>), typeof(PromotionRepository<>))
+            .AddScoped(typeof(ILeaderBoardReadOnlyRepository<>), typeof(LeaderBoardReadOnlyRepository<>));
+        ;
 
         return services;
     }

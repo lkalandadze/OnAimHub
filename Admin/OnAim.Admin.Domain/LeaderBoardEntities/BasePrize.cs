@@ -9,6 +9,7 @@ public class BasePrize
     {
         Id = ObjectId.GenerateNewId().ToString();
     }
+
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }

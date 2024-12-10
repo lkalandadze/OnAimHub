@@ -52,11 +52,19 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
 
         if (request.RepeatType != RepeatType.None)
         {
+            // Calculate duration hours
+            var announcementDurationHours = (request.StartDate - request.AnnouncementDate).TotalHours;
+            var startDurationHours = (request.EndDate - request.StartDate).TotalHours;
+            var endDurationHours = (request.EndDate - request.AnnouncementDate).TotalHours;
+
             var schedule = new LeaderboardSchedule(
                 request.Title,
                 request.RepeatType,
                 request.RepeatValue,
-                leaderboard.Id
+                leaderboard.Id,
+                (int)announcementDurationHours,
+                (int)startDurationHours,
+                (int)endDurationHours
             );
 
             await _leaderboardScheduleRepository.InsertAsync(schedule);

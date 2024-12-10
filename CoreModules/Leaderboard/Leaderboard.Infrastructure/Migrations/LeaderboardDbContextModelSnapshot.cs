@@ -156,6 +156,15 @@ namespace Leaderboard.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AnnouncementDurationHours")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CreationHours")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EndDurationHours")
+                        .HasColumnType("integer");
+
                     b.Property<int>("LeaderboardRecordId")
                         .HasColumnType("integer");
 
@@ -163,6 +172,9 @@ namespace Leaderboard.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int?>("RepeatValue")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StartDurationHours")
                         .HasColumnType("integer");
 
                     b.Property<int>("Status")

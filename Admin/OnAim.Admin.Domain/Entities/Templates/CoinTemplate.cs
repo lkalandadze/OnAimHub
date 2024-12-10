@@ -14,7 +14,7 @@ public class CoinTemplate : Coin
         string description,
         string imageUrl,
         CoinType coinType,
-        IEnumerable<CoinTemplateWithdrawOption> withdrawOptions = null,
+        IEnumerable<CoinTemplateWithdrawOption>? withdrawOptions = null,
         IEnumerable<CoinTemplateWithdrawOptionGroup>? withdrawOptionGroups = null
         )
     {
