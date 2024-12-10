@@ -15,11 +15,11 @@ public class PlayerProgress : BaseEntity<int>
         
     }
 
-    public PlayerProgress(int progress, int playerId, string currencyId)
+    public PlayerProgress(int progress, int playerId, string coinId)
     {
         Progress = progress;
         PlayerId = playerId;
-        CoinId = currencyId;
+        CoinId = coinId;
     }
 
     public int Progress { get; private set; }

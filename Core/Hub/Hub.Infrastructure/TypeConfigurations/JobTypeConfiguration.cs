@@ -8,6 +8,6 @@ public class JobTypeConfiguration : IEntityTypeConfiguration<Job>
 {
     public void Configure(EntityTypeBuilder<Job> builder)
     {
-        builder.Property(e => e.CurrencyId).IsRequired(false);
+        builder.Property(e => e.CoinId).IsRequired(false);
     }
 }

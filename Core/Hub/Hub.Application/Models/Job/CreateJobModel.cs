@@ -12,6 +12,6 @@ public class CreateJobModel
     public JobType JobType { get; set; }
     public JobCategory JobCategory { get; set; }
     public TimeSpan? ExecutionTime { get; set; }
-    public string CurrencyId { get; set; }
+    public string CoinId { get; set; }
     public int? IntervalInDays { get; set; }
 }

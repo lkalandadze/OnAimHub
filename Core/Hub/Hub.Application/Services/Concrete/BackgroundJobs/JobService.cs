@@ -49,7 +49,7 @@ public class JobService : IJobService
             }
         }
 
-        var job = new Job(request.Name, request.Description, request.IsActive, request.JobType, request.JobCategory, request.ExecutionTime, request.CurrencyId, request.IntervalInDays);
+        var job = new Job(request.Name, request.Description, request.IsActive, request.JobType, request.JobCategory, request.ExecutionTime, request.CoinId, request.IntervalInDays);
 
         await _jobRepository.InsertAsync(job);
         await _unitOfWork.SaveAsync();

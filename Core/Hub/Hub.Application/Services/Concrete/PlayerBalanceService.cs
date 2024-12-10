@@ -67,7 +67,7 @@ public class PlayerBalanceService : IPlayerBalanceService
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task ResetBalancesByCurrencyIdAsync(string coinId)
+    public async Task ResetBalancesByCoinIdAsync(string coinId)
     {
         var balances = _playerBalanceRepository.Query().Where(x => x.CoinId == coinId);
 

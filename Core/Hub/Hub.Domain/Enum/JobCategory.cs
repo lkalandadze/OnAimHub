@@ -3,6 +3,6 @@
 public enum JobCategory
 {
     DailyProgressReset = 1,
-    CurrencyBalanceReset = 2,
+    CoinBalanceReset = 2,
     PromotionStatusUpdate = 3,
 }

@@ -46,10 +46,10 @@ public class HangfireJobScheduler : IBackgroundJobScheduler
         {
             switch (currentJob.Category)
             {
-                case JobCategory.CurrencyBalanceReset:
-                    if (!string.IsNullOrEmpty(currentJob.CurrencyId))
+                case JobCategory.CoinBalanceReset:
+                    if (!string.IsNullOrEmpty(currentJob.CoinId))
                     {
-                        await ResetBalancesByCurrencyIdAsync(currentJob);
+                        await ResetBalancesByCoinIdAsync(currentJob);
                     }
                     break;
                 case JobCategory.DailyProgressReset:
@@ -63,9 +63,9 @@ public class HangfireJobScheduler : IBackgroundJobScheduler
         }
     }
 
-    private async Task ResetBalancesByCurrencyIdAsync(Job job)
+    private async Task ResetBalancesByCoinIdAsync(Job job)
     {
-        await _playerBalanceService.ResetBalancesByCurrencyIdAsync(job.CurrencyId);
+        await _playerBalanceService.ResetBalancesByCoinIdAsync(job.CoinId);
 
         job.SetLastExecutedTime();
 

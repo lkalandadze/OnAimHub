@@ -12,7 +12,7 @@ public class Job : BaseEntity<int>
         
     }
 
-    public Job(string name, string description, bool isActive, JobType jobType, JobCategory jobCategory, TimeSpan? executionTime = null, string currencyId = null, int? intervalInDays = null)
+    public Job(string name, string description, bool isActive, JobType jobType, JobCategory jobCategory, TimeSpan? executionTime = null, string coinId = null, int? intervalInDays = null)
     {
         Name = name;
         Description = description;
@@ -20,7 +20,7 @@ public class Job : BaseEntity<int>
         Type = jobType;
         Category = jobCategory;
         ExecutionTime = executionTime;
-        CurrencyId = currencyId;
+        CoinId = coinId;
         IntervalInDays = intervalInDays;
     }
 
@@ -31,7 +31,7 @@ public class Job : BaseEntity<int>
     public JobCategory Category { get; private set; }
     public TimeSpan? ExecutionTime { get; private set; }
     public DateTimeOffset? LastExecutedTime { get; set; }
-    public string CurrencyId { get; private set; }
+    public string CoinId { get; private set; }
     public int? IntervalInDays { get; private set; }
 
     public void SetLastExecutedTime()
