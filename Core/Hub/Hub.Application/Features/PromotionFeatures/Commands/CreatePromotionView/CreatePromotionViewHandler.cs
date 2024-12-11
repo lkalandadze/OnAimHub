@@ -3,11 +3,9 @@ using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
 using Shared.Lib.Wrappers;
-using System.IO;
 
 namespace Hub.Application.Features.PromotionFeatures.Commands.CreatePromotionView;
 
@@ -32,6 +30,11 @@ public class CreatePromotionViewHandler : IRequestHandler<CreatePromotionView, R
 
     public async Task<Response<CreatePromotionViewResponse>> Handle(CreatePromotionView request, CancellationToken cancellationToken)
     {
+        if (!CheckmateValidations.Checkmate.IsValid(request, true))
+        {
+            throw new CheckmateException(CheckmateValidations.Checkmate.GetFailedChecks(request, true));
+        }
+
         var promotion = await _promotionRepository.OfIdAsync(request.PromotionId);
 
         if (promotion == null)

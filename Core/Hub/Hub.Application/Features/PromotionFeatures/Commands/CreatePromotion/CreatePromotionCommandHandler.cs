@@ -39,6 +39,20 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
 
     public async Task<int> Handle(CreatePromotionCommand request, CancellationToken cancellationToken)
     {
+        //var rootCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(request);
+        //var rootFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(request).ToList();
+        //var rootStatus = CheckmateValidations.Checkmate.IsValid(request);
+
+        //var treeStatus = CheckmateValidations.Checkmate.IsValid(request, true);
+
+        //var treeFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(request, true).ToList();
+        //var treeCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(request, "", true);
+
+        //if (!CheckmateValidations.Checkmate.IsValid(request, true))
+        //{
+        //    throw new CheckmateException(CheckmateValidations.Checkmate.GetFailedChecks(request, true));
+        //}
+
         if (request.EndDate <= request.StartDate)
         {
             throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"EndDate must be later than StartDate.");

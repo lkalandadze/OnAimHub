@@ -23,6 +23,11 @@ public class UpdateSegmentHandler : IRequestHandler<UpdateSegmentCommand>
 
     public async Task<Unit> Handle(UpdateSegmentCommand request, CancellationToken cancellationToken)
     {
+        if (!CheckmateValidations.Checkmate.IsValid(request, true))
+        {
+            throw new CheckmateException(CheckmateValidations.Checkmate.GetFailedChecks(request, true));
+        }
+
         var segment = _segmentRepository.Query(x => x.Id == request.Id).FirstOrDefault();
 
         if (segment == null)
