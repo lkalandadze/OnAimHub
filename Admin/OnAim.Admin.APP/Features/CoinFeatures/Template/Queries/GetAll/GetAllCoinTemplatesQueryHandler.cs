@@ -15,7 +15,7 @@ public sealed class GetAllCoinTemplatesQueryHandler : IQueryHandler<GetAllCoinTe
 
     public async Task<ApplicationResult> Handle(GetAllCoinTemplatesQuery request, CancellationToken cancellationToken)
     {
-        var result = await _coinTemplateService.GetAllCoinTemplates();
+        var result = await _coinTemplateService.GetAllCoinTemplates(request.Filter);
 
         return new ApplicationResult { Data = result.Data, Success = result.Success };
     }

@@ -1,4 +1,5 @@
 ﻿using OnAim.Admin.Contracts.Dtos.Game;
+using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.Dtos.Segment;
 
 namespace OnAim.Admin.Contracts.Dtos.Promotion;
@@ -12,9 +13,5 @@ public class PromotionOverviewDto
     public DateTimeOffset EndDate { get; set; }
     public List<SegmentDto> Segments { get; set; }
     public List<GameDto> Games { get; set; }
-    public List<LeaderboardDto> Leaderboards { get; set; }
-}
-public class LeaderboardDto
-{
-
+    public List<LeaderBoardData> Leaderboards { get; set; }
 }

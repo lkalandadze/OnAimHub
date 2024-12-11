@@ -1,5 +1,8 @@
-﻿namespace OnAim.Admin.Domain.HubEntities.Coin;
+﻿using MongoDB.Bson.Serialization.Attributes;
 
+namespace OnAim.Admin.Domain.HubEntities.Coin;
+
+[BsonDiscriminator("OutCoin")]
 public class OutCoin : Coin
 {
     public OutCoin()
@@ -14,8 +17,8 @@ public class OutCoin : Coin
         WithdrawOptionGroups = withdrawOptionGroups?.ToList() ?? [];
     }
 
-    public ICollection<WithdrawOption> WithdrawOptions { get; private set; }
-    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; private set; }
+    public ICollection<WithdrawOption> WithdrawOptions { get; set; }
+    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
 
     public void AddWithdrawOptions(IEnumerable<WithdrawOption> withdrawOptions)
     {

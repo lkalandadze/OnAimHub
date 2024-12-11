@@ -124,7 +124,7 @@ public class AdminController : BaseApiController
     {
         var result = await Mediator.Send(command);
 
-        return StatusCode(201, result);
+        return StatusCode(200, result);
     }
 
     [HttpPost(nameof(AssignSegmentToPlayer))]
@@ -252,7 +252,7 @@ public class AdminController : BaseApiController
     {
         var result = await Mediator.Send(command);
 
-        return StatusCode(201, result);
+        return StatusCode(200, result);
     }
 
     [HttpPut(nameof(UpdateWithdrawOption))]
@@ -268,7 +268,7 @@ public class AdminController : BaseApiController
     {
         var result = await Mediator.Send(command);
 
-        return StatusCode(201, result);
+        return StatusCode(200, result);
     }
 
     [HttpPut(nameof(UpdateWithdrawOptionEndpoint))]
@@ -284,7 +284,7 @@ public class AdminController : BaseApiController
     {
         var result = await Mediator.Send(command);
 
-        return StatusCode(201, result);
+        return StatusCode(200, result);
     }
 
     [HttpPut(nameof(UpdateWithdrawOptionGroup))]

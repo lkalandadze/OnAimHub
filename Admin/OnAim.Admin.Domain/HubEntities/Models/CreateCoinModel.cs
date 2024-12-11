@@ -1,9 +1,10 @@
-﻿using OnAim.Admin.Domain.HubEntities.Coin;
+﻿using MongoDB.Bson;
+using OnAim.Admin.Domain.HubEntities.Coin;
 using OnAim.Admin.Domain.HubEntities.Enum;
 
 namespace OnAim.Admin.Domain.HubEntities.Models;
 
-public class CreateCoinModel
+public abstract class CreateCoinModel
 {
     public string Name { get; set; }
     public string Description { get; set; }
@@ -17,7 +18,7 @@ public class CreateCoinModel
         IEnumerable<WithdrawOption> withdrawOptions = null,
         IEnumerable<WithdrawOptionGroup> withdrawOptionGroups = null)
     {
-        var coinId = $"{promotionId}_{model.Name}";
+        var coinId = ObjectId.GenerateNewId().ToString();
 
         return model switch
         {

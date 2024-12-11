@@ -1,4 +1,8 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.Base;
+using OnAim.Admin.Contracts.Dtos.Withdraw;
+using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.Domain.HubEntities;
 using OnAim.Admin.Infrasturcture.Interfaces;
 
@@ -9,15 +13,18 @@ public class CoinService : ICoinService
     private readonly HubClientService _hubClientService;
     private readonly IReadOnlyRepository<WithdrawOption> _withdrawOptionRepository;
     private readonly IReadOnlyRepository<WithdrawOptionGroup> _withdrawOptionGroupRepository;
+    private readonly IReadOnlyRepository<WithdrawOptionEndpoint> _withdrawOptionEndpointRepository;
 
     public CoinService(
         HubClientService hubClientService,
         IReadOnlyRepository<WithdrawOption> withdrawOptionRepository,
-        IReadOnlyRepository<WithdrawOptionGroup> withdrawOptionGroupRepository)
+        IReadOnlyRepository<WithdrawOptionGroup> withdrawOptionGroupRepository,
+        IReadOnlyRepository<WithdrawOptionEndpoint> WithdrawOptionEndpointRepository)
     {
         _hubClientService = hubClientService;
         _withdrawOptionRepository = withdrawOptionRepository;
         _withdrawOptionGroupRepository = withdrawOptionGroupRepository;
+        _withdrawOptionEndpointRepository = WithdrawOptionEndpointRepository;
     }
 
     public async Task<IEnumerable<WithdrawOption>> GetWithdrawOptions(Domain.HubEntities.Models.CreateOutCoinModel? outCoinModel)
@@ -60,6 +67,135 @@ public class CoinService : ICoinService
         }
 
         return withdrawOptionGroups;
+    }
+
+    public async Task<ApplicationResult> GetAllWithdrawOptions(BaseFilter filter)
+    {
+        var data = _withdrawOptionRepository.Query();
+
+        var totalCount = await data.CountAsync();
+
+        var pageNumber = filter?.PageNumber ?? 1;
+        var pageSize = filter?.PageSize ?? 25;
+
+        var res = data
+           .Select(x => new WithdrawOptionDto
+           {
+               Id = x.Id,
+               Title = x.Title,
+               Description = x.Description,
+               ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)x.ContentType,
+               Endpoint = x.Endpoint,
+               //EndpointContent = x.EndpointContent,
+               ImageUrl = x.ImageUrl,
+               WithdrawOptionGroups = x.WithdrawOptionGroups.Select(x => new WithdrawOptionGroupDto
+               {
+                   Title = x.Title,
+                   Description = x.Description,
+                   ImageUrl = x.ImageUrl,
+                   PriorityIndex = x.PriorityIndex,
+                   OutCoins = x.OutCoins.Select(x => new OutCoinDto
+                   {
+                       Name = x.Name,
+                       Description = x.Description,
+                       ImageUrl = x.ImageUrl,
+                   }).ToList(),
+               }).ToList(),
+           })
+           .Skip((pageNumber - 1) * pageSize)
+           .Take(pageSize);
+
+        return new ApplicationResult
+        {
+            Success = true,
+            Data = new PaginatedResult<WithdrawOptionDto>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = await res.ToListAsync(),
+            },
+        };
+    }
+
+    public async Task<ApplicationResult> GetAllWithdrawOptionGroups(BaseFilter filter)
+    {
+        var data = _withdrawOptionGroupRepository.Query();
+
+        var totalCount = await data.CountAsync();
+
+        var pageNumber = filter?.PageNumber ?? 1;
+        var pageSize = filter?.PageSize ?? 25;
+
+        var res = data
+           .Select(x => new WithdrawOptionGroupDto
+           {
+               Id = x.Id,
+               Title = x.Title,
+               Description = x.Description,
+               ImageUrl = x.ImageUrl,
+               PriorityIndex = x.PriorityIndex,
+               OutCoins = x.OutCoins.Select(xx => new OutCoinDto
+               {
+                   Name = xx.Name,
+                   Description = xx.Description,
+                   ImageUrl = xx.ImageUrl,
+               }).ToList(),
+               WithdrawOptions = x.WithdrawOptions.Select(x => new WithdrawOptionDto
+               {
+                   Title = x.Title,
+                   Description = x.Description,
+                   ImageUrl = x.ImageUrl,
+               }).ToList()
+           })
+           .Skip((pageNumber - 1) * pageSize)
+           .Take(pageSize);
+
+        return new ApplicationResult
+        {
+            Success = true,
+            Data = new PaginatedResult<WithdrawOptionGroupDto>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = await res.ToListAsync(),
+            },
+        };
+    }
+
+    public async Task<ApplicationResult> GetWithdrawOptionEndpoints(BaseFilter filter)
+    {
+        var data = _withdrawOptionEndpointRepository.Query();
+
+        var totalCount = await data.CountAsync();
+
+        var pageNumber = filter?.PageNumber ?? 1;
+        var pageSize = filter?.PageSize ?? 25;
+
+        var res = data
+           .Select(x => new WithdrawOptionEndpointDto
+           {
+               Id = x.Id,
+               Name = x.Name,
+               Endpoint = x.Endpoint,
+               Content = x.Content,
+               ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)x.ContentType
+           })
+           .Skip((pageNumber - 1) * pageSize)
+           .Take(pageSize);
+
+        return new ApplicationResult
+        {
+            Success = true,
+            Data = new PaginatedResult<WithdrawOptionEndpointDto>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = await res.ToListAsync(),
+            },
+        };
     }
 
     public async Task<ApplicationResult> CreateWithdrawOption(CreateWithdrawOption option)

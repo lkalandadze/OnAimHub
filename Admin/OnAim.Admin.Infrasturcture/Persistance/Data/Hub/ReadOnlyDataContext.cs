@@ -36,6 +36,7 @@ public class ReadOnlyDataContext : DbContext
     public DbSet<Coin> Coins { get; set; }
     public DbSet<OnAim.Admin.Domain.HubEntities.WithdrawOption> WithdrawOptions { get; set; }
     public DbSet<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
+    public DbSet<WithdrawOptionEndpoint> WithdrawOptionEndpoints { get; set; }
 
     public IQueryable<TEntity> Set<TEntity>() where TEntity : class
     {

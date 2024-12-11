@@ -3,8 +3,8 @@ using MongoDB.Bson;
 using OnAim.Admin.Domain.HubEntities.Coin;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
-using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Domain.HubEntities.Models;
+using OnAim.Admin.Contracts.Dtos.Game;
 
 namespace OnAim.Admin.Domain.Entities.Templates;
 
@@ -66,13 +66,12 @@ public class PromotionTemplate
     }
 }
 public record CreatePromotionTemplate(
-    int PromotionId,
     string Title,
     DateTime StartDate,
     DateTime EndDate,
     string Description,
     IEnumerable<string> SegmentIds,
     IEnumerable<CreateCoinModel>? Coins,
-    IEnumerable<CreateLeaderboardTemplateDto>? Leaderboards,
+    IEnumerable<CreateLeaderboardRecordDto>? Leaderboards,
     IEnumerable<CreateGameConfigurationTemplateDto> Games
     );

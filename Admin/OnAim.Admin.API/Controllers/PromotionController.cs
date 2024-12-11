@@ -29,17 +29,17 @@ public class PromotionController : ApiControllerBase
 
     //Promotion
 
+    [HttpPost(nameof(CreatePromotion))]
+    public async Task<IActionResult> CreatePromotion([FromBody] CreatePromotionDto create)
+        => Ok(await _promotionService.CreatePromotion(create));
+
     [HttpGet(nameof(GetAllPromotion))]
     public async Task<IActionResult> GetAllPromotion([FromQuery] PromotionFilter filter)
         => Ok(await Mediator.Send(new GetAllPromotionsQuery(filter)));
 
-    [HttpGet(nameof(GetById))]
-    public async Task<IActionResult> GetById([FromQuery] int id)
+    [HttpGet(nameof(GetPromotionById))]
+    public async Task<IActionResult> GetPromotionById([FromQuery] int id)
         => Ok(await Mediator.Send(new GetPromotionByIdQuery(id)));
-
-    [HttpPost(nameof(CreatePromotion))]
-    public async Task<IActionResult> CreatePromotion([FromBody] CreatePromotionDto create)
-        => Ok(await _promotionService.CreatePromotion(create));
 
     [HttpPost(nameof(CreatePromotionView))]
     public async Task<IActionResult> CreatePromotionView([FromBody] APP.CreatePromotionView create)
@@ -74,7 +74,7 @@ public class PromotionController : ApiControllerBase
     //Promotion View Template
 
     [HttpGet(nameof(GetAllPromotionViewTemplates))]
-    public async Task<IActionResult> GetAllPromotionViewTemplates(BaseFilter filter)
+    public async Task<IActionResult> GetAllPromotionViewTemplates([FromQuery] BaseFilter filter)
         => Ok(await Mediator.Send(new GetAllPromotionViewTemplatesQuery(filter)));
 
     [HttpGet(nameof(GetPromotionViewTemplateById))]

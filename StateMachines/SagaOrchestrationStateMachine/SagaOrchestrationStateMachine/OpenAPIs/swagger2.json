@@ -156,17 +156,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ConfigurationCreateModel"
+                "$ref": "#/components/schemas/GameConfiguration"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/ConfigurationCreateModel"
+                "$ref": "#/components/schemas/GameConfiguration"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/ConfigurationCreateModel"
+                "$ref": "#/components/schemas/GameConfiguration"
               }
             }
           }
@@ -187,17 +187,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ConfigurationUpdateModel"
+                "$ref": "#/components/schemas/GameConfiguration"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/ConfigurationUpdateModel"
+                "$ref": "#/components/schemas/GameConfiguration"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/ConfigurationUpdateModel"
+                "$ref": "#/components/schemas/GameConfiguration"
               }
             }
           }
@@ -217,8 +217,7 @@
         "parameters": [
           {
             "name": "id",
-            "in": "path",
-            "required": true,
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -240,8 +239,29 @@
         "parameters": [
           {
             "name": "id",
-            "in": "path",
-            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/WheelApi/Admin/DeleteConfiguration": {
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -445,6 +465,16 @@
         },
         "additionalProperties": false
       },
+      "CoinBaseGetModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ConfigurationBaseGetModel": {
         "type": "object",
         "properties": {
@@ -462,66 +492,6 @@
           },
           "isActive": {
             "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ConfigurationCreateModel": {
-        "type": "object",
-        "properties": {
-          "configurationJson": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ConfigurationUpdateModel": {
-        "type": "object",
-        "properties": {
-          "configurationJson": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "Currency": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "prices": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Price"
-            },
-            "nullable": true,
-            "readOnly": true
-          },
-          "prizeTypes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PrizeType"
-            },
-            "nullable": true,
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CurrencyBaseGetModel": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -556,6 +526,14 @@
       },
       "GameConfiguration": {
         "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/WheelConfiguration"
+          },
+          {
+            "$ref": "#/components/schemas/GameConfiguration`1"
+          }
+        ],
         "properties": {
           "id": {
             "type": "integer",
@@ -571,6 +549,67 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "promotionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "correlationId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "fromTemplateId": {
+            "type": "string",
+            "nullable": true
+          },
+          "prices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "Discriminator",
+          "mapping": {
+            "WheelConfiguration": "#/components/schemas/WheelConfiguration",
+            "GameConfiguration`1": "#/components/schemas/GameConfiguration`1"
+          }
+        }
+      },
+      "GameConfiguration`1": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "promotionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "correlationId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "fromTemplateId": {
+            "type": "string",
+            "nullable": true
           },
           "prices": {
             "type": "array",
@@ -597,39 +636,9 @@
             "type": "number",
             "format": "double"
           },
-          "currencyId": {
+          "coinId": {
             "type": "string",
             "nullable": true
-          },
-          "currency": {
-            "$ref": "#/components/schemas/Currency"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PrizeType": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
-          },
-          "isMultiplied": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "currencyId": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
-          },
-          "currency": {
-            "$ref": "#/components/schemas/Currency"
           }
         },
         "additionalProperties": false
@@ -644,7 +653,7 @@
           "isMultiplied": {
             "type": "boolean"
           },
-          "currencyId": {
+          "coinId": {
             "type": "string",
             "nullable": true
           }
@@ -665,8 +674,8 @@
           "isMultiplied": {
             "type": "boolean"
           },
-          "currency": {
-            "$ref": "#/components/schemas/CurrencyBaseGetModel"
+          "coin": {
+            "$ref": "#/components/schemas/CoinBaseGetModel"
           }
         },
         "additionalProperties": false
@@ -681,7 +690,7 @@
           "isMultiplied": {
             "type": "boolean"
           },
-          "currencyId": {
+          "coinId": {
             "type": "string",
             "nullable": true
           }
@@ -705,6 +714,127 @@
           },
           "genericTypeMetadata": {
             "$ref": "#/components/schemas/EntityMetadata"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Round": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sequence": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "nextPrizeIndex": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "configurationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prizes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WheelPrize"
+            },
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WheelConfiguration": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "promotionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "correlationId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "fromTemplateId": {
+            "type": "string",
+            "nullable": true
+          },
+          "prices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "nullable": true
+          },
+          "rounds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Round"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WheelPrize": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "probability": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prizeTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prizeGroupId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "wheelIndex": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false

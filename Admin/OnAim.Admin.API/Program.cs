@@ -32,20 +32,14 @@ builder.Services
                 ;
 builder.AddCustomHttpClients();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-    options.JsonSerializerOptions.Converters.Add(new CoinModelJsonConverter());
-});
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SchemaFilter<PolymorphismSchemaFilter<CreateCoinModel>>();
-});
+
 builder.Services.AddControllersWithViews()
-    .AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
+    //.AddNewtonsoftJson(options =>
+    //    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new CoinModelJsonConverter());
+    });
 
 var app = builder.Build();
 

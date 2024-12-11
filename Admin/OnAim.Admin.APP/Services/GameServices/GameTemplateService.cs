@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.Promotion;
+using OnAim.Admin.Contracts.Dtos.Game;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
@@ -56,8 +56,34 @@ public class GameTemplateService : IGameTemplateService
     {
         var temp = new GameConfigurationTemplate
         {
-            ConfigurationJson = coinTemplate.ConfigurationJson,
+            Name = coinTemplate.Name,
+            Value = coinTemplate.Value,
+            IsActive = coinTemplate.IsActive,
+            Prices = coinTemplate.Prices.Select(x => new Price
+            {
+                Value = x.Value,
+                Multiplier = x.Multiplier,
+                CoinId = x.CoinId,
+            }).ToList(),
+            Rounds = coinTemplate.Rounds.Select(xx => new Round
+            {
+                Sequence = xx.Sequence,
+                Name = xx.Name,
+                NextPrizeIndex = xx.NextPrizeIndex,
+                ConfigurationId = xx.ConfigurationId,
+                Prizes = xx.Prizes.Select(xxx => new Prize
+                {
+                    Value = xxx.Value,
+                    PrizeGroupId = xxx.PrizeGroupId,
+                    PrizeTypeId = xxx.PrizeTypeId,
+                    Probability = xxx.Probability,
+                    Name = xxx.Name,
+                    WheelIndex = xxx.WheelIndex,
+                }).ToList(),
+            }).ToList(),
         };
+
+        await _gameConfigurationTemplateRepository.AddGameConfigurationTemplateAsync(temp);
 
         return temp;
     }

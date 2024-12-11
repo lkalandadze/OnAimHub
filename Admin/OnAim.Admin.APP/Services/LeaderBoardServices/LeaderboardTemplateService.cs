@@ -27,14 +27,35 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
         var pageNumber = filter?.PageNumber ?? 1;
         var pageSize = filter?.PageSize ?? 25;
 
-        var res = temps
+        var tempss = temps.Select(x => new LeaderBoardTemplateListDto
+        {
+            Id = x.Id,
+            Description = x.Description,
+            Title = x.Title,
+            EventType = (Contracts.Dtos.LeaderBoard.EventType)x.EventType,
+            CreationDate = x.CreationDate,
+            AnnouncementDate = x.AnnouncementDate,
+            StartDate = x.StartDate,
+            EndDate = x.EndDate,
+            IsDeleted = x.IsDeleted,
+            LeaderboardTemplatePrizes = x.LeaderboardTemplatePrizes.Select(xx => new leaderboardTemplatePrizesDto
+            {
+                Id = xx.Id,
+                Amount = xx.Amount,
+                CoinId = xx.CoinId,
+                StartRank = xx.StartRank,
+                EndRank = xx.EndRank
+            }).ToList()
+        });
+
+        var res = tempss
            .Skip((pageNumber - 1) * pageSize)
            .Take(pageSize);
 
         return new ApplicationResult
         {
             Success = true,
-            Data = new PaginatedResult<LeaderboardTemplate>
+            Data = new PaginatedResult<LeaderBoardTemplateListDto>
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
@@ -50,7 +71,28 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
 
         if (template == null) throw new NotFoundException("template Not Found");
 
-        return new ApplicationResult { Success = true, Data = template };
+        var temp = new LeaderBoardTemplateListDto
+        {
+            Id = template.Id,
+            Description = template.Description,
+            Title = template.Title,
+            EventType = (Contracts.Dtos.LeaderBoard.EventType)template.EventType,
+            CreationDate = template.CreationDate,
+            AnnouncementDate = template.AnnouncementDate,
+            StartDate = template.StartDate,
+            EndDate = template.EndDate,
+            IsDeleted = template.IsDeleted,
+            LeaderboardTemplatePrizes = template.LeaderboardTemplatePrizes.Select(xx => new leaderboardTemplatePrizesDto
+            {
+                Id = xx.Id,
+                Amount = xx.Amount,
+                CoinId = xx.CoinId,
+                StartRank = xx.StartRank,
+                EndRank = xx.EndRank
+            }).ToList()
+        };
+
+        return new ApplicationResult { Success = true, Data = temp };
     }
 
     public async Task<LeaderboardTemplate> CreateLeaderboardTemplate(CreateLeaderboardTemplateDto create)
@@ -58,9 +100,9 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
         var leaderboardTemplate = new LeaderboardTemplate(
             create.Title,
             create.Description,
-            create.AnnouncementDuration,
-            create.StartDuration,
-            create.EndDuration
+            create.AnnouncementDuration.ToString(),
+            create.StartDuration.ToString(),
+            create.EndDuration.ToString()
             );
 
         foreach (var prize in create.LeaderboardPrizes)
@@ -98,9 +140,9 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
             update.Name,
             update.Description,
             (Domain.LeaderBoradEntities.EventType)update.EventType,
-            update.AnnouncementDuration,
-            update.StartDuration,
-            update.EndDuration
+            update.AnnouncementDuration.ToString(),
+            update.StartDuration.ToString(),
+            update.EndDuration.ToString()
             );
 
         foreach (var prize in update.LeaderboardPrizes)

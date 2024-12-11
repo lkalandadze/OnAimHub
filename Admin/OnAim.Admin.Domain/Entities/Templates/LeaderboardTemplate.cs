@@ -11,9 +11,9 @@ public class LeaderboardTemplate
     public LeaderboardTemplate(
         string title, 
         string description,
-        DateTimeOffset announcementDate,
-        DateTimeOffset startDate,
-        DateTimeOffset endDate)
+        string announcementDate,
+        string startDate,
+        string endDate)
     {
         Id = ObjectId.GenerateNewId().ToString();
         Title = title;
@@ -31,9 +31,9 @@ public class LeaderboardTemplate
     public string Description { get; set; }
     public EventType EventType { get; set; }
     public DateTimeOffset CreationDate { get; set; }
-    public DateTimeOffset AnnouncementDate { get; set; }
-    public DateTimeOffset StartDate { get; set; }
-    public DateTimeOffset EndDate { get; set; }
+    public string AnnouncementDate { get; set; }
+    public string StartDate { get; set; }
+    public string EndDate { get; set; }
     public bool IsDeleted { get; set; } 
     public DateTimeOffset DateDeleted { get; set; }
 
@@ -65,9 +65,9 @@ public class LeaderboardTemplate
         string title, 
         string description,
         EventType eventType,
-        DateTimeOffset announcementDate,
-        DateTimeOffset startDate,
-        DateTimeOffset endDate)
+        string announcementDate,
+        string startDate,
+        string endDate)
     {
         Title = title;
         Description = description;

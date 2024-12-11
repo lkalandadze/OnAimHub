@@ -10,8 +10,3 @@ public class PromotionListDto
     public PromotionStatistics CompletePromotion { get; set; }
     public PromotionStatistics InProgressPromotion { get; set; }
 }
-public class PromotionStatistics
-{
-    public int Promotions { get; set; }
-    public decimal Value { get; set; }
-}

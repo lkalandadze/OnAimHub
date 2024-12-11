@@ -10,16 +10,14 @@ public class CoinTemplateWithdrawOptionGroup
 
     public CoinTemplateWithdrawOptionGroup(string coinTemplateId, int withdrawOptionGroupId)
     {
-        Id = ObjectId.GenerateNewId().ToString();
         CoinTemplateId = coinTemplateId;
         WithdrawOptionGroupId = withdrawOptionGroupId;
     }
 
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    //[BsonId]
+    //[BsonRepresentation(BsonType.ObjectId)]
+    public int Id { get; set; }
     public string CoinTemplateId { get; set; }
-    public CoinTemplate CoinTemplate { get; set; }
 
     public int WithdrawOptionGroupId { get; set; }
     public WithdrawOptionGroup WithdrawOptionGroup { get; set; }

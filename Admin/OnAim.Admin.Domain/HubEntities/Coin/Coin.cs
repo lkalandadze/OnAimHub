@@ -4,6 +4,8 @@ using OnAim.Admin.Domain.HubEntities.Enum;
 
 namespace OnAim.Admin.Domain.HubEntities.Coin;
 
+[BsonKnownTypes(typeof(InCoin), typeof(OutCoin))]
+[BsonDiscriminator("Coin")]
 public abstract class Coin
 {
     public Coin()
@@ -27,8 +29,8 @@ public abstract class Coin
         PromotionId = promotionId;
         FromTemplateId = templateId;
     }
-    //[BsonId]
-    //[BsonRepresentation(BsonType.ObjectId)]
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }

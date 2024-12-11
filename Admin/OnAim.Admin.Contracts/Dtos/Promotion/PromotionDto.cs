@@ -1,0 +1,22 @@
+﻿using OnAim.Admin.Contracts.Dtos.Segment;
+
+namespace OnAim.Admin.Contracts.Dtos.Promotion;
+
+public class PromotionDto
+{
+    public int Id { get; set; }
+    public decimal? TotalCost { get; set; }
+    public PromotionStatus Status { get; set; }
+    public DateTimeOffset StartDate { get; set; }
+    public DateTimeOffset EndDate { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public DateTimeOffset CreateDate { get; set; }
+    public DateTimeOffset? DateDeleted { get; set; }
+    public bool IsDeleted { get; set; }
+
+    public ICollection<PromotionServiceDto> Services { get; set; }
+    public ICollection<string> Segments { get; set; }
+    public ICollection<PromotionCoinDto> PromotionCoins { get; set; }
+    public ICollection<TransactionDto> Transactions { get; set; }
+}

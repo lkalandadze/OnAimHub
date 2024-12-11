@@ -9,6 +9,9 @@ using OnAim.Admin.APP.Feature.Identity;
 using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Shared.Lib;
+using OnAim.Admin.Domain.HubEntities.Models;
+using Shared.Lib.SwaggerFilters;
 
 namespace OnAim.Admin.API.Extensions;
 
@@ -174,6 +177,8 @@ public static class ServiceCollectionExtensions
                     Array.Empty<string>()
                 }
             });
+
+            options.SchemaFilter<PolymorphismSchemaFilter<CreateCoinModel>>();
         });
 
         return services;

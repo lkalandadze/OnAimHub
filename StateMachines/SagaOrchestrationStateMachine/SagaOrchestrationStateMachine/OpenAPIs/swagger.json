@@ -378,6 +378,14 @@
         ],
         "parameters": [
           {
+            "name": "LeaderboardRecordId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "PageNumber",
             "in": "query",
             "schema": {
@@ -433,14 +441,6 @@
             }
           },
           {
-            "name": "PlayerId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
             "name": "PageNumber",
             "in": "query",
             "schema": {
@@ -477,6 +477,28 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v1/LeaderboardProgress/FiniishLeaderboard": {
+      "post": {
+        "tags": [
+          "LeaderboardProgress"
+        ],
+        "parameters": [
+          {
+            "name": "LeaderboardRecordId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -850,15 +872,9 @@
           "data": {
             "$ref": "#/components/schemas/LeaderboardProgressModelPagedResponse"
           },
-          "top20Users": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LeaderboardProgressModel"
-            },
+          "currentPlayerUsername": {
+            "type": "string",
             "nullable": true
-          },
-          "currentUser": {
-            "$ref": "#/components/schemas/LeaderboardProgressModel"
           }
         },
         "additionalProperties": false
@@ -1119,10 +1135,6 @@
       "LeaderboardProgressModel": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
           "leaderboardRecordId": {
             "type": "integer",
             "format": "int32"

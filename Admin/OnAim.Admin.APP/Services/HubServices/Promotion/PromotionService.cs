@@ -36,8 +36,6 @@ public class PromotionService : IPromotionService
             .Include(x => x.Coins)
             .AsNoTracking();
 
-        var promList = promotions.ToList();
-
         if (filter.Status.HasValue)
             promotions = promotions.Where(x => x.Status == (Domain.HubEntities.Enum.PromotionStatus)filter.Status.Value);
 
@@ -94,20 +92,14 @@ public class PromotionService : IPromotionService
                 Status = (Contracts.Dtos.Promotion.PromotionStatus)x.Status,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
+                Segments = x.Segments.Select(s => s.Id).ToList(),
                 PromotionCoins = x.Coins.Select(xx => new PromotionCoinDto
                 {
                     Id = xx.Id,
-                    //PromotionId = xx.PromotionId,
                     Name = xx.Name,
                     Description = xx.Description,
                     ImageUrl = xx.ImageUrl,
                     CoinType = (Contracts.Dtos.Coin.CoinType)xx.CoinType,
-                    //WithdrawOptions = xx.WithdrawOptions.Select(xxx => new WithdrawOptionDto
-                    //{
-                    //    Title = xxx.Title,
-                    //    Description = xxx.Description,
-                    //    ImageUrl = xxx.ImageUrl,
-                    //}).ToList()
                 }).ToList()
             })
             .Skip((pageNumber - 1) * pageSize)
@@ -145,19 +137,12 @@ public class PromotionService : IPromotionService
             {
                 Description = x.Description,
                 Id = x.Id,
-                //PromotionId = x.PromotionId,
                 Name = x.Name,
                 ImageUrl = x.ImageUrl,
                 CoinType = (Contracts.Dtos.Coin.CoinType)x.CoinType,
-                //WithdrawOptions = x.WithdrawOptions.Select(xxx => new WithdrawOptionDto
-                //{
-                //    Title = xxx.Title,
-                //    Description = xxx.Description,
-                //    ImageUrl = xxx.ImageUrl,
-                //}).ToList()
             }).ToList(),
 
-            Segments = (List<Contracts.Dtos.Segment.SegmentDto>)promotion.Segments,
+            Segments = promotion.Segments.Select(s => s.Id).ToList(),
         };
 
 

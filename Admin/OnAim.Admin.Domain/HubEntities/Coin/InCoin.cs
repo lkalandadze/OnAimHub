@@ -1,4 +1,8 @@
-﻿namespace OnAim.Admin.Domain.HubEntities.Coin;
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace OnAim.Admin.Domain.HubEntities.Coin;
+
+[BsonDiscriminator("InCoin")]
 public class InCoin : Coin
 {
     public InCoin()

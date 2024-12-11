@@ -1,15 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Services.GameServices;
+﻿using OnAim.Admin.APP.Services.GameServices;
 using OnAim.Admin.APP.Services.HubServices.Coin;
 using OnAim.Admin.APP.Services.LeaderBoardServices;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
+using OnAim.Admin.Contracts.Dtos.Coin;
+using OnAim.Admin.Contracts.Dtos.Game;
+using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.Dtos.Promotion;
+using OnAim.Admin.Contracts.Dtos.Withdraw;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Domain.HubEntities;
 using OnAim.Admin.Domain.HubEntities.Coin;
+using OnAim.Admin.Domain.HubEntities.Models;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
@@ -52,14 +56,139 @@ public class PromotionTemplateService : IPromotionTemplateService
         var pageNumber = filter?.PageNumber ?? 1;
         var pageSize = filter?.PageSize ?? 25;
 
-        var res = temps
+        var data = temps.Select(x => new PromotionTemplateListDto
+        {
+            Id = x.Id,
+            Title = x.Title,
+            Description = x.Description,
+            StartDate = x.StartDate,
+            EndDate = x.EndDate,
+            IsDeleted = x.IsDeleted,
+            DateDeleted = x.DateDeleted,
+            Segments = (List<string>)x.SegmentIds,
+            Coins = x.Coins.Select(xx =>
+            {
+                if (xx is OutCoin outCoin)
+                {
+                    return new CoinsPromTempDto
+                    {
+                        Name = outCoin.Name,
+                        Description = outCoin.Description,
+                        ImgUrl = outCoin.ImageUrl,
+                        CoinType = (Contracts.Dtos.Coin.CoinType)outCoin.CoinType,
+                        IsDeleted = outCoin.IsDeleted,
+                        WithdrawOptions = outCoin.WithdrawOptions?.Select(o => new WithdrawOptionDto
+                        {
+                            Id = o.Id,
+                            Title = o.Title,
+                            Description = o.Description,
+                            ImageUrl = o.ImageUrl,
+                            //Endpoint = o.Endpoint,
+                            //ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)o.ContentType,
+                            ////EndpointContent = o.EndpointContent,
+                            //WithdrawOptionGroups = o.WithdrawOptionGroups.Select(c => new WithdrawOptionGroupDto
+                            //{
+                            //    Title = c.Title,
+                            //    Description = c.Description,
+                            //    ImageUrl = c.ImageUrl,
+                            //    PriorityIndex = c.PriorityIndex,
+                            //}).ToList(),
+                            //OutCoins = o.OutCoins?.Select(v => new OutCoinDto
+                            //{
+                            //    Name = v.Name,
+                            //    Description = v.Description,
+                            //    ImageUrl = v.ImageUrl,
+                            //}).ToList() ?? new List<OutCoinDto>()
+                        }).ToList() ?? new List<WithdrawOptionDto>(),
+                        WithdrawOptiongroups = outCoin.WithdrawOptionGroups.Select(g => new WithdrawOptionGroupDto
+                        {
+                            Id = g.Id,
+                            Title = g.Title,
+                            Description = g.Description,
+                            ImageUrl = g.ImageUrl,
+                            PriorityIndex = g.PriorityIndex,
+                            //OutCoins = g.OutCoins.Select(n => new OutCoinDto
+                            //{
+                            //    Name = n.Name,
+                            //    Description = n.Description,
+                            //    ImageUrl = n.ImageUrl
+                            //}).ToList() ?? new List<OutCoinDto>(),
+                            //WithdrawOptionIds = g.WithdrawOptions?.Select(x => x.Id).ToList() ?? new List<int>()
+                        }).ToList() ?? new List<WithdrawOptionGroupDto>()
+                    };
+                }
+                return new CoinsPromTempDto
+                {
+                    Name = xx.Name,
+                    Description = xx.Description,
+                    ImgUrl = xx.ImageUrl,
+                    CoinType = (Contracts.Dtos.Coin.CoinType)xx.CoinType,
+                    IsDeleted = xx.IsDeleted,
+                    WithdrawOptions = null,
+                    WithdrawOptiongroups = null
+                };
+            }).ToList(),
+            Leaderboards = x.Leaderboards.Select(y => new LeaderboardsPromTempdto
+            {
+                Title = y.Title,
+                Description = y.Description,
+                EventType = (Contracts.Dtos.LeaderBoard.EventType)y.EventType,
+                CreationDate = y.CreationDate,
+                AnnouncementDate = y.AnnouncementDate.ToString(),
+                StartDate = y.StartDate.ToString(),
+                EndDate = y.EndDate.ToString(),
+                Status = (Contracts.Dtos.LeaderBoard.LeaderboardRecordStatus)y.Status,
+                IsGenerated = y.IsGenerated,
+                ScheduleId = y.ScheduleId,
+                LeaderboardTemplatePrizes = y.LeaderboardRecordPrizes.Select(z => new leaderboardTemplatePrizesDto
+                {
+                    Amount = z.Amount,
+                    CoinId = z.CoinId,
+                    StartRank = z.StartRank,
+                    EndRank = z.EndRank
+                }).ToList()
+
+            }).ToList(),
+            Games = x.Games.Select(w => new GameConfigurationPromTemplateListDto
+            {
+                Name = w.Name,
+                Value = w.Value,
+                IsActive = w.IsActive,
+                Prices = w.Prices.Select(x => new PriceDto
+                {
+                    Value = x.Value,
+                    Multiplier = x.Multiplier,
+                    CoinId = x.CoinId,
+                }).ToList(),
+                Rounds = w.Rounds.Select(x => new RoundDto
+                {
+                    Sequence = x.Sequence,
+                    Name = x.Name,
+                    NextPrizeIndex = x.NextPrizeIndex,
+                    ConfigurationId = x.ConfigurationId,
+                    Id = x.Id,
+                    Prizes = x.Prizes.Select(xx => new PrizeDto
+                    {
+                        Value = xx.Value,
+                        PrizeGroupId = xx.Id,
+                        PrizeTypeId = xx.Id,
+                        Probability = xx.Probability,
+                        Name = xx.Name,
+                        WheelIndex = xx.WheelIndex,
+                    }).ToList()
+                }).ToList(),
+            }).ToList(),
+        });
+
+
+        var res = data
            .Skip((pageNumber - 1) * pageSize)
            .Take(pageSize);
 
         return new ApplicationResult
         {
             Success = true,
-            Data = new PaginatedResult<PromotionTemplate>
+            Data = new PaginatedResult<PromotionTemplateListDto>
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
@@ -71,11 +200,135 @@ public class PromotionTemplateService : IPromotionTemplateService
 
     public async Task<ApplicationResult> GetPromotionTemplateById(string id)
     {
-        var coin = await _promotionTemplateRepository.GetPromotionTemplateByIdAsync(id);
+        var template = await _promotionTemplateRepository.GetPromotionTemplateByIdAsync(id);
 
-        if (coin == null) throw new NotFoundException("Template Not Found");
+        if (template == null) throw new NotFoundException("Template Not Found");
 
-        return new ApplicationResult { Success = true, Data = coin };
+        var data = new PromotionTemplateListDto
+        {
+            Id = template.Id,
+            Title = template.Title,
+            Description = template.Description,
+            StartDate = template.StartDate,
+            EndDate = template.EndDate,
+            IsDeleted = template.IsDeleted,
+            DateDeleted = template.DateDeleted,
+            Segments = (List<string>)template.SegmentIds,
+            Coins = template.Coins.Select(xx =>
+            {
+                if (xx is OutCoin outCoin)
+                {
+                    return new CoinsPromTempDto
+                    {
+                        Name = outCoin.Name,
+                        Description = outCoin.Description,
+                        ImgUrl = outCoin.ImageUrl,
+                        CoinType = (Contracts.Dtos.Coin.CoinType)outCoin.CoinType,
+                        IsDeleted = outCoin.IsDeleted,
+                        WithdrawOptions = outCoin.WithdrawOptions?.Select(o => new WithdrawOptionDto
+                        {
+                            Id = o.Id,
+                            Title = o.Title,
+                            Description = o.Description,
+                            ImageUrl = o.ImageUrl,
+                            //Endpoint = o.Endpoint,
+                            //ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)o.ContentType,
+                            ////EndpointContent = o.EndpointContent,
+                            //WithdrawOptionGroups = o.WithdrawOptionGroups.Select(c => new WithdrawOptionGroupDto
+                            //{
+                            //    Title = c.Title,
+                            //    Description = c.Description,
+                            //    ImageUrl = c.ImageUrl,
+                            //    PriorityIndex = c.PriorityIndex,
+                            //}).ToList(),
+                            //OutCoins = o.OutCoins?.Select(v => new OutCoinDto
+                            //{
+                            //    Name = v.Name,
+                            //    Description = v.Description,
+                            //    ImageUrl = v.ImageUrl,
+                            //}).ToList() ?? new List<OutCoinDto>()
+                        }).ToList() ?? new List<WithdrawOptionDto>(),
+                        WithdrawOptiongroups = outCoin.WithdrawOptionGroups.Select(g => new WithdrawOptionGroupDto
+                        {
+                            Id = g.Id,
+                            Title = g.Title,
+                            Description = g.Description,
+                            ImageUrl = g.ImageUrl,
+                            PriorityIndex = g.PriorityIndex,
+                            //OutCoins = g.OutCoins.Select(n => new OutCoinDto
+                            //{
+                            //    Name = n.Name,
+                            //    Description = n.Description,
+                            //    ImageUrl = n.ImageUrl
+                            //}).ToList() ?? new List<OutCoinDto>(),
+                            //WithdrawOptionIds = g.WithdrawOptions?.Select(x => x.Id).ToList() ?? new List<int>()
+                        }).ToList() ?? new List<WithdrawOptionGroupDto>()
+                    };
+                }
+                return new CoinsPromTempDto
+                {
+                    Name = xx.Name,
+                    Description = xx.Description,
+                    ImgUrl = xx.ImageUrl,
+                    CoinType = (Contracts.Dtos.Coin.CoinType)xx.CoinType,
+                    IsDeleted = xx.IsDeleted,
+                    WithdrawOptions = null,
+                    WithdrawOptiongroups = null
+                };
+            }).ToList(),
+            Leaderboards = template.Leaderboards.Select(y => new LeaderboardsPromTempdto
+            {
+                Title = y.Title,
+                Description = y.Description,
+                EventType = (Contracts.Dtos.LeaderBoard.EventType)y.EventType,
+                CreationDate = y.CreationDate,
+                AnnouncementDate = y.AnnouncementDate.ToString(),
+                StartDate = y.StartDate.ToString(),
+                EndDate = y.EndDate.ToString(),
+                Status = (Contracts.Dtos.LeaderBoard.LeaderboardRecordStatus)y.Status,
+                IsGenerated = y.IsGenerated,
+                ScheduleId = y.ScheduleId,
+                LeaderboardTemplatePrizes = y.LeaderboardRecordPrizes.Select(z => new leaderboardTemplatePrizesDto
+                {
+                    Amount = z.Amount,
+                    CoinId = z.CoinId,
+                    StartRank = z.StartRank,
+                    EndRank = z.EndRank
+                }).ToList()
+
+            }).ToList(),
+            Games = template.Games.Select(w => new GameConfigurationPromTemplateListDto
+            {
+                Name = w.Name,
+                Value = w.Value,
+                IsActive = w.IsActive,
+                Prices = w.Prices.Select(x => new PriceDto
+                {
+                    Value = x.Value,
+                    Multiplier = x.Multiplier,
+                    CoinId = x.CoinId,
+                }).ToList(),
+                Rounds = w.Rounds.Select(x => new RoundDto
+                {
+                    Sequence = x.Sequence,
+                    Name = x.Name,
+                    NextPrizeIndex = x.NextPrizeIndex,
+                    ConfigurationId = x.ConfigurationId,
+                    Id = x.Id,
+                    Prizes = x.Prizes.Select(xx => new PrizeDto
+                    {
+                        Value = xx.Value,
+                        PrizeGroupId = xx.Id,
+                        PrizeTypeId = xx.Id,
+                        Probability = xx.Probability,
+                        Name = xx.Name,
+                        WheelIndex = xx.WheelIndex,
+                    }).ToList()
+                }).ToList(),
+            }).ToList(),
+        };
+
+        return new ApplicationResult { Success = true, Data = data };
     }
 
     public async Task<ApplicationResult> CreatePromotionTemplate(CreatePromotionTemplate template)
@@ -90,51 +343,29 @@ public class PromotionTemplateService : IPromotionTemplateService
         };
 
         var coins = new List<Domain.HubEntities.Coin.Coin>();
-        foreach (var item in template.Coins)
+
+        var mappedCoins = template.Coins.Select(coin => CreateCoinModel.ConvertToEntity(coin, 0))
+                                      .ToList();
+
+        if (template.Coins.FirstOrDefault(c => c.CoinType == Domain.HubEntities.Enum.CoinType.Out) is Domain.HubEntities.Models.CreateOutCoinModel outCoinModel)
         {
-            var coinId = $"{template.PromotionId}_{item.Name}"; // remove id and leave only name
-            Domain.HubEntities.Coin.Coin coin; 
+            var withdrawOptions = await _coinService.GetWithdrawOptions(outCoinModel);
+            var withdrawOptionGroups = await _coinService.GetWithdrawOptionGroups(outCoinModel);
 
-            switch (item.CoinType)
+            var outCoin = mappedCoins.OfType<OutCoin>()
+                                     .FirstOrDefault(c => c.CoinType == Domain.HubEntities.Enum.CoinType.Out);
+
+            if (outCoin != null)
             {
-                case Domain.HubEntities.Enum.CoinType.In:
-                    coin = new InCoin(coinId, item.Name, item.Description, item.ImageUrl, template.PromotionId);
-                    break;
+                if (withdrawOptions.Any())
+                    outCoin.AddWithdrawOptions(withdrawOptions);
 
-                case Domain.HubEntities.Enum.CoinType.Out:
-                    coin = new OutCoin(coinId, item.Name, item.Description, item.ImageUrl, template.PromotionId);
-
-                    if (coin is OutCoin outCoin)
-                    {
-                        var withdrawOptions = await _withdrawOptionRepository.Query()
-                            .Where(wo => outCoin.WithdrawOptions.Select(x => x.Id).Any(woId => woId == wo.Id))
-                            .ToListAsync(); 
-
-                        var withdrawOptionGroups = await _withdrawOptionGroupRepository.Query()
-                            .Where(wog => outCoin.WithdrawOptionGroups.Select(x => x.Id).Any(wogId => wogId == wog.Id))
-                            .ToListAsync();
-
-                        outCoin.AddWithdrawOptions(withdrawOptions);
-                        outCoin.AddWithdrawOptionGroups(withdrawOptionGroups);
-                    }
-                    break;
-
-                case Domain.HubEntities.Enum.CoinType.Asset:
-                    coin = new AssetCoin(coinId, item.Name, item.Description, item.ImageUrl, template.PromotionId);
-                    break;
-
-                case Domain.HubEntities.Enum.CoinType.Internal:
-                    coin = new InternalCoin(coinId, item.Name, item.Description, item.ImageUrl, template.PromotionId);
-                    break;
-
-                default:
-                    throw new ArgumentException($"Invalid coin type: {item.CoinType}");
+                if (withdrawOptionGroups.Any())
+                    outCoin.AddWithdrawOptionGroups(withdrawOptionGroups);
             }
-
-            coins.Add(coin);
         }
 
-        temp.Coins = coins;    
+        temp.Coins = mappedCoins;    
 
         var leaderboards = new List<LeaderboardRecord>();
         foreach(var leaderboard in template.Leaderboards)
@@ -143,10 +374,19 @@ public class PromotionTemplateService : IPromotionTemplateService
             {
                 Title = leaderboard.Title,
                 Description = leaderboard.Description,
-                AnnouncementDate = leaderboard.AnnouncementDuration,
-                StartDate = leaderboard.StartDuration,
-                EndDate = leaderboard.EndDuration,
+                CreationDate = DateTime.Now,
+                AnnouncementDate = leaderboard.AnnouncementDate,
+                StartDate = leaderboard.StartDate,
+                EndDate = leaderboard.EndDate,
+                EventType = (Domain.LeaderBoradEntities.EventType)leaderboard.EventType,
+                IsGenerated = leaderboard.IsGenerated,
+                Status = (Domain.LeaderBoradEntities.LeaderboardRecordStatus)leaderboard.Status,
             };
+
+            foreach (var prize in leaderboard.LeaderboardPrizes)
+            {
+                leadTemplate.AddLeaderboardRecordPrizes(prize.StartRank, prize.EndRank, prize.CoinId, prize.Amount);
+            }
             leaderboards.Add(leadTemplate);
             temp.Leaderboards = leaderboards;
         }
@@ -154,9 +394,9 @@ public class PromotionTemplateService : IPromotionTemplateService
         var games = new List<GameConfigurationTemplate>();
         foreach (var item in template.Games)
         {
-            //var conf = await _gameTemplateService.CreateGameConfigurationTemplate(item);
-            //games.Add(conf);
-            //temp.Games = games;
+            var conf = await _gameTemplateService.CreateGameConfigurationTemplate(item);
+            games.Add(conf);
+            temp.Games = games;
         }
 
         await _promotionTemplateRepository.AddPromotionTemplateAsync(temp);

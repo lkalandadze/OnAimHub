@@ -17,13 +17,13 @@ builder.Services.AddSingleton<WheelService>(sp =>
 {
     var httpClient = new HttpClient
     {
-        BaseAddress = new Uri("https://localhost:7217")
+        BaseAddress = new Uri("http://localhost:5066")
     };
 
     var authHeader = Convert.ToBase64String(Encoding.ASCII.GetBytes($"a:a"));
     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeader);
 
-    return new WheelService("https://localhost:7217",httpClient);
+    return new WheelService("http://localhost:5066", httpClient);
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

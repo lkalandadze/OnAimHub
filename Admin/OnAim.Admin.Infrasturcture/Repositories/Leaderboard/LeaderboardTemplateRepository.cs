@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Infrasturcture.Persistance.MongoDB;
 using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
@@ -22,7 +21,11 @@ public class LeaderboardTemplateRepository : ILeaderboardTemplateRepository
 
     public async Task<List<LeaderboardTemplate>> GetLeaderboardTemplates()
     {
-        return await _dbContext.LeaderboardTemplates.Find(_ => true).ToListAsync();
+        var templates = await _dbContext.LeaderboardTemplates
+        .Find(_ => true)
+        .ToListAsync();
+
+        return templates;
     }
 
     public async Task<LeaderboardTemplate?> GetLeaderboardTemplateByIdAsync(string id)

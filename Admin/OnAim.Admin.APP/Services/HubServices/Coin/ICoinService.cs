@@ -1,4 +1,5 @@
 ﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Domain.HubEntities;
 
 namespace OnAim.Admin.APP.Services.HubServices.Coin;
@@ -7,6 +8,9 @@ public interface ICoinService
 {
     Task<IEnumerable<WithdrawOption>> GetWithdrawOptions(Domain.HubEntities.Models.CreateOutCoinModel? outCoinModel);
     Task<IEnumerable<WithdrawOptionGroup>> GetWithdrawOptionGroups(Domain.HubEntities.Models.CreateOutCoinModel? outCoinModel);
+    Task<ApplicationResult> GetAllWithdrawOptions(BaseFilter filter);
+    Task<ApplicationResult> GetAllWithdrawOptionGroups(BaseFilter filter);
+    Task<ApplicationResult> GetWithdrawOptionEndpoints(BaseFilter filter);
     Task<ApplicationResult> CreateWithdrawOption(CreateWithdrawOption option);
     Task<ApplicationResult> UpdateWithdrawOption(UpdateWithdrawOption option);
     Task<ApplicationResult> CreateWithdrawOptionEndpoint(CreateWithdrawOptionEndpoint option);

@@ -1312,8 +1312,7 @@
             "$ref": "#/components/schemas/CoinType"
           },
           "templateId": {
-            "type": "integer",
-            "format": "int32",
+            "type": "string",
             "nullable": true
           }
         },
@@ -1411,8 +1410,7 @@
             "$ref": "#/components/schemas/CoinType"
           },
           "templateId": {
-            "type": "integer",
-            "format": "int32",
+            "type": "string",
             "nullable": true
           }
         },
@@ -1437,8 +1435,7 @@
             "$ref": "#/components/schemas/CoinType"
           },
           "templateId": {
-            "type": "integer",
-            "format": "int32",
+            "type": "string",
             "nullable": true
           }
         },
@@ -1463,8 +1460,7 @@
             "$ref": "#/components/schemas/CoinType"
           },
           "templateId": {
-            "type": "integer",
-            "format": "int32",
+            "type": "string",
             "nullable": true
           },
           "withdrawOptionIds": {
@@ -1530,6 +1526,10 @@
           "correlationId": {
             "type": "string",
             "format": "uuid"
+          },
+          "templateId": {
+            "type": "string",
+            "nullable": true
           },
           "segmentIds": {
             "type": "array",

@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnAim.Admin.APP.Services.HubServices.Coin;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Coin;
+using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Domain.HubEntities;
@@ -28,19 +30,55 @@ public class CoinTemplateService : ICoinTemplateService
         _coinRepository = coinRepository;
     }
 
-    public async Task<ApplicationResult> GetAllCoinTemplates()
+    public async Task<ApplicationResult> GetAllCoinTemplates(BaseFilter filter)
     {
         var temps = await _coinRepository.GetCoinTemplates();
-        return new ApplicationResult { Data = temps, Success = true };
+        var totalCount = temps.Count();
+
+        var pageNumber = filter?.PageNumber ?? 1;
+        var pageSize = filter?.PageSize ?? 25;
+        var coinTemplates = temps.Select(x => new CoinTemplateListDto
+        {
+            Id = x.Id,
+            Title = x.Name,
+            Description = x.Description,
+            CoinType = (CoinType)x.CoinType,
+            WithdrawOptions = (List<CoinTemplateWithdrawOption>)x.WithdrawOptions,
+        });    
+
+        var res = coinTemplates
+           .Skip((pageNumber - 1) * pageSize)
+           .Take(pageSize);
+
+        return new ApplicationResult
+        {
+            Success = true,
+            Data = new PaginatedResult<CoinTemplateListDto>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = res.ToList(),
+            },
+        };
     }
 
     public async Task<ApplicationResult> GetCoinTemplateById(string id)
     {
         var coin = await _coinRepository.GetCoinTemplateByIdAsync(id);
 
-        if (coin == null) throw new NotFoundException("Coin Not Found");
+        var coinTemplate = new CoinTemplateListDto
+        {
+            Id = coin.Id,
+            Title = coin.Name,
+            Description = coin.Description,
+            CoinType = (CoinType)coin.CoinType,
+            WithdrawOptions = (List<CoinTemplateWithdrawOption>)coin.WithdrawOptions,
+        };
 
-        return new ApplicationResult { Success = true, Data = coin };
+        if (coinTemplate == null) throw new NotFoundException("Coin template Not Found");
+
+        return new ApplicationResult { Success = true, Data = coinTemplate };
     }
 
     public async Task<CoinTemplate> CreateCoinTemplate(CreateCoinTemplateDto coinTemplate)
@@ -58,10 +96,14 @@ public class CoinTemplateService : ICoinTemplateService
         {
             var withdrawOptions = _withdrawOptionRepository.Query
                 (wo => coinTemplate.WithdrawOptionIds.Contains(wo.Id))
+                //.Include(x => x.WithdrawOptionEndpoint)
+                //.Include(x => x.WithdrawOptionGroups)
                 .ToList();
 
             var template = withdrawOptions.Select(x => new CoinTemplateWithdrawOption
             {
+                Id = x.Id,
+                CoinTemplateId = temp.Id,
                 WithdrawOption = x,
                 WithdrawOptionId = x.Id,
             }).ToList();
@@ -74,10 +116,14 @@ public class CoinTemplateService : ICoinTemplateService
         {
             var withdrawOptionGroupss = _withdrawOptionGroupRepository.Query
                 (wo => coinTemplate.WithdrawOptionGroupIds.Contains(wo.Id))
+                //.Include(x => x.WithdrawOptions)
+                //.Include(x => x.OutCoins)
                 .ToList();
 
             var groupTemplate = withdrawOptionGroupss.Select(x => new CoinTemplateWithdrawOptionGroup
             {
+                Id = x.Id,
+                CoinTemplateId = temp.Id,
                 WithdrawOptionGroup = x,
                 WithdrawOptionGroupId = x.Id,
             }).ToList();
@@ -149,4 +195,12 @@ public class CoinTemplateService : ICoinTemplateService
 
         return new ApplicationResult { Success = true };
     }
+}
+public class CoinTemplateListDto
+{
+    public string Id { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public CoinType CoinType { get; set; }
+    public List<CoinTemplateWithdrawOption> WithdrawOptions { get; set; }
 }

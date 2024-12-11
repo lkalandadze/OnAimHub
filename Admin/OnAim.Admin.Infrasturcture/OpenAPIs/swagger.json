@@ -50,16 +50,6 @@
         "type": "integer",
         "format": "int32"
       },
-      "ConfigurationCreateModel": {
-        "type": "object",
-        "properties": {
-          "configurationJson": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "CreateAssetCoinModel": {
         "type": "object",
         "properties": {
@@ -79,8 +69,7 @@
             "$ref": "#/components/schemas/CoinType"
           },
           "templateId": {
-            "type": "integer",
-            "format": "int32",
+            "type": "string",
             "nullable": true
           }
         },
@@ -149,8 +138,7 @@
             "$ref": "#/components/schemas/CoinType"
           },
           "templateId": {
-            "type": "integer",
-            "format": "int32",
+            "type": "string",
             "nullable": true
           }
         },
@@ -175,8 +163,7 @@
             "$ref": "#/components/schemas/CoinType"
           },
           "templateId": {
-            "type": "integer",
-            "format": "int32",
+            "type": "string",
             "nullable": true
           }
         },
@@ -290,8 +277,7 @@
             "$ref": "#/components/schemas/CoinType"
           },
           "templateId": {
-            "type": "integer",
-            "format": "int32",
+            "type": "string",
             "nullable": true
           },
           "withdrawOptionIds": {
@@ -336,6 +322,10 @@
             "type": "string",
             "format": "uuid"
           },
+          "templateId": {
+            "type": "string",
+            "nullable": true
+          },
           "segmentIds": {
             "type": "array",
             "items": {
@@ -367,7 +357,11 @@
             "nullable": true
           },
           "gameConfiguration": {
-            "$ref": "#/components/schemas/ConfigurationCreateModel"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GameConfiguration"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -379,6 +373,54 @@
         ],
         "type": "integer",
         "format": "int32"
+      },
+      "GameConfiguration": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "promotionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "correlationId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "fromTemplateId": {
+            "type": "string",
+            "nullable": true
+          },
+          "prices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Price"
+            },
+            "nullable": true
+          },
+          "rounds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Round"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "LeaderboardRecordStatus": {
         "enum": [
@@ -392,6 +434,28 @@
         "type": "integer",
         "format": "int32"
       },
+      "Price": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "number",
+            "format": "double"
+          },
+          "multiplier": {
+            "type": "number",
+            "format": "double"
+          },
+          "coinId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "RepeatType": {
         "enum": [
           0,
@@ -401,6 +465,79 @@
         ],
         "type": "integer",
         "format": "int32"
+      },
+      "Round": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sequence": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          },
+          "nextPrizeIndex": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "configurationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prizes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WheelPrize"
+            },
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WheelPrize": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "probability": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prizeTypeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prizeGroupId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "wheelIndex": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       }
     }
   }
