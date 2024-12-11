@@ -24,6 +24,11 @@ public class CreateSegmentHandler : IRequestHandler<CreateSegmentCommand>
 
     public async Task<Unit> Handle(CreateSegmentCommand request, CancellationToken cancellationToken)
     {
+        if (!CheckmateValidations.Checkmate.IsValid(request, true))
+        {
+            throw new CheckmateException(CheckmateValidations.Checkmate.GetFailedChecks(request, true));
+        }
+
         var segments = _segmentRepository.Query(x => x.Id == request.Id || x.PriorityLevel == request.PriorityLevel);
 
         if (segments != null && segments.Any())

@@ -8,8 +8,8 @@ using Hub.Application;
 using Hub.Application.Configurations;
 using Hub.Application.Consumers.Rewards;
 using Hub.Application.Converters;
+using Hub.Application.Features.CoinFeatures.WithdrawOptionFeatures.Commands.CreateWithdrawOption;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
-using Hub.Application.Features.WithdrawOptionFeatures.Commands.CreateWithdrawOption;
 using Hub.Application.Models.Coin;
 using Hub.Application.Services.Abstract;
 using Hub.Application.Services.Abstract.BackgroundJobs;
@@ -154,7 +154,7 @@ public class Startup
         services.AddControllers()
             .AddFluentValidation(fv =>
             {
-                fv.RegisterValidatorsFromAssemblyContaining<CreateWithdrawOptionValidator>();
+                fv.RegisterValidatorsFromAssemblyContaining<CreateWithdrawOptionChecker>();
             })
             .AddJsonOptions(options =>
             {

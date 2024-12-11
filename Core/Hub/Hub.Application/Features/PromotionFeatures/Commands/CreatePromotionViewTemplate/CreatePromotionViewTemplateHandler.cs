@@ -3,6 +3,7 @@ using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities.Templates;
 using MediatR;
+using Shared.Application.Exceptions;
 using Shared.Lib.Wrappers;
 
 namespace Hub.Application.Features.PromotionFeatures.Commands.CreatePromotionViewTemplate;
@@ -25,6 +26,11 @@ public class CreatePromotionViewTemplateHandler : IRequestHandler<CreatePromotio
 
     public async Task<Response<CreatePromotionViewTemplateResponse>> Handle(CreatePromotionViewTemplate request, CancellationToken cancellationToken)
     {
+        if (!CheckmateValidations.Checkmate.IsValid(request, true))
+        {
+            throw new CheckmateException(CheckmateValidations.Checkmate.GetFailedChecks(request, true));
+        }
+
         var viewUrl = _promotionViewService.GenerateTemplateViewUrl(request.ViewContent);
 
         var promotionViewTemplate = new PromotionViewTemplate(request.Name, viewUrl);
