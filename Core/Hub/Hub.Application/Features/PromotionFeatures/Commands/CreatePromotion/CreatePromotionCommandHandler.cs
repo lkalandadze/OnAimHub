@@ -39,6 +39,11 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
 
     public async Task<int> Handle(CreatePromotionCommand request, CancellationToken cancellationToken)
     {
+        //if (!CheckmateValidations.Checkmate.IsValid(request, true))
+        //{
+        //    throw new CheckmateException(CheckmateValidations.Checkmate.GetFailedChecks(request, true));
+        //}
+
         if (request.EndDate <= request.StartDate)
         {
             throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"EndDate must be later than StartDate.");
