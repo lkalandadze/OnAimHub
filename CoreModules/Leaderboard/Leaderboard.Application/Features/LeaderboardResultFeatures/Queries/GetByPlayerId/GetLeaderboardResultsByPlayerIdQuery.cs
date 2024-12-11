@@ -5,5 +5,5 @@ namespace Leaderboard.Application.Features.LeaderboardResultFeatures.Queries.Get
 
 public class GetLeaderboardResultsByPlayerIdQuery : PagedRequest, IRequest<GetLeaderboardResultsByPlayerIdQueryResponse>
 {
-    public int PlayerId { get; }
+    public int PlayerId { get; set; }
 }

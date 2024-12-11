@@ -9,6 +9,6 @@ public interface IAuthService
     public IEnumerable<string> GetCurrentPlayerSegments();
 
     string GetCurrentPlayerUserName();
-
+    string GetToken();
     int GetCurrentPlayerId();
 }

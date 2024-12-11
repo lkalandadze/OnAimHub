@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Leaderboard.Application.Behaviours;
+using Leaderboard.Application.Consumers.Play;
 using Leaderboard.Application.Consumers.Players;
 using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Infrastructure.Repositories;
@@ -45,6 +46,7 @@ public static class ServiceExtensions
         services.AddMassTransit(x =>
         {
             x.AddConsumer<CreatePlayerAggregationConsumer>();
+            x.AddConsumer<PlayLeaderboardAggregationConsumer>();
 
             x.UsingRabbitMq((context, cfg) =>
             {
@@ -60,13 +62,20 @@ public static class ServiceExtensions
                     p.ExchangeType = "fanout";
                 });
 
-                cfg.ReceiveEndpoint(rabbitMqOptions.Queues["ReceiveLeaderboardRewardQueue"].QueueName, e =>
-                {
-                    e.Bind(rabbitMqOptions.ExchangeName, x =>
-                    {
-                        x.ExchangeType = "fanout";
-                    });
-                });
+                //var receiveLeaderQueueSettings = rabbitMqOptions.Queues["ReceiveLeaderboardRewardQueue"];
+                //cfg.ReceiveEndpoint(receiveLeaderQueueSettings.QueueName, e =>
+                //{
+                //    var rabbitMqEndpoint = e as IRabbitMqReceiveEndpointConfigurator;
+                //    foreach (var routingKey in receiveLeaderQueueSettings.RoutingKeys)
+                //    {
+                //        rabbitMqEndpoint?.Bind(rabbitMqOptions.ExchangeName, x =>
+                //        {
+                //            x.RoutingKey = routingKey;
+                //            x.ExchangeType = "fanout";
+                //        });
+                //    }
+                //    e.ConfigureConsumer<CreatePlayerAggregationConsumer>(context);
+                //});
 
                 var playerQueueSettings = rabbitMqOptions.Queues["CreatePlayerQueue"];
                 cfg.ReceiveEndpoint(playerQueueSettings.QueueName, e =>
@@ -81,6 +90,21 @@ public static class ServiceExtensions
                         });
                     }
                     e.ConfigureConsumer<CreatePlayerAggregationConsumer>(context);
+                });
+
+                var playLeaderboardQueueSettings = rabbitMqOptions.Queues["PlayLeaderboardQueue"];
+                cfg.ReceiveEndpoint(playLeaderboardQueueSettings.QueueName, e =>
+                {
+                    var rabbitMqEndpoint = e as IRabbitMqReceiveEndpointConfigurator;
+                    foreach (var routingKey in playLeaderboardQueueSettings.RoutingKeys)
+                    {
+                        rabbitMqEndpoint?.Bind(rabbitMqOptions.ExchangeName, x =>
+                        {
+                            x.RoutingKey = routingKey;
+                            x.ExchangeType = "fanout";
+                        });
+                    }
+                    e.ConfigureConsumer<PlayLeaderboardAggregationConsumer>(context);
                 });
             });
         });

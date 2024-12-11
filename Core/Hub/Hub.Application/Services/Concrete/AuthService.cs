@@ -31,6 +31,17 @@ public class AuthService : IAuthService
             return new JwtSecurityToken(jwtEncodedString: token);
         }
     }
+    public string GetToken()
+    {
+        var authHeader = _accessor.HttpContext!.Request.Headers[HeaderNames.Authorization].ToString();
+
+        if (string.IsNullOrEmpty(authHeader))
+        {
+            throw new InvalidOperationException("Authorization header is missing.");
+        }
+
+        return authHeader.Replace("Bearer ", string.Empty, StringComparison.OrdinalIgnoreCase);
+    }
 
     public AuthService(IHttpContextAccessor accessor)
     {

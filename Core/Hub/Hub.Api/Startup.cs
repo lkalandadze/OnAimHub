@@ -36,6 +36,7 @@ using Shared.Application.Configurations;
 using Shared.Application.Middlewares;
 using Shared.Infrastructure.Bus;
 using Shared.Infrastructure.MassTransit;
+using Shared.IntegrationEvents.IntegrationEvents.Leaderboard;
 using Shared.IntegrationEvents.IntegrationEvents.Segment;
 using Shared.Lib.SwaggerFilters;
 using System.Reflection;
@@ -417,6 +418,12 @@ public class Startup
 
                 cfg.Message<CreatePlayerEvent>(c => c.SetEntityName("leaderboard.fanout"));
                 cfg.Publish<CreatePlayerEvent>(p =>
+                {
+                    p.ExchangeType = "fanout";
+                });
+
+                cfg.Message<PlayLeaderboardEvent>(c => c.SetEntityName("leaderboard.fanout"));
+                cfg.Publish<PlayLeaderboardEvent>(p =>
                 {
                     p.ExchangeType = "fanout";
                 });

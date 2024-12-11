@@ -2,6 +2,7 @@
 using Hub.Application.Features.IdentityFeatures.Commands.ApplyPromoCode;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Features.IdentityFeatures.Commands.RefreshTokens;
+using Hub.Application.Features.LeaderboardFeatures.Commands.PlayLeaderboard;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerBalance;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPlayerProgress;
 using Hub.Application.Features.PlayerFeatures.Queries.GetPromoCode;
@@ -92,4 +93,7 @@ public class HubController : BaseApiController
     }
 
     #endregion
+
+    [HttpPost(nameof(PlayLeaderboard))]
+    public async Task PlayLeaderboard(PlayLeaderboardCommand request) => await Mediator.Send(request);
 }
