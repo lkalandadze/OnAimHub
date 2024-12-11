@@ -37,9 +37,9 @@ public class WithdrawOption
     public EndpointContentType ContentType { get; set; }
     public string EndpointContent { get; set; }
 
-    public int? WithdrawOptionEndpointId { get; private set; }
-    public WithdrawOptionEndpoint WithdrawOptionEndpoint { get; private set; }
+    public int? WithdrawOptionEndpointId { get; set; }
+    public WithdrawOptionEndpoint WithdrawOptionEndpoint { get; set; }
 
-    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; private set; }
+    public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
     public ICollection<OutCoin> OutCoins { get; private set; }
 }

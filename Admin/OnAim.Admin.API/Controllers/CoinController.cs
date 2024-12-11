@@ -36,6 +36,10 @@ public class CoinController : ApiControllerBase
     public async Task<IActionResult> GetAllWithdrawOptions([FromQuery] BaseFilter filter)
         => Ok(await _coinService.GetAllWithdrawOptions(filter));
 
+    [HttpGet(nameof(GetWithdrawOptionById))] 
+    public async Task<IActionResult> GetWithdrawOptionById([FromQuery] int id)
+        => Ok(await _coinService.GetWithdrawOptionById(id));
+
     [HttpPost(nameof(CreateWithdrawOptionGroup))]
     public async Task<IActionResult> CreateWithdrawOptionGroup([FromBody] APP.CreateWithdrawOptionGroup create)
         => Ok(await _coinService.CreateWithdrawOptionGroup(create));
@@ -47,6 +51,10 @@ public class CoinController : ApiControllerBase
     [HttpGet(nameof(GetAllWithdrawOptionGroups))]
     public async Task<IActionResult> GetAllWithdrawOptionGroups([FromQuery] BaseFilter filter)
         => Ok(await _coinService.GetAllWithdrawOptionGroups(filter));
+
+    [HttpGet(nameof(GetWithdrawOptionGroupById))]
+    public async Task<IActionResult> GetWithdrawOptionGroupById([FromQuery] int id)
+        => Ok(await _coinService.GetWithdrawOptionGroupById(id));
 
     [HttpPost(nameof(CreateWithdrawOptionEndpoint))]
     public async Task<IActionResult> CreateWithdrawOptionEndpoint([FromBody] APP.CreateWithdrawOptionEndpoint create)
@@ -60,6 +68,9 @@ public class CoinController : ApiControllerBase
     public async Task<IActionResult> GetAllWithdrawOptionEndpoints([FromQuery] BaseFilter filter)
         => Ok(await _coinService.GetWithdrawOptionEndpoints(filter));
 
+    [HttpGet(nameof(GetWithdrawOptionEndpointById))]
+    public async Task<IActionResult> GetWithdrawOptionEndpointById([FromQuery] int id)
+        => Ok(await _coinService.GetWithdrawOptionEndpointById(id));
 
     //Template
 

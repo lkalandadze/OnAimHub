@@ -9,8 +9,11 @@ public interface ICoinService
     Task<IEnumerable<WithdrawOption>> GetWithdrawOptions(Domain.HubEntities.Models.CreateOutCoinModel? outCoinModel);
     Task<IEnumerable<WithdrawOptionGroup>> GetWithdrawOptionGroups(Domain.HubEntities.Models.CreateOutCoinModel? outCoinModel);
     Task<ApplicationResult> GetAllWithdrawOptions(BaseFilter filter);
+    Task<ApplicationResult> GetWithdrawOptionById(int id);
     Task<ApplicationResult> GetAllWithdrawOptionGroups(BaseFilter filter);
+    Task<ApplicationResult> GetWithdrawOptionGroupById(int id);
     Task<ApplicationResult> GetWithdrawOptionEndpoints(BaseFilter filter);
+    Task<ApplicationResult> GetWithdrawOptionEndpointById(int id);
     Task<ApplicationResult> CreateWithdrawOption(CreateWithdrawOption option);
     Task<ApplicationResult> UpdateWithdrawOption(UpdateWithdrawOption option);
     Task<ApplicationResult> CreateWithdrawOptionEndpoint(CreateWithdrawOptionEndpoint option);
