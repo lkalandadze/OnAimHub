@@ -27,7 +27,7 @@ public class Player : BaseEntity<int>
         ReferrerId = referrerId;
         RegistredOn = DateTimeOffset.UtcNow;
         LastVisitedOn = DateTimeOffset.UtcNow;
-        //Segments = segments?.ToList() ?? [];
+        Segments = segments?.ToList() ?? new List<Segment>();
         PlayerBalances = playerBalances?.ToList() ?? [];
     }
 
