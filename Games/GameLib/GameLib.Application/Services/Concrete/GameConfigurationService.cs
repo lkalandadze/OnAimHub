@@ -15,17 +15,20 @@ public class GameConfigurationService : IGameConfigurationService
 {
     private readonly IGameConfigurationRepository _configurationRepository;
     private readonly IPriceRepository _priceRepository;
+    private readonly ICoinRepository _coinRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly EntityGenerator _entityGenerator;
 
     public GameConfigurationService(
         IGameConfigurationRepository configurationRepository,
         IPriceRepository priceRepository,
+        ICoinRepository coinRepository,
         IUnitOfWork unitOfWork,
         EntityGenerator entityGenerator)
     {
         _configurationRepository = configurationRepository;
         _priceRepository = priceRepository;
+        _coinRepository = coinRepository;
         _unitOfWork = unitOfWork;
         _entityGenerator = entityGenerator;
     }
@@ -81,8 +84,12 @@ public class GameConfigurationService : IGameConfigurationService
             throw new CheckmateException(CheckmateValidations.Checkmate.GetFailedChecks(configuration, true));
         }
 
+        
         try
         {
+            var price = configuration.Prices.FirstOrDefault()!;
+            await _coinRepository.InsertAsync(new Coin() { Id = $"{configuration.Id}_{price.CoinId}", Name = price.CoinId });
+       
             await _configurationRepository.UpdateConfigurationTreeAsync(configuration);
             await _unitOfWork.SaveAsync();
         }
@@ -136,7 +143,7 @@ public class GameConfigurationService : IGameConfigurationService
         {
             _priceRepository.Delete(price);
         }
-        
+
         _configurationRepository.DeleteConfigurationTree(configuration);
         await _unitOfWork.SaveAsync();
     }

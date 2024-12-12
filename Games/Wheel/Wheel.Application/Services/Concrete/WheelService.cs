@@ -1,11 +1,16 @@
-﻿using GameLib.Application.Services.Abstract;
+﻿using GameLib.Application.Configurations;
+using GameLib.Application;
+using GameLib.Application.Holders;
+using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 using Shared.Infrastructure.Bus;
-using Shared.IntegrationEvents.IntegrationEvents.Player;
 using Wheel.Application.Models.Player;
 using Wheel.Application.Services.Abstract;
 using Wheel.Domain.Entities;
+using Microsoft.Extensions.Options;
 
 namespace Wheel.Application.Services.Concrete;
 
@@ -14,16 +19,22 @@ public class WheelService : IWheelService
     private readonly IAuthService _authService;
     private readonly IHubService _hubService;
     private readonly IMessageBus _messageBus;
+    private readonly GameSettings _gameSettings;
+    private readonly GameInfoConfiguration _gameInfoConfig;
 
     public WheelService(
         IGameConfigurationRepository configurationRepository,
         IAuthService authService,
         IHubService hubService,
-        IMessageBus messageBus)
+        IMessageBus messageBus,
+        GameSettings gameSettings,
+        IOptions<GameInfoConfiguration> gameInfoConfig)
     {
         _authService = authService;
         _hubService = hubService;
         _messageBus = messageBus;
+        _gameSettings = gameSettings;
+        _gameInfoConfig = gameInfoConfig.Value;
     }
 
     public async Task<PlayResponseModel> PlayWheelAsync(PlayRequestModel model)
@@ -34,29 +45,39 @@ public class WheelService : IWheelService
     private async Task<PlayResponseModel> PlayAsync<TPrize>(PlayRequestModel model)
         where TPrize : BasePrize
     {
-        await _hubService.BetTransactionAsync(model.GameId, model.CurrencyId, model.Amount);
+        if (!_gameSettings.IsActive.Value)
+        {
+            throw new ApiException(
+                ApiExceptionCodeTypes.OperationNotAllowed,
+                "The game is currently inactive and cannot be played. Please try again later."
+            );
+        }
 
-        //TODO: prioritetis minicheba segmentistvis
-        //var prize = GeneratorHolder.GetPrize<TPrize>(_authService.GetCurrentPlayerSegmentIds().ToList()[0]);
+        await _hubService.BetTransactionAsync(_gameInfoConfig.GameId, model.PromotionId, model.Amount);
 
-        //if (prize == null)
-        //{
-        //    throw new ArgumentNullException(nameof(prize));
-        //}
+        var prize = GeneratorHolder.GetPrize<TPrize>();
 
-        //if (prize.Value > 0)
-        //{
-        //    await _hubService.WinTransactionAsync(model.GameId, model.CurrencyId, model.Amount);
-        //}
+        if (prize == null)
+        {
+            throw new ApiException(
+                ApiExceptionCodeTypes.KeyNotFound,
+                "The prize generation failed. No prize was generated for the specified criteria. Please try again or contact support."
+            );
+        }
 
-        var @event = new UpdatePlayerExperienceEvent(Guid.NewGuid(), model.Amount, model.CurrencyId, _authService.GetCurrentPlayerId());
+        if (prize.Value > 0)
+        {
+            await _hubService.WinTransactionAsync(_gameInfoConfig.GameId, model.PromotionId, model.Amount * prize.Value);
+        }
 
-        await _messageBus.Publish(@event);
+        //var @event = new UpdatePlayerExperienceEvent(Guid.NewGuid(), model.Amount, model.CurrencyId, _authService.GetCurrentPlayerId());
+
+        //await _messageBus.Publish(@event);
 
         return new PlayResponseModel
         {
-            PrizeResults = null,
-            Multiplier = 0,
+            //PrizeResults = [prize],
+            Result = prize.Value <= 0 ? "You Lose" : $"Win Amount: {model.Amount * prize.Value}",
         };
     }
 }

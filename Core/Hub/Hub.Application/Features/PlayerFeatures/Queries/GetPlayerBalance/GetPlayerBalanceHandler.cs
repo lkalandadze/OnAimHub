@@ -26,19 +26,19 @@ public class GetPlayerBalanceHandler : IRequestHandler<GetPlayerBalanceQuery, Ge
 
     public async Task<GetPlayerBalanceResponse> Handle(GetPlayerBalanceQuery request, CancellationToken cancellationToken)
     {
-        var aaa = _authService.GetCurrentPlayer();
+        var player = _authService.GetCurrentPlayer();
 
-        if (_authService.GetCurrentPlayer() == null)
+        if (player == null)
         {
             throw new ApiException(ApiExceptionCodeTypes.UnauthorizedAccessAttempt, "Unauthorized access attempt - player information is missing.");
         }
 
-        var balances = await _playerBalanceRepository.QueryAsync(x => x.PlayerId == _authService.GetCurrentPlayerId());
+        var balances = await _playerBalanceRepository.QueryAsync(x => x.PlayerId == player.Id);
 
         return new GetPlayerBalanceResponse
         {
             Balances = balances.Select(x => PlayerBalanceBaseDtoModel.MapFrom(x)),
-            PlayerId = _authService.GetCurrentPlayerId(),
+            PlayerId = player.Id,
         };
     }
 }

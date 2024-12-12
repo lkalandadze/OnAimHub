@@ -7,6 +7,5 @@ namespace Hub.Application.Features.TransactionFeatures.Commands.CreateBetTransac
 [CheckMate<CreateBetTransactionChecker>]
 public record CreateBetTransactionCommand(
     int GameId,
-    string CoinId,
     decimal Amount,
     int PromotionId) : IRequest<TransactionResponseModel>;

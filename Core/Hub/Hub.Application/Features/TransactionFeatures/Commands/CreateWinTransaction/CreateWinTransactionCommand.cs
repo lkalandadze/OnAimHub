@@ -7,6 +7,5 @@ namespace Hub.Application.Features.TransactionFeatures.Commands.CreateWinTransac
 [CheckMate<CreateWinTransactionChecker>]
 public record CreateWinTransactionCommand(
     int GameId,
-    string CoinId,
     decimal Amount,
     int PromotionId) : IRequest<TransactionResponseModel>;

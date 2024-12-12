@@ -33,7 +33,6 @@ public class UpdateSegmentHandler : IRequestHandler<UpdateSegmentCommand>
         if (segment == null)
         {
             throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Segment with the specified ID: [{request.Id}] was not found.");
-
         }
 
         var segments = _segmentRepository.Query(x => x.Id == request.Id || x.PriorityLevel == request.PriorityLevel);

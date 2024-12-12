@@ -24,13 +24,13 @@ public class HubService : IHubService
         _hubApiConfig = hubApiConfig.Value;
     }
 
-    public async Task BetTransactionAsync(int gameVersionId, string CoinId, int amount)
+    public async Task BetTransactionAsync(int gameVersionId, int promotionId, int amount)
     {
         Authorize();
         var transactionPost = new TransactionPostModel
         {
             GameId = gameVersionId,
-            CoinId = CoinId,
+            PromotionId = promotionId,
             Amount = amount,
         };
 
@@ -48,13 +48,13 @@ public class HubService : IHubService
         }
     }
 
-    public async Task WinTransactionAsync(int gameVersionId, string CoinId, int amount)
+    public async Task WinTransactionAsync(int gameVersionId, int promotionId, int amount)
     {
         Authorize();
         var transactionPost = new TransactionPostModel
         {
             GameId = gameVersionId,
-            CoinId = CoinId,
+            PromotionId = promotionId,
             Amount = amount,
         };
 
