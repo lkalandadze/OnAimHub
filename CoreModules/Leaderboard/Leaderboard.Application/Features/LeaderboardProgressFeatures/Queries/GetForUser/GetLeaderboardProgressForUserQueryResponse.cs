@@ -6,4 +6,5 @@ namespace Leaderboard.Application.Features.LeaderboardProgressFeatures.Queries.G
 public class GetLeaderboardProgressForUserQueryResponse : Response<PagedResponse<LeaderboardProgressModel>>
 {
     public string? CurrentPlayerUsername { get; set; }
+    public int CurrentPlacement { get; set; }
 };

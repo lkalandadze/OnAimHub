@@ -8,6 +8,7 @@ public sealed record LeaderboardProgressModel
     public int PlayerId { get; set; }
     public string PlayerUsername { get; set; }
     public int Amount { get; set; }
+    public int Placement { get; set; }
 
 
     public static LeaderboardProgressModel MapFrom(LeaderboardProgress leaderboardProgress)

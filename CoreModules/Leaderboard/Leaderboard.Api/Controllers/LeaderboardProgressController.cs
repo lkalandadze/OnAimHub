@@ -22,6 +22,6 @@ public class LeaderboardProgressController : BaseApiController
     [HttpGet(nameof(GetLeaderboardProgressForUser))]
     public async Task<ActionResult<GetLeaderboardProgressForUserQueryResponse>> GetLeaderboardProgressForUser([FromQuery] GetLeaderboardProgressForUserQuery request) => await Mediator.Send(request);
 
-    [HttpPost(nameof(FiniishLeaderboard))]
-    public async Task FiniishLeaderboard([FromQuery] FinishLeaderboardCommand request) => await Mediator.Send(request);
+    [HttpPost(nameof(FinishLeaderboard))]
+    public async Task FinishLeaderboard([FromQuery] FinishLeaderboardCommand request) => await Mediator.Send(request);
 }
