@@ -9,7 +9,7 @@ public interface IGameConfigurationService
 {
     Response<EntityMetadata?> GetConfigurationMetaData();
 
-    Task<Response<IEnumerable<ConfigurationBaseGetModel>>> GetAllAsync();
+    Task<Response<IEnumerable<ConfigurationBaseGetModel>>> GetAllAsync(int promotionId);
 
     Task<Response<GameConfiguration>> GetByIdAsync(int id);
 

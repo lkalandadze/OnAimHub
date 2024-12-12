@@ -3,6 +3,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Withdraw;
 using OnAim.Admin.Contracts.Paging;
+using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.HubEntities;
 using OnAim.Admin.Infrasturcture.Interfaces;
 
@@ -118,6 +119,45 @@ public class CoinService : ICoinService
         };
     }
 
+    public async Task<ApplicationResult> GetWithdrawOptionById(int id)
+    {
+        var data = await _withdrawOptionRepository.Query().Include(x => x.OutCoins).FirstOrDefaultAsync(x => x.Id == id);
+
+        if (data == null)
+            throw new NotFoundException("withdraw Option not found");
+
+        var item = new WithdrawOptionDto
+        {
+            Id = data.Id,
+            Title = data.Title,
+            ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)data.ContentType,
+            Description = data.Description,
+            Endpoint = data.Endpoint,
+            EndpointContent = data.EndpointContent,
+            ImageUrl = data.ImageUrl,
+            OutCoins = data.OutCoins?.Select(x => new OutCoinDto
+            {
+                ImageUrl = x.ImageUrl,
+                Id = x.Id,
+                Description = x.Description,
+                Name = x.Name,
+                PromotionId = x.PromotionId,
+                TemplateId = x.FromTemplateId
+            }).ToList() ?? new List<OutCoinDto>(),
+            WithdrawOptionEndpointId = data.WithdrawOptionEndpointId,
+            WithdrawOptionGroups = data.WithdrawOptionGroups?.Select(z => new WithdrawOptionGroupDto
+            {
+                Id = z.Id,
+                Title = z.Title,
+                Description = z.Description,
+                ImageUrl = z.ImageUrl,
+                PriorityIndex = z.PriorityIndex,
+            }).ToList() ?? new List<WithdrawOptionGroupDto>(),
+        };
+
+        return new ApplicationResult { Data = item, Success = true };
+    }
+
     public async Task<ApplicationResult> GetAllWithdrawOptionGroups(BaseFilter filter)
     {
         var data = _withdrawOptionGroupRepository.Query();
@@ -164,6 +204,45 @@ public class CoinService : ICoinService
         };
     }
 
+    public async Task<ApplicationResult> GetWithdrawOptionGroupById(int id)
+    {
+        var data = await _withdrawOptionGroupRepository.Query().Include(x => x.OutCoins).FirstOrDefaultAsync(x => x.Id == id);
+
+        if (data == null)
+            throw new NotFoundException("withdraw Option Group not found");
+
+        var item = new WithdrawOptionGroupDto
+        {
+            Id = data.Id,
+            Description = data.Description,
+            ImageUrl = data.ImageUrl,
+            OutCoins = data.OutCoins?.Select(x => new OutCoinDto
+            {
+                ImageUrl = x.ImageUrl,
+                Id = x.Id,
+                Description = x.Description,
+                Name = x.Name,
+                PromotionId = x.PromotionId,
+                TemplateId = x.FromTemplateId
+            }).ToList() ?? new List<OutCoinDto>(),
+            PriorityIndex = data.PriorityIndex,
+            Title = data.Title,
+            WithdrawOptions = data.WithdrawOptions?.Select(x => new WithdrawOptionDto
+            {
+                Id = x.Id,
+                Title = x.Title,
+                ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)x.ContentType,
+                Description = x.Description,
+                Endpoint = x.Endpoint,
+                EndpointContent = x.EndpointContent,
+                ImageUrl = x.ImageUrl,
+                WithdrawOptionEndpointId = x.WithdrawOptionEndpointId,
+            }).ToList() ?? new List<WithdrawOptionDto>()
+        };
+
+        return new ApplicationResult { Data = item, Success = true };
+    }
+
     public async Task<ApplicationResult> GetWithdrawOptionEndpoints(BaseFilter filter)
     {
         var data = _withdrawOptionEndpointRepository.Query();
@@ -196,6 +275,25 @@ public class CoinService : ICoinService
                 Items = await res.ToListAsync(),
             },
         };
+    }
+
+    public async Task<ApplicationResult> GetWithdrawOptionEndpointById(int id)
+    {
+        var data = await _withdrawOptionEndpointRepository.Query().FirstOrDefaultAsync(x => x.Id == id);
+
+        if (data == null)
+            throw new NotFoundException("withdraw Option Endpoint not found");
+
+        var item = new WithdrawOptionEndpointDto
+        {
+            Id = data.Id,
+            Content = data.Content,
+            ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)data.ContentType,
+            Endpoint = data.Endpoint,
+            Name = data.Name,
+        };
+
+        return new ApplicationResult { Data = item, Success = true };
     }
 
     public async Task<ApplicationResult> CreateWithdrawOption(CreateWithdrawOption option)
