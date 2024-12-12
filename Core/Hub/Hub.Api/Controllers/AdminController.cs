@@ -14,6 +14,7 @@ using Hub.Application.Features.GameFeatures.Queries.GetAllGame;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Create;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Revoke;
 using Hub.Application.Features.PlayerBanFeatures.Commands.Update;
+using Hub.Application.Features.PlayerFeatures.Commands.AddBalance;
 using Hub.Application.Features.PrizeClaimFeatures.Commands.CreateReward;
 using Hub.Application.Features.PrizeClaimFeatures.Commands.DeleteReward;
 using Hub.Application.Features.PromotionFeatures.Commands.CreatePromotion;
@@ -111,6 +112,12 @@ public class AdminController : BaseApiController
 
     [HttpPost(nameof(BanPlayer))]
     public async Task<ActionResult> BanPlayer(CreatePlayerBanCommand request)
+    {
+        return Ok(await Mediator.Send(request));
+    }
+
+    [HttpPost(nameof(AddBalanceToPlayer))]
+    public async Task<ActionResult> AddBalanceToPlayer(AddBalanceCommand request)
     {
         return Ok(await Mediator.Send(request));
     }

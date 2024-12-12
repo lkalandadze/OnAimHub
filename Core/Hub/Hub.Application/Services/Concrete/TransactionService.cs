@@ -30,9 +30,6 @@ public class TransactionService : ITransactionService
     {
         var playerId = _authService.GetCurrentPlayerId();
 
-        // check and apply player balances
-        await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, coinId, fromAccount, toAccount, amount, promotionId);
-
         var player = await _playerRepository.OfIdAsync(playerId);
 
         if (player == null)
@@ -42,6 +39,9 @@ public class TransactionService : ITransactionService
 
         if (!player.HasPlayed)
             player.UpdateHasPlayed();
+
+        // check and apply player balances
+        await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, coinId, fromAccount, toAccount, amount, promotionId);
 
         var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, null /* Needs Promotion id */);
 
