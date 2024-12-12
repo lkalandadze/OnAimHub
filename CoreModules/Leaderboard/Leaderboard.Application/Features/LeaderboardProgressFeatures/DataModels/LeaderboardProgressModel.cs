@@ -9,7 +9,8 @@ public sealed record LeaderboardProgressModel
     public string PlayerUsername { get; set; }
     public int Amount { get; set; }
     public int Placement { get; set; }
-
+    public string? CoinId { get; set; }
+    public int? PrizeAmount { get; set; }
 
     public static LeaderboardProgressModel MapFrom(LeaderboardProgress leaderboardProgress)
     {

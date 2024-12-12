@@ -37,6 +37,7 @@ public static class ServiceRegistration
         services.AddScoped<ILeaderboardRecordRepository, LeaderboardRecordRepository>();
         services.AddScoped<ILeaderboardProgressRepository, LeaderboardProgressRepository>();
         services.AddScoped<ILeaderboardResultRepository, LeaderboardResultRepository>();
+        services.AddScoped<ILeaderboardRecordPrizeRepository, LeaderboardRecordPrizeRepository>();
         services.AddScoped<IMessageBus, MessageBus>();
         return services;
     }
