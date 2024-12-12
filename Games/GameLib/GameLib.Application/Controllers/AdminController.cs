@@ -58,9 +58,9 @@ public class AdminController : BaseApiController
     }
 
     [HttpGet(nameof(Configurations))]
-    public async Task<ActionResult<IEnumerable<ConfigurationBaseGetModel>>> Configurations()
+    public async Task<ActionResult<IEnumerable<ConfigurationBaseGetModel>>> Configurations(int promotionId)
     {
-        return Ok(await _configurationService.GetAllAsync());
+        return Ok(await _configurationService.GetAllAsync(promotionId));
     }
 
     [HttpGet(nameof(ConfigurationById))]
