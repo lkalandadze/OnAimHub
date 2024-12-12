@@ -19,7 +19,8 @@ public sealed record LeaderboardResultModel
             LeaderboardRecordId = leaderboardProgress.LeaderboardRecordId,
             PlayerId = leaderboardProgress.PlayerId,
             PlayerUsername = leaderboardProgress.PlayerUsername,
-            Amount = leaderboardProgress.Amount
+            Amount = leaderboardProgress.Amount,
+            Placement = leaderboardProgress.Placement
         };
     }
 }

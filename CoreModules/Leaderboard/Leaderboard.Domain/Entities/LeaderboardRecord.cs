@@ -50,6 +50,7 @@ public class LeaderboardRecord : BaseEntity<int>
     public string? TemplateId { get; set; }
     public int? ScheduleId { get; set; }
     public Guid? CorrelationId { get; set; }
+    public LeaderboardSchedule LeaderboardSchedule { get; set; }
     public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; } = new List<LeaderboardProgress>();
     public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; } = new List<LeaderboardRecordPrize>();
 
