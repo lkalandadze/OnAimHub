@@ -41,6 +41,11 @@ public class GetAllGameHandler : IRequestHandler<GetAllGameQuery, GetAllGameResp
                 throw new ApiException(ApiExceptionCodeTypes.ExternalServiceError, $"Failed to retrieve info of {game.Name} game.");
             }
 
+            if (request.PromotionId != null && !gameInfo.PromotionIds.Any(pi => pi == request.PromotionId))
+            {
+                continue;
+            }
+
             allGame.Add(GameBaseDtoModel.MapFrom(game, gameInfo));
         }
 

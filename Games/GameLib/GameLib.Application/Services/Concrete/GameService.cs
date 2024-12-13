@@ -69,6 +69,9 @@ public class GameService : IGameService
             Status = _gameSettings.IsActive.Value,
             Description = _gameSettings.Description.Value,
             ConfigurationCount = configurations.Count(),
+            PromotionIds = configurations.Where(c => c.IsActive)
+                                         .Select(c => c.PromotionId)
+                                         .Distinct(),
         };
     }
 

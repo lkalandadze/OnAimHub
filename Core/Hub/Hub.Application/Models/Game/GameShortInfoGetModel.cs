@@ -17,4 +17,7 @@ public class GameShortInfoGetModel
 
     [JsonPropertyName("segments")]
     public IEnumerable<string> Segments { get; set; }
+
+    [JsonPropertyName("promotionIds")]
+    public IEnumerable<int> PromotionIds { get; set; }
 }
