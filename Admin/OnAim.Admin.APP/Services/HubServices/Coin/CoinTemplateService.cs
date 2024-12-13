@@ -116,7 +116,7 @@ public class CoinTemplateService : ICoinTemplateService
         return new ApplicationResult { Success = true, Data = coinTemplate };
     }
 
-    public async Task<CoinTemplate> CreateCoinTemplate(CreateCoinTemplateDto coinTemplate)
+    public async Task<CoinTemplateListDto> CreateCoinTemplate(CreateCoinTemplateDto coinTemplate)
     {
         var temp = new CoinTemplate
         {
@@ -168,7 +168,35 @@ public class CoinTemplateService : ICoinTemplateService
 
         await _coinRepository.AddCoinTemplateAsync(temp);
 
-        return temp;
+        var data = new CoinTemplateListDto
+        {
+            Id = temp.Id,
+            Title =temp.Name,
+            Description = temp.Description,
+            ImgUrl = temp.ImageUrl,
+            CoinType = (CoinType)temp.CoinType,
+            IsDeleted = temp.IsDeleted,
+            WithdrawOptions = temp.WithdrawOptions.Select(x => new WithdrawOptionCoinTempDto
+            {
+                Id= x.WithdrawOption.Id,
+                Title = x.WithdrawOption.Title,
+                Description = x.WithdrawOption.Description,
+                ContentType = (EndpointContentType)x.WithdrawOption.ContentType,
+                EndpointContent = x.WithdrawOption.EndpointContent,
+                Endpoint = x.WithdrawOption.Endpoint,
+                ImageUrl = x.WithdrawOption.ImageUrl,
+            }).ToList(),
+            WithdrawOptionGroups = temp.WithdrawOptionGroups.Select(xx => new WithdrawOptionGroupCoinTempDto
+            {
+                Id = xx.WithdrawOptionGroup.Id,
+                Title = xx.WithdrawOptionGroup.Title,
+                Description = xx.WithdrawOptionGroup.Description,
+                ImageUrl = xx.WithdrawOptionGroup.ImageUrl,
+                PriorityIndex = xx.WithdrawOptionGroup.PriorityIndex,
+            }).ToList(),
+        };
+
+        return data;
     }
 
     public async Task<ApplicationResult> DeleteCoinTemplate(string CoinTemplateId)
@@ -238,6 +266,7 @@ public class CoinTemplateListDto
     public string Description { get; set; }
     public CoinType CoinType { get; set; }
     public string ImgUrl { get; set; }
+    public bool IsDeleted { get; set; }
     public List<WithdrawOptionCoinTempDto> WithdrawOptions { get; set; }
     public List<WithdrawOptionGroupCoinTempDto> WithdrawOptionGroups { get; set; }
 }

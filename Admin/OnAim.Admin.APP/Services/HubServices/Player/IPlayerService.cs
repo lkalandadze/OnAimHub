@@ -11,6 +11,8 @@ public interface IPlayerService
     Task<ApplicationResult> GetAll(PlayerFilter filter);
     Task<ApplicationResult> GetById(int id);
     Task<ApplicationResult> GetBalance(int id);
+
+    Task<ApplicationResult> AddBalanceToPlayer(AddBalanceCommand command);
     Task<ApplicationResult> GetBannedPlayer(int id);
     Task<ApplicationResult> GetAllBannedPlayers();
     Task<ApplicationResult> GetLeaderBoardResultByPlayer(int playerId);

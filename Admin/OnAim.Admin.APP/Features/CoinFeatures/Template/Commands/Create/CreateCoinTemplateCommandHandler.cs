@@ -1,10 +1,10 @@
 ﻿using OnAim.Admin.APP.CQRS.Command;
+using OnAim.Admin.APP.Services.Hub.Coin;
 using OnAim.Admin.APP.Services.HubServices.Coin;
-using OnAim.Admin.Domain.Entities.Templates;
 
 namespace OnAim.Admin.APP.Features.CoinFeatures.Template.Commands.Create;
 
-public sealed class CreateCoinTemplateCommandHandler : ICommandHandler<CreateCoinTemplateCommand, CoinTemplate>
+public sealed class CreateCoinTemplateCommandHandler : ICommandHandler<CreateCoinTemplateCommand, CoinTemplateListDto>
 {
     private readonly ICoinTemplateService _coinTemplateService;
 
@@ -13,7 +13,7 @@ public sealed class CreateCoinTemplateCommandHandler : ICommandHandler<CreateCoi
         _coinTemplateService = coinTemplateService;
     }
 
-    public async Task<CoinTemplate> Handle(CreateCoinTemplateCommand request, CancellationToken cancellationToken)
+    public async Task<CoinTemplateListDto> Handle(CreateCoinTemplateCommand request, CancellationToken cancellationToken)
     {
         return await _coinTemplateService.CreateCoinTemplate(request.create);
     }

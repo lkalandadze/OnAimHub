@@ -7,6 +7,7 @@ using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.HubEntities;
+using OnAim.Admin.Domain.HubEntities.Enum;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Infrasturcture;
 using OnAim.Admin.Infrasturcture.Interfaces;
@@ -174,6 +175,7 @@ public class PromotionService : IPromotionService
         var data = _promotionRepository
             .Query()
             .Where(x => x.Id == promotionId && !x.IsDeleted)
+            .Include(x => x.Segments)
             .SelectMany(x => x.Segments)
             .SelectMany(x => x.Players)
             .Distinct();
@@ -218,6 +220,7 @@ public class PromotionService : IPromotionService
                             .Select(ps => ps.Id)
                             .FirstOrDefault(),
             RegistrationDate = x.RegistredOn,
+            IsBanned = x.IsBanned
         })
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize);
@@ -238,7 +241,6 @@ public class PromotionService : IPromotionService
 
     public async Task<ApplicationResult> GetPromotionPlayerTransaction(int playerId, PlayerTransactionFilter filter)
     {
-        //var data = await _playerRepository.Query().FirstOrDefaultAsync(x => x.Id == playerId);
         var transaction = _transactionRepository
             .Query()
             .Where(x => x.PlayerId == playerId);
@@ -316,17 +318,18 @@ public class PromotionService : IPromotionService
     {
         var data = await _leaderboardRecordRepository
             .Query()
+            .Include(x => x.LeaderboardSchedule)
             .Include(x => x.LeaderboardProgresses)
             .FirstOrDefaultAsync(x => x.Id == leaderboardId);
 
         var item = new PromotionLeaderboardDetailDto
         {
-            //PlayerId = data.LeaderboardProgresses.Select(x => x.PlayerId).FirstOrDefault(),
-            //Segment = null,
-            //Place = 0,
-            //Score = 0,
+            PlayerId = data.LeaderboardProgresses.Select(x => x.PlayerId).FirstOrDefault(),
+            Segment = null,
+            Place = 0,
+            Score = 0,
             //PrizeType = data.LeaderboardRecordPrizes.Select(x => new ),
-            //PrizeValue = null,
+            PrizeValue = null,
         };
 
         return new ApplicationResult { Data = data };
@@ -440,16 +443,16 @@ public class PromotionLeaderboardDto
 }
 public class PromotionLeaderboardDetailDto
 {
-    //public int Id { get; set; }
-    //public int PlayerId { get; set; }
-    //public string UserName { get; set; }
-    //public string Segment {  get; set; }
-    //public int Place {  set; get; }
+    public int Id { get; set; }
+    public int PlayerId { get; set; }
+    public string UserName { get; set; }
+    public string Segment { get; set; }
+    public int Place { set; get; }
     public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; }
     public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; }
-    //public decimal Score { get; set; }
-    //public PrizeType PrizeType { get; set; }
-    //public string PrizeValue { get; set; }
+    public decimal Score { get; set; }
+    public PrizeType PrizeType { get; set; }
+    public string PrizeValue { get; set; }
 }
 public class PromotionGameDto
 {

@@ -278,6 +278,19 @@ public class PlayerService : IPlayerService
         };
     }
 
+    public async Task<ApplicationResult> AddBalanceToPlayer(AddBalanceCommand command)
+    {
+        try
+        {
+            await _hubClientService.AddBalanceToPlayerAsync(command);
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
     public async Task<ApplicationResult> GetBannedPlayer(int id)
     {
         var palyer = await _playerBanRepository.Query(x => x.Id == id).FirstOrDefaultAsync();

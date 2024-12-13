@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
+using OnAim.Admin.APP;
 using OnAim.Admin.APP.Features.PlayerFeatures.Commands.BanPlayer;
-using OnAim.Admin.APP.Features.PlayerFeatures.Commands.RevokePlayerBan;
-using OnAim.Admin.APP.Features.PlayerFeatures.Commands.UpdatePlayerBan;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBalance;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBannedPlayer;
@@ -10,12 +9,19 @@ using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBannedPlayers;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetById;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetLeaderBoardResultByPlayerId;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetProgress;
+using OnAim.Admin.APP.Services.HubServices.Player;
 using OnAim.Admin.Contracts.Dtos.Player;
 
 namespace OnAim.Admin.API.Controllers;
 
 public class PlayerController : ApiControllerBase
 {
+    private readonly IPlayerService _playerService;
+
+    public PlayerController(IPlayerService playerService)
+    {
+        _playerService = playerService;
+    }
     [HttpGet(nameof(GetAll))]
     public async Task<IActionResult> GetAll([FromQuery] PlayerFilter filter)
         => Ok(await Mediator.Send(new GetAllPlayerQuery(filter)));
@@ -27,6 +33,10 @@ public class PlayerController : ApiControllerBase
     [HttpGet(nameof(GetPlayerBalance) + "/{id}")]
     public async Task<IActionResult> GetPlayerBalance([FromRoute] int id)
         => Ok(await Mediator.Send(new GetPlayerBalanceQuery(id)));
+
+    [HttpPost(nameof(AddBalanceToPlayer))]
+    public async Task<IActionResult> AddBalanceToPlayer([FromBody] AddBalanceCommand command)
+        => Ok(await _playerService.AddBalanceToPlayer(command));
 
     [HttpGet(nameof(GetPlayerProgress) + "/{id}")]
     public async Task<IActionResult> GetPlayerProgress([FromRoute] int id)
@@ -49,10 +59,10 @@ public class PlayerController : ApiControllerBase
         => Ok(await Mediator.Send(command));
 
     [HttpPut(nameof(RevokePlayerBan))]
-    public async Task<IActionResult> RevokePlayerBan([FromBody] RevokePlayerBanCommand command)
+    public async Task<IActionResult> RevokePlayerBan([FromBody] APP.RevokePlayerBanCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpPut(nameof(UpdateBannedPlayer))]
-    public async Task<IActionResult> UpdateBannedPlayer([FromBody] UpdatePlayerBanCommand command)
+    public async Task<IActionResult> UpdateBannedPlayer([FromBody] APP.UpdatePlayerBanCommand command)
         => Ok(await Mediator.Send(command));
 }

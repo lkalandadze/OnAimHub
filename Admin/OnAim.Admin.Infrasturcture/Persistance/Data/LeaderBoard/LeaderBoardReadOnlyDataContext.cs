@@ -10,6 +10,7 @@ public class LeaderBoardReadOnlyDataContext : DbContext
         
     }
 
+    public DbSet<LeaderboardSchedule> LeaderboardSchedules { get; set; }
     public DbSet<LeaderboardRecord> LeaderboardRecords { get; set; }
     public DbSet<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; }
     public DbSet<LeaderboardProgress> LeaderboardProgresses { get; set; }
