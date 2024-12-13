@@ -30,4 +30,59 @@ public class Segment : BaseEntity<string>
     public ICollection<Player> Players { get; private set; }
     public ICollection<Player> BlockedPlayers { get; private set; }
     public ICollection<Promotion> Promotions { get; private set; }
+
+    public void Update(string description, int priorityLevel)
+    {
+        Description = description;
+        PriorityLevel = priorityLevel;
+    }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+    }
+
+    public void AddPlayers(List<Player> players)
+    {
+        foreach (var player in players)
+        {
+            if (!players.Contains(player))
+            {
+                Players.Add(player);
+            }
+        }
+    }
+
+    public void RemovePlayers(List<Player> players)
+    {
+        foreach (var player in players)
+        {
+            if (!players.Contains(player))
+            {
+                Players.Remove(player);
+            }
+        }
+    }
+
+    public void BlockPlayers(List<Player> players)
+    {
+        foreach (var player in players)
+        {
+            if (!players.Contains(player))
+            {
+                BlockedPlayers.Add(player);
+            }
+        }
+    }
+
+    public void UnblockPlayers(List<Player> players)
+    {
+        foreach (var player in players)
+        {
+            if (!players.Contains(player))
+            {
+                BlockedPlayers.Remove(player);
+            }
+        }
+    }
 }

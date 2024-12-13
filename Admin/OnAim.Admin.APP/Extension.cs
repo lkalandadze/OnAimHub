@@ -64,7 +64,7 @@ public static class Extension
         services.AddSingleton<LeaderboardClientService>(sp =>
         new LeaderboardClientService("https://localhost:7041", new HttpClient()));
         services.AddSingleton<SagaClient>(sp =>
-        new SagaClient("https://localhost:7084", new HttpClient()));
+        new SagaClient("http://192.168.10.42:8004", new HttpClient()));
         services
             .AddScoped<IGameTemplateService, GameTemplateService>()
             .AddScoped<IPromotionService, PromotionService>()

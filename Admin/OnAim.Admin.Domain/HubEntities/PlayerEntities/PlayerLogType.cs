@@ -6,5 +6,6 @@ namespace OnAim.Admin.Domain.HubEntities.PlayerEntities
 
     public class PlayerLogType : DbEnum<int, PlayerLogType>
     {
+        public static PlayerLogType Auth => FromId(1);
     }
 }

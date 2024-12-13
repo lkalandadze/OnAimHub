@@ -268,7 +268,7 @@ public class PlayerService : IPlayerService
         {
             Id = x.Id,
             Amount = x.Amount,
-            Currency = x.Currency.Name,
+            Currency = x.Coin.Name,
         });
 
         return new ApplicationResult

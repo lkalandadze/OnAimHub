@@ -47,12 +47,13 @@ public class LeaderboardRecord
     public string? TemplateId { get; set; }
     public int? ScheduleId { get; set; }
     public Guid? CorrelationId { get; set; }
+    public LeaderboardSchedule LeaderboardSchedule { get; set; }
     public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; } = new List<LeaderboardProgress>();
     public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; } = new List<LeaderboardRecordPrize>();
 
-    public void AddLeaderboardRecordPrizes(int startRank, int endRank, string coinId, int amount)
+    public void AddLeaderboardRecordPrizes(int id, int startRank, int endRank, string coinId, int amount)
     {
-        var prize = new LeaderboardRecordPrize(startRank, endRank, coinId, amount);
+        var prize = new LeaderboardRecordPrize(id, startRank, endRank, coinId, amount);
         LeaderboardRecordPrizes.Add(prize);
     }
 }

@@ -19,7 +19,6 @@ public class Reward : BaseEntity<int>
         IsDeleted = false;
         CreatedAt = DateTime.UtcNow;
     }
-
     public bool IsClaimed { get; private set; }
     public bool IsDeleted { get; private set; }
     public DateTime CreatedAt { get; private set; }

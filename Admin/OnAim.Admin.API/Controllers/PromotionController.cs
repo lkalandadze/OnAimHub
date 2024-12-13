@@ -11,8 +11,10 @@ using OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Queries.
 using OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Queries.GetById;
 using OnAim.Admin.APP.Features.PromotionFeatures.Template.Queries.GetAll;
 using OnAim.Admin.APP.Features.PromotionFeatures.Template.Queries.GetById;
+using OnAim.Admin.APP.Services.Hub.Promotion;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.Dtos.Base;
+using OnAim.Admin.Contracts.Dtos.Player;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Infrasturcture;
 
@@ -40,6 +42,26 @@ public class PromotionController : ApiControllerBase
     [HttpGet(nameof(GetPromotionById))]
     public async Task<IActionResult> GetPromotionById([FromQuery] int id)
         => Ok(await Mediator.Send(new GetPromotionByIdQuery(id)));
+
+    [HttpGet(nameof(GetAllPromotionGames) + "/{id}")]
+    public async Task<IActionResult> GetAllPromotionGames([FromRoute] int id, [FromQuery] BaseFilter filter)
+        => Ok(await _promotionService.GetAllPromotionGames(id, filter));
+
+    [HttpGet(nameof(GetPromotionPlayers) + "/{id}")]
+    public async Task<IActionResult> GetPromotionPlayers([FromRoute] int id, [FromQuery] PlayerFilter filter)
+        => Ok(await _promotionService.GetPromotionPlayers(id, filter));
+
+    [HttpGet(nameof(GetPromotionPlayerTransaction) + "/{id}")]
+    public async Task<IActionResult> GetPromotionPlayerTransaction([FromRoute] int id)
+        => Ok(await _promotionService.GetPromotionPlayerTransaction(id, new PlayerTransactionFilter()));
+
+    [HttpGet(nameof(GetPromotionLeaderboards) + "/{id}")]
+    public async Task<IActionResult> GetPromotionLeaderboards([FromRoute] int id, [FromQuery] BaseFilter filter)
+        => Ok(await _promotionService.GetPromotionLeaderboards(id, filter));
+
+    [HttpGet(nameof(GetPromotionLeaderboardDetails) + "/{id}")]
+    public async Task<IActionResult> GetPromotionLeaderboardDetails([FromRoute] int id, [FromQuery] BaseFilter filter)
+        => Ok(await _promotionService.GetPromotionLeaderboardDetails(id, filter));
 
     [HttpPost(nameof(CreatePromotionView))]
     public async Task<IActionResult> CreatePromotionView([FromBody] APP.CreatePromotionView create)

@@ -2,8 +2,9 @@
 
 public class LeaderboardRecordPrize : BasePrize
 {
-    public LeaderboardRecordPrize(int startRank, int endRank, string coinId, int amount)
+    public LeaderboardRecordPrize(int id, int startRank, int endRank, string coinId, int amount)
     {
+        Id = id;
         StartRank = startRank;
         EndRank = endRank;
         CoinId = coinId;

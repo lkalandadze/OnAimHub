@@ -14,16 +14,19 @@ public class LeaderBoardService : ILeaderBoardService
 {
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecord> _leaderboardRecordRepository;
     private readonly ILeaderBoardReadOnlyRepository<Prize> _prizeRepository;
+    private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecordPrize> _lLeaderboardRecordPrize;
     private readonly LeaderboardClientService _leaderboardClientService;
 
     public LeaderBoardService(
         ILeaderBoardReadOnlyRepository<LeaderboardRecord> leaderboardRecordRepository,
         ILeaderBoardReadOnlyRepository<Prize> prizeRepository,
+        ILeaderBoardReadOnlyRepository<LeaderboardRecordPrize>lLeaderboardRecordPrize,
         LeaderboardClientService leaderboardClientService
         )
     {
         _leaderboardRecordRepository = leaderboardRecordRepository;
         _prizeRepository = prizeRepository;
+        _lLeaderboardRecordPrize = lLeaderboardRecordPrize;
         _leaderboardClientService = leaderboardClientService;
     }
 
@@ -60,7 +63,7 @@ public class LeaderBoardService : ILeaderBoardService
            .Select(x => new LeaderBoardListDto
            {
                Id = x.Id,
-               Ttile = x.Title,
+               Title = x.Title,
                Status = (Contracts.Dtos.LeaderBoard.LeaderboardRecordStatus)x.Status,
                Description = x.Description,
                EventType = (Contracts.Dtos.LeaderBoard.EventType)x.EventType,
@@ -89,8 +92,9 @@ public class LeaderBoardService : ILeaderBoardService
     public async Task<ApplicationResult> GetLeaderboardRecordById(int id)
     {
         var leaderboard = await _leaderboardRecordRepository.Query(x => x.Id == id)
-            .Include(x => x.LeaderboardRecordPrizes)
             .FirstOrDefaultAsync();
+
+        var prize = await _lLeaderboardRecordPrize.Query().Where(x => x.LeaderboardRecordId == leaderboard.Id).ToListAsync();
 
         if (leaderboard == null)
             throw new NotFoundException("");
@@ -104,7 +108,7 @@ public class LeaderBoardService : ILeaderBoardService
             AnnouncementDate = leaderboard.AnnouncementDate,
             StartDate = leaderboard.StartDate,
             EndDate = leaderboard.EndDate,
-            Prizes = leaderboard.LeaderboardRecordPrizes.Select(x => new TemplatePrizeDto
+            Prizes = prize.Select(x => new TemplatePrizeDto
             {
                 Id = x.Id,
                 Amount = x.Amount,

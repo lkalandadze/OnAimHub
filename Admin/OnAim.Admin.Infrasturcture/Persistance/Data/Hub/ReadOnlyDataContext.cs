@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain;
 using OnAim.Admin.Domain.HubEntities;
 using OnAim.Admin.Domain.HubEntities.Coin;
+using OnAim.Admin.Domain.HubEntities.Enum;
 using OnAim.Admin.Domain.HubEntities.PlayerEntities;
 
 namespace OnAim.Admin.Infrasturcture.Persistance.Data.Hub;
@@ -13,7 +13,6 @@ public class ReadOnlyDataContext : DbContext
     {
     }
 
-    public DbSet<Currency> Currencies { get; set; }
     public DbSet<Game> Games { get; set; }
     public DbSet<Player> Players { get; set; }
     public DbSet<PlayerBalance> PlayerBalances { get; set; }
@@ -31,12 +30,16 @@ public class ReadOnlyDataContext : DbContext
     public DbSet<AccountType> AccountTypes { get; set; }
     public DbSet<ReferralDistribution> ReferralDistributions { get; set; }
     public DbSet<PlayerBan> PlayerBans { get; set; }
+    public DbSet<Reward> Rewards { get; set; }
+    public DbSet<RewardPrize> RewardPrizes { get; set; }
+    public DbSet<PrizeType> PrizeTypes { get; set; }
     public DbSet<Promotion> Promotions { get; set; }
     public DbSet<PromotionService> PromotionServices { get; set; }
+    public DbSet<PromotionView> PromotionViews { get; set; }
     public DbSet<Coin> Coins { get; set; }
-    public DbSet<OnAim.Admin.Domain.HubEntities.WithdrawOption> WithdrawOptions { get; set; }
-    public DbSet<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
+    public DbSet<WithdrawOption> WithdrawOptions { get; set; }
     public DbSet<WithdrawOptionEndpoint> WithdrawOptionEndpoints { get; set; }
+    public DbSet<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
 
     public IQueryable<TEntity> Set<TEntity>() where TEntity : class
     {

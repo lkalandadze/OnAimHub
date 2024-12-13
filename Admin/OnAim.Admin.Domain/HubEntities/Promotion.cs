@@ -14,7 +14,7 @@ public class Promotion
           DateTimeOffset endDate,
           string title,
           string description,
-          Guid correlationId,
+          //Guid correlationId,
           IEnumerable<PromotionService> services = null,
           IEnumerable<Segment> segments = null,
           IEnumerable<Coin.Coin> coins = null,
@@ -25,7 +25,7 @@ public class Promotion
         EndDate = endDate;
         Title = title;
         Description = description;
-        Correlationid = correlationId;
+        //Correlationid = correlationId;
         CreateDate = DateTimeOffset.UtcNow;
         Services = services?.ToList() ?? [];
         Segments = segments?.ToList() ?? [];
@@ -43,7 +43,7 @@ public class Promotion
     public DateTimeOffset CreateDate { get; private set; }
     public DateTimeOffset? DateDeleted { get; private set; }
     public bool IsDeleted { get; private set; }
-    public Guid Correlationid { get; private set; }
+    //public Guid Correlationid { get; private set; }
 
     public ICollection<PromotionService> Services { get; private set; }
     public ICollection<Segment> Segments { get; private set; }

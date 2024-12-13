@@ -1,32 +1,58 @@
-using OnAim.Admin.Domain.HubEntities.Enum;
 using OnAim.Admin.Domain.HubEntities.PlayerEntities;
 
 namespace OnAim.Admin.Domain.HubEntities
 {
     // Generated Code
 
-    public class Transaction : BaseEntity<Int32>	{
-		public Decimal Amount { get; set; }
-		public Nullable<Int32> GameId { get; set; }
-		public Game Game { get; set; }
-		public Int32 PlayerId { get; set; }
-		public Player Player { get; set; }
-		public Int32 FromAccountId { get; set; }
-		public AccountType FromAccount { get; set; }
-		public Int32 ToAccountId { get; set; }
-		public AccountType ToAccount { get; set; }
-		public string CurrencyId { get; set; }
-		public Currency Currency { get; set; }
-		public Int32 StatusId { get; set; }
-		public TransactionStatus Status { get; set; }
-		public Int32 TypeId { get; set; }
-		public TransactionType Type { get; set; }
-	}
-    public class AccountType : DbEnum<int, AccountType>
+    public class Transaction : BaseEntity<int>
     {
-        public static AccountType Player => FromId(1);
-        public static AccountType Game => FromId(2);
-        public static AccountType Casino => FromId(3);
-        public static AccountType Reset => FromId(4);
+        public Transaction()
+        {
+
+        }
+
+        public Transaction(decimal amount, int? gameId, int playerId, AccountType fromAccount, AccountType toAccount, string coinId, TransactionStatus status, TransactionType type, int? promotionId)
+        {
+            Amount = amount;
+            GameId = gameId;
+            PlayerId = playerId;
+            FromAccountId = fromAccount.Id;
+            ToAccountId = toAccount.Id;
+            CoinId = coinId;
+            StatusId = status.Id;
+            TypeId = type.Id;
+            PromotionId = promotionId;
+        }
+
+        public decimal Amount { get; private set; }
+
+        public int? GameId { get; private set; }
+        public Game Game { get; private set; }
+
+        public int PlayerId { get; private set; }
+        public Player Player { get; private set; }
+
+        public int FromAccountId { get; private set; }
+        public AccountType FromAccount { get; private set; }
+
+        public int ToAccountId { get; private set; }
+        public AccountType ToAccount { get; private set; }
+
+        public string CoinId { get; private set; }
+        public Coin.Coin Coin { get; private set; }
+
+        public int StatusId { get; private set; }
+        public TransactionStatus Status { get; private set; }
+
+        public int TypeId { get; private set; }
+        public TransactionType Type { get; private set; }
+
+        public int? PromotionId { get; private set; }
+        public Promotion Promotion { get; private set; }
+
+        public void SetStatus(TransactionStatus status)
+        {
+            StatusId = status.Id;
+        }
     }
 }

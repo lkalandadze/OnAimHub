@@ -72,7 +72,7 @@ public class CoinService : ICoinService
 
     public async Task<ApplicationResult> GetAllWithdrawOptions(BaseFilter filter)
     {
-        var data = _withdrawOptionRepository.Query();
+        var data = _withdrawOptionRepository.Query().Include(x => x.WithdrawOptionEndpoint).Include(x => x.OutCoins);
 
         var totalCount = await data.CountAsync();
 
@@ -87,20 +87,34 @@ public class CoinService : ICoinService
                Description = x.Description,
                ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)x.ContentType,
                Endpoint = x.Endpoint,
-               //EndpointContent = x.EndpointContent,
+               EndpointContent = x.EndpointContent,
+               WithdrawOptionEndpointId = x.WithdrawOptionEndpointId,
                ImageUrl = x.ImageUrl,
+               OutCoins = x.OutCoins.Select(o => new OutCoinDto 
+               {
+                   Id = o.Id,
+                   Name = o.Name,
+                   Description = o.Description,
+                   ImageUrl = o.ImageUrl,
+                   PromotionId = o.PromotionId,
+                   TemplateId = o.FromTemplateId
+               }).ToList(),
                WithdrawOptionGroups = x.WithdrawOptionGroups.Select(x => new WithdrawOptionGroupDto
                {
+                   Id = x.Id,
                    Title = x.Title,
                    Description = x.Description,
                    ImageUrl = x.ImageUrl,
                    PriorityIndex = x.PriorityIndex,
-                   OutCoins = x.OutCoins.Select(x => new OutCoinDto
-                   {
-                       Name = x.Name,
-                       Description = x.Description,
-                       ImageUrl = x.ImageUrl,
-                   }).ToList(),
+                   //OutCoins = x.OutCoins.Select(x => new OutCoinDto
+                   //{
+                   //    Id = x.Id,
+                   //    Name = x.Name,
+                   //    Description = x.Description,
+                   //    ImageUrl = x.ImageUrl,
+                   //    PromotionId = x.PromotionId,
+                   //    TemplateId = x.FromTemplateId
+                   //}).ToList(),
                }).ToList(),
            })
            .Skip((pageNumber - 1) * pageSize)
@@ -121,7 +135,7 @@ public class CoinService : ICoinService
 
     public async Task<ApplicationResult> GetWithdrawOptionById(int id)
     {
-        var data = await _withdrawOptionRepository.Query().Include(x => x.OutCoins).FirstOrDefaultAsync(x => x.Id == id);
+        var data = await _withdrawOptionRepository.Query().Include(x => x.WithdrawOptionGroups).Include(x => x.OutCoins).Include(x => x.WithdrawOptionEndpoint).FirstOrDefaultAsync(x => x.Id == id);
 
         if (data == null)
             throw new NotFoundException("withdraw Option not found");
@@ -160,7 +174,7 @@ public class CoinService : ICoinService
 
     public async Task<ApplicationResult> GetAllWithdrawOptionGroups(BaseFilter filter)
     {
-        var data = _withdrawOptionGroupRepository.Query();
+        var data = _withdrawOptionGroupRepository.Query().Include(x => x.OutCoins).Include(x => x.WithdrawOptions);
 
         var totalCount = await data.CountAsync();
 
@@ -177,12 +191,14 @@ public class CoinService : ICoinService
                PriorityIndex = x.PriorityIndex,
                OutCoins = x.OutCoins.Select(xx => new OutCoinDto
                {
+                   Id = xx.Id,
                    Name = xx.Name,
                    Description = xx.Description,
                    ImageUrl = xx.ImageUrl,
                }).ToList(),
                WithdrawOptions = x.WithdrawOptions.Select(x => new WithdrawOptionDto
                {
+                   Id = x.Id,
                    Title = x.Title,
                    Description = x.Description,
                    ImageUrl = x.ImageUrl,
@@ -206,7 +222,7 @@ public class CoinService : ICoinService
 
     public async Task<ApplicationResult> GetWithdrawOptionGroupById(int id)
     {
-        var data = await _withdrawOptionGroupRepository.Query().Include(x => x.OutCoins).FirstOrDefaultAsync(x => x.Id == id);
+        var data = await _withdrawOptionGroupRepository.Query().Include(x => x.WithdrawOptions).Include(x => x.OutCoins).FirstOrDefaultAsync(x => x.Id == id);
 
         if (data == null)
             throw new NotFoundException("withdraw Option Group not found");
@@ -214,30 +230,24 @@ public class CoinService : ICoinService
         var item = new WithdrawOptionGroupDto
         {
             Id = data.Id,
+            Title = data.Title,
             Description = data.Description,
             ImageUrl = data.ImageUrl,
-            OutCoins = data.OutCoins?.Select(x => new OutCoinDto
-            {
-                ImageUrl = x.ImageUrl,
-                Id = x.Id,
-                Description = x.Description,
-                Name = x.Name,
-                PromotionId = x.PromotionId,
-                TemplateId = x.FromTemplateId
-            }).ToList() ?? new List<OutCoinDto>(),
             PriorityIndex = data.PriorityIndex,
-            Title = data.Title,
-            WithdrawOptions = data.WithdrawOptions?.Select(x => new WithdrawOptionDto
+            OutCoins = data.OutCoins.Select(xx => new OutCoinDto
+            {
+                Id = xx.Id,
+                Name = xx.Name,
+                Description = xx.Description,
+                ImageUrl = xx.ImageUrl,
+            }).ToList(),
+            WithdrawOptions = data.WithdrawOptions.Select(x => new WithdrawOptionDto
             {
                 Id = x.Id,
                 Title = x.Title,
-                ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)x.ContentType,
                 Description = x.Description,
-                Endpoint = x.Endpoint,
-                EndpointContent = x.EndpointContent,
                 ImageUrl = x.ImageUrl,
-                WithdrawOptionEndpointId = x.WithdrawOptionEndpointId,
-            }).ToList() ?? new List<WithdrawOptionDto>()
+            }).ToList()
         };
 
         return new ApplicationResult { Data = item, Success = true };

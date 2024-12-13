@@ -3,7 +3,7 @@
 public class LeaderBoardListDto
 {
     public int Id { get; set; }
-    public string Ttile { get; set; }
+    public string Title { get; set; }
     public string Description { get; set; }
     public EventType EventType { get; set; }
     public DateTimeOffset CreationDate { get; set; }

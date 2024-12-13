@@ -3,8 +3,9 @@ using OnAim.Admin.Domain.HubEntities;
 
 namespace OnAim.Admin.Domain.LeaderBoradEntities;
 
-public class LeaderboardSchedule : BaseEntity<int>
+public class LeaderboardSchedule
 {
+    public int Id { get; set; }
     public string Title { get; set; }
     public RepeatType RepeatType { get; set; }
     public int? RepeatValue { get; set; }

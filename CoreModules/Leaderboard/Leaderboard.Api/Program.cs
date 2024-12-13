@@ -44,6 +44,14 @@ builder.Services.Configure<HostOptions>(options =>
     options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore;
 });
 
+builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+{
+    builder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+}));
+
 //needs to be taken to custom services
 builder.Services.AddScoped<ICalendarService, CalendarService>();
 builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
@@ -70,11 +78,11 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 {
-    //if (app.Environment.IsDevelopment())
-    //{
-    //}
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
     var serviceProvider = builder.Services.BuildServiceProvider();
 
@@ -84,6 +92,8 @@ var app = builder.Build();
     {
         DbInitializer.InitializeDatabase(app.Services, context);
     }
+
+    app.UseCors("MyPolicy");
 
     app.UseHttpsRedirection();
 

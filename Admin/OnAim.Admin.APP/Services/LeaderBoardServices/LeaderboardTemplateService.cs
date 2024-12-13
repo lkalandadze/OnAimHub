@@ -40,7 +40,7 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
             IsDeleted = x.IsDeleted,
             LeaderboardTemplatePrizes = x.LeaderboardTemplatePrizes.Select(xx => new leaderboardTemplatePrizesDto
             {
-                Id = xx.Id,
+                //Id = xx.Id,
                 Amount = xx.Amount,
                 CoinId = xx.CoinId,
                 StartRank = xx.StartRank,

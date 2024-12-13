@@ -384,8 +384,8 @@ public class PromotionTemplateService : IPromotionTemplateService
             };
 
             foreach (var prize in leaderboard.LeaderboardPrizes)
-            {
-                leadTemplate.AddLeaderboardRecordPrizes(prize.StartRank, prize.EndRank, prize.CoinId, prize.Amount);
+            {              
+                leadTemplate.AddLeaderboardRecordPrizes(Random.Shared.Next(), prize.StartRank, prize.EndRank, prize.CoinId, prize.Amount);
             }
             leaderboards.Add(leadTemplate);
             temp.Leaderboards = leaderboards;

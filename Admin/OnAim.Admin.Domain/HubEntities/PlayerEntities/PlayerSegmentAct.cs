@@ -6,9 +6,11 @@ namespace OnAim.Admin.Domain.HubEntities.PlayerEntities
     {
         public int TotalPlayers { get; set; }
         public int? ByUserId { get; set; }
-        public bool IsBulk { get; set; }
+        public bool IsBulk { get; private set; }
+
         public int? ActionId { get; set; }
         public PlayerSegmentActType Action { get; set; }
+
         public string SegmentId { get; set; }
         public Segment Segment { get; set; }
     }

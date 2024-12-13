@@ -43,6 +43,7 @@ public class CoinTemplateService : ICoinTemplateService
             Title = x.Name,
             Description = x.Description,
             CoinType = (CoinType)x.CoinType,
+            ImgUrl = x.ImageUrl,
             WithdrawOptions = x.WithdrawOptions?.Select(xx => new WithdrawOptionCoinTempDto
             {
                 Title = xx.WithdrawOption.Title,
@@ -236,6 +237,7 @@ public class CoinTemplateListDto
     public string Title { get; set; }
     public string Description { get; set; }
     public CoinType CoinType { get; set; }
+    public string ImgUrl { get; set; }
     public List<WithdrawOptionCoinTempDto> WithdrawOptions { get; set; }
     public List<WithdrawOptionGroupCoinTempDto> WithdrawOptionGroups { get; set; }
 }
