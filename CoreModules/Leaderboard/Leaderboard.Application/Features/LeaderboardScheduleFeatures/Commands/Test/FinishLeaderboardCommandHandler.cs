@@ -39,8 +39,8 @@ public sealed class FinishLeaderboardCommandHandler : IRequestHandler<FinishLead
         // Fetch all leaderboard progress
         var leaderboardProgress = await _leaderboardProgressRepository.GetAllProgressAsync(request.LeaderboardRecordId, cancellationToken);
 
-        if (!leaderboardProgress.Any())
-            throw new Exception("No progress found for this leaderboard.");
+        //if (!leaderboardProgress.Any())
+        //    throw new Exception("No progress found for this leaderboard.");
 
         // Sort progress by amount
         var sortedProgress = leaderboardProgress
