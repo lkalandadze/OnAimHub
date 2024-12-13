@@ -10,20 +10,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddSingleton<HubService>(sp =>
-new HubService("https://localhost:7069", new HttpClient()));
+new HubService("http://192.168.10.42:8003", new HttpClient()));
 builder.Services.AddSingleton<LeaderBoardService>(sp =>
-new LeaderBoardService("https://localhost:7041", new HttpClient()));
+new LeaderBoardService("http://192.168.10.42:8002", new HttpClient()));
 builder.Services.AddSingleton<WheelService>(sp =>
 {
     var httpClient = new HttpClient
     {
-        BaseAddress = new Uri("http://localhost:5066")
+        BaseAddress = new Uri("http://192.168.10.42:8005")
     };
 
     var authHeader = Convert.ToBase64String(Encoding.ASCII.GetBytes($"a:a"));
     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeader);
 
-    return new WheelService("http://localhost:5066", httpClient);
+    return new WheelService("http://192.168.10.42:8005", httpClient);
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

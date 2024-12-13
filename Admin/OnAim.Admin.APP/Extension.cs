@@ -60,9 +60,9 @@ public static class Extension
         configureOptions?.Invoke(emailOptions);
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
         services.AddSingleton<HubClientService>(sp =>
-        new HubClientService("https://localhost:7069", new HttpClient()));
+        new HubClientService("http://192.168.10.42:8003", new HttpClient()));
         services.AddSingleton<LeaderboardClientService>(sp =>
-        new LeaderboardClientService("https://localhost:7041", new HttpClient()));
+        new LeaderboardClientService("http://192.168.10.42:8002", new HttpClient()));
         services.AddSingleton<SagaClient>(sp =>
         new SagaClient("http://192.168.10.42:8004", new HttpClient()));
         services
