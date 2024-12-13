@@ -199,10 +199,10 @@ public class JobService : IJobService
 
         var leaderboardProgress = await _leaderboardProgressRepository.GetAllProgressAsync(leaderboardRecordId, CancellationToken.None);
 
-        if (!leaderboardProgress.Any())
-        {
-            throw new Exception("No progress found for this leaderboard.");
-        }
+        //if (!leaderboardProgress.Any())
+        //{
+        //    throw new Exception("No progress found for this leaderboard.");
+        //}
 
         var sortedProgress = leaderboardProgress
             .OrderByDescending(x => x.Amount)

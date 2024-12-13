@@ -39,7 +39,7 @@ public class TestWheelService : ITestWheelService
     private async Task<PlayResponseModel> PlayAsync<TPrize>(PlayRequestModel model)
         where TPrize : BasePrize
     {
-        await _hubService.BetTransactionAsync(model.GameId, model.CurrencyId, model.Amount);
+        //await _hubService.BetTransactionAsync(model.GameId, model.CurrencyId, model.Amount);
 
         //TODO: prioritetis minicheba segmentistvis
         //var prize = GeneratorHolder.GetPrize<TPrize>(_authService.GetCurrentPlayerSegmentIds().ToList()[0]);
