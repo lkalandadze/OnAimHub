@@ -32,12 +32,14 @@ public class WithdrawOption : BaseEntity<int>
         WithdrawOptionGroups = withdrawOptionGroups?.ToList();
     }
 
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string ImageUrl { get; set; }
-    public string Endpoint { get; set; }
-    public EndpointContentType ContentType { get; set; }
-    public string EndpointContent { get; set; }
+    public string Title { get; private set; }
+    public string Description { get; private set; }
+    public string ImageUrl { get; private set; }
+    public string Endpoint { get; private set; }
+    public EndpointContentType ContentType { get; private set; }
+    public string EndpointContent { get; private set; }
+    public bool IsDeleted { get; private set; }
+    public DateTimeOffset DateDeleted { get; private set; }
 
     public int? WithdrawOptionEndpointId { get; private set; }
     public WithdrawOptionEndpoint WithdrawOptionEndpoint { get; private set; }
@@ -79,5 +81,11 @@ public class WithdrawOption : BaseEntity<int>
                 WithdrawOptionGroups.Add(withdrawOptionGroup);
             }
         }
+    }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+        DateDeleted = DateTimeOffset.UtcNow;
     }
 }

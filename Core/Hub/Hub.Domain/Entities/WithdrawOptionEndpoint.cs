@@ -20,10 +20,12 @@ public class WithdrawOptionEndpoint : BaseEntity<int>
         ContentType = contentType;
     }
 
-    public string Name { get; set; }
-    public string Endpoint { get; set; }
-    public EndpointContentType ContentType { get; set; }
+    public string Name { get; private set; }
+    public string Endpoint { get; private set; }
+    public EndpointContentType ContentType { get; private set; }
     public string Content { get; set; }
+    public bool IsDeleted { get; private set; }
+    public DateTimeOffset DateDeleted { get; private set; }
 
     public void Update(string name, string endpoint, string endpointContent, EndpointContentType contentType)
     {
@@ -31,5 +33,11 @@ public class WithdrawOptionEndpoint : BaseEntity<int>
         Endpoint = endpoint;
         Content = endpointContent;
         ContentType = contentType;
+    }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+        DateDeleted = DateTimeOffset.UtcNow;
     }
 }
