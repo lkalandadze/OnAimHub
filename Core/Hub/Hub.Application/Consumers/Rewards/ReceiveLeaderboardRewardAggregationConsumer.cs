@@ -63,7 +63,7 @@ public sealed class ReceiveLeaderboardRewardAggregationConsumer : IConsumer<Rece
                 null,
                 reward.CoinId,
                 reward.TotalAmount,
-                AccountType.Casino,
+                AccountType.Leaderboard,
                 AccountType.Player,
                 TransactionType.Reward,
                 reward.PromotionId,
