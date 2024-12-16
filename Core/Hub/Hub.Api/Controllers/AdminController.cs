@@ -6,6 +6,9 @@ using Hub.Application.Features.CoinFeatures.Commands.UpdateCoinTemplate;
 using Hub.Application.Features.CoinFeatures.WithdrawOptionFeatures.Commands.CreateWithdrawOption;
 using Hub.Application.Features.CoinFeatures.WithdrawOptionFeatures.Commands.CreateWithdrawOptionEndpoint;
 using Hub.Application.Features.CoinFeatures.WithdrawOptionFeatures.Commands.CreateWithdrawOptionGroup;
+using Hub.Application.Features.CoinFeatures.WithdrawOptionFeatures.Commands.DeleteWithdrawOption;
+using Hub.Application.Features.CoinFeatures.WithdrawOptionFeatures.Commands.DeleteWithdrawOptionEndpoint;
+using Hub.Application.Features.CoinFeatures.WithdrawOptionFeatures.Commands.DeleteWithdrawOptionGroup;
 using Hub.Application.Features.CoinFeatures.WithdrawOptionFeatures.Commands.UpdateWithdrawOption;
 using Hub.Application.Features.CoinFeatures.WithdrawOptionFeatures.Commands.UpdateWithdrawOptionEndpoint;
 using Hub.Application.Features.CoinFeatures.WithdrawOptionFeatures.Commands.UpdateWithdrawOptionGroup;
@@ -270,6 +273,14 @@ public class AdminController : BaseApiController
         return StatusCode(200, result);
     }
 
+    [HttpPost(nameof(DeleteWithdrawOption))]
+    public async Task<IActionResult> DeleteWithdrawOption([FromBody] DeleteWithdrawOption command)
+    {
+        var result = await Mediator.Send(command);
+
+        return StatusCode(200, result);
+    }
+
     [HttpPost(nameof(CreateWithdrawOptionEndpoint))]
     public async Task<IActionResult> CreateWithdrawOptionEndpoint([FromBody] CreateWithdrawOptionEndpoint command)
     {
@@ -286,6 +297,14 @@ public class AdminController : BaseApiController
         return StatusCode(200, result);
     }
 
+    [HttpPost(nameof(DeleteWithdrawOptionEndpoint))]
+    public async Task<IActionResult> DeleteWithdrawOptionEndpoint([FromBody] DeleteWithdrawOptionEndpoint command)
+    {
+        var result = await Mediator.Send(command);
+
+        return StatusCode(200, result);
+    }
+
     [HttpPost(nameof(CreateWithdrawOptionGroup))]
     public async Task<IActionResult> CreateWithdrawOptionGroup([FromBody] CreateWithdrawOptionGroup command)
     {
@@ -296,6 +315,14 @@ public class AdminController : BaseApiController
 
     [HttpPut(nameof(UpdateWithdrawOptionGroup))]
     public async Task<IActionResult> UpdateWithdrawOptionGroup([FromBody] UpdateWithdrawOptionGroup command)
+    {
+        var result = await Mediator.Send(command);
+
+        return StatusCode(200, result);
+    }
+
+    [HttpPost(nameof(DeleteWithdrawOptionGroup))]
+    public async Task<IActionResult> DeleteWithdrawOptionGroup([FromBody] DeleteWithdrawOptionGroup command)
     {
         var result = await Mediator.Send(command);
 
