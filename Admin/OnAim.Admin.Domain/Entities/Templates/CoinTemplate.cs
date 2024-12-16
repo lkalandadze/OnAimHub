@@ -33,6 +33,8 @@ public class CoinTemplate : Coin
     [BsonIgnoreIfNull]
     public ICollection<CoinTemplateWithdrawOptionGroup>? WithdrawOptionGroups { get; set; }
 
+    public int Usage { get; set; }
+
     public void Update(string name, string description, string imageUrl, CoinType coinType, IEnumerable<CoinTemplateWithdrawOption> withdrawOptions = null)
     {
         Name = name;

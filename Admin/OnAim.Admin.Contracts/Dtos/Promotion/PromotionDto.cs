@@ -1,6 +1,4 @@
-﻿using OnAim.Admin.Contracts.Dtos.Game;
-
-namespace OnAim.Admin.Contracts.Dtos.Promotion;
+﻿namespace OnAim.Admin.Contracts.Dtos.Promotion;
 
 public class PromotionDto
 {
@@ -16,7 +14,7 @@ public class PromotionDto
 
     public ICollection<string> Segments { get; set; }
     //public ICollection<PromotionServiceDto> Services { get; set; }
-
+    public ICollection<string> PageViews { get; set; }
     public List<GamePromotionDto> Games { get; set; }
 
     public ICollection<PromotionCoinDto> PromotionCoins { get; set; }

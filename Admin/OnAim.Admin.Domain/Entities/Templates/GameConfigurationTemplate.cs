@@ -21,6 +21,7 @@ public class GameConfigurationTemplate
     public List<Round> Rounds { get; set; } = new List<Round>();
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DateDeleted { get; set; }
+    public int Usage { get; set; }
 
     public void Delete()
     {

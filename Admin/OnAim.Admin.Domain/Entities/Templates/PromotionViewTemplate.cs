@@ -24,6 +24,7 @@ public class PromotionViewTemplate
     //type[] featuretemplatetype
     public bool IsDeleted { get; set; }
     public DateTimeOffset DateDeleted { get; set; }
+    public int Usage { get; set; }
 
     public void Delete()
     {

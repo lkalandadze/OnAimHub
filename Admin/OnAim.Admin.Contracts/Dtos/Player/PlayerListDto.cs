@@ -8,5 +8,6 @@ public class PlayerListDto
     public DateTimeOffset? LastVisit { get; set; }
     public string? Segment { get; set; }
     public bool? IsBanned { get; set; }
+    public string? Status { get; set; }
 
 }

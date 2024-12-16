@@ -114,7 +114,8 @@ public class PromotionService : IPromotionService
                     Description = xx.Description,
                     ImageUrl = xx.ImageUrl,
                     CoinType = (Contracts.Dtos.Coin.CoinType)xx.CoinType,
-                }).ToList()
+                }).ToList(),
+                PageViews = null,
             })
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize);
@@ -220,7 +221,7 @@ public class PromotionService : IPromotionService
                             .Select(ps => ps.Id)
                             .FirstOrDefault(),
             RegistrationDate = x.RegistredOn,
-            IsBanned = x.IsBanned
+            IsBanned = x.IsBanned,
         })
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize);
@@ -239,11 +240,11 @@ public class PromotionService : IPromotionService
         };
     }
 
-    public async Task<ApplicationResult> GetPromotionPlayerTransaction(int playerId, PlayerTransactionFilter filter)
+    public async Task<ApplicationResult> GetPromotionPlayerTransaction(int promotionId, PlayerTransactionFilter filter)
     {
-        var transaction = _transactionRepository
-            .Query()
-            .Where(x => x.PlayerId == playerId);
+        var transaction = _transactionRepository.Query()
+            .Include(x => x.Coin)
+            .Where(x => x.PromotionId == promotionId);
 
         //if (filter.TransactionType != null)
         //    transaction = transaction.Where(x => x.Type == filter.TransactionType);
@@ -262,6 +263,8 @@ public class PromotionService : IPromotionService
             PlayerId = x.PlayerId,
             TransactionType = x.Type,
             Amount = x.Amount,
+            Coin = x.Coin.Name,
+            Status = x.Status,
         })
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize);
@@ -424,7 +427,9 @@ public class PlayerTransactionDto
     public int PlayerId { get; set; }
     public TransactionType TransactionType { get; set; }
     public DateTimeOffset Date { get; set; }
+    public string Coin { get; set; }
     public decimal Amount { get; set; }
+    public TransactionStatus Status { get; set; }
 }
 public record PlayerTransactionFilter : BaseFilter
 {

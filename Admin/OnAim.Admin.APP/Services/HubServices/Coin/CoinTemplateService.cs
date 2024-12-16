@@ -3,6 +3,7 @@ using OnAim.Admin.APP.Services.HubServices.Coin;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Coin;
+using OnAim.Admin.Contracts.Dtos.Withdraw;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
@@ -42,13 +43,13 @@ public class CoinTemplateService : ICoinTemplateService
             Id = x.Id,
             Title = x.Name,
             Description = x.Description,
-            CoinType = (CoinType)x.CoinType,
+            CoinType = (Contracts.Dtos.Coin.CoinType)x.CoinType,
             ImgUrl = x.ImageUrl,
             WithdrawOptions = x.WithdrawOptions?.Select(xx => new WithdrawOptionCoinTempDto
             {
                 Title = xx.WithdrawOption.Title,
                 Description = xx.WithdrawOption.Description,
-                ContentType = (EndpointContentType)xx.WithdrawOption.ContentType,
+                ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)xx.WithdrawOption.ContentType,
                 Endpoint = xx.WithdrawOption.Endpoint,
                 EndpointContent = xx.WithdrawOption.EndpointContent,
                 Id = xx.WithdrawOption.Id,
@@ -90,12 +91,12 @@ public class CoinTemplateService : ICoinTemplateService
             Id = coin.Id,
             Title = coin.Name,
             Description = coin.Description,
-            CoinType = (CoinType)coin.CoinType,
+            CoinType = (Contracts.Dtos.Coin.CoinType)coin.CoinType,
             WithdrawOptions = coin.WithdrawOptions.Select(xx => new WithdrawOptionCoinTempDto
             {
                 Title = xx.WithdrawOption.Title,
                 Description = xx.WithdrawOption.Description,
-                ContentType = (EndpointContentType)xx.WithdrawOption.ContentType,
+                ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)xx.WithdrawOption.ContentType,
                 Endpoint = xx.WithdrawOption.Endpoint,
                 EndpointContent = xx.WithdrawOption.EndpointContent,
                 Id = xx.WithdrawOption.Id,
@@ -174,14 +175,14 @@ public class CoinTemplateService : ICoinTemplateService
             Title =temp.Name,
             Description = temp.Description,
             ImgUrl = temp.ImageUrl,
-            CoinType = (CoinType)temp.CoinType,
+            CoinType = (Contracts.Dtos.Coin.CoinType)temp.CoinType,
             IsDeleted = temp.IsDeleted,
             WithdrawOptions = temp.WithdrawOptions.Select(x => new WithdrawOptionCoinTempDto
             {
                 Id= x.WithdrawOption.Id,
                 Title = x.WithdrawOption.Title,
                 Description = x.WithdrawOption.Description,
-                ContentType = (EndpointContentType)x.WithdrawOption.ContentType,
+                ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)x.WithdrawOption.ContentType,
                 EndpointContent = x.WithdrawOption.EndpointContent,
                 Endpoint = x.WithdrawOption.Endpoint,
                 ImageUrl = x.WithdrawOption.ImageUrl,
@@ -258,34 +259,4 @@ public class CoinTemplateService : ICoinTemplateService
 
         return new ApplicationResult { Success = true };
     }
-}
-public class CoinTemplateListDto
-{
-    public string Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public CoinType CoinType { get; set; }
-    public string ImgUrl { get; set; }
-    public bool IsDeleted { get; set; }
-    public List<WithdrawOptionCoinTempDto> WithdrawOptions { get; set; }
-    public List<WithdrawOptionGroupCoinTempDto> WithdrawOptionGroups { get; set; }
-}
-public class WithdrawOptionCoinTempDto
-{
-    public int Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string ImageUrl { get; set; }
-    public string Endpoint { get; set; }
-    public EndpointContentType ContentType { get; set; }
-    public string EndpointContent { get; set; }
-
-}
-public class WithdrawOptionGroupCoinTempDto
-{
-    public int Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string ImageUrl { get; set; }
-    public int? PriorityIndex { get; set; }
 }

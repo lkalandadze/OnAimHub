@@ -1,6 +1,6 @@
 ﻿using OnAim.Admin.APP.CQRS.Command;
-using OnAim.Admin.APP.Services.Hub.Coin;
 using OnAim.Admin.APP.Services.HubServices.Coin;
+using OnAim.Admin.Contracts.Dtos.Coin;
 
 namespace OnAim.Admin.APP.Features.CoinFeatures.Template.Commands.Create;
 

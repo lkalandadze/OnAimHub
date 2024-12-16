@@ -36,6 +36,7 @@ public class LeaderboardTemplate
     public string EndDate { get; set; }
     public bool IsDeleted { get; set; } 
     public DateTimeOffset DateDeleted { get; set; }
+    public int Usage { get; set; }
 
     public ICollection<LeaderboardTemplatePrize> LeaderboardTemplatePrizes { get; set; } = new List<LeaderboardTemplatePrize>();
 

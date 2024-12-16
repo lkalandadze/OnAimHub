@@ -23,6 +23,7 @@ public class PromotionTemplate
     public ICollection<GameConfigurationTemplate>? Games { get; set; } = new List<GameConfigurationTemplate>();
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DateDeleted { get; set; }
+    public int Usage { get; set; }
 
     public void UpdateCoins(IEnumerable<Coin> coins)
     {
