@@ -15,14 +15,6 @@ public class CreateWithdrawOptionModel
 
     public static Domain.Entities.WithdrawOption ConvertToEntity(CreateWithdrawOptionModel model)
     {
-        return new()
-        {
-            Title = model.Title,
-            Description = model.Description,
-            ImageUrl = model.ImageUrl,
-            Endpoint = model.Endpoint,
-            ContentType = model.ContentType,
-            EndpointContent = model.EndpointContent,
-        };
+        return new (model.Title, model.Description, model.ImageUrl, model.Endpoint, model.ContentType, model.EndpointContent);
     }
 }
