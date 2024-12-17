@@ -20,7 +20,7 @@ public class CreateRewardHandler : IRequestHandler<CreateRewardCommand>
     {
         var prizes = request.Prizes.Select(p => new RewardPrize(p.Amount, p.PrizeTypeId));
 
-        var reward = new Reward(request.PlayerId, request.SourceId, request.ExpirationDate, prizes);
+        var reward = new Reward(request.IsClaimableByPlayer, request.PlayerId, request.SourceId, request.ExpirationDate, prizes);
 
         await _rewardRepository.InsertAsync(reward);
         await _unitOfWork.SaveAsync();

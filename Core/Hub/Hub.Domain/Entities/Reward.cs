@@ -12,8 +12,9 @@ public class Reward : BaseEntity<int>
         
     }
 
-    public Reward(int playerId, int sourceId, DateTime expirationDate, IEnumerable<RewardPrize> prizes)
+    public Reward(bool isClaimableByPlayer, int playerId, int sourceId, DateTime expirationDate, IEnumerable<RewardPrize> prizes)
     {
+        IsClaimableByPlayer = isClaimableByPlayer;
         PlayerId = playerId;
         SourceId = sourceId;
         ExpirationDate = expirationDate;
@@ -22,7 +23,7 @@ public class Reward : BaseEntity<int>
         IsDeleted = false;
         CreatedAt= DateTime.UtcNow;
     }
-
+    public bool IsClaimableByPlayer { get; set; }
     public bool IsClaimed { get; private set; }
     public bool IsDeleted { get; private set; }
     public DateTime CreatedAt { get; private set; }

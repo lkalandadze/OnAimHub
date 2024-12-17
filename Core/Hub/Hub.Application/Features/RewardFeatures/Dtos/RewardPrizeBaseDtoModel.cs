@@ -8,7 +8,7 @@ public class RewardPrizeBaseDtoModel
 {
     public int Id{ get; set; }
     public int Value { get; set; }
-    public string Type { get; set; }
+    public string Coin { get; set; }
 
     public static RewardPrizeBaseDtoModel MapFrom(RewardPrize prize)
     {
@@ -16,7 +16,7 @@ public class RewardPrizeBaseDtoModel
         {
             Id = prize.Id,
             Value = prize.Value,
-            Type = prize.PrizeTypeId,
+            Coin = prize.CoinId,
         };
     }
 }
