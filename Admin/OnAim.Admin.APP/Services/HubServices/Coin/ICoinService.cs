@@ -20,4 +20,7 @@ public interface ICoinService
     Task<ApplicationResult> UpdateWithdrawOptionEndpoint(UpdateWithdrawOptionEndpoint option);
     Task<ApplicationResult> CreateWithdrawOptionGroup(CreateWithdrawOptionGroup option);
     Task<ApplicationResult> UpdateWithdrawOptionGroup(UpdateWithdrawOptionGroup option);
+    Task<ApplicationResult> DeleteWithdrawOption(APP.DeleteWithdrawOption delete);
+    Task<ApplicationResult> DeleteWithdrawOptionEndpoint(APP.DeleteWithdrawOptionEndpoint delete);
+    Task<ApplicationResult> DeleteWithdrawOptiongroup(APP.DeleteWithdrawOptionGroup delete);
 }

@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPlayers;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Segment;
-using System.Net.Http.Headers;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
-using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.Domain.HubEntities.PlayerEntities;
 using OnAim.Admin.APP.Services.HubServices.Segment;
 using OnAim.Admin.Infrasturcture.Interfaces;
@@ -17,274 +14,309 @@ namespace OnAim.Admin.APP.Services.Hub.Segment;
 
 public class SegmentService : ISegmentService
 {
-    private readonly IHubApiClient _hubApiClient;
     private readonly IReadOnlyRepository<Domain.HubEntities.Segment> _segmentRepository;
     private readonly IReadOnlyRepository<PlayerSegmentAct> _playerSegmentActRepository;
     private readonly IReadOnlyRepository<PlayerSegmentActHistory> _playerSegmentActHistoryRepository;
     private readonly ISecurityContextAccessor _securityContextAccessor;
-    private readonly HubApiClientOptions _options;
+    private readonly HubClientService _hubClientService;
 
     public SegmentService(
-        IHubApiClient hubApiClient,
-        IOptions<HubApiClientOptions> options,
         IReadOnlyRepository<Domain.HubEntities.Segment> segmentRepository,
         IReadOnlyRepository<PlayerSegmentAct> _playerSegmentActRepository,
         IReadOnlyRepository<PlayerSegmentActHistory> _playerSegmentActHistoryRepository,
-        ISecurityContextAccessor securityContextAccessor
+        ISecurityContextAccessor securityContextAccessor,
+        HubClientService hubClientService
         )
     {
-        _hubApiClient = hubApiClient;
         _segmentRepository = segmentRepository;
         this._playerSegmentActRepository = _playerSegmentActRepository;
         this._playerSegmentActHistoryRepository = _playerSegmentActHistoryRepository;
         _securityContextAccessor = securityContextAccessor;
-        _options = options.Value;
+        _hubClientService = hubClientService;
     }
 
     public async Task<ApplicationResult> AssignSegmentToPlayers(IEnumerable<string> segmentIds, IFormFile file)
     {
-        using var multipartContent = new MultipartFormDataContent();
+        //using var multipartContent = new MultipartFormDataContent();
+
+        //if (file != null)
+        //{
+        //    var fileContent = new StreamContent(file.OpenReadStream());
+        //    fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+        //    multipartContent.Add(fileContent, "file", file.FileName);
+        //}
+
+        FileParameter fileParameter = null;
 
         if (file != null)
         {
-            var fileContent = new StreamContent(file.OpenReadStream());
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-            multipartContent.Add(fileContent, "file", file.FileName);
+            fileParameter = new FileParameter(
+                file.OpenReadStream(),
+                file.FileName,
+                file.ContentType  
+            );
         }
 
-        multipartContent.Add(new StringContent(string.Join(",", segmentIds)), "SegmentIds");
-        multipartContent.Add(new StringContent(_securityContextAccessor.UserId.ToString()), "ByUserId");
-
-        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/AssignSegmentsToPlayers", multipartContent);
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            var errorContent = await response.Content.ReadAsStringAsync();
-            throw new HubAPIRequestFailedException($"Failed to assign players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
+            await _hubClientService.AssignSegmentsToPlayersAsync(segmentIds, fileParameter, _securityContextAccessor.UserId);
+            return new ApplicationResult { Success = true };
         }
-
-        return new ApplicationResult
+        catch (Exception ex)
         {
-            Success = true,
-            Data = await response.Content.ReadAsStringAsync(),
-        };
+            throw new Exception(ex.Message, ex);
+        }
     }
 
     public async Task<ApplicationResult> AssignSegmentToPlayer(string segmentId, int playerId)
     {
-        var req = new
+        try
         {
-            PlayerId = playerId,
-            SegmentId = segmentId,
-            ByUserId = _securityContextAccessor.UserId
-        };
-
-        var result = await _hubApiClient.PostAsJsonAndSerializeResultTo<object>(
-            $"{_options.Endpoint}Admin/AssignSegmentToPlayer?segmentId={req.SegmentId}&playerId={req.PlayerId}",
-            req
-            );
-
-        if (result != null)
-        {
+            await _hubClientService.AssignSegmentToPlayerAsync(segmentId, playerId, _securityContextAccessor.UserId);
             return new ApplicationResult { Success = true };
         }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+
+        //var result = await _hubApiClient.PostAsJsonAndSerializeResultTo<object>(
+        //    $"{_options.Endpoint}Admin/AssignSegmentToPlayer?segmentId={req.SegmentId}&playerId={req.PlayerId}",
+        //    req
+        //    );
+
+        //if (result != null)
+        //{
+        //    return new ApplicationResult { Success = true };
+        //}
 
         throw new Exception("Failed to assign segment");
     }
 
     public async Task<ApplicationResult> BlockSegmentForPlayers(IEnumerable<string> segmentIds, IFormFile file)
     {
-        using var multipartContent = new MultipartFormDataContent();
+        FileParameter fileParameter = null;
 
         if (file != null)
         {
-            var fileContent = new StreamContent(file.OpenReadStream());
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-            multipartContent.Add(fileContent, "file", file.FileName);
+            fileParameter = new FileParameter(
+                file.OpenReadStream(),
+                file.FileName,
+                file.ContentType
+            );
         }
 
-        multipartContent.Add(new StringContent(string.Join(",", segmentIds)), "SegmentIds");
-        multipartContent.Add(new StringContent(_securityContextAccessor.UserId.ToString()), "ByUserId");
-
-        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/BlockSegmentsForPlayers", multipartContent);
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            var errorContent = await response.Content.ReadAsStringAsync();
-            throw new HubAPIRequestFailedException($"Failed to Block Players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
+            await _hubClientService.BlockSegmentsForPlayersAsync(segmentIds, fileParameter, _securityContextAccessor.UserId);
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
         }
 
-        return new ApplicationResult
-        {
-            Success = true,
-            Data = await response.Content.ReadAsStringAsync(),
-        };
+        //using var multipartContent = new MultipartFormDataContent();
+
+        //if (file != null)
+        //{
+        //    var fileContent = new StreamContent(file.OpenReadStream());
+        //    fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+        //    multipartContent.Add(fileContent, "file", file.FileName);
+        //}
+
+        //multipartContent.Add(new StringContent(string.Join(",", segmentIds)), "SegmentIds");
+        //multipartContent.Add(new StringContent(_securityContextAccessor.UserId.ToString()), "ByUserId");
+
+        //var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/BlockSegmentsForPlayers", multipartContent);
+
+        //if (!response.IsSuccessStatusCode)
+        //{
+        //    var errorContent = await response.Content.ReadAsStringAsync();
+        //    throw new HubAPIRequestFailedException($"Failed to Block Players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
+        //}
+
+        //return new ApplicationResult
+        //{
+        //    Success = true,
+        //};
     }
 
     public async Task<ApplicationResult> BlockSegmentForPlayer(string segmentId, int playerId)
     {
-        var req = new
+        try
         {
-            PlayerId = playerId,
-            SegmentId = segmentId,
-            ByUserId = _securityContextAccessor.UserId
-        };
-
-        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/BlockSegmentForPlayer?segmentId={req.SegmentId}&playerId={req.PlayerId}", req);
-
-        if (result.IsSuccessStatusCode)
-        {
+            await _hubClientService.BlockSegmentForPlayerAsync(segmentId, playerId, _securityContextAccessor.UserId);
             return new ApplicationResult { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
         }
 
         throw new Exception("Failed to block segment for player");
     }
 
-    public async Task<ApplicationResult> CreateSegment(string id, string description, int priorityLevel)
+    public async Task<ApplicationResult> CreateSegment(CreateSegmentCommand create)
     {
-        var req = new
+        try
         {
-            Id = id,
-            Description = description,
-            PriorityLevel = priorityLevel,
-            CreatedByUserId = _securityContextAccessor.UserId,
-        };
-
-        var result = await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/CreateSegment", req);
-
-        if (result != null)
-        {
+            await _hubClientService.CreateSegmentAsync(create);
             return new ApplicationResult { Success = true };
         }
-
-        throw new Exception("Failed to add segment");
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
     }
 
     public async Task<ApplicationResult> DeleteSegment(string id)
     {
-        var result = await _hubApiClient.Delete($"{_options.Endpoint}Admin/DeleteSegment?id={id}");
-
-        if (result.IsSuccessStatusCode)
+        try
         {
+            await _hubClientService.DeleteSegmentAsync(id);
             return new ApplicationResult { Success = true };
         }
-
-        throw new Exception("Failed to delete segment");
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
     }
 
     public async Task<ApplicationResult> UnAssignPlayersToSegment(IEnumerable<string> segmentIds, IFormFile file)
     {
-        using var multipartContent = new MultipartFormDataContent();
+        FileParameter fileParameter = null;
 
         if (file != null)
         {
-            var fileContent = new StreamContent(file.OpenReadStream());
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-            multipartContent.Add(fileContent, "file", file.FileName);
+            fileParameter = new FileParameter(
+                file.OpenReadStream(),
+                file.FileName,
+                file.ContentType
+            );
         }
 
-        multipartContent.Add(new StringContent(string.Join(",", segmentIds)), "SegmentIds");
-        multipartContent.Add(new StringContent(_securityContextAccessor.UserId.ToString()), "ByUserId");
-
-        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/UnassignSegmentsToPlayers", multipartContent);
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            var errorContent = await response.Content.ReadAsStringAsync();
-            throw new HubAPIRequestFailedException($"Failed to unassign players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
+            await _hubClientService.UnassignSegmentsToPlayersAsync(segmentIds, fileParameter, _securityContextAccessor.UserId);
+            return new ApplicationResult { Success = true };
         }
-
-        return new ApplicationResult
+        catch (Exception ex)
         {
-            Success = true,
-            Data = await response.Content.ReadAsStringAsync(),
-        };
+            throw new Exception(ex.Message, ex);
+        }
+        //using var multipartContent = new MultipartFormDataContent();
+
+        //if (file != null)
+        //{
+        //    var fileContent = new StreamContent(file.OpenReadStream());
+        //    fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+        //    multipartContent.Add(fileContent, "file", file.FileName);
+        //}
+
+        //multipartContent.Add(new StringContent(string.Join(",", segmentIds)), "SegmentIds");
+        //multipartContent.Add(new StringContent(_securityContextAccessor.UserId.ToString()), "ByUserId");
+
+        //var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/UnassignSegmentsToPlayers", multipartContent);
+
+        //if (!response.IsSuccessStatusCode)
+        //{
+        //    var errorContent = await response.Content.ReadAsStringAsync();
+        //    throw new HubAPIRequestFailedException($"Failed to unassign players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
+        //}
+
+        //return new ApplicationResult
+        //{
+        //    Success = true,
+        //};
     }
 
     public async Task<ApplicationResult> UnAssignSegmentForPlayer(string segmentId, int playerId)
     {
-        var req = new
+        try
         {
-            PlayerId = playerId,
-            SegmentId = segmentId,
-            ByUserId = _securityContextAccessor.UserId
-        };
-
-        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/UnassignSegmentToPlayer?segmentId={req.SegmentId}&playerId={req.PlayerId}", req);
-
-        if (result.IsSuccessStatusCode)
-        {
+            await _hubClientService.UnassignSegmentToPlayerAsync(segmentId, playerId, _securityContextAccessor.UserId);
             return new ApplicationResult { Success = true };
         }
-
-        throw new Exception("Failed to unassign segment");
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
     }
 
     public async Task<ApplicationResult> UnBlockSegmentForPlayer(string segmentId, int playerId)
     {
-        var req = new
+        try
         {
-            PlayerId = playerId,
-            SegmentId = segmentId,
-            ByUserId = _securityContextAccessor.UserId
-        };
-
-        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/UnblockSegmentForPlayer?segmentId={req.SegmentId}&playerId={req.PlayerId}", req);
-
-        if (result.IsSuccessStatusCode)
-        {
+            await _hubClientService.UnblockSegmentForPlayerAsync(segmentId, playerId, _securityContextAccessor.UserId);
             return new ApplicationResult { Success = true };
         }
-
-        throw new Exception("Failed to unblock segment for player");
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
     }
 
     public async Task<ApplicationResult> UnBlockSegmentForPlayers(IEnumerable<string> segmentIds, IFormFile file)
     {
-        using var multipartContent = new MultipartFormDataContent();
+        FileParameter fileParameter = null;
 
         if (file != null)
         {
-            var fileContent = new StreamContent(file.OpenReadStream());
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-            multipartContent.Add(fileContent, "file", file.FileName);
+            fileParameter = new FileParameter(
+                file.OpenReadStream(),
+                file.FileName,
+                file.ContentType
+            );
         }
 
-        multipartContent.Add(new StringContent(string.Join(",", segmentIds)), "SegmentIds");
-        multipartContent.Add(new StringContent(_securityContextAccessor.UserId.ToString()), "ByUserId");
-
-        var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/UnblockSegmentsForPlayers", multipartContent);
-
-        if (!response.IsSuccessStatusCode)
+        try
         {
-            var errorContent = await response.Content.ReadAsStringAsync();
-            throw new HubAPIRequestFailedException($"Failed to Unblock Players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
+            await _hubClientService.UnblockSegmentsForPlayersAsync(segmentIds, fileParameter, _securityContextAccessor.UserId);
+            return new ApplicationResult { Success = true };
         }
-
-        return new ApplicationResult
+        catch (Exception ex)
         {
-            Success = true,
-            Data = await response.Content.ReadAsStringAsync(),
-        };
+            throw new Exception(ex.Message, ex);
+        }
+        //using var multipartContent = new MultipartFormDataContent();
+
+        //if (file != null)
+        //{
+        //    var fileContent = new StreamContent(file.OpenReadStream());
+        //    fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+        //    multipartContent.Add(fileContent, "file", file.FileName);
+        //}
+
+        //multipartContent.Add(new StringContent(string.Join(",", segmentIds)), "SegmentIds");
+        //multipartContent.Add(new StringContent(_securityContextAccessor.UserId.ToString()), "ByUserId");
+
+        //var response = await _hubApiClient.PostMultipartAsync($"{_options.Endpoint}Admin/UnblockSegmentsForPlayers", multipartContent);
+
+        //if (!response.IsSuccessStatusCode)
+        //{
+        //    var errorContent = await response.Content.ReadAsStringAsync();
+        //    throw new HubAPIRequestFailedException($"Failed to Unblock Players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
+        //}
+
+        //return new ApplicationResult
+        //{
+        //    Success = true,
+        //};
 
     }
 
-    public async Task<ApplicationResult> UpdateSegment(string id, string description, int priorityLevel)
+    public async Task<ApplicationResult> UpdateSegment(UpdateSegmentCommand update)
     {
-        var request = new
+        try
         {
-            Id = id,
-            Description = description,
-            PriorityLevel = priorityLevel
-        };
-        var result = await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/UpdateSegment", request);
-
-        if (result.IsSuccessStatusCode)
-        {
+            await _hubClientService.UpdateSegmentAsync(update);
             return new ApplicationResult { Success = true };
         }
-
-        throw new Exception("Failed to update segment");
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
     }
 
     public async Task<ApplicationResult> GetAll(int? pageNumber, int? pageSize)

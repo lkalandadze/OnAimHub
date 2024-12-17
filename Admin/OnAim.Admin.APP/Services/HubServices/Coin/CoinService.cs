@@ -336,6 +336,21 @@ public class CoinService : ICoinService
         }
     }
 
+    public async Task<ApplicationResult> DeleteWithdrawOption(APP.DeleteWithdrawOption delete)
+    {
+        try
+        {
+            await _hubClientService.DeleteWithdrawOptionAsync(delete);
+
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception)
+        {
+
+            throw new Exception("failed to delete withdraw option");
+        }
+    }
+
     public async Task<ApplicationResult> CreateWithdrawOptionEndpoint(CreateWithdrawOptionEndpoint option)
     {
         try
@@ -366,6 +381,21 @@ public class CoinService : ICoinService
         }
     }
 
+    public async Task<ApplicationResult> DeleteWithdrawOptionEndpoint(APP.DeleteWithdrawOptionEndpoint delete)
+    {
+        try
+        {
+            await _hubClientService.DeleteWithdrawOptionEndpointAsync(delete);
+
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception)
+        {
+
+            throw new Exception("failed to delete withdraw option");
+        }
+    }
+
     public async Task<ApplicationResult> CreateWithdrawOptionGroup(CreateWithdrawOptionGroup option)
     {
         try
@@ -393,6 +423,21 @@ public class CoinService : ICoinService
         {
 
             throw new Exception("failed to update withdraw option Group");
+        }
+    }
+
+    public async Task<ApplicationResult> DeleteWithdrawOptiongroup(APP.DeleteWithdrawOptionGroup delete)
+    {
+        try
+        {
+            await _hubClientService.DeleteWithdrawOptionGroupAsync(delete);
+
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception)
+        {
+
+            throw new Exception("failed to delete withdraw option");
         }
     }
 }

@@ -32,6 +32,10 @@ public class CoinController : ApiControllerBase
     public async Task<IActionResult> UpdateWithdrawOption([FromBody] APP.UpdateWithdrawOption create)
         => Ok(await _coinService.UpdateWithdrawOption(create));
 
+    [HttpPost(nameof(DeleteWithdrawOption))]
+    public async Task<IActionResult> DeleteWithdrawOption([FromBody] APP.DeleteWithdrawOption delete)
+        => Ok(await _coinService.DeleteWithdrawOption(delete));
+
     [HttpGet(nameof(GetAllWithdrawOptions))]
     public async Task<IActionResult> GetAllWithdrawOptions([FromQuery] BaseFilter filter)
         => Ok(await _coinService.GetAllWithdrawOptions(filter));
@@ -48,6 +52,10 @@ public class CoinController : ApiControllerBase
     public async Task<IActionResult> UpdateWithdrawOptionGroup([FromBody] APP.UpdateWithdrawOptionGroup create)
         => Ok(await _coinService.UpdateWithdrawOptionGroup(create));
 
+    [HttpPost(nameof(DeleteWithdrawOptiongroup))]
+    public async Task<IActionResult> DeleteWithdrawOptiongroup([FromBody] APP.DeleteWithdrawOptionGroup delete)
+        => Ok(await _coinService.DeleteWithdrawOptiongroup(delete));
+
     [HttpGet(nameof(GetAllWithdrawOptionGroups))]
     public async Task<IActionResult> GetAllWithdrawOptionGroups([FromQuery] BaseFilter filter)
         => Ok(await _coinService.GetAllWithdrawOptionGroups(filter));
@@ -63,6 +71,10 @@ public class CoinController : ApiControllerBase
     [HttpPut(nameof(UpdateWithdrawOptionEndpoint))]
     public async Task<IActionResult> UpdateWithdrawOptionEndpoint([FromBody] APP.UpdateWithdrawOptionEndpoint create)
         => Ok(await _coinService.UpdateWithdrawOptionEndpoint(create));
+
+    [HttpPost(nameof(DeleteWithdrawOptionEndpoint))]
+    public async Task<IActionResult> DeleteWithdrawOptionEndpoint([FromBody] APP.DeleteWithdrawOptionEndpoint delete)
+        => Ok(await _coinService.DeleteWithdrawOptionEndpoint(delete));
 
     [HttpGet(nameof(GetAllWithdrawOptionEndpoints))]
     public async Task<IActionResult> GetAllWithdrawOptionEndpoints([FromQuery] BaseFilter filter)

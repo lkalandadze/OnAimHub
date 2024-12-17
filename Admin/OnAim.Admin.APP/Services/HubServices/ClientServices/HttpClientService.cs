@@ -9,7 +9,7 @@ using System.Text;
 
 namespace OnAim.Admin.APP.Services.Hub.ClientServices;
 
-public class HttpClientService : ILeaderBoardApiClient
+public class HttpClientService 
 {
     private readonly HttpClient _httpClient;
     private readonly LeaderBoardApiClientOptions _options;

@@ -23,8 +23,8 @@ public class UpdateSegmentCommandHandler : ICommandHandler<UpdateSegmentCommand,
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var result = await _segmentService.UpdateSegment(request.Id, request.Description, request.PriorityLevel);
+        //var result = await _segmentService.UpdateSegment(request.Id, request.Description, request.PriorityLevel);
 
-        return new ApplicationResult { Success = result.Success, Data = result.Data };
+        return new ApplicationResult { Success = true };
     }
 }

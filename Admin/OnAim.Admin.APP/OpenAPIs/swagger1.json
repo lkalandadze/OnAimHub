@@ -378,6 +378,14 @@
         ],
         "parameters": [
           {
+            "name": "LeaderboardRecordId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "PageNumber",
             "in": "query",
             "schema": {
@@ -433,14 +441,6 @@
             }
           },
           {
-            "name": "PlayerId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
             "name": "PageNumber",
             "in": "query",
             "schema": {
@@ -477,6 +477,28 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v1/LeaderboardProgress/FinishLeaderboard": {
+      "post": {
+        "tags": [
+          "LeaderboardProgress"
+        ],
+        "parameters": [
+          {
+            "name": "LeaderboardRecordId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -584,61 +606,6 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetLeaderboardResultsByPlayerIdQueryResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/LeaderboardResult/GetPlateyLeaderboardResults": {
-      "get": {
-        "tags": [
-          "LeaderboardResult"
-        ],
-        "parameters": [
-          {
-            "name": "PlayerId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "PageNumber",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "PageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPlayerResultsQueryResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPlayerResultsQueryResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPlayerResultsQueryResponse"
                 }
               }
             }
@@ -850,15 +817,13 @@
           "data": {
             "$ref": "#/components/schemas/LeaderboardProgressModelPagedResponse"
           },
-          "top20Users": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LeaderboardProgressModel"
-            },
+          "currentPlayerUsername": {
+            "type": "string",
             "nullable": true
           },
-          "currentUser": {
-            "$ref": "#/components/schemas/LeaderboardProgressModel"
+          "currentPlacement": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1049,37 +1014,6 @@
         },
         "additionalProperties": false
       },
-      "GetPlayerResultsQueryResponse": {
-        "type": "object",
-        "properties": {
-          "succeeded": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "error": {
-            "type": "string",
-            "nullable": true
-          },
-          "validationErrors": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "nullable": true
-            },
-            "nullable": true
-          },
-          "data": {
-            "$ref": "#/components/schemas/PlayerResultModelPagedResponse"
-          }
-        },
-        "additionalProperties": false
-      },
       "JobTypeEnum": {
         "enum": [
           0,
@@ -1119,10 +1053,6 @@
       "LeaderboardProgressModel": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
           "leaderboardRecordId": {
             "type": "integer",
             "format": "int32"
@@ -1138,6 +1068,19 @@
           "amount": {
             "type": "integer",
             "format": "int32"
+          },
+          "placement": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "coinId": {
+            "type": "string",
+            "nullable": true
+          },
+          "prizeAmount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1393,55 +1336,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/LeaderboardSchedulesModel"
-            },
-            "nullable": true
-          },
-          "pageNumber": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PlayerResultModel": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "leaderboardRecordId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "amount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "placement": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PlayerResultModelPagedResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PlayerResultModel"
             },
             "nullable": true
           },

@@ -328,32 +328,8 @@ public static partial class WebApplicationBuilderExtensions
         builder.Services.AddValidatedOptions<HubApiClientOptions>();
 
         builder.Services.AddValidatedOptions<LeaderBoardApiClientOptions>();
-
-        builder.Services.AddHttpClient<IHubApiClient, HubApiClient>(
-            (client, sp) =>
-            {
-                var catalogApiOptions = sp.GetRequiredService<IOptions<HubApiClientOptions>>();
-                var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
-                catalogApiOptions.Value.NotBeNull();
-
-                var baseAddress = catalogApiOptions.Value.BaseApiAddress;
-                client.BaseAddress = new Uri(baseAddress);
-                return new HubApiClient(client, catalogApiOptions, policyOptions, "admin", "password");
-            }
-        );
-
-        builder.Services.AddHttpClient<ILeaderBoardApiClient, HttpClientService>(
-           (client, sp) =>
-           {
-               var catalogApiOptions = sp.GetRequiredService<IOptions<LeaderBoardApiClientOptions>>();
-               var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
-               catalogApiOptions.Value.NotBeNull();
-
-               var baseAddress = catalogApiOptions.Value.BaseApiAddress;
-               client.BaseAddress = new Uri(baseAddress);
-               return new HttpClientService(client, catalogApiOptions, policyOptions);
-           }
-       );
+        
+        
     }
 
     public static IServiceCollection AddValidatedOptions<T>(

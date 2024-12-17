@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnAim.Admin.APP.Services.FileServices;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
@@ -385,8 +386,10 @@ public class PromotionService : IPromotionService
     {
         try
         {
-            await _hubClientService.CreatePromotionViewAsync(create);
-            return new ApplicationResult { Success = true };
+            var hhub = new HubClient();
+
+            var data = await hhub.PostAsJsonAndSerializeResultTo<object>("HubApi/Admin/CreatePromotionView", create);
+            return new ApplicationResult { Success = true, Data = data };
         }
         catch (Exception ex)
         {

@@ -1076,6 +1076,37 @@
         }
       }
     },
+    "/HubApi/Admin/DeleteWithdrawOption": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteWithdrawOption"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteWithdrawOption"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteWithdrawOption"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/HubApi/Admin/CreateWithdrawOptionEndpoint": {
       "post": {
         "tags": [
@@ -1138,6 +1169,37 @@
         }
       }
     },
+    "/HubApi/Admin/DeleteWithdrawOptionEndpoint": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteWithdrawOptionEndpoint"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteWithdrawOptionEndpoint"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteWithdrawOptionEndpoint"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/HubApi/Admin/CreateWithdrawOptionGroup": {
       "post": {
         "tags": [
@@ -1189,6 +1251,37 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateWithdrawOptionGroup"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/HubApi/Admin/DeleteWithdrawOptionGroup": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteWithdrawOptionGroup"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteWithdrawOptionGroup"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteWithdrawOptionGroup"
               }
             }
           }
@@ -1811,6 +1904,36 @@
         "additionalProperties": false
       },
       "DeleteRewardCommand": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeleteWithdrawOption": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeleteWithdrawOptionEndpoint": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeleteWithdrawOptionGroup": {
         "type": "object",
         "properties": {
           "id": {

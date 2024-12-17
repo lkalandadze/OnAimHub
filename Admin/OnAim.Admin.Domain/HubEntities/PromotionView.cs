@@ -7,7 +7,7 @@ public class PromotionView : BaseEntity<int>
 
     }
 
-    public PromotionView(string name, string url, int promotionId, int? templateId = null)
+    public PromotionView(string name, string url, int promotionId, string? templateId = null)
     {
         Name = name;
         Url = url;
@@ -17,7 +17,7 @@ public class PromotionView : BaseEntity<int>
 
     public string Name { get; private set; }
     public string Url { get; private set; }
-    public int? FromTemplateId { get; private set; }
+    public string? FromTemplateId { get; private set; }
 
     public int PromotionId { get; private set; }
     public Promotion Promotion { get; private set; }

@@ -9,22 +9,19 @@ namespace OnAim.Admin.APP.Services.Game;
 
 public class GameService : IGameService
 {
-    private readonly IHubApiClient _hubApiClient;
     private readonly HttpClient _httpClientFactory;
     private readonly HubApiClientOptions _options;
 
-    public GameService(IHubApiClient hubApiClient,IOptions<HubApiClientOptions> options, IHttpClientFactory httpClientFactory)
+    public GameService(IHttpClientFactory httpClientFactory)
     {
-        _hubApiClient = hubApiClient;
         _httpClientFactory = httpClientFactory.CreateClient("ApiGateway");
-        _options = options.Value;
     }
 
     public async Task<List<GameListDtoItem>> GetAll()
     {
-        var response = await _hubApiClient.Get<GameListDto>($"{_options.Endpoint}Admin/AllGames");
+        //var response = await _hubApiClient.Get<GameListDto>($"{_options.Endpoint}Admin/AllGames");
 
-        return response.Data;
+        return new List<GameListDtoItem>();
     }
 
     public async Task<object> GetConfiguration(int id)

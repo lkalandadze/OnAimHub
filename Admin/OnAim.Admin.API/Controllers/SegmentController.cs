@@ -2,16 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP.Features.SegmentFeatures.Commands.AssignPlayer;
-using OnAim.Admin.APP.Features.SegmentFeatures.Commands.AssignPlayersToSegment;
 using OnAim.Admin.APP.Features.SegmentFeatures.Commands.BlockPlayer;
-using OnAim.Admin.APP.Features.SegmentFeatures.Commands.BlockSegmentForPlayers;
-using OnAim.Admin.APP.Features.SegmentFeatures.Commands.Create;
-using OnAim.Admin.APP.Features.SegmentFeatures.Commands.Delete;
 using OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnAssignPlayer;
-using OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnAssignPlayersToSegment;
 using OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnBlockPlayer;
-using OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnBlockSegmentForPlayers;
-using OnAim.Admin.APP.Features.SegmentFeatures.Commands.Update;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.ActivePlayers;
@@ -20,12 +13,20 @@ using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.ActsAndHistory.Hi
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPlayers;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetGeneralSegmentActsHistory;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetSegmentActs;
+using OnAim.Admin.APP.Services.HubServices.Segment;
 using OnAim.Admin.Contracts.Dtos.Segment;
 
 namespace OnAim.Admin.API.Controllers;
 
 public class SegmentController : ApiControllerBase
 {
+    private readonly ISegmentService _segmentService;
+
+    public SegmentController(ISegmentService segmentService)
+    {
+        _segmentService = segmentService;
+    }
+
     [HttpGet(nameof(GetAll))]
     public async Task<IActionResult> GetAll([FromQuery] GetAllSegmentQuery query)
         => Ok(await Mediator.Send(query));
@@ -59,31 +60,31 @@ public class SegmentController : ApiControllerBase
         => Ok(await Mediator.Send(new GetSegmentActsHistoryByIdQuery(playerSegmentActId)));
 
     [HttpPost(nameof(Create))]
-    public async Task<IActionResult> Create([FromBody] CreateSegmentCommand command)
-        => Ok(await Mediator.Send(command));
+    public async Task<IActionResult> Create([FromBody] APP.CreateSegmentCommand command)
+        => Ok(await _segmentService.CreateSegment(command));
 
     [HttpPut(nameof(Update))]
-    public async Task<IActionResult> Update([FromBody] UpdateSegmentCommand command)
-        => Ok(await Mediator.Send(command));
+    public async Task<IActionResult> Update([FromBody] APP.UpdateSegmentCommand command)
+        => Ok(await _segmentService.UpdateSegment(command));
 
     [HttpDelete(nameof(Delete) + "/{id}")]
     public async Task<IActionResult> Delete([FromRoute] string id)
-        => Ok(await Mediator.Send(new DeleteSegmentCommand(id)));
+        => Ok(await _segmentService.DeleteSegment(id));
 
     [HttpPost(nameof(AssignPlayerToSegment))]
     public async Task<IActionResult> AssignPlayerToSegment([FromBody] AssignPlayerCommand command)
-        => Ok(await Mediator.Send(command));
+        => Ok(await _segmentService.AssignSegmentToPlayer(command.SegmentId, command.PlayerId));
 
     [HttpPost(nameof(UnAssignPlayer))]
     public async Task<IActionResult> UnAssignPlayer([FromBody] UnAssignPlayerCommand command)
-        => Ok(await Mediator.Send(command));
+        => Ok(await _segmentService.UnAssignSegmentForPlayer(command.SegmentId, command.PlayerId));
 
     [HttpPost(nameof(AssignSegmentToPlayers))]
     public async Task<IActionResult> AssignSegmentToPlayers(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
     {
         try
         {
-            await Mediator.Send(new AssignSegmentToPlayersCommand(segmentId, formFile));
+            await _segmentService.AssignSegmentToPlayers(segmentId, formFile);
             return Ok(new { results = "File Uploaded Successfully To Database" });
         }
         catch (ValidationException ve)
@@ -101,7 +102,7 @@ public class SegmentController : ApiControllerBase
     {
         try
         {
-            await Mediator.Send(new UnAssignPlayersToSegmentCommand(segmentId, formFile));
+            await _segmentService.UnAssignPlayersToSegment(segmentId, formFile);
             return Ok(new { results = "File Uploaded Successfully To Database" });
         }
         catch (ValidationException ve)
@@ -116,18 +117,18 @@ public class SegmentController : ApiControllerBase
 
     [HttpPost(nameof(BlockSegmentForPlayer))]
     public async Task<IActionResult> BlockSegmentForPlayer([FromBody] BlockSegmentForPlayerCommand command)
-        => Ok(await Mediator.Send(command));
+        => Ok(await _segmentService.BlockSegmentForPlayer(command.SegmentId, command.PlayerId));
 
     [HttpPost(nameof(UnBlockSegmentForPlayer))]
     public async Task<IActionResult> UnBlockSegmentForPlayer([FromBody] UnBlockSegmentForPlayerCommand command)
-        => Ok(await Mediator.Send(command));
+        => Ok(await _segmentService.UnBlockSegmentForPlayer(command.SegmentId, command.PlayerId));
 
     [HttpPost(nameof(BlockSegmentForPlayers))]
     public async Task<IActionResult> BlockSegmentForPlayers(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
     {
         try
         {
-            await Mediator.Send(new BlockSegmentForPlayersCommand(segmentId, formFile));
+            await _segmentService.BlockSegmentForPlayers(segmentId, formFile);
             return Ok(new { results = "File Uploaded Successfully To Database" });
         }
         catch (ValidationException ve)
@@ -145,7 +146,7 @@ public class SegmentController : ApiControllerBase
     {
         try
         {
-            await Mediator.Send(new UnBlockSegmentForPlayersCommand(segmentId, formFile));
+            await _segmentService.UnBlockSegmentForPlayers(segmentId,formFile);
             return Ok(new { results = "File Uploaded Successfully To Database" });
         }
         catch (ValidationException ve)

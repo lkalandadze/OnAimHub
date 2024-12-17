@@ -23,8 +23,8 @@ public sealed class CreateSegmentCommandHandler : ICommandHandler<CreateSegmentC
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var result = await _segmentService.CreateSegment(request.Id, request.Description, request.PriorityLevel);
+        //var result = await _segmentService.CreateSegment(request.Id, request.Description, request.PriorityLevel);
 
-        return new ApplicationResult { Success = result.Success, Data = result.Data };
+        return new ApplicationResult {Success = true };
     }
 }

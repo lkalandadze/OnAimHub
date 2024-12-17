@@ -8,7 +8,6 @@ using OnAim.Admin.Contracts.Dtos.Segment;
 using OnAim.Admin.Contracts.Dtos.Transaction;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.Domain.HubEntities.PlayerEntities;
 using OnAim.Admin.APP.Services.HubServices.Player;
 using OnAim.Admin.Infrasturcture.Interfaces;
@@ -26,7 +25,6 @@ public class PlayerService : IPlayerService
     private readonly IReadOnlyRepository<PlayerLog> _playerLogRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _leaderboardResultRepository;
     private readonly IReadOnlyRepository<PlayerProgress> _playerProgressRepository;
-    private readonly HubApiClientOptions _options;
     private readonly HubClientService _hubClientService;
 
     public PlayerService(
