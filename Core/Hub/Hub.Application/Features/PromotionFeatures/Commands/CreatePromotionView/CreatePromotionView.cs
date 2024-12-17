@@ -8,5 +8,5 @@ namespace Hub.Application.Features.PromotionFeatures.Commands.CreatePromotionVie
 public record CreatePromotionView(
     string Name, 
     string ViewContent, 
-    int PromotionId, 
-    int? TemplateId) : IRequest<Response<CreatePromotionViewResponse>>;
+    int PromotionId,
+    string TemplateId) : IRequest<Response<CreatePromotionViewResponse>>;
