@@ -32,8 +32,6 @@ public class ClaimRewardHandler : IRequestHandler<ClaimRewardCommand>
         var reward = _rewardRepository.Query(r => r.Id == request.RewardId && r.PlayerId == playerId && !r.IsDeleted)
                                       .Include(r => r.Source)
                                       .Include(r => r.Prizes)
-                                      .ThenInclude(p => p.PrizeType)
-                                      .ThenInclude(pt => pt.Coin)
                                       .FirstOrDefault();
 
         if (reward == null)
@@ -51,11 +49,11 @@ public class ClaimRewardHandler : IRequestHandler<ClaimRewardCommand>
 
         foreach (var prize in reward.Prizes)
         {
-            if (prize.PrizeType.Coin != null)
+            if (prize.Coins != null)
             {
                 var transactionType = DetermineTransactionType(reward.Source);
 
-                await _transactionService.CreateTransactionAndApplyBalanceAsync(null, prize.PrizeType.CoinId, prize.Value, AccountType.Casino, AccountType.Player, transactionType, prize.PrizeType.Coin.PromotionId);
+                await _transactionService.CreateTransactionAndApplyBalanceAsync(null, prize.CoinId, prize.Value, AccountType.Casino, AccountType.Player, transactionType, prize.Coins.PromotionId);
             }
         }
 
