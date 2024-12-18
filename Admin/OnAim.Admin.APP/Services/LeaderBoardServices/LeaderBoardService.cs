@@ -7,6 +7,7 @@ using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using MassTransit.Initializers;
 using OnAim.Admin.APP.Services.LeaderBoardServices;
 using OnAim.Admin.Infrasturcture.Interfaces;
+using OnAim.Admin.APP.Services.Hub.Promotion;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 
@@ -16,39 +17,44 @@ public class LeaderBoardService : ILeaderBoardService
     private readonly ILeaderBoardReadOnlyRepository<Prize> _prizeRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecordPrize> _leaderboardRecordPrize;
     private readonly LeaderboardClientService _leaderboardClientService;
+    private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _leaderboardResultRepository;
 
     public LeaderBoardService(
         ILeaderBoardReadOnlyRepository<LeaderboardRecord> leaderboardRecordRepository,
         ILeaderBoardReadOnlyRepository<Prize> prizeRepository,
-        ILeaderBoardReadOnlyRepository<LeaderboardRecordPrize>lLeaderboardRecordPrize,
-        LeaderboardClientService leaderboardClientService
+        ILeaderBoardReadOnlyRepository<LeaderboardRecordPrize> leaderboardRecordPrize,
+        LeaderboardClientService leaderboardClientService,
+        ILeaderBoardReadOnlyRepository<LeaderboardResult> leaderboardResultRepository
         )
     {
         _leaderboardRecordRepository = leaderboardRecordRepository;
         _prizeRepository = prizeRepository;
-        _leaderboardRecordPrize = lLeaderboardRecordPrize;
+        _leaderboardRecordPrize = leaderboardRecordPrize;
         _leaderboardClientService = leaderboardClientService;
+        _leaderboardResultRepository = leaderboardResultRepository;
     }
 
     public async Task<ApplicationResult> GetAllLeaderBoard(LeaderBoardFilter? filter)
     {
-        var leaderboards = _leaderboardRecordRepository.Query();
+        var leaderboards = _leaderboardRecordRepository.Query().Include(x => x.LeaderboardRecordPrizes);
+
+        var prizes = _leaderboardRecordPrize.Query();
 
         if (filter?.LeaderBoardId.HasValue == true)
         {
-            leaderboards = leaderboards.Where(x => x.Id == filter.LeaderBoardId);
+            leaderboards = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<LeaderboardRecord, ICollection<LeaderboardRecordPrize>>)leaderboards.Where(x => x.Id == filter.LeaderBoardId);
         }
         if (!string.IsNullOrEmpty(filter?.Status))
         {
-            leaderboards = leaderboards.Where(x => x.Status.ToString() == filter.Status);
+            leaderboards = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<LeaderboardRecord, ICollection<LeaderboardRecordPrize>>)leaderboards.Where(x => x.Status.ToString() == filter.Status);
         }
         if (filter?.StartDate.HasValue == true)
         {
-            leaderboards = leaderboards.Where(x => x.StartDate >= filter.StartDate);
+            leaderboards = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<LeaderboardRecord, ICollection<LeaderboardRecordPrize>>)leaderboards.Where(x => x.StartDate >= filter.StartDate);
         }
         if (filter?.EndDate.HasValue == true)
         {
-            leaderboards = leaderboards.Where(x => x.EndDate <= filter.EndDate);
+            leaderboards = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<LeaderboardRecord, ICollection<LeaderboardRecordPrize>>)leaderboards.Where(x => x.EndDate <= filter.EndDate);
         }
 
         var totalCount = await leaderboards.CountAsync();
@@ -72,6 +78,12 @@ public class LeaderBoardService : ILeaderBoardService
                StartDate = x.StartDate,
                EndDate = x.EndDate,
                IsGenerated = x.IsGenerated,
+               Prizes = x.LeaderboardRecordPrizes.Select(xx => new Contracts.Dtos.Game.PrizeDto
+               {
+                   Id = xx.Id,
+                   Name = xx.CoinId,
+                   Amount = xx.Amount,
+               }).ToList(),
            })
            .Skip((pageNumber - 1) * pageSize)
            .Take(pageSize);
@@ -96,6 +108,13 @@ public class LeaderBoardService : ILeaderBoardService
 
         var prize = await _leaderboardRecordPrize.Query().Where(x => x.LeaderboardRecordId == leaderboard.Id).ToListAsync();
 
+        var data = _leaderboardResultRepository
+           .Query()
+           .Where(x => x.Id == leaderboard.Id)
+           .Include(x => x.LeaderboardRecord)
+           .ThenInclude(x => x.LeaderboardRecordPrizes)
+           .ToList();
+
         if (leaderboard == null)
             throw new NotFoundException("");
 
@@ -115,6 +134,16 @@ public class LeaderBoardService : ILeaderBoardService
                 StartRank = x.StartRank,
                 CoinId = x.CoinId,
                 EndRank = x.EndRank,
+            }).ToList(),
+            Players = data.Select(x => new PromotionLeaderboardDetailDto
+            {
+                PlayerId = x.PlayerId,
+                UserName = x.PlayerUsername,
+                Segment = null,
+                Place = x.Placement,
+                Score = x.Amount,
+                PrizeType = x.LeaderboardRecord.LeaderboardRecordPrizes.Select(x => x.CoinId).FirstOrDefault(),
+                PrizeValue = x.LeaderboardRecord.LeaderboardRecordPrizes.Select(x => x.Amount).FirstOrDefault(),
             }).ToList(),
         };
 
@@ -222,4 +251,17 @@ public class LeaderBoardService : ILeaderBoardService
             Data = await prizes.ToListAsync(),
         };
     }
+}
+public class LeaderBoardData
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public EventType EventType { get; set; }
+    public DateTimeOffset CreationDate { get; set; }
+    public DateTimeOffset AnnouncementDate { get; set; }
+    public DateTimeOffset StartDate { get; set; }
+    public DateTimeOffset EndDate { get; set; }
+    public List<TemplatePrizeDto> Prizes { get; set; }
+    public List<PromotionLeaderboardDetailDto> Players { get; set; }
 }

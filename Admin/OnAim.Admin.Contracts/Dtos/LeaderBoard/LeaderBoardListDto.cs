@@ -1,4 +1,6 @@
-﻿namespace OnAim.Admin.Contracts.Dtos.LeaderBoard;
+﻿using OnAim.Admin.Contracts.Dtos.Game;
+
+namespace OnAim.Admin.Contracts.Dtos.LeaderBoard;
 
 public class LeaderBoardListDto
 {
@@ -12,7 +14,7 @@ public class LeaderBoardListDto
     public DateTimeOffset EndDate { get; set; }
     public LeaderboardRecordStatus Status { get; set; }
     public bool IsGenerated { get; set; }
-    //public ICollection<PrizeDto> Prizes {  get; set; } 
+    public ICollection<PrizeDto> Prizes { get; set; }
     //public List<PrizeConfigurationsDto> PrizeConfigurations { get; set; }
     //public List<LeaderBoardItemsDto> LeaderBoardItems { get; set; }
 }

@@ -474,8 +474,8 @@ public class PromotionLeaderboardDetailDto
     public string UserName { get; set; }
     public string Segment { get; set; }
     public int Place { set; get; }
-    public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; }
-    public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; }
+    //public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; }
+    //public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; }
     public decimal Score { get; set; }
     public string PrizeType { get; set; }
     public int PrizeValue { get; set; }

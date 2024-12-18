@@ -8,6 +8,7 @@ using MediatR;
 using Shared.IntegrationEvents.IntegrationEvents.Reward.Leaderboard;
 using Hub.Domain.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Hub.Domain.Enum;
 
 namespace Hub.Application.Consumers.Rewards;
 
@@ -15,15 +16,21 @@ public sealed class ReceiveLeaderboardRewardAggregationConsumer : IConsumer<Rece
 {
     private readonly IPlayerBalanceRepository _playerBalanceRepository;
     private readonly ITransactionService _transactionService;
+    private readonly ICoinRepository _coinRepository;
+    private readonly IRewardRepository _rewardRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public ReceiveLeaderboardRewardAggregationConsumer(
         IPlayerBalanceRepository playerBalanceRepository,
         ITransactionService transactionService,
+        ICoinRepository coinRepository,
+        IRewardRepository rewardRepository,
         IUnitOfWork unitOfWork)
     {
         _playerBalanceRepository = playerBalanceRepository;
         _transactionService = transactionService;
+        _coinRepository = coinRepository;
+        _rewardRepository = rewardRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -44,30 +51,53 @@ public sealed class ReceiveLeaderboardRewardAggregationConsumer : IConsumer<Rece
 
         foreach (var reward in groupedRewards)
         {
-            var playerBalance = await _playerBalanceRepository.Query()
-                .FirstOrDefaultAsync(pb => pb.PlayerId == reward.PlayerId && pb.CoinId == reward.CoinId, context.CancellationToken);
+            var coin = await _coinRepository.Query()
+                .FirstOrDefaultAsync(x => x.Id == reward.CoinId, context.CancellationToken);
 
-            if (playerBalance != null)
+            if (coin.CoinType == CoinType.Asset)
             {
-                var newAmount = playerBalance.Amount + reward.TotalAmount;
-                playerBalance.SetAmount(newAmount);
-                _playerBalanceRepository.Update(playerBalance);
+                var rewardPrizes = new List<RewardPrize>
+                {
+                    new RewardPrize((int)reward.TotalAmount, reward.CoinId)
+                };
+
+                var playerReward = new Reward(
+                    isClaimableByPlayer: false,
+                    playerId: reward.PlayerId,
+                    sourceId: reward.PromotionId,
+                    expirationDate: DateTime.UtcNow.AddDays(30),
+                    prizes: rewardPrizes
+                );
+
+                await _rewardRepository.InsertAsync(playerReward);
             }
             else
             {
-                playerBalance = new PlayerBalance(reward.TotalAmount, reward.PlayerId, reward.CoinId, reward.PromotionId);
-                await _playerBalanceRepository.InsertAsync(playerBalance);
-            }
+                var playerBalance = await _playerBalanceRepository.Query()
+                    .FirstOrDefaultAsync(pb => pb.PlayerId == reward.PlayerId && pb.CoinId == reward.CoinId, context.CancellationToken);
 
-            await _transactionService.CreateLeaderboardTransactionAndApplyBalanceAsync(
-                null,
-                reward.CoinId,
-                reward.TotalAmount,
-                AccountType.Leaderboard,
-                AccountType.Player,
-                TransactionType.Reward,
-                reward.PromotionId,
-                reward.PlayerId);
+                if (playerBalance != null)
+                {
+                    var newAmount = playerBalance.Amount + reward.TotalAmount;
+                    playerBalance.SetAmount(newAmount);
+                    _playerBalanceRepository.Update(playerBalance);
+                }
+                else
+                {
+                    playerBalance = new PlayerBalance(reward.TotalAmount, reward.PlayerId, reward.CoinId, reward.PromotionId);
+                    await _playerBalanceRepository.InsertAsync(playerBalance);
+                }
+
+                await _transactionService.CreateLeaderboardTransactionAndApplyBalanceAsync(
+                    null,
+                    reward.CoinId,
+                    reward.TotalAmount,
+                    AccountType.Leaderboard,
+                    AccountType.Player,
+                    TransactionType.Reward,
+                    reward.PromotionId,
+                    reward.PlayerId);
+            }
         }
 
         await _unitOfWork.SaveAsync();
