@@ -11,7 +11,7 @@ public class GameBaseDtoModel
     public bool Status { get; set; }
     public string Description { get; set; }
     public int ConfigurationCount { get; set; }
-    public IEnumerable<string> Segments { get; set; }
+    public IEnumerable<int> PromotionIds { get; set; }
 
     public static GameBaseDtoModel MapFrom(GameModel model, GameShortInfoGetModel game)
     {
@@ -22,7 +22,7 @@ public class GameBaseDtoModel
             Status = game.Status,
             Description = game.Description,
             ConfigurationCount = game.ConfigurationCount,
-            Segments = game.Segments,
+            PromotionIds = game.PromotionIds,
         };
     }
 }

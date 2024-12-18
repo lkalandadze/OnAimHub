@@ -90,7 +90,6 @@ public class AdminController : BaseApiController
         var query = new GetAllGameQuery(false)
         {
             Name = model.Name,
-            SegmentIds = model.SegmentIds,
             PromotionId = model.PromotionId,
         };
 

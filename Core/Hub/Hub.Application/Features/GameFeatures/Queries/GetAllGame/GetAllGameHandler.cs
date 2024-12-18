@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
 using Shared.Lib.Extensions;
+using System.Linq;
 
 namespace Hub.Application.Features.GameFeatures.Queries.GetAllGame;
 
@@ -41,20 +42,7 @@ public class GetAllGameHandler : IRequestHandler<GetAllGameQuery, GetAllGameResp
                 throw new ApiException(ApiExceptionCodeTypes.ExternalServiceError, $"Failed to retrieve info of {game.Name} game.");
             }
 
-            if (request.PromotionId != null && !gameInfo.PromotionIds.Any(pi => pi == request.PromotionId))
-            {
-                continue;
-            }
-
             allGame.Add(GameBaseDtoModel.MapFrom(game, gameInfo));
-        }
-
-        if (request.IsAuthorized)
-        {
-            var playerSegments = _authService.GetCurrentPlayerSegments();
-
-            allGame = allGame.Where(game => game.Segments.Any(segment => playerSegments.Contains(segment)))
-                             .ToList();
         }
 
         #region Filters
@@ -66,9 +54,9 @@ public class GetAllGameHandler : IRequestHandler<GetAllGameQuery, GetAllGameResp
             allGame = allGame.Where(g => g.Name.Contains(request.Name)).ToList();
         }
 
-        if (request.SegmentIds != null && request.SegmentIds.Any())
+        if (request.PromotionId != null)
         {
-            allGame = allGame.Where(g => g.Segments.Any(segmentId => request.SegmentIds.Contains(segmentId))).ToList();
+             allGame = allGame.Where(g => g.PromotionIds.Any(pi => pi == request.PromotionId)).ToList();
         }
 
         #endregion
