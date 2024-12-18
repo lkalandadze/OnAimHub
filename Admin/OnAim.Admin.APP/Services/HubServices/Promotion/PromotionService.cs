@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using OnAim.Admin.APP.Services.FileServices;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
@@ -13,6 +14,7 @@ using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Infrasturcture;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
+using System.Text.Json;
 
 namespace OnAim.Admin.APP.Services.Hub.Promotion;
 
@@ -25,6 +27,7 @@ public class PromotionService : IPromotionService
     private readonly IReadOnlyRepository<Domain.HubEntities.PlayerEntities.Player> _playerRepository;
     private readonly IReadOnlyRepository<Transaction> _transactionRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecord> _leaderboardRecordRepository;
+    private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _leaderboardResultRepository;
 
     public PromotionService(
         IPromotionRepository<Domain.HubEntities.Promotion> promotionRepository,
@@ -33,7 +36,8 @@ public class PromotionService : IPromotionService
         SagaClient sagaClient,
         IReadOnlyRepository<Domain.HubEntities.PlayerEntities.Player> _playerRepository,
         IReadOnlyRepository<Transaction> transactionRepository,
-        ILeaderBoardReadOnlyRepository<LeaderboardRecord> leaderboardRecordRepository
+        ILeaderBoardReadOnlyRepository<LeaderboardRecord> leaderboardRecordRepository,
+        ILeaderBoardReadOnlyRepository<LeaderboardResult> leaderboardResultRepository
         )
     {
         _promotionRepository = promotionRepository;
@@ -43,6 +47,7 @@ public class PromotionService : IPromotionService
         this._playerRepository = _playerRepository;
         _transactionRepository = transactionRepository;
         _leaderboardRecordRepository = leaderboardRecordRepository;
+        _leaderboardResultRepository = leaderboardResultRepository;
     }
 
     public async Task<ApplicationResult> GetAllPromotions(PromotionFilter filter)
@@ -320,23 +325,25 @@ public class PromotionService : IPromotionService
 
     public async Task<ApplicationResult> GetPromotionLeaderboardDetails(int leaderboardId, BaseFilter filter)
     {
-        var data = await _leaderboardRecordRepository
+        var data = _leaderboardResultRepository
             .Query()
-            .Include(x => x.LeaderboardSchedule)
-            .Include(x => x.LeaderboardProgresses)
-            .FirstOrDefaultAsync(x => x.Id == leaderboardId);
+            .Where(x => x.Id == leaderboardId)
+            .Include(x => x.LeaderboardRecord)
+            .ThenInclude(x => x.LeaderboardRecordPrizes)
+            .ToList();
 
-        var item = new PromotionLeaderboardDetailDto
+        var item = data.Select(x => new PromotionLeaderboardDetailDto
         {
-            PlayerId = data.LeaderboardProgresses.Select(x => x.PlayerId).FirstOrDefault(),
+            PlayerId = x.PlayerId,
+            UserName = x.PlayerUsername,
             Segment = null,
-            Place = 0,
-            Score = 0,
-            //PrizeType = data.LeaderboardRecordPrizes.Select(x => new ),
-            PrizeValue = null,
-        };
+            Place = x.Placement,
+            Score = x.Amount,
+            PrizeType = x.LeaderboardRecord.LeaderboardRecordPrizes.Select(x => x.CoinId).FirstOrDefault(),
+            PrizeValue = x.LeaderboardRecord.LeaderboardRecordPrizes.Select(x => x.Amount).FirstOrDefault(),
+        });
 
-        return new ApplicationResult { Data = data };
+        return new ApplicationResult { Data = item };
     }
 
     public async Task<ApplicationResult> GetPromotionById(int id)
@@ -388,12 +395,25 @@ public class PromotionService : IPromotionService
         {
             var hhub = new HubClient();
 
-            var data = await hhub.PostAsJsonAndSerializeResultTo<object>("HubApi/Admin/CreatePromotionView", create);
-            return new ApplicationResult { Success = true, Data = data };
+            var data = await hhub.PostAsJsonAndSerializeResultTo<Dictionary<string, object>>("HubApi/Admin/CreatePromotionView", create);
+
+            if (data != null && data.TryGetValue("data", out var innerData))
+            {
+                if (innerData is JObject jObject)
+                {
+                    var viewUrl = jObject["viewUrl"]?.ToString();
+                    if (!string.IsNullOrEmpty(viewUrl))
+                    {
+                        return new ApplicationResult { Success = true, Data = viewUrl };
+                    }
+                }
+            }
+
+            return new ApplicationResult { Success = false, Data = "viewUrl not found in the response data" };
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message, ex);
+            throw new Exception("An error occurred while creating the promotion view: " + ex.Message, ex);
         }
     }
 
@@ -459,8 +479,8 @@ public class PromotionLeaderboardDetailDto
     public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; }
     public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; }
     public decimal Score { get; set; }
-    public PrizeType PrizeType { get; set; }
-    public string PrizeValue { get; set; }
+    public string PrizeType { get; set; }
+    public int PrizeValue { get; set; }
 }
 public class PromotionGameDto
 {
