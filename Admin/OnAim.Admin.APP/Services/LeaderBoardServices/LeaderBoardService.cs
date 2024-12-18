@@ -14,7 +14,7 @@ public class LeaderBoardService : ILeaderBoardService
 {
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecord> _leaderboardRecordRepository;
     private readonly ILeaderBoardReadOnlyRepository<Prize> _prizeRepository;
-    private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecordPrize> _lLeaderboardRecordPrize;
+    private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecordPrize> _leaderboardRecordPrize;
     private readonly LeaderboardClientService _leaderboardClientService;
 
     public LeaderBoardService(
@@ -26,7 +26,7 @@ public class LeaderBoardService : ILeaderBoardService
     {
         _leaderboardRecordRepository = leaderboardRecordRepository;
         _prizeRepository = prizeRepository;
-        _lLeaderboardRecordPrize = lLeaderboardRecordPrize;
+        _leaderboardRecordPrize = lLeaderboardRecordPrize;
         _leaderboardClientService = leaderboardClientService;
     }
 
@@ -94,7 +94,7 @@ public class LeaderBoardService : ILeaderBoardService
         var leaderboard = await _leaderboardRecordRepository.Query(x => x.Id == id)
             .FirstOrDefaultAsync();
 
-        var prize = await _lLeaderboardRecordPrize.Query().Where(x => x.LeaderboardRecordId == leaderboard.Id).ToListAsync();
+        var prize = await _leaderboardRecordPrize.Query().Where(x => x.LeaderboardRecordId == leaderboard.Id).ToListAsync();
 
         if (leaderboard == null)
             throw new NotFoundException("");

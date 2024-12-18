@@ -9,12 +9,10 @@ using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Domain.HubEntities.Enum;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Infrasturcture;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
-using System.Text.Json;
 
 namespace OnAim.Admin.APP.Services.Hub.Promotion;
 
@@ -34,7 +32,7 @@ public class PromotionService : IPromotionService
         IPromotionRepository<Domain.HubEntities.Coin.Coin> coinRepo,
         HubClientService hubClientService,
         SagaClient sagaClient,
-        IReadOnlyRepository<Domain.HubEntities.PlayerEntities.Player> _playerRepository,
+        IReadOnlyRepository<Domain.HubEntities.PlayerEntities.Player> playerRepository,
         IReadOnlyRepository<Transaction> transactionRepository,
         ILeaderBoardReadOnlyRepository<LeaderboardRecord> leaderboardRecordRepository,
         ILeaderBoardReadOnlyRepository<LeaderboardResult> leaderboardResultRepository
@@ -44,7 +42,7 @@ public class PromotionService : IPromotionService
         _coinRepo = coinRepo;
         _hubClientService = hubClientService;
         _sagaClient = sagaClient;
-        this._playerRepository = _playerRepository;
+        _playerRepository = playerRepository;
         _transactionRepository = transactionRepository;
         _leaderboardRecordRepository = leaderboardRecordRepository;
         _leaderboardResultRepository = leaderboardResultRepository;
