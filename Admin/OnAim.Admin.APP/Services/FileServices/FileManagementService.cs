@@ -111,7 +111,7 @@ public class HubClient
     {
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri("https://localhost:7069/")
+            BaseAddress = new Uri("http://192.168.10.42:8003/")
         };
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }

@@ -1706,8 +1706,7 @@
             "format": "int32"
           },
           "templateId": {
-            "type": "integer",
-            "format": "int32",
+            "type": "string",
             "nullable": true
           }
         },
@@ -1730,6 +1729,9 @@
       "CreateRewardCommand": {
         "type": "object",
         "properties": {
+          "isClaimableByPlayer": {
+            "type": "boolean"
+          },
           "playerId": {
             "type": "integer",
             "format": "int32"
