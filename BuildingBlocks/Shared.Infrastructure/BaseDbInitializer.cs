@@ -60,10 +60,10 @@ public abstract class BaseDbInitializer
 
                             if (idProperty != null && idProperty.PropertyType == typeof(string))
                             {
-                                ObjectHelper.SetProperty(dbEnumInstance, idProperty, enumInstanceName);
+                                ReflectionHelper.SetProperty(dbEnumInstance, idProperty, enumInstanceName);
                             }
 
-                            ObjectHelper.SetProperty(dbEnumInstance, nameof(DbEnum<object>.Name), enumInstanceName);
+                            ReflectionHelper.SetProperty(dbEnumInstance, nameof(DbEnum<object>.Name), enumInstanceName);
 
                             var addMethod = dbSet.GetType().GetMethod("Add");
                             addMethod!.Invoke(dbSet, new[] { dbEnumInstance });

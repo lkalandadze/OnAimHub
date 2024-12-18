@@ -17,11 +17,11 @@ public abstract class SharedGameConfigDbContext<T> : SharedGameConfigDbContext w
 
     }
 
-    public DbSet<Coin> Coins { get; set; }
     public DbSet<T> GameConfigurations { get; set; }
     public DbSet<Price> Prices { get; set; }
-    public DbSet<PrizeType> PrizeTypes { get; set; }
     public DbSet<GameSetting> GameSettings { get; set; }
+    //public DbSet<PrizeType> PrizeTypes { get; set; }
+    //public DbSet<Coin> Coins { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

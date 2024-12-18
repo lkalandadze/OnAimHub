@@ -4,6 +4,6 @@ using GameLib.Infrastructure.DataAccess;
 
 namespace GameLib.Infrastructure.Repositories;
 
-public class PrizeTypeRepository(SharedGameConfigDbContext context) : BaseRepository<SharedGameConfigDbContext, PrizeType>(context), IPrizeTypeRepository
-{
-}
+//public class PrizeTypeRepository(SharedGameConfigDbContext context) : BaseRepository<SharedGameConfigDbContext, PrizeType>(context), IPrizeTypeRepository
+//{
+//}

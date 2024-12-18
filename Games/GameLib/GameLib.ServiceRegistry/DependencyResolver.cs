@@ -59,9 +59,9 @@ public static class DependencyResolver
         services.AddHttpClient();
         services.AddSingleton<IAuthService, AuthService>();
         services.AddScoped<IHubService, HubService>();
-        services.AddScoped<ICoinRepository, CoinRepository>();
+        //services.AddScoped<ICoinRepository, CoinRepository>();
         services.AddScoped<IPriceRepository, PriceRepository>();
-        services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
+        //services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
         services.AddScoped<IGameConfigurationRepository, GameConfigurationRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
         services.AddScoped<ISettingRepository, GameSettingRepository<TGameConfiguration>>();
@@ -70,7 +70,7 @@ public static class DependencyResolver
         services.AddScoped<IConsulClient, ConsulClient>();
         services.AddScoped<IConsulGameService, ConsulGameService>();
         services.AddScoped<IGameConfigurationService, GameConfigurationService>();
-        services.AddScoped<IPrizeTypeService, PrizeTypeService>();
+        //services.AddScoped<IPrizeTypeService, PrizeTypeService>();
         services.AddScoped<IGameService, GameService>();
 
         services.Configure<GameInfoConfiguration>(configuration.GetSection("GameInfoConfiguration"));

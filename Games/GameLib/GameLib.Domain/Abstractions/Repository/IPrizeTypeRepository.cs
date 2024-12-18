@@ -2,6 +2,6 @@
 
 namespace GameLib.Domain.Abstractions.Repository;
 
-public interface IPrizeTypeRepository : IBaseRepository<PrizeType>
-{
-}
+//public interface IPrizeTypeRepository : IBaseRepository<PrizeType>
+//{
+//}

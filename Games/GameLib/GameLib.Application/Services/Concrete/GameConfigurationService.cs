@@ -7,6 +7,7 @@ using GameLib.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
+using Shared.Lib.Helpers;
 using Shared.Lib.Wrappers;
 
 namespace GameLib.Application.Services.Concrete;
@@ -15,20 +16,17 @@ public class GameConfigurationService : IGameConfigurationService
 {
     private readonly IGameConfigurationRepository _configurationRepository;
     private readonly IPriceRepository _priceRepository;
-    private readonly ICoinRepository _coinRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly EntityGenerator _entityGenerator;
 
     public GameConfigurationService(
         IGameConfigurationRepository configurationRepository,
         IPriceRepository priceRepository,
-        ICoinRepository coinRepository,
         IUnitOfWork unitOfWork,
         EntityGenerator entityGenerator)
     {
         _configurationRepository = configurationRepository;
         _priceRepository = priceRepository;
-        _coinRepository = coinRepository;
         _unitOfWork = unitOfWork;
         _entityGenerator = entityGenerator;
     }
@@ -67,6 +65,11 @@ public class GameConfigurationService : IGameConfigurationService
 
         try
         {
+            ReflectionHelper.ReplacePropertyValuesDynamic(
+                configuration,
+                nameof(BasePrize.CoinId),
+                (string coinId) => $"{configuration.PromotionId}_{coinId}");
+
             _configurationRepository.InsertConfigurationTree(configuration);
             await _unitOfWork.SaveAsync();
         }
@@ -84,12 +87,13 @@ public class GameConfigurationService : IGameConfigurationService
             throw new CheckmateException(CheckmateValidations.Checkmate.GetFailedChecks(configuration, true));
         }
 
-        
         try
         {
-            var price = configuration.Prices.FirstOrDefault()!;
-            await _coinRepository.InsertAsync(new Coin() { Id = $"{configuration.Id}_{price.CoinId}", Name = price.CoinId });
-       
+            ReflectionHelper.ReplacePropertyValuesDynamic(
+                configuration,
+                nameof(BasePrize.CoinId),
+                (string coinId) => $"{configuration.PromotionId}_{coinId}");
+
             await _configurationRepository.UpdateConfigurationTreeAsync(configuration);
             await _unitOfWork.SaveAsync();
         }

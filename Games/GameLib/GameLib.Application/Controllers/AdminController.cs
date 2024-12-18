@@ -14,13 +14,13 @@ public class AdminController : BaseApiController
 {
     private readonly IGameService _gameService;
     private readonly IGameConfigurationService _configurationService;
-    private readonly IPrizeTypeService _prizeTypeService;
+    //private readonly IPrizeTypeService _prizeTypeService;
 
-    public AdminController(IGameService gameService, IGameConfigurationService configurationService, IPrizeTypeService prizeTypeService)
+    public AdminController(IGameService gameService, IGameConfigurationService configurationService/*, IPrizeTypeService prizeTypeService*/)
     {
         _gameService = gameService;
         _configurationService = configurationService;
-        _prizeTypeService = prizeTypeService;
+        //_prizeTypeService = prizeTypeService;
     }
 
     #region Game
@@ -108,31 +108,31 @@ public class AdminController : BaseApiController
 
     #region PrizeType
 
-    [HttpGet(nameof(PrizeTypes))]
-    public async Task<ActionResult<IEnumerable<PrizeTypeGetModel>>> PrizeTypes()
-    {
-        return Ok(await _prizeTypeService.GetAllAsync());
-    }
+    //[HttpGet(nameof(PrizeTypes))]
+    //public async Task<ActionResult<IEnumerable<PrizeTypeGetModel>>> PrizeTypes()
+    //{
+    //    return Ok(await _prizeTypeService.GetAllAsync());
+    //}
 
-    [HttpGet(nameof(PrizeTypeById))]
-    public async Task<ActionResult<PrizeTypeGetModel>> PrizeTypeById(int id)
-    {
-        return Ok(await _prizeTypeService.GetByIdAsync(id));
-    }
+    //[HttpGet(nameof(PrizeTypeById))]
+    //public async Task<ActionResult<PrizeTypeGetModel>> PrizeTypeById(int id)
+    //{
+    //    return Ok(await _prizeTypeService.GetByIdAsync(id));
+    //}
 
-    [HttpPost(nameof(CreatePrizeType))]
-    public async Task<ActionResult> CreatePrizeType([FromBody] PrizeTypeCreateModel model)
-    {
-        await _prizeTypeService.CreateAsync(model);
-        return StatusCode(201);
-    }
+    //[HttpPost(nameof(CreatePrizeType))]
+    //public async Task<ActionResult> CreatePrizeType([FromBody] PrizeTypeCreateModel model)
+    //{
+    //    await _prizeTypeService.CreateAsync(model);
+    //    return StatusCode(201);
+    //}
 
-    [HttpPut(nameof(UpdatePrizeType))]
-    public async Task<ActionResult> UpdatePrizeType([FromRoute] int id, [FromBody] PrizeTypeUpdateModel model)
-    {
-        await _prizeTypeService.UpdateAsync(id, model);
-        return StatusCode(200);
-    }
+    //[HttpPut(nameof(UpdatePrizeType))]
+    //public async Task<ActionResult> UpdatePrizeType([FromRoute] int id, [FromBody] PrizeTypeUpdateModel model)
+    //{
+    //    await _prizeTypeService.UpdateAsync(id, model);
+    //    return StatusCode(200);
+    //}
 
     #endregion
 }

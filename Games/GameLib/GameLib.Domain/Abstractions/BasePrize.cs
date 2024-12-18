@@ -12,11 +12,11 @@ public abstract class BasePrize : BaseEntity<int>
 {
     public int Value { get; set; }
     public int Probability { get; set; }
-
-    public PrizeType PrizeType { get; set; }
-    public int PrizeTypeId { get; set; }
-
+    public string CoinId { get; set; }
     public int PrizeGroupId { get; set; }
+
+    //public PrizeType PrizeType { get; set; }
+    //public int PrizeTypeId { get; set; }
 }
 
 public abstract class BasePrize<TPrizeGroup> : BasePrize

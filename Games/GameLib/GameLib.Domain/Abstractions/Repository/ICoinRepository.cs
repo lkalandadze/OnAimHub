@@ -2,6 +2,6 @@
 
 namespace GameLib.Domain.Abstractions.Repository;
 
-public interface ICoinRepository : IBaseRepository<Coin>
-{
-}
+//public interface ICoinRepository : IBaseRepository<Coin>
+//{
+//}

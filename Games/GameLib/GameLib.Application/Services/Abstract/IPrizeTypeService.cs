@@ -3,13 +3,13 @@ using Shared.Lib.Wrappers;
 
 namespace GameLib.Application.Services.Abstract;
 
-public interface IPrizeTypeService
-{
-    Task<Response<IEnumerable<PrizeTypeGetModel>>> GetAllAsync();
+//public interface IPrizeTypeService
+//{
+//    Task<Response<IEnumerable<PrizeTypeGetModel>>> GetAllAsync();
 
-    Task<Response<PrizeTypeGetModel>> GetByIdAsync(int id);
+//    Task<Response<PrizeTypeGetModel>> GetByIdAsync(int id);
 
-    Task CreateAsync(PrizeTypeCreateModel model);
+//    Task CreateAsync(PrizeTypeCreateModel model);
 
-    Task UpdateAsync(int id, PrizeTypeUpdateModel model);
-}
+//    Task UpdateAsync(int id, PrizeTypeUpdateModel model);
+//}
