@@ -91,6 +91,7 @@ public class AdminController : BaseApiController
         {
             Name = model.Name,
             SegmentIds = model.SegmentIds,
+            PromotionId = model.PromotionId,
         };
 
         return Ok(await Mediator.Send(query));
