@@ -327,11 +327,16 @@ public class PromotionService : IPromotionService
             .Query()
             .Where(x => x.Id == leaderboardId)
             .Include(x => x.LeaderboardRecord)
-            .ThenInclude(x => x.LeaderboardRecordPrizes)
-            .ToList();
+            .ThenInclude(x => x.LeaderboardRecordPrizes);
 
-        var item = data.Select(x => new PromotionLeaderboardDetailDto
+        var totalCount = await data.CountAsync();
+
+        var pageNumber = filter.PageNumber ?? 1;
+        var pageSize = filter.PageSize ?? 25;
+
+        var items = data.Select(x => new PromotionLeaderboardDetailDto
         {
+            Id = x.Id,
             PlayerId = x.PlayerId,
             UserName = x.PlayerUsername,
             Segment = null,
@@ -339,9 +344,22 @@ public class PromotionService : IPromotionService
             Score = x.Amount,
             PrizeType = x.LeaderboardRecord.LeaderboardRecordPrizes.Select(x => x.CoinId).FirstOrDefault(),
             PrizeValue = x.LeaderboardRecord.LeaderboardRecordPrizes.Select(x => x.Amount).FirstOrDefault(),
-        });
+        })
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize);
 
-        return new ApplicationResult { Data = item };
+        return new ApplicationResult
+        {
+            Success = true,
+            Data = new PaginatedResult<PromotionLeaderboardDetailDto>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = await items.ToListAsync(),
+                SortableFields = new List<string>(),
+            },
+        };
     }
 
     public async Task<ApplicationResult> GetPromotionById(int id)

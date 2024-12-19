@@ -15,7 +15,6 @@ WORKDIR /src
 COPY ["Admin/OnAim.Admin.API/OnAim.Admin.API.csproj", "Admin/OnAim.Admin.API/"]
 COPY ["Admin/OnAim.Admin.APP/OnAim.Admin.APP.csproj", "Admin/OnAim.Admin.APP/"]
 COPY ["BuildingBlocks/Shared.Application/Shared.Application.csproj", "BuildingBlocks/Shared.Application/"]
-COPY ["Helpers/Lib/CheckMate/Checkmate.csproj", "Helpers/Lib/CheckMate/"]
 COPY ["BuildingBlocks/Shared.Domain/Shared.Domain.csproj", "BuildingBlocks/Shared.Domain/"]
 COPY ["BuildingBlocks/Shared.Lib/Shared.Lib.csproj", "BuildingBlocks/Shared.Lib/"]
 COPY ["Helpers/Lib/OnAim.Lib.EntityExtension.GlobalAttributes/OnAim.Lib.EntityExtension.GlobalAttributes.csproj", "Helpers/Lib/OnAim.Lib.EntityExtension.GlobalAttributes/"]
@@ -23,8 +22,8 @@ COPY ["BuildingBlocks/Shared.Infrastructure/Shared.Infrastructure.csproj", "Buil
 COPY ["BuildingBlocks/Shared.IntegrationEvents/Shared.IntegrationEvents.csproj", "BuildingBlocks/Shared.IntegrationEvents/"]
 COPY ["Admin/OnAim.Admin.CrossCuttingConcerns/OnAim.Admin.CrossCuttingConcerns.csproj", "Admin/OnAim.Admin.CrossCuttingConcerns/"]
 COPY ["Admin/OnAim.Admin.Contracts/OnAim.Admin.Contracts.csproj", "Admin/OnAim.Admin.Contracts/"]
-COPY ["Admin/OnAim.Admin.Domain/OnAim.Admin.Domain.csproj", "Admin/OnAim.Admin.Domain/"]
 COPY ["Admin/OnAim.Admin.Infrasturcture/OnAim.Admin.Infrasturcture.csproj", "Admin/OnAim.Admin.Infrasturcture/"]
+COPY ["Admin/OnAim.Admin.Domain/OnAim.Admin.Domain.csproj", "Admin/OnAim.Admin.Domain/"]
 RUN dotnet restore "./Admin/OnAim.Admin.API/OnAim.Admin.API.csproj"
 COPY . .
 WORKDIR "/src/Admin/OnAim.Admin.API"
