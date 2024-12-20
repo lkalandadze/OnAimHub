@@ -1,4 +1,5 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
+﻿using OnAim.Admin.APP.Services.Hub.Player;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Player;
 
 namespace OnAim.Admin.APP.Services.HubServices.Player;
@@ -12,7 +13,7 @@ public interface IPlayerService
     Task<ApplicationResult> GetById(int id);
     Task<ApplicationResult> GetBalance(int id);
 
-    Task<ApplicationResult> AddBalanceToPlayer(AddBalanceCommand command);
+    Task<ApplicationResult> AddBalanceToPlayer(AddBalanceDto command);
     Task<ApplicationResult> GetBannedPlayer(int id);
     Task<ApplicationResult> GetAllBannedPlayers();
     Task<ApplicationResult> GetLeaderBoardResultByPlayer(int playerId);

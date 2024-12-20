@@ -11,11 +11,15 @@ using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.HubEntities.PlayerEntities;
 using OnAim.Admin.APP.Services.HubServices.Player;
 using OnAim.Admin.Infrasturcture.Interfaces;
+using Microsoft.Extensions.Options;
+using OnAim.Admin.APP.Services.Hub.ClientServices;
 
 namespace OnAim.Admin.APP.Services.Hub.Player;
 
 public class PlayerService : IPlayerService
 {
+    private readonly IHubApiClient _hubApiClient;
+    private readonly HubApiClientOptions _options;
     private readonly IReadOnlyRepository<Domain.HubEntities.PlayerEntities.Player> _playerRepository;
     private readonly IReadOnlyRepository<PlayerBalance> _playerBalanceRepository;
     private readonly IReadOnlyRepository<PlayerBan> _playerBanRepository;
@@ -25,9 +29,10 @@ public class PlayerService : IPlayerService
     private readonly IReadOnlyRepository<PlayerLog> _playerLogRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _leaderboardResultRepository;
     private readonly IReadOnlyRepository<PlayerProgress> _playerProgressRepository;
-    private readonly HubClientService _hubClientService;
 
     public PlayerService(
+        IHubApiClient hubApiClient,
+        IOptions<HubApiClientOptions> options,
         IReadOnlyRepository<Domain.HubEntities.PlayerEntities.Player> playerRepository,
         IReadOnlyRepository<PlayerBalance> playerBalanceRepository,
         IReadOnlyRepository<PlayerBan> playerBanRepository,
@@ -36,10 +41,11 @@ public class PlayerService : IPlayerService
         IReadOnlyRepository<PlayerBalance> playerBalanaceRepository,
         IReadOnlyRepository<PlayerLog> playerLogRepository,
         ILeaderBoardReadOnlyRepository<LeaderboardResult> leaderboardResultRepository,
-        IReadOnlyRepository<PlayerProgress> playerProgressRepository,
-        HubClientService hubClientService
+        IReadOnlyRepository<PlayerProgress> playerProgressRepository
         )
     {
+        _hubApiClient = hubApiClient;
+        _options = options.Value;
         _playerRepository = playerRepository;
         _playerBalanceRepository = playerBalanceRepository;
         _playerBanRepository = playerBanRepository;
@@ -49,66 +55,62 @@ public class PlayerService : IPlayerService
         _playerLogRepository = playerLogRepository;
         _leaderboardResultRepository = leaderboardResultRepository;
         _playerProgressRepository = playerProgressRepository;
-        _hubClientService = hubClientService;
     }
 
     public async Task<ApplicationResult> BanPlayer(int playerId, DateTimeOffset? expireDate, bool isPermanent, string description)
     {
-        var request = new CreatePlayerBanCommand
+        var request = new
         {
             PlayerId = playerId,
             ExpireDate = expireDate,
-            Description = description,
-            IsPermanent = isPermanent
+            IsPermanent = isPermanent,
+            Description = description
         };
 
-        try
+        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/BanPlayer", request);
+
+        if (result.IsSuccessStatusCode)
         {
-            await _hubClientService.BanPlayerAsync(request);
             return new ApplicationResult { Success = true };
         }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
+
+        throw new BadRequestException("Failed to Ban player");
     }
 
     public async Task<ApplicationResult> RevokeBan(int id)
     {
-        var request = new RevokePlayerBanCommand
+        var request = new
         {
             Id = id
         };
 
-        try
+        var result = await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/RevokePlayerBan", request);
+
+        if (result.IsSuccessStatusCode)
         {
-            await _hubClientService.RevokePlayerBanAsync(request);
             return new ApplicationResult { Success = true };
         }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
+
+        throw new BadRequestException("Failed to revoke ban!");
     }
 
     public async Task<ApplicationResult> UpdateBan(int id, DateTimeOffset? expireDate, bool isPermanent, string description)
     {
-        var request = new UpdatePlayerBanCommand
+        var request = new
         {
             Id = id,
             ExpireDate = expireDate,
             IsPermanent = isPermanent,
             Description = description
         };
-        try
+        var result = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/UpdateBannedPlayer", request);
+
+        if (result.IsSuccessStatusCode)
         {
-            await _hubClientService.UpdateBannedPlayerAsync(request);
             return new ApplicationResult { Success = true };
         }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message, ex);
-        }
+
+        throw new BadRequestException("Failed to update ban!");
     }
 
     public async Task<ApplicationResult> GetAll(PlayerFilter filter)
@@ -276,11 +278,11 @@ public class PlayerService : IPlayerService
         };
     }
 
-    public async Task<ApplicationResult> AddBalanceToPlayer(AddBalanceCommand command)
+    public async Task<ApplicationResult> AddBalanceToPlayer(AddBalanceDto command)
     {
         try
         {
-            await _hubClientService.AddBalanceToPlayerAsync(command);
+            await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/AddBalanceToPlayer", command);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -354,4 +356,10 @@ public class PlayerService : IPlayerService
             Data = result
         };
     }
+}
+public class AddBalanceDto
+{
+    public int PlayerId { get; set; }
+    public string CoinId { get; set; }
+    public int Amount { get; set; }
 }

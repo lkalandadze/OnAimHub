@@ -11,13 +11,13 @@ public interface ISegmentService
     Task<ApplicationResult> AssignSegmentToPlayer(string segmentId, int playerId);
     Task<ApplicationResult> BlockSegmentForPlayers(IEnumerable<string> segmentId, IFormFile file);
     Task<ApplicationResult> BlockSegmentForPlayer(string segmentId, int playerId);
-    Task<ApplicationResult> CreateSegment(CreateSegmentCommand create);
+    Task<ApplicationResult> CreateSegment(string id, string description, int priorityLevel);
     Task<ApplicationResult> DeleteSegment(string id);
     Task<ApplicationResult> UnAssignPlayersToSegment(IEnumerable<string> segmentId, IFormFile file);
     Task<ApplicationResult> UnAssignSegmentForPlayer(string segmentId, int playerId);
     Task<ApplicationResult> UnBlockSegmentForPlayer(string segmentId, int playerId);
     Task<ApplicationResult> UnBlockSegmentForPlayers(IEnumerable<string> segmentId, IFormFile file);
-    Task<ApplicationResult> UpdateSegment(UpdateSegmentCommand update);
+    Task<ApplicationResult> UpdateSegment(string id, string description, int priorityLevel);
     Task<ApplicationResult> GetAll(int? pageNumber, int? pageSize);
     Task<ApplicationResult> GetById(string id);
     Task<ApplicationResult> GetActivePlayers(string segmentId, FilterBy filter);

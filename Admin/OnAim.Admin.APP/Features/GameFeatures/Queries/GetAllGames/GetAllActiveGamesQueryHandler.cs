@@ -16,7 +16,7 @@ public class GetAllActiveGamesQueryHandler : IQueryHandler<GetAllActiveGamesQuer
     public async Task<ApplicationResult> Handle(GetAllActiveGamesQuery request, CancellationToken cancellationToken)
     {
 
-        var result = await _gameService.GetAll();
+        var result = await _gameService.GetAll(request.Filter);
 
         return new ApplicationResult { Data = result };
     }

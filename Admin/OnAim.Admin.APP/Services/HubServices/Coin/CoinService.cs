@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Withdraw;
@@ -11,21 +13,25 @@ namespace OnAim.Admin.APP.Services.HubServices.Coin;
 
 public class CoinService : ICoinService
 {
-    private readonly HubClientService _hubClientService;
     private readonly IReadOnlyRepository<WithdrawOption> _withdrawOptionRepository;
     private readonly IReadOnlyRepository<WithdrawOptionGroup> _withdrawOptionGroupRepository;
     private readonly IReadOnlyRepository<WithdrawOptionEndpoint> _withdrawOptionEndpointRepository;
+    private readonly IHubApiClient _hubApiClient;
+    private readonly HubApiClientOptions _options;
 
     public CoinService(
-        HubClientService hubClientService,
         IReadOnlyRepository<WithdrawOption> withdrawOptionRepository,
         IReadOnlyRepository<WithdrawOptionGroup> withdrawOptionGroupRepository,
-        IReadOnlyRepository<WithdrawOptionEndpoint> WithdrawOptionEndpointRepository)
+        IReadOnlyRepository<WithdrawOptionEndpoint> WithdrawOptionEndpointRepository,
+        IHubApiClient hubApiClient,
+        IOptions<HubApiClientOptions> options
+        )
     {
-        _hubClientService = hubClientService;
         _withdrawOptionRepository = withdrawOptionRepository;
         _withdrawOptionGroupRepository = withdrawOptionGroupRepository;
         _withdrawOptionEndpointRepository = WithdrawOptionEndpointRepository;
+        _hubApiClient = hubApiClient;
+        _options = options.Value;
     }
 
     public async Task<IEnumerable<WithdrawOption>> GetWithdrawOptions(Domain.HubEntities.Models.CreateOutCoinModel? outCoinModel)
@@ -306,11 +312,11 @@ public class CoinService : ICoinService
         return new ApplicationResult { Data = item, Success = true };
     }
 
-    public async Task<ApplicationResult> CreateWithdrawOption(CreateWithdrawOption option)
+    public async Task<ApplicationResult> CreateWithdrawOption(CreateWithdrawOptionDto option)
     {
         try
         {
-            await _hubClientService.CreateWithdrawOptionAsync(option);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/CreateWithdrawOption", option);
 
             return new ApplicationResult { Success = true };
         }
@@ -321,11 +327,11 @@ public class CoinService : ICoinService
         }
     }
 
-    public async Task<ApplicationResult> UpdateWithdrawOption(UpdateWithdrawOption option)
+    public async Task<ApplicationResult> UpdateWithdrawOption(UpdateWithdrawOptionDto option)
     {
         try
         {
-            await _hubClientService.UpdateWithdrawOptionAsync(option);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/UpdateWithdrawOption", option);
 
             return new ApplicationResult { Success = true };
         }
@@ -336,11 +342,11 @@ public class CoinService : ICoinService
         }
     }
 
-    public async Task<ApplicationResult> DeleteWithdrawOption(APP.DeleteWithdrawOption delete)
+    public async Task<ApplicationResult> DeleteWithdrawOption(int id)
     {
         try
         {
-            await _hubClientService.DeleteWithdrawOptionAsync(delete);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOption", id);
 
             return new ApplicationResult { Success = true };
         }
@@ -351,11 +357,11 @@ public class CoinService : ICoinService
         }
     }
 
-    public async Task<ApplicationResult> CreateWithdrawOptionEndpoint(CreateWithdrawOptionEndpoint option)
+    public async Task<ApplicationResult> CreateWithdrawOptionEndpoint(CreateWithdrawOptionEndpointDto option)
     {
         try
         {
-            await _hubClientService.CreateWithdrawOptionEndpointAsync(option);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/CreateWithdrawOptionEndpoint", option);
 
             return new ApplicationResult { Success = true };
         }
@@ -366,11 +372,11 @@ public class CoinService : ICoinService
         }
     }
 
-    public async Task<ApplicationResult> UpdateWithdrawOptionEndpoint(UpdateWithdrawOptionEndpoint option)
+    public async Task<ApplicationResult> UpdateWithdrawOptionEndpoint(UpdateWithdrawOptionEndpointDto option)
     {
         try
         {
-            await _hubClientService.UpdateWithdrawOptionEndpointAsync(option);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/UpdateWithdrawOptionEndpoint", option);
 
             return new ApplicationResult { Success = true };
         }
@@ -381,11 +387,11 @@ public class CoinService : ICoinService
         }
     }
 
-    public async Task<ApplicationResult> DeleteWithdrawOptionEndpoint(APP.DeleteWithdrawOptionEndpoint delete)
+    public async Task<ApplicationResult> DeleteWithdrawOptionEndpoint(int id)
     {
         try
         {
-            await _hubClientService.DeleteWithdrawOptionEndpointAsync(delete);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOptionEndpoint", id);
 
             return new ApplicationResult { Success = true };
         }
@@ -396,11 +402,11 @@ public class CoinService : ICoinService
         }
     }
 
-    public async Task<ApplicationResult> CreateWithdrawOptionGroup(CreateWithdrawOptionGroup option)
+    public async Task<ApplicationResult> CreateWithdrawOptionGroup(CreateWithdrawOptionGroupDto option)
     {
         try
         {
-            await _hubClientService.CreateWithdrawOptionGroupAsync(option);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/CreateWithdrawOptionGroup", option);
 
             return new ApplicationResult { Success = true };
         }
@@ -411,11 +417,11 @@ public class CoinService : ICoinService
         }
     }
 
-    public async Task<ApplicationResult> UpdateWithdrawOptionGroup(UpdateWithdrawOptionGroup option)
+    public async Task<ApplicationResult> UpdateWithdrawOptionGroup(UpdateWithdrawOptionGroupDto option)
     {
         try
         {
-            await _hubClientService.UpdateWithdrawOptionGroupAsync(option);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/UpdateWithdrawOptionGroup", option);
 
             return new ApplicationResult { Success = true };
         }
@@ -426,11 +432,11 @@ public class CoinService : ICoinService
         }
     }
 
-    public async Task<ApplicationResult> DeleteWithdrawOptiongroup(APP.DeleteWithdrawOptionGroup delete)
+    public async Task<ApplicationResult> DeleteWithdrawOptiongroup(int id)
     {
         try
         {
-            await _hubClientService.DeleteWithdrawOptionGroupAsync(delete);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOptionGroup", id);
 
             return new ApplicationResult { Success = true };
         }
@@ -440,4 +446,59 @@ public class CoinService : ICoinService
             throw new Exception("failed to delete withdraw option");
         }
     }
+}
+public class CreateWithdrawOptionDto
+{
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public string ImageUrl { get; set; }
+    public string Endpoint { get; set; }
+    public int EndpointContentType { get; set; }
+    public string EndpointContent { get; set; }
+    public int WithdrawOptionEndpointId { get; set; }
+    public List<int> WithdrawOptionGroupIds { get; set; } = new List<int>();
+}
+public class UpdateWithdrawOptionDto
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public string ImageUrl { get; set; }
+    public string Endpoint { get; set; }
+    public int EndpointContentType { get; set; }
+    public string EndpointContent { get; set; }
+    public int WithdrawOptionEndpointId { get; set; }
+    public List<int> WithdrawOptionGroupIds { get; set; } = new List<int>();
+}
+public class CreateWithdrawOptionEndpointDto
+{
+    public string Name { get; set; }
+    public string Endpoint { get; set; }
+    public string Content { get; set; }
+    public int ContentType { get; set; }
+}
+public class UpdateWithdrawOptionEndpointDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Endpoint { get; set; }
+    public string Content { get; set; }
+    public int ContentType { get; set; }
+}
+public class CreateWithdrawOptionGroupDto
+{
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public string ImageUrl { get; set; }
+    public int PriorityIndex { get; set; }
+    public List<int> WithdrawOptionIds { get; set; } = new List<int>();
+}
+public class UpdateWithdrawOptionGroupDto
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public string ImageUrl { get; set; }
+    public int PriorityIndex { get; set; }
+    public List<int> WithdrawOptionIds { get; set; } = new List<int>();
 }

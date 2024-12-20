@@ -14,13 +14,13 @@ public interface ICoinService
     Task<ApplicationResult> GetWithdrawOptionGroupById(int id);
     Task<ApplicationResult> GetWithdrawOptionEndpoints(BaseFilter filter);
     Task<ApplicationResult> GetWithdrawOptionEndpointById(int id);
-    Task<ApplicationResult> CreateWithdrawOption(CreateWithdrawOption option);
-    Task<ApplicationResult> UpdateWithdrawOption(UpdateWithdrawOption option);
-    Task<ApplicationResult> CreateWithdrawOptionEndpoint(CreateWithdrawOptionEndpoint option);
-    Task<ApplicationResult> UpdateWithdrawOptionEndpoint(UpdateWithdrawOptionEndpoint option);
-    Task<ApplicationResult> CreateWithdrawOptionGroup(CreateWithdrawOptionGroup option);
-    Task<ApplicationResult> UpdateWithdrawOptionGroup(UpdateWithdrawOptionGroup option);
-    Task<ApplicationResult> DeleteWithdrawOption(APP.DeleteWithdrawOption delete);
-    Task<ApplicationResult> DeleteWithdrawOptionEndpoint(APP.DeleteWithdrawOptionEndpoint delete);
-    Task<ApplicationResult> DeleteWithdrawOptiongroup(APP.DeleteWithdrawOptionGroup delete);
+    Task<ApplicationResult> CreateWithdrawOption(CreateWithdrawOptionDto option);
+    Task<ApplicationResult> UpdateWithdrawOption(UpdateWithdrawOptionDto option);
+    Task<ApplicationResult> CreateWithdrawOptionEndpoint(CreateWithdrawOptionEndpointDto option);
+    Task<ApplicationResult> UpdateWithdrawOptionEndpoint(UpdateWithdrawOptionEndpointDto option);
+    Task<ApplicationResult> CreateWithdrawOptionGroup(CreateWithdrawOptionGroupDto option);
+    Task<ApplicationResult> UpdateWithdrawOptionGroup(UpdateWithdrawOptionGroupDto option);
+    Task<ApplicationResult> DeleteWithdrawOption(int id);
+    Task<ApplicationResult> DeleteWithdrawOptionEndpoint(int id);
+    Task<ApplicationResult> DeleteWithdrawOptiongroup(int id);
 }

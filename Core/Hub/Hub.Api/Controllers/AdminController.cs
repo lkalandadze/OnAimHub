@@ -40,6 +40,8 @@ using Hub.Application.Features.SegmentFeatures.Commands.UpdateSegment;
 using Hub.Application.Features.SettingFeatures.Commands.Update;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 using Shared.Lib.Wrappers;
 
 namespace Hub.Api.Controllers;
@@ -92,7 +94,6 @@ public class AdminController : BaseApiController
             Name = model.Name,
             PromotionId = model.PromotionId,
         };
-
         return Ok(await Mediator.Send(query));
     }
 

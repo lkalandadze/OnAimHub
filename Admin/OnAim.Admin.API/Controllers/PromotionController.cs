@@ -64,16 +64,16 @@ public class PromotionController : ApiControllerBase
         => Ok(await _promotionService.GetPromotionLeaderboardDetails(id, filter));
 
     [HttpPost(nameof(CreatePromotionView))]
-    public async Task<IActionResult> CreatePromotionView([FromBody] APP.CreatePromotionView create)
+    public async Task<IActionResult> CreatePromotionView([FromBody] CreatePromotionView create)
         => Ok(await _promotionService.CreatePromotionView(create));
 
     [HttpPut(nameof(UpdatePromotionStatus))]
-    public async Task<IActionResult> UpdatePromotionStatus([FromBody] APP.UpdatePromotionStatusCommand update)
+    public async Task<IActionResult> UpdatePromotionStatus([FromBody] UpdatePromotionStatusDto update)
         => Ok(await _promotionService.UpdatePromotionStatus(update));
 
     [HttpDelete(nameof(DeletePromotion))]
-    public async Task<IActionResult> DeletePromotion([FromBody] SoftDeletePromotionCommand command)
-        => Ok(await _promotionService.DeletePromotion(command));
+    public async Task<IActionResult> DeletePromotion([FromBody] int id)
+        => Ok(await _promotionService.DeletePromotion(id));
 
     //Promotion Template
 

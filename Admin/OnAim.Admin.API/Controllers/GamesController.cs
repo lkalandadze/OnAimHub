@@ -17,6 +17,7 @@ using OnAim.Admin.APP.Features.GameFeatures.Template.Commands.Create;
 using OnAim.Admin.APP.Features.GameFeatures.Template.Commands.Delete;
 using OnAim.Admin.APP.Features.GameFeatures.Template.Queries.GetAll;
 using OnAim.Admin.APP.Services.Game;
+using OnAim.Admin.APP.Services.GameServices;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Game;
 
@@ -24,9 +25,15 @@ namespace OnAim.Admin.API.Controllers;
 
 public class GamesController : ApiControllerBase
 {
+    private readonly IGameService _gameService;
+
+    public GamesController(IGameService gameService)
+    {
+        _gameService = gameService;
+    }
     [HttpGet(nameof(GetAll))]
-    public async Task<IActionResult> GetAll()
-        => Ok(await Mediator.Send(new GetAllActiveGamesQuery()));
+    public async Task<IActionResult> GetAll([FromQuery] FilterGamesDto filter)
+        => Ok(await _gameService.GetAll(filter));
 
     [HttpGet(nameof(GetById) + "/{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
