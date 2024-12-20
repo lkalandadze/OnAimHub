@@ -36,12 +36,11 @@ public class GameConfigurationService : IGameConfigurationService
         return new Response<EntityMetadata?> { Data = _entityGenerator.GenerateEntityMetadata(Globals.ConfigurationType) };
     }
 
-    public async Task<Response<IEnumerable<ConfigurationBaseGetModel>>> GetAllAsync(int promotionId)
+    public async Task<Response<IEnumerable<GameConfiguration>>> GetAllAsync(int promotionId)
     {
-        var configurations = await _configurationRepository.Query().Where(x => x.PromotionId == promotionId).ToListAsync();
-        var mappedConfigurations = configurations.Select(c => ConfigurationBaseGetModel.MapFrom(c));
+        var configurations = await _configurationRepository.QueryAsync(x => x.PromotionId == promotionId);
 
-        return new Response<IEnumerable<ConfigurationBaseGetModel>>() { Data = mappedConfigurations };
+        return new Response<IEnumerable<GameConfiguration>>() { Data = configurations };
     }
 
     public async Task<Response<GameConfiguration>> GetByIdAsync(int id)

@@ -1,40 +1,55 @@
 ﻿using GameLib.Application.Managers;
+using GameLib.Application.Models.Price;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Entities;
+using Shared.Application.Exceptions;
+using Shared.Application.Exceptions.Types;
 
 namespace GameLib.Application.Holders;
 
 public class ConfigurationHolder
 {
-    internal List<Type> prizeGroupTypes;
+    public Dictionary<int, GameConfiguration> GameConfigurations { get; private set; }
 
-    public IEnumerable<Price> Prices = [];
-    public Dictionary<string, List<BasePrizeGroup>> PrizeGroups = [];
-
-    public ConfigurationHolder(List<Type> prizeGroupTypes)
+    public ConfigurationHolder()
     {
-        this.prizeGroupTypes = prizeGroupTypes;
-
-        SetPricesAsync().Wait();
-        SetPrizeGroups();
+        var gameConfigurations = RepositoryManager.GetGameConfigurationRepository().QueryAsync().Result;
+        GameConfigurations = gameConfigurations.ToDictionary(config => config.PromotionId, config => config);
     }
 
-    public void SetPrizeGroups()
+    public IEnumerable<BasePrizeGroup> GetPrizeGroups(int promotionId)
     {
-        prizeGroupTypes.ForEach(type =>
-        {
-            var prizeGroups = RepositoryManager.GetPrizeGroupRepository(type).QueryWithPrizes();
-            PrizeGroups.Add(type.Name, prizeGroups.ToList());
-        });
-    }
+        var gameConfiguration = GameConfigurations[promotionId];
 
-    public async Task SetPricesAsync()
-    {
-        var prices = await RepositoryManager.GetPriceRepository().QueryAsync();
-
-        if (prices != null && prices.Any())
+        if (gameConfiguration == null)
         {
-            Prices = prices.AsEnumerable();
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Game configuration with the specified promotion ID: [{promotionId}] was not found.");
         }
+
+        // Extract collections of BasePrizeGroup from gameConfiguration
+        var prizeGroups = gameConfiguration.GetType()
+            .GetProperties()
+            .Where(p => typeof(System.Collections.IEnumerable).IsAssignableFrom(p.PropertyType) && // Check if it's a collection
+                        p.PropertyType != typeof(string)) // Exclude strings
+            .Select(p => p.GetValue(gameConfiguration) as System.Collections.IEnumerable) // Get property value
+            .Where(collection => collection != null) // Exclude null collections
+            .SelectMany(collection => collection.OfType<BasePrizeGroup>()) // Flatten and filter BasePrizeGroup types
+            .ToList();
+
+        // Mapping logic
+
+        return prizeGroups;
+    }
+
+    public IEnumerable<PriceBaseGetModel> GetPrices(int promotionId)
+    {
+        var gameConfiguration = GameConfigurations[promotionId];
+
+        if (gameConfiguration == null)
+        {
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Game configuration with the specified promotion ID: [{promotionId}] was not found.");
+        }
+
+        return gameConfiguration.Prices.Select(p => PriceBaseGetModel.MapFrom(p));
     }
 }

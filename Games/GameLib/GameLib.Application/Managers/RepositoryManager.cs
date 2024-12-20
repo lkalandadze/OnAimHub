@@ -22,6 +22,11 @@ public class RepositoryManager
         return new PrizeGroupRepositoryProxy(genericType);
     }
 
+    internal static IGameConfigurationRepository GetGameConfigurationRepository()
+    {
+        return _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IGameConfigurationRepository>();
+    }
+
     internal static IPriceRepository GetPriceRepository()
     {
         return _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IPriceRepository>();

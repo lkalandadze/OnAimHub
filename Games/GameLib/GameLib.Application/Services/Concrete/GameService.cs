@@ -29,19 +29,17 @@ public class GameService : IGameService
         _gameInfoConfig = gameInfoConfig.Value;
     }
 
-    public InitialDataResponseModel GetInitialData()
+    public InitialDataResponseModel GetInitialData(int promotionId)
     {
-        return new InitialDataResponseModel
+        return new InitialDataResponseModel()
         {
-            PrizeGroups = _configurationHolder.PrizeGroups,
-            Prices = _configurationHolder.Prices,
+            Prices = _configurationHolder.GetPrices(promotionId),
+            PrizeGroups = _configurationHolder.GetPrizeGroups(promotionId),
         };
     }
 
     public GameResponseModel GetGame()
     {
-        var segments = _configurationRepository.Query();
-
         return new GameResponseModel
         {
             Name = _gameInfoConfig.Name,

@@ -1,5 +1,6 @@
 ﻿using GameLib.Application.Models.Game;
 using GameLib.Application.Services.Abstract;
+using GameLib.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,9 +19,9 @@ public class GameController : BaseApiController
     #region Game
 
     [HttpGet(nameof(InitialData))]
-    public ActionResult<InitialDataResponseModel> InitialData()
+    public ActionResult<InitialDataResponseModel> InitialData(int promotionId)
     {
-        return Ok(_gameService.GetInitialData());
+        return Ok(_gameService.GetInitialData(promotionId));
     }
 
     [AllowAnonymous]
