@@ -128,7 +128,7 @@ public class CoinTemplateService : ICoinTemplateService
         };
 
         if (coinTemplate.WithdrawOptionIds != null && coinTemplate.WithdrawOptionIds.Any() &&
-        (Infrasturcture.CoinType)coinTemplate.CoinType == Infrasturcture.CoinType._2)
+        (Domain.HubEntities.Enum.CoinType)coinTemplate.CoinType == Domain.HubEntities.Enum.CoinType.Out)
         {
             var withdrawOptions = _withdrawOptionRepository.Query
                 (wo => coinTemplate.WithdrawOptionIds.Contains(wo.Id))
@@ -148,7 +148,7 @@ public class CoinTemplateService : ICoinTemplateService
         }
 
         if (coinTemplate.WithdrawOptionGroupIds != null && coinTemplate.WithdrawOptionGroupIds.Any() &&
-        (Infrasturcture.CoinType)coinTemplate.CoinType == Infrasturcture.CoinType._2)
+        (Domain.HubEntities.Enum.CoinType)coinTemplate.CoinType == Domain.HubEntities.Enum.CoinType.Out)
         {
             var withdrawOptionGroupss = _withdrawOptionGroupRepository.Query
                 (wo => coinTemplate.WithdrawOptionGroupIds.Contains(wo.Id))
@@ -228,7 +228,7 @@ public class CoinTemplateService : ICoinTemplateService
         coinTemplate.Update(update.Name, update.Description, update.ImageUrl, (Domain.HubEntities.Enum.CoinType)update.CoinType);
 
         if (update.WithdrawOptionIds != null && update.WithdrawOptionIds.Any() &&
-        (Infrasturcture.CoinType)coinTemplate.CoinType == Infrasturcture.CoinType._1)
+        (Domain.HubEntities.Enum.CoinType)coinTemplate.CoinType == Domain.HubEntities.Enum.CoinType.Out)
         {
             var withdrawOptions = _withdrawOptionRepository.Query(wo => update.WithdrawOptionIds.Any(woId => woId == wo.Id));
 
@@ -242,7 +242,7 @@ public class CoinTemplateService : ICoinTemplateService
         }
 
         if (update.WithdrawOptionGroupIds != null && update.WithdrawOptionGroupIds.Any() &&
-        (Infrasturcture.CoinType)coinTemplate.CoinType == Infrasturcture.CoinType._1)
+        (Domain.HubEntities.Enum.CoinType)coinTemplate.CoinType == Domain.HubEntities.Enum.CoinType.Out)
         {
             var withdrawOptionGroups = _withdrawOptionGroupRepository.Query(wo => update.WithdrawOptionGroupIds.Any(woId => woId == wo.Id));
 

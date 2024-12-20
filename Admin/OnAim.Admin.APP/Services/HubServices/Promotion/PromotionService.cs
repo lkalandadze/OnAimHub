@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using OnAim.Admin.APP.Services.FileServices;
+using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
@@ -8,9 +10,10 @@ using OnAim.Admin.Contracts.Dtos.Player;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
+using OnAim.Admin.Domain.GameEntities;
 using OnAim.Admin.Domain.HubEntities;
+using OnAim.Admin.Domain.HubEntities.Models;
 using OnAim.Admin.Domain.LeaderBoradEntities;
-using OnAim.Admin.Infrasturcture;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 
@@ -20,32 +23,38 @@ public class PromotionService : IPromotionService
 {
     private readonly IPromotionRepository<Domain.HubEntities.Promotion> _promotionRepository;
     private readonly IPromotionRepository<Domain.HubEntities.Coin.Coin> _coinRepo;
-    private readonly HubClientService _hubClientService;
-    private readonly SagaClient _sagaClient;
     private readonly IReadOnlyRepository<Domain.HubEntities.PlayerEntities.Player> _playerRepository;
     private readonly IReadOnlyRepository<Transaction> _transactionRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecord> _leaderboardRecordRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _leaderboardResultRepository;
+    private readonly ISagaApiClient _sagaApiClient;
+    private readonly IHubApiClient _hubApiClient;
+    private readonly HubApiClientOptions _options;
+    private readonly SagaApiClientOptions _sagaOptions;
 
     public PromotionService(
         IPromotionRepository<Domain.HubEntities.Promotion> promotionRepository,
         IPromotionRepository<Domain.HubEntities.Coin.Coin> coinRepo,
-        HubClientService hubClientService,
-        SagaClient sagaClient,
         IReadOnlyRepository<Domain.HubEntities.PlayerEntities.Player> playerRepository,
         IReadOnlyRepository<Transaction> transactionRepository,
         ILeaderBoardReadOnlyRepository<LeaderboardRecord> leaderboardRecordRepository,
-        ILeaderBoardReadOnlyRepository<LeaderboardResult> leaderboardResultRepository
+        ILeaderBoardReadOnlyRepository<LeaderboardResult> leaderboardResultRepository,
+        ISagaApiClient sagaApiClient,
+        IOptions<SagaApiClientOptions> sagaOptions,
+        IHubApiClient hubApiClient,
+        IOptions<HubApiClientOptions> options
         )
     {
         _promotionRepository = promotionRepository;
         _coinRepo = coinRepo;
-        _hubClientService = hubClientService;
-        _sagaClient = sagaClient;
         _playerRepository = playerRepository;
         _transactionRepository = transactionRepository;
         _leaderboardRecordRepository = leaderboardRecordRepository;
         _leaderboardResultRepository = leaderboardResultRepository;
+        _sagaApiClient = sagaApiClient;
+        _hubApiClient = hubApiClient;
+        _options = options.Value;
+        _sagaOptions = sagaOptions.Value;
     }
 
     public async Task<ApplicationResult> GetAllPromotions(PromotionFilter filter)
@@ -396,8 +405,8 @@ public class PromotionService : IPromotionService
     {
         try
         {
-            await _sagaClient.SagaAsync(create);
-            return new ApplicationResult { Success = true };
+            var res = await _sagaApiClient.PostAsJsonAndSerializeResultTo<object>($"{_sagaOptions.Endpoint}", create);
+            return new ApplicationResult { Success = true, Data = res };
         }
         catch (Exception ex)
         {
@@ -433,11 +442,11 @@ public class PromotionService : IPromotionService
         }
     }
 
-    public async Task<ApplicationResult> UpdatePromotionStatus(UpdatePromotionStatusCommand update)
+    public async Task<ApplicationResult> UpdatePromotionStatus(UpdatePromotionStatusDto update)
     {
         try
         {
-            await _hubClientService.UpdatePromotionStatusAsync(update);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/UpdatePromotionStatus", update);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -446,11 +455,11 @@ public class PromotionService : IPromotionService
         }
     }
 
-    public async Task<ApplicationResult> DeletePromotion(SoftDeletePromotionCommand command)
+    public async Task<ApplicationResult> DeletePromotion(int id)
     {
         try
         {
-            await _hubClientService.SoftDeletePromotionAsync(command);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/SoftDeletePromotion", id);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -505,4 +514,23 @@ public class PromotionGameDto
     public string Description { get; set; }
     public int BetPrice { get; set; }
     public string Coins { get; set; }
+}
+
+
+public class CreatePromotionDto
+{
+    public CreatePromotionCommandDto Promotion { get; set; }
+    public List<CreateLeaderboardRecordCommand>? Leaderboards { get; set; }
+    public List<GameConfiguration>? GameConfiguration { get; set; }
+}
+public class CreatePromotionCommandDto
+{
+    public string Title { get; set; }
+    public DateTimeOffset StartDate { get; set; }
+    public DateTimeOffset EndDate { get; set; }
+    public string Description { get; set; }
+    public Guid CorrelationId { get; set; }
+    public string? TemplateId { get; set; }
+    public IEnumerable<string> SegmentIds { get; set; }
+    public IEnumerable<CreateCoinModel> Coins { get; set; }
 }

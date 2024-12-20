@@ -73,17 +73,27 @@ services:
     volumes:
       - ./Core/Hub/Hub.Api/appsettings.json:/app/appsettings.json
 
-  # adminapi:
-  #   build:
-  #     context: .
-  #     dockerfile: Admin/OnAim.Admin.API/Dockerfile
-  #   ports:
-  #     - "5003:8080"
-  #   environment:
-  #     - ConnectionStrings__Connection=Host=admindb;Port=5435;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;
-  #   volumes:
-  #         - ./Admin/OnAim.Admin.API/appsettings.json:/app/appsettings.json
+  adminapi:
+    build:
+      context: .
+      dockerfile: Admin/OnAim.Admin.API/Dockerfile
+    ports:
+      - "5003:8080"
+    environment:
+      - ConnectionStrings__Connection=Host=admindb;Port=5435;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;
+    volumes:
+          - ./Admin/OnAim.Admin.API/appsettings.json:/app/appsettings.json
           
+  sagamachine:
+    build: 
+      context: .
+      dockerfile: StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/Dockerfile
+    ports:
+      - "5007:8080"
+    volumes:
+      - ./StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/appsettings.json:/app/appsettings.json
+
+
   levelapi:
     build:
       context: .

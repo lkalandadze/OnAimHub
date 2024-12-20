@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP.Features.SegmentFeatures.Commands.AssignPlayer;
 using OnAim.Admin.APP.Features.SegmentFeatures.Commands.BlockPlayer;
+using OnAim.Admin.APP.Features.SegmentFeatures.Commands.Create;
 using OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnAssignPlayer;
 using OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnBlockPlayer;
+using OnAim.Admin.APP.Features.SegmentFeatures.Commands.Update;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.ActivePlayers;
@@ -60,12 +62,12 @@ public class SegmentController : ApiControllerBase
         => Ok(await Mediator.Send(new GetSegmentActsHistoryByIdQuery(playerSegmentActId)));
 
     [HttpPost(nameof(Create))]
-    public async Task<IActionResult> Create([FromBody] APP.CreateSegmentCommand command)
-        => Ok(await _segmentService.CreateSegment(command));
+    public async Task<IActionResult> Create([FromBody] CreateSegmentCommand command)
+        => Ok(await _segmentService.CreateSegment(command.Id, command.Description, command.PriorityLevel));
 
     [HttpPut(nameof(Update))]
-    public async Task<IActionResult> Update([FromBody] APP.UpdateSegmentCommand command)
-        => Ok(await _segmentService.UpdateSegment(command));
+    public async Task<IActionResult> Update([FromBody] UpdateSegmentCommand command)
+        => Ok(await _segmentService.UpdateSegment(command.Id, command.Description, command.PriorityLevel));
 
     [HttpDelete(nameof(Delete) + "/{id}")]
     public async Task<IActionResult> Delete([FromRoute] string id)

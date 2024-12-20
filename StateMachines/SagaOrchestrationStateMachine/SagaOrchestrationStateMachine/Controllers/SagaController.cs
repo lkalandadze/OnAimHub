@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Hub.Application.Features.PromotionFeatures.Commands.Delete;
+using Hub.Application.Models.Coin;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Retry;
 using SagaOrchestrationStateMachine.Models;
+using SagaOrchestrationStateMachine.Services;
 
 namespace SagaOrchestrationStateMachine.Controllers;
 
@@ -12,22 +16,25 @@ public class SagaController : ControllerBase
     private readonly HttpClient _httpClient;
     private readonly ILogger<SagaController> _logger;
     private readonly LeaderBoardService _leaderboardService;
-    private readonly HubService _hubService;
     private readonly WheelService _wheelService;
+    private readonly IHubApiClient _hubApiClient;
+    private readonly HubApiClientOptions _options;
     private readonly AsyncRetryPolicy<HttpResponseMessage> _retryPolicy;
     public SagaController(
         HttpClient httpClient, 
         ILogger<SagaController> logger, 
         LeaderBoardService leaderboardService,
-        HubService hubService,
-        WheelService wheelService
+        WheelService wheelService,
+        IHubApiClient hubApiClient,
+        IOptions<HubApiClientOptions> options
         )
     {
         _httpClient = httpClient;
         _logger = logger;
         _leaderboardService = leaderboardService;
-        _hubService = hubService;
         _wheelService = wheelService;
+        _hubApiClient = hubApiClient;
+        _options = options.Value;
         _retryPolicy = Policy
                    .Handle<HttpRequestException>()
                    .OrResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
@@ -35,22 +42,24 @@ public class SagaController : ControllerBase
     }
 
     [HttpPost]
-    public async Task OrchestratePromotionAsync(CreatePromotionDto request)
+    public async Task<IActionResult> OrchestratePromotionAsync(CreatePromotionDto request)
     {
         var correlationId = Guid.NewGuid();
         try
         {
             request.Promotion.CorrelationId = correlationId;
             int promotionId;
+
             try
             {
                 promotionId = await CreatePromotionAsync(request.Promotion);
                 _logger.LogInformation("Promotion created successfully: {PromotionId}", promotionId);
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error creating promotion.");
                 await CompensateAsync(correlationId);
-                throw;
+                return BadRequest(new { Success = false, Message = "Failed to create promotion.", Error = ex.Message });
             }
 
             if (request.Leaderboards != null)
@@ -69,21 +78,22 @@ public class SagaController : ControllerBase
                                 var leaderboardResponse = await CreateLeaderboardRecordAsync(leaderboard);
                                 _logger.LogInformation("LeaderboardRecord created successfully: {LeaderboardRecord}", leaderboardResponse);
                             }
-                            catch
+                            catch (Exception ex)
                             {
+                                _logger.LogError(ex, "Error creating leaderboard record.");
                                 await CompensateAsync(correlationId);
-                                throw;
+                                return BadRequest(new { Success = false, Message = "Failed to create leaderboard.", Error = ex.Message });
                             }
                         }
 
                         _logger.LogInformation("Leaderboard created successfully: {Leaderboard}");
                     }
-
                 }
-                catch
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Error processing leaderboards.");
                     await CompensateAsync(correlationId);
-                    throw;
+                    return BadRequest(new { Success = false, Message = "Failed to process leaderboards.", Error = ex.Message });
                 }
             }
 
@@ -101,39 +111,44 @@ public class SagaController : ControllerBase
                             try
                             {
                                 var gameResponse = await CreateGameConfiguration(config);
-                                _logger.LogInformation("Configuration created successfully: {ConfigId}", gameResponse);
+                                _logger.LogInformation("Game configuration created successfully: {ConfigId}", gameResponse);
                             }
-                            catch
+                            catch (Exception ex)
                             {
+                                _logger.LogError(ex, "Error creating game configuration.");
                                 await CompensateAsync(correlationId);
-                                throw;
+                                return BadRequest(new { Success = false, Message = "Failed to create game configuration.", Error = ex.Message });
                             }
                         }
 
-                        _logger.LogInformation("Configuration created successfully: {Configuration}");
+                        _logger.LogInformation("Game configuration created successfully: {Configuration}");
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Error processing game configurations.");
                     await CompensateAsync(correlationId);
-                    throw;
+                    return BadRequest(new { Success = false, Message = "Failed to process game configurations.", Error = ex.Message });
                 }
             }
 
             _logger.LogInformation("Saga completed successfully.");
+            return Ok(new { Success = true, CorrelationId = correlationId });
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during Saga execution.");
             await CompensateAsync(correlationId);
+            return StatusCode(500, new { Success = false, Message = "Internal server error during saga execution.", Error = ex.Message });
         }
     }
 
-    private async Task<int> CreatePromotionAsync(CreatePromotionCommand request)
+
+    private async Task<int> CreatePromotionAsync(CreatePromotionCommandDto request)
     {
         try
         {
-            var promotionId = await _hubService.CreatePromotionAsync(request);
+            var promotionId = await _hubApiClient.PostAsJsonAndSerializeResultTo<int>($"{_options.Endpoint}Admin/CreatePromotion", request);
             return promotionId;
         }
         catch (Exception ex)
@@ -173,11 +188,10 @@ public class SagaController : ControllerBase
     {
         try
         {
-            var req = new DeletePromotionCommand();
+            var req = new DeletePromotionCommand(request);
             var lead = new DeleteLeaderboardRecordCommand();
             lead.CorrelationId = request;
-            req.CorrelationId = request;
-            await _hubService.DeletePromotionAsync(req);
+            await _hubApiClient.Delete($"{_options.Endpoint}Admin/DeletePromotion", req);
             await _leaderboardService.DeleteLeaderboardRecordAsync(lead);
         }
         catch (Exception ex)
@@ -186,4 +200,15 @@ public class SagaController : ControllerBase
             throw new Exception(ex.Message, ex);
         }
     }
+}
+public class CreatePromotionCommandDto 
+{ 
+    public string Title {get; set;}
+    public DateTimeOffset StartDate {get; set;}
+    public DateTimeOffset EndDate {get; set;}
+    public string Description {get; set;}
+    public Guid CorrelationId {get; set;}
+    public string? TemplateId {get; set;}
+    public IEnumerable<string> SegmentIds {get; set;}
+    public IEnumerable<CreateCoinModel> Coins { get; set; }
 }

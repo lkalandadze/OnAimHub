@@ -11,17 +11,24 @@ public class GameService : IGameService
 {
     private readonly HttpClient _httpClientFactory;
     private readonly HubApiClientOptions _options;
+    private readonly IHubApiClient _hubApiClient;
 
-    public GameService(IHttpClientFactory httpClientFactory)
+    public GameService(
+        IHubApiClient hubApiClient,
+        IOptions<HubApiClientOptions> options,
+        IHttpClientFactory httpClientFactory
+        )
     {
         _httpClientFactory = httpClientFactory.CreateClient("ApiGateway");
+        _hubApiClient = hubApiClient;
+        _options = options.Value;
     }
 
-    public async Task<List<GameListDtoItem>> GetAll()
+    public async Task<string> GetAll(FilterGamesDto? filter)
     {
-        //var response = await _hubApiClient.Get<GameListDto>($"{_options.Endpoint}Admin/AllGames");
+        var response = await _hubApiClient.Get<string>($"{_options.Endpoint}Admin/AllGames?Name={filter.Name}&PromotionId={filter.PromotionId}");
 
-        return new List<GameListDtoItem>();
+        return response;
     }
 
     public async Task<object> GetConfiguration(int id)
@@ -203,4 +210,27 @@ public class CreatePrizeTypeDto
     public string Name { get; set; }
     public bool IsMultiplied { get; set; }
     public string CurrencyId { get; set; }
+}
+public class FilterGamesDto
+{
+    public string? Name { get; set; }
+    public int? PromotionId { get; set; }
+}
+public class ApiResponse<T>
+{
+    public bool Succeeded { get; set; }
+    public string? Message { get; set; }
+    public string? Error { get; set; }
+    public object? ValidationErrors { get; set; }
+    public T? Data { get; set; }
+}
+
+public class Gamed
+{
+    public string Name { get; set; }
+    public string Address { get; set; }
+    public bool Status { get; set; }
+    public string Description { get; set; }
+    public int ConfigurationCount { get; set; }
+    public List<int> PromotionIds { get; set; }
 }

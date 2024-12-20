@@ -25,16 +25,16 @@ public class CoinController : ApiControllerBase
     }
 
     [HttpPost(nameof(CreateWithdrawOption))]
-    public async Task<IActionResult> CreateWithdrawOption([FromBody] APP.CreateWithdrawOption create)
+    public async Task<IActionResult> CreateWithdrawOption([FromBody] CreateWithdrawOptionDto create)
         => Ok(await _coinService.CreateWithdrawOption(create));
 
     [HttpPut(nameof(UpdateWithdrawOption))]
-    public async Task<IActionResult> UpdateWithdrawOption([FromBody] APP.UpdateWithdrawOption create)
+    public async Task<IActionResult> UpdateWithdrawOption([FromBody] UpdateWithdrawOptionDto create)
         => Ok(await _coinService.UpdateWithdrawOption(create));
 
     [HttpPost(nameof(DeleteWithdrawOption))]
-    public async Task<IActionResult> DeleteWithdrawOption([FromBody] APP.DeleteWithdrawOption delete)
-        => Ok(await _coinService.DeleteWithdrawOption(delete));
+    public async Task<IActionResult> DeleteWithdrawOption([FromBody] int id)
+        => Ok(await _coinService.DeleteWithdrawOption(id));
 
     [HttpGet(nameof(GetAllWithdrawOptions))]
     public async Task<IActionResult> GetAllWithdrawOptions([FromQuery] BaseFilter filter)
@@ -45,16 +45,16 @@ public class CoinController : ApiControllerBase
         => Ok(await _coinService.GetWithdrawOptionById(id));
 
     [HttpPost(nameof(CreateWithdrawOptionGroup))]
-    public async Task<IActionResult> CreateWithdrawOptionGroup([FromBody] APP.CreateWithdrawOptionGroup create)
+    public async Task<IActionResult> CreateWithdrawOptionGroup([FromBody] CreateWithdrawOptionGroupDto create)
         => Ok(await _coinService.CreateWithdrawOptionGroup(create));
 
     [HttpPut(nameof(UpdateWithdrawOptionGroup))]
-    public async Task<IActionResult> UpdateWithdrawOptionGroup([FromBody] APP.UpdateWithdrawOptionGroup create)
+    public async Task<IActionResult> UpdateWithdrawOptionGroup([FromBody] UpdateWithdrawOptionGroupDto create)
         => Ok(await _coinService.UpdateWithdrawOptionGroup(create));
 
     [HttpPost(nameof(DeleteWithdrawOptiongroup))]
-    public async Task<IActionResult> DeleteWithdrawOptiongroup([FromBody] APP.DeleteWithdrawOptionGroup delete)
-        => Ok(await _coinService.DeleteWithdrawOptiongroup(delete));
+    public async Task<IActionResult> DeleteWithdrawOptiongroup([FromBody] int id)
+        => Ok(await _coinService.DeleteWithdrawOptiongroup(id));
 
     [HttpGet(nameof(GetAllWithdrawOptionGroups))]
     public async Task<IActionResult> GetAllWithdrawOptionGroups([FromQuery] BaseFilter filter)
@@ -65,16 +65,16 @@ public class CoinController : ApiControllerBase
         => Ok(await _coinService.GetWithdrawOptionGroupById(id));
 
     [HttpPost(nameof(CreateWithdrawOptionEndpoint))]
-    public async Task<IActionResult> CreateWithdrawOptionEndpoint([FromBody] APP.CreateWithdrawOptionEndpoint create)
+    public async Task<IActionResult> CreateWithdrawOptionEndpoint([FromBody] CreateWithdrawOptionEndpointDto create)
         => Ok(await _coinService.CreateWithdrawOptionEndpoint(create));
 
     [HttpPut(nameof(UpdateWithdrawOptionEndpoint))]
-    public async Task<IActionResult> UpdateWithdrawOptionEndpoint([FromBody] APP.UpdateWithdrawOptionEndpoint create)
+    public async Task<IActionResult> UpdateWithdrawOptionEndpoint([FromBody] UpdateWithdrawOptionEndpointDto create)
         => Ok(await _coinService.UpdateWithdrawOptionEndpoint(create));
 
     [HttpPost(nameof(DeleteWithdrawOptionEndpoint))]
-    public async Task<IActionResult> DeleteWithdrawOptionEndpoint([FromBody] APP.DeleteWithdrawOptionEndpoint delete)
-        => Ok(await _coinService.DeleteWithdrawOptionEndpoint(delete));
+    public async Task<IActionResult> DeleteWithdrawOptionEndpoint([FromBody] int id)
+        => Ok(await _coinService.DeleteWithdrawOptionEndpoint(id));
 
     [HttpGet(nameof(GetAllWithdrawOptionEndpoints))]
     public async Task<IActionResult> GetAllWithdrawOptionEndpoints([FromQuery] BaseFilter filter)

@@ -10,7 +10,7 @@ using OnAim.Admin.APP.Services.AdminServices.EmailServices;
 using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.Domain.Interfaces;
+using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using System.Linq.Expressions;
 

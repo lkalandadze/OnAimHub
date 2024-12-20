@@ -5,7 +5,7 @@ namespace OnAim.Admin.APP.Services.GameServices;
 
 public interface IGameService
 {
-    Task<List<GameListDtoItem>> GetAll();
+    Task<string> GetAll(FilterGamesDto? filter);
     Task<object> GetConfigurations();
     Task<object> GetConfiguration(int id);
     Task<string> GetGame();

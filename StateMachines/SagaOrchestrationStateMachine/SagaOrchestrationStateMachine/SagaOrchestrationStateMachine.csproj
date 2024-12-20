@@ -25,6 +25,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Nito.AsyncEx.Context" Version="5.1.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
     <PackageReference Include="NSwag.ApiDescription.Client" Version="13.18.2">
       <PrivateAssets>all</PrivateAssets>
@@ -46,11 +47,8 @@
     <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" Options="LeaderBoardService" ClassName="LeaderBoardService">
       <SourceUri>https://localhost:7041/swagger/v1/swagger.json</SourceUri>
     </OpenApiReference>
-    <OpenApiReference Include="OpenAPIs\swagger1.json" CodeGenerator="NSwagCSharp" Options="HubService" ClassName="HubService">
-      <SourceUri>https://localhost:7069/swagger/admin/swagger.json</SourceUri>
-    </OpenApiReference>
-    <OpenApiReference Include="OpenAPIs\swagger2.json" CodeGenerator="NSwagCSharp" Options="WheelService" ClassName="WheelService">
-      <SourceUri>https://localhost:7217/swagger/admin/swagger.json</SourceUri>
+    <OpenApiReference Include="OpenAPIs\swagger1.json" CodeGenerator="NSwagCSharp" Options="WheelService" ClassName="WheelService">
+      <SourceUri>http://localhost:5066/swagger/admin/swagger.json</SourceUri>
     </OpenApiReference>
   </ItemGroup>
 

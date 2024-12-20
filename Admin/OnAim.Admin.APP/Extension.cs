@@ -28,7 +28,6 @@ using OnAim.Admin.APP.Services.Hub.Player;
 using OnAim.Admin.APP.Services.Hub.Promotion;
 using OnAim.Admin.APP.Services.Hub.Segment;
 using OnAim.Admin.APP.Services.Hub.Coin;
-using OnAim.Admin.Infrasturcture;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.APP.Services.FileServices;
 using OnAim.Admin.APP.Services.HubServices.Coin;
@@ -59,12 +58,10 @@ public static class Extension
         configuration.GetSection(nameof(EmailOptions)).Bind(emailOptions);
         configureOptions?.Invoke(emailOptions);
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
-        services.AddSingleton<HubClientService>(sp =>
-        new HubClientService("http://192.168.10.42:8003", new HttpClient()));
         services.AddSingleton<LeaderboardClientService>(sp =>
-        new LeaderboardClientService("http://192.168.10.42:8002", new HttpClient()));
-        services.AddSingleton<SagaClient>(sp =>
-        new SagaClient("http://192.168.10.42:8004", new HttpClient()));
+        new LeaderboardClientService("http://192.168.10.42:5004", new HttpClient()));
+        //services.AddSingleton<SagaClient>(sp =>
+        //new SagaClient("http://192.168.10.42:8004", new HttpClient()));
         services
             .AddScoped<IGameTemplateService, GameTemplateService>()
             .AddScoped<IPromotionService, PromotionService>()

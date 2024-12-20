@@ -1,12 +1,11 @@
+using Microsoft.Extensions.Options;
 using OnAim.Admin.API.Extensions;
 using OnAim.Admin.APP;
 using OnAim.Admin.APP.Extensions;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
-using OnAim.Admin.Domain.HubEntities.Models;
 using OnAim.Admin.Infrasturcture;
 using Serilog;
 using Serilog.Events;
-using Shared.Lib.SwaggerFilters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +19,38 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 builder.Services.AddCustomJwtAuthentication(builder.Configuration);
 builder.Services.AddScoped<HttpClientService>();
+builder.Services.Configure<HubApiClientOptions>(
+builder.Configuration.GetSection("HubApiClientOptions")
+);
+builder.Services.AddHttpClient<IHubApiClient, HubApiClient>(
+    (client, sp) =>
+    {
+        var catalogApiOptions = sp.GetRequiredService<IOptions<HubApiClientOptions>>();
+        var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
+        catalogApiOptions.Value.NotBeNull();
+
+        var baseAddress = catalogApiOptions.Value.BaseApiAddress;
+        client.BaseAddress = new Uri(baseAddress);
+        return new HubApiClient(client, catalogApiOptions, policyOptions, "admin", "password");
+    }
+);
+
+
+builder.Services.Configure<SagaApiClientOptions>(
+builder.Configuration.GetSection("SagaApiClientOptions")
+);
+builder.Services.AddHttpClient<ISagaApiClient, SagaApiClient>(
+    (client, sp) =>
+    {
+        var catalogApiOptions = sp.GetRequiredService<IOptions<SagaApiClientOptions>>();
+        var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
+        catalogApiOptions.Value.NotBeNull();
+
+        var baseAddress = catalogApiOptions.Value.BaseApiAddress;
+        client.BaseAddress = new Uri(baseAddress);
+        return new SagaApiClient(client, catalogApiOptions, policyOptions, "admin", "password");
+    }
+);
 
 builder.Services
                 .AddCustomAuthorization()
