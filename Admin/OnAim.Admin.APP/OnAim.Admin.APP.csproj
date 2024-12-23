@@ -16,6 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <OpenApiReference Include="OpenAPIs\swagger1.json" CodeGenerator="NSwagCSharp" Options="LeaderboardClientService" ClassName="LeaderboardClientService">
+      <SourceUri>https://localhost:7041/swagger/v1/swagger.json</SourceUri>
+    </OpenApiReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.102.3" />
     <PackageReference Include="FluentValidation" Version="11.9.2" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
@@ -50,9 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" Options="LeaderboardClientService" ClassName="LeaderboardClientService">
-      <SourceUri>https://localhost:7041/swagger/v1/swagger.json</SourceUri>
-    </OpenApiReference>
+    <None Update="OpenAPIs\swagger.json" ClassName="LeaderboardClientService" />
   </ItemGroup>
 
 </Project>

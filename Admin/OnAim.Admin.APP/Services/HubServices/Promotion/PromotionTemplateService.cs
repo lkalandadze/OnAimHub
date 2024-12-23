@@ -17,6 +17,7 @@ using OnAim.Admin.Domain.HubEntities.Models;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
+using PrizeDto = OnAim.Admin.Contracts.Dtos.Game.PrizeDto;
 
 namespace OnAim.Admin.APP.Services.HubServices.Promotion;
 

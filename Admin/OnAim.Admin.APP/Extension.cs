@@ -59,7 +59,7 @@ public static class Extension
         configureOptions?.Invoke(emailOptions);
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
         services.AddSingleton<LeaderboardClientService>(sp =>
-        new LeaderboardClientService("http://192.168.10.42:5004", new HttpClient()));
+        new LeaderboardClientService("http://192.168.10.42:8002", new HttpClient()));
         //services.AddSingleton<SagaClient>(sp =>
         //new SagaClient("http://192.168.10.42:8004", new HttpClient()));
         services

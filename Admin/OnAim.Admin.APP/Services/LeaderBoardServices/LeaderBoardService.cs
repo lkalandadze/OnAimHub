@@ -193,8 +193,8 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            await _leaderboardClientService.GetLeaderboardSchedulesAsync(pageNumber, pageSize);
-            return new ApplicationResult { Success = true };
+            var res = await _leaderboardClientService.GetLeaderboardSchedulesAsync(pageNumber, pageSize);
+            return new ApplicationResult { Data = res, Success = true };
         }
         catch (Exception ex)
         {
@@ -232,8 +232,9 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            await _leaderboardClientService.GetCalendarAsync(startDate, endDate);
-            return new ApplicationResult { Success = true };
+            var res = await _leaderboardClientService.GetCalendarAsync(startDate, endDate);
+
+            return new ApplicationResult { Data = res, Success = true };
         }
         catch (Exception ex)
         {
