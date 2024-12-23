@@ -4,13 +4,13 @@ namespace GameLib.Application.Models.Price;
 
 public class PriceBaseGetModel
 {
-    public string CoinId { get; set; }
+    public string Coin { get; set; }
 
     public static PriceBaseGetModel MapFrom(Domain.Entities.Price entity)
     {
         return new PriceBaseGetModel
         {
-            CoinId = entity.CoinId.Split('_')[1]
+            Coin = entity.CoinId.Split('_')[1]
         };
     }
 }

@@ -6,7 +6,9 @@ namespace Wheel.Application.Models.Player;
 
 public class PlayResponseModel
 {
-    //public List<BasePrize> PrizeResults { get; set; }
-    //internal long BetTransactionId { get; set; }
-    public string Result { get; set; }
+    public bool IsWin { get; set; }
+    public int PrizeId { get; set; }
+    public int? WheelIndex { get; set; }
+    public decimal? Amount { get; set; }
+    //public decimal TotalBalance { get; set; }
 }

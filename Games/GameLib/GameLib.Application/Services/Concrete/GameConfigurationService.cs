@@ -62,6 +62,14 @@ public class GameConfigurationService : IGameConfigurationService
             throw new CheckmateException(CheckmateValidations.Checkmate.GetFailedChecks(configuration, true));
         }
 
+        var existConfig = await _configurationRepository.Query(x => x.PromotionId == configuration.PromotionId)
+                                                        .FirstOrDefaultAsync();
+
+        if (existConfig != null)
+        {
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"This game already has configuration for promotion with the specified ID: {configuration.PromotionId}");
+        }
+
         try
         {
             ReflectionHelper.ReplacePropertyValuesDynamic(
@@ -84,6 +92,13 @@ public class GameConfigurationService : IGameConfigurationService
         if (!CheckmateValidations.Checkmate.IsValid(configuration, true))
         {
             throw new CheckmateException(CheckmateValidations.Checkmate.GetFailedChecks(configuration, true));
+        }
+
+        var existConfig = await _configurationRepository.OfIdAsync(configuration.PromotionId);
+
+        if (existConfig != null)
+        {
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"This game already has configuration for promotion with the specified ID: {configuration.PromotionId}");
         }
 
         try
