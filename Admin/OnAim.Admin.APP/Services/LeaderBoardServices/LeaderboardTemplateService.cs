@@ -34,13 +34,13 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
             Title = x.Title,
             EventType = (Contracts.Dtos.LeaderBoard.EventType)x.EventType,
             CreationDate = x.CreationDate,
-            AnnouncementDate = x.AnnouncementDate,
-            StartDate = x.StartDate,
-            EndDate = x.EndDate,
+            AnnouncementDate = (x.AnnouncementDate).TotalMilliseconds,
+            StartDate = (x.StartDate).TotalMilliseconds,
+            EndDate = (x.EndDate).TotalMilliseconds,
             IsDeleted = x.IsDeleted,
             LeaderboardTemplatePrizes = x.LeaderboardTemplatePrizes.Select(xx => new leaderboardTemplatePrizesDto
             {
-                //Id = xx.Id,
+                Id = xx.Id,
                 Amount = xx.Amount,
                 CoinId = xx.CoinId,
                 StartRank = xx.StartRank,
@@ -78,9 +78,9 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
             Title = template.Title,
             EventType = (Contracts.Dtos.LeaderBoard.EventType)template.EventType,
             CreationDate = template.CreationDate,
-            AnnouncementDate = template.AnnouncementDate,
-            StartDate = template.StartDate,
-            EndDate = template.EndDate,
+            AnnouncementDate = (template.AnnouncementDate).TotalMilliseconds,
+            StartDate = (template.StartDate).TotalMilliseconds,
+            EndDate = (template.EndDate).TotalMilliseconds,
             IsDeleted = template.IsDeleted,
             LeaderboardTemplatePrizes = template.LeaderboardTemplatePrizes.Select(xx => new leaderboardTemplatePrizesDto
             {
@@ -97,13 +97,17 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
 
     public async Task<LeaderboardTemplate> CreateLeaderboardTemplate(CreateLeaderboardTemplateDto create)
     {
+        var announcementDuration = TimeSpan.FromMilliseconds(create.AnnouncementDuration);
+        var startDuration = TimeSpan.FromMilliseconds(create.StartDuration);
+        var endDuration = TimeSpan.FromMilliseconds(create.EndDuration);
+
         var leaderboardTemplate = new LeaderboardTemplate(
             create.Title,
             create.Description,
-            create.AnnouncementDuration.ToString(),
-            create.StartDuration.ToString(),
-            create.EndDuration.ToString()
-            );
+            announcementDuration,
+            startDuration,
+            endDuration
+        );
 
         foreach (var prize in create.LeaderboardPrizes)
         {
@@ -140,9 +144,9 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
             update.Name,
             update.Description,
             (Domain.LeaderBoradEntities.EventType)update.EventType,
-            update.AnnouncementDuration.ToString(),
-            update.StartDuration.ToString(),
-            update.EndDuration.ToString()
+            update.AnnouncementDuration,
+            update.StartDuration,
+            update.EndDuration
             );
 
         foreach (var prize in update.LeaderboardPrizes)

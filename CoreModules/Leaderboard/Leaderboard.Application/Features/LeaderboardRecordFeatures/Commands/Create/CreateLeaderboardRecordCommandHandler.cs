@@ -30,6 +30,7 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
 
         var leaderboard = new LeaderboardRecord(
             request.PromotionId,
+            request.PromotionName,
             request.Title,
             request.Description,
             request.EventType,

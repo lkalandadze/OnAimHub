@@ -69,6 +69,7 @@ public class JobService : IJobService
             // Create the record
             var newRecord = new LeaderboardRecord(
                 schedule.LeaderboardRecord.PromotionId,
+                schedule.LeaderboardRecord.PromotionName,
                 schedule.LeaderboardRecord.Title,
                 schedule.LeaderboardRecord.Description,
                 schedule.LeaderboardRecord.EventType,

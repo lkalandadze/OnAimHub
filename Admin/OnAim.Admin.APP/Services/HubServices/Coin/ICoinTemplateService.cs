@@ -8,7 +8,7 @@ public interface ICoinTemplateService
 {
     Task<ApplicationResult> GetAllCoinTemplates(BaseFilter filter);
     Task<ApplicationResult> GetCoinTemplateById(string id);
-    Task<CoinTemplateListDto> CreateCoinTemplate(CreateCoinTemplateDto coinTemplate);
+    Task<ApplicationResult> CreateCoinTemplate(CreateCoinTemplateDto coinTemplate);
     Task<ApplicationResult> DeleteCoinTemplate(string CoinTemplateId);
     Task<ApplicationResult> UpdateCoinTemplate(UpdateCoinTemplateDto update);
 }

@@ -117,7 +117,7 @@ public class CoinTemplateService : ICoinTemplateService
         return new ApplicationResult { Success = true, Data = coinTemplate };
     }
 
-    public async Task<CoinTemplateListDto> CreateCoinTemplate(CreateCoinTemplateDto coinTemplate)
+    public async Task<ApplicationResult> CreateCoinTemplate(CreateCoinTemplateDto coinTemplate)
     {
         var temp = new CoinTemplate
         {
@@ -177,7 +177,7 @@ public class CoinTemplateService : ICoinTemplateService
             ImgUrl = temp.ImageUrl,
             CoinType = (Contracts.Dtos.Coin.CoinType)temp.CoinType,
             IsDeleted = temp.IsDeleted,
-            WithdrawOptions = temp.WithdrawOptions.Select(x => new WithdrawOptionCoinTempDto
+            WithdrawOptions = temp.WithdrawOptions?.Select(x => new WithdrawOptionCoinTempDto
             {
                 Id= x.WithdrawOption.Id,
                 Title = x.WithdrawOption.Title,
@@ -186,18 +186,35 @@ public class CoinTemplateService : ICoinTemplateService
                 EndpointContent = x.WithdrawOption.EndpointContent,
                 Endpoint = x.WithdrawOption.Endpoint,
                 ImageUrl = x.WithdrawOption.ImageUrl,
-            }).ToList(),
-            WithdrawOptionGroups = temp.WithdrawOptionGroups.Select(xx => new WithdrawOptionGroupCoinTempDto
+            }).ToList() ?? new List<WithdrawOptionCoinTempDto>(),
+            WithdrawOptionGroups = temp.WithdrawOptionGroups?.Select(xx => new WithdrawOptionGroupCoinTempDto
             {
                 Id = xx.WithdrawOptionGroup.Id,
                 Title = xx.WithdrawOptionGroup.Title,
                 Description = xx.WithdrawOptionGroup.Description,
                 ImageUrl = xx.WithdrawOptionGroup.ImageUrl,
                 PriorityIndex = xx.WithdrawOptionGroup.PriorityIndex,
-            }).ToList(),
+            }).ToList() ?? new List<WithdrawOptionGroupCoinTempDto>(),
         };
 
-        return data;
+        if (data.WithdrawOptions.Count == 0 && data.WithdrawOptionGroups.Count == 0)
+        {
+            return new ApplicationResult
+            {
+                Data = new CoinInTemplateDto
+                {
+                    Id = data.Id,
+                    Title = data.Title,
+                    Description = data.Description,
+                    CoinType = data.CoinType,
+                    ImgUrl = data.ImgUrl,
+                    IsDeleted = data.IsDeleted
+                },
+                Success = true
+            };
+        }
+
+        return new ApplicationResult { Data = data, Success = true};
     }
 
     public async Task<ApplicationResult> DeleteCoinTemplate(string CoinTemplateId)
@@ -259,4 +276,13 @@ public class CoinTemplateService : ICoinTemplateService
 
         return new ApplicationResult { Success = true };
     }
+}
+public class CoinInTemplateDto
+{
+    public string Id { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public CoinType CoinType { get; set; }
+    public string ImgUrl { get; set; }
+    public bool IsDeleted { get; set; }
 }

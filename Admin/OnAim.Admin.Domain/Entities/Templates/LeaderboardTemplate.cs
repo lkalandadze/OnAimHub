@@ -11,9 +11,9 @@ public class LeaderboardTemplate
     public LeaderboardTemplate(
         string title, 
         string description,
-        string announcementDate,
-        string startDate,
-        string endDate)
+        TimeSpan announcementDate,
+        TimeSpan startDate,
+        TimeSpan endDate)
     {
         Id = ObjectId.GenerateNewId().ToString();
         Title = title;
@@ -21,7 +21,7 @@ public class LeaderboardTemplate
         AnnouncementDate = announcementDate;
         StartDate = startDate;
         EndDate = endDate;
-        CreationDate = DateTimeOffset.UtcNow;
+        CreationDate = DateTime.UtcNow;
     }
 
     [BsonId]
@@ -30,10 +30,10 @@ public class LeaderboardTemplate
     public string Title { get; set; }
     public string Description { get; set; }
     public EventType EventType { get; set; }
-    public DateTimeOffset CreationDate { get; set; }
-    public string AnnouncementDate { get; set; }
-    public string StartDate { get; set; }
-    public string EndDate { get; set; }
+    public DateTime CreationDate { get; set; }
+    public TimeSpan AnnouncementDate { get; set; }
+    public TimeSpan StartDate { get; set; }
+    public TimeSpan EndDate { get; set; }
     public bool IsDeleted { get; set; } 
     public DateTimeOffset DateDeleted { get; set; }
     public int Usage { get; set; }
@@ -66,9 +66,9 @@ public class LeaderboardTemplate
         string title, 
         string description,
         EventType eventType,
-        string announcementDate,
-        string startDate,
-        string endDate)
+        TimeSpan announcementDate,
+        TimeSpan startDate,
+        TimeSpan endDate)
     {
         Title = title;
         Description = description;

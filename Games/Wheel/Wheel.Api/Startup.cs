@@ -49,7 +49,16 @@ public class Startup
 
         services.AddDbContext<SharedGameHistoryDbContext>(opt =>
             opt.UseNpgsql(Configuration.GetConnectionString("GameHistory")));
-
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll",
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+        });
         services.AddScoped<IRoundRepository, RoundRepository>();
         services.AddScoped<IWheelPrizeRepository, WheelPrizeRepository>();
         services.AddScoped<IWheelConfigurationRepository, WheelConfigurationRepository>();
@@ -75,7 +84,7 @@ public class Startup
         {
             ConfigureConsulLifetime(app, lifetime);
         }
-
+        app.UseCors("AllowAll");
         app.ResolveGameLib(Configuration, env, lifetime);
     }
 

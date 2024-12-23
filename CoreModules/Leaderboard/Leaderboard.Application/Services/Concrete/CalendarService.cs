@@ -55,6 +55,8 @@ public class CalendarService : ICalendarService
                 var futureLeaderboard = new LeaderboardRecordsModel
                 {
                     Id = 0, // Placeholder ID for dynamically generated leaderboard
+                    PromotionId = leaderboardRecord.PromotionId,
+                    PromotionName = leaderboardRecord.PromotionName,
                     Title = leaderboardRecord.Title,
                     Description = leaderboardRecord.Description,
                     CreationDate = nextStartDate.AddDays(-1), // Placeholder: 1 day before the start date

@@ -62,6 +62,7 @@ public class PromotionService : IPromotionService
         var promotions = _promotionRepository.Query(x =>
                          string.IsNullOrEmpty(filter.Name) || EF.Functions.Like(x.Title, $"{filter.Name}%"))
             .Include(x => x.Coins)
+            .Include(x => x.Views)
             .AsNoTracking();
 
         if (filter.Status.HasValue)
@@ -128,7 +129,7 @@ public class PromotionService : IPromotionService
                     ImageUrl = xx.ImageUrl,
                     CoinType = (Contracts.Dtos.Coin.CoinType)xx.CoinType,
                 }).ToList(),
-                PageViews = null,
+                PageViews = x.Views.Select(x => x.Url).ToList(),
             })
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize);
@@ -148,38 +149,11 @@ public class PromotionService : IPromotionService
         };
     }
 
-    public async Task<ApplicationResult> GetAllPromotionGames(int promotionId, BaseFilter filter)
+    public async Task<ApplicationResult> GetAllPromotionGames(int promotionId, BaseFilter? filter)
     {
-        var data = new List<PromotionGameDto>
-        {
-            new PromotionGameDto
-            {
-                Id = 1,
-                GameName = "Treasure Hunt",
-                Description = "Find hidden treasures and earn rewards.",
-                BetPrice = 100,
-                Coins = "Gold, Silver"
-            },
-            new PromotionGameDto
-            {
-                Id = 2,
-                GameName = "Spin & Win",
-                Description = "Spin the wheel for a chance to win big.",
-                BetPrice = 50,
-                Coins = "Gold, Diamond"
-            },
-            new PromotionGameDto
-            {
-                Id = 3,
-                GameName = "Battle Arena",
-                Description = "Compete against other players to claim victory.",
-                BetPrice = 150,
-                Coins = "Platinum, Ruby"
-            }
-        };
+        var response = await _hubApiClient.Get<string>($"{_options.Endpoint}Admin/AllGames?Name=&PromotionId={promotionId}");
 
-
-        return new ApplicationResult { Data = data };
+        return new ApplicationResult { Data = response };
     }
 
     public async Task<ApplicationResult> GetPromotionPlayers(int promotionId, PlayerFilter filter)
@@ -501,8 +475,6 @@ public class PromotionLeaderboardDetailDto
     public string UserName { get; set; }
     public string Segment { get; set; }
     public int Place { set; get; }
-    //public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; }
-    //public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; }
     public decimal Score { get; set; }
     public string PrizeType { get; set; }
     public int PrizeValue { get; set; }
@@ -521,7 +493,12 @@ public class CreatePromotionDto
 {
     public CreatePromotionCommandDto Promotion { get; set; }
     public List<CreateLeaderboardRecordCommand>? Leaderboards { get; set; }
-    public List<GameConfiguration>? GameConfiguration { get; set; }
+    public List<GameConfigDto>? GameConfiguration { get; set; }
+}
+public class GameConfigDto
+{
+    public string GameName { get; set; }
+    public GameConfiguration GameConfiguration { get; set; }
 }
 public class CreatePromotionCommandDto
 {
@@ -533,4 +510,28 @@ public class CreatePromotionCommandDto
     public string? TemplateId { get; set; }
     public IEnumerable<string> SegmentIds { get; set; }
     public IEnumerable<CreateCoinModel> Coins { get; set; }
+}
+public class PromotionData
+{
+    public string Name { get; set; }
+    public string Address { get; set; }
+    public bool Status { get; set; }
+    public string Description { get; set; }
+    public int ConfigurationCount { get; set; }
+    public List<int> PromotionIds { get; set; }
+}
+public class ApiData
+{
+    public bool Succeeded { get; set; }
+    public string Message { get; set; }
+    public string Error { get; set; }
+    public string ValidationErrors { get; set; }
+    public List<PromotionData> Data { get; set; }
+}
+
+public class ApiResponse
+{
+    public bool Success { get; set; }
+    public object Errors { get; set; }
+    public string Data { get; set; }
 }

@@ -14,7 +14,7 @@ public class UpdateConfigurationCommandHandler : ICommandHandler<UpdateConfigura
     }
     public async Task<ApplicationResult> Handle(UpdateConfigurationCommand request, CancellationToken cancellationToken)
     {
-        var result = await _gameService.UpdateConfiguration(request.ConfigurationJson);
+        var result = await _gameService.UpdateConfiguration(request.gameName, request.ConfigurationJson);
 
         return new ApplicationResult { Data = result };
     }

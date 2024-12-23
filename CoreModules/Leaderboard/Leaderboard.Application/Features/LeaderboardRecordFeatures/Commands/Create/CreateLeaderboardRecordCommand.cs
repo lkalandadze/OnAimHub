@@ -6,6 +6,7 @@ namespace Leaderboard.Application.Features.LeaderboardRecordFeatures.Commands.Cr
 public sealed class CreateLeaderboardRecordCommand : IRequest
 {
     public int PromotionId { get; set; }
+    public string PromotionName { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
     public EventType EventType { get; set; }

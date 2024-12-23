@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using OnAim.Admin.APP.Services.GameServices;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
-using OnAim.Admin.Contracts.Dtos.Game;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
@@ -79,44 +79,40 @@ public class GameService : IGameService
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
     }
 
-    public async Task<object> CreateConfiguration(string configurationJson)
+    public async Task<object> CreateConfiguration(string gameName, GameConfigurationDto configurationJson)
     {
-        var payload = new
+        if (gameName != null)
         {
-            configurationJson = configurationJson
-        };
+            var jsonContent = JsonSerializer.Serialize(configurationJson);
+            using var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-        var jsonContent = JsonSerializer.Serialize(payload);
-        using var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var response = await _httpClientFactory.PostAsJsonAsync<object>("/WheelApi/Admin/CreateConfiguration", content);
 
-        var response = await _httpClientFactory.PostAsync("/WheelApi/Admin/CreateConfiguration", content);
-
-        if (response.IsSuccessStatusCode)
-        {
-            return await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
         }
 
-        throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
+        throw new HttpRequestException($"Failed to retrieve data");
     }
 
-    public async Task<object> UpdateConfiguration(string configurationJson)
+    public async Task<object> UpdateConfiguration(string gameName, GameConfigurationDto configurationJson)
     {
-        var payload = new
+        if (gameName != null)
         {
-            configurationJson = configurationJson
-        };
+            var jsonContent = JsonSerializer.Serialize(configurationJson);
+            using var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-        var jsonContent = JsonSerializer.Serialize(payload);
-        using var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var response = await _httpClientFactory.PutAsJsonAsync<object>("/WheelApi/Admin/CreateConfiguration", content);
 
-        var response = await _httpClientFactory.PutAsync("/WheelApi/Admin/CreateConfiguration", content);
-
-        if (response.IsSuccessStatusCode)
-        {
-            return await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
         }
 
-        throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
+        throw new HttpRequestException($"Failed to retrieve data");
     }
 
     public async Task<object> ActivateConfiguration(int id)
@@ -233,4 +229,45 @@ public class Gamed
     public string Description { get; set; }
     public int ConfigurationCount { get; set; }
     public List<int> PromotionIds { get; set; }
+}
+public class PriceDto
+{
+    public string Id { get; set; }
+    public decimal Value { get; set; }
+    public decimal Multiplier { get; set; }
+    public string CoinId { get; set; }
+}
+
+public class PrizeDto
+{
+    public int Id { get; set; }
+    public decimal Value { get; set; }
+    public decimal Probability { get; set; }
+    public string CoinId { get; set; }
+    public int PrizeGroupId { get; set; }
+    public string Name { get; set; }
+    public int WheelIndex { get; set; }
+}
+
+public class RoundDto
+{
+    public int Id { get; set; }
+    public List<int> Sequence { get; set; }
+    public int NextPrizeIndex { get; set; }
+    public int ConfigurationId { get; set; }
+    public List<PrizeDto> Prizes { get; set; }
+    public string Name { get; set; }
+}
+
+public class GameConfigurationDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public decimal Value { get; set; }
+    public bool IsActive { get; set; }
+    public int PromotionId { get; set; }
+    public string CorrelationId { get; set; }
+    public string FromTemplateId { get; set; }
+    public List<PriceDto> Prices { get; set; }
+    public List<RoundDto> Rounds { get; set; }
 }

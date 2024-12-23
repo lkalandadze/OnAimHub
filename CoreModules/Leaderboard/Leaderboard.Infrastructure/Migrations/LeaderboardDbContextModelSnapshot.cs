@@ -56,6 +56,10 @@ namespace Leaderboard.Infrastructure.Migrations
                     b.Property<int>("PromotionId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("PromotionName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int?>("ScheduleId")
                         .HasColumnType("integer");
 

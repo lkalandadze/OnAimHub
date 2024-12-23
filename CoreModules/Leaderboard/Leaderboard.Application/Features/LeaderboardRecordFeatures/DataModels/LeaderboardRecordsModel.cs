@@ -6,6 +6,8 @@ namespace Leaderboard.Application.Features.LeaderboardRecordFeatures.DataModels;
 public sealed record LeaderboardRecordsModel
 {
     public int Id { get; set; }
+    public int PromotionId { get; set; }
+    public string PromotionName { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
     public EventType EventType { get; set; }
@@ -22,6 +24,8 @@ public sealed record LeaderboardRecordsModel
         return new LeaderboardRecordsModel
         {
             Id = leaderboardRecord.Id,
+            PromotionId = leaderboardRecord.PromotionId,
+            PromotionName = leaderboardRecord.PromotionName,
             Title = leaderboardRecord.Title,
             Description = leaderboardRecord.Description,
             EventType = leaderboardRecord.EventType,
