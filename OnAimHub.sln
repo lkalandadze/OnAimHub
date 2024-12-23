@@ -153,21 +153,33 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StateMachines", "StateMachi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SagaOrchestrationStateMachine", "SagaOrchestrationStateMachine", "{56FAC1B3-A69C-4555-A375-980040CA1E99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SagaOrchestrationStateMachine", "StateMachines\SagaOrchestrationStateMachine\SagaOrchestrationStateMachine\SagaOrchestrationStateMachine.csproj", "{F3BFE3D2-E619-4BC8-B164-ACBF72BC627B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SagaOrchestrationStateMachine", "StateMachines\SagaOrchestrationStateMachine\SagaOrchestrationStateMachine\SagaOrchestrationStateMachine.csproj", "{F3BFE3D2-E619-4BC8-B164-ACBF72BC627B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FileManagement", "FileManagement", "{5DCBA617-AA26-46A3-B94A-31FD1356BF64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileService", "Helpers\FileManagement\FileService\FileService.csproj", "{37DF211A-5352-4928-A168-6444EBFB3712}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileService", "Helpers\FileManagement\FileService\FileService.csproj", "{37DF211A-5352-4928-A168-6444EBFB3712}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestWheel", "TestWheel", "{40131C77-A3B4-4FE7-9875-92E3E3EC0450}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWheel.Api", "Games\TestWheel\TestWheel.Api\TestWheel.Api.csproj", "{7FEBAB37-6E94-45DB-B65E-C0B41CC163D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWheel.Api", "Games\TestWheel\TestWheel.Api\TestWheel.Api.csproj", "{7FEBAB37-6E94-45DB-B65E-C0B41CC163D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWheel.Application", "Games\TestWheel\TestWheel.Application\TestWheel.Application.csproj", "{B9CC4D0E-3AD9-4389-8D23-DF44D13B4981}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWheel.Application", "Games\TestWheel\TestWheel.Application\TestWheel.Application.csproj", "{B9CC4D0E-3AD9-4389-8D23-DF44D13B4981}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWheel.Domain", "Games\TestWheel\TestWheel.Domain\TestWheel.Domain.csproj", "{A9623F2D-1A30-4D57-85F6-EF7276CB5951}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWheel.Domain", "Games\TestWheel\TestWheel.Domain\TestWheel.Domain.csproj", "{A9623F2D-1A30-4D57-85F6-EF7276CB5951}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWheel.Infrastructure", "Games\TestWheel\TestWheel.Infrastructure\TestWheel.Infrastructure.csproj", "{BECC61AD-90EE-40D8-9C23-1BF6131CA5BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWheel.Infrastructure", "Games\TestWheel\TestWheel.Infrastructure\TestWheel.Infrastructure.csproj", "{BECC61AD-90EE-40D8-9C23-1BF6131CA5BF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AggregationService", "AggregationService", "{4997A204-600A-4280-AC7D-BBEC16062EF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationService.API", "CoreModules\AggregationService\AggregationService.API\AggregationService.API.csproj", "{253F286A-A3C1-455F-8C2A-DA97534ECE8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationService.Application", "CoreModules\AggregationService\AggregationService.Application\AggregationService.Application.csproj", "{205E6970-FB63-4010-B2D9-31A73290D020}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationService.Domain", "CoreModules\AggregationService\AggregationService.Domain\AggregationService.Domain.csproj", "{D5E7FAE2-AEC2-423A-8D46-B3109018A3DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationService.Infrastructure", "CoreModules\AggregationService\AggregationService.Infrastructure\AggregationService.Infrastructure.csproj", "{8544848C-4D48-402C-8816-2BC6E79E4557}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationService.IntegrationEvents", "CoreModules\AggregationService\AggregationService.IntegrationEvents\AggregationService.IntegrationEvents.csproj", "{96D75D30-5FCA-49FD-BF62-00A1E4CCD02F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -399,6 +411,26 @@ Global
 		{BECC61AD-90EE-40D8-9C23-1BF6131CA5BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BECC61AD-90EE-40D8-9C23-1BF6131CA5BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BECC61AD-90EE-40D8-9C23-1BF6131CA5BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{253F286A-A3C1-455F-8C2A-DA97534ECE8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{253F286A-A3C1-455F-8C2A-DA97534ECE8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{253F286A-A3C1-455F-8C2A-DA97534ECE8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{253F286A-A3C1-455F-8C2A-DA97534ECE8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{205E6970-FB63-4010-B2D9-31A73290D020}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{205E6970-FB63-4010-B2D9-31A73290D020}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{205E6970-FB63-4010-B2D9-31A73290D020}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{205E6970-FB63-4010-B2D9-31A73290D020}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5E7FAE2-AEC2-423A-8D46-B3109018A3DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5E7FAE2-AEC2-423A-8D46-B3109018A3DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5E7FAE2-AEC2-423A-8D46-B3109018A3DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5E7FAE2-AEC2-423A-8D46-B3109018A3DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8544848C-4D48-402C-8816-2BC6E79E4557}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8544848C-4D48-402C-8816-2BC6E79E4557}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8544848C-4D48-402C-8816-2BC6E79E4557}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8544848C-4D48-402C-8816-2BC6E79E4557}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96D75D30-5FCA-49FD-BF62-00A1E4CCD02F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96D75D30-5FCA-49FD-BF62-00A1E4CCD02F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96D75D30-5FCA-49FD-BF62-00A1E4CCD02F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96D75D30-5FCA-49FD-BF62-00A1E4CCD02F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -472,6 +504,12 @@ Global
 		{B9CC4D0E-3AD9-4389-8D23-DF44D13B4981} = {40131C77-A3B4-4FE7-9875-92E3E3EC0450}
 		{A9623F2D-1A30-4D57-85F6-EF7276CB5951} = {40131C77-A3B4-4FE7-9875-92E3E3EC0450}
 		{BECC61AD-90EE-40D8-9C23-1BF6131CA5BF} = {40131C77-A3B4-4FE7-9875-92E3E3EC0450}
+		{4997A204-600A-4280-AC7D-BBEC16062EF3} = {C5337EEE-10D7-4E7F-8A21-0096E2569214}
+		{253F286A-A3C1-455F-8C2A-DA97534ECE8E} = {4997A204-600A-4280-AC7D-BBEC16062EF3}
+		{205E6970-FB63-4010-B2D9-31A73290D020} = {4997A204-600A-4280-AC7D-BBEC16062EF3}
+		{D5E7FAE2-AEC2-423A-8D46-B3109018A3DD} = {4997A204-600A-4280-AC7D-BBEC16062EF3}
+		{8544848C-4D48-402C-8816-2BC6E79E4557} = {4997A204-600A-4280-AC7D-BBEC16062EF3}
+		{96D75D30-5FCA-49FD-BF62-00A1E4CCD02F} = {4997A204-600A-4280-AC7D-BBEC16062EF3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2083D19C-3851-4364-95A9-449C10AD54E0}
