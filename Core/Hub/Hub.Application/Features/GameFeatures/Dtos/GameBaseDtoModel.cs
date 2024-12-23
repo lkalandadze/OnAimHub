@@ -6,6 +6,7 @@ namespace Hub.Application.Features.GameFeatures.Dtos;
 
 public class GameBaseDtoModel
 {
+    public int Id { get; set; }
     public string Name { get; set; }
     public string Address { get; set; }
     public bool Status { get; set; }
@@ -17,6 +18,7 @@ public class GameBaseDtoModel
     {
         return new GameBaseDtoModel
         {
+            Id = model.Id,
             Name = model.Name,
             Address = model.Address,
             Status = game.Status,
