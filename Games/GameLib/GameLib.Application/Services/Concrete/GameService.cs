@@ -11,31 +11,19 @@ public class GameService : IGameService
 {
     private readonly IGameConfigurationRepository _configurationRepository;
     private readonly IConsulGameService _consulGameService;
-    private readonly ConfigurationHolder _configurationHolder;
     private readonly GameSettings _gameSettings;
     private readonly GameInfoConfiguration _gameInfoConfig;
 
     public GameService(
-        IGameConfigurationRepository configurationRepository, 
-        IConsulGameService consulGameService, 
-        ConfigurationHolder configurationHolder, 
+        IGameConfigurationRepository configurationRepository,
+        IConsulGameService consulGameService,
         GameSettings gameSettings,
         IOptions<GameInfoConfiguration> gameInfoConfig)
     {
         _configurationRepository = configurationRepository;
         _consulGameService = consulGameService;
-        _configurationHolder = configurationHolder;
         _gameSettings = gameSettings;
         _gameInfoConfig = gameInfoConfig.Value;
-    }
-
-    public InitialDataResponseModel GetInitialData(int promotionId)
-    {
-        return new InitialDataResponseModel()
-        {
-            Prices = _configurationHolder.GetPrices(promotionId),
-            PrizeGroups = _configurationHolder.GetPrizeGroups(promotionId),
-        };
     }
 
     public GameResponseModel GetGame()

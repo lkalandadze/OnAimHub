@@ -36,8 +36,6 @@ public class ConfigurationHolder
             .SelectMany(collection => collection.OfType<BasePrizeGroup>()) // Flatten and filter BasePrizeGroup types
             .ToList();
 
-        // Mapping logic
-
         return prizeGroups;
     }
 

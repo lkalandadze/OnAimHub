@@ -5,8 +5,6 @@ namespace GameLib.Application.Services.Abstract;
 
 public interface IGameService
 {
-    InitialDataResponseModel GetInitialData(int promotionId);
-
     GameResponseModel GetGame();
 
     Task UpdateMetadataAsync();

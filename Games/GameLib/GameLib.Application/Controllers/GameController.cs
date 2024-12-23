@@ -18,12 +18,6 @@ public class GameController : BaseApiController
 
     #region Game
 
-    [HttpGet(nameof(InitialData))]
-    public ActionResult<InitialDataResponseModel> InitialData(int promotionId)
-    {
-        return Ok(_gameService.GetInitialData(promotionId));
-    }
-
     [AllowAnonymous]
     [HttpGet(nameof(GameVersion))]
     public ActionResult<GameResponseModel> GameVersion()

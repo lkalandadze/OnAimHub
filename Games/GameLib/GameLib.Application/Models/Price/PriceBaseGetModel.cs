@@ -10,7 +10,7 @@ public class PriceBaseGetModel
     {
         return new PriceBaseGetModel
         {
-            CoinId = entity.CoinId
+            CoinId = entity.CoinId.Split('_')[1]
         };
     }
 }
