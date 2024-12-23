@@ -14,7 +14,7 @@ public class CreateConfigurationCommandHandler : ICommandHandler<CreateConfigura
     }
     public async Task<ApplicationResult> Handle(CreateConfigurationCommand request, CancellationToken cancellationToken)
     {
-        var result = await _gameService.CreateConfiguration(request.ConfigurationJson);
+        var result = await _gameService.CreateConfiguration(request.gameName, request.ConfigurationJson);
 
         return new ApplicationResult { Data = result };
     }

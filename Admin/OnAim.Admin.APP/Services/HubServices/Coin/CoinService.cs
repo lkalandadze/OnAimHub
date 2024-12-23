@@ -316,14 +316,14 @@ public class CoinService : ICoinService
     {
         try
         {
-            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/CreateWithdrawOption", option);
+            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOption", option);
 
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult { Data = res.StatusCode, Success = true };
         }
-        catch (Exception)
+        catch (Exception e)
         {
 
-            throw new Exception("failed to save withdraw option");
+            throw new Exception($"failed to save withdraw option : {e.Message}");
         }
     }
 
@@ -344,16 +344,21 @@ public class CoinService : ICoinService
 
     public async Task<ApplicationResult> DeleteWithdrawOption(int id)
     {
+        var body = new 
+        {
+            Id = id
+        };
+
         try
         {
-            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOption", id);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOption", body);
 
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult { Data = "Successfully deleted withdraw option", Success = true };
         }
-        catch (Exception)
+        catch (Exception e)
         {
 
-            throw new Exception("failed to delete withdraw option");
+            throw new Exception($"failed to delete withdraw option : {e.Message}");
         }
     }
 
@@ -389,9 +394,14 @@ public class CoinService : ICoinService
 
     public async Task<ApplicationResult> DeleteWithdrawOptionEndpoint(int id)
     {
+        var body = new
+        {
+            Id = id
+        };
+
         try
         {
-            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOptionEndpoint", id);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOptionEndpoint", body);
 
             return new ApplicationResult { Success = true };
         }
@@ -434,16 +444,65 @@ public class CoinService : ICoinService
 
     public async Task<ApplicationResult> DeleteWithdrawOptiongroup(int id)
     {
+        var body = new
+        {
+            Id = id
+        };
+
         try
         {
-            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOptionGroup", id);
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOptionGroup", body);
 
             return new ApplicationResult { Success = true };
         }
-        catch (Exception)
+        catch (Exception e)
         {
 
-            throw new Exception("failed to delete withdraw option");
+            throw new Exception($"failed to delete withdraw option Group: {e.Message}");
+        }
+    }
+
+    public async Task<ApplicationResult> CreateReward(PlayerPrizeDto dto)
+    {
+        var body = new
+        {
+            IsClaimableByPlayer = dto.IsClaimableByPlayer,
+            PlayerId = dto.PlayerId,
+            SourceId = dto.SourceId,
+            ExpirationDate = dto.ExpirationDate,
+            Prizes = dto.Prizes
+        };
+
+        try
+        {
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/CreateReward", body);
+
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception e)
+        {
+
+            throw new Exception($"failed to create: {e.Message}");
+        }
+    }
+
+    public async Task<ApplicationResult> DeleteReward(int id)
+    {
+        var body = new
+        {
+            Id = id
+        };
+
+        try
+        {
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteReward", body);
+
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception e)
+        {
+
+            throw new Exception($"failed to delete reward: {e.Message}");
         }
     }
 }
@@ -501,4 +560,17 @@ public class UpdateWithdrawOptionGroupDto
     public string ImageUrl { get; set; }
     public int PriorityIndex { get; set; }
     public List<int> WithdrawOptionIds { get; set; } = new List<int>();
+}
+public class PrizeDto
+{
+    public decimal Amount { get; set; }
+    public string PrizeTypeId { get; set; }
+}
+public class PlayerPrizeDto
+{
+    public bool IsClaimableByPlayer { get; set; }
+    public int PlayerId { get; set; }
+    public int SourceId { get; set; }
+    public DateTime ExpirationDate { get; set; }
+    public List<PrizeDto> Prizes { get; set; }
 }

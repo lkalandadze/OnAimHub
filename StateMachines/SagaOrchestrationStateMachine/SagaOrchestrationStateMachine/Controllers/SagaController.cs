@@ -103,14 +103,14 @@ public class SagaController : ControllerBase
                 {
                     foreach (var config in request.GameConfiguration)
                     {
-                        config.CorrelationId = correlationId;
-                        config.PromotionId = promotionId;
+                        config.GameConfiguration.CorrelationId = correlationId;
+                        config.GameConfiguration.PromotionId = promotionId;
 
                         if (config != null)
                         {
                             try
                             {
-                                var gameResponse = await CreateGameConfiguration(config);
+                                var gameResponse = await CreateGameConfiguration(config.GameConfiguration);
                                 _logger.LogInformation("Game configuration created successfully: {ConfigId}", gameResponse);
                             }
                             catch (Exception ex)
