@@ -89,7 +89,8 @@ public class WheelService : IWheelService
 
         await _hubService.BetTransactionAsync(_gameInfoConfig.GameId, model.PromotionId, model.Amount);
 
-        var prize = GeneratorHolder.GetPrize<TPrize>();
+        var round = _configurationHolder.GetPrizeGroups(model.PromotionId).Cast<Round>().FirstOrDefault();
+        var prize = GeneratorHolder.GetPrize<TPrize>(round!.Id);
 
         if (prize == null)
         {
@@ -105,13 +106,14 @@ public class WheelService : IWheelService
         }
 
         //var @event = new UpdatePlayerExperienceEvent(Guid.NewGuid(), model.Amount, model.CurrencyId, _authService.GetCurrentPlayerId());
-
         //await _messageBus.Publish(@event);
 
         return new PlayResponseModel
         {
-            //PrizeResults = [prize],
-            Result = prize.Value <= 0 ? "You Lose" : $"Win Amount: {model.Amount * prize.Value}",
+            IsWin = prize.Value > 0,
+            PrizeId = prize.Id,
+            WheelIndex = (prize as WheelPrize)?.WheelIndex,
+            Amount = prize.Value > 0 ? prize.Value * model.Amount : null
         };
     }
 }

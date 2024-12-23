@@ -26,14 +26,13 @@ public class ConfigurationHolder
             throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Game configuration with the specified promotion ID: [{promotionId}] was not found.");
         }
 
-        // Extract collections of BasePrizeGroup from gameConfiguration
         var prizeGroups = gameConfiguration.GetType()
             .GetProperties()
             .Where(p => typeof(System.Collections.IEnumerable).IsAssignableFrom(p.PropertyType) && // Check if it's a collection
                         p.PropertyType != typeof(string)) // Exclude strings
             .Select(p => p.GetValue(gameConfiguration) as System.Collections.IEnumerable) // Get property value
             .Where(collection => collection != null) // Exclude null collections
-            .SelectMany(collection => collection.OfType<BasePrizeGroup>()) // Flatten and filter BasePrizeGroup types
+            .SelectMany(collection => collection!.OfType<BasePrizeGroup>()) // Flatten and filter BasePrizeGroup types
             .ToList();
 
         return prizeGroups;

@@ -1,9 +1,12 @@
 ﻿#nullable disable
 
+using CheckmateValidations;
+using GameLib.Domain.Checkers;
 using Shared.Domain.Entities;
 
 namespace GameLib.Domain.Abstractions;
 
+[CheckMate<BasePrizeGroupChecker>]
 public abstract class BasePrizeGroup : BaseEntity<int>
 {
     public List<int> Sequence { get; set; }
@@ -18,6 +21,7 @@ public abstract class BasePrizeGroup : BaseEntity<int>
     public virtual List<BasePrize> GetBasePrizes() => [];
 }
 
+[CheckMate<BasePrizeGroupChecker>]
 public abstract class BasePrizeGroup<TPrize> : BasePrizeGroup where TPrize : BasePrize
 {
     public ICollection<TPrize> Prizes { get; set; }

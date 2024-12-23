@@ -37,20 +37,21 @@ public class GeneratorHolder
         });
     }
 
-    public static TPrize GetPrize<TPrize>(Predicate<BasePrizeGroup>? predicate = null)
+    public static TPrize GetPrize<TPrize>(int prizeGroupId, Predicate<BasePrizeGroup>? predicate = null)
         where TPrize : BasePrize
     {
-        var generator = GetGenerator<TPrize>(predicate);
+        var generator = GetGenerator<TPrize>(prizeGroupId, predicate);
 
         return (TPrize)generator.GetPrize();
     }
 
-    internal static Generator GetGenerator<TPrize>(Predicate<BasePrizeGroup>? predicate)
+    internal static Generator GetGenerator<TPrize>(int prizeGroupId, Predicate<BasePrizeGroup>? predicate)
         where TPrize : BasePrize
     {
         lock (_sync)
         {
             return Generators
+                .Where(x => x.Key.Id == prizeGroupId)
                 .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any())
                 .Where(x => x.Key.GetBasePrizes().First().GetType() == typeof(TPrize))
                 .First(x => predicate?.Invoke(x.Key) ?? true)
