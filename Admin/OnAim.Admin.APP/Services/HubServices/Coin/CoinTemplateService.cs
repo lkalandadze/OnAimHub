@@ -4,6 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Coin;
 using OnAim.Admin.Contracts.Dtos.Withdraw;
+using OnAim.Admin.Contracts.Enums;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
@@ -34,6 +35,24 @@ public class CoinTemplateService : ICoinTemplateService
     public async Task<ApplicationResult> GetAllCoinTemplates(BaseFilter filter)
     {
         var temps = await _coinRepository.GetCoinTemplates();
+
+        if (filter?.HistoryStatus.HasValue == true)
+        {
+            switch (filter.HistoryStatus.Value)
+            {
+                case HistoryStatus.Existing:
+                    temps = (List<CoinTemplate>)temps.Where(u => u.IsDeleted == false);
+                    break;
+                case HistoryStatus.Deleted:
+                    temps = (List<CoinTemplate>)temps.Where(u => u.IsDeleted == true);
+                    break;
+                case HistoryStatus.All:
+                    break;
+                default:
+                    break;
+            }
+        }
+
         var totalCount = temps.Count();
 
         var pageNumber = filter?.PageNumber ?? 1;
@@ -276,13 +295,4 @@ public class CoinTemplateService : ICoinTemplateService
 
         return new ApplicationResult { Success = true };
     }
-}
-public class CoinInTemplateDto
-{
-    public string Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public CoinType CoinType { get; set; }
-    public string ImgUrl { get; set; }
-    public bool IsDeleted { get; set; }
 }

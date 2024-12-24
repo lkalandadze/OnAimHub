@@ -3,7 +3,9 @@ using Microsoft.Extensions.Options;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
+using OnAim.Admin.Contracts.Dtos.Coin;
 using OnAim.Admin.Contracts.Dtos.Withdraw;
+using OnAim.Admin.Contracts.Enums;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.HubEntities;
@@ -79,6 +81,23 @@ public class CoinService : ICoinService
     public async Task<ApplicationResult> GetAllWithdrawOptions(BaseFilter filter)
     {
         var data = _withdrawOptionRepository.Query().Include(x => x.WithdrawOptionEndpoint).Include(x => x.OutCoins);
+
+        if (filter?.HistoryStatus.HasValue == true)
+        {
+            switch (filter.HistoryStatus.Value)
+            {
+                case HistoryStatus.Existing:
+                    data = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<WithdrawOption, ICollection<Domain.HubEntities.Coin.OutCoin>>)data.Where(u => u.IsDeleted == false);
+                    break;
+                case HistoryStatus.Deleted:
+                    data = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<WithdrawOption, ICollection<Domain.HubEntities.Coin.OutCoin>>)data.Where(u => u.IsDeleted == true);
+                    break;
+                case HistoryStatus.All:
+                    break;
+                default:
+                    break;
+            }
+        }
 
         var totalCount = await data.CountAsync();
 
@@ -505,72 +524,4 @@ public class CoinService : ICoinService
             throw new Exception($"failed to delete reward: {e.Message}");
         }
     }
-}
-public class CreateWithdrawOptionDto
-{
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string ImageUrl { get; set; }
-    public string Endpoint { get; set; }
-    public int EndpointContentType { get; set; }
-    public string EndpointContent { get; set; }
-    public int WithdrawOptionEndpointId { get; set; }
-    public List<int> WithdrawOptionGroupIds { get; set; } = new List<int>();
-}
-public class UpdateWithdrawOptionDto
-{
-    public int Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string ImageUrl { get; set; }
-    public string Endpoint { get; set; }
-    public int EndpointContentType { get; set; }
-    public string EndpointContent { get; set; }
-    public int WithdrawOptionEndpointId { get; set; }
-    public List<int> WithdrawOptionGroupIds { get; set; } = new List<int>();
-}
-public class CreateWithdrawOptionEndpointDto
-{
-    public string Name { get; set; }
-    public string Endpoint { get; set; }
-    public string Content { get; set; }
-    public int ContentType { get; set; }
-}
-public class UpdateWithdrawOptionEndpointDto
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Endpoint { get; set; }
-    public string Content { get; set; }
-    public int ContentType { get; set; }
-}
-public class CreateWithdrawOptionGroupDto
-{
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string ImageUrl { get; set; }
-    public int PriorityIndex { get; set; }
-    public List<int> WithdrawOptionIds { get; set; } = new List<int>();
-}
-public class UpdateWithdrawOptionGroupDto
-{
-    public int Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string ImageUrl { get; set; }
-    public int PriorityIndex { get; set; }
-    public List<int> WithdrawOptionIds { get; set; } = new List<int>();
-}
-public class PrizeDto
-{
-    public decimal Amount { get; set; }
-    public string PrizeTypeId { get; set; }
-}
-public class PlayerPrizeDto
-{
-    public bool IsClaimableByPlayer { get; set; }
-    public int PlayerId { get; set; }
-    public int SourceId { get; set; }
-    public DateTime ExpirationDate { get; set; }
-    public List<PrizeDto> Prizes { get; set; }
 }

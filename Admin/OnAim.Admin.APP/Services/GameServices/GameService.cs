@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using OnAim.Admin.APP.Services.GameServices;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
+using OnAim.Admin.Contracts.Dtos.Game;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -200,73 +201,4 @@ public class GameService : IGameService
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
     }
 
-}
-public class CreatePrizeTypeDto
-{
-    public string Name { get; set; }
-    public bool IsMultiplied { get; set; }
-    public string CurrencyId { get; set; }
-}
-public class FilterGamesDto
-{
-    public string? Name { get; set; }
-    public int? PromotionId { get; set; }
-}
-public class ApiResponse<T>
-{
-    public bool Succeeded { get; set; }
-    public string? Message { get; set; }
-    public string? Error { get; set; }
-    public object? ValidationErrors { get; set; }
-    public T? Data { get; set; }
-}
-
-public class Gamed
-{
-    public string Name { get; set; }
-    public string Address { get; set; }
-    public bool Status { get; set; }
-    public string Description { get; set; }
-    public int ConfigurationCount { get; set; }
-    public List<int> PromotionIds { get; set; }
-}
-public class PriceDto
-{
-    public string Id { get; set; }
-    public int Value { get; set; }
-    public int Multiplier { get; set; }
-    public string CoinId { get; set; }
-}
-
-public class PrizeDto
-{
-    public int Id { get; set; }
-    public int Value { get; set; }
-    public int Probability { get; set; }
-    public string CoinId { get; set; }
-    public int PrizeGroupId { get; set; }
-    public string Name { get; set; }
-    public int WheelIndex { get; set; }
-}
-
-public class RoundDto
-{
-    public int Id { get; set; }
-    public List<int> Sequence { get; set; }
-    public int NextPrizeIndex { get; set; }
-    public int ConfigurationId { get; set; }
-    public List<PrizeDto> Prizes { get; set; }
-    public string Name { get; set; }
-}
-
-public class GameConfigurationDto
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public int Value { get; set; }
-    public bool IsActive { get; set; }
-    public int PromotionId { get; set; }
-    public string? FromTemplateId { get; set; }
-    public List<PriceDto> Prices { get; set; }
-    public List<RoundDto> Rounds { get; set; }
 }

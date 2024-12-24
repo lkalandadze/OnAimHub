@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
-using OnAim.Admin.APP;
 using OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetById;
 using OnAim.Admin.APP.Features.PromotionFeatures.Template.Commands.Create;
@@ -16,7 +15,6 @@ using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Player;
 using OnAim.Admin.Contracts.Dtos.Promotion;
-using OnAim.Admin.Infrasturcture;
 
 namespace OnAim.Admin.API.Controllers;
 

@@ -20,8 +20,8 @@ public class SagaController : ControllerBase
     private readonly HubApiClientOptions _options;
     private readonly AsyncRetryPolicy<HttpResponseMessage> _retryPolicy;
     public SagaController(
-        HttpClient httpClient, 
-        ILogger<SagaController> logger, 
+        HttpClient httpClient,
+        ILogger<SagaController> logger,
         LeaderBoardService leaderboardService,
         WheelService wheelService,
         IHubApiClient hubApiClient,
@@ -77,45 +77,44 @@ public class SagaController : ControllerBase
                         {
                             try
                             {
-                                foreach (var leaderboardPrize in leaderboard.LeaderboardPrizes)
+                                //foreach (var leaderboardPrize in leaderboard.LeaderboardPrizes)
+                                //{
+                                //    if (leaderboardPrize != null)
+                                //    {
+                                var command = new CreateLeaderboardRecordCommand
                                 {
-                                    var matchingCoin = coins.FirstOrDefault(coin => coin.CoinName == leaderboardPrize.Coin);
-                                    if (matchingCoin != null)
+                                    AnnouncementDate = leaderboard.AnnouncementDate,
+                                    CorrelationId = correlationId,
+                                    Description = leaderboard.Description,
+                                    EndDate = leaderboard.EndDate,
+                                    EventType = leaderboard.EventType,
+                                    IsGenerated = leaderboard.IsGenerated,
+                                    LeaderboardPrizes = leaderboard.LeaderboardPrizes.Select(x => new CreateLeaderboardRecordPrizeCommandItem
                                     {
-                                        var command = new CreateLeaderboardRecordCommand
-                                        {
-                                            AnnouncementDate = leaderboard.AnnouncementDate,
-                                            CorrelationId = correlationId,
-                                            Description = leaderboard.Description,
-                                            EndDate = leaderboard.EndDate,
-                                            EventType = leaderboard.EventType,
-                                            IsGenerated = leaderboard.IsGenerated,
-                                            LeaderboardPrizes = leaderboard.LeaderboardPrizes.Select(x => new CreateLeaderboardRecordPrizeCommandItem
-                                            {
-                                                CoinId = matchingCoin.Id,
-                                                Amount = x.Amount,
-                                                EndRank = x.EndRank,
-                                                StartRank = x.StartRank,
-                                            }).ToList(),
-                                            PromotionId = promotionId,
-                                            PromotionName = leaderboard.PromotionName,
-                                            RepeatType = leaderboard.RepeatType,
-                                            RepeatValue = leaderboard.RepeatValue,
-                                            ScheduleId = leaderboard.ScheduleId,
-                                            StartDate = leaderboard.StartDate,
-                                            Status = leaderboard.Status,
-                                            TemplateId = leaderboard.TemplateId,
-                                            Title = leaderboard.Title,
-                                        };
+                                        CoinId = $"{promotionId}_{x.Coin}",
+                                        Amount = x.Amount,
+                                        EndRank = x.EndRank,
+                                        StartRank = x.StartRank,
+                                    }).ToList(),
+                                    PromotionId = promotionId,
+                                    PromotionName = leaderboard.PromotionName,
+                                    RepeatType = leaderboard.RepeatType,
+                                    RepeatValue = leaderboard.RepeatValue,
+                                    ScheduleId = leaderboard.ScheduleId,
+                                    StartDate = leaderboard.StartDate,
+                                    Status = leaderboard.Status,
+                                    TemplateId = leaderboard.TemplateId,
+                                    Title = leaderboard.Title,
+                                };
 
-                                        var leaderboardResponse = await CreateLeaderboardRecordAsync(command);
-                                        _logger.LogInformation("LeaderboardRecord created successfully: {LeaderboardRecord}", leaderboardResponse);
-                                    }
-                                    else
-                                    {
-                                        _logger.LogWarning("No matching coin found for leaderboard prize: {CoinId}", leaderboardPrize.Coin);
-                                    }
-                                }
+                                var leaderboardResponse = await CreateLeaderboardRecordAsync(command);
+                                _logger.LogInformation("LeaderboardRecord created successfully: {LeaderboardRecord}", leaderboardResponse);
+                                //}
+                                //else
+                                //{
+                                //    _logger.LogWarning("No matching coin found for leaderboard prize: {CoinId}", leaderboardPrize.Coin);
+                                //    //}
+                                //}
                             }
                             catch (Exception ex)
                             {
@@ -181,7 +180,6 @@ public class SagaController : ControllerBase
             return StatusCode(500, new { Success = false, Message = "Internal server error during saga execution.", Error = ex.Message });
         }
     }
-
 
     private async Task<PromotionResponse> CreatePromotionAsync(CreatePromotionCommandDto request)
     {
