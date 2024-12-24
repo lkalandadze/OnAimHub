@@ -45,7 +45,7 @@ public class UpdateWithdrawOptionGroupHandler : IRequestHandler<UpdateWithdrawOp
             request.PriorityIndex,
             withdrawOptions);
 
-        await _withdrawOptionGroupRepository.InsertAsync(group);
+        _withdrawOptionGroupRepository.Update(group);
         await _unitOfWork.SaveAsync();
 
         return Unit.Value;

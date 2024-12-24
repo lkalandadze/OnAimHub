@@ -48,7 +48,7 @@ public class UpdateWithdrawOptionHandler : IRequestHandler<UpdateWithdrawOption>
             request.WithdrawOptionEndpointId,
             withdrawOptionGroups);
 
-        await _withdrawOptionRepository.InsertAsync(option);
+        _withdrawOptionRepository.Update(option);
         await _unitOfWork.SaveAsync();
 
         return Unit.Value;
