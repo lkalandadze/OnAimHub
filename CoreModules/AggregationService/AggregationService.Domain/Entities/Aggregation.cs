@@ -22,9 +22,9 @@ public class Aggregation : BaseEntity<int>
     public ICollection<AggregationConfiguration> AggregationConfigurations { get; set; } = new List<AggregationConfiguration>();
 
 
-    public void AddAggregationConfigurations(ConfigurationType configurationType, string spendableFund, int fundsSpent, string earnableFund, int fundsEarned, bool isRepeatable)
+    public void AddAggregationConfigurations(ConfigurationType configurationType, string spendableFund, int fundsSpent, string earnableFund, int fundsEarned, bool isRepeatable, int contextId, string contextType)
     {
-        var prize = new AggregationConfiguration(configurationType, spendableFund, fundsSpent, earnableFund, fundsEarned, isRepeatable);
+        var prize = new AggregationConfiguration(configurationType, spendableFund, fundsSpent, earnableFund, fundsEarned, isRepeatable, contextId, contextType);
         AggregationConfigurations.Add(prize);
     }
 }

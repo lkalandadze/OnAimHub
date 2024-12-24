@@ -1,4 +1,5 @@
-﻿using AggregationService.Domain.Abstractions.Repository;
+﻿using AggregationService.Application.Services.Abstract;
+using AggregationService.Domain.Abstractions.Repository;
 using AggregationService.Infrastructure.Persistance.Data;
 using AggregationService.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ public static class Extensions
             .AddScoped<IAggregationRepository, AggregationRepository>()
             .AddScoped<IPlayerProgressRepository, PlayerProgressRepository>()
             .AddScoped<IPlayerRepository, PlayerRepository>()
+            .AddScoped<IAggregationService, Application.Services.Concrete.AggregationService>()
             ;
 
         return services;

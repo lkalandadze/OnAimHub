@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\Shared.Domain\Shared.Domain.csproj" />
+    <ProjectReference Include="..\AggregationService.Application\AggregationService.Application.csproj" />
     <ProjectReference Include="..\AggregationService.Domain\AggregationService.Domain.csproj" />
   </ItemGroup>
 

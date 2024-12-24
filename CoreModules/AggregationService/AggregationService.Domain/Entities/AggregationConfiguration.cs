@@ -5,7 +5,7 @@ namespace AggregationService.Domain.Entities;
 
 public class AggregationConfiguration : BaseEntity<int>
 {
-    public AggregationConfiguration(ConfigurationType configurationType, string spendableFund, int fundsSpent, string earnableFund, int fundsEarned, bool isRepeatable)
+    public AggregationConfiguration(ConfigurationType configurationType, string spendableFund, int fundsSpent, string earnableFund, int fundsEarned, bool isRepeatable, int contextId, string contextType)
     {
         ConfigurationType = configurationType;
         SpendableFund = spendableFund;
@@ -13,6 +13,8 @@ public class AggregationConfiguration : BaseEntity<int>
         EarnableFund = earnableFund;
         FundsEarned = fundsEarned;
         IsRepeatable = isRepeatable;
+        ContextId = contextId;
+        ContextType = contextType;
     }
 
     public ConfigurationType ConfigurationType { get; set; }
@@ -28,4 +30,9 @@ public class AggregationConfiguration : BaseEntity<int>
     public bool IsRepeatable { get; set; }
     public int AggregationId { get; set; }
     public Aggregation Aggregation { get; set; }
+
+    // Main table's Id of the project ex: LeaderboardRecordId, GameConfigurationId and etc.
+    public int ContextId { get; set; }
+    // Name of the project so it can call via rabbit
+    public string ContextType { get; set; }
 }
