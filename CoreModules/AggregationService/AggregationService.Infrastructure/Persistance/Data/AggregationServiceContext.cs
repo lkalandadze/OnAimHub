@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AggregationService.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace AggregationService.Infrastructure.Persistance.Data;
 
@@ -8,4 +9,15 @@ public class AggregationServiceContext : DbContext
     {
         
     }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+    }
+
+    public DbSet<Aggregation> Aggregations { get; set; }
+    public DbSet<AggregationConfiguration> AggregationConfigurations { get; set; }
+    public DbSet<Player> Players { get; set; }
+    public DbSet<PlayerProgress> PlayerProgresses { get; set; }
+
 }

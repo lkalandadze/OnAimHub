@@ -1,4 +1,4 @@
-using OnAim.Admin.Infrasturcture;
+using AggregationService.Infrastructure;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost"));
+//builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost"));
 builder.Services.AddHttpClient();
 builder.Services.AddInfrastructure(builder.Configuration);
 
