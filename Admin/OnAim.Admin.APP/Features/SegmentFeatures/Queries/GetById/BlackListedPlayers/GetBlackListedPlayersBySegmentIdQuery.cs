@@ -6,4 +6,4 @@ namespace OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPl
 
 public record GetBlackListedPlayersBySegmentIdQuery(string SegmentId, FilterBy Filter) : IQuery<ApplicationResult>;
 
-public record FilterBy(string? UserName): BaseFilter;
+public class FilterBy : BaseFilter { public string? UserName { get; set; } }

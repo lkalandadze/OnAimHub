@@ -13,4 +13,4 @@ public record CreatePromotionCommand(
     Guid CorrelationId,
     string? TemplateId,
     IEnumerable<string> SegmentIds,
-    IEnumerable<CreateCoinModel> Coins) : IRequest<int>;
+    IEnumerable<CreateCoinModel> Coins) : IRequest<PromotionResponse>;

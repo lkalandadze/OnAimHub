@@ -2,6 +2,7 @@
 
 namespace OnAim.Admin.Contracts.Dtos.EmailDomain;
 
-public record DomainFilter(
-    string? domain
-    ) : BaseFilter;
+public class DomainFilter : BaseFilter
+{ 
+    public string? domain { get; set; }
+}

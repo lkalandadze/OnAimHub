@@ -1,12 +1,14 @@
-﻿namespace OnAim.Admin.Contracts.Dtos.LeaderBoard;
+﻿namespace SagaOrchestrationStateMachine.Models;
 
-public class CreateLeaderboardRecordDto
+public sealed class CreateLeaderboardRecord
 {
+    public int PromotionId { get; set; }
+    public string PromotionName { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
     public EventType EventType { get; set; }
-    public RepeatType RepeatType { get; set; } // when should job execute 
-    public int? RepeatValue { get; set; } // Holds the repeat interval or day information
+    public RepeatType RepeatType { get; set; }
+    public int? RepeatValue { get; set; }
     public DateTimeOffset AnnouncementDate { get; set; }
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }

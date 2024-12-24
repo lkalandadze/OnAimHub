@@ -4,11 +4,12 @@ using OnAim.Admin.Contracts.Models;
 
 namespace OnAim.Admin.Contracts.Dtos.Endpoint;
 
-public record EndpointFilter(
-    string? Name,
-    bool? IsActive,
-    HistoryStatus? HistoryStatus,
-    EndpointType? Type,
-    List<int>? GroupIds,
-    bool? SortDescending
-    ) : BaseFilter; 
+public class EndpointFilter : BaseFilter
+{
+    public string? Name { get; set; }
+    public bool? IsActive { get; set; }
+    public HistoryStatus? HistoryStatus { get; set; }
+    public EndpointType? Type { get; set; }
+    public List<int>? GroupIds { get; set; }
+    public bool? SortDescending { get; set; }
+}

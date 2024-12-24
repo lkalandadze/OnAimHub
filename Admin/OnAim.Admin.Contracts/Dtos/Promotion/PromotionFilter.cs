@@ -2,7 +2,7 @@
 
 namespace OnAim.Admin.Contracts.Dtos.Promotion;
 
-public record PromotionFilter : BaseFilter
+public class PromotionFilter : BaseFilter
 {
     public string? Name { get; set; }
     public PromotionStatus? Status { get; set; }

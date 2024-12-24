@@ -2,7 +2,7 @@
 
 namespace OnAim.Admin.Contracts.Dtos.LeaderBoard;
 
-public record LeaderBoardFilter : BaseFilter
+public class LeaderBoardFilter : BaseFilter
 {
     public int? LeaderBoardId { get; set; }
     public string? Status { get; set; }

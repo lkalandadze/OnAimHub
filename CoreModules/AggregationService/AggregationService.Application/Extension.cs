@@ -1,5 +1,5 @@
 ﻿namespace AggregationService.Application;
 
-internal class Extension
+public static class Extension
 {
 }

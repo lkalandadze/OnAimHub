@@ -3,9 +3,11 @@ using OnAim.Admin.Contracts.Enums;
 
 namespace OnAim.Admin.Contracts.Dtos.EndpointGroup;
 
-public record EndpointGroupFilter(
-    string? Name,
-    bool? IsActive,
-    HistoryStatus? HistoryStatus,
-    List<int>? RoleIds,
-    List<int>? EndpointIds) : BaseFilter;
+public class EndpointGroupFilter : BaseFilter
+{
+    public string? Name { get; set; }
+    public bool? IsActive { get; set; }
+    public HistoryStatus? HistoryStatus { get; set; }
+    public List<int>? RoleIds { get; set; }
+    public List<int>? EndpointIds { get; set; }
+}

@@ -1,5 +1,4 @@
 ﻿using Hub.Application.Features.PromotionFeatures.Commands.Delete;
-using Hub.Application.Models.Coin;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Polly;
@@ -49,10 +48,13 @@ public class SagaController : ControllerBase
         {
             request.Promotion.CorrelationId = correlationId;
             int promotionId;
+            List<PromotionResponseCoin> coins;
 
             try
             {
-                promotionId = await CreatePromotionAsync(request.Promotion);
+                var res = await CreatePromotionAsync(request.Promotion);
+                promotionId = res.PromotionId;
+                coins = res.Coins;
                 _logger.LogInformation("Promotion created successfully: {PromotionId}", promotionId);
             }
             catch (Exception ex)
@@ -75,8 +77,45 @@ public class SagaController : ControllerBase
                         {
                             try
                             {
-                                var leaderboardResponse = await CreateLeaderboardRecordAsync(leaderboard);
-                                _logger.LogInformation("LeaderboardRecord created successfully: {LeaderboardRecord}", leaderboardResponse);
+                                foreach (var leaderboardPrize in leaderboard.LeaderboardPrizes)
+                                {
+                                    var matchingCoin = coins.FirstOrDefault(coin => coin.CoinName == leaderboardPrize.Coin);
+                                    if (matchingCoin != null)
+                                    {
+                                        var command = new CreateLeaderboardRecordCommand
+                                        {
+                                            AnnouncementDate = leaderboard.AnnouncementDate,
+                                            CorrelationId = correlationId,
+                                            Description = leaderboard.Description,
+                                            EndDate = leaderboard.EndDate,
+                                            EventType = leaderboard.EventType,
+                                            IsGenerated = leaderboard.IsGenerated,
+                                            LeaderboardPrizes = leaderboard.LeaderboardPrizes.Select(x => new CreateLeaderboardRecordPrizeCommandItem
+                                            {
+                                                CoinId = matchingCoin.Id,
+                                                Amount = x.Amount,
+                                                EndRank = x.EndRank,
+                                                StartRank = x.StartRank,
+                                            }).ToList(),
+                                            PromotionId = promotionId,
+                                            PromotionName = leaderboard.PromotionName,
+                                            RepeatType = leaderboard.RepeatType,
+                                            RepeatValue = leaderboard.RepeatValue,
+                                            ScheduleId = leaderboard.ScheduleId,
+                                            StartDate = leaderboard.StartDate,
+                                            Status = leaderboard.Status,
+                                            TemplateId = leaderboard.TemplateId,
+                                            Title = leaderboard.Title,
+                                        };
+
+                                        var leaderboardResponse = await CreateLeaderboardRecordAsync(command);
+                                        _logger.LogInformation("LeaderboardRecord created successfully: {LeaderboardRecord}", leaderboardResponse);
+                                    }
+                                    else
+                                    {
+                                        _logger.LogWarning("No matching coin found for leaderboard prize: {CoinId}", leaderboardPrize.Coin);
+                                    }
+                                }
                             }
                             catch (Exception ex)
                             {
@@ -144,11 +183,11 @@ public class SagaController : ControllerBase
     }
 
 
-    private async Task<int> CreatePromotionAsync(CreatePromotionCommandDto request)
+    private async Task<PromotionResponse> CreatePromotionAsync(CreatePromotionCommandDto request)
     {
         try
         {
-            var promotionId = await _hubApiClient.PostAsJsonAndSerializeResultTo<int>($"{_options.Endpoint}Admin/CreatePromotion", request);
+            var promotionId = await _hubApiClient.PostAsJsonAndSerializeResultTo<PromotionResponse>($"{_options.Endpoint}Admin/CreatePromotion", request);
             return promotionId;
         }
         catch (Exception ex)
@@ -200,15 +239,4 @@ public class SagaController : ControllerBase
             throw new Exception(ex.Message, ex);
         }
     }
-}
-public class CreatePromotionCommandDto 
-{ 
-    public string Title {get; set;}
-    public DateTimeOffset StartDate {get; set;}
-    public DateTimeOffset EndDate {get; set;}
-    public string Description {get; set;}
-    public Guid CorrelationId {get; set;}
-    public string? TemplateId {get; set;}
-    public IEnumerable<string> SegmentIds {get; set;}
-    public IEnumerable<CreateCoinModel> Coins { get; set; }
 }

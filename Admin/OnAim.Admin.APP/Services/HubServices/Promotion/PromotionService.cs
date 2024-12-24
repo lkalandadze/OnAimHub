@@ -7,11 +7,11 @@ using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
+using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.Dtos.Player;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Domain.GameEntities;
 using OnAim.Admin.Domain.HubEntities;
 using OnAim.Admin.Domain.HubEntities.Models;
 using OnAim.Admin.Domain.LeaderBoradEntities;
@@ -454,46 +454,16 @@ public class PlayerTransactionDto
     public decimal Amount { get; set; }
     public TransactionStatus Status { get; set; }
 }
-public record PlayerTransactionFilter : BaseFilter
+public class PlayerTransactionFilter : BaseFilter
 {
     public string SearchString { get; set; }
     public TransactionType TransactionType { get; set; }
     public TransactionStatus TransactionStatus { get; set; }
 }
-public class PromotionLeaderboardDto
-{
-    public int Id { get; set; }
-    public string Title { get; set; }
-    public int Place { get; set; }
-    public RepeatType RepeatType { get; set; }
-    public DateTimeOffset StartDate { get; set; }
-    public DateTimeOffset EndDate { get; set; }
-}
-public class PromotionLeaderboardDetailDto
-{
-    public int Id { get; set; }
-    public int PlayerId { get; set; }
-    public string UserName { get; set; }
-    public string Segment { get; set; }
-    public int Place { set; get; }
-    public decimal Score { get; set; }
-    public string PrizeType { get; set; }
-    public int PrizeValue { get; set; }
-}
-public class PromotionGameDto
-{
-    public int Id { get; set; }
-    public string GameName { get; set; }
-    public string Description { get; set; }
-    public int BetPrice { get; set; }
-    public string Coins { get; set; }
-}
-
-
 public class CreatePromotionDto
 {
     public CreatePromotionCommandDto Promotion { get; set; }
-    public List<CreateLeaderboardRecordCommand>? Leaderboards { get; set; }
+    public List<CreateLeaderboardRecord>? Leaderboards { get; set; }
     public List<GameConfigDto>? GameConfiguration { get; set; }
 }
 public class GameConfigDto
@@ -511,28 +481,4 @@ public class CreatePromotionCommandDto
     public string? TemplateId { get; set; }
     public IEnumerable<string> SegmentIds { get; set; }
     public IEnumerable<CreateCoinModel> Coins { get; set; }
-}
-public class PromotionData
-{
-    public string Name { get; set; }
-    public string Address { get; set; }
-    public bool Status { get; set; }
-    public string Description { get; set; }
-    public int ConfigurationCount { get; set; }
-    public List<int> PromotionIds { get; set; }
-}
-public class ApiData
-{
-    public bool Succeeded { get; set; }
-    public string Message { get; set; }
-    public string Error { get; set; }
-    public string ValidationErrors { get; set; }
-    public List<PromotionData> Data { get; set; }
-}
-
-public class ApiResponse
-{
-    public bool Success { get; set; }
-    public object Errors { get; set; }
-    public string Data { get; set; }
 }
