@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using OnAim.Admin.APP.Services.FileServices;
+using OnAim.Admin.APP.Services.Game;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
@@ -498,7 +499,7 @@ public class CreatePromotionDto
 public class GameConfigDto
 {
     public string GameName { get; set; }
-    public GameConfiguration GameConfiguration { get; set; }
+    public GameConfigurationDto GameConfiguration { get; set; }
 }
 public class CreatePromotionCommandDto
 {
