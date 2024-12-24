@@ -233,16 +233,16 @@ public class Gamed
 public class PriceDto
 {
     public string Id { get; set; }
-    public decimal Value { get; set; }
-    public decimal Multiplier { get; set; }
+    public int Value { get; set; }
+    public int Multiplier { get; set; }
     public string CoinId { get; set; }
 }
 
 public class PrizeDto
 {
     public int Id { get; set; }
-    public decimal Value { get; set; }
-    public decimal Probability { get; set; }
+    public int Value { get; set; }
+    public int Probability { get; set; }
     public string CoinId { get; set; }
     public int PrizeGroupId { get; set; }
     public string Name { get; set; }
@@ -263,11 +263,10 @@ public class GameConfigurationDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public decimal Value { get; set; }
+    public int Value { get; set; }
     public bool IsActive { get; set; }
     public int PromotionId { get; set; }
-    public string CorrelationId { get; set; }
-    public string FromTemplateId { get; set; }
+    public string? FromTemplateId { get; set; }
     public List<PriceDto> Prices { get; set; }
     public List<RoundDto> Rounds { get; set; }
 }

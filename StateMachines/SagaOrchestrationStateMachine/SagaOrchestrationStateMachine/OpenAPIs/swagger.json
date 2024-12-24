@@ -623,6 +623,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "promotionName": {
+            "type": "string",
+            "nullable": true
+          },
           "title": {
             "type": "string",
             "nullable": true
@@ -1174,6 +1178,14 @@
           "id": {
             "type": "integer",
             "format": "int32"
+          },
+          "promotionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "promotionName": {
+            "type": "string",
+            "nullable": true
           },
           "title": {
             "type": "string",
