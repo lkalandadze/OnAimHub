@@ -41,7 +41,7 @@ public class DeleteEmailDomainCommandHandlerTest
         }.AsQueryable().BuildMock();
         var command = new DeleteEmailDomainCommand(domainIds);
 
-        var filter = new DomainFilter("");
+        var filter = new DomainFilter();
 
         MockService
             .Setup(service => service.GetAllDomain(filter))
@@ -66,7 +66,7 @@ public class DeleteEmailDomainCommandHandlerTest
         var domainIds = new List<int> { 3, 4 };
         var emptyDomains = new List<OnAim.Admin.Domain.Entities.AllowedEmailDomain>().AsQueryable().BuildMock();
         var command = new DeleteEmailDomainCommand(domainIds);
-        var filter = new DomainFilter("");
+        var filter = new DomainFilter();
 
         MockService
             .Setup(service => service.GetAllDomain(filter))

@@ -41,7 +41,7 @@ public class CreateEmailDomainCommandHandlerTests
     public async Task Handle_ShouldCreateNewDomain_WhenDomainDoesNotExist()
     {
         var command = new CreateEmailDomainCommand(new List<DomainDto>(), "newdomain.com", true);
-        var filter = new DomainFilter("");
+        var filter = new DomainFilter();
 
         MockService
             .Setup(service => service.GetById(0))
@@ -67,7 +67,7 @@ public class CreateEmailDomainCommandHandlerTests
         var command = new CreateEmailDomainCommand(new List<DomainDto>(), "newdomain.com", true);
         var existingList = new List<DomainDto> { existingDomain }.AsQueryable();
 
-        var filter = new DomainFilter("");
+        var filter = new DomainFilter();
 
         MockService
              .Setup(service => service.GetAllDomain(filter))
@@ -92,7 +92,7 @@ public class CreateEmailDomainCommandHandlerTests
         var command = new CreateEmailDomainCommand(new List<DomainDto>(), "deletedomain.com", true);
         var deletedList = new List<DomainDto> { deletedDomain }.AsQueryable();
 
-        var filter = new DomainFilter("");
+        var filter = new DomainFilter();
 
         MockService
                .Setup(service => service.GetAllDomain(filter))

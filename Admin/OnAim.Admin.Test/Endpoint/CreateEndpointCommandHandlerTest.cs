@@ -36,7 +36,7 @@ public class CreateEndpointCommandHandlerTest
     {
         var command = new CreateEndpointCommand(new List<CreateEndpointDto>());
 
-        var filter = new EndpointFilter("", true, HistoryStatus.All, null, null, null);
+        var filter = new EndpointFilter();
 
         MockEndpointService
             .Setup(service => service.GetAll(filter))
