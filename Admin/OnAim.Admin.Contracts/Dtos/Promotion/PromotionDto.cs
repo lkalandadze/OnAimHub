@@ -13,7 +13,7 @@ public class PromotionDto
     public bool IsDeleted { get; set; }
 
     public ICollection<string> Segments { get; set; }
-    //public ICollection<PromotionServiceDto> Services { get; set; }
+    public ICollection<PromotionServiceDto> Services { get; set; }
     public ICollection<string> PageViews { get; set; }
     public List<GamePromotionDto> Games { get; set; }
 

@@ -61,8 +61,10 @@ public class PromotionService : IPromotionService
 
     public async Task<ApplicationResult> GetAllPromotions(PromotionFilter filter)
     {
-        var promotions = _promotionRepository.Query(x =>
-                         string.IsNullOrEmpty(filter.Name) || EF.Functions.Like(x.Title, $"{filter.Name}%"))
+        var promotions = _promotionRepository.Query(
+                         x =>
+                                      string.IsNullOrEmpty(filter.Name) || EF.Functions.Like(x.Title, $"{filter.Name}%")
+                         )
             .Include(x => x.Coins)
             .Include(x => x.Views)
             .AsNoTracking();
@@ -362,14 +364,14 @@ public class PromotionService : IPromotionService
             Description = promotion.Description,
             StartDate = promotion.StartDate,
             EndDate = promotion.EndDate,
-            PromotionCoins = coins.Select(xx => new PromotionCoinDto
-            {
-                Id = xx.Id,
-                Name = xx.Name,
-                Description = xx.Description,
-                ImageUrl = xx.ImageUrl,
-                CoinType = (Contracts.Dtos.Coin.CoinType)xx.CoinType,
-            }).ToList(),
+            //PromotionCoins = coins.Select(xx => new PromotionCoinDto
+            //{
+            //    Id = xx.Id,
+            //    Name = xx.Name,
+            //    Description = xx.Description,
+            //    ImageUrl = xx.ImageUrl,
+            //    CoinType = (Contracts.Dtos.Coin.CoinType)xx.CoinType,
+            //}).ToList(),
             Segments = promotion.Segments.Select(s => s.Id).ToList(),
         };
 
