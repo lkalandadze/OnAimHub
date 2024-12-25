@@ -77,10 +77,6 @@ public class SagaController : ControllerBase
                         {
                             try
                             {
-                                //foreach (var leaderboardPrize in leaderboard.LeaderboardPrizes)
-                                //{
-                                //    if (leaderboardPrize != null)
-                                //    {
                                 var command = new CreateLeaderboardRecordCommand
                                 {
                                     AnnouncementDate = leaderboard.AnnouncementDate,
@@ -109,12 +105,6 @@ public class SagaController : ControllerBase
 
                                 var leaderboardResponse = await CreateLeaderboardRecordAsync(command);
                                 _logger.LogInformation("LeaderboardRecord created successfully: {LeaderboardRecord}", leaderboardResponse);
-                                //}
-                                //else
-                                //{
-                                //    _logger.LogWarning("No matching coin found for leaderboard prize: {CoinId}", leaderboardPrize.Coin);
-                                //    //}
-                                //}
                             }
                             catch (Exception ex)
                             {

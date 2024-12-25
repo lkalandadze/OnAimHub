@@ -14,6 +14,7 @@ using OnAim.Admin.APP.Features.GameFeatures.Template.Queries.GetAll;
 using OnAim.Admin.APP.Services.Game;
 using OnAim.Admin.APP.Services.GameServices;
 using OnAim.Admin.Contracts.Dtos.Base;
+using OnAim.Admin.Contracts.Dtos.Game;
 
 namespace OnAim.Admin.API.Controllers;
 

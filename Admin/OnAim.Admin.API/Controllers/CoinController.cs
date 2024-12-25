@@ -7,6 +7,7 @@ using OnAim.Admin.APP.Features.CoinFeatures.Template.Queries.GetAll;
 using OnAim.Admin.APP.Features.CoinFeatures.Template.Queries.GetById;
 using OnAim.Admin.APP.Services.HubServices.Coin;
 using OnAim.Admin.Contracts.Dtos.Base;
+using OnAim.Admin.Contracts.Dtos.Coin;
 
 namespace OnAim.Admin.API.Controllers;
 

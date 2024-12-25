@@ -8,6 +8,7 @@ using MassTransit.Initializers;
 using OnAim.Admin.APP.Services.LeaderBoardServices;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.APP.Services.Hub.Promotion;
+using OnAim.Admin.Contracts.Dtos.Promotion;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 

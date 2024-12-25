@@ -77,7 +77,7 @@ public class PromotionTemplateService : IPromotionTemplateService
                         Description = outCoin.Description,
                         ImgUrl = outCoin.ImageUrl,
                         CoinType = (Contracts.Dtos.Coin.CoinType)outCoin.CoinType,
-                        IsDeleted = outCoin.IsDeleted,
+                        IsDeleted = (bool)outCoin.IsDeleted,
                         WithdrawOptions = outCoin.WithdrawOptions?.Select(o => new WithdrawOptionDto
                         {
                             Id = o.Id,
@@ -225,7 +225,7 @@ public class PromotionTemplateService : IPromotionTemplateService
                         Description = outCoin.Description,
                         ImgUrl = outCoin.ImageUrl,
                         CoinType = (Contracts.Dtos.Coin.CoinType)outCoin.CoinType,
-                        IsDeleted = outCoin.IsDeleted,
+                        IsDeleted = (bool)outCoin.IsDeleted,
                         WithdrawOptions = outCoin.WithdrawOptions?.Select(o => new WithdrawOptionDto
                         {
                             Id = o.Id,
