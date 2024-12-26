@@ -7,7 +7,6 @@ using Polly.Timeout;
 using Polly.Wrap;
 using System.Text;
 using OnAim.Admin.APP.Extensions;
-using OnAim.Admin.APP.Services.Game;
 using System.Text.Json;
 
 namespace OnAim.Admin.APP.Services.Hub.ClientServices;
@@ -25,7 +24,8 @@ public class HubApiClient : IHubApiClient
         IOptions<HubApiClientOptions> options,
         IOptions<PolicyOptions> policyOptions,
         string username,
-        string password)
+        string password
+        )
     {
         _httpClient = httpClient.NotBeNull();
         _options = options.Value;

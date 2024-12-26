@@ -1,12 +1,10 @@
-﻿using OnAim.Admin.APP.Services.Game;
-using OnAim.Admin.Contracts.Dtos.Game;
-using OnAim.Admin.Domain.GameEntities;
+﻿using OnAim.Admin.Contracts.Dtos.Game;
 
 namespace OnAim.Admin.APP.Services.GameServices;
 
 public interface IGameService
 {
-    Task<string> GetAll(FilterGamesDto? filter);
+    Task<object> GetAll(FilterGamesDto? filter);
     Task<object> GetConfigurations();
     Task<object> GetConfiguration(int id);
     Task<string> GetGame();

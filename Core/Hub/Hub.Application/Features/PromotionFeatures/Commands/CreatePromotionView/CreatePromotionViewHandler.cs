@@ -44,7 +44,12 @@ public class CreatePromotionViewHandler : IRequestHandler<CreatePromotionView, R
 
         var viewUrl = _promotionViewService.GenerateViewUrl(request.ViewContent, promotion.Id);
 
-        var promotionView = new PromotionView(request.Name, viewUrl, request.PromotionId, request.TemplateId);
+        var promotionView = new PromotionView(
+            request.Name,
+            viewUrl,
+            request.PromotionId,
+            createdByUserId: request.CreatedByUserId,
+            templateId: request.TemplateId);
 
         await _promotionViewRepository.InsertAsync(promotionView);
 

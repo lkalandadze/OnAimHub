@@ -71,6 +71,8 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
             request.Title,
             request.Description,
             request.CorrelationId,
+            createdByUserId: request.CreatedByUserId,
+            templateId: request.TemplateId,
             segments: segments
         );
 

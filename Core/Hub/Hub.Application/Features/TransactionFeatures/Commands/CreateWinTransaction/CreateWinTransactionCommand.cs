@@ -8,4 +8,5 @@ namespace Hub.Application.Features.TransactionFeatures.Commands.CreateWinTransac
 public record CreateWinTransactionCommand(
     int GameId,
     decimal Amount,
+    string CoinId,
     int PromotionId) : IRequest<TransactionResponseModel>;

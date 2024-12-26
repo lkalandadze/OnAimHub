@@ -17,6 +17,8 @@ public class SagaController : ControllerBase
     private readonly LeaderBoardService _leaderboardService;
     private readonly WheelService _wheelService;
     private readonly IHubApiClient _hubApiClient;
+    private readonly IWheelApiClientApiClient _wheelApiClientApiClient;
+    private readonly WheelApiClientOptions _wheelApiClientOptions;
     private readonly HubApiClientOptions _options;
     private readonly AsyncRetryPolicy<HttpResponseMessage> _retryPolicy;
     public SagaController(
@@ -25,7 +27,9 @@ public class SagaController : ControllerBase
         LeaderBoardService leaderboardService,
         WheelService wheelService,
         IHubApiClient hubApiClient,
-        IOptions<HubApiClientOptions> options
+        IOptions<HubApiClientOptions> options,
+        IWheelApiClientApiClient wheelApiClientApiClient,
+        IOptions<WheelApiClientOptions> wheelApiClientOptions
         )
     {
         _httpClient = httpClient;
@@ -33,6 +37,8 @@ public class SagaController : ControllerBase
         _leaderboardService = leaderboardService;
         _wheelService = wheelService;
         _hubApiClient = hubApiClient;
+        _wheelApiClientApiClient = wheelApiClientApiClient;
+        _wheelApiClientOptions = wheelApiClientOptions.Value;
         _options = options.Value;
         _retryPolicy = Policy
                    .Handle<HttpRequestException>()
@@ -132,7 +138,7 @@ public class SagaController : ControllerBase
                     foreach (var config in request.GameConfiguration)
                     {
                         config.GameConfiguration.CorrelationId = correlationId;
-                        config.GameConfiguration.PromotionId = promotionId;
+                        config.GameConfiguration.PromotionId = promotionId;                    
 
                         if (config != null)
                         {
@@ -198,11 +204,11 @@ public class SagaController : ControllerBase
         }
     }
 
-    private async Task<IActionResult> CreateGameConfiguration(GameConfiguration model)
+    private async Task<IActionResult> CreateGameConfiguration(GameConfigurationDto model)
     {
         try
         {
-            await _wheelService.CreateConfigurationAsync(model);
+            await _wheelApiClientApiClient.PostAsJson($"{_wheelApiClientOptions.Endpoint}Admin/CreateConfiguration", model);
             return Ok();
         }
         catch (Exception ex)

@@ -12,12 +12,18 @@ public class WithdrawOptionEndpoint : BaseEntity<int>
 
     }
 
-    public WithdrawOptionEndpoint(string name, string endpoint, string endpointContent, EndpointContentType contentType)
+    public WithdrawOptionEndpoint(
+        string name, 
+        string endpoint, 
+        string endpointContent, 
+        EndpointContentType contentType, 
+        int? createdByUserId = null)
     {
         Name = name;
         Endpoint = endpoint;
         Content = endpointContent;
         ContentType = contentType;
+        CreatedByUserId = createdByUserId;
     }
 
     public string Name { get; private set; }
@@ -26,6 +32,7 @@ public class WithdrawOptionEndpoint : BaseEntity<int>
     public string Content { get; set; }
     public bool IsDeleted { get; private set; }
     public DateTimeOffset DateDeleted { get; private set; }
+    public int? CreatedByUserId { get; private set; }
 
     public void Update(string name, string endpoint, string endpointContent, EndpointContentType contentType)
     {

@@ -36,7 +36,8 @@ public class CreateWithdrawOptionHandler : IRequestHandler<CreateWithdrawOption>
             request.Endpoint,
             request.EndpointContentType,
             request.EndpointContent,
-            request.WithdrawOptionEndpointId);
+            request.WithdrawOptionEndpointId,
+            createdByUserId: request.CreatedByUserId);
 
         if (request.WithdrawOptionGroupIds != null && request.WithdrawOptionGroupIds.Any())
         {

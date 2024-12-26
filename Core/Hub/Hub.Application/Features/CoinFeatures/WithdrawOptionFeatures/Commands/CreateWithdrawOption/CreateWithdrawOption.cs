@@ -14,4 +14,5 @@ public record CreateWithdrawOption(
     EndpointContentType,
     string EndpointContent,
     int? WithdrawOptionEndpointId,
-    IEnumerable<int>? WithdrawOptionGroupIds) : IRequest;
+    IEnumerable<int>? WithdrawOptionGroupIds,
+    int? CreatedByUserId) : IRequest;

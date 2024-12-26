@@ -16,13 +16,15 @@ public class WithdrawOptionGroup : BaseEntity<int>
         string description,
         string imageUrl,
         int? priorityIndex = null,
-        IEnumerable<WithdrawOption> withdrawOptions = null)
+        IEnumerable<WithdrawOption> withdrawOptions = null,
+        int? createdByUserId = null)
     {
         Title = title;
         Description = description;
         ImageUrl = imageUrl;
         PriorityIndex = priorityIndex;
         WithdrawOptions = withdrawOptions?.ToList() ?? [];
+        CreatedByUserId = createdByUserId;
     }
 
     public string Title { get; private set; }
@@ -31,6 +33,7 @@ public class WithdrawOptionGroup : BaseEntity<int>
     public int? PriorityIndex { get; private set; }
     public bool IsDeleted { get; private set; }
     public DateTimeOffset DateDeleted { get; private set; }
+    public int? CreatedByUserId { get; private set; }
 
     public ICollection<OutCoin> OutCoins { get; set; }
     public ICollection<WithdrawOption> WithdrawOptions { get; set; }
