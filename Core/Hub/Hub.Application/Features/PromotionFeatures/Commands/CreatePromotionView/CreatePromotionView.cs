@@ -9,4 +9,5 @@ public record CreatePromotionView(
     string Name, 
     string ViewContent, 
     int PromotionId,
-    string TemplateId) : IRequest<Response<CreatePromotionViewResponse>>;
+    int? CreatedByUserId,
+    string? TemplateId) : IRequest<Response<CreatePromotionViewResponse>>;

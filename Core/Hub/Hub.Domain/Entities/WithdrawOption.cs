@@ -20,7 +20,8 @@ public class WithdrawOption : BaseEntity<int>
         EndpointContentType? contentType = null,
         string endpointContent = null, 
         int? withdrawOptionEndpointId = null,
-        IEnumerable<WithdrawOptionGroup> withdrawOptionGroups = null)
+        IEnumerable<WithdrawOptionGroup> withdrawOptionGroups = null,
+        int? createdByUserId = null)
     {
         Title = title;
         Description = description;
@@ -40,6 +41,7 @@ public class WithdrawOption : BaseEntity<int>
     public string EndpointContent { get; private set; }
     public bool IsDeleted { get; private set; }
     public DateTimeOffset DateDeleted { get; private set; }
+    public int? CreatedByUserId { get; private set; }
 
     public int? WithdrawOptionEndpointId { get; private set; }
     public WithdrawOptionEndpoint WithdrawOptionEndpoint { get; private set; }

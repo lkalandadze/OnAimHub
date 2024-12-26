@@ -102,7 +102,7 @@ public class WheelService : IWheelService
 
         if (prize.Value > 0)
         {
-            await _hubService.WinTransactionAsync(_gameInfoConfig.GameId, model.PromotionId, model.Amount * prize.Value);
+            await _hubService.WinTransactionAsync(_gameInfoConfig.GameId, prize.CoinId, model.PromotionId, model.Amount * prize.Value);
         }
 
         //var @event = new UpdatePlayerExperienceEvent(Guid.NewGuid(), model.Amount, model.CurrencyId, _authService.GetCurrentPlayerId());

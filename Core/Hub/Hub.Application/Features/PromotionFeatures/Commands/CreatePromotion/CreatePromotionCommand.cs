@@ -11,6 +11,7 @@ public record CreatePromotionCommand(
     DateTimeOffset EndDate,
     string Description,
     Guid CorrelationId,
+    int? CreatedByUserId,
     string? TemplateId,
     IEnumerable<string> SegmentIds,
     IEnumerable<CreateCoinModel> Coins) : IRequest<int>;

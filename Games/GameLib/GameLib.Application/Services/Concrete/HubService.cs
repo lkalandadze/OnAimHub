@@ -34,26 +34,37 @@ public class HubService : IHubService
             Amount = amount,
         };
 
-        var betTransaction = await _httpClient.CustomPostAsync<TransactionResponseModel>(_hubApiConfig.Host, _hubApiConfig.Endpoints.BetTransaction, transactionPost);
-
-        if (betTransaction == null)
+        try
         {
-            throw new ApiException(ApiExceptionCodeTypes.DependencyFailure, "Failed to process bet transaction due to null response from the service.");
+            var betTransaction = await _httpClient.CustomPostAsync<TransactionResponseModel>(_hubApiConfig.Host, _hubApiConfig.Endpoints.BetTransaction, transactionPost);
+
+            if (betTransaction == null)
+            {
+                throw new ApiException(ApiExceptionCodeTypes.DependencyFailure, "Failed to process bet transaction due to null response from the service.");
+            }
+
+            if (!betTransaction.Success)
+            {
+                var reason = /*betTransaction.ErrorCode ?? */"Unknown error";
+                throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Bet transaction failed: {reason}.");
+            }
+        }
+        catch (Exception ex)
+        {
+
+            throw;
         }
 
-        if (!betTransaction.Success)
-        {
-            var reason = /*betTransaction.ErrorCode ?? */"Unknown error";
-            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Bet transaction failed: {reason}.");
-        }
+        
     }
 
-    public async Task WinTransactionAsync(int gameVersionId, int promotionId, int amount)
+    public async Task WinTransactionAsync(int gameVersionId, string coinId, int promotionId, int amount)
     {
         Authorize();
         var transactionPost = new TransactionPostModel
         {
             GameId = gameVersionId,
+            CoinId = coinId,
             PromotionId = promotionId,
             Amount = amount,
         };

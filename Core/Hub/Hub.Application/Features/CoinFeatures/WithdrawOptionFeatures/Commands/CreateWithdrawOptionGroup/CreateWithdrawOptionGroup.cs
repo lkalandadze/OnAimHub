@@ -7,4 +7,5 @@ public record CreateWithdrawOptionGroup(
     string Description,
     string ImageUrl,
     int? PriorityIndex,
-    IEnumerable<int>? WithdrawOptionIds) : IRequest;
+    IEnumerable<int>? WithdrawOptionIds,
+    int? CreatedByUserId) : IRequest;

@@ -19,6 +19,7 @@ public class Promotion : BaseEntity<int>
         string title, 
         string description,
         Guid correlationId,
+        int? createdByUserId = null,
         string templateId = null,
         IEnumerable<PromotionService> services = null,
         IEnumerable<Segment> segments = null,
@@ -31,6 +32,7 @@ public class Promotion : BaseEntity<int>
         Title = title;
         Description = description;
         CorrelationId = correlationId;
+        CreatedByUserId = createdByUserId;
         FromTemplateId = templateId;
         CreateDate = DateTimeOffset.UtcNow;
         Services = services?.ToList() ?? [];
@@ -50,6 +52,7 @@ public class Promotion : BaseEntity<int>
     public bool IsDeleted { get; private set; }
     public Guid CorrelationId { get; private set; }
     public string FromTemplateId { get; private set; }
+    public int? CreatedByUserId { get; private set; }
 
     public ICollection<PromotionService> Services { get; private set; }
     public ICollection<Segment> Segments { get; private set; }

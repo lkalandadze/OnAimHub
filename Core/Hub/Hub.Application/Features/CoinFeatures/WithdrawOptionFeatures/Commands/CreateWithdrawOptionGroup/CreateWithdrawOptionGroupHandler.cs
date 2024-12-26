@@ -29,7 +29,8 @@ public class CreateWithdrawOptionGroupHandler : IRequestHandler<CreateWithdrawOp
             request.Title,
             request.Description,
             request.ImageUrl,
-            request.PriorityIndex);
+            request.PriorityIndex,
+            createdByUserId: request.CreatedByUserId);
 
         if (request.WithdrawOptionIds != null && request.WithdrawOptionIds.Any())
         {

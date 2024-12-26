@@ -2,7 +2,6 @@
 using Hub.Application.Services.Abstract;
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities.DbEnums;
-using Hub.Domain.Enum;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Application.Exceptions;
@@ -14,11 +13,13 @@ public class CreateWinTransactionHandler : IRequestHandler<CreateWinTransactionC
 {
     private readonly IPromotionRepository _promotionRepository;
     private readonly ITransactionService _transactionService;
+    private readonly ICoinRepository _coinRepository;
 
-    public CreateWinTransactionHandler(IPromotionRepository promotionRepository, ITransactionService transactionService)
+    public CreateWinTransactionHandler(IPromotionRepository promotionRepository, ITransactionService transactionService, ICoinRepository coinRepository)
     {
         _promotionRepository = promotionRepository;
         _transactionService = transactionService;
+        _coinRepository = coinRepository;
     }
 
     public async Task<TransactionResponseModel> Handle(CreateWinTransactionCommand request, CancellationToken cancellationToken)
@@ -37,15 +38,20 @@ public class CreateWinTransactionHandler : IRequestHandler<CreateWinTransactionC
             throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Promotion with the specified ID: [{request.PromotionId}] was not found.");
         }
 
-        var inCoin = promotion.Coins.First(c => c.CoinType == CoinType.In).Id;
+        var coin = await _coinRepository.Query(c => c.Id == request.CoinId).FirstOrDefaultAsync();
+        
+        if (coin == null)
+        {
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"CoinId with the specified name: [{request.CoinId.Split('_')[1]}] was not found in [{request.PromotionId}] promotion.");
+        }
 
         return await _transactionService.CreateTransactionAndApplyBalanceAsync(
-            request.GameId, 
-            inCoin, 
+            request.GameId,
+            request.CoinId,
             request.Amount,
             AccountType.Game,
-            AccountType.Player, 
-            TransactionType.Win, 
+            AccountType.Player,
+            TransactionType.Win,
             request.PromotionId
         );
     }

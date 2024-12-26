@@ -24,7 +24,12 @@ public class CreateWithdrawOptionEndpointHandler : IRequestHandler<CreateWithdra
             throw new CheckmateException(CheckmateValidations.Checkmate.GetFailedChecks(request, true));
         }
 
-        var endpoint = new WithdrawOptionEndpoint(request.Name, request.Endpoint, request.Content, request.ContentType);
+        var endpoint = new WithdrawOptionEndpoint(
+            request.Name,
+            request.Endpoint,
+            request.Content,
+            request.ContentType,
+            createdByUserId: request.CreatedByUserId);
 
         await _withdrawOptionEndpointRepository.InsertAsync(endpoint);
         await _unitOfWork.SaveAsync();
