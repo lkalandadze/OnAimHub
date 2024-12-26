@@ -37,6 +37,9 @@ namespace Leaderboard.Infrastructure.Migrations
                     b.Property<Guid?>("CorrelationId")
                         .HasColumnType("uuid");
 
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("integer");
+
                     b.Property<DateTimeOffset>("CreationDate")
                         .HasColumnType("timestamp with time zone");
 

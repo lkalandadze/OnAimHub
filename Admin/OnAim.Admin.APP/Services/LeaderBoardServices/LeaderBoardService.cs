@@ -8,6 +8,7 @@ using MassTransit.Initializers;
 using OnAim.Admin.APP.Services.LeaderBoardServices;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.APP.Services.Hub.Promotion;
+using OnAim.Admin.Contracts.Dtos.Promotion;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 
@@ -62,9 +63,6 @@ public class LeaderBoardService : ILeaderBoardService
         var pageNumber = filter?.PageNumber ?? 1;
         var pageSize = filter?.PageSize ?? 25;
 
-        var itemsPageNumber = filter?.ItemsPageNumber ?? 1;
-        var itemsPageSize = filter?.ItemsPageSize ?? 10;
-
         var res = leaderboards
            .Select(x => new LeaderBoardListDto
            {
@@ -82,7 +80,7 @@ public class LeaderBoardService : ILeaderBoardService
                {
                    Id = xx.Id,
                    Name = xx.CoinId,
-                   Amount = xx.Amount,
+                   Value = xx.Amount,
                }).ToList(),
            })
            .Skip((pageNumber - 1) * pageSize)

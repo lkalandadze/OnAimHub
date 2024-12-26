@@ -2,7 +2,7 @@
 
 namespace OnAim.Admin.Contracts.Dtos.Base;
 
-public record BaseFilter
+public class BaseFilter
 {
     public int? PageNumber { get; set; }
     public int? PageSize { get; set; }

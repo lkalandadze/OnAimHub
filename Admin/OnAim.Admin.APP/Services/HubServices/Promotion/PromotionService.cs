@@ -7,16 +7,18 @@ using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
+using OnAim.Admin.Contracts.Dtos.Game;
+using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.Dtos.Player;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Domain.GameEntities;
 using OnAim.Admin.Domain.HubEntities;
 using OnAim.Admin.Domain.HubEntities.Models;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
+using System.Text.Json;
 
 namespace OnAim.Admin.APP.Services.Hub.Promotion;
 
@@ -60,8 +62,10 @@ public class PromotionService : IPromotionService
 
     public async Task<ApplicationResult> GetAllPromotions(PromotionFilter filter)
     {
-        var promotions = _promotionRepository.Query(x =>
-                         string.IsNullOrEmpty(filter.Name) || EF.Functions.Like(x.Title, $"{filter.Name}%"))
+        var promotions = _promotionRepository.Query(
+                         x =>
+                                      string.IsNullOrEmpty(filter.Name) || EF.Functions.Like(x.Title, $"{filter.Name}%")
+                         )
             .Include(x => x.Coins)
             .Include(x => x.Views)
             .AsNoTracking();
@@ -152,9 +156,9 @@ public class PromotionService : IPromotionService
 
     public async Task<ApplicationResult> GetAllPromotionGames(int promotionId, BaseFilter? filter)
     {
-        var response = await _hubApiClient.Get<string>($"{_options.Endpoint}Admin/AllGames?Name=&PromotionId={promotionId}");
+        ResponseData response = await _hubApiClient.Get<ResponseData>($"{_options.Endpoint}Admin/AllGames?Name=&PromotionId={promotionId}");
 
-        return new ApplicationResult { Data = response };
+        return new ApplicationResult { Success = true, Data = response };
     }
 
     public async Task<ApplicationResult> GetPromotionPlayers(int promotionId, PlayerFilter filter)
@@ -443,7 +447,25 @@ public class PromotionService : IPromotionService
         }
     }
 }
+public class GameData
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Address { get; set; }
+    public bool Status { get; set; }
+    public string Description { get; set; }
+    public int ConfigurationCount { get; set; }
+    public List<int> PromotionIds { get; set; }
+}
 
+public class ResponseData
+{
+    public bool Succeeded { get; set; }
+    public string Message { get; set; }
+    public object Error { get; set; }
+    public object ValidationErrors { get; set; }
+    public List<GameData> Data { get; set; }
+}
 public class PlayerTransactionDto
 {
     public int Id { get; set; }
@@ -454,46 +476,16 @@ public class PlayerTransactionDto
     public decimal Amount { get; set; }
     public TransactionStatus Status { get; set; }
 }
-public record PlayerTransactionFilter : BaseFilter
+public class PlayerTransactionFilter : BaseFilter
 {
     public string SearchString { get; set; }
     public TransactionType TransactionType { get; set; }
     public TransactionStatus TransactionStatus { get; set; }
 }
-public class PromotionLeaderboardDto
-{
-    public int Id { get; set; }
-    public string Title { get; set; }
-    public int Place { get; set; }
-    public RepeatType RepeatType { get; set; }
-    public DateTimeOffset StartDate { get; set; }
-    public DateTimeOffset EndDate { get; set; }
-}
-public class PromotionLeaderboardDetailDto
-{
-    public int Id { get; set; }
-    public int PlayerId { get; set; }
-    public string UserName { get; set; }
-    public string Segment { get; set; }
-    public int Place { set; get; }
-    public decimal Score { get; set; }
-    public string PrizeType { get; set; }
-    public int PrizeValue { get; set; }
-}
-public class PromotionGameDto
-{
-    public int Id { get; set; }
-    public string GameName { get; set; }
-    public string Description { get; set; }
-    public int BetPrice { get; set; }
-    public string Coins { get; set; }
-}
-
-
 public class CreatePromotionDto
 {
     public CreatePromotionCommandDto Promotion { get; set; }
-    public List<CreateLeaderboardRecordCommand>? Leaderboards { get; set; }
+    public List<CreateLeaderboardRecord>? Leaderboards { get; set; }
     public List<GameConfigDto>? GameConfiguration { get; set; }
 }
 public class GameConfigDto
@@ -511,28 +503,4 @@ public class CreatePromotionCommandDto
     public string? TemplateId { get; set; }
     public IEnumerable<string> SegmentIds { get; set; }
     public IEnumerable<CreateCoinModel> Coins { get; set; }
-}
-public class PromotionData
-{
-    public string Name { get; set; }
-    public string Address { get; set; }
-    public bool Status { get; set; }
-    public string Description { get; set; }
-    public int ConfigurationCount { get; set; }
-    public List<int> PromotionIds { get; set; }
-}
-public class ApiData
-{
-    public bool Succeeded { get; set; }
-    public string Message { get; set; }
-    public string Error { get; set; }
-    public string ValidationErrors { get; set; }
-    public List<PromotionData> Data { get; set; }
-}
-
-public class ApiResponse
-{
-    public bool Success { get; set; }
-    public object Errors { get; set; }
-    public string Data { get; set; }
 }

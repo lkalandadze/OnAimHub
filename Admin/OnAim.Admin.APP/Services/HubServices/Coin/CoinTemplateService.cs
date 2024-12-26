@@ -4,6 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Coin;
 using OnAim.Admin.Contracts.Dtos.Withdraw;
+using OnAim.Admin.Contracts.Enums;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
@@ -34,6 +35,24 @@ public class CoinTemplateService : ICoinTemplateService
     public async Task<ApplicationResult> GetAllCoinTemplates(BaseFilter filter)
     {
         var temps = await _coinRepository.GetCoinTemplates();
+
+        if (filter?.HistoryStatus.HasValue == true)
+        {
+            switch (filter.HistoryStatus.Value)
+            {
+                case HistoryStatus.Existing:
+                    temps = (List<CoinTemplate>)temps.Where(u => u.IsDeleted == false);
+                    break;
+                case HistoryStatus.Deleted:
+                    temps = (List<CoinTemplate>)temps.Where(u => u.IsDeleted == true);
+                    break;
+                case HistoryStatus.All:
+                    break;
+                default:
+                    break;
+            }
+        }
+
         var totalCount = temps.Count();
 
         var pageNumber = filter?.PageNumber ?? 1;
@@ -86,35 +105,54 @@ public class CoinTemplateService : ICoinTemplateService
     {
         var coin = await _coinRepository.GetCoinTemplateByIdAsync(id);
 
-        var coinTemplate = new CoinTemplateListDto
+        if (coin == null) throw new NotFoundException("Coin template Not Found");
+
+        if (coin.CoinType != Domain.HubEntities.Enum.CoinType.Out)
         {
-            Id = coin.Id,
-            Title = coin.Name,
-            Description = coin.Description,
-            CoinType = (Contracts.Dtos.Coin.CoinType)coin.CoinType,
-            WithdrawOptions = coin.WithdrawOptions.Select(xx => new WithdrawOptionCoinTempDto
+            return new ApplicationResult
             {
-                Title = xx.WithdrawOption.Title,
-                Description = xx.WithdrawOption.Description,
-                ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)xx.WithdrawOption.ContentType,
-                Endpoint = xx.WithdrawOption.Endpoint,
-                EndpointContent = xx.WithdrawOption.EndpointContent,
-                Id = xx.WithdrawOption.Id,
-                ImageUrl = xx.WithdrawOption.ImageUrl,
-            }).ToList(),
-            WithdrawOptionGroups = coin.WithdrawOptionGroups.Select(z => new WithdrawOptionGroupCoinTempDto
+                Data = new CoinInTemplateDto
+                {
+                    Id = coin.Id,
+                    Title = coin.Name,
+                    Description = coin.Description,
+                    CoinType = (CoinType)coin.CoinType,
+                    ImgUrl = coin.ImageUrl,
+                    IsDeleted = coin.IsDeleted
+                },
+                Success = true
+            };
+        } 
+        else
+        {
+            var coinTemplate = new CoinTemplateListDto
             {
-                Title = z.WithdrawOptionGroup.Title,
-                Description = z.WithdrawOptionGroup.Description,
-                Id = z.WithdrawOptionGroup.Id,
-                ImageUrl = z.WithdrawOptionGroup.ImageUrl,
-                PriorityIndex = z.WithdrawOptionGroup.PriorityIndex,
-            }).ToList(),
-        };
+                Id = coin.Id,
+                Title = coin.Name,
+                Description = coin.Description,
+                CoinType = (Contracts.Dtos.Coin.CoinType)coin.CoinType,
+                WithdrawOptions = coin.WithdrawOptions?.Select(xx => new WithdrawOptionCoinTempDto
+                {
+                    Title = xx.WithdrawOption.Title,
+                    Description = xx.WithdrawOption.Description,
+                    ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)xx.WithdrawOption.ContentType,
+                    Endpoint = xx.WithdrawOption.Endpoint,
+                    EndpointContent = xx.WithdrawOption.EndpointContent,
+                    Id = xx.WithdrawOption.Id,
+                    ImageUrl = xx.WithdrawOption.ImageUrl,
+                }).ToList() ?? new List<WithdrawOptionCoinTempDto>(),
+                WithdrawOptionGroups = coin.WithdrawOptionGroups?.Select(z => new WithdrawOptionGroupCoinTempDto
+                {
+                    Title = z.WithdrawOptionGroup.Title,
+                    Description = z.WithdrawOptionGroup.Description,
+                    Id = z.WithdrawOptionGroup.Id,
+                    ImageUrl = z.WithdrawOptionGroup.ImageUrl,
+                    PriorityIndex = z.WithdrawOptionGroup.PriorityIndex,
+                }).ToList() ?? new List<WithdrawOptionGroupCoinTempDto>(),
+            };
 
-        if (coinTemplate == null) throw new NotFoundException("Coin template Not Found");
-
-        return new ApplicationResult { Success = true, Data = coinTemplate };
+            return new ApplicationResult { Success = true, Data = coinTemplate };
+        }  
     }
 
     public async Task<ApplicationResult> CreateCoinTemplate(CreateCoinTemplateDto coinTemplate)
@@ -276,13 +314,4 @@ public class CoinTemplateService : ICoinTemplateService
 
         return new ApplicationResult { Success = true };
     }
-}
-public class CoinInTemplateDto
-{
-    public string Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public CoinType CoinType { get; set; }
-    public string ImgUrl { get; set; }
-    public bool IsDeleted { get; set; }
 }

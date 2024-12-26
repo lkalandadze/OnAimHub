@@ -2,7 +2,7 @@
 
 public interface IHubApiClient
 {
-    Task<string> Get<T>(
+    Task<T> Get<T>(
    string uri,
    CancellationToken ct = default
     );

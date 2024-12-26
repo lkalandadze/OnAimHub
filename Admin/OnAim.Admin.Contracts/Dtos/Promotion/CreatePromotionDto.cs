@@ -11,8 +11,3 @@ public class CreatePromotionCoinModel
     public bool IsTemplate { get; set; }
     public IEnumerable<CreateWithdrawOptionGroupModel> WithdrawOptionGroups { get; set; }
 }
-public class UpdatePromotionStatusDto 
-{
-    public int Id { get; set; }
-    public PromotionStatus Status { get; set; }
-}

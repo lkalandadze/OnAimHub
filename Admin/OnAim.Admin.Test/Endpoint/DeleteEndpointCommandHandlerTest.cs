@@ -40,7 +40,7 @@ public class DeleteEndpointCommandHandlerTest
         }.AsQueryable().BuildMock();
         var command = new DeleteEndpointCommand(domainIds);
 
-        var filter = new EndpointFilter(null, null, null, null, null, null);
+        var filter = new EndpointFilter();
 
         MockEndpointService
             .Setup(service => service.GetAll(filter))
@@ -65,7 +65,7 @@ public class DeleteEndpointCommandHandlerTest
         var endpointIds = new List<int> { 3, 4 };
         var emptyEndpoints = new List<OnAim.Admin.Domain.Entities.Endpoint>().AsQueryable().BuildMock();
         var command = new DeleteEndpointCommand(endpointIds);
-        var filter = new EndpointFilter(null, null, null, null, null, null);
+        var filter = new EndpointFilter();
 
         MockEndpointService
             .Setup(service => service.GetAll(filter))

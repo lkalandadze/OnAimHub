@@ -7,7 +7,7 @@ using Polly.Timeout;
 using Polly.Wrap;
 using System.Text;
 using OnAim.Admin.APP.Extensions;
-using OnAim.Admin.APP.Services.Game;
+using System.Text.Json;
 
 namespace OnAim.Admin.APP.Services.Hub.ClientServices;
 
@@ -24,7 +24,8 @@ public class HubApiClient : IHubApiClient
         IOptions<HubApiClientOptions> options,
         IOptions<PolicyOptions> policyOptions,
         string username,
-        string password)
+        string password
+        )
     {
         _httpClient = httpClient.NotBeNull();
         _options = options.Value;
@@ -56,7 +57,7 @@ public class HubApiClient : IHubApiClient
         _combinedPolicy = combinedPolicy.WrapAsync(timeoutPolicy);
     }
 
-    public async Task<string> Get<T>(string uri, CancellationToken ct = default)
+    public async Task<T> Get<T>(string uri, CancellationToken ct = default)
     {
         var res = await _httpClient.GetAsync(uri, ct);
 
@@ -64,7 +65,8 @@ public class HubApiClient : IHubApiClient
             throw new HubAPIRequestFailedException(res);
 
         var content = await res.Content.ReadAsStringAsync();
-        return content;
+
+        return System.Text.Json.JsonSerializer.Deserialize<T>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
 
     public async Task<Stream> GetAsStream(string uri, CancellationToken ct = default)

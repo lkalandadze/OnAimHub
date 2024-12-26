@@ -2,10 +2,10 @@
 
 namespace OnAim.Admin.Contracts.Dtos.Segment;
 
-public record SegmentActsFilter(
-    int? UserId,
-    //int? playerId,
-    string? SegmentId,
-    DateTimeOffset? DateFrom,
-    DateTimeOffset? DateTo
-    ) : BaseFilter;
+public class SegmentActsFilter : BaseFilter
+{
+    public int? UserId { get; set; }
+    public string? SegmentId { get; set; }
+    public DateTimeOffset? DateFrom { get; set; }
+    public DateTimeOffset? DateTo { get; set; }
+}

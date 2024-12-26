@@ -3,9 +3,15 @@ using OnAim.Admin.Contracts.Enums;
 
 namespace OnAim.Admin.Contracts.Dtos.Role;
 
-public record RoleFilter(
-    string? Name,
-    bool? IsActive,
-    HistoryStatus? HistoryStatus,
-    List<int>? UserIds,
-    List<int>? GroupIds) : BaseFilter;
+public class RoleFilter : BaseFilter
+{
+    public string? Name { get; set; }
+    //public int? PageNumber { get; set; }
+    //public int? PageSize { get; set; }
+    //public string? SortBy { get; set; }
+    //public bool? SortDescending { get; set; }
+    //public bool? IsActive { get; set; }
+    //public HistoryStatus? HistoryStatus { get; set; }
+    public List<int>? UserIds { get; set; }
+    public List<int>? GroupIds { get; set; }
+};

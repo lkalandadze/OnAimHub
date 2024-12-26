@@ -33,9 +33,7 @@ public class FileController : ApiControllerBase
     {
         var memoryStream = new MemoryStream();
         await file.CopyToAsync(memoryStream);
-        memoryStream.Seek(0, SeekOrigin.Begin); // Reset stream position
+        memoryStream.Seek(0, SeekOrigin.Begin);
         return memoryStream;
     }
-
-
 }

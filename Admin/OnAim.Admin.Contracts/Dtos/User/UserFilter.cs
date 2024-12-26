@@ -3,15 +3,16 @@ using OnAim.Admin.Contracts.Enums;
 
 namespace OnAim.Admin.Contracts.Dtos.User;
 
-public record UserFilter(
-    string? Name,
-    string? Email,
-    string? Direction,
-    List<int>? RoleIds,
-    bool? IsActive,
-    HistoryStatus? HistoryStatus,
-    DateTime? RegistrationDateFrom,
-    DateTime? RegistrationDateTo,
-    DateTime? LoginDateFrom,
-    DateTime? LoginDateTo
-    ) : BaseFilter;
+public class UserFilter : BaseFilter
+{
+    public string? Name { get; set; }
+    public string? Email { get; set; }
+    public string? Direction { get; set; }
+    public List<int>? RoleIds { get; set; }
+    public bool? IsActive { get; set; }
+    public HistoryStatus? HistoryStatus { get; set; }
+    public DateTime? RegistrationDateFrom { get; set; }
+    public DateTime? RegistrationDateTo { get; set; }
+    public DateTime? LoginDateFrom { get; set; }
+    public DateTime? LoginDateTo { get; set; }
+}

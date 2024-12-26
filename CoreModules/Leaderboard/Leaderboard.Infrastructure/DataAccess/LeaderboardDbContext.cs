@@ -1,7 +1,6 @@
 ﻿using Leaderboard.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Reflection.Emit;
 
 namespace Leaderboard.Infrastructure.DataAccess;
 

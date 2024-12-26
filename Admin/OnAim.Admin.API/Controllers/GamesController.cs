@@ -14,6 +14,7 @@ using OnAim.Admin.APP.Features.GameFeatures.Template.Queries.GetAll;
 using OnAim.Admin.APP.Services.Game;
 using OnAim.Admin.APP.Services.GameServices;
 using OnAim.Admin.Contracts.Dtos.Base;
+using OnAim.Admin.Contracts.Dtos.Game;
 
 namespace OnAim.Admin.API.Controllers;
 
@@ -48,14 +49,6 @@ public class GamesController : ApiControllerBase
     public async Task<IActionResult> GetConfigurationMetadata()
         => Ok(await Mediator.Send(new GetConfigurationMetadataQuery()));
 
-    //[HttpGet(nameof(GetPrizeTypes))]
-    //public async Task<IActionResult> GetPrizeTypes()
-    //    => Ok(await Mediator.Send(new GetPrizeTypesQuery()));    
-
-    //[HttpGet(nameof(GetPrizeTypeById))]
-    //public async Task<IActionResult> GetPrizeTypeById([FromQuery] int id)
-    //    => Ok(await Mediator.Send(new GetPrizeTypeByIdQuery(id)));
-
     [HttpPost(nameof(CreateConfiguration))]
     public async Task<IActionResult> CreateConfiguration([FromQuery] string gameName, [FromBody] GameConfigurationDto configurationJson)
         => Ok(await Mediator.Send(new CreateConfigurationCommand(gameName, configurationJson)));
@@ -71,14 +64,6 @@ public class GamesController : ApiControllerBase
     [HttpPut(nameof(DeactivateConfiguration))]
     public async Task<IActionResult> DeactivateConfiguration([FromQuery] int id)
         => Ok(await Mediator.Send(new DeactivateConfigurationCommand(id)));
-
-    //[HttpPost(nameof(CreatePrizeType))]
-    //public async Task<IActionResult> CreatePrizeType([FromBody] CreatePrizeTypeDto createPrizeType)
-    //    => Ok(await Mediator.Send(new CreatePrizeTypeCommand(createPrizeType)));
-
-    //[HttpPut(nameof(UpdatePrizeType))]
-    //public async Task<IActionResult> UpdatePrizeType([FromQuery] int id,[FromBody] CreatePrizeTypeDto createPrizeType)
-    //=> Ok(await Mediator.Send(new UpdatePrizeTypeCommand(id,createPrizeType)));
 
     //Game Configuration Template
 

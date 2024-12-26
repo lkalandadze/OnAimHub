@@ -12,7 +12,7 @@ using Shared.Application.Exceptions.Types;
 
 namespace Hub.Application.Features.PromotionFeatures.Commands.CreatePromotion;
 
-public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionCommand, int>
+public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionCommand, PromotionResponse>
 {
     private readonly ISegmentRepository _segmentRepository;
     private readonly IPromotionRepository _promotionRepository;
@@ -37,7 +37,7 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<int> Handle(CreatePromotionCommand request, CancellationToken cancellationToken)
+    public async Task<PromotionResponse> Handle(CreatePromotionCommand request, CancellationToken cancellationToken)
     {
         //var rootCheckContainer = CheckmateValidations.Checkmate.GetCheckContainersWithInstance(request);
         //var rootFailedCheckers = CheckmateValidations.Checkmate.GetFailedChecks(request).ToList();
@@ -107,7 +107,17 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
 
         SchedulePromotionStatusJobs(promotion);
 
-        return promotion.Id;
+        var res = new PromotionResponse
+        {
+            PromotionId = promotion.Id,
+            Coins = mappedCoins.Select(x => new PromotionResponseCoin
+            {
+                Id = x.Id,
+                CoinName = x.Name,
+            }).ToList(),
+        };
+
+        return res;
     }
 
     private void SchedulePromotionStatusJobs(Promotion promotion)
@@ -156,4 +166,14 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
     {
         return $"{date.Second} {date.Minute} {date.Hour} {date.Day} {date.Month} ?";
     }
+}
+public class PromotionResponse
+{
+    public int PromotionId { get; set; }
+    public List<PromotionResponseCoin> Coins { get; set; }
+}
+public class PromotionResponseCoin
+{
+    public string Id { get; set; }
+    public string CoinName { get; set; }
 }

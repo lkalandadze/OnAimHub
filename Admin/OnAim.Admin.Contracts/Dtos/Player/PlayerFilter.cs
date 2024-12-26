@@ -2,10 +2,11 @@
 
 namespace OnAim.Admin.Contracts.Dtos.Player;
 
-public record PlayerFilter(
-    string? Name,
-    DateTime? DateFrom,
-    DateTime? DateTo,
-    List<string>? SegmentIds,
-    bool? IsBanned
-    ) : BaseFilter;
+public class PlayerFilter : BaseFilter
+{
+    public string? Name { get; set; }
+    public DateTime? DateFrom { get; set; }
+    public DateTime? DateTo { get; set; }
+    public List<string>? SegmentIds { get; set; }
+    public bool? IsBanned { get; set; }
+}

@@ -72,18 +72,7 @@ public class DeleteUserCommandHandlerTests
             )
         }.AsQueryable().BuildMock();
         var command = new DeleteUserCommand(userIds);
-        var filter = new UserFilter(
-            "",
-            "",
-            "",
-            new List<int>(),
-            true,
-            HistoryStatus.All,
-            new DateTime(),
-            new DateTime(),
-            new DateTime(),
-            new DateTime()
-            );
+        var filter = new UserFilter();
 
         MockService
            .Setup(service => service.GetAll(filter))
@@ -109,18 +98,7 @@ public class DeleteUserCommandHandlerTests
         var emptyUsers = new List<OnAim.Admin.Domain.Entities.User>().AsQueryable().BuildMock();
         var command = new DeleteUserCommand(userIds);
 
-        var filter = new UserFilter(
-            "",
-            "",
-            "",
-            new List<int>(),
-            true,
-            HistoryStatus.All,
-            new DateTime(),
-            new DateTime(),
-            new DateTime(),
-            new DateTime()
-            );
+        var filter = new UserFilter( );
 
         MockService
            .Setup(service => service.GetAll(filter))

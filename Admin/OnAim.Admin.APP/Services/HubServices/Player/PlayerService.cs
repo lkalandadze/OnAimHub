@@ -235,8 +235,8 @@ public class PlayerService : IPlayerService
                 Description = x.Description,
             }).ToList(),
             Transactions = res,
-            RegistrationDate = null,
-            LastVisit = null,
+            RegistrationDate = player.RegistredOn,
+            LastVisit = player.LastVisitedOn,
             Referee = referee != null ? new RefereeDto
             {
                 Id = referee.Id,
@@ -282,8 +282,8 @@ public class PlayerService : IPlayerService
     {
         try
         {
-            await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/AddBalanceToPlayer", command);
-            return new ApplicationResult { Success = true };
+            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/AddBalanceToPlayer", command);
+            return new ApplicationResult { Success = true, Data = res.StatusCode };
         }
         catch (Exception ex)
         {
@@ -356,10 +356,4 @@ public class PlayerService : IPlayerService
             Data = result
         };
     }
-}
-public class AddBalanceDto
-{
-    public int PlayerId { get; set; }
-    public string CoinId { get; set; }
-    public int Amount { get; set; }
 }
