@@ -79,6 +79,7 @@ public class JobService : IJobService
                 true,
                 schedule.LeaderboardRecord.TemplateId,
                 scheduleId,
+                null,
                 null
             );
 

@@ -40,6 +40,7 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
             request.IsGenerated,
             request.TemplateId,
             request.ScheduleId,
+            request.CreatedBy,
             request.CorrelationId
         );
 

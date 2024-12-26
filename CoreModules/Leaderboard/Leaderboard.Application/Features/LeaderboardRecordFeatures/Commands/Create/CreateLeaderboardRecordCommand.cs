@@ -19,6 +19,7 @@ public sealed class CreateLeaderboardRecordCommand : IRequest
     public bool IsGenerated { get; set; }
     public int? ScheduleId { get; set; }
     public string? TemplateId { get; set; }
+    public int? CreatedBy { get; set; }
     public Guid CorrelationId { get; set; }
     public List<CreateLeaderboardRecordPrizeCommandItem> LeaderboardPrizes { get; set; }
 }

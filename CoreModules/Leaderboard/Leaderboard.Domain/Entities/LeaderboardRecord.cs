@@ -22,6 +22,7 @@ public class LeaderboardRecord : BaseEntity<int>
                              bool isGenerated,
                              string? templateId,
                              int? scheduleId,
+                             int? createdBy,
                              Guid? correlationId)
     {
         PromotionId = promotionId;
@@ -35,6 +36,7 @@ public class LeaderboardRecord : BaseEntity<int>
         IsGenerated = isGenerated;
         TemplateId = templateId;
         ScheduleId = scheduleId;
+        CreatedBy = createdBy;
         CorrelationId = correlationId;
         CreationDate = DateTimeOffset.UtcNow;
         Status = LeaderboardRecordStatus.Created;
@@ -52,6 +54,7 @@ public class LeaderboardRecord : BaseEntity<int>
     public bool IsGenerated { get; set; }
     public string? TemplateId { get; set; }
     public int? ScheduleId { get; set; }
+    public int? CreatedBy { get; set; }
     public Guid? CorrelationId { get; set; }
     public LeaderboardSchedule LeaderboardSchedule { get; set; }
     public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; } = new List<LeaderboardProgress>();
