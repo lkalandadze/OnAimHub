@@ -3,6 +3,7 @@ using System;
 using AggregationService.Infrastructure.Persistance.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AggregationService.Infrastructure.Migrations
 {
     [DbContext(typeof(AggregationServiceContext))]
-    partial class AggregationServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20241226071412_Removed_Players")]
+    partial class Removed_Players
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

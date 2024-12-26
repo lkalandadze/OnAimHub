@@ -35,4 +35,14 @@ public class AggregationConfiguration : BaseEntity<int>
     public int ContextId { get; set; }
     // Name of the project so it can call via rabbit
     public string ContextType { get; set; }
+
+    public void Update(ConfigurationType configurationType, string spendableFund, int fundsSpent, string earnableFund, int fundsEarned, bool isRepeatable)
+    {
+        ConfigurationType = configurationType;
+        SpendableFund = spendableFund;
+        FundsSpent = fundsSpent;
+        EarnableFund = earnableFund;
+        FundsEarned = fundsEarned;
+        IsRepeatable = isRepeatable;
+    }
 }

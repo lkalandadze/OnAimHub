@@ -17,7 +17,5 @@ public class AggregationServiceContext : DbContext
 
     public DbSet<Aggregation> Aggregations { get; set; }
     public DbSet<AggregationConfiguration> AggregationConfigurations { get; set; }
-    public DbSet<Player> Players { get; set; }
-    public DbSet<PlayerProgress> PlayerProgresses { get; set; }
 
 }

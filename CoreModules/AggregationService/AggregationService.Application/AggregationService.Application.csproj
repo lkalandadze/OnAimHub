@@ -15,4 +15,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AggregationService.Domain\AggregationService.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

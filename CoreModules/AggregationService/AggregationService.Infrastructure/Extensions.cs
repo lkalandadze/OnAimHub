@@ -25,8 +25,7 @@ public static class Extensions
         services
             .AddScoped<IAggregationConfigurationRepository, AggregationConfigurationRepository>()
             .AddScoped<IAggregationRepository, AggregationRepository>()
-            .AddScoped<IPlayerProgressRepository, PlayerProgressRepository>()
-            .AddScoped<IPlayerRepository, PlayerRepository>();
+            ;
 
         return services;
     }

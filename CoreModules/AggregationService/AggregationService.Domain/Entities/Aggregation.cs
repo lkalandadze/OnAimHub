@@ -1,5 +1,6 @@
 ﻿using AggregationService.Domain.Enum;
 using Shared.Domain.Entities;
+using System.Linq;
 
 namespace AggregationService.Domain.Entities;
 
@@ -26,5 +27,35 @@ public class Aggregation : BaseEntity<int>
     {
         var prize = new AggregationConfiguration(configurationType, spendableFund, fundsSpent, earnableFund, fundsEarned, isRepeatable, contextId, contextType);
         AggregationConfigurations.Add(prize);
+    }
+
+    public void Update(string title, string description)
+    {
+        Title = title; 
+        Description = description;
+    }
+
+    public void UpdateConfigurations(IEnumerable<AggregationConfiguration> updatedConfigurations)
+    {
+        foreach (var updatedConfig in updatedConfigurations)
+        {
+            var existingConfig = AggregationConfigurations.FirstOrDefault(c => c.Id == updatedConfig.Id);
+
+            if (existingConfig != null)
+            {
+                existingConfig.Update(
+                    updatedConfig.ConfigurationType,
+                    updatedConfig.SpendableFund,
+                    updatedConfig.FundsSpent,
+                    updatedConfig.EarnableFund,
+                    updatedConfig.FundsEarned,
+                    updatedConfig.IsRepeatable
+                );
+            }
+            else
+            {
+                throw new Exception("Configuration not found");
+            }
+        }
     }
 }
