@@ -4,6 +4,7 @@ using GameLib.Application.Holders;
 using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
@@ -19,6 +20,7 @@ namespace Wheel.Application.Services.Concrete;
 
 public class WheelService : IWheelService
 {
+    private readonly IPriceRepository _priceRepository;
     private readonly IAuthService _authService;
     private readonly IHubService _hubService;
     private readonly IMessageBus _messageBus;
@@ -27,7 +29,7 @@ public class WheelService : IWheelService
     private readonly GameInfoConfiguration _gameInfoConfig;
 
     public WheelService(
-        IGameConfigurationRepository configurationRepository,
+        IPriceRepository priceRepository,
         IAuthService authService,
         IHubService hubService,
         IMessageBus messageBus,
@@ -35,6 +37,7 @@ public class WheelService : IWheelService
         GameSettings gameSettings,
         IOptions<GameInfoConfiguration> gameInfoConfig)
     {
+        _priceRepository = priceRepository;
         _authService = authService;
         _hubService = hubService;
         _messageBus = messageBus;
@@ -76,20 +79,27 @@ public class WheelService : IWheelService
         return await PlayAsync<WheelPrize>(model);
     }
 
-    private async Task<PlayResponseModel> PlayAsync<TPrize>(PlayRequestModel model)
+    private async Task<PlayResponseModel> PlayAsync<TPrize>(PlayRequestModel request)
         where TPrize : BasePrize
     {
-        if (!_gameSettings.IsActive.Value)
+        //if (!_gameSettings.IsActive.Value)
+        //{
+        //    throw new ApiException(
+        //        ApiExceptionCodeTypes.OperationNotAllowed,
+        //        "The game is currently inactive and cannot be played. Please try again later."
+        //    );
+        //}
+
+        var price = await _priceRepository.Query(p => p.Id == request.BetPriceId).FirstOrDefaultAsync();
+
+        if (price == null)
         {
-            throw new ApiException(
-                ApiExceptionCodeTypes.OperationNotAllowed,
-                "The game is currently inactive and cannot be played. Please try again later."
-            );
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Price with the specified ID: [{request.BetPriceId}] was not found.");
         }
 
-        await _hubService.BetTransactionAsync(_gameInfoConfig.GameId, model.PromotionId, model.Amount);
+        await _hubService.BetTransactionAsync(_gameInfoConfig.GameId, request.PromotionId, price.Value);
 
-        var round = _configurationHolder.GetPrizeGroups(model.PromotionId).Cast<Round>().FirstOrDefault();
+        var round = _configurationHolder.GetPrizeGroups(request.PromotionId).Cast<Round>().FirstOrDefault();
         var prize = GeneratorHolder.GetPrize<TPrize>(round!.Id);
 
         if (prize == null)
@@ -102,7 +112,7 @@ public class WheelService : IWheelService
 
         if (prize.Value > 0)
         {
-            await _hubService.WinTransactionAsync(_gameInfoConfig.GameId, prize.CoinId, model.PromotionId, model.Amount * prize.Value);
+            await _hubService.WinTransactionAsync(_gameInfoConfig.GameId, prize.CoinId, request.PromotionId, price.Multiplier * prize.Value);
         }
 
         //var @event = new UpdatePlayerExperienceEvent(Guid.NewGuid(), model.Amount, model.CurrencyId, _authService.GetCurrentPlayerId());
@@ -113,7 +123,7 @@ public class WheelService : IWheelService
             IsWin = prize.Value > 0,
             PrizeId = prize.Id,
             WheelIndex = (prize as WheelPrize)?.WheelIndex,
-            Amount = prize.Value > 0 ? prize.Value * model.Amount : null
+            WinAmount = prize.Value > 0 ? price.Multiplier * prize.Value : null
         };
     }
 }

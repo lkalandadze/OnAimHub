@@ -24,7 +24,7 @@ public class HubService : IHubService
         _hubApiConfig = hubApiConfig.Value;
     }
 
-    public async Task BetTransactionAsync(int gameVersionId, int promotionId, int amount)
+    public async Task BetTransactionAsync(int gameVersionId, int promotionId, decimal amount)
     {
         Authorize();
         var transactionPost = new TransactionPostModel
@@ -58,7 +58,7 @@ public class HubService : IHubService
         
     }
 
-    public async Task WinTransactionAsync(int gameVersionId, string coinId, int promotionId, int amount)
+    public async Task WinTransactionAsync(int gameVersionId, string coinId, int promotionId, decimal amount)
     {
         Authorize();
         var transactionPost = new TransactionPostModel
