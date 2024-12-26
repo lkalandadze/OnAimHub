@@ -25,9 +25,9 @@ public class GameService : IGameService
         _options = options.Value;
     }
 
-    public async Task<string> GetAll(FilterGamesDto? filter)
+    public async Task<object> GetAll(FilterGamesDto? filter)
     {
-        var response = await _hubApiClient.Get<string>($"{_options.Endpoint}Admin/AllGames?Name={filter.Name}&PromotionId={filter.PromotionId}");
+        var response = await _hubApiClient.Get<object>($"{_options.Endpoint}Admin/AllGames?Name={filter.Name}&PromotionId={filter.PromotionId}");
 
         return response;
     }
