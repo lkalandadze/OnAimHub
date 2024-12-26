@@ -58,6 +58,7 @@ public class SagaController : ControllerBase
 
             try
             {
+                request.Promotion.CreatedByUserId = request.CreatedByUserId;
                 var res = await CreatePromotionAsync(request.Promotion);
                 promotionId = res.PromotionId;
                 coins = res.Coins;
@@ -107,6 +108,7 @@ public class SagaController : ControllerBase
                                     Status = leaderboard.Status,
                                     TemplateId = leaderboard.TemplateId,
                                     Title = leaderboard.Title,
+                                    CreatedBy = request.CreatedByUserId,
                                 };
 
                                 var leaderboardResponse = await CreateLeaderboardRecordAsync(command);

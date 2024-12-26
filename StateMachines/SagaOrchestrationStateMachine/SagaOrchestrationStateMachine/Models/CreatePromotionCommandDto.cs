@@ -10,6 +10,7 @@ public class CreatePromotionCommandDto
     public string Description { get; set; }
     public Guid CorrelationId { get; set; }
     public string? TemplateId { get; set; }
+    public int? CreatedByUserId { get; set; }
     public IEnumerable<string> SegmentIds { get; set; }
     public IEnumerable<CreateCoinModel> Coins { get; set; }
 }

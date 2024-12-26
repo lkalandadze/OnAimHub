@@ -15,10 +15,11 @@ public class PromotionView : BaseEntity<int>
         FromTemplateId = templateId;
     }
 
-    public string Name { get; private set; }
-    public string Url { get; private set; }
-    public string? FromTemplateId { get; private set; }
+    public string Name { get; set; }
+    public string Url { get; set; }
+    public string? FromTemplateId { get; set; }
+    public int? CreatedByUserId { get; set; }
 
-    public int PromotionId { get; private set; }
-    public Promotion Promotion { get; private set; }
+    public int PromotionId { get; set; }
+    public Promotion Promotion { get; set; }
 }

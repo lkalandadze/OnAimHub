@@ -37,6 +37,7 @@ public class WithdrawOption
     public EndpointContentType ContentType { get; set; }
     public string EndpointContent { get; set; }
     public bool? IsDeleted { get; set; }
+    public int? CreatedByUserId { get; set; }
     public int? WithdrawOptionEndpointId { get; set; }
     public WithdrawOptionEndpoint WithdrawOptionEndpoint { get; set; }
 

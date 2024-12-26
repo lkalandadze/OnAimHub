@@ -44,11 +44,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" Options="LeaderBoardService" ClassName="LeaderBoardService">
-      <SourceUri>https://localhost:7041/swagger/v1/swagger.json</SourceUri>
-    </OpenApiReference>
+    <None Include="OpenAPIs\swagger.json" ClassName="LeaderBoardService" />
     <OpenApiReference Include="OpenAPIs\swagger1.json" CodeGenerator="NSwagCSharp" Options="WheelService" ClassName="WheelService">
       <SourceUri>http://localhost:5066/swagger/admin/swagger.json</SourceUri>
+    </OpenApiReference>
+    <OpenApiReference Include="OpenAPIs\swagger2.json" CodeGenerator="NSwagCSharp" Options="LeaderBoardService" ClassName="LeaderBoardService">
+      <SourceUri>https://localhost:7041/swagger/v1/swagger.json</SourceUri>
     </OpenApiReference>
   </ItemGroup>
 

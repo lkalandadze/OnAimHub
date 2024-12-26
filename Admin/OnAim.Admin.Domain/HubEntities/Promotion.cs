@@ -44,6 +44,8 @@ public class Promotion
     public DateTimeOffset? DateDeleted { get; private set; }
     public bool IsDeleted { get; private set; }
     //public Guid Correlationid { get; private set; }
+    public string? FromTemplateId { get; set; }
+    public int? CreatedByUserId { get; set; }
 
     public ICollection<PromotionService> Services { get; private set; }
     public ICollection<Segment> Segments { get; private set; }

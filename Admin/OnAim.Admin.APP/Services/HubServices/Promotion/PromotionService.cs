@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
+using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.FileServices;
-using OnAim.Admin.APP.Services.Game;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
@@ -18,7 +18,6 @@ using OnAim.Admin.Domain.HubEntities.Models;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
-using System.Text.Json;
 
 namespace OnAim.Admin.APP.Services.Hub.Promotion;
 
@@ -32,6 +31,7 @@ public class PromotionService : IPromotionService
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _leaderboardResultRepository;
     private readonly ISagaApiClient _sagaApiClient;
     private readonly IHubApiClient _hubApiClient;
+    private readonly ISecurityContextAccessor _securityContextAccessor;
     private readonly HubApiClientOptions _options;
     private readonly SagaApiClientOptions _sagaOptions;
 
@@ -45,7 +45,8 @@ public class PromotionService : IPromotionService
         ISagaApiClient sagaApiClient,
         IOptions<SagaApiClientOptions> sagaOptions,
         IHubApiClient hubApiClient,
-        IOptions<HubApiClientOptions> options
+        IOptions<HubApiClientOptions> options,
+        ISecurityContextAccessor securityContextAccessor
         )
     {
         _promotionRepository = promotionRepository;
@@ -56,6 +57,7 @@ public class PromotionService : IPromotionService
         _leaderboardResultRepository = leaderboardResultRepository;
         _sagaApiClient = sagaApiClient;
         _hubApiClient = hubApiClient;
+        _securityContextAccessor = securityContextAccessor;
         _options = options.Value;
         _sagaOptions = sagaOptions.Value;
     }
@@ -383,7 +385,8 @@ public class PromotionService : IPromotionService
     public async Task<ApplicationResult> CreatePromotion(CreatePromotionDto create)
     {
         try
-        {
+        {        
+            create.CreatedByUserId = _securityContextAccessor.UserId;
             var res = await _sagaApiClient.PostAsJsonAndSerializeResultTo<object>($"{_sagaOptions.Endpoint}", create);
             return new ApplicationResult { Success = true, Data = res };
         }
@@ -447,25 +450,6 @@ public class PromotionService : IPromotionService
         }
     }
 }
-public class GameData
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Address { get; set; }
-    public bool Status { get; set; }
-    public string Description { get; set; }
-    public int ConfigurationCount { get; set; }
-    public List<int> PromotionIds { get; set; }
-}
-
-public class ResponseData
-{
-    public bool Succeeded { get; set; }
-    public string Message { get; set; }
-    public object Error { get; set; }
-    public object ValidationErrors { get; set; }
-    public List<GameData> Data { get; set; }
-}
 public class PlayerTransactionDto
 {
     public int Id { get; set; }
@@ -482,17 +466,6 @@ public class PlayerTransactionFilter : BaseFilter
     public TransactionType TransactionType { get; set; }
     public TransactionStatus TransactionStatus { get; set; }
 }
-public class CreatePromotionDto
-{
-    public CreatePromotionCommandDto Promotion { get; set; }
-    public List<CreateLeaderboardRecord>? Leaderboards { get; set; }
-    public List<GameConfigDto>? GameConfiguration { get; set; }
-}
-public class GameConfigDto
-{
-    public string GameName { get; set; }
-    public GameConfigurationDto GameConfiguration { get; set; }
-}
 public class CreatePromotionCommandDto
 {
     public string Title { get; set; }
@@ -503,4 +476,11 @@ public class CreatePromotionCommandDto
     public string? TemplateId { get; set; }
     public IEnumerable<string> SegmentIds { get; set; }
     public IEnumerable<CreateCoinModel> Coins { get; set; }
+}
+public class CreatePromotionDto
+{
+    public int? CreatedByUserId { get; set; }
+    public CreatePromotionCommandDto Promotion { get; set; }
+    public List<CreateLeaderboardRecord>? Leaderboards { get; set; }
+    public List<GameConfigDto>? GameConfiguration { get; set; }
 }

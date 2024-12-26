@@ -27,7 +27,7 @@ public class WithdrawOptionGroup
     public string Description { get; set; }
     public string ImageUrl { get; set; }
     public int? PriorityIndex { get; set; }
-
+    public int? CreatedByUserId { get; set; }
     public ICollection<OutCoin> OutCoins { get; set; }
     public ICollection<WithdrawOption> WithdrawOptions { get; set; }
 }

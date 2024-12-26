@@ -9,4 +9,5 @@ public class WithdrawOptionEndpoint
     public string Endpoint { get; set; }
     public EndpointContentType ContentType { get; set; }
     public string Content { get; set; }
+    public int? CreatedByUserId { get; set; }
 }
