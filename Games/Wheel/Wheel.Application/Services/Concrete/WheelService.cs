@@ -69,7 +69,7 @@ public class WheelService : IWheelService
 
         return new InitialDataResponseModel()
         {
-            Prices = _configurationHolder.GetPrices(promotionId),
+            Prices = _configurationHolder.GetPrices(promotionId).OrderBy(p => p.Bet),
             Rounds = rounds,
         };
     }
