@@ -18,6 +18,23 @@
       ]
     },
     {
+      "DownstreamPathTemplate": "/WheelApi/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "WheelApi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/WheelApi/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ]
+    },
+    {
       "DownstreamPathTemplate": "/wheelapi/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

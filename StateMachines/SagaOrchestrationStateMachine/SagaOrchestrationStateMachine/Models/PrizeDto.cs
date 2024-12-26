@@ -1,4 +1,4 @@
-﻿namespace OnAim.Admin.Contracts.Dtos.Game;
+﻿namespace SagaOrchestrationStateMachine.Models;
 
 public class PrizeDto
 {

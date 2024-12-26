@@ -80,7 +80,7 @@ public class LeaderBoardService : ILeaderBoardService
                {
                    Id = xx.Id,
                    Name = xx.CoinId,
-                   Amount = xx.Amount,
+                   Value = xx.Amount,
                }).ToList(),
            })
            .Skip((pageNumber - 1) * pageSize)

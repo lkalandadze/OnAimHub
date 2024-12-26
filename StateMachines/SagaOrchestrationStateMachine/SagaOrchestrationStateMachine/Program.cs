@@ -44,6 +44,21 @@ builder.Services.AddHttpClient<IHubApiClient, HubApiClient>(
             }
         );
 
+builder.Services.Configure<WheelApiClientOptions>(
+    builder.Configuration.GetSection("WheelApiClientOptions")
+);
+builder.Services.AddHttpClient<IWheelApiClientApiClient, WheelApiClient>(
+            (client, sp) =>
+            {
+                var catalogApiOptions = sp.GetRequiredService<IOptions<WheelApiClientOptions>>();
+                var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
+
+                var baseAddress = catalogApiOptions.Value.BaseApiAddress;
+                client.BaseAddress = new Uri(baseAddress);
+                return new WheelApiClient(client, catalogApiOptions, policyOptions, "admin", "password");
+            }
+        );
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;

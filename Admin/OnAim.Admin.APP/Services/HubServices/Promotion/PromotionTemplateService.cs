@@ -170,7 +170,7 @@ public class PromotionTemplateService : IPromotionTemplateService
                     Id = x.Id,
                     Prizes = x.Prizes.Select(xx => new PrizeDto
                     {
-                        Amount = xx.Value,
+                        Value = xx.Value,
                         PrizeGroupId = xx.Id,
                         PrizeTypeId = xx.Id,
                         Probability = xx.Probability,
@@ -318,7 +318,7 @@ public class PromotionTemplateService : IPromotionTemplateService
                     Id = x.Id,
                     Prizes = x.Prizes.Select(xx => new PrizeDto
                     {
-                        Amount = xx.Value,
+                        Value = xx.Value,
                         PrizeGroupId = xx.Id,
                         PrizeTypeId = xx.Id,
                         Probability = xx.Probability,
