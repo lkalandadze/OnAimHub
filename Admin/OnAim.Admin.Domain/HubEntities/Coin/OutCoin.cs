@@ -19,7 +19,6 @@ public class OutCoin : Coin
 
     public ICollection<WithdrawOption> WithdrawOptions { get; set; }
     public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
-    public bool? IsDeleted { get; set; }
 
     public void AddWithdrawOptions(IEnumerable<WithdrawOption> withdrawOptions)
     {

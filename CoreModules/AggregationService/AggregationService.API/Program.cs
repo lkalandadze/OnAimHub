@@ -1,3 +1,4 @@
+using AggregationService.Application;
 using AggregationService.Infrastructure;
 using StackExchange.Redis;
 
@@ -8,7 +9,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost"));
 builder.Services.AddHttpClient();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services
+    .AddInfrastructure(builder.Configuration)
+    .AddApplication(builder.Configuration);
 
 var app = builder.Build();
 

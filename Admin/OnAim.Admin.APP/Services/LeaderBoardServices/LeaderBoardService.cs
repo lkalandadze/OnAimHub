@@ -63,9 +63,6 @@ public class LeaderBoardService : ILeaderBoardService
         var pageNumber = filter?.PageNumber ?? 1;
         var pageSize = filter?.PageSize ?? 25;
 
-        var itemsPageNumber = filter?.ItemsPageNumber ?? 1;
-        var itemsPageSize = filter?.ItemsPageSize ?? 10;
-
         var res = leaderboards
            .Select(x => new LeaderBoardListDto
            {
