@@ -1,8 +1,8 @@
-﻿using Hub.Domain.Entities;
-using Shared.Domain.Abstractions.Repository;
+﻿//using Hub.Domain.Entities;
+//using Shared.Domain.Abstractions.Repository;
 
-namespace Hub.Domain.Abstractions.Repository;
+//namespace Hub.Domain.Abstractions.Repository;
 
-public interface IPromotionServiceRepository : IBaseEntityRepository<PromotionService>
-{
-}
+//public interface IPromotionServiceRepository : IBaseEntityRepository<PromotionService>
+//{
+//}

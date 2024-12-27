@@ -4,6 +4,7 @@ using Hub.Application.Services.Abstract;
 using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
 using Hub.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
@@ -32,11 +33,12 @@ public class ConsulWatcherService : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             var services = await _consulClient.Agent.Services(stoppingToken);
-            var currentGameIds = new HashSet<string>();
+            var currentServiceNames = new HashSet<string>();
 
             using (var scope = _serviceProvider.CreateScope())
             {
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+                var _serviceRepository = scope.ServiceProvider.GetRequiredService<IServiceRepository>();
                 var _consulLogRepository = scope.ServiceProvider.GetRequiredService<IConsulLogRepository>();
 
                 foreach (var service in services.Response.Values)
@@ -50,8 +52,22 @@ public class ConsulWatcherService : BackgroundService
                             gameStatus.Address = service.Address;
                             _activeGameService.AddOrUpdateGame(gameStatus);
 
-                            if (!_trackedGames.TryGetValue(service.ID, out var previousGameDataJson) || previousGameDataJson != gameDataJson)
+                            // Check if the service has changed or is new
+                            if (!_trackedGames.TryGetValue(service.Service, out var previousGameDataJson) || previousGameDataJson != gameDataJson)
                             {
+                                var existingService = await _serviceRepository.Query().FirstOrDefaultAsync(s => s.Name == service.Service);
+
+                                if (existingService == null)
+                                {
+                                    var newService = new Service("Game", service.Service, true);
+                                    await _serviceRepository.InsertAsync(newService);
+                                }
+                                else
+                                {
+                                    existingService.IsActive = true;
+                                    _serviceRepository.Update(existingService);
+                                }
+
                                 var log = new ConsulLog
                                 (
                                     gameStatus.Id,
@@ -61,22 +77,33 @@ public class ConsulWatcherService : BackgroundService
                                 );
 
                                 await _consulLogRepository.InsertAsync(log);
-                                await unitOfWork.SaveAsync();
-
-                                _trackedGames[service.ID] = gameDataJson;
+                                _trackedGames[service.Service] = gameDataJson;
                             }
                         }
                     }
 
-                    currentGameIds.Add(service.ID);
+                    currentServiceNames.Add(service.Service);
                 }
 
-                var removedGameIds = _trackedGames.Keys.Except(currentGameIds).ToList();
-                foreach (var gameId in removedGameIds)
+                // Handle services that are no longer active
+                var removedServiceNames = _trackedGames.Keys.Except(currentServiceNames).ToList();
+                foreach (var serviceName in removedServiceNames)
                 {
-                    _activeGameService.RemoveGame(gameId);
-                    _trackedGames.TryRemove(gameId, out _);
+                    if (_trackedGames.TryRemove(serviceName, out _))
+                    {
+                        var existingService = await _serviceRepository.Query().FirstOrDefaultAsync(s => s.Name == serviceName);
+
+                        if (existingService != null && existingService.IsActive)
+                        {
+                            existingService.IsActive = false;
+                            _serviceRepository.Update(existingService);
+                        }
+
+                        _activeGameService.RemoveGame(serviceName);
+                    }
                 }
+
+                await unitOfWork.SaveAsync();
             }
 
             await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);

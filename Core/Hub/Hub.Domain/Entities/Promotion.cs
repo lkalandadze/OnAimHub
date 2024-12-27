@@ -21,7 +21,7 @@ public class Promotion : BaseEntity<int>
         Guid correlationId,
         int? createdByUserId = null,
         string templateId = null,
-        IEnumerable<PromotionService> services = null,
+        //IEnumerable<PromotionService> services = null,
         IEnumerable<Segment> segments = null,
         IEnumerable<Coin> coins = null,
         IEnumerable<PromotionView> views = null)
@@ -35,7 +35,7 @@ public class Promotion : BaseEntity<int>
         CreatedByUserId = createdByUserId;
         FromTemplateId = templateId;
         CreateDate = DateTimeOffset.UtcNow;
-        Services = services?.ToList() ?? [];
+        //Services = services?.ToList() ?? [];
         Segments = segments?.ToList() ?? [];
         Coins = coins?.ToList() ?? [];
         Views = views?.ToList() ?? [];
@@ -54,11 +54,12 @@ public class Promotion : BaseEntity<int>
     public string FromTemplateId { get; private set; }
     public int? CreatedByUserId { get; private set; }
 
-    public ICollection<PromotionService> Services { get; private set; }
+    //public ICollection<PromotionService> Services { get; private set; }
     public ICollection<Segment> Segments { get; private set; }
     public ICollection<Coin> Coins { get; private set; }
     public ICollection<Transaction> Transactions { get; private set; }
     public ICollection<PromotionView> Views { get; private set; }
+    public ICollection<Service> Services { get; private set; } = new List<Service>();
 
     public void UpdatePrice(decimal? totalCost)
     {

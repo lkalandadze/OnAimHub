@@ -14,4 +14,5 @@ public record CreatePromotionCommand(
     int? CreatedByUserId,
     string? TemplateId,
     IEnumerable<string> SegmentIds,
+    IEnumerable<int> ServiceIds,
     IEnumerable<CreateCoinModel> Coins) : IRequest<PromotionResponse>;

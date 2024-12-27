@@ -78,7 +78,7 @@ public class Startup
         services.AddScoped<IPlayerBanRepository, PlayerBanRepository>();
         services.AddScoped<IRewardRepository, PrizeClaimRepository>();
         services.AddScoped<IPromotionRepository, PromotionRepository>();
-        services.AddScoped<IPromotionServiceRepository, PromotionServiceRepository>();
+        //services.AddScoped<IPromotionServiceRepository, PromotionServiceRepository>();
         services.AddScoped<IPromotionViewRepository, PromotionViewRepository>();
         services.AddScoped<IPromotionViewTemplateRepository, PromotionViewTemplateRepository>();
         services.AddScoped<ICoinTemplateRepository, CoinTemplateRepository>();
@@ -87,6 +87,7 @@ public class Startup
         services.AddScoped<IWithdrawOptionEndpointRepository, WithdrawOptionEndpointRepository>();
         services.AddScoped<IWithdrawOptionGroupRepository, WithdrawOptionGroupRepository>();
         services.AddScoped<IPromotionService, PromotionService>();
+        services.AddScoped<IServiceRepository, ServiceRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddSingleton<IGameService, GameService>();

@@ -50,7 +50,7 @@ namespace AggregationService.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Aggregations");
+                    b.ToTable("Aggregations", (string)null);
                 });
 
             modelBuilder.Entity("AggregationService.Domain.Entities.AggregationConfiguration", b =>
@@ -96,7 +96,7 @@ namespace AggregationService.Infrastructure.Migrations
 
                     b.HasIndex("AggregationId");
 
-                    b.ToTable("AggregationConfigurations");
+                    b.ToTable("AggregationConfigurations", (string)null);
                 });
 
             modelBuilder.Entity("AggregationService.Domain.Entities.AggregationConfiguration", b =>
