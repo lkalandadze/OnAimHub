@@ -8,16 +8,17 @@ namespace OnAim.Admin.APP.Services.HubServices.Promotion;
 
 public interface IPromotionService
 {
-    Task<ApplicationResult> GetAllPromotions(PromotionFilter baseFilter);
-    Task<ApplicationResult> GetPromotionById(int id);
+    Task<ApplicationResult> DeletePromotion(int id);
     Task<ApplicationResult> CreatePromotion(CreatePromotionDto create);
     Task<ApplicationResult> CreatePromotionView(CreatePromotionView create);
     Task<ApplicationResult> UpdatePromotionStatus(UpdatePromotionStatusDto update);
-    Task<ApplicationResult> DeletePromotion(int id);
 
+    Task<ApplicationResult> GetAllService();
+    Task<ApplicationResult> GetPromotionById(int id);
+    Task<ApplicationResult> GetAllPromotions(PromotionFilter baseFilter);
     Task<ApplicationResult> GetAllPromotionGames(int promotionId, BaseFilter filter);
     Task<ApplicationResult> GetPromotionPlayers(int promotionId, PlayerFilter filter);
-    Task<ApplicationResult> GetPromotionPlayerTransaction(int playerId, PlayerTransactionFilter filter);
     Task<ApplicationResult> GetPromotionLeaderboards(int promotionId, BaseFilter filter);
     Task<ApplicationResult> GetPromotionLeaderboardDetails(int leaderboardId, BaseFilter filter);
+    Task<ApplicationResult> GetPromotionPlayerTransaction(int playerId, PlayerTransactionFilter filter);
 }

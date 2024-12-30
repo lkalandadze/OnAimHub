@@ -70,8 +70,12 @@ public class PromotionController : ApiControllerBase
         => Ok(await _promotionService.UpdatePromotionStatus(update));
 
     [HttpDelete(nameof(DeletePromotion))]
-    public async Task<IActionResult> DeletePromotion([FromBody] int id)
+    public async Task<IActionResult> DeletePromotion([FromQuery] int id)
         => Ok(await _promotionService.DeletePromotion(id));
+
+    [HttpGet(nameof(GetAllService))]
+    public async Task<IActionResult> GetAllService()
+        => Ok(await _promotionService.GetAllService());
 
     //Promotion Template
 

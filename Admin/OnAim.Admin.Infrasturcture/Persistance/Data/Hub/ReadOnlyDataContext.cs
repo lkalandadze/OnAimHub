@@ -40,6 +40,7 @@ public class ReadOnlyDataContext : DbContext
     public DbSet<WithdrawOption> WithdrawOptions { get; set; }
     public DbSet<WithdrawOptionEndpoint> WithdrawOptionEndpoints { get; set; }
     public DbSet<WithdrawOptionGroup> WithdrawOptionGroups { get; set; }
+    public DbSet<Service> Services { get; set; }
 
     public IQueryable<TEntity> Set<TEntity>() where TEntity : class
     {

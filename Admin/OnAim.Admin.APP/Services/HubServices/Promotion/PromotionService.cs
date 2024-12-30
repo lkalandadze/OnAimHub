@@ -455,7 +455,11 @@ public class PromotionService : IPromotionService
     {
         try
         {
-            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/SoftDeletePromotion", id);
+            var body = new
+            {
+                Id = id,
+            };
+            await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/SoftDeletePromotion", body);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
