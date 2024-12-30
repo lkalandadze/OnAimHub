@@ -14,30 +14,30 @@ public class SagaController : ControllerBase
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<SagaController> _logger;
-    private readonly LeaderBoardService _leaderboardService;
-    private readonly WheelService _wheelService;
     private readonly IHubApiClient _hubApiClient;
     private readonly IWheelApiClientApiClient _wheelApiClientApiClient;
+    private readonly ILeaderboardApiClientApiClient _leaderboardApiClientApiClient;
+    private readonly LeaderBoardApiClientOptions _leaderBoardApiClientOptions;
     private readonly WheelApiClientOptions _wheelApiClientOptions;
     private readonly HubApiClientOptions _options;
     private readonly AsyncRetryPolicy<HttpResponseMessage> _retryPolicy;
     public SagaController(
         HttpClient httpClient,
         ILogger<SagaController> logger,
-        LeaderBoardService leaderboardService,
-        WheelService wheelService,
         IHubApiClient hubApiClient,
         IOptions<HubApiClientOptions> options,
         IWheelApiClientApiClient wheelApiClientApiClient,
-        IOptions<WheelApiClientOptions> wheelApiClientOptions
+        IOptions<WheelApiClientOptions> wheelApiClientOptions,
+        ILeaderboardApiClientApiClient leaderboardApiClientApiClient,
+        IOptions<LeaderBoardApiClientOptions> leaderBoardApiClientOptions
         )
     {
         _httpClient = httpClient;
         _logger = logger;
-        _leaderboardService = leaderboardService;
-        _wheelService = wheelService;
         _hubApiClient = hubApiClient;
         _wheelApiClientApiClient = wheelApiClientApiClient;
+        _leaderboardApiClientApiClient = leaderboardApiClientApiClient;
+        _leaderBoardApiClientOptions = leaderBoardApiClientOptions.Value;
         _wheelApiClientOptions = wheelApiClientOptions.Value;
         _options = options.Value;
         _retryPolicy = Policy
@@ -58,7 +58,6 @@ public class SagaController : ControllerBase
 
             try
             {
-                request.Promotion.CreatedByUserId = request.CreatedByUserId;
                 var res = await CreatePromotionAsync(request.Promotion);
                 promotionId = res.PromotionId;
                 coins = res.Coins;
@@ -71,7 +70,7 @@ public class SagaController : ControllerBase
                 return BadRequest(new { Success = false, Message = "Failed to create promotion.", Error = ex.Message });
             }
 
-            if (request.Leaderboards != null)
+            if (request.Leaderboards.Count != 0)
             {
                 try
                 {
@@ -94,7 +93,7 @@ public class SagaController : ControllerBase
                                     IsGenerated = leaderboard.IsGenerated,
                                     LeaderboardPrizes = leaderboard.LeaderboardPrizes.Select(x => new CreateLeaderboardRecordPrizeCommandItem
                                     {
-                                        CoinId = $"{promotionId}_{x.Coin}",
+                                        CoinId = $"{promotionId}_{x.CoinId}",
                                         Amount = x.Amount,
                                         EndRank = x.EndRank,
                                         StartRank = x.StartRank,
@@ -108,7 +107,7 @@ public class SagaController : ControllerBase
                                     Status = leaderboard.Status,
                                     TemplateId = leaderboard.TemplateId,
                                     Title = leaderboard.Title,
-                                    CreatedBy = request.CreatedByUserId,
+                                    CreatedBy = leaderboard.CreatedBy,
                                 };
 
                                 var leaderboardResponse = await CreateLeaderboardRecordAsync(command);
@@ -133,7 +132,7 @@ public class SagaController : ControllerBase
                 }
             }
 
-            if (request.GameConfiguration != null)
+            if (request.GameConfiguration.Count != 0)
             {
                 try
                 {
@@ -197,7 +196,7 @@ public class SagaController : ControllerBase
     {
         try
         {
-            await _leaderboardService.CreateLeaderboardRecordAsync(leaderboard);
+            await _leaderboardApiClientApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}CreateLeaderboardRecord", leaderboard);
             return Ok();
         }
         catch (Exception ex)
@@ -224,10 +223,10 @@ public class SagaController : ControllerBase
         try
         {
             var req = new DeletePromotionCommand(request);
-            var lead = new DeleteLeaderboardRecordCommand();
-            lead.CorrelationId = request;
+            var lead = new DeleteLeaderboardRecordCommand(request);
             await _hubApiClient.Delete($"{_options.Endpoint}Admin/DeletePromotion", req);
-            await _leaderboardService.DeleteLeaderboardRecordAsync(lead);
+            await _leaderboardApiClientApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}DeleteLeaderboardRecord", lead);
+            //await _wheelApiClientApiClient.Delete($"{_leaderBoardApiClientOptions.Endpoint}DeleteLeaderboardRecord", request);
         }
         catch (Exception ex)
         {

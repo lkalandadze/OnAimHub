@@ -13,4 +13,5 @@ public class CreatePromotionCommandDto
     public int? CreatedByUserId { get; set; }
     public IEnumerable<string> SegmentIds { get; set; }
     public IEnumerable<CreateCoinModel> Coins { get; set; }
+    public IEnumerable<int> ServiceIds { get; set; }
 }

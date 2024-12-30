@@ -188,6 +188,20 @@ public class ReadOnlyDataContext : DbContext
                    .OnDelete(DeleteBehavior.Cascade)
           );
 
+        modelBuilder.Entity<Service>().HasMany(s => s.Promotions)
+       .WithMany(p => p.Services)
+       .UsingEntity<Dictionary<string, object>>(
+            $"{nameof(Promotion)}{nameof(Service)}Mappings",
+            j => j.HasOne<Promotion>()
+                  .WithMany()
+                  .HasForeignKey($"{nameof(Promotion)}{nameof(Promotion.Id)}")
+                  .OnDelete(DeleteBehavior.Cascade),
+            j => j.HasOne<Service>()
+                  .WithMany()
+                  .HasForeignKey($"{nameof(Service)}{nameof(Service.Id)}")
+                  .OnDelete(DeleteBehavior.Cascade)
+        );
+
         base.OnModelCreating(modelBuilder);
     }
 }

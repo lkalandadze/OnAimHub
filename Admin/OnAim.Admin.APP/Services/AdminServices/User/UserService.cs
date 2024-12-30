@@ -278,6 +278,7 @@ public class UserService : IUserService
             var roles = await GetUserRolesAsync(user.Id);
             var roleNames = roles.Select(r => r.Name).ToList();
 
+            var expiration = DateTime.UtcNow.AddDays(1);
             var token = _jwtFactory.GenerateEncodedToken(user.Id, user.Email, new List<Claim>(), roleNames);
             var refreshToken = await _jwtFactory.GenerateRefreshToken(user.Id);
 
@@ -291,7 +292,8 @@ public class UserService : IUserService
             {
                 AccessToken = token,
                 RefreshToken = refreshToken,
-                StatusCode = 200
+                StatusCode = 200,
+                Expiry = expiration
             };
         }
 

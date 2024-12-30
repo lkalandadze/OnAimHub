@@ -27,7 +27,7 @@ public class Promotion
         Description = description;
         //Correlationid = correlationId;
         CreateDate = DateTimeOffset.UtcNow;
-        Services = services?.ToList() ?? [];
+        //Services = services?.ToList() ?? [];
         Segments = segments?.ToList() ?? [];
         Coins = coins?.ToList() ?? [];
         Views = views?.ToList() ?? [];
@@ -46,8 +46,7 @@ public class Promotion
     //public Guid Correlationid { get; private set; }
     public string? FromTemplateId { get; set; }
     public int? CreatedByUserId { get; set; }
-
-    public ICollection<PromotionService> Services { get; private set; }
+    public ICollection<Service> Services { get; private set; } = new List<Service>();
     public ICollection<Segment> Segments { get; private set; }
     public ICollection<Coin.Coin> Coins { get; private set; }
     public ICollection<Transaction> Transactions { get; private set; }

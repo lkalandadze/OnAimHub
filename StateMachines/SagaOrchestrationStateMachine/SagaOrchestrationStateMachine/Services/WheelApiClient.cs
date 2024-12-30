@@ -4,22 +4,21 @@ using Newtonsoft.Json;
 using Polly.Timeout;
 using Polly.Wrap;
 using System.Text;
-using Nito.AsyncEx;
 using Polly;
 
 namespace SagaOrchestrationStateMachine.Services;
 
-public class HubApiClient : IHubApiClient
+public class WheelApiClient : IWheelApiClientApiClient
 {
     private readonly HttpClient _httpClient;
-    private readonly HubApiClientOptions _options;
+    private readonly WheelApiClientOptions _options;
     private readonly AsyncPolicyWrap<HttpResponseMessage> _combinedPolicy;
     private readonly string _username;
     private readonly string _password;
 
-    public HubApiClient(
+    public WheelApiClient(
         HttpClient httpClient,
-        IOptions<HubApiClientOptions> options,
+        IOptions<WheelApiClientOptions> options,
         IOptions<PolicyOptions> policyOptions,
         string username,
         string password)
@@ -30,7 +29,7 @@ public class HubApiClient : IHubApiClient
         _password = password;
 
         var byteArray = Encoding.ASCII.GetBytes($"admin:password");
-        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+        //_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
         var retryPolicy = Policy
        .Handle<HttpRequestException>()
@@ -206,70 +205,8 @@ public class HubApiClient : IHubApiClient
         );
 
 }
-public interface IHubApiClient
-{
-    Task<T> Get<T>(
-   string uri,
-   CancellationToken ct = default
-    );
-    Task<Stream> GetAsStream(
-        string uri,
-        CancellationToken ct = default
-    );
-    Task<HttpResponseMessage> PostAsJson(
-        string uri,
-        object obj,
-        CancellationToken ct = default
-    );
-    Task<HttpResponseMessage> PutAsJson(
-        string uri,
-        object obj,
-        CancellationToken ct = default
-    );
-    Task<T> PostAsJsonAndSerializeResultTo<T>(
-        string uri,
-        object obj,
-        CancellationToken ct = default
-    );
-
-    Task<HttpResponseMessage> Delete(
-        string uri, object obj, CancellationToken ct = default
-    );
-
-    Task<HttpResponseMessage> PostMultipartAsync(string uri, MultipartFormDataContent content, CancellationToken ct = default);
-
-}
-public class HubAPIRequestFailedException : Exception
-{
-    public HubAPIRequestFailedException(HttpResponseMessage res) :
-    base(AsyncContext.Run(async () => (await res.Content.ReadFromJsonAsync<IEnumerable<HubAPIErrorResponseDTO>>()).FirstOrDefault().Message))
-    { }
-
-    public HubAPIRequestFailedException(string msg) : base(msg) { }
-
-}
-public sealed record HubAPIErrorResponseDTO(string Message);
-public class HubApiClientOptions
+public class WheelApiClientOptions
 {
     public string BaseApiAddress { get; set; } = default!;
     public string Endpoint { get; set; } = default!;
-}
-public class PolicyOptions : ICircuitBreakerPolicyOptions, IRetryPolicyOptions, ITimeoutPolicyOptions
-{
-    public int RetryCount { get; set; } = 3;
-    public int BreakDuration { get; set; } = 30;
-    public int TimeOutDuration { get; set; } = 15;
-}
-public interface ICircuitBreakerPolicyOptions
-{
-    int RetryCount { get; set; }
-    int BreakDuration { get; set; }
-}
-public interface IRetryPolicyOptions
-{
-    int RetryCount { get; set; }
-}
-public interface ITimeoutPolicyOptions
-{
-    public int TimeOutDuration { get; set; }
 }

@@ -32,6 +32,7 @@ public class PromotionService : IPromotionService
     private readonly ISagaApiClient _sagaApiClient;
     private readonly IHubApiClient _hubApiClient;
     private readonly ISecurityContextAccessor _securityContextAccessor;
+    private readonly IPromotionRepository<Service> _serviceRepository;
     private readonly HubApiClientOptions _options;
     private readonly SagaApiClientOptions _sagaOptions;
 
@@ -46,7 +47,8 @@ public class PromotionService : IPromotionService
         IOptions<SagaApiClientOptions> sagaOptions,
         IHubApiClient hubApiClient,
         IOptions<HubApiClientOptions> options,
-        ISecurityContextAccessor securityContextAccessor
+        ISecurityContextAccessor securityContextAccessor,
+        IPromotionRepository<Service> serviceRepository
         )
     {
         _promotionRepository = promotionRepository;
@@ -58,6 +60,7 @@ public class PromotionService : IPromotionService
         _sagaApiClient = sagaApiClient;
         _hubApiClient = hubApiClient;
         _securityContextAccessor = securityContextAccessor;
+        _serviceRepository = serviceRepository;
         _options = options.Value;
         _sagaOptions = sagaOptions.Value;
     }
@@ -382,6 +385,17 @@ public class PromotionService : IPromotionService
         return new ApplicationResult { Success = true, Data = result };
     }
 
+    public async Task<ApplicationResult> GetAllService()
+    {
+        var service = _serviceRepository.Query();
+
+        return new ApplicationResult
+        {
+            Data = await service.ToListAsync(),
+            Success = true
+        };
+    }
+
     public async Task<ApplicationResult> CreatePromotion(CreatePromotionDto create)
     {
         try
@@ -476,6 +490,7 @@ public class CreatePromotionCommandDto
     public string? TemplateId { get; set; }
     public IEnumerable<string> SegmentIds { get; set; }
     public IEnumerable<CreateCoinModel> Coins { get; set; }
+    public IEnumerable<int> ServiceIds { get; set; }
 }
 public class CreatePromotionDto
 {

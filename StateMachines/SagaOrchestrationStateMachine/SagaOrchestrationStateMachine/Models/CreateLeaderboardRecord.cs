@@ -1,6 +1,6 @@
 ﻿namespace SagaOrchestrationStateMachine.Models;
 
-public sealed class CreateLeaderboardRecord
+public sealed class CreateLeaderboardRecordCommand
 {
     public int PromotionId { get; set; }
     public string PromotionName { get; set; }
@@ -16,6 +16,28 @@ public sealed class CreateLeaderboardRecord
     public bool IsGenerated { get; set; }
     public int? ScheduleId { get; set; }
     public string? TemplateId { get; set; }
+    public int? CreatedBy { get; set; }
     public Guid CorrelationId { get; set; }
     public List<CreateLeaderboardRecordPrizeCommandItem> LeaderboardPrizes { get; set; }
+}
+public enum EventType
+{
+    Internal = 0,
+    External = 1,
+}
+public enum RepeatType
+{
+    None = 0,
+    EveryNDays = 1,
+    DayOfWeek = 2,
+    DayOfMonth = 3
+}
+public enum LeaderboardRecordStatus
+{
+    Future = 0,
+    Created = 1,
+    Announced = 2,
+    InProgress = 3,
+    Finished = 4,
+    Cancelled = 5,
 }
