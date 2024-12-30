@@ -4,11 +4,14 @@ using Hub.Domain.Entities.Coins;
 using Hub.Domain.Entities.Templates;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Hub.Infrastructure.DataAccess;
 
 public class HubDbContext(DbContextOptions options) : DbContext(options)
 {
+    private IDbContextTransaction _currentTransaction;
+
     public DbSet<Game> Games { get; set; }
     public DbSet<Player> Players { get; set; }
     public DbSet<PlayerBalance> PlayerBalances { get; set; }
@@ -47,5 +50,56 @@ public class HubDbContext(DbContextOptions options) : DbContext(options)
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(HubDbContext))!);
 
         base.OnModelCreating(modelBuilder);
+    }
+
+    public async Task BeginTransactionAsync(CancellationToken cancellationToken)
+    {
+        _currentTransaction ??= await Database.BeginTransactionAsync(cancellationToken);
+    }
+
+    public async Task CommitTransactionAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await SaveChangesAsync(cancellationToken);
+            if (_currentTransaction != null) await _currentTransaction.CommitAsync(cancellationToken);
+        }
+        catch
+        {
+            await RollbackTransaction();
+            throw;
+        }
+        finally
+        {
+            if (_currentTransaction != null)
+            {
+                _currentTransaction.Dispose();
+                _currentTransaction = null;
+            }
+        }
+    }
+
+    public async Task RollbackTransaction()
+    {
+        try
+        {
+            if (_currentTransaction != null)
+            {
+                await _currentTransaction.RollbackAsync();
+            }
+        }
+        finally
+        {
+            if (_currentTransaction != null)
+            {
+                _currentTransaction.Dispose();
+                _currentTransaction = null;
+            }
+        }
+    }
+
+    public IExecutionStrategy CreateExecutionStrategy()
+    {
+        return Database.CreateExecutionStrategy();
     }
 }

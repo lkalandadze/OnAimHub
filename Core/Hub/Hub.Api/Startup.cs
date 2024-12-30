@@ -58,6 +58,7 @@ public class Startup
         services.AddDbContext<HubDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("OnAimHub")));
 
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehaviour<,>));
         services.AddHttpClient();
 
         services.AddScoped<IPlayerRepository, PlayerRepository>();

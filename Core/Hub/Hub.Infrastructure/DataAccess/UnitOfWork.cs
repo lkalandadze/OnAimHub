@@ -60,26 +60,51 @@ public class UnitOfWork(HubDbContext context) : IUnitOfWork, IDisposable
         }
     }
 
+    //public async Task SaveAsync(CancellationToken cancellationToken = default)
+    //{
+    //    if (_currentTransaction == null)
+    //    {
+    //        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+
+    //        try
+    //        {
+    //            await _context.SaveChangesAsync(cancellationToken);
+    //            await transaction.CommitAsync(cancellationToken);
+    //        }
+    //        catch
+    //        {
+    //            await transaction.RollbackAsync(cancellationToken);
+    //            throw;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        await _context.SaveChangesAsync(cancellationToken);
+    //    }
+    //}
+
     public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
-        if (_currentTransaction == null)
+        try
         {
-            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-
-            try
+            if (_currentTransaction == null)
             {
+                // If no transaction is present, just save the changes without beginning a new transaction
                 await _context.SaveChangesAsync(cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
             }
-            catch
+            else
             {
-                await transaction.RollbackAsync(cancellationToken);
-                throw;
+                // If there's an active transaction, just save the changes without starting a new transaction
+                await _context.SaveChangesAsync(cancellationToken);
             }
         }
-        else
+        catch (Exception ex)
         {
-            await _context.SaveChangesAsync(cancellationToken);
+            if (_currentTransaction != null)
+            {
+                await RollbackTransactionAsync(cancellationToken); // Ensure rollback happens if there is a failure during SaveChangesAsync
+            }
+            throw;
         }
     }
 
