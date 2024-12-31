@@ -11,6 +11,7 @@ using Leaderboard.Application.Services.Concrete.BackgroundJobs;
 using Leaderboard.Infrastructure;
 using Leaderboard.Infrastructure.DataAccess;
 using MassTransit;
+using MassTransit.Licensing;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -68,6 +69,7 @@ builder.Services.AddHostedService<LeaderboardScheduleStatusUpdaterService>();
 
 CustomServiceExtensions.ConfigureJwt(builder.Services, configuration);
 CustomServiceExtensions.ConfigureSwagger(builder.Services);
+CustomServiceExtensions.ConfigureConsul(builder.Services, configuration);
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication();
@@ -85,8 +87,9 @@ var app = builder.Build();
     //}
     app.UseSwagger();
     app.UseSwaggerUI();
-
     var serviceProvider = builder.Services.BuildServiceProvider();
+
+    CustomServiceExtensions.Configure(app, app.Lifetime);
 
     var context = serviceProvider.GetService<LeaderboardDbContext>();
 

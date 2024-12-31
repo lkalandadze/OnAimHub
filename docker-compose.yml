@@ -139,14 +139,16 @@ services:
     volumes:
       - ./CoreModules/MissionService/MissionService.Api/appsettings.json:/app/appsettings.json
       
-
   leaderboardapi:
     build:
       context: .
       dockerfile: CoreModules/Leaderboard/Leaderboard.Api/Dockerfile
+    depends_on:
+      - consul
     ports:
       - "5004:8080"
     environment:
+      - CONSUL_ADDRESS=http://consul:8500
       - ConnectionString__OnAimLeaderboard=Host=leaderboarddb;Port=5436;Database=OnAimLeaderboard2;Username=postgres;Password=Test1234!
     volumes:
       - ./CoreModules/Leaderboard/Leaderboard.Api/appsettings.json:/app/appsettings.json

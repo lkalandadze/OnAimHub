@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Consul;
+using Leaderboard.Api.Consul;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using System.Security.Cryptography;
 
 namespace Leaderboard.Api.Extensions;
@@ -63,6 +66,70 @@ public static class CustomServiceExtensions
                     ClockSkew = TimeSpan.Zero
                 };
             });
+    }
+
+    public static void Configure(IApplicationBuilder app, IHostApplicationLifetime lifetime)
+    {
+        if (IsRunningInDocker())
+        {
+            ConfigureConsulLifetime(app, lifetime);
+        }
+        app.UseCors("AllowAll");
+    }
+
+    private static void ConfigureConsulLifetime(IApplicationBuilder app, IHostApplicationLifetime lifetime)
+    {
+        if (!IsRunningInDocker())
+        {
+            Console.WriteLine("Skipping Consul registration because the application is not running in Docker.");
+            return;
+        }
+
+        var serviceId = Guid.NewGuid().ToString();
+
+        lifetime.ApplicationStarted.Register(() =>
+        {
+            var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
+
+            var registration = new AgentServiceRegistration()
+            {
+                ID = serviceId,
+                Name = "leaderboardapi",
+                Address = "leaderboardapi",
+                Port = 8080,
+                Tags = new[] { "Leaderboard", "Back" }, // Use array initialization for the Tags property
+                Meta = new Dictionary<string, string>
+            {
+                { "LeaderboardData", "Leaderboard" }
+            }
+            };
+
+            consulClient.Agent.ServiceRegister(registration).Wait();
+        });
+
+        lifetime.ApplicationStopped.Register(() =>
+        {
+            var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
+            consulClient.Agent.ServiceDeregister(serviceId).Wait();
+        });
+    }
+
+    public static void ConfigureConsul(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<ConsulConfig>(configuration.GetSection("Consul"));
+        services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+        {
+            var address = configuration["Consul:Host"];
+            consulConfig.Address = new Uri(address!);
+        }));
+
+        services.AddHostedService<ConsulHostedService>();
+    }
+
+    private static bool IsRunningInDocker()
+    {
+        var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER");
+        return !string.IsNullOrEmpty(isDocker) && isDocker == "true";
     }
     public class JwtConfiguration
     {
