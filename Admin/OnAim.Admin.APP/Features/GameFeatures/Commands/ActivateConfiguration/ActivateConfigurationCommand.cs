@@ -3,4 +3,4 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.GameFeatures.Commands.ActivateConfiguration;
 
-public record ActivateConfigurationCommand(int Id) : ICommand<ApplicationResult>;
+public record ActivateConfigurationCommand(string Name, int Id) : ICommand<ApplicationResult>;

@@ -14,7 +14,7 @@ public class GetGameQueryHandler : IQueryHandler<GetGameQuery, ApplicationResult
     }
     public async Task<ApplicationResult> Handle(GetGameQuery request, CancellationToken cancellationToken)
     {
-        var res = await _gameService.GetGame();
+        var res = await _gameService.GetGame(request.name);
 
         return new ApplicationResult { Data = res };
     }

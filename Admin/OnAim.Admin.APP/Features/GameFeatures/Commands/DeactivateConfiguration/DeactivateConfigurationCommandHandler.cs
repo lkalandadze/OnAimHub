@@ -14,7 +14,7 @@ public class DeactivateConfigurationCommandHandler : ICommandHandler<DeactivateC
     }
     public async Task<ApplicationResult> Handle(DeactivateConfigurationCommand request, CancellationToken cancellationToken)
     {
-        var result = await _gameService.DeactivateConfiguration(request.Id);
+        var result = await _gameService.DeactivateConfiguration(request.Name, request.Id);
 
         return new ApplicationResult { Data = result };
     }

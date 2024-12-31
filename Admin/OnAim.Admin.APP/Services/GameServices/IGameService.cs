@@ -5,16 +5,15 @@ namespace OnAim.Admin.APP.Services.GameServices;
 public interface IGameService
 {
     Task<object> GetAll(FilterGamesDto? filter);
-    Task<object> GetConfigurations();
-    Task<object> GetConfiguration(int id);
-    Task<string> GetGame();
-    Task<object> GetConfigurationMetadata();
-    Task<object> CreateConfiguration(string gameName, GameConfigurationDto configurationJson);
-    Task<object> UpdateConfiguration(string gameName, GameConfigurationDto configurationJson);
-    Task<object> ActivateConfiguration(int id);
-    Task<object> DeactivateConfiguration(int id);
-    Task<object> GetPrizeTypes();
-    Task<object> GetPrizeTypeById(int id);
-    Task<object> CreatePrizeType(CreatePrizeTypeDto createPrize);
-    Task<object> UpdatePrizeType(int id, CreatePrizeTypeDto typeDto);
+    Task<bool> GameStatus(string name);
+    Task<object> ActivateGame(string name);
+    Task<object> DeactivateGame(string name);
+    Task<object> GetConfigurations(string name, int promotionId);
+    Task<object> GetConfiguration(string name, int id);
+    Task<string> GetGame(string name);
+    Task<object> GetConfigurationMetadata(string name);
+    Task<object> CreateConfiguration(string name, GameConfigurationDto configurationJson);
+    Task<object> UpdateConfiguration(string name, GameConfigurationDto configurationJson);
+    Task<object> ActivateConfiguration(string name, int id);
+    Task<object> DeactivateConfiguration(string name, int id);
 }

@@ -14,7 +14,7 @@ public class ActivateConfigurationCommandHandler : ICommandHandler<ActivateConfi
     }
     public async Task<ApplicationResult> Handle(ActivateConfigurationCommand request, CancellationToken cancellationToken)
     {
-        var result = await _gameService.ActivateConfiguration(request.Id);
+        var result = await _gameService.ActivateConfiguration(request.Name, request.Id);
 
         return new ApplicationResult { Data = result };
     }

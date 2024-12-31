@@ -14,7 +14,7 @@ public class GetConfigurationMetadataQueryHandler : IQueryHandler<GetConfigurati
     }
     public async Task<ApplicationResult> Handle(GetConfigurationMetadataQuery request, CancellationToken cancellationToken)
     {
-        var result = await _gameService.GetConfigurationMetadata();
+        var result = await _gameService.GetConfigurationMetadata(request.Name);
 
         return new ApplicationResult { Data = result };
     }
