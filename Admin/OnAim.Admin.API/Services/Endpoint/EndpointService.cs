@@ -113,6 +113,7 @@ public class EndpointService : IEndpointService
             "POST" => EndpointType.Create,
             "PUT" => EndpointType.Update,
             "DELETE" => EndpointType.Delete,
+            "PATCH" => EndpointType.Patch,
             _ => throw new ArgumentOutOfRangeException($"Unsupported HTTP method: {httpMethod}")
         };
     }

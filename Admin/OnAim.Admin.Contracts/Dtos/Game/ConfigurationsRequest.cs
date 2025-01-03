@@ -1,7 +1,7 @@
 ﻿namespace OnAim.Admin.Contracts.Dtos.Game;
 
-public class ConfigurationRequest
+public class ConfigurationsRequest
 {
     public string Name { get; set; }
-    public int Id { get; set; }
+    public int PromotionId { get; set; }
 }

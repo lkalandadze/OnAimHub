@@ -9,5 +9,5 @@ public class ConfigurationDto
     public string Status { get; set; }
     public string Name { get; set; }
     public List<SegmentDto> Segments { get; set; }
-    public List<BetPricesDto> BetPrices { get; set; }
+    //public List<BetPricesDto> BetPrices { get; set; }
 }

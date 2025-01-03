@@ -32,21 +32,33 @@ public class GamesController : ApiControllerBase
     public async Task<IActionResult> GetAll([FromQuery] FilterGamesDto filter)
         => Ok(await _gameService.GetAll(filter));
 
-    [HttpGet(nameof(GetById))]
-    public async Task<IActionResult> GetById([FromQuery] string name)
+    [HttpGet(nameof(GetGameShortInfo))]
+    public async Task<IActionResult> GetGameShortInfo([FromQuery] string name)
         => Ok(await Mediator.Send(new GetGameQuery(name)));
 
-    [HttpGet(nameof(GetConfiguration))]
-    public async Task<IActionResult> GetConfiguration([FromQuery] ConfigurationRequest request)
+    [HttpGet(nameof(GetGameStatus))]
+    public async Task<IActionResult> GetGameStatus([FromQuery] string name)
+        => Ok(await _gameService.GameStatus(name));
+
+    [HttpGet(nameof(GetGameConfigurationById))]
+    public async Task<IActionResult> GetGameConfigurationById([FromQuery] ConfigurationRequest request)
         => Ok(await Mediator.Send(new GetConfigurationQuery(request.Name, request.Id)));
 
-    [HttpGet(nameof(GetConfigurations))]
-    public async Task<IActionResult> GetConfigurations([FromQuery] ConfigurationsRequest request)
+    [HttpGet(nameof(GetGameConfigurations))]
+    public async Task<IActionResult> GetGameConfigurations([FromQuery] ConfigurationsRequest request)
         => Ok(await Mediator.Send(new GetGameConfigurationsQuery(request.Name, request.PromotionId)));
 
-    [HttpGet(nameof(GetConfigurationMetadata))]
-    public async Task<IActionResult> GetConfigurationMetadata([FromQuery] string name)
+    [HttpGet(nameof(GetGameConfigurationMetadata))]
+    public async Task<IActionResult> GetGameConfigurationMetadata([FromQuery] string name)
         => Ok(await Mediator.Send(new GetConfigurationMetadataQuery(name)));
+
+    [HttpPost(nameof(ActivateGame))]
+    public async Task<IActionResult> ActivateGame(string name)
+        => Ok(await _gameService.ActivateGame(name));
+
+    [HttpPost(nameof(DeactivateGame))]
+    public async Task<IActionResult> DeactivateGame(string name)
+    => Ok(await _gameService.DeactivateGame(name));
 
     [HttpPost(nameof(CreateConfiguration))]
     public async Task<IActionResult> CreateConfiguration([FromQuery] string gameName, [FromBody] GameConfigurationDto configurationJson)
@@ -56,11 +68,11 @@ public class GamesController : ApiControllerBase
     public async Task<IActionResult> UpdateConfiguration([FromQuery] string gameName, [FromBody] GameConfigurationDto configurationJson)
         => Ok(await Mediator.Send(new UpdateConfigurationCommand(gameName, configurationJson)));
 
-    [HttpPut(nameof(ActivateConfiguration))]
+    [HttpPatch(nameof(ActivateConfiguration))]
     public async Task<IActionResult> ActivateConfiguration([FromQuery] ConfigurationRequest request)
         => Ok(await Mediator.Send(new ActivateConfigurationCommand(request.Name, request.Id)));
 
-    [HttpPut(nameof(DeactivateConfiguration))]
+    [HttpPatch(nameof(DeactivateConfiguration))]
     public async Task<IActionResult> DeactivateConfiguration([FromQuery] ConfigurationRequest request)
         => Ok(await Mediator.Send(new DeactivateConfigurationCommand(request.Name, request.Id)));
 
@@ -81,14 +93,4 @@ public class GamesController : ApiControllerBase
     [HttpGet(nameof(GetGameConfigurationTemplateById))]
     public async Task<IActionResult> GetGameConfigurationTemplateById([FromQuery] string id)
     => Ok(await _gameTemplateService.GetGameConfigurationTemplateById(id));
-}
-public class ConfigurationRequest
-{
-    public string Name { get; set; }
-    public int Id { get; set; }
-}
-public class ConfigurationsRequest
-{
-    public string Name { get; set; }
-    public int PromotionId { get; set; }
 }

@@ -34,7 +34,7 @@ public class GameService : IGameService
 
     public async Task<bool> GameStatus(string name)
     {
-        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}+Api/Admin/GameStatus");
+        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}Api/Admin/GameStatus");
 
         if (response.IsSuccessStatusCode)
         {
@@ -46,7 +46,7 @@ public class GameService : IGameService
 
     public async Task<object> ActivateGame(string name)
     {
-        var response = await _httpClientFactory.GetAsync($"/{name}/Admin/ActivateGame");
+        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}Api/Admin/ActivateGame");
 
         if (response.IsSuccessStatusCode)
         {
@@ -58,7 +58,7 @@ public class GameService : IGameService
 
     public async Task<object> DeactivateGame(string name)
     {
-        var response = await _httpClientFactory.GetAsync($"/{name}/Admin/DeactivateGame");
+        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}Api/Admin/DeactivateGame");
 
         if (response.IsSuccessStatusCode)
         {
@@ -70,11 +70,12 @@ public class GameService : IGameService
 
     public async Task<object> GetConfiguration(string name, int id)
     {
-        var response = await _httpClientFactory.GetAsync($"/{name}/Admin/ConfigurationById?id={id}");
+        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}Api/Admin/ConfigurationById?id={id}");
 
         if (response.IsSuccessStatusCode)
         {
-            return await response.Content.ReadAsStringAsync();
+            var jsonString = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ConfigurationResponse>(jsonString);
         }
 
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
@@ -82,11 +83,12 @@ public class GameService : IGameService
 
     public async Task<object> GetConfigurations(string name, int promotionId)
     {
-        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}+Api/Admin/Configurations?promotionId={promotionId}");
+        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}Api/Admin/Configurations?promotionId={promotionId}");
 
         if (response.IsSuccessStatusCode)
         {
-            return await response.Content.ReadAsStringAsync();
+            var jsonString = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ConfigurationsResponse>(jsonString);
         }
 
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
@@ -94,23 +96,26 @@ public class GameService : IGameService
 
     public async Task<object> GetConfigurationMetadata(string name)
     {
-        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}+Api/Admin/ConfigurationMetadata");
+        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}Api/Admin/ConfigurationMetadata");
 
         if (response.IsSuccessStatusCode)
         {
-            return await response.Content.ReadAsStringAsync();
+            var outerJson = await response.Content.ReadAsStringAsync();
+            var outerObject = JsonSerializer.Deserialize<ConfigurationMetadataResponse>(outerJson);
+            return outerObject;
         }
 
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
     }
 
-    public async Task<string> GetGame(string name)
+    public async Task<object> GetGame(string name)
     {
-        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}+Api/Hub/GameShortInfo");
+        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}Api/Hub/GameShortInfo");
 
         if (response.IsSuccessStatusCode)
         {
-            return await response.Content.ReadAsStringAsync();
+            var jsonString = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<GameShortInfo>(jsonString);
         }
 
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
@@ -118,20 +123,33 @@ public class GameService : IGameService
 
     public async Task<object> CreateConfiguration(string name, GameConfigurationDto configurationJson)
     {
-        if (name != null)
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentNullException(nameof(name), "The name parameter cannot be null or empty.");
+        }
+
+        try
         {
             var jsonContent = JsonSerializer.Serialize(configurationJson);
-            using var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            var response = await _httpClientFactory.PostAsJsonAsync<object>($"/{Uri.EscapeDataString(name)}+Api/Admin/CreateConfiguration", content);
+            using var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var response = await _httpClientFactory.PostAsync($"/{Uri.EscapeDataString(name)}Api/Admin/CreateConfiguration", content);
 
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadAsStringAsync();
             }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Request to CreateConfiguration failed with status {response.StatusCode}. Response: {errorContent}");
+            }
         }
-
-        throw new HttpRequestException($"Failed to retrieve data");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred in CreateConfiguration: {ex.Message}");
+            throw;
+        }
     }
 
     public async Task<object> UpdateConfiguration(string name, GameConfigurationDto configurationJson)
@@ -141,7 +159,7 @@ public class GameService : IGameService
             var jsonContent = JsonSerializer.Serialize(configurationJson);
             using var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-            var response = await _httpClientFactory.PutAsJsonAsync<object>($"/{Uri.EscapeDataString(name)}+Api/Admin/CreateConfiguration", content);
+            var response = await _httpClientFactory.PutAsJsonAsync<object>($"/{Uri.EscapeDataString(name)}Api/Admin/CreateConfiguration", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -156,7 +174,7 @@ public class GameService : IGameService
     {
         using var content = new StringContent(id.ToString(), Encoding.UTF8, "application/json");
 
-        var response = await _httpClientFactory.PatchAsync($"/{Uri.EscapeDataString(name)}+Api/Admin/ActivateConfiguration", content);
+        var response = await _httpClientFactory.PatchAsync($"/{Uri.EscapeDataString(name)}Api/Admin/ActivateConfiguration?id={id}", content);
 
         if (response.IsSuccessStatusCode)
         {
@@ -168,15 +186,23 @@ public class GameService : IGameService
 
     public async Task<object> DeactivateConfiguration(string name, int id)
     {
-        using var content = new StringContent(id.ToString(), Encoding.UTF8, "application/json");
-
-        var response = await _httpClientFactory.PatchAsync($"/{Uri.EscapeDataString(name)}+Api/Admin/DeactivateConfiguration", content);
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            return await response.Content.ReadAsStringAsync();
-        }
+            var url = $"/{Uri.EscapeDataString(name)}Api/Admin/DeactivateConfiguration?id={id}";
 
-        throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
+            var response = await _httpClientFactory.PatchAsync(url, null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+
+            throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in DeactivateConfiguration: {ex.Message}");
+            throw;
+        }
     }
 }

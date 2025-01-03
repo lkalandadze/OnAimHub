@@ -5,5 +5,6 @@ public enum EndpointType
     Get,
     Create,
     Update,
-    Delete
+    Delete,
+    Patch
 }
