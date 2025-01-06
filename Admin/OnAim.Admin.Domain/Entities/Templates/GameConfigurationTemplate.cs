@@ -14,6 +14,7 @@ public class GameConfigurationTemplate
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
+    public string Game {  get; set; }
     public string Name { get; set; }
     public int Value { get; set; }
     public bool IsActive { get; set; }

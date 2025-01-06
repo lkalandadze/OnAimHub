@@ -52,20 +52,21 @@ public class GameTemplateService : IGameTemplateService
         return new ApplicationResult { Success = true, Data = coin };
     }
 
-    public async Task<GameConfigurationTemplate> CreateGameConfigurationTemplate(CreateGameConfigurationTemplateDto coinTemplate)
+    public async Task<GameConfigurationTemplate> CreateGameConfigurationTemplate(CreateGameConfigurationTemplateDto template)
     {
         var temp = new GameConfigurationTemplate
         {
-            Name = coinTemplate.Name,
-            Value = coinTemplate.Value,
-            IsActive = coinTemplate.IsActive,
-            Prices = coinTemplate.Prices.Select(x => new Price
+            Game = template.Game,
+            Name = template.Name,
+            Value = template.Value,
+            IsActive = template.IsActive,
+            Prices = template.Prices.Select(x => new Price
             {
                 Value = x.Value,
                 Multiplier = x.Multiplier,
                 CoinId = x.CoinId,
             }).ToList(),
-            Rounds = coinTemplate.Rounds.Select(xx => new Round
+            Rounds = template.Rounds.Select(xx => new Round
             {
                 Sequence = xx.Sequence,
                 Name = xx.Name,

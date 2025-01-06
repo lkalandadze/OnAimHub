@@ -40,13 +40,13 @@ public class GamesController : ApiControllerBase
     public async Task<IActionResult> GetGameStatus([FromQuery] string name)
         => Ok(await _gameService.GameStatus(name));
 
-    [HttpGet(nameof(GetGameConfigurationById))]
-    public async Task<IActionResult> GetGameConfigurationById([FromQuery] ConfigurationRequest request)
-        => Ok(await Mediator.Send(new GetConfigurationQuery(request.Name, request.Id)));
-
     [HttpGet(nameof(GetGameConfigurations))]
     public async Task<IActionResult> GetGameConfigurations([FromQuery] ConfigurationsRequest request)
         => Ok(await Mediator.Send(new GetGameConfigurationsQuery(request.Name, request.PromotionId)));
+
+    [HttpGet(nameof(GetGameConfigurationById))]
+    public async Task<IActionResult> GetGameConfigurationById([FromQuery] ConfigurationRequest request)
+        => Ok(await Mediator.Send(new GetConfigurationQuery(request.Name, request.Id)));
 
     [HttpGet(nameof(GetGameConfigurationMetadata))]
     public async Task<IActionResult> GetGameConfigurationMetadata([FromQuery] string name)
