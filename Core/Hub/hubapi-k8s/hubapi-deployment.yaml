@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hubapi
+  namespace: onaimhub
+  labels:
+    app: hubapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hubapi
+  template:
+    metadata:
+      labels:
+        app: hubapi
+    spec:
+      containers:
+        - name: hubapi
+          image: gvgroup/onaimhub-core_hub:latest  
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: CONSUL_ADDRESS
+              value: http://consul:8500
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /app/appsettings.json
+              name: hubapi-cm0
+              subPath: appsettings.json
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: appsettings.json
+                path: appsettings.json
+            name: hubapi-cm0
+          name: hubapi-cm0

@@ -1,0 +1,62 @@
+stages:
+  - build
+  - test
+  - push
+  - deploy
+
+variables:
+  DOCKER_IMAGE_TAG: $CI_COMMIT_SHA
+  DOCKER_NAMESPACE: gvgroup
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+
+services:
+  - docker:dind
+
+before_script:
+  - apk add --no-cache docker-cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+build_AggregationService:
+  stage: build
+  script:
+    - echo "Building  LeaderBorad.."
+    # - docker build -t $DOCKER_NAMESPACE/onaimhub-aggregationservice:$DOCKER_IMAGE_TAG -f CoreModules/AggregationService/AggregationService.API/Dockerfile .
+    # - echo "Pushing Docker image for onaimhub-aggregationservice to Docker Hub..."
+    # - docker push $DOCKER_NAMESPACE/onaimhub-aggregationservice:$DOCKER_IMAGE_TAG
+  tags:
+    - docker-runner
+
+test_AggregationService:
+  stage: test
+  script:
+    - echo "Running tests for LeaderBorad...."
+  tags:
+    - docker-runner
+
+push_AggregationService:
+  stage: push
+  script:
+    - echo "Pushing LeaderBorad...."
+    # - docker pull $DOCKER_NAMESPACE/onaimhub-aggregationservice:$DOCKER_IMAGE_TAG
+    # - docker tag $DOCKER_NAMESPACE/onaimhub-aggregationservice:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaimhub-aggregationservice:latest
+    # - docker push $DOCKER_NAMESPACE/onaimhub-aggregationservice:latest
+  tags:
+    - docker-runner
+  only:
+    - main
+  needs:
+    - build_AggregationService
+
+
+deploy_AggregationService:
+  stage: deploy
+  script:
+    - echo "Deploying LeaderBorad...."
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - kubectl apply -f CoreModules/AggregationService/aggregation-k8s/*.yaml
+  only:
+    - main
+  when: manual
+  tags:
+    - docker-runner

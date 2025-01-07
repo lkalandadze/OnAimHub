@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: adminapi
+  namespace: onaimhub
+spec:
+  ports:
+    - name: http
+      port: 5003
+      targetPort: 8080
+  selector:
+    app: adminapi
+  type: ClusterIP
+
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: adminapi
+#   annotations:
+#     kubernetes.io/ingress.class: nginx
+# spec:
+#   ports:
+#     - name: http
+#       port: 5003
+#       targetPort: 8080
+#   selector:
+#     app: adminapi

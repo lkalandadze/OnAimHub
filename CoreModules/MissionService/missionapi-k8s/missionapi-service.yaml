@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: missionapi
+  namespace: onaimhub
+spec:
+  ports:
+    - name: "5009"
+      port: 5009
+      targetPort: 8080
+  selector:
+    app: missionapi
+  type: ClusterIP
+
+# spec:
+#   ports:
+#     - name: "5009"
+#       port: 5009
+#       targetPort: 8080
+#   selector:
+#     io.kompose.service: missionapi

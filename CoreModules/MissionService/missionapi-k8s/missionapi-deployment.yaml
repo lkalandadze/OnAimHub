@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: missionapi
+  namespace: onaimhub
+  labels:
+    app: missionapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: missionapi
+  template:
+    metadata:
+      labels:
+        app: missionapi
+    spec:
+      containers:
+        - name: missionapi
+          image: gvgroup/onaimhub-missionservice:latest  # Replace with your DockerHub image path
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: CONSUL_ADDRESS
+              value: http://consul:8500
+            - name: ConnectionStrings__OnAimMission
+              value: Host=missiondb;Port=5432;Database=OnAimMission;Username=postgres;Password=Test1234!
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"              
+          volumeMounts:
+            - mountPath: /app/appsettings.json
+              name: missionapi-cm0
+              subPath: appsettings.json
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: appsettings.json
+                path: appsettings.json
+            name: missionapi-cm0
+          name: missionapi-cm0

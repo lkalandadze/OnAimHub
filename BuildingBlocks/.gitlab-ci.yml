@@ -1,0 +1,57 @@
+stages:
+  - build
+  - test
+  - push
+  - deploy
+
+variables:
+  DOCKER_IMAGE_TAG: $CI_COMMIT_SHA
+  DOCKER_NAMESPACE: gvgroup
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+
+services:
+  - docker:dind
+
+before_script:
+  - apk add --no-cache docker-cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker info
+
+
+build_BuildingBlocks:
+  stage: build
+  script:
+    - echo "Building  RNG..."
+    # - docker build -t $DOCKER_NAMESPACE/buildingblocks:$DOCKER_IMAGE_TAG .
+  tags:
+    - docker-runner
+
+test_Buildingblocks:
+  stage: test
+  script:
+    - echo "Running tests for RNG.."
+  tags:
+    - docker-runner
+    
+push_Buildingblocks:
+  stage: push
+  script:
+    - echo "Pushing RNG..."
+    # - docker push $DOCKER_NAMESPACE/buildingblocks:$DOCKER_IMAGE_TAG
+  tags:
+    - docker-runner
+  only:
+    - main
+  needs:
+    - build_BuildingBlocks
+
+deploy_Buildingblocks:
+  stage: deploy
+  script:
+    - echo "Deploying RNG..."
+  tags:
+    - docker-runner
+ 
+
+
