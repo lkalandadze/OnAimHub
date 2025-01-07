@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aggregation
+  namespace: onaimhub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aggregation
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: aggregation
+    spec:
+      containers:
+        - name: aggregation
+          image: gvgroup/onaimhub-aggregationservice:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ConnectionStrings__Connection
+              value: Host=aggregationdb;Port=5435;Database=aggregation;Username=postgres;Password=Test1234!;Pooling=true;
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+          volumeMounts:
+            - mountPath: /app/appsettings.json
+              name: aggregation-cm0
+              subPath: appsettings.json
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: appsettings.json
+                path: appsettings.json
+            name: aggregation-cm0
+          name: aggregation-cm0

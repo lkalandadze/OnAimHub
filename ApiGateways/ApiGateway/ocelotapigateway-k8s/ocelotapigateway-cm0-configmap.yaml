@@ -1,0 +1,36 @@
+apiVersion: v1
+data:
+  appsettings.json: |-
+    {
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft": "Warning",
+          "Microsoft.Hosting.Lifetime": "Information",
+          "Ocelot": "Debug"
+        }
+      },
+      "AllowedHosts": "*",
+      "Ocelot": {
+        "ConfigurationFile": "ocelot.json"
+      },
+
+      "GlobalConfiguration": {
+        "BaseUrl": "http://ocelotapigateway:8080",
+        "ServiceDiscoveryProvider": {
+          "Host": "consul",
+          "Port": 8500,
+          "Type": "Consul"
+        }
+      },
+
+      "Routes": []
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: ocelotapigateway
+  name: ocelotapigateway-cm0
+  namespace: onaimhub

@@ -1,0 +1,198 @@
+stages:
+  - start
+  - build
+  - test
+  - push
+  - deploy
+  - redis
+  - rabbitmq
+  - mongo
+  - admindb
+
+# top-level-job:
+#   stage: start
+#   script:
+#     - echo "Hello world..."
+#   tags:
+#     - docker-runner
+
+deploy_redis:
+  stage: redis
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - kubectl apply -f k8s/redis/*.yaml 
+  tags:
+    - docker-runner
+  when: manual
+
+deploy_rabbitmq:
+  stage: rabbitmq
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - kubectl apply -f k8s/rabbitmq/*.yaml 
+  tags:
+    - docker-runner
+  when: manual
+
+deploy_mongo:
+  stage: mongo
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - kubectl apply -f k8s/mongo/*.yaml 
+  tags:
+    - docker-runner
+  when: manual
+
+deploy_admindb:
+  stage: admindb
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - kubectl apply -f k8s/admindb/*.yaml 
+  tags:
+    - docker-runner
+  when: manual
+
+include:
+  - local: 'Admin/OnAim.Admin.API/.gitlab-ci.yml'
+    rules:
+      - if: '$CI_COMMIT_BRANCH =~ /^admin\/.*/'
+        changes:
+          - 'Admin/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+        when: always
+        changes:
+          - 'Admin/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^admin\/.*/'
+        when: always
+  - local: 'ApiGateways/ApiGateway/.gitlab-ci.yml'
+    rules:
+       - if: '$CI_COMMIT_BRANCH =~ /^api_gateway\/.*/'
+         changes:
+          - 'ApiGateways/ApiGateway/**/*'
+       - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+         changes:
+          - 'ApiGateways/ApiGateway/**/*'
+       - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^api_gateway\/.*/'
+         when: always
+  - local: 'BuildingBlocks/.gitlab-ci.yml'
+    rules:
+      - if: '$CI_COMMIT_BRANCH =~ /^building_blocks\/.*/'
+        changes:
+          - 'BuildingBlocks/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+        changes:
+          - 'BuildingBlocks/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^building_blocks\/.*/'
+        when: always  
+  - local: 'Core/Hub/Hub.Api/.gitlab-ci.yml'
+    rules:
+      - if: '$CI_COMMIT_BRANCH =~ /^hub_api\/.*/'
+        changes:
+          - 'Core/Hub/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+        changes:
+          - 'Core/Hub/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^hub_api\/.*/'
+        when: always
+  - local: 'CoreModules/Leaderboard/Leaderboard.Api/.gitlab-ci.yml'
+    rules:
+      - if: '$CI_COMMIT_BRANCH =~ /^leaderboard\/.*/'
+        changes:
+          - 'CoreModules/Leaderboard/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+        changes:
+          - 'CoreModules/Leaderboard/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^leaderboard\/.*/'
+        when: always
+  - local: 'CoreModules/LevelService/LevelService.Api/.gitlab-ci.yml'
+    rules:
+      - if: '$CI_COMMIT_BRANCH =~ /^level_service\/.*/'
+        changes:
+          - 'CoreModules/LevelService/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+        changes:
+          - 'CoreModules/LevelService/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^level_service\/.*/'
+        when: always
+  - local: 'CoreModules/MissionService/MissionService.Api/.gitlab-ci.yml'
+    rules:
+      - if: '$CI_COMMIT_BRANCH =~ /^mission_service\/.*/'
+        changes:
+          - 'CoreModules/MissionService/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+        changes:
+          - 'CoreModules/MissionService/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^mission_service\/.*/'
+        when: always
+  - local: 'CoreModules/AggregationService/AggregationService.API/.gitlab-ci.yml'
+    rules:
+      - if: '$CI_COMMIT_BRANCH =~ /^aggregation_service\/.*/'
+        changes:
+          - 'CoreModules/AggregationService/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+        changes:
+          - 'CoreModules/AggregationService/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^aggregation_service\/.*/'
+        when: always
+  - local: 'Games/GameLib/.gitlab-ci.yml'
+    rules:
+      - if: '$CI_COMMIT_BRANCH =~ /^game_lib\/.*/'
+        changes:
+          - 'Games/GameLib/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+        changes:
+          - 'Games/GameLib/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^game_lib\/.*/'
+        when: always
+  - local: Games/TestWheel/TestWheel.Api/.gitlab-ci.yml
+    rules:
+      - if: '$CI_COMMIT_BRANCH =~ /^test_wheel\/.*/'
+        changes:
+          - 'Games/TestWheel/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+        changes:
+          - 'Games/TestWheel/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^test_wheel\/.*/'
+        when: always
+  - local: 'Games/Wheel/Wheel.Api/.gitlab-ci.yml'
+    rules:
+      - if: '$CI_COMMIT_BRANCH =~ /^wheel\/.*/'
+        changes:
+          - 'Games/Wheel/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+        changes:
+          - 'Games/Wheel/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^wheel\/.*/'
+        when: always
+  - local: 'Helpers/Test.Api/.gitlab-ci.yml'
+    rules:
+      - if: '$CI_COMMIT_BRANCH =~ /^test_api\/.*/'
+        changes:
+          - 'Helpers/Test.Api/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+        changes:
+          - 'Helpers/Test.Api/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^test_api\/.*/'
+        when: always
+  - local: 'StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/.gitlab-ci.yml'
+    rules:
+      - if: '$CI_COMMIT_BRANCH =~ /^saga_orchestration_state_machine\/.*/'
+        changes:
+          - 'StateMachines/SagaOrchestrationStateMachine/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+        changes:
+          - 'StateMachines/SagaOrchestrationStateMachine/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^saga_orchestration_state_machine\/.*/'
+        when: always

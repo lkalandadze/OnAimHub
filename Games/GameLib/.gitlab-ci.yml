@@ -1,0 +1,48 @@
+stages:
+  - build
+  - test
+  - push 
+  - deploy
+
+variables:
+  DOCKER_IMAGE_TAG: $CI_COMMIT_SHA
+  DOCKER_NAMESPACE: gvgrop
+
+# Login to Docker Hub
+.before_script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+
+build_Gamelib:
+  stage: build
+  script:
+    - echo "Building Gamelib"
+    # - docker build -t $DOCKER_NAMESPACE/gamelib:$DOCKER_IMAGE_TAG .
+  tags:
+    - docker-runner
+
+test_Gamelib:
+  stage: test
+  script:
+    - echo "Running tests for Gamelib"
+  tags:
+    - docker-runner
+
+push_Gamelib:
+  stage: push
+  script:
+    - echo "Pushing Gamelib"
+    # - docker push $DOCKER_NAMESPACE/gamelib:$DOCKER_IMAGE_TAG
+  tags:
+    - docker-runner
+  only:
+    - main
+  needs:
+    - build_Gamelib
+
+deploy_Gamelib:
+  stage: deploy
+  script:
+    - echo "Deploying GameLib"
+  tags:
+    - docker-runner

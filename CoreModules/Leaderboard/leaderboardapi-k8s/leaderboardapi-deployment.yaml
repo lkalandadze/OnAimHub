@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leaderboardapi
+  namespace: onaimhub
+  labels:
+    app: leaderboardapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: leaderboardapi
+  template:
+    metadata:
+      labels:
+        app: leaderboardapi
+    spec:
+      containers:
+        - name: leaderboardapi
+          image: gvgroup/onaimhub-leaderboard:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ConnectionString__OnAimLeaderboard
+              value: Host=leaderboarddb;Port=5436;Database=OnAimLeaderboard2;Username=postgres;Password=Test1234!
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /app/appsettings.json
+              name: leaderboardapi-cm0
+              subPath: appsettings.json
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: appsettings.json
+                path: appsettings.json
+            name: leaderboardapi-cm0
+          name: leaderboardapi-cm0

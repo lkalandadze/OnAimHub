@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: leaderboardapi
+  namespace: onaimhub
+spec:
+  ports:
+    - name: "5004"
+      port: 5004
+      targetPort: 8080
+  selector:
+    app: leaderboardapi

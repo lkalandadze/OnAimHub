@@ -1,0 +1,64 @@
+apiVersion: v1
+data:
+  appsettings.json: |
+    {
+      "ConnectionStrings": {
+        "DefaultConnectionString": "Host=aggregationdb;Port=5432;Database=aggregation;Username=postgres;Password=12345678"
+      },
+      "RabbitMQSettings": {
+        "ConnectionName": "aggregation-service",
+        "Retries": 3,
+        "RetryInterval": 2,
+        "ConventionsCasing": "snakeCase",
+        "Host": "rabbitmq",
+        "Port": "5672",
+        "User": "guest",
+        "Password": "guest",
+        "RequestedConnectionTimeout": "00:00:30",
+        "RequestedHeartbeat": "00:01:00",
+        "SocketReadTimeout": "00:00:30",
+        "SocketWriteTimeout": "00:00:30",
+        "ContinuationTimeout": "00:00:20",
+        "HandshakeContinuationTimeout": "00:00:10",
+        "NetworkRecoveryInterval": "00:00:05",
+        "Exchange": {
+          "declare": true,
+          "durable": true,
+          "autoDelete": false,
+          "type": "topic",
+          "name": "deliveries"
+        },
+        "Queue": {
+          "declare": true,
+          "durable": true,
+          "exclusive": false,
+          "autoDelete": false,
+          "template": "{{assembly}}/{{exchange}}.{{message}}"
+        },
+        "context": {
+          "enabled": true,
+          "header": "message_context"
+        },
+        "spanContextHeader": "span_context",
+        "deadLetter": {
+          "enabled": true,
+          "prefix": "dlx-",
+          "declare": true
+        }
+      },
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft.AspNetCore": "Warning"
+        }
+      },
+      "AllowedHosts": "*"
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: aggregation
+  name: aggregation-cm0
+  namespace: onaimhub

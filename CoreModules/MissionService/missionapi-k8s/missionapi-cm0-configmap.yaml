@@ -1,0 +1,69 @@
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: mission-config
+#   namespace: mission
+# data:
+#   appsettings.json: |
+#     {
+#       "Logging": {
+#         "LogLevel": {
+#           "Default": "Information",
+#           "Microsoft.AspNetCore": "Warning"
+#         }
+#       },
+#       "AllowedHosts": "*"
+#     }
+
+apiVersion: v1
+data:
+  appsettings.json: |-
+    {
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft.AspNetCore": "Warning"
+        }
+      },
+      "ConnectionStrings": {
+        "OnAimMission": "User ID =postgres;Password=Test1234!;Server=missiondb;Port=5432;Database=OnAimMission;Pooling=true;" //Akaki
+      },
+      "JwtConfiguration": {
+        "PublicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhRGzVPGyq8lyFY/6xgdZiQT06c5k6RLauQjuE8zk6iXNP1EX86xZ8iQ4K/pB4Pw6u4b3stAxwnbwyOYPBngVUA==",
+        "Issuer": "HUB",
+        "Audience": "HUB-AUDIENCE"
+      },
+      "RabbitMQSettings": {
+        "Host": "rabbitmq",
+        "Port": "5672",
+        "User": "guest",
+        "Password": "guest",
+        "ExchangeName": "leaderboard.fanout",
+        "Queues": {
+          "SegmentQueue": {
+            "QueueName": "SegmentQueue",
+            "RoutingKeys": [ "mission_createSegmentEvent", "mission_deleteSegmentEvent" ]
+          }
+        },
+        "Consumers": {
+          "CreateSegmentAggregationConsumer": {
+            "CreateSegmentEvent": "mission_createSegmentEvent"
+          },
+          "DeleteSegmentAggregationConsumer": {
+            "DeleteSegmentEvent": "mission_deleteSegmentEvent"
+          },
+          "UpdateSegmentAggregationConsumer": {
+            "UpdateSegmentEvent": "mission_updateSegmentEvent"
+          }
+        }
+      },
+      "AllowedHosts": "*"
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: missionapi
+  name: missionapi-cm0
+  namespace: onaimhub

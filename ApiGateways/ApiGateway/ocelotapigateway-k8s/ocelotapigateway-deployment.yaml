@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ocelotapigateway
+  namespace: onaimhub
+  labels:
+    app: ocelotapigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ocelotapigateway
+  template:
+    metadata:
+      labels:
+        app: ocelotapigateway
+    spec:
+      containers:
+        - name: ocelotapigateway
+          image: gvgroup/onaimhub-apigateway:latest  
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: CONSUL_ADDRESS
+              value: http://consul:8500
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /app/appsettings.json
+              name: ocelotapigateway-cm0
+              subPath: appsettings.json
+            - mountPath: /app/ocelot.json
+              name: ocelotapigateway-cm1
+              subPath: ocelot.json
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: appsettings.json
+                path: appsettings.json
+            name: ocelotapigateway-cm0
+          name: ocelotapigateway-cm0
+        - configMap:
+            items:
+              - key: ocelot.json
+                path: ocelot.json
+            name: ocelotapigateway-cm1
+          name: ocelotapigateway-cm1

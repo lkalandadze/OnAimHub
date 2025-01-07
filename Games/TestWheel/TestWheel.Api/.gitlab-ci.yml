@@ -1,0 +1,48 @@
+stages:
+  - build
+  - test
+  - push
+  - deploy
+
+variables:
+  DOCKER_IMAGE_TAG: $CI_COMMIT_SHA
+  DOCKER_NAMESPACE: gvgrop
+
+# Login to Docker Hub
+.before_script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+
+build_TestWheel:
+  stage: build
+  script:
+    - echo "Building TestWheel"
+    # - docker build -t $DOCKER_NAMESPACE/testwheel:$DOCKER_IMAGE_TAG .
+  tags:
+    - docker-runner
+
+test_TestWheel:
+  stage: test
+  script:
+    - echo "Running tests for TstWheel"
+  tags:
+    - docker-runner
+
+push_TestWheel:
+  stage: push
+  script:
+    - echo "Pushing TestWheel"
+    # - docker push $DOCKER_NAMESPACE/testwheel:$DOCKER_IMAGE_TAG
+  tags:
+    - docker-runner
+  only:
+    - main
+  needs:
+    - build_TestWheel
+
+deploy_TestWheel:
+  stage: deploy
+  script:
+    - echo "Deploying test
+  tags:
+    - docker-runner

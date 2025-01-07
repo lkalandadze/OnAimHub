@@ -1,0 +1,37 @@
+apiVersion: v1
+data:
+  appsettings.json: |
+    {
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft.AspNetCore": "Warning"
+        }
+      },
+      "AllowedHosts": "*"
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: testapi
+  name: testapi-cm0
+  namespace: onaimhub
+
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: testapi-config
+#   namespace: testapi
+# data:
+#   appsettings.json: |
+#     {
+#       "Logging": {
+#         "LogLevel": {
+#           "Default": "Information",
+#           "Microsoft.AspNetCore": "Warning"
+#         }
+#       },
+#       "AllowedHosts": "*"
+#     }

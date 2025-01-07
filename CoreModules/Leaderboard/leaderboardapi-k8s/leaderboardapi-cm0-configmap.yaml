@@ -1,0 +1,67 @@
+apiVersion: v1
+data:
+  appsettings.json: |
+    {
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft.AspNetCore": "Warning"
+        }
+      },
+      "ConnectionStrings": {
+        "OnAimLeaderboard": "User ID =postgres;Password=Test1234!;Server=leaderboarddb;Port=5432;Database=OnAimLeaderboard;Pooling=true;", //Akaki
+        "Redis": "redis:6379,abortConnect=false"
+      },
+      "JwtConfiguration": {
+        "PublicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhRGzVPGyq8lyFY/6xgdZiQT06c5k6RLauQjuE8zk6iXNP1EX86xZ8iQ4K/pB4Pw6u4b3stAxwnbwyOYPBngVUA==",
+        "Issuer": "HUB",
+        "Audience": "HUB-AUDIENCE"
+      },
+      "RabbitMQSettings": {
+        "Host": "rabbitmq",
+        "Port": "5672",
+        "User": "guest",
+        "Password": "guest",
+        "ExchangeName": "leaderboard.fanout",
+        "Queues": {
+          "CreatePlayerQueue": {
+            "QueueName": "CreatePlayerQueue",
+            "RoutingKeys": [ "leaderboard_createPlayerEvent" ]
+          },
+          "PlayLeaderboardQueue": {
+            "QueueName": "PlayLeaderboardQueue",
+            "RoutingKeys": [ "leaderboard_playLeaderboardEvent" ]
+          },
+          "SegmentQueue": {
+            "QueueName": "SegmentQueue",
+            "RoutingKeys": [ "leaderboard_createSegmentEvent", "leaderboard_deleteSegmentEvent" ]
+          }
+        },
+        "Consumers": {
+          "CreatePlayerAggregationConsumer": {
+            "CreatePlayerEvent": "leaderboard_createPlayerEvent"
+          },
+          "PlayLeaderboardAggregationConsumer": {
+            "PlayLeaderboardEvent": "leaderboard_playLeaderboardEvent"
+          },
+          "CreateSegmentAggregationConsumer": {
+            "CreateSegmentEvent": "leaderboard_createSegmentEvent"
+          },
+          "DeleteSegmentAggregationConsumer": {
+            "DeleteSegmentEvent": "leaderboard_deleteSegmentEvent"
+          },
+          "UpdateSegmentAggregationConsumer": {
+            "UpdateSegmentEvent": "leaderboard_updateSegmentEvent"
+          }
+        }
+      },
+      "AllowedHosts": "*"
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: leaderboardapi
+  name: leaderboardapi-cm0
+  namespace: onaimhub

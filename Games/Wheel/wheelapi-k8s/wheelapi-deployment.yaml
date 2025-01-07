@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wheelapi
+  namespace: onaimhub
+  labels:
+    app: wheelapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wheelapi
+  template:
+    metadata:
+      labels:
+        app: wheelapi
+    spec:
+      containers:
+        - name: wheelapi
+          image: gvgroup/onaimhub-wheel:latest  # Replace with DockerHub path
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: CONSUL_ADDRESS
+              value: http://consul:8500
+            - name: ConnectionStrings__GameConfig
+              value: Host=gameconfigdb;Port=5432;Database=WheelConfig;Username=postgres;Password=Test1234!
+            - name: ConnectionStrings__GameHistory
+              value: Host=gamehistorydb;Port=5432;Database=WheelHistory;Username=postgres;Password=Test1234!
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /app/appsettings.json
+              name: wheelapi-cm0
+              subPath: appsettings.json
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: appsettings.json
+                path: appsettings.json
+            name: wheelapi-cm0
+          name: wheelapi-cm0

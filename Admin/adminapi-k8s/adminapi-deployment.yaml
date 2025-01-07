@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adminapi
+  namespace: onaimhub
+  labels:
+    app: adminapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adminapi
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: adminapi
+    spec:
+      containers:
+        - name: adminapi
+          image: gvgroup/onaimhub-admin_api:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ConnectionStrings__Connection
+              value: Host=admindb;Port=5435;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          volumeMounts:
+            - name: appsettings-volume
+              mountPath: /app/appsettings.json
+              subPath: appsettings.json
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: dockerhub-secret
+      volumes:
+        - configMap:
+            items:
+              - key: appsettings.json
+                path: appsettings.json
+            name: adminapi-cm0
+          name: appsettings-volume
+          # name: adminapi-cm0

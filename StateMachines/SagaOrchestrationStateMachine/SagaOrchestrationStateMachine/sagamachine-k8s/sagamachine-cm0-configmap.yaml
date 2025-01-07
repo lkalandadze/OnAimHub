@@ -1,0 +1,39 @@
+apiVersion: v1
+data:
+  appsettings.json: |
+    {
+      "RabbitMQUrl": "localhost",
+      "ConnectionStrings": {
+        "DefaultConnection": "Host=192.168.10.42;Port=5432;Database=StateMachineDb;Username=postgres;Password=12345678",
+      },
+      "Serilog": {
+        "MinimumLevel": {
+          "Default": "Information",
+          "Override": {
+            "Microsoft": "Information",
+            "System": "Warning"
+          }
+        }
+      },
+      "ElasticConfiguration": {
+        "Uri": "http://localhost:9200"
+      },
+      "HubApiClientOptions": {
+        "BaseApiAddress": "http://hubapi:8080/",
+        //"BaseApiAddress": "http://192.168.10.42:5002/", docker
+        "Endpoint": "hubapi/"
+      },
+      "OpenTelemetry": {
+        "ActivitySourceName": "ActivitySource.StateMachine",
+        "ServiceName": "StateMachine",
+        "ServiceVersion": "1.0.0"
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: sagamachine
+  name: sagamachine-cm0
+  namespace: onaimhub

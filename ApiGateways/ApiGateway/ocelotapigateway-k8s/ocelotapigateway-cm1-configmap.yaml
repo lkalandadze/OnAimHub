@@ -1,0 +1,58 @@
+apiVersion: v1
+data:
+  ocelot.json: |-
+    {
+      "Routes": [
+        {
+          "DownstreamPathTemplate": "/wheelapi/{everything}",
+          "DownstreamScheme": "http",
+          "DownstreamHostAndPorts": [
+            {
+              "Host": "wheelapi",
+              "Port": 8080
+            }
+          ],
+          "UpstreamPathTemplate": "/wheelapi/{everything}",
+          "UpstreamHttpMethod": [
+            "Get",
+            "Post",
+            "Put",
+            "Delete"
+          ]
+        },
+        {
+          "DownstreamPathTemplate": "/hubapi/{everything}",
+          "DownstreamScheme": "http",
+          "DownstreamHostAndPorts": [
+            {
+              "Host": "hubapi",
+              "Port": 8080
+            }
+          ],
+          "UpstreamPathTemplate": "/hubapi/{everything}",
+          "UpstreamHttpMethod": [
+            "Get",
+            "Post",
+            "Put",
+            "Delete"
+          ]
+        }
+      ],
+      "GlobalConfiguration": {
+        "BaseUrl": "http://ocelotapigateway:8080",
+        "ServiceDiscoveryProvider": {
+          "Type": "Consul",
+          "Scheme": "http",
+          "Host": "consul",
+          "Port": 8500
+        }
+      }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: ocelotapigateway
+  name: ocelotapigateway-cm1
+  namespace: onaimhub

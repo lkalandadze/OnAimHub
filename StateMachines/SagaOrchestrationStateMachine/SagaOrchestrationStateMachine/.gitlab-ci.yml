@@ -1,0 +1,61 @@
+stages:
+  - build
+  - test
+  - push
+  - deploy
+
+variables:
+  DOCKER_IMAGE_TAG: $CI_COMMIT_SHA
+  DOCKER_NAMESPACE: gvgroup
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+
+services:
+  - docker:dind
+
+before_script:
+  - apk add --no-cache docker-cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+build_SagaOrchestrationStateMachine:
+  stage: build
+  script:
+    - echo "Building SagaOrchestrationStateMachine"
+    # - docker build -t $DOCKER_NAMESPACE/onaimhub-sagamachine:$DOCKER_IMAGE_TAG -f StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/Dockerfile .
+    # - echo "Pushing Docker image for onaimhub-sagamachine to Docker Hub..."
+    # - docker push $DOCKER_NAMESPACE/onaimhub-sagamachine:$DOCKER_IMAGE_TAG
+  tags:
+    - docker-runner
+
+# test_SagaOrchestrationStateMachine:
+#   stage: test
+#   script:
+#     - echo "Running tests for SagaOrchestrationStateMachine"
+#   tags:
+#     - docker-runner
+
+push_SagaOrchestrationStateMachine:
+  stage: push
+  script:
+    - echo "Pushing SagaOrchestrationStateMachine"
+    # - docker pull $DOCKER_NAMESPACE/onaimhub-sagamachine:$DOCKER_IMAGE_TAG
+    # - docker tag $DOCKER_NAMESPACE/onaimhub-sagamachine:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaimhub-sagamachine:latest
+    # - docker push $DOCKER_NAMESPACE/onaimhub-sagamachine:latest
+  tags:
+    - docker-runner
+  only:
+    - main
+  needs:
+    - build_SagaOrchestrationStateMachine  
+
+deploy_SagaOrchestrationStateMachine:
+  stage: deploy
+  script:
+    - echo "Deploying SagaOrchestrationStateMachine"
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - kubectl apply -f StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/sagamachine-k8s/*.yaml
+  only:
+    - main
+  when: manual
+  tags:
+    - docker-runner
