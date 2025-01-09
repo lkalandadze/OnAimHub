@@ -3,7 +3,7 @@
 using GameLib.Application.Models.Price;
 using Wheel.Application.Models.Round;
 
-namespace Wheel.Application.Models.Game;
+namespace Wheel.Application.Models.Wheel;
 
 public class InitialDataResponseModel
 {

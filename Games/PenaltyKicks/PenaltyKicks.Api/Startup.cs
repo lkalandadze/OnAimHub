@@ -6,19 +6,19 @@ using GameLib.ServiceRegistry;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using PenaltyKicks.Api.Consul;
+using PenaltyKicks.Application.Services.Abstract;
+using PenaltyKicks.Application.Services.Concrete;
+using PenaltyKicks.Domain.Abstractions.Repository;
+using PenaltyKicks.Domain.Entities;
+using PenaltyKicks.Infrastructure.DataAccess;
+using PenaltyKicks.Infrastructure.Repositories;
 using Shared.Infrastructure.Bus;
 using Shared.Infrastructure.DataAccess;
 using Shared.Infrastructure.MassTransit;
 using Shared.IntegrationEvents.IntegrationEvents.Player;
-using Wheel.Api.Consul;
-using Wheel.Application.Services.Abstract;
-using Wheel.Application.Services.Concrete;
-using Wheel.Domain.Abstractions.Repository;
-using Wheel.Domain.Entities;
-using Wheel.Infrastructure.DataAccess;
-using Wheel.Infrastructure.Repositories;
 
-namespace Wheel.Api;
+namespace PenaltyKicks.Api;
 
 public class Startup
 {
@@ -34,10 +34,10 @@ public class Startup
         var env = services.BuildServiceProvider().GetRequiredService<IWebHostEnvironment>();
         //services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetConfigurationByIdQueryHandler).Assembly));
 
-        services.AddScoped<SharedGameConfigDbContext, WheelConfigDbContext>();
-        services.AddScoped<SharedGameConfigDbContext<WheelConfiguration>, WheelConfigDbContext>();
+        services.AddScoped<SharedGameConfigDbContext, PenaltyConfigDbContext>();
+        services.AddScoped<SharedGameConfigDbContext<PenaltyConfiguration>, PenaltyConfigDbContext>();
 
-        services.AddDbContext<WheelConfigDbContext>(opt =>
+        services.AddDbContext<PenaltyConfigDbContext>(opt =>
         {
             opt.UseNpgsql(Configuration.GetConnectionString("GameConfig"));
         });
@@ -59,15 +59,17 @@ public class Startup
                            .AllowAnyHeader();
                 });
         });
-        services.AddScoped<IRoundRepository, RoundRepository>();
-        services.AddScoped<IWheelPrizeRepository, WheelPrizeRepository>();
-        services.AddScoped<IWheelConfigurationRepository, WheelConfigurationRepository>();
+
+        services.AddScoped<IPenaltyConfigurationRepository, PenaltyConfigurationRepository>();
+        services.AddScoped<IPenaltyGameRepository, PenaltyGameRepository>();
+        services.AddScoped<IPenaltyPrizeRepository, PenaltyPrizeRepository>();
+        services.AddScoped<IPenaltySeriesRepository, PenaltySeriesRepository>();
         services.AddScoped<IMessageBus, MessageBus>();
 
-        var prizeGroupTypes = new List<Type> { typeof(Round) };
-        services.ResolveGameLibServices<WheelConfiguration>(Configuration, prizeGroupTypes);
+        var prizeGroupTypes = new List<Type> { typeof(PenaltySeries) };
+        services.ResolveGameLibServices<PenaltyConfiguration>(Configuration, prizeGroupTypes);
 
-        services.AddScoped<IWheelService, WheelService>();
+        services.AddScoped<IPenaltyService, PenaltyService>();
 
         ConfigureMassTransit(services, Configuration, env, consumerAssemblyMarkerType: typeof(Program));
         services.AddMassTransitHostedService();
@@ -108,10 +110,10 @@ public class Startup
             var registration = new AgentServiceRegistration()
             {
                 ID = serviceId,
-                Name = "wheelapi",
-                Address = "wheelapi",
+                Name = "penaltyapi",
+                Address = "penaltyapi",
                 Port = 8080,
-                Tags = ["Wheel", "Back"],
+                Tags = ["Game", "Back"],
                 Meta = new Dictionary<string, string>
                 {
                     { "GameData", serializedGameData }
@@ -131,7 +133,7 @@ public class Startup
     private void ConfigureConsul(IServiceCollection services)
     {
         services.Configure<ConsulConfig>(Configuration.GetSection("Consul"));
-        services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+        services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>  
         {
             var address = Configuration["Consul:Host"];
             consulConfig.Address = new Uri(address!);

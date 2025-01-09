@@ -1,6 +1,5 @@
 ﻿using GameLib.Application.Models.Game;
-using Wheel.Application.Models.Game;
-using Wheel.Application.Models.Player;
+using Wheel.Application.Models.Wheel;
 
 namespace Wheel.Application.Services.Abstract;
 

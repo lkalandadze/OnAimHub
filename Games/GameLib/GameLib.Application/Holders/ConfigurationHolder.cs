@@ -49,4 +49,9 @@ public class ConfigurationHolder
 
         return gameConfiguration.Prices.Select(p => PriceBaseGetModel.MapFrom(p));
     }
+
+    public GameConfiguration GetConfiguration(int promotionId)
+    {
+        return GameConfigurations.Where(c => c.Value.PromotionId == promotionId).FirstOrDefault().Value;
+    }
 }
