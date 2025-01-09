@@ -1,15 +1,20 @@
-﻿using AggregationService.Domain.Enum;
+﻿using AggregationService.Application.Models.Filters;
+using AggregationService.Domain.Entities;
+using AggregationService.Domain.Enum;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace AggregationService.Application.Models.AggregationConfigurations;
 
 public class CreateAggregationConfigurationModel
 {
-    public ConfigurationType ConfigurationType { get; set; }
-    public string SpendableFund { get; set; }
-    public int FundsSpent { get; set; }
-    public string EarnableFund { get; set; }
-    public int FundsEarned { get; set; }
-    public bool IsRepeatable { get; set; }
-    public int ContextId { get; set; }
-    public string ContextType { get; set; }
+    public string EventProducer { get; set; }
+    public string AggregationSubscriber { get; set; }
+    public List<FilterModel> Filters { get; set; }
+    public AggregationType AggregationType { get; set; }
+    public EvaluationType EvaluationType { get; set; }
+    public IEnumerable<PointEvaluationRule> PointEvaluationRules { get; set; } = new List<PointEvaluationRule>();
+    public string SelectionField { get; set; }
+    public DateTime Expiration { get; set; }
+    public string PromotionId { get; set; }
+    public string Key { get; set; }
 }

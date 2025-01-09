@@ -3,46 +3,70 @@ using Shared.Domain.Entities;
 
 namespace AggregationService.Domain.Entities;
 
-public class AggregationConfiguration : BaseEntity<int>
+// Only available when used with 1 CoinIn
+public class AggregationConfiguration : BaseEntity<string>
 {
-    public AggregationConfiguration(ConfigurationType configurationType, string spendableFund, int fundsSpent, string earnableFund, int fundsEarned, bool isRepeatable, int contextId, string contextType)
+    public AggregationConfiguration()
     {
-        ConfigurationType = configurationType;
-        SpendableFund = spendableFund;
-        FundsSpent = fundsSpent;
-        EarnableFund = earnableFund;
-        FundsEarned = fundsEarned;
-        IsRepeatable = isRepeatable;
-        ContextId = contextId;
-        ContextType = contextType;
+        
+    }
+    public AggregationConfiguration(
+        string eventProducer,
+        string aggregationSubscriber,
+        List<Filter> filters,
+        AggregationType aggregationType,
+        EvaluationType evaluationType,
+        IEnumerable<PointEvaluationRule> pointEvaluationRules,
+        string selectionField,
+        DateTime expiration,
+        string promotionId,
+        string key)
+    {
+        Id = Guid.NewGuid().ToString();
+        EventProducer = eventProducer;
+        AggregationSubscriber = aggregationSubscriber;
+        Filters = filters;
+        AggregationType = aggregationType;
+        EvaluationType = evaluationType;
+        PointEvaluationRules = pointEvaluationRules;
+        SelectionField = selectionField;
+        Expiration = expiration;
+        PromotionId = promotionId;
+        Key = key;
     }
 
-    public ConfigurationType ConfigurationType { get; set; }
+    public string EventProducer { get; set; } // Example: Hub
+    public string AggregationSubscriber { get; set; } // Example: Leaderboard
+    public List<Filter> Filters { get; set; } = new();
+    public AggregationType AggregationType { get; set; }
+    public EvaluationType EvaluationType { get; set; }
+    public IEnumerable<PointEvaluationRule> PointEvaluationRules { get; set; } = new List<PointEvaluationRule>();
+    public string SelectionField { get; set; } // Example: "Bet"
+    public DateTime Expiration { get; set; }
+    public string PromotionId { get; set; }
+    public string Key { get; set; } // Example: LeaderboardId
 
-    //Coins to spend and how much
-    public string SpendableFund { get; set; }
-    public int FundsSpent { get; set; }
-
-    //Ciubs to earn and how much
-    public string EarnableFund { get; set; }
-    public int FundsEarned { get; set; }
-
-    public bool IsRepeatable { get; set; }
-    public int AggregationId { get; set; }
-    public Aggregation Aggregation { get; set; }
-
-    // Main table's Id of the project ex: LeaderboardRecordId, GameConfigurationId and etc.
-    public int ContextId { get; set; }
-    // Name of the project so it can call via rabbit
-    public string ContextType { get; set; }
-
-    public void Update(ConfigurationType configurationType, string spendableFund, int fundsSpent, string earnableFund, int fundsEarned, bool isRepeatable)
+    public void Update(
+        string eventProducer,
+        string aggregationSubscriber,
+        List<Filter> filters,
+        AggregationType aggregationType,
+        EvaluationType evaluationType,
+        IEnumerable<PointEvaluationRule> pointEvaluationRules,
+        string selectionField,
+        DateTime expiration,
+        string promotionId,
+        string key)
     {
-        ConfigurationType = configurationType;
-        SpendableFund = spendableFund;
-        FundsSpent = fundsSpent;
-        EarnableFund = earnableFund;
-        FundsEarned = fundsEarned;
-        IsRepeatable = isRepeatable;
+        EventProducer = eventProducer;
+        AggregationSubscriber = aggregationSubscriber;
+        Filters = filters;
+        AggregationType = aggregationType;
+        EvaluationType = evaluationType;
+        PointEvaluationRules = pointEvaluationRules;
+        SelectionField = selectionField;
+        Expiration = expiration;
+        PromotionId = promotionId;
+        Key = key;
     }
 }

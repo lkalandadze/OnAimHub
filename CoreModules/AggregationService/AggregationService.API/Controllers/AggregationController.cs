@@ -1,4 +1,4 @@
-﻿using AggregationService.Application.Models.Aggregations;
+﻿using AggregationService.Application.Models.AggregationConfigurations;
 using AggregationService.Application.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,27 +10,27 @@ public class AggregationController : ControllerBase
 {
     //private readonly HttpClient _client;
     //private readonly IDatabase _redis;
-    private readonly IAggregationService _aggregationService;
-    public AggregationController(/*HttpClient client, IConnectionMultiplexer muxer,*/ IAggregationService aggregationService)
+    private readonly IAggregationConfigurationService _aggregationConfigurationService;
+    public AggregationController(/*HttpClient client, IConnectionMultiplexer muxer,*/ IAggregationConfigurationService aggregationConfigurationService)
     {
         //_client = client;
         //_client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("CachingApp", "1.0"));
         //_redis = muxer.GetDatabase();
-        _aggregationService = aggregationService;
+        _aggregationConfigurationService = aggregationConfigurationService;
     }
 
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateAggregationModel filter)
+    public async Task<IActionResult> Create([FromBody] CreateAggregationConfigurationModel filter)
     {
-        await _aggregationService.AddAggregationWithConfigurationsAsync(filter);
+        await _aggregationConfigurationService.AddAggregationWithConfigurationsAsync(filter);
         return Ok(new { message = "Aggregation created successfully." });
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] UpdateAggregationModel filter)
+    public async Task<IActionResult> Update([FromBody] UpdateAggregationConfigurationModel filter)
     {
-        await _aggregationService.UpdateAggregationAsync(filter);
+        await _aggregationConfigurationService.UpdateAggregationAsync(filter);
         return Ok(new { message = "Aggregation updated successfully." });
     }
 

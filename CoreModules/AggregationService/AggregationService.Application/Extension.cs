@@ -1,4 +1,5 @@
 ﻿using AggregationService.Application.Services.Abstract;
+using AggregationService.Application.Services.Concrete;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,7 +9,7 @@ public static class Extension
 {
     public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IAggregationService, Application.Services.Concrete.AggregationService>();
+        services.AddScoped<IAggregationConfigurationService, AggregationConfigurationService>();
 
         return services;
     }

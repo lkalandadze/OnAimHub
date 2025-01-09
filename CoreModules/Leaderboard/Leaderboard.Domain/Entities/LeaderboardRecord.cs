@@ -41,6 +41,7 @@ public class LeaderboardRecord : BaseEntity<int>
         CreationDate = DateTimeOffset.UtcNow;
         Status = LeaderboardRecordStatus.Created;
     }
+    // External Id
     public int PromotionId { get; set; }
     public string PromotionName { get; set; }
     public string Title { get; set; }
