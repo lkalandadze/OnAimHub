@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: adminapi-ingress
+  name: ocelotapigateway-ingress
   namespace: onaimhub
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
@@ -9,13 +9,13 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: onaim.adminapi.dev.local
+    - host: onaim.ocelotapigateway.dev.local
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: adminapi
+                name: ocelotapigateway
                 port:
-                  number: 5003
+                  number: 5000

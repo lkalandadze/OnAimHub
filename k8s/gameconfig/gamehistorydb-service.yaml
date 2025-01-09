@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: missiondb
+  name: gamehistorydb
   namespace: onaimhub
 spec:
   ports:
-    - name: "5437"
-      port: 5437
+    - name: "5432"
+      port: 5433
       targetPort: 5432
   selector:
-    app: missiondb
-  type: ClusterIP
+    app: gamehistorydb

@@ -1,21 +1,20 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: adminapi-ingress
+  name: levelapi-ingress
   namespace: onaimhub
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "false" # Set to "true" if SSL is configured
 spec:
-  ingressClassName: nginx
   rules:
-    - host: onaim.adminapi.dev.local
+    - host: onaim.levelapi.dev.local
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: adminapi
+                name: levelapi
                 port:
-                  number: 5003
+                  number: 5008
