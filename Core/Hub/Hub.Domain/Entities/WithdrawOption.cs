@@ -16,6 +16,7 @@ public class WithdrawOption : BaseEntity<int>
         string title, 
         string description, 
         string imageUrl,
+        decimal value,
         string endpoint = null,
         EndpointContentType? contentType = null,
         string endpointContent = null, 
@@ -26,6 +27,7 @@ public class WithdrawOption : BaseEntity<int>
         Title = title;
         Description = description;
         ImageUrl = imageUrl;
+        Value = value;
         Endpoint = endpoint;
         ContentType = contentType.Value;
         EndpointContent = endpointContent;
@@ -36,6 +38,7 @@ public class WithdrawOption : BaseEntity<int>
     public string Title { get; private set; }
     public string Description { get; private set; }
     public string ImageUrl { get; private set; }
+    public decimal Value { get; set; }
     public string Endpoint { get; private set; }
     public EndpointContentType ContentType { get; private set; }
     public string EndpointContent { get; private set; }
@@ -53,6 +56,7 @@ public class WithdrawOption : BaseEntity<int>
         string title,
         string description,
         string imageUrl,
+        decimal value,
         string endpoint = null,
         EndpointContentType? contentType = null,
         string endpointContent = null,
@@ -62,6 +66,7 @@ public class WithdrawOption : BaseEntity<int>
         Title = title;
         Description = description;
         ImageUrl = imageUrl;
+        Value = value;
         Endpoint = endpoint;
         ContentType = contentType.Value;
         EndpointContent = endpointContent;
