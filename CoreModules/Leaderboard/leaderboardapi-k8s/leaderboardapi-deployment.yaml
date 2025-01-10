@@ -17,12 +17,12 @@ spec:
     spec:
       containers:
         - name: leaderboardapi
-          image: gvgroup/onaimhub-leaderboard:latest
+          image: gvgroup/onaim-leaderboard:latest
           ports:
             - containerPort: 8080
           env:
             - name: ConnectionString__OnAimLeaderboard
-              value: Host=leaderboarddb;Port=5436;Database=OnAimLeaderboard2;Username=postgres;Password=Test1234!
+              value: Host=leaderboarddb;Port=5436;Database=OnAimLeaderboard;Username=postgres;Password=Test1234!
           resources:
             requests:
               memory: "256Mi"

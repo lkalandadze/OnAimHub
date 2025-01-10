@@ -2,12 +2,89 @@ stages:
   - start
   - build
   - test
-  - push
+  - tagged_latest
   - deploy
   - redis
   - rabbitmq
   - mongo
   - admindb
+  - missiondb
+  - leaderboarddb
+  - aggregationdb
+  - gameconfigdb
+
+deploy_admindb:
+  stage: admindb
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - kubectl apply -f k8s/admindb/admindb-deployment.yaml -f k8s/admindb/admindb-service.yaml -f k8s/admindb/admindb-persistentvolumeclaim.yaml
+  tags:
+    - docker-runner
+  when: manual
+
+deploy_aggregationdb:
+  stage: aggregationdb
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - kubectl apply -f k8s/aggregationdb/aggregationdb-deployment.yaml -f k8s/aggregationdb/aggregationdb-service.yaml -f k8s/aggregationdb/aggregationdb-persistentvolumeclaim.yaml
+  tags:
+    - docker-runner
+  when: manual
+
+deploy_gameconfigdb:
+  stage: gameconfigdb
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - kubectl apply -f k8s/gameconfigdb/gameconfigdb-deployment.yaml -f k8s/gameconfigdb/gameconfigdb-service.yaml -f k8s/gameconfigdb/gameconfigdb-data-persistentvolumeclaim.yaml
+    - kubectl apply -f k8s/gameconfigdb/gamehistorydb-deployment.yaml -f k8s/gameconfigdb/gamehistorydb-service.yaml -f k8s/gameconfigdb/gamehistorydb-data-persistentvolumeclaim.yaml
+  tags:
+    - docker-runner
+  when: manual
+
+deploy_leaderboarddb:
+  stage: leaderboarddb
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - kubectl apply -f k8s/leaderboarddb/leaderboarddb-deployment.yaml -f k8s/leaderboarddb/leaderboarddb-service.yaml -f k8s/leaderboarddb/leaderboarddb-data-persistentvolumeclaim.yaml
+  tags:
+    - docker-runner
+  when: manual
+
+deploy_missiondb:
+  stage: missiondb
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - kubectl apply -f k8s/missiondb/missiondb-deployment.yaml -f k8s/missiondb/missiondb-service.yaml -f k8s/missiondb/missiondb-data-persistentvolumeclaim.yaml
+  tags:
+    - docker-runner
+  when: manual
+
+deploy_leveldb:
+  stage: leveldb
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - kubectl apply -f k8s/leveldb/leveldb-deployment.yaml -f k8s/leveldb/leveldb-service.yaml -f k8s/leveldb/leveldb-data-persistentvolumeclaim.yaml
+  tags:
+    - docker-runner
+  when: manual
 
 deploy_redis:
   stage: redis
@@ -16,7 +93,7 @@ deploy_redis:
     entrypoint: ['']
   script:
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f k8s/redis/*.yaml 
+    - kubectl apply -f k8s/redis/redis-deployment.yaml -f k8s/redis/redis-service.yaml -f k8s/redis/redis-data-persistentvolumeclaim.yaml 
   tags:
     - docker-runner
   when: manual
@@ -28,7 +105,7 @@ deploy_rabbitmq:
     entrypoint: ['']
   script:
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f k8s/rabbitmq/*.yaml 
+    - kubectl apply -f k8s/rabbitmq/rabbitmq-deployment.yaml -f k8s/rabbitmq/rabbitmq-service.yaml -f k8s/rabbitmq/rabbitmq-data-persistentvolumeclaim.yaml
   tags:
     - docker-runner
   when: manual
@@ -40,22 +117,23 @@ deploy_mongo:
     entrypoint: ['']
   script:
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f k8s/mongo/*.yaml 
+    - kubectl apply -f k8s/mongo/mongo-deployment.yaml -f k8s/mongo/mongo-service.yaml -f k8s/mongo/mongo-data-persistentvolumeclaim.yaml
   tags:
     - docker-runner
   when: manual
 
-deploy_admindb:
-  stage: admindb
+deploy_consul:
+  stage: deploy
   image:
     name: bitnami/kubectl:latest
     entrypoint: ['']
   script:
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f k8s/admindb/*.yaml 
+    - kubectl apply -f k8s/consul/consul-deployment.yaml -f k8s/consul/consul-service.yaml
   tags:
     - docker-runner
   when: manual
+
 
 include:
   - local: 'Admin/OnAim.Admin.API/.gitlab-ci.yml'

@@ -19,8 +19,7 @@ data:
         "Uri": "http://localhost:9200"
       },
       "HubApiClientOptions": {
-        "BaseApiAddress": "http://hubapi:8080/",
-        //"BaseApiAddress": "http://192.168.10.42:5002/", docker
+        "BaseApiAddress": "http://hubapi:5002/",
         "Endpoint": "hubapi/"
       },
       "OpenTelemetry": {

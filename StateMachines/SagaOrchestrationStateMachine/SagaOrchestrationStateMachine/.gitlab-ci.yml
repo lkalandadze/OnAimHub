@@ -1,7 +1,7 @@
 stages:
   - build
   - test
-  - push
+  - tagged_latest
   - deploy
 
 variables:
@@ -14,16 +14,15 @@ services:
   - docker:dind
 
 before_script:
-  - apk add --no-cache docker-cli
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 build_SagaOrchestrationStateMachine:
   stage: build
   script:
     - echo "Building SagaOrchestrationStateMachine"
-    # - docker build -t $DOCKER_NAMESPACE/onaimhub-sagamachine:$DOCKER_IMAGE_TAG -f StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/Dockerfile .
-    # - echo "Pushing Docker image for onaimhub-sagamachine to Docker Hub..."
-    # - docker push $DOCKER_NAMESPACE/onaimhub-sagamachine:$DOCKER_IMAGE_TAG
+    - docker build -t $DOCKER_NAMESPACE/onaim-sagamachine:$DOCKER_IMAGE_TAG -f StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/Dockerfile .
+    - echo "Pushing Docker image for onaim-sagamachine to Docker Hub..."
+    - docker push $DOCKER_NAMESPACE/onaim-sagamachine:$DOCKER_IMAGE_TAG
   tags:
     - docker-runner
 
@@ -34,26 +33,27 @@ build_SagaOrchestrationStateMachine:
 #   tags:
 #     - docker-runner
 
-push_SagaOrchestrationStateMachine:
-  stage: push
+tagged_latest_SagaOrchestrationStateMachine:
+  stage: tagged_latest
   script:
     - echo "Pushing SagaOrchestrationStateMachine"
-    # - docker pull $DOCKER_NAMESPACE/onaimhub-sagamachine:$DOCKER_IMAGE_TAG
-    # - docker tag $DOCKER_NAMESPACE/onaimhub-sagamachine:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaimhub-sagamachine:latest
-    # - docker push $DOCKER_NAMESPACE/onaimhub-sagamachine:latest
+    - docker pull $DOCKER_NAMESPACE/onaim-sagamachine:$DOCKER_IMAGE_TAG
+    - docker tag $DOCKER_NAMESPACE/onaim-sagamachine:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaim-sagamachine:latest
+    - docker push $DOCKER_NAMESPACE/onaim-sagamachine:latest
   tags:
     - docker-runner
   only:
     - main
   needs:
     - build_SagaOrchestrationStateMachine  
+  when: manual
 
 deploy_SagaOrchestrationStateMachine:
   stage: deploy
   script:
     - echo "Deploying SagaOrchestrationStateMachine"
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/sagamachine-k8s/*.yaml
+    - kubectl apply -f StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/sagamachine-k8s/sagamachine-deployment.yaml -f StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/sagamachine-k8s/sagamachine-service.yaml -f StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/sagamachine-k8s/sagamachine-ingress.yaml -f StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/sagamachine-k8s/sagamachine-cm0-configmap.yaml -f StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/sagamachine-k8s/secret.yaml
   only:
     - main
   when: manual

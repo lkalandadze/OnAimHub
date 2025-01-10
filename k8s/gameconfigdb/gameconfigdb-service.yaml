@@ -1,12 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: gamehistorydb
-  namespace: onaimhub
+  name: gameconfigdb
+  onaimhub: onaimhub
 spec:
   ports:
     - name: "5432"
-      port: 5433
+      port: 5432
       targetPort: 5432
   selector:
-    app: gamehistorydb
+    app: gameconfigdb
+  type: ClusterIP
+
+
+
