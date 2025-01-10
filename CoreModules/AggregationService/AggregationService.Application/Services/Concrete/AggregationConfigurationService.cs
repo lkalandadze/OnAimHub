@@ -1,8 +1,11 @@
-﻿using AggregationService.Application.Models.AggregationConfigurations;
+﻿using AggregationService.Application.Models.Request;
+using AggregationService.Application.Models.Response.AggregationConfigurations;
 using AggregationService.Application.Services.Abstract;
 using AggregationService.Domain.Abstractions.Repository;
 using AggregationService.Domain.Entities;
+using AggregationService.Domain.Enum;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace AggregationService.Application.Services.Concrete;
 
@@ -54,5 +57,50 @@ public class AggregationConfigurationService : IAggregationConfigurationService
 
             await _aggregationConfigurationRepository.SaveChangesAsync();
         }
+    }
+
+    public async Task<List<string>> ProcessPlayRequestAsync(PlayRequest playRequest)
+    {
+        // Get all aggregation configurations by PromotionId
+        var aggregations = await _aggregationConfigurationRepository.Query()
+            .Where(a => a.PromotionId == playRequest.PromotionId.ToString())
+            .Include(a => a.PointEvaluationRules)
+            .ToListAsync();
+
+        if (!aggregations.Any())
+        {
+            throw new InvalidOperationException($"No aggregation configurations found for PromotionId {playRequest.PromotionId}");
+        }
+
+        var eventPayloads = new List<string>();
+
+        foreach (var aggregation in aggregations)
+        {
+            // Calculate the points based on PointEvaluationRules
+            decimal calculatedAmount = aggregation.EvaluationType switch
+            {
+                EvaluationType.SingleRule => aggregation.PointEvaluationRules.FirstOrDefault()?.Point ?? 0,
+                EvaluationType.Steps => aggregation.PointEvaluationRules
+                    .Where(rule => playRequest.Amount >= rule.Step)
+                    .OrderByDescending(rule => rule.Step)
+                    .FirstOrDefault()?.Point ?? 0,
+                _ => throw new InvalidOperationException("Unsupported evaluation type")
+            };
+
+            // Create the event payload
+            var eventPayload = new
+            {
+                Key = aggregation.Key,
+                CalculatedAmount = calculatedAmount,
+                PlayerId = playRequest.PlayerId,
+                CoinIn = playRequest.CoinIn,
+                PromotionId = playRequest.PromotionId
+            };
+
+            var message = JsonSerializer.Serialize(eventPayload);
+            eventPayloads.Add(message);
+        }
+
+        return eventPayloads;
     }
 }

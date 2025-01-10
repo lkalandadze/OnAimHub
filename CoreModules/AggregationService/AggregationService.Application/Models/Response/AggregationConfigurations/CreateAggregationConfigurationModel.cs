@@ -1,9 +1,9 @@
-﻿using AggregationService.Application.Models.Filters;
+﻿using AggregationService.Application.Models.Response.Filters;
 using AggregationService.Domain.Entities;
 using AggregationService.Domain.Enum;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
-namespace AggregationService.Application.Models.AggregationConfigurations;
+namespace AggregationService.Application.Models.Response.AggregationConfigurations;
 
 public class CreateAggregationConfigurationModel
 {

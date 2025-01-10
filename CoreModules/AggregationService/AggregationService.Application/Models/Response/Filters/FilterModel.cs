@@ -1,6 +1,6 @@
 ﻿using AggregationService.Domain.Enum;
 
-namespace AggregationService.Application.Models.Filters;
+namespace AggregationService.Application.Models.Response.Filters;
 
 public class FilterModel
 {
