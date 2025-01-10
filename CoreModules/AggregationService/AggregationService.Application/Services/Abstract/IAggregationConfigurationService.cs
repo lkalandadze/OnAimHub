@@ -7,5 +7,5 @@ public interface IAggregationConfigurationService
 {
     Task AddAggregationWithConfigurationsAsync(CreateAggregationConfigurationModel model);
     Task UpdateAggregationAsync(UpdateAggregationConfigurationModel model);
-    Task<List<string>> ProcessPlayRequestAsync(PlayRequest playRequest);
+    Task<List<string>> ProcessPlayRequestAsync(int playerId, string coinIn, decimal amount, int promotionId);
 }

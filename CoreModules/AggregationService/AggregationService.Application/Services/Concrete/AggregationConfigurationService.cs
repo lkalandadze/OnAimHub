@@ -59,17 +59,17 @@ public class AggregationConfigurationService : IAggregationConfigurationService
         }
     }
 
-    public async Task<List<string>> ProcessPlayRequestAsync(PlayRequest playRequest)
+    public async Task<List<string>> ProcessPlayRequestAsync(int playerId, string coinIn, decimal amount, int promotionId)
     {
         // Get all aggregation configurations by PromotionId
         var aggregations = await _aggregationConfigurationRepository.Query()
-            .Where(a => a.PromotionId == playRequest.PromotionId.ToString())
+            .Where(a => a.PromotionId == promotionId.ToString())
             .Include(a => a.PointEvaluationRules)
             .ToListAsync();
 
         if (!aggregations.Any())
         {
-            throw new InvalidOperationException($"No aggregation configurations found for PromotionId {playRequest.PromotionId}");
+            throw new InvalidOperationException($"No aggregation configurations found for PromotionId {promotionId}");
         }
 
         var eventPayloads = new List<string>();
@@ -81,7 +81,7 @@ public class AggregationConfigurationService : IAggregationConfigurationService
             {
                 EvaluationType.SingleRule => aggregation.PointEvaluationRules.FirstOrDefault()?.Point ?? 0,
                 EvaluationType.Steps => aggregation.PointEvaluationRules
-                    .Where(rule => playRequest.Amount >= rule.Step)
+                    .Where(rule => amount >= rule.Step)
                     .OrderByDescending(rule => rule.Step)
                     .FirstOrDefault()?.Point ?? 0,
                 _ => throw new InvalidOperationException("Unsupported evaluation type")
@@ -92,9 +92,9 @@ public class AggregationConfigurationService : IAggregationConfigurationService
             {
                 Key = aggregation.Key,
                 CalculatedAmount = calculatedAmount,
-                PlayerId = playRequest.PlayerId,
-                CoinIn = playRequest.CoinIn,
-                PromotionId = playRequest.PromotionId
+                PlayerId = playerId,
+                CoinIn = coinIn,
+                PromotionId = promotionId
             };
 
             var message = JsonSerializer.Serialize(eventPayload);

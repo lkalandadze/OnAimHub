@@ -35,11 +35,11 @@ public class AggregationController : ControllerBase
         return Ok(new { message = "Aggregation updated successfully." });
     }
 
-    [HttpPost("process-play")]
-    public async Task<IActionResult> ProcessPlayRequest([FromBody] PlayRequest playRequest)
-    {
-        var payloads = await _aggregationConfigurationService.ProcessPlayRequestAsync(playRequest);
-        return Ok(payloads);
-    }
+    //[HttpPost("process-play")]
+    //public async Task<IActionResult> ProcessPlayRequest([FromBody] PlayRequest playRequest)
+    //{
+    //    var payloads = await _aggregationConfigurationService.ProcessPlayRequestAsync(playRequest);
+    //    return Ok(payloads);
+    //}
 
 }

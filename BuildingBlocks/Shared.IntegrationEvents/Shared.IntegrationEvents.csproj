@@ -11,8 +11,4 @@
     <PackageReference Include="MediatR" Version="11.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="IntegrationEvents\Aggregation\" />
-  </ItemGroup>
-
 </Project>
