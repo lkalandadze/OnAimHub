@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
-using OnAim.Admin.APP;
+using OnAim.Admin.APP.Features.PlayerFeatures.Commands.AddBalanceToPlayer;
 using OnAim.Admin.APP.Features.PlayerFeatures.Commands.BanPlayer;
 using OnAim.Admin.APP.Features.PlayerFeatures.Commands.RevokePlayerBan;
 using OnAim.Admin.APP.Features.PlayerFeatures.Commands.UpdatePlayerBan;
@@ -11,20 +11,12 @@ using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBannedPlayers;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetById;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetLeaderBoardResultByPlayerId;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetProgress;
-using OnAim.Admin.APP.Services.Hub.Player;
-using OnAim.Admin.APP.Services.HubServices.Player;
 using OnAim.Admin.Contracts.Dtos.Player;
 
 namespace OnAim.Admin.API.Controllers;
 
 public class PlayerController : ApiControllerBase
 {
-    private readonly IPlayerService _playerService;
-
-    public PlayerController(IPlayerService playerService)
-    {
-        _playerService = playerService;
-    }
     [HttpGet(nameof(GetAll))]
     public async Task<IActionResult> GetAll([FromQuery] PlayerFilter filter)
         => Ok(await Mediator.Send(new GetAllPlayerQuery(filter)));
@@ -39,7 +31,7 @@ public class PlayerController : ApiControllerBase
 
     [HttpPost(nameof(AddBalanceToPlayer))]
     public async Task<IActionResult> AddBalanceToPlayer([FromBody] AddBalanceDto command)
-        => Ok(await _playerService.AddBalanceToPlayer(command));
+        => Ok(await Mediator.Send(new AddBalanceToPlayerCommand(command)));
 
     [HttpGet(nameof(GetPlayerProgress) + "/{id}")]
     public async Task<IActionResult> GetPlayerProgress([FromRoute] int id)
