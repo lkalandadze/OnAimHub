@@ -12,10 +12,4 @@ spec:
     app: missionapi
   type: ClusterIP
 
-# spec:
-#   ports:
-#     - name: "5009"
-#       port: 5009
-#       targetPort: 8080
-#   selector:
-#     io.kompose.service: missionapi
+

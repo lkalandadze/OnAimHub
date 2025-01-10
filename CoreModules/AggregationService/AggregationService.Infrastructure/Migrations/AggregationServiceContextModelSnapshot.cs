@@ -22,7 +22,47 @@ namespace AggregationService.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AggregationService.Domain.Entities.Aggregation", b =>
+            modelBuilder.Entity("AggregationService.Domain.Entities.AggregationConfiguration", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnOrder(1);
+
+                    b.Property<string>("AggregationSubscriber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("AggregationType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("EvaluationType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("EventProducer")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Expiration")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PromotionId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SelectionField")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AggregationConfigurations");
+                });
+
+            modelBuilder.Entity("AggregationService.Domain.Entities.PointEvaluationRule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,88 +71,68 @@ namespace AggregationService.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
-                        .IsRequired()
+                    b.Property<string>("AggregationConfigurationId")
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("EndDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("PromotionId")
+                    b.Property<int>("Point")
                         .HasColumnType("integer");
 
-                    b.Property<DateTimeOffset>("StartDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Step")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Aggregations", (string)null);
+                    b.HasIndex("AggregationConfigurationId");
+
+                    b.ToTable("PointEvaluationRules");
                 });
 
-            modelBuilder.Entity("AggregationService.Domain.Entities.AggregationConfiguration", b =>
+            modelBuilder.Entity("Filter", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
                         .HasColumnOrder(1);
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<string>("AggregationConfigurationId")
+                        .HasColumnType("text");
 
-                    b.Property<int>("AggregationId")
+                    b.Property<int>("Operator")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ConfigurationType")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ContextId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ContextType")
+                    b.Property<string>("Property")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("EarnableFund")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("FundsEarned")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("FundsSpent")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsRepeatable")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("SpendableFund")
+                    b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AggregationId");
+                    b.HasIndex("AggregationConfigurationId");
 
-                    b.ToTable("AggregationConfigurations", (string)null);
+                    b.ToTable("Filters");
+                });
+
+            modelBuilder.Entity("AggregationService.Domain.Entities.PointEvaluationRule", b =>
+                {
+                    b.HasOne("AggregationService.Domain.Entities.AggregationConfiguration", null)
+                        .WithMany("PointEvaluationRules")
+                        .HasForeignKey("AggregationConfigurationId");
+                });
+
+            modelBuilder.Entity("Filter", b =>
+                {
+                    b.HasOne("AggregationService.Domain.Entities.AggregationConfiguration", null)
+                        .WithMany("Filters")
+                        .HasForeignKey("AggregationConfigurationId");
                 });
 
             modelBuilder.Entity("AggregationService.Domain.Entities.AggregationConfiguration", b =>
                 {
-                    b.HasOne("AggregationService.Domain.Entities.Aggregation", "Aggregation")
-                        .WithMany("AggregationConfigurations")
-                        .HasForeignKey("AggregationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Filters");
 
-                    b.Navigation("Aggregation");
-                });
-
-            modelBuilder.Entity("AggregationService.Domain.Entities.Aggregation", b =>
-                {
-                    b.Navigation("AggregationConfigurations");
+                    b.Navigation("PointEvaluationRules");
                 });
 #pragma warning restore 612, 618
         }

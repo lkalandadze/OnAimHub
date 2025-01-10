@@ -24,7 +24,8 @@ public static class Extensions
 
         services
             .AddScoped<IAggregationConfigurationRepository, AggregationConfigurationRepository>()
-            .AddScoped<IAggregationRepository, AggregationRepository>()
+            .AddScoped<IFilterRepository, FilterRepository>()
+            .AddScoped<IPointEvaluationRuleRepository, PointEvaluationRuleRepository>()
             ;
 
         return services;

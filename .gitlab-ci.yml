@@ -9,13 +9,6 @@ stages:
   - mongo
   - admindb
 
-# top-level-job:
-#   stage: start
-#   script:
-#     - echo "Hello world..."
-#   tags:
-#     - docker-runner
-
 deploy_redis:
   stage: redis
   image:
@@ -86,16 +79,6 @@ include:
           - 'ApiGateways/ApiGateway/**/*'
        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^api_gateway\/.*/'
          when: always
-  - local: 'BuildingBlocks/.gitlab-ci.yml'
-    rules:
-      - if: '$CI_COMMIT_BRANCH =~ /^building_blocks\/.*/'
-        changes:
-          - 'BuildingBlocks/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
-        changes:
-          - 'BuildingBlocks/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^building_blocks\/.*/'
-        when: always  
   - local: 'Core/Hub/Hub.Api/.gitlab-ci.yml'
     rules:
       - if: '$CI_COMMIT_BRANCH =~ /^hub_api\/.*/'
@@ -145,26 +128,6 @@ include:
         changes:
           - 'CoreModules/AggregationService/**/*'
       - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^aggregation_service\/.*/'
-        when: always
-  - local: 'Games/GameLib/.gitlab-ci.yml'
-    rules:
-      - if: '$CI_COMMIT_BRANCH =~ /^game_lib\/.*/'
-        changes:
-          - 'Games/GameLib/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
-        changes:
-          - 'Games/GameLib/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^game_lib\/.*/'
-        when: always
-  - local: Games/TestWheel/TestWheel.Api/.gitlab-ci.yml
-    rules:
-      - if: '$CI_COMMIT_BRANCH =~ /^test_wheel\/.*/'
-        changes:
-          - 'Games/TestWheel/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
-        changes:
-          - 'Games/TestWheel/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^test_wheel\/.*/'
         when: always
   - local: 'Games/Wheel/Wheel.Api/.gitlab-ci.yml'
     rules:

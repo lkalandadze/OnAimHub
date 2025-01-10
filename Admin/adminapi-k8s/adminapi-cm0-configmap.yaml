@@ -6,10 +6,6 @@ data:
         "DefaultConnectionString": "Host=admindb;Port=5435;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;",
         "HubDefaultConnectionString": "User ID=postgres;Password=1234;Server=hubdb;Port=5432;Database=OnAimHub;Pooling=true;",
         "LeaderBoardDefaultConnectionString": "User ID=postgres;Password=Test1234!;Server=leaderboarddb;Port=5432;Database=OnAimLeaderboard;Pooling=true;"
-
-        # "DefaultConnectionString": "Host=192.168.10.42;Port=5432;Database=Publish;Username=postgres;Password=12345678",
-        # "HubDefaultConnectionString": "User ID =postgres;Password=1234;Server=192.168.10.49;Port=5432;Database=OnAimHub;Pooling=true;",
-        # "LeaderBoardDefaultConnectionString": "User ID =postgres;Password=Test1234!;Server=192.168.10.46;Port=5432;Database=OnAimLeaderboard;Pooling=true;"
       },
       "MongoDB": {
         "Connection": "mongodb://mongo::27017/",
@@ -106,26 +102,14 @@ data:
       "HubApiClientOptions": {
         "BaseApiAddress": "http://hubapi:5002/",
         "Endpoint": "hubapi/"
-
-        # //"BaseApiAddress": "http://192.168.10.42:5002/", docker
-        # "BaseApiAddress": "http://192.168.10.42:8003/", //hosted
-        # "Endpoint": "hubapi/"
       },
       "SagaApiClientOptions": {
         "BaseApiAddress": "http://sagamachine:5007/",
         "Endpoint": "Saga"
-
-        # //"BaseApiAddress": "http://192.168.10.42:5007/", docker
-        # "BaseApiAddress": "http://192.168.10.42:8004/", //hosted
-        # "Endpoint": "Saga"
       },
       "LeaderBoardApiClientOptions": {
         "BaseApiAddress": "http://leaderboardapi:5004/",
         "Endpoint": "api/v1/Leaderboard/"
-
-        # //"BaseApiAddress": "http://192.168.10.42:5004/", docker
-        # "BaseApiAddress": "http://192.168.10.42:8002/", //hosted
-        # "Endpoint": "api/v1/Leaderboard/"
       },
       "AllowedHosts": "*"
     }

@@ -15,7 +15,8 @@ public class AggregationServiceContext : DbContext
         base.OnModelCreating(builder);
     }
 
-    public DbSet<Aggregation> Aggregations { get; set; }
     public DbSet<AggregationConfiguration> AggregationConfigurations { get; set; }
+    public DbSet<Filter> Filters { get; set; }
+    public DbSet<PointEvaluationRule> PointEvaluationRules { get; set; }
 
 }

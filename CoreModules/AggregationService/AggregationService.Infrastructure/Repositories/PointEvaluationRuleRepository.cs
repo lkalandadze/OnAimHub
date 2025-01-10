@@ -4,6 +4,8 @@ using AggregationService.Infrastructure.Persistance.Data;
 
 namespace AggregationService.Infrastructure.Repositories;
 
-public class AggregationRepository(AggregationServiceContext context) : BaseRepository<AggregationServiceContext, Aggregation>(context), IAggregationRepository
+
+public class PointEvaluationRuleRepository(AggregationServiceContext context) : BaseRepository<AggregationServiceContext, PointEvaluationRule>(context), IPointEvaluationRuleRepository
 {
 }
+

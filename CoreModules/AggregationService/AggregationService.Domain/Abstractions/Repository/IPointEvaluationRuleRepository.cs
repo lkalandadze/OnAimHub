@@ -2,4 +2,5 @@
 
 namespace AggregationService.Domain.Abstractions.Repository;
 
-public interface IAggregationRepository : IBaseRepository<Aggregation> { }
+public interface IPointEvaluationRuleRepository : IBaseRepository<PointEvaluationRule> { }
+

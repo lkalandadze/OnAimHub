@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sagamachine-ingress
+  namespace: onaimhub
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false" # Set to "true" if SSL is configured
+spec:
+  rules:
+    - host: onaim.sagamachine.dev.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sagamachine
+                port:
+                  number: 5007

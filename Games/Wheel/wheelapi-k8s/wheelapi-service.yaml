@@ -13,19 +13,3 @@ spec:
   type: ClusterIP
 
 
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   annotations:
-#     kompose.cmd: C:\Users\user3\Desktop\kompose.exe convert
-#     kompose.version: 1.34.0 (cbf2835db)
-#   labels:
-#     io.kompose.service: wheelapi
-#   name: wheelapi
-# spec:
-#   ports:
-#     - name: "5001"
-#       port: 5001
-#       targetPort: 8080
-#   selector:
-#     io.kompose.service: wheelapi

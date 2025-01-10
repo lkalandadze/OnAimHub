@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: sagamachine
-          image: gvgroup/onaimhub-sagamachine:latest  # Replace with DockerHub path
+          image: gvgroup/onaimhub-sagamachine:latest  
           ports:
             - containerPort: 8080
           # env:
