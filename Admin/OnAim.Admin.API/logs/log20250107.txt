@@ -1,0 +1,210 @@
+2025-01-07 00:53:20.609 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 00:53:20.615 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 01:53:20.650 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 01:53:20.652 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 02:53:20.693 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 02:53:20.695 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 03:53:20.733 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 03:53:20.736 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 04:53:20.782 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 04:53:20.786 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 05:53:20.835 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 05:53:20.837 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 06:53:20.890 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 06:53:20.892 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 07:53:20.940 +04:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 07:53:20.943 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 08:53:20.972 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 08:53:20.976 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 08:53:20.993 +04:00 [INF] Executed DbCommand (12ms) [Parameters=[@p0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+DELETE FROM "AccessTokens"
+WHERE "Id" = @p0;
+2025-01-07 09:53:21.030 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 09:53:21.033 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 09:53:21.045 +04:00 [INF] Executed DbCommand (11ms) [Parameters=[@p0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+DELETE FROM "AccessTokens"
+WHERE "Id" = @p0;
+2025-01-07 10:53:21.097 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 10:53:21.100 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 11:53:21.160 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 11:53:21.163 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 12:53:21.194 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 12:53:21.197 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 12:53:21.199 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+DELETE FROM "AccessTokens"
+WHERE "Id" = @p0;
+2025-01-07 13:53:21.236 +04:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 13:53:21.238 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 13:53:21.248 +04:00 [INF] Executed DbCommand (8ms) [Parameters=[@p0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+DELETE FROM "AccessTokens"
+WHERE "Id" = @p0;
+2025-01-07 14:53:21.276 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 14:53:21.279 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 15:53:21.306 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 15:53:21.309 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 15:53:21.313 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+DELETE FROM "AccessTokens"
+WHERE "Id" = @p0;
+2025-01-07 16:53:21.341 +04:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 16:53:21.344 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 16:53:21.348 +04:00 [INF] Executed DbCommand (3ms) [Parameters=[@p0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+DELETE FROM "AccessTokens"
+WHERE "Id" = @p0;
+2025-01-07 17:53:21.382 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 17:53:21.384 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 18:53:21.404 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 18:53:21.406 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 19:53:21.435 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 19:53:21.437 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 20:53:21.464 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 20:53:21.466 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 21:53:21.487 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 21:53:21.489 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 22:53:21.513 +04:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 22:53:21.516 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")
+2025-01-07 23:53:21.542 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT a."Id", a."DateCreated", a."DateDeleted", a."DateUpdated", a."Expiration", a."IsActive", a."IsDeleted", a."Token", a."UserId"
+FROM "AccessTokens" AS a
+WHERE a."Expiration" <= now()
+2025-01-07 23:53:21.545 +04:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT r."Id", r."DateCreated", r."DateDeleted", r."DateUpdated", r."Expiration", r."IsActive", r."IsDeleted", r."IsRevoked", r."Token", r."UserId"
+FROM "RefreshTokens" AS r
+WHERE r."Expiration" <= now() AND NOT (r."IsRevoked")

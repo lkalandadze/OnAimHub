@@ -33,6 +33,7 @@ public class WithdrawOption : BaseEntity<int>
         EndpointContent = endpointContent;
         WithdrawOptionEndpointId = withdrawOptionEndpointId;
         WithdrawOptionGroups = withdrawOptionGroups?.ToList();
+        CreatedByUserId = createdByUserId;
     }
 
     public string Title { get; private set; }

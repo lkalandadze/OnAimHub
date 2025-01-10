@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
@@ -19,6 +20,7 @@ public class CoinService : ICoinService
     private readonly IReadOnlyRepository<WithdrawOptionGroup> _withdrawOptionGroupRepository;
     private readonly IReadOnlyRepository<WithdrawOptionEndpoint> _withdrawOptionEndpointRepository;
     private readonly IHubApiClient _hubApiClient;
+    private readonly ISecurityContextAccessor _securityContextAccessor;
     private readonly HubApiClientOptions _options;
 
     public CoinService(
@@ -26,13 +28,15 @@ public class CoinService : ICoinService
         IReadOnlyRepository<WithdrawOptionGroup> withdrawOptionGroupRepository,
         IReadOnlyRepository<WithdrawOptionEndpoint> WithdrawOptionEndpointRepository,
         IHubApiClient hubApiClient,
-        IOptions<HubApiClientOptions> options
+        IOptions<HubApiClientOptions> options,
+        ISecurityContextAccessor SecurityContextAccessor
         )
     {
         _withdrawOptionRepository = withdrawOptionRepository;
         _withdrawOptionGroupRepository = withdrawOptionGroupRepository;
         _withdrawOptionEndpointRepository = WithdrawOptionEndpointRepository;
         _hubApiClient = hubApiClient;
+        _securityContextAccessor = SecurityContextAccessor;
         _options = options.Value;
     }
 
@@ -113,6 +117,7 @@ public class CoinService : ICoinService
                ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)x.ContentType,
                Endpoint = x.Endpoint,
                EndpointContent = x.EndpointContent,
+               Value = x.Value,
                WithdrawOptionEndpointId = x.WithdrawOptionEndpointId,
                ImageUrl = x.ImageUrl,
                OutCoins = x.OutCoins.Select(o => new OutCoinDto 
@@ -335,7 +340,21 @@ public class CoinService : ICoinService
     {
         try
         {
-            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOption", option);
+            var body = new
+            {
+                Title = option.Title,
+                Description = option.Description,
+                ImageUrl = option.ImageUrl,
+                Value = option.Value,
+                Endpoint = option.Endpoint,
+                EndpointContentType = option.EndpointContentType,
+                EndpointContent = option.EndpointContent,
+                WithdrawOptionEndpointId = option.WithdrawOptionEndpointId,
+                WithdrawOptionGroupIds = option.WithdrawOptionGroupIds,
+                CreatedByUserId = _securityContextAccessor.UserId
+            };
+
+            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOption", body);
 
             return new ApplicationResult { Data = res.StatusCode, Success = true };
         }
@@ -385,7 +404,17 @@ public class CoinService : ICoinService
     {
         try
         {
-            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOptionEndpoint", option);
+            var body = new
+            {
+                Name = option.Name,
+                Endpoint = option.Endpoint,
+                Content = option.Content,
+                CreatedByUserId = _securityContextAccessor.UserId,
+                ContentType = option.ContentType
+            };
+
+
+            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOptionEndpoint", body);
 
             return new ApplicationResult { Success = true, Data = res.StatusCode };
         }
@@ -435,6 +464,16 @@ public class CoinService : ICoinService
     {
         try
         {
+            var body = new
+            {
+                Title = option.Title,
+                Description = option.Description,
+                ImageUrl = option.ImageUrl,
+                PriorityIndex = option.PriorityIndex,
+                WithdrawOptionIds = option.WithdrawOptionIds,
+                CreatedByUserId = _securityContextAccessor.UserId,
+            };
+
             var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOptionGroup", option);
 
             return new ApplicationResult { Success = true, Data = res.StatusCode };

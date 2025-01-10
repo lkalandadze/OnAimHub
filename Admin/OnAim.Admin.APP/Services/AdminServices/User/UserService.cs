@@ -688,7 +688,8 @@ public class UserService : IUserService
     public async Task<ApplicationResult> GetAll(UserFilter filter)
     {
         var query = _userRepository.Query(x =>
-            string.IsNullOrEmpty(filter.Name) || EF.Functions.Like(x.FirstName, $"%{filter.Name}%")
+            string.IsNullOrEmpty(filter.Name) ||
+            EF.Functions.Like(x.FirstName.ToLower(), $"%{filter.Name.ToLower()}%")
         ).AsNoTracking();
 
 
@@ -777,7 +778,8 @@ public class UserService : IUserService
             .ThenInclude(x => x.Endpoint)
             .FirstOrDefaultAsync();
 
-        if (query == null) { return new ApplicationResult { Success = false, Data = $"User Not Found!" }; }
+        if (query == null)
+            throw new NotFoundException($"User Not Found!");
 
         var usert = await _userRepository.Query(x => x.Id == query.CreatedBy).FirstOrDefaultAsync();
 
@@ -821,13 +823,11 @@ public class UserService : IUserService
                 LastName = usert.LastName,
                 Email = usert.Email,
             },
+            DateCreated = query.DateCreated,
+            DateUpdated = query.DateUpdated
         };
 
-        return new ApplicationResult
-        {
-            Success = true,
-            Data = user,
-        };
+        return new ApplicationResult{ Success = true, Data = user };
     }
 
     public async Task<ApplicationResult> GetUserLogs(int id, AuditLogFilter filter)
