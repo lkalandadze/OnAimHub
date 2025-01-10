@@ -42,6 +42,7 @@ public class UpdateWithdrawOptionHandler : IRequestHandler<UpdateWithdrawOption>
             request.Title,
             request.Description,
             request.ImageUrl,
+            request.Value,
             request.Endpoint,
             request.EndpointContentType,
             request.EndpointContent,

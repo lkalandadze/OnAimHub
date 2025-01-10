@@ -1,7 +1,6 @@
 ﻿using GameLib.Application.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Wheel.Application.Models.Game;
-using Wheel.Application.Models.Player;
+using Wheel.Application.Models.Wheel;
 using Wheel.Application.Services.Abstract;
 
 namespace Wheel.Api.Controllers;

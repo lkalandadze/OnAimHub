@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gamehistorydb-data
+  onaimhub: onaimhub
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   labels:
+#     io.kompose.service: gamehistorydb-data
+#   name: gamehistorydb-data
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 100Mi

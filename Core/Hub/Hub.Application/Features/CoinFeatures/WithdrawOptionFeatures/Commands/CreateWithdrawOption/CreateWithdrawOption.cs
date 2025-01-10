@@ -9,6 +9,7 @@ public record CreateWithdrawOption(
     string Title,
     string Description,
     string ImageUrl,
+    decimal Value,
     string Endpoint,
     EndpointContentType
     EndpointContentType,

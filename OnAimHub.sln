@@ -181,6 +181,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationService.Infrastr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationService.IntegrationEvents", "CoreModules\AggregationService\AggregationService.IntegrationEvents\AggregationService.IntegrationEvents.csproj", "{96D75D30-5FCA-49FD-BF62-00A1E4CCD02F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PenaltyKicks", "PenaltyKicks", "{4DE19697-5278-4A2E-8052-1C3F7F3B4BA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenaltyKicks.Api", "Games\PenaltyKicks\PenaltyKicks.Api\PenaltyKicks.Api.csproj", "{487209D4-1A3C-4AF8-8CA0-FCF365BD40A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenaltyKicks.Application", "Games\PenaltyKicks\PenaltyKicks.Application\PenaltyKicks.Application.csproj", "{D44D1B77-F19E-40DA-B289-FAA08C096D76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenaltyKicks.Domain", "Games\PenaltyKicks\PenaltyKicks.Domain\PenaltyKicks.Domain.csproj", "{118F2BE1-A5A3-4E16-A42D-4E2DCDD060A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenaltyKicks.Infrastructure", "Games\PenaltyKicks\PenaltyKicks.Infrastructure\PenaltyKicks.Infrastructure.csproj", "{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -431,6 +441,22 @@ Global
 		{96D75D30-5FCA-49FD-BF62-00A1E4CCD02F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96D75D30-5FCA-49FD-BF62-00A1E4CCD02F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96D75D30-5FCA-49FD-BF62-00A1E4CCD02F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{487209D4-1A3C-4AF8-8CA0-FCF365BD40A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{487209D4-1A3C-4AF8-8CA0-FCF365BD40A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{487209D4-1A3C-4AF8-8CA0-FCF365BD40A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{487209D4-1A3C-4AF8-8CA0-FCF365BD40A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D44D1B77-F19E-40DA-B289-FAA08C096D76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D44D1B77-F19E-40DA-B289-FAA08C096D76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D44D1B77-F19E-40DA-B289-FAA08C096D76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D44D1B77-F19E-40DA-B289-FAA08C096D76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{118F2BE1-A5A3-4E16-A42D-4E2DCDD060A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{118F2BE1-A5A3-4E16-A42D-4E2DCDD060A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{118F2BE1-A5A3-4E16-A42D-4E2DCDD060A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{118F2BE1-A5A3-4E16-A42D-4E2DCDD060A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -510,6 +536,11 @@ Global
 		{D5E7FAE2-AEC2-423A-8D46-B3109018A3DD} = {4997A204-600A-4280-AC7D-BBEC16062EF3}
 		{8544848C-4D48-402C-8816-2BC6E79E4557} = {4997A204-600A-4280-AC7D-BBEC16062EF3}
 		{96D75D30-5FCA-49FD-BF62-00A1E4CCD02F} = {4997A204-600A-4280-AC7D-BBEC16062EF3}
+		{4DE19697-5278-4A2E-8052-1C3F7F3B4BA8} = {7394F16F-EFEA-40CA-A016-A25DBE9A4502}
+		{487209D4-1A3C-4AF8-8CA0-FCF365BD40A4} = {4DE19697-5278-4A2E-8052-1C3F7F3B4BA8}
+		{D44D1B77-F19E-40DA-B289-FAA08C096D76} = {4DE19697-5278-4A2E-8052-1C3F7F3B4BA8}
+		{118F2BE1-A5A3-4E16-A42D-4E2DCDD060A3} = {4DE19697-5278-4A2E-8052-1C3F7F3B4BA8}
+		{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5} = {4DE19697-5278-4A2E-8052-1C3F7F3B4BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2083D19C-3851-4364-95A9-449C10AD54E0}

@@ -11,5 +11,4 @@ spec:
   selector:
     app: ocelotapigateway
   type: ClusterIP
-  # selector:
-  #   io.kompose.service: ocelotapigateway
+

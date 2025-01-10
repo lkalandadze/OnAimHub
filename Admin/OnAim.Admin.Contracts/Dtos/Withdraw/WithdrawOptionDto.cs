@@ -7,6 +7,7 @@ public class WithdrawOptionDto
     public string Description { get; set; }
     public string ImageUrl { get; set; }
     public string Endpoint { get; set; }
+    public decimal Value { get; set; }
     public EndpointContentType ContentType { get; set; }
     public string EndpointContent { get; set; }
     public int? WithdrawOptionEndpointId { get; set; }

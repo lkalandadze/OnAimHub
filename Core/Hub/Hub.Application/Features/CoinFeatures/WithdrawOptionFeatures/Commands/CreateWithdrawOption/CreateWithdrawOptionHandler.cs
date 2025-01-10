@@ -33,6 +33,7 @@ public class CreateWithdrawOptionHandler : IRequestHandler<CreateWithdrawOption>
             request.Title,
             request.Description,
             request.ImageUrl,
+            request.Value,
             request.Endpoint,
             request.EndpointContentType,
             request.EndpointContent,

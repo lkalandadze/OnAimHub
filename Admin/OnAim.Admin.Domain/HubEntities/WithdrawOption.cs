@@ -33,6 +33,7 @@ public class WithdrawOption
     public string Title { get; set; }
     public string Description { get; set; }
     public string ImageUrl { get; set; }
+    public decimal Value { get; set; }
     public string Endpoint { get; set; }
     public EndpointContentType ContentType { get; set; }
     public string EndpointContent { get; set; }

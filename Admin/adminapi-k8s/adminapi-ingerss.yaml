@@ -7,8 +7,9 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "false" # Set to "true" if SSL is configured
 spec:
+  ingressClassName: nginx
   rules:
-    - host: onaimhub.adminapi.dev.local
+    - host: onaim.adminapi.dev.local
       http:
         paths:
           - path: /

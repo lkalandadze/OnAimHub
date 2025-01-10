@@ -10,6 +10,6 @@ public class EndpointRequestModel
     public bool? IsActive { get; set; }
     public bool? IsEnabled { get; set; }
     public DateTimeOffset? DateCreated { get; set; }
-    public DateTimeOffset? DateUpdated { get; set; }
-    public DateTimeOffset? DateDeleted { get; set; }
+    //public DateTimeOffset? DateUpdated { get; set; }
+    //public DateTimeOffset? DateDeleted { get; set; }
 }

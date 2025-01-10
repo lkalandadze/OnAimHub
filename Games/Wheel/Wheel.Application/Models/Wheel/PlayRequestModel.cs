@@ -1,6 +1,8 @@
 ﻿#nullable disable
 
-namespace Wheel.Application.Models.Player;
+using Wheel;
+
+namespace Wheel.Application.Models.Wheel;
 
 public class PlayRequestModel
 {
