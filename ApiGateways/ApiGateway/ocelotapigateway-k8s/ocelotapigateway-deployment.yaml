@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ocelotapigateway
-          image: gvgroup/onaimhub-apigateway:latest  
+          image: gvgroup/onaim-apigateway:latest  
           ports:
             - containerPort: 8080
           env:

@@ -1,7 +1,7 @@
 stages:
   - build
   - test
-  - push
+  - tagged_latest
   - deploy
 
 variables:
@@ -23,8 +23,8 @@ build_admin:
   stage: build
   script:
     - echo "Building Admin API..."
-    - docker build -t $DOCKER_NAMESPACE/onaimhub-admin_api:$DOCKER_IMAGE_TAG -f Admin/OnAim.Admin.API/Dockerfile .
-    - docker push $DOCKER_NAMESPACE/onaimhub-admin_api:$DOCKER_IMAGE_TAG
+    - docker build -t $DOCKER_NAMESPACE/onaim-admin_api:$DOCKER_IMAGE_TAG -f Admin/OnAim.Admin.API/Dockerfile .
+    - docker push $DOCKER_NAMESPACE/onaim-admin_api:$DOCKER_IMAGE_TAG
   tags:
     - docker-runner
 
@@ -35,19 +35,20 @@ build_admin:
 #   tags:
 #     - docker-runner
     
-push_admin:
-  stage: push
+tagged_latest_admin:
+  stage: tagged_latest
   script:
     - echo "Pushing Admin API image to registry..."
-    - docker pull $DOCKER_NAMESPACE/onaimhub-admin_api:$DOCKER_IMAGE_TAG
-    - docker tag $DOCKER_NAMESPACE/onaimhub-admin_api:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaimhub-admin_api:latest
-    - docker push $DOCKER_NAMESPACE/onaimhub-admin_api:latest
+    - docker pull $DOCKER_NAMESPACE/onaim-admin_api:$DOCKER_IMAGE_TAG
+    - docker tag $DOCKER_NAMESPACE/onaim-admin_api:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaim-admin_api:latest
+    - docker push $DOCKER_NAMESPACE/onaim-admin_api:latest
   tags:
     - docker-runner
   only:
     - main
   needs:
     - build_admin
+  when: manual
 
 deploy_admin:
   stage: deploy
@@ -57,7 +58,7 @@ deploy_admin:
   script:
     - echo "Deploying Admin API..."
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f Admin/OnAim.Admin.API/k8s/*.yaml
+    - kubectl apply -f Admin/adminapi-k8s/adminapi-deployment.yaml -f Admin/adminapi-k8s/adminapi-service.yaml -f Admin/adminapi-k8s/adminapi-ingress.yaml -f Admin/adminapi-k8s/adminapi-cm0-configmap.yaml -f Admin/adminapi-k8s/secret.yaml
   tags:
     - docker-runner
   only:
