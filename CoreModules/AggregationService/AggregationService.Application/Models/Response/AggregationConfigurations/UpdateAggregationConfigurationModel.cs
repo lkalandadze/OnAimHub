@@ -1,7 +1,7 @@
 ﻿using AggregationService.Domain.Entities;
 using AggregationService.Domain.Enum;
 
-namespace AggregationService.Application.Models.AggregationConfigurations;
+namespace AggregationService.Application.Models.Response.AggregationConfigurations;
 
 public class UpdateAggregationConfigurationModel
 {
