@@ -1,20 +1,28 @@
-﻿using AggregationService.Application.Models.Request;
-using AggregationService.Application.Models.Response.AggregationConfigurations;
+﻿using AggregationService.Application.Models.Response.AggregationConfigurations;
 using AggregationService.Application.Services.Abstract;
 using AggregationService.Domain.Abstractions.Repository;
 using AggregationService.Domain.Entities;
-using AggregationService.Domain.Enum;
+using AggregationService.Domain.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
+using Shared.Infrastructure.Bus;
+using Shared.IntegrationEvents.IntegrationEvents.Aggregation;
+using StackExchange.Redis;
 
 namespace AggregationService.Application.Services.Concrete;
 
 public class AggregationConfigurationService : IAggregationConfigurationService
 {
     private readonly IAggregationConfigurationRepository _aggregationConfigurationRepository;
-    public AggregationConfigurationService(IAggregationConfigurationRepository aggregationConfigurationRepository)
+    private readonly IDatabase _db;
+    private readonly IMessageBus _messageBus;
+    public AggregationConfigurationService(
+                                        IAggregationConfigurationRepository aggregationConfigurationRepository,
+                                        IConnectionMultiplexer redisConnection,
+                                        IMessageBus messageBus)
     {
         _aggregationConfigurationRepository = aggregationConfigurationRepository;
+        _db = redisConnection.GetDatabase();
+        _messageBus = messageBus;
     }
 
     public async Task AddAggregationWithConfigurationsAsync(CreateAggregationConfigurationModel model)
@@ -59,48 +67,37 @@ public class AggregationConfigurationService : IAggregationConfigurationService
         }
     }
 
-    public async Task<List<string>> ProcessPlayRequestAsync(int playerId, string coinIn, decimal amount, int promotionId)
+    public async Task TriggerRequestAsync(TriggerAggregationEvent @event, AggregationConfiguration config)
     {
-        // Get all aggregation configurations by PromotionId
-        var aggregations = await _aggregationConfigurationRepository.Query()
-            .Where(a => a.PromotionId == promotionId.ToString())
-            .Include(a => a.PointEvaluationRules)
-            .ToListAsync();
-
-        if (!aggregations.Any())
+        var eventValue = @event.ExtractValue(config);
+        if (eventValue > 0)
         {
-            throw new InvalidOperationException($"No aggregation configurations found for PromotionId {promotionId}");
-        }
+            //make atomic with lock
+            var currentTotal = _db.StringIncrement(config.GenerateKeyForValue(@event), (double)eventValue);
 
-        var eventPayloads = new List<string>();
+            var currentPoints = config.CalculatePoints(currentTotal);
 
-        foreach (var aggregation in aggregations)
-        {
-            // Calculate the points based on PointEvaluationRules
-            decimal calculatedAmount = aggregation.EvaluationType switch
+            if (currentPoints > 0)
             {
-                EvaluationType.SingleRule => aggregation.PointEvaluationRules.FirstOrDefault()?.Point ?? 0,
-                EvaluationType.Steps => aggregation.PointEvaluationRules
-                    .Where(rule => amount >= rule.Step)
-                    .OrderByDescending(rule => rule.Step)
-                    .FirstOrDefault()?.Point ?? 0,
-                _ => throw new InvalidOperationException("Unsupported evaluation type")
-            };
+                var previousPoints = double.Parse(_db.StringGet(config.GenerateKeyForPoints(@event)));
 
-            // Create the event payload
-            var eventPayload = new
-            {
-                Key = aggregation.Key,
-                CalculatedAmount = calculatedAmount,
-                PlayerId = playerId,
-                CoinIn = coinIn,
-                PromotionId = promotionId
-            };
 
-            var message = JsonSerializer.Serialize(eventPayload);
-            eventPayloads.Add(message);
+                if (previousPoints > currentPoints)
+                {
+                    _db.StringSet(config.GenerateKeyForPoints(@event), currentPoints);
+
+                    var pointsAdded = currentPoints - previousPoints;
+
+                    _ = _messageBus.PublishWithRouting(new AggregatedEvent
+                    {
+                        PlayerId = @event.CustomerId,
+                        Timestamp = DateTime.Now,
+                        AddedPoints = pointsAdded,
+                        PromotionId = config.PromotionId,
+                        ConfigKey = config.Key,
+                    }, config.AggregationSubscriber);
+                }
+            }
         }
-
-        return eventPayloads;
     }
 }

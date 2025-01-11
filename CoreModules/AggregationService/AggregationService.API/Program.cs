@@ -4,6 +4,8 @@ using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
+IConfiguration configuration = builder.Configuration;
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -11,7 +13,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 builder.Services
     .AddInfrastructure(builder.Configuration)
-    .AddApplication(builder.Configuration);
+    .AddApplication(builder.Configuration)
+    .AddMassTransitWithRabbitMqTransport(configuration, consumerAssemblyMarkerType: typeof(Program));
 
 var app = builder.Build();
 

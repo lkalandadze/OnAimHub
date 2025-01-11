@@ -1,26 +1,21 @@
-﻿using Shared.IntegrationEvents.Interfaces;
+﻿using Newtonsoft.Json;
+using Shared.IntegrationEvents.Interfaces;
 
 namespace Shared.IntegrationEvents.IntegrationEvents.Aggregation;
 
 public class TriggerAggregationEvent : IIntegrationEvent
 {
-    public TriggerAggregationEvent(
-        Guid correlationId,
-        int playerId,
-        string coinIn,
-        decimal amount,
-        int promotionId
-        )
+    public Dictionary<string, string> Data { get; set; }
+    public string CustomerId => Data["customerId"];
+    public string EventType => Data["eventType"];
+    public string Producer { get; private set; }
+    public bool IsExternal => Producer.ToLower() == "external";
+    public Guid CorrelationId {  get; private set; }
+
+    public TriggerAggregationEvent(string data, string? producer = null)
     {
-        CorrelationId = correlationId;
-        PlayerId = playerId;
-        CoinIn = coinIn;
-        Amount = amount;
-        PromotionId = promotionId;
+        Data = JsonConvert.DeserializeObject<Dictionary<string, string>>(data)!;
+        Producer = producer ?? Data["producer"];
+        CorrelationId = Guid.NewGuid();
     }
-    public Guid CorrelationId { get; set; }
-    public int PlayerId { get; set; }
-    public string CoinIn { get; set; }
-    public decimal Amount { get; set; }
-    public int PromotionId { get; set; }
 }
