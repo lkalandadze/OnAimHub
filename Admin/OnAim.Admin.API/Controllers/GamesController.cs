@@ -58,7 +58,7 @@ public class GamesController : ApiControllerBase
 
     [HttpPost(nameof(DeactivateGame))]
     public async Task<IActionResult> DeactivateGame(string name)
-    => Ok(await _gameService.DeactivateGame(name));
+        => Ok(await _gameService.DeactivateGame(name));
 
     [HttpPost(nameof(CreateConfiguration))]
     public async Task<IActionResult> CreateConfiguration([FromQuery] string gameName, [FromBody] GameConfigurationDto configurationJson)
@@ -92,5 +92,5 @@ public class GamesController : ApiControllerBase
 
     [HttpGet(nameof(GetGameConfigurationTemplateById))]
     public async Task<IActionResult> GetGameConfigurationTemplateById([FromQuery] string id)
-    => Ok(await _gameTemplateService.GetGameConfigurationTemplateById(id));
+        => Ok(await _gameTemplateService.GetGameConfigurationTemplateById(id));
 }

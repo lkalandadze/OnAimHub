@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: levelapi
-          image: gvgroup/onaim-levelservice:latest  
+          image: gvgroup/onaimhub-levelservice:latest  # Replace with your DockerHub image path
           ports:
             - containerPort: 8080
           env:

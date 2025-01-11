@@ -1,7 +1,7 @@
 stages:
   - build
   - test
-  - tagged_latest
+  - push
   - deploy
 
 variables:
@@ -14,15 +14,18 @@ services:
   - docker:dind
 
 before_script:
+  - apk add --no-cache docker-cli
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+
 
 build_ApiGateway:
   stage: build
   script:
     - echo "Building  API GAT..."
-    - docker build -t $DOCKER_NAMESPACE/onaim-apigateway:$DOCKER_IMAGE_TAG -f ApiGateways/ApiGateway/Dockerfile .
-    - echo "Pushing Docker image for onaim-apigateway to Docker Hub..."
-    - docker push $DOCKER_NAMESPACE/onaim-apigateway:$DOCKER_IMAGE_TAG
+    - docker build -t $DOCKER_NAMESPACE/onaimhub-apigateway:$DOCKER_IMAGE_TAG -f ApiGateways/ApiGateway/Dockerfile .
+    - echo "Pushing Docker image for onaimhub-apigateway to Docker Hub..."
+    - docker push $DOCKER_NAMESPACE/onaimhub-apigateway:$DOCKER_IMAGE_TAG
   tags:
     - docker-runner
 
@@ -33,27 +36,26 @@ build_ApiGateway:
 #   tags:
 #     - docker-runner
     
-tagged_latest_ApiGateway:
-  stage: tagged_latest
+push_ApiGateway:
+  stage: push
   script:
     - echo "Pushing API GAT..."
-    - docker pull $DOCKER_NAMESPACE/onaim-apigateway:$DOCKER_IMAGE_TAG
-    - docker tag $DOCKER_NAMESPACE/onaim-apigateway:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaim-apigateway:latest
-    - docker push $DOCKER_NAMESPACE/onaim-apigateway:latest
+    - docker pull $DOCKER_NAMESPACE/onaimhub-apigateway:$DOCKER_IMAGE_TAG
+    - docker tag $DOCKER_NAMESPACE/onaimhub-apigateway:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaimhub-apigateway:latest
+    - docker push $DOCKER_NAMESPACE/onaimhub-apigateway:latest
   tags:
     - docker-runner
   only:
     - main
   needs:
     - build_ApiGateway
-  when: manual
     
 deploy_ApiGateway:
   stage: deploy
   script:
     - echo "Deploying API GAT..."
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f ApiGateways/ApiGateway/ocelotapigateway-k8s/ocelotapigateway-deployment.yaml -f ApiGateways/ApiGateway/ocelotapigateway-k8s/ocelotapigateway-service.yaml -f ApiGateways/ApiGateway/ocelotapigateway-k8s/ocelotapigateway-ingress.yaml -f ApiGateways/ApiGateway/ocelotapigateway-k8s/ocelotapigateway-cm0-configmap.yaml -f ApiGateways/ApiGateway/ocelotapigateway-k8s/ocelotapigateway-cm1-configmap.yaml -f ApiGateways/ApiGateway/ocelotapigateway-k8s/secret.yaml
+    - kubectl apply -f ApiGateways/ApiGateway/ocelotapigateway-k8s/*.yaml 
   only:
     - main
   when: manual

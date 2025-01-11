@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: hubapi
-          image: gvgroup/onaim-core_hub:latest  
+          image: gvgroup/onaimhub-core_hub:latest  
           ports:
             - containerPort: 8080
           env:

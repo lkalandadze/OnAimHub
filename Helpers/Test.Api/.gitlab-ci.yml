@@ -1,7 +1,7 @@
 stages:
   - build
   - test
-  - tagged_latest
+  - push
   - deploy
 
 variables:
@@ -14,6 +14,7 @@ services:
   - docker:dind
 
 before_script:
+  - apk add --no-cache docker-cli
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 
@@ -21,9 +22,9 @@ build_Test.Api:
   stage: build
   script:
     - echo "Building Test.Api"
-    - docker build -t $DOCKER_NAMESPACE/onaim-helpers_test_api:$DOCKER_IMAGE_TAG  -f Helpers/Test.Api/Dockerfile .
+    - docker build -t $DOCKER_NAMESPACE/onaimhub-helpers_test_api:$DOCKER_IMAGE_TAG  -f Helpers/Test.Api/Dockerfile .
     - echo "Pushing Docker image for onaimhub-helpers_test_api to Docker Hub..."
-    - docker push $DOCKER_NAMESPACE/onaim-helpers_test_api:$DOCKER_IMAGE_TAG
+    - docker push $DOCKER_NAMESPACE/onaimhub-helpers_test_api:$DOCKER_IMAGE_TAG
   tags:
     - docker-runner
 
@@ -38,23 +39,22 @@ push_Test.Api:
   stage: push
   script:
     - echo "Pushing Test.Api"
-    - docker pull $DOCKER_NAMESPACE/onaim-helpers_test_api:$DOCKER_IMAGE_TAG
-    - docker tag $DOCKER_NAMESPACE/onaim-helpers_test_api:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaim-helpers_test_api:latest
-    - docker push $DOCKER_NAMESPACE/onaim-helpers_test_api:latest
+    # - docker pull $DOCKER_NAMESPACE/onaimhub-helpers_test_api:$DOCKER_IMAGE_TAG
+    # - docker tag $DOCKER_NAMESPACE/onaimhub-helpers_test_api:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaimhub-helpers_test_api:latest
+    # - docker push $DOCKER_NAMESPACE/onaimhub-helpers_test_api:latest
   tags:
     - docker-runner
   only:
     - main
   needs:
     - build_Test.Api
-  when: manual
 
 deploy_Test.Api:
   stage: deploy
   script:
     - echo "Deploying Test.Api"
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f Helpers/Test.Api/testapi-k8s/testapi-deployment.yaml -f Helpers/Test.Api/testapi-k8s/testapi-service.yaml -f Helpers/Test.Api/testapi-k8s/testapi-ingress.yaml -f Helpers/Test.Api/testapi-k8s/testapi-cm0-configmap.yaml -f Helpers/Test.Api/testapi-k8s/secret.yaml
+    - kubectl apply -f Helpers/Test.Api/testapi-k8s/*.yaml
   only:
     - main
   when: manual

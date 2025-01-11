@@ -1,7 +1,7 @@
 stages:
   - build
   - test
-  - tagged_latest
+  - push
   - deploy
 
 variables:
@@ -14,16 +14,18 @@ services:
   - docker:dind
 
 before_script:
+  - apk add --no-cache docker-cli
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker info
 
 
 build_MissionService:
   stage: build
   script:
     - echo "Building  MissionService"
-    - docker build -t $DOCKER_NAMESPACE/onaim-missionservice:$DOCKER_IMAGE_TAG -f CoreModules/MissionService/MissionService.Api/Dockerfile .
-    - echo "Pushing Docker image for onaim-missionservice to Docker Hub..."
-    - docker push $DOCKER_NAMESPACE/onaim-missionservice:$DOCKER_IMAGE_TAG
+    # - docker build -t $DOCKER_NAMESPACE/onaimhub-missionservice:$DOCKER_IMAGE_TAG -f CoreModules/MissionService/MissionService.Api/Dockerfile .
+    # - echo "Pushing Docker image for onaimhub-missionservice to Docker Hub..."
+    # - docker push $DOCKER_NAMESPACE/onaimhub-missionservice:$DOCKER_IMAGE_TAG
   tags:
     - docker-runner
 
@@ -34,27 +36,26 @@ build_MissionService:
 #   tags:
 #     - docker-runner
 
-tagged_latest_MissionService:
-  stage: tagged_latest
+push_MissionService:
+  stage: push
   script:
     - echo "Pushing MissionService"
-    - docker pull $DOCKER_NAMESPACE/onaim-missionservice:$DOCKER_IMAGE_TAG
-    - docker tag $DOCKER_NAMESPACE/onaim-missionservice:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaim-missionservice:latest
-    - docker push $DOCKER_NAMESPACE/onaim-missionservice:latest
+    # - docker pull $DOCKER_NAMESPACE/onaimhub-missionservice:$DOCKER_IMAGE_TAG
+    # - docker tag $DOCKER_NAMESPACE/onaimhub-missionservice:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaimhub-missionservice:latest
+    # - docker push $DOCKER_NAMESPACE/onaimhub-missionservice:latest
   tags:
     - docker-runner
   only:
     - main
   needs:
     - build_MissionService
-  when: manual
 
 deploy_MissionService:
   stage: deploy
   script:
     - echo "Deploying MissionService to Kubernetes"
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f CoreModules/MissionService/missionapi-k8s/missionapi-deployment.yaml -f CoreModules/MissionService/missionapi-k8s/missionapi-service.yaml -f CoreModules/MissionService/missionapi-k8s/missionapi-ingress.yaml -f CoreModules/MissionService/missionapi-k8s/missionapi-cm0-configmap.yaml -f CoreModules/MissionService/missionapi-k8s/secret.yaml
+    - kubectl apply -f CoreModules/MissionService/missionapi/k8s/*.yaml
   only:
     - main
   when: manual

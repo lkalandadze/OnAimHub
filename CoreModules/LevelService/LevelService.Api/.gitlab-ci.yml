@@ -1,7 +1,7 @@
 stages:
   - build
   - test
-  - tagged_latest
+  - push
   - deploy
 
 variables:
@@ -14,15 +14,16 @@ services:
   - docker:dind
 
 before_script:
+  - apk add --no-cache docker-cli
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 build_LevelService:
   stage: build
   script:
     - echo "Building  LevelService...."
-    - docker build -t $DOCKER_NAMESPACE/onaim-levelservice:$DOCKER_IMAGE_TAG -f CoreModules/LevelService/LevelService.Api/Dockerfile .
-    - echo "Pushing Docker image for onaim-levelservice to Docker Hub..."
-    - docker push $DOCKER_NAMESPACE/onaim-levelservice:$DOCKER_IMAGE_TAG
+    # - docker build -t $DOCKER_NAMESPACE/onaimhub-levelservice:$DOCKER_IMAGE_TAG -f CoreModules/LevelService/LevelService.Api/Dockerfile .
+    # - echo "Pushing Docker image for onaimhub-levelservice to Docker Hub..."
+    # - docker push $DOCKER_NAMESPACE/onaimhub-levelservice:$DOCKER_IMAGE_TAG
   tags:
     - docker-runner
 
@@ -33,27 +34,26 @@ build_LevelService:
 #   tags:
 #     - docker-runner
 
-tagged_latest_LevelService:
-  stage: tagged_latest
+push_LevelService:
+  stage: push
   script:
     - echo "Pushing LevelService to DockerHub"
-    - docker pull $DOCKER_NAMESPACE/onaim-levelservice:$DOCKER_IMAGE_TAG
-    - docker tag $DOCKER_NAMESPACE/onaim-levelservice:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaim-levelservice:latest
-    - docker push $DOCKER_NAMESPACE/onaim-levelservice:latest
+    # - docker pull $DOCKER_NAMESPACE/onaimhub-levelservice:$DOCKER_IMAGE_TAG
+    # - docker tag $DOCKER_NAMESPACE/onaimhub-levelservice:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaimhub-levelservice:latest
+    # - docker push $DOCKER_NAMESPACE/onaimhub-levelservice:latest
   tags:
     - docker-runner
   only:
     - main
   needs:
      - build_LevelService
-  when: manual
      
 deploy_LevelService:
   stage: deploy
   script:
     - echo "Deploying LevelService to Kubernetes"
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f CoreModules/LevelService/levelapi-k8s/levelapi-deployment.yaml -f CoreModules/LevelService/levelapi-k8s/levelapi-service.yaml -f CoreModules/LevelService/levelapi-k8s/levelapi-ingress.yaml -f CoreModules/LevelService/levelapi-k8s/levelapi-cm0-configmap.yaml -f CoreModules/LevelService/levelapi-k8s/secret.yaml
+    - kubectl apply -f CoreModules/LevelService/levelapi-k8s/*.yaml
   only:
     - main
   when: manual

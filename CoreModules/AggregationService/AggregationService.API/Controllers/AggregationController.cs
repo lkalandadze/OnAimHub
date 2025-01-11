@@ -1,5 +1,4 @@
-﻿using AggregationService.Application.Models.Request;
-using AggregationService.Application.Models.Response.AggregationConfigurations;
+﻿using AggregationService.Application.Models.AggregationConfigurations;
 using AggregationService.Application.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,12 +33,5 @@ public class AggregationController : ControllerBase
         await _aggregationConfigurationService.UpdateAggregationAsync(filter);
         return Ok(new { message = "Aggregation updated successfully." });
     }
-
-    //[HttpPost("process-play")]
-    //public async Task<IActionResult> ProcessPlayRequest([FromBody] PlayRequest playRequest)
-    //{
-    //    var payloads = await _aggregationConfigurationService.ProcessPlayRequestAsync(playRequest);
-    //    return Ok(payloads);
-    //}
 
 }

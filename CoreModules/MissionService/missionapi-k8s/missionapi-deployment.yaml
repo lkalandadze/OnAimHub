@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: missionapi
-          image: gvgroup/onaim-missionservice:latest  # Replace with your DockerHub image path
+          image: gvgroup/onaimhub-missionservice:latest  # Replace with your DockerHub image path
           ports:
             - containerPort: 8080
           env:

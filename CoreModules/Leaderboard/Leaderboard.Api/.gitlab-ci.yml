@@ -1,7 +1,7 @@
 stages:
   - build
   - test
-  - tagged_latest
+  - push
   - deploy
 variables:
   DOCKER_IMAGE_TAG: $CI_COMMIT_SHA
@@ -13,15 +13,16 @@ services:
   - docker:dind
 
 before_script:
+  - apk add --no-cache docker-cli
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 build_Leaderboard:
   stage: build
   script:
     - echo "Building  LeaderBorad.."
-    - docker build -t $DOCKER_NAMESPACE/onaim-leaderboard:$DOCKER_IMAGE_TAG -f CoreModules/Leaderboard/Leaderboard.Api/Dockerfile .
-    - echo "Pushing Docker image for onaim-leaderboard to Docker Hub..."
-    - docker push $DOCKER_NAMESPACE/onaim-leaderboard:$DOCKER_IMAGE_TAG
+    # - docker build -t $DOCKER_NAMESPACE/onaimhub-leaderboard:$DOCKER_IMAGE_TAG -f CoreModules/Leaderboard/Leaderboard.Api/Dockerfile .
+    # - echo "Pushing Docker image for onaimhub-leaderboard to Docker Hub..."
+    # - docker push $DOCKER_NAMESPACE/onaimhub-leaderboard:$DOCKER_IMAGE_TAG
   tags:
     - docker-runner
 
@@ -32,27 +33,26 @@ build_Leaderboard:
 #   tags:
 #     - docker-runner
 
-tagged_latest_Leaderboard:
-  stage: tagged_latest
+push_Leaderboard:
+  stage: push
   script:
     - echo "Pushing LeaderBorad...."
-    - docker pull $DOCKER_NAMESPACE/onaim-leaderboard:$DOCKER_IMAGE_TAG
-    - docker tag $DOCKER_NAMESPACE/onaim-leaderboard:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaim-leaderboard:latest
-    - docker push $DOCKER_NAMESPACE/onaim-leaderboard:latest
+    # - docker pull $DOCKER_NAMESPACE/onaimhub-leaderboard:$DOCKER_IMAGE_TAG
+    # - docker tag $DOCKER_NAMESPACE/onaimhub-leaderboard:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaimhub-leaderboard:latest
+    # - docker push $DOCKER_NAMESPACE/onaimhub-leaderboard:latest
   tags:
     - docker-runner
   only:
     - main
   needs:
     - build_Leaderboard
-  when: manual
 
 deploy_Leaderboard:
   stage: deploy
   script:
     - echo "Deploying LeaderBorad...."
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f CoreModules/Leaderboard/leaderboardapi-k8s/leaderboardapi-deployment.yaml -f CoreModules/Leaderboard/leaderboardapi-k8s/leaderboardapi-service.yaml -f CoreModules/Leaderboard/leaderboardapi-k8s/leaderboardapi-ingress.yaml -f CoreModules/Leaderboard/leaderboardapi-k8s/leaderboardapi-cm0-configmap.yaml -f CoreModules/Leaderboard/leaderboardapi-k8s/secret.yaml
+    - kubectl apply -f CoreModules/Leaderboard/leaderboardapi-k8s/*.yaml
   only:
     - main
   when: manual

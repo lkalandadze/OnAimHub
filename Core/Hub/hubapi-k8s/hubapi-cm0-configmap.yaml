@@ -89,6 +89,9 @@ data:
             }
           },
           "WriteTo": [
+            //{
+            //  "Name": "Console"
+            //},
             {
               "Name": "PostgreSQL",
               "Args": {

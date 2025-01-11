@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: aggregation
-          image: gvgroup/onaim-aggregationservice:latest
+          image: gvgroup/onaimhub-aggregationservice:latest
           ports:
             - containerPort: 8080
           env:
