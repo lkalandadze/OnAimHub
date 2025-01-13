@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: wheelapi
-          image: gvgroup/onaimhub-wheel:latest  # Replace with DockerHub path
+          image: gvgroup/onaim-wheel:latest  # Replace with DockerHub path
           ports:
             - containerPort: 8080
           env:
@@ -41,6 +41,8 @@ spec:
               name: wheelapi-cm0
               subPath: appsettings.json
       restartPolicy: Always
+      imagePullSecrets:
+        - name: dockerhub-secret
       volumes:
         - configMap:
             items:

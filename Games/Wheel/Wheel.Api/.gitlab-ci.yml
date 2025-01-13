@@ -1,12 +1,12 @@
 stages:
   - build
   - test
-  - push
+  - tagged_latest
   - deploy
 
 
 variables:
-  DOCKER_IMAGE_TAG: $CI_COMMIT_SHA
+  DOCKER_IMAGE_TAG: $CI_COMMIT_REF_SLUG-$CI_PIPELINE_ID
   DOCKER_NAMESPACE: gvgroup
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
@@ -14,47 +14,52 @@ variables:
 services:
   - docker:dind
 
-before_script:
-  - apk add --no-cache docker-cli
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-
 build_Wheel:
+  image: docker
   stage: build
   script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - echo "Building Wheel"
-    # - docker build -t $DOCKER_NAMESPACE/onaimhub-wheel:$DOCKER_IMAGE_TAG 
-    # - echo "Pushing Docker image for onaimhub-wheel to Docker Hub..."
-    # - docker push $DOCKER_NAMESPACE/onaimhub-wheel:$DOCKER_IMAGE_TAG
+    - docker build -t $DOCKER_NAMESPACE/onaim-wheel:$DOCKER_IMAGE_TAG -f Games/Wheel/Wheel.Api/Dockerfile .
+    - echo "Pushing Docker image for onaim-wheel to Docker Hub..."
+    - docker push $DOCKER_NAMESPACE/onaim-wheel:$DOCKER_IMAGE_TAG
   tags:
     - docker-runner
 
-# test_Wheel:
-#   stage: test
-#   script:
-#     - echo "Running tests for Wheel""
-#   tags:
-#     - docker-runner
-
-push_Wheel:
-  stage: push
+test_Wheel:
+  stage: test
   script:
-    - echo "Pushing Wheel""
-    # - docker pull $DOCKER_NAMESPACE/onaimhub-wheel:$DOCKER_IMAGE_TAG
-    # - docker tag $DOCKER_NAMESPACE/onaimhub-wheel:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaimhub-wheel:latest
-    # - docker push $DOCKER_NAMESPACE/onaimhub-wheel:latest
+    - echo "Running tests for Wheel"
+  tags:
+    - docker-runner
+
+tagged_latest_Wheel:
+  image: docker
+  stage: tagged_latest
+  script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - echo "Pushing Wheel"
+    - docker pull $DOCKER_NAMESPACE/onaim-wheel:$DOCKER_IMAGE_TAG
+    - docker tag $DOCKER_NAMESPACE/onaim-wheel:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaim-wheel:latest
+    - docker push $DOCKER_NAMESPACE/onaim-wheel:latest
   tags:
     - docker-runner
   only:
     - main
   needs:
     - build_Wheel
+  when: manual
 
 deploy_Wheel:
   stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
   script:
-    - echo "Deploying Wheel""
+    - echo "Deploying Wheel"
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f Games/Wheel/wheelapi/k8s/*.yaml
+    - sed -i "s|gvgroup/onaim-wheel:latest|gvgroup/onaim-wheel:$DOCKER_IMAGE_TAG|g" Games/Wheel/wheelapi-k8s/wheelapi-deployment.yaml
+    - kubectl apply -f Games/Wheel/wheelapi-k8s/wheelapi-deployment.yaml -f Games/Wheel/wheelapi-k8s/wheelapi-service.yaml -f Games/Wheel/wheelapi-k8s/wheelapi-ingress.yaml -f Games/Wheel/wheelapi-k8s/wheelapi-cm0-configmap.yaml -f Games/Wheel/wheelapi-k8s/secret.yaml
   only:
     - main
   when: manual

@@ -9,7 +9,7 @@ data:
         }
       },
       "ConnectionStrings": {
-        "OnAimLeaderboard": "User ID =postgres;Password=Test1234!;Server=leaderboarddb;Port=5432;Database=OnAimLeaderboard;Pooling=true;", //Akaki
+        "OnAimLeaderboard": "User ID =postgres;Password=Test1234!;Server=leaderboarddb;Port=5436;Database=OnAimLeaderboard;Pooling=true;", 
         "Redis": "redis:6379,abortConnect=false"
       },
       "JwtConfiguration": {
