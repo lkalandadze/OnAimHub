@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: missionapi
-          image: gvgroup/onaimhub-missionservice:latest  # Replace with your DockerHub image path
+          image: gvgroup/onaim-missionservice:latest 
           ports:
             - containerPort: 8080
           env:
@@ -26,7 +26,7 @@ spec:
             - name: CONSUL_ADDRESS
               value: http://consul:8500
             - name: ConnectionStrings__OnAimMission
-              value: Host=missiondb;Port=5432;Database=OnAimMission;Username=postgres;Password=Test1234!
+              value: Host=missiondb;Port=5437;Database=OnAimMission;Username=postgres;Password=Test1234!
           resources:
             requests:
               memory: "256Mi"
@@ -39,6 +39,8 @@ spec:
               name: missionapi-cm0
               subPath: appsettings.json
       restartPolicy: Always
+      imagePullSecrets:
+        - name: dockerhub-secret
       volumes:
         - configMap:
             items:

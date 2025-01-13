@@ -1,11 +1,12 @@
 stages:
   - build
   - test
-  - push
+  - tagged_latest
   - deploy
 
+
 variables:
-  DOCKER_IMAGE_TAG: $CI_COMMIT_SHA
+  DOCKER_IMAGE_TAG: $CI_COMMIT_REF_SLUG-$CI_PIPELINE_ID
   DOCKER_NAMESPACE: gvgroup
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
@@ -13,49 +14,52 @@ variables:
 services:
   - docker:dind
 
-before_script:
-  - apk add --no-cache docker-cli
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-
-
-
 build_ApiGateway:
+  image: docker
   stage: build
   script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - echo "Building  API GAT..."
-    - docker build -t $DOCKER_NAMESPACE/onaimhub-apigateway:$DOCKER_IMAGE_TAG -f ApiGateways/ApiGateway/Dockerfile .
-    - echo "Pushing Docker image for onaimhub-apigateway to Docker Hub..."
-    - docker push $DOCKER_NAMESPACE/onaimhub-apigateway:$DOCKER_IMAGE_TAG
+    - docker build -t $DOCKER_NAMESPACE/onaim-apigateway:$DOCKER_IMAGE_TAG -f ApiGateways/ApiGateway/Dockerfile .
+    - echo "Pushing Docker image for onaim-apigateway to Docker Hub..."
+    - docker push $DOCKER_NAMESPACE/onaim-apigateway:$DOCKER_IMAGE_TAG
   tags:
     - docker-runner
 
-# test_ApiGateway:
-#   stage: test
-#   script:
-#     - echo "Running tests for API GAT..."
-#   tags:
-#     - docker-runner
-    
-push_ApiGateway:
-  stage: push
+test_ApiGateway:
+  stage: test
   script:
+    - echo "Running tests for API GAT..."
+  tags:
+    - docker-runner
+    
+tagged_latest_ApiGateway:
+  image: docker
+  stage: tagged_latest
+  script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - echo "Pushing API GAT..."
-    - docker pull $DOCKER_NAMESPACE/onaimhub-apigateway:$DOCKER_IMAGE_TAG
-    - docker tag $DOCKER_NAMESPACE/onaimhub-apigateway:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaimhub-apigateway:latest
-    - docker push $DOCKER_NAMESPACE/onaimhub-apigateway:latest
+    - docker pull $DOCKER_NAMESPACE/onaim-apigateway:$DOCKER_IMAGE_TAG
+    - docker tag $DOCKER_NAMESPACE/onaim-apigateway:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaim-apigateway:latest
+    - docker push $DOCKER_NAMESPACE/onaim-apigateway:latest
   tags:
     - docker-runner
   only:
     - main
   needs:
     - build_ApiGateway
+  when: manual
     
 deploy_ApiGateway:
   stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
   script:
     - echo "Deploying API GAT..."
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f ApiGateways/ApiGateway/ocelotapigateway-k8s/*.yaml 
+    - sed -i "s|gvgroup/onaim-apigateway:latest|gvgroup/onaim-apigateway:$DOCKER_IMAGE_TAG|g" ApiGateways/ApiGateway/ocelotapigateway-k8s/ocelotapigateway-deployment.yaml
+    - kubectl apply -f ApiGateways/ApiGateway/ocelotapigateway-k8s/ocelotapigateway-deployment.yaml -f ApiGateways/ApiGateway/ocelotapigateway-k8s/ocelotapigateway-service.yaml -f ApiGateways/ApiGateway/ocelotapigateway-k8s/ocelotapigateway-ingress.yaml -f ApiGateways/ApiGateway/ocelotapigateway-k8s/ocelotapigateway-cm0-configmap.yaml -f ApiGateways/ApiGateway/ocelotapigateway-k8s/ocelotapigateway-cm1-configmap.yaml -f ApiGateways/ApiGateway/ocelotapigateway-k8s/secret.yaml
   only:
     - main
   when: manual
