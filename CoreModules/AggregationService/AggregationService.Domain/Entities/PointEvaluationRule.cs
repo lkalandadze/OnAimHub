@@ -1,8 +1,10 @@
-﻿using Shared.Domain.Entities;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using Shared.Domain.Entities;
 
 namespace AggregationService.Domain.Entities;
 
-public class PointEvaluationRule : BaseEntity<int>
+public class PointEvaluationRule
 {
     public PointEvaluationRule(int step, int point)
     {
@@ -10,6 +12,8 @@ public class PointEvaluationRule : BaseEntity<int>
         Point = point;
     }
 
+    [BsonId]
+    public ObjectId Id { get; set; }
     public int Step { get; set; }
     public int Point { get; set; }
 

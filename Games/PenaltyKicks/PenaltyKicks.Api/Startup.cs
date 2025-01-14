@@ -7,6 +7,7 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using PenaltyKicks.Api.Consul;
+using PenaltyKicks.Application.Holders;
 using PenaltyKicks.Application.Services.Abstract;
 using PenaltyKicks.Application.Services.Concrete;
 using PenaltyKicks.Domain.Abstractions.Repository;
@@ -60,16 +61,18 @@ public class Startup
                 });
         });
 
+        services.AddSingleton<GameHolder>();
+
         services.AddScoped<IPenaltyConfigurationRepository, PenaltyConfigurationRepository>();
         services.AddScoped<IPenaltyGameRepository, PenaltyGameRepository>();
         services.AddScoped<IPenaltyPrizeRepository, PenaltyPrizeRepository>();
         services.AddScoped<IPenaltySeriesRepository, PenaltySeriesRepository>();
         services.AddScoped<IMessageBus, MessageBus>();
 
+        services.AddScoped<IPenaltyService, PenaltyService>();
+
         var prizeGroupTypes = new List<Type> { typeof(PenaltySeries) };
         services.ResolveGameLibServices<PenaltyConfiguration>(Configuration, prizeGroupTypes);
-
-        services.AddScoped<IPenaltyService, PenaltyService>();
 
         ConfigureMassTransit(services, Configuration, env, consumerAssemblyMarkerType: typeof(Program));
         services.AddMassTransitHostedService();
@@ -78,6 +81,8 @@ public class Startup
         {
             ConfigureConsul(services);
         }
+
+        services.BuildServiceProvider().GetRequiredService<GameHolder>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
@@ -110,8 +115,8 @@ public class Startup
             var registration = new AgentServiceRegistration()
             {
                 ID = serviceId,
-                Name = "penaltyapi",
-                Address = "penaltyapi",
+                Name = "penaltykicksapi",
+                Address = "penaltykicksapi",
                 Port = 8080,
                 Tags = ["Game", "Back"],
                 Meta = new Dictionary<string, string>

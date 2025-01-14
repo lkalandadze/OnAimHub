@@ -1,10 +1,11 @@
 ﻿using AggregationService.Domain.Enum;
+using MongoDB.Bson.Serialization.Attributes;
 using Shared.Domain.Entities;
 
 namespace AggregationService.Domain.Entities;
 
 // Only available when used with 1 CoinIn
-public class AggregationConfiguration : BaseEntity<string>
+public class AggregationConfiguration
 {
     public AggregationConfiguration()
     {
@@ -34,7 +35,8 @@ public class AggregationConfiguration : BaseEntity<string>
         PromotionId = promotionId;
         Key = key;
     }
-
+    [BsonId]
+    public string Id { get; set; }
     public string EventProducer { get; set; } // Example: Hub
     public string AggregationSubscriber { get; set; } // Example: Leaderboard
     public List<Filter> Filters { get; set; } = new();

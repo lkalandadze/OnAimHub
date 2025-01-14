@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PenaltyKicks.Application.Models.PenaltyKicks;
 using PenaltyKicks.Application.Services.Abstract;
+using System.ComponentModel.DataAnnotations;
 
 namespace PenaltyKicks.Api.Controllers;
 
@@ -16,20 +17,20 @@ public class GameController : BaseApiController
     }
 
     [HttpGet(nameof(InitialData))]
-    public async Task<ActionResult<InitialDataResponseModel>> InitialData(int promotionId)
+    public ActionResult<InitialDataResponseModel> InitialData([Required] int promotionId)
     {
-        return Ok(await _penaltyService.GetInitialDataAsync(promotionId));
+        return Ok(_penaltyService.GetInitialDataAsync(promotionId));
     }
 
     [HttpPost(nameof(PlaceBet))]
-    public async Task<ActionResult> PlaceBet()
+    public async Task<ActionResult<BetResponseModel>> PlaceBet([Required] int promotionId, [Required] string betPriceId)
     {
-        return Ok();
+        return Ok(await _penaltyService.PlaceBetAsync(promotionId, betPriceId));
     }
 
     [HttpPost(nameof(PenaltyKick))]
-    public async Task<ActionResult> PenaltyKick()
+    public async Task<ActionResult<KickResponseModel>> PenaltyKick([Required] int promotionId)
     {
-        return Ok();
+        return Ok(await _penaltyService.PenaltyKick(promotionId));
     }
 }

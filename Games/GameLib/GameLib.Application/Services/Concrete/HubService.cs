@@ -46,7 +46,7 @@ public class HubService : IHubService
             if (!betTransaction.Success)
             {
                 var reason = /*betTransaction.ErrorCode ?? */"Unknown error";
-                throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Bet transaction failed: {reason}.");
+                throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"BetAmount transaction failed: {reason}.");
             }
         }
         catch (Exception ex)

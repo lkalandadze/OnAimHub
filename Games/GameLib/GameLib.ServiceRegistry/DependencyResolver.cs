@@ -59,13 +59,12 @@ public static class DependencyResolver
         services.AddHttpClient();
         services.AddSingleton<IAuthService, AuthService>();
         services.AddScoped<IHubService, HubService>();
-        //services.AddScoped<ICoinRepository, CoinRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IPriceRepository, PriceRepository>();
         //services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
         services.AddScoped<IGameConfigurationRepository, GameConfigurationRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
         services.AddScoped<ISettingRepository, GameSettingRepository<TGameConfiguration>>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IConsulClient, ConsulClient>();
         services.AddScoped<IConsulGameService, ConsulGameService>();

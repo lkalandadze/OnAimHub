@@ -8,9 +8,9 @@ public class BasePrizeChecker : Checkmate<BasePrize>
 {
     public BasePrizeChecker() : base()
     {
-        Check(x => x.Value)
-            .GreaterThan(0)
-            .WithMessage("The value of price must be positive.");
+        //Check(x => x.Value)
+        //    .GreaterThan(0)
+        //    .WithMessage("The value of prize must be positive.");
 
         Check(x => x.Probability)
             .GreaterThan(0)

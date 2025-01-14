@@ -1,9 +1,11 @@
-﻿using AggregationService.Application.Models.Response.AggregationConfigurations;
+﻿using AggregationService.Application.Models.AggregationConfigurations;
 using AggregationService.Application.Services.Abstract;
 using AggregationService.Domain.Abstractions.Repository;
 using AggregationService.Domain.Entities;
 using AggregationService.Domain.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using Shared.Infrastructure.Bus;
 using Shared.IntegrationEvents.IntegrationEvents.Aggregation;
 using StackExchange.Redis;
@@ -15,14 +17,17 @@ public class AggregationConfigurationService : IAggregationConfigurationService
     private readonly IAggregationConfigurationRepository _aggregationConfigurationRepository;
     private readonly IDatabase _db;
     private readonly IMessageBus _messageBus;
+    private readonly IConfigurationStore _configurationStore;
     public AggregationConfigurationService(
                                         IAggregationConfigurationRepository aggregationConfigurationRepository,
                                         IConnectionMultiplexer redisConnection,
-                                        IMessageBus messageBus)
+                                        IMessageBus messageBus,
+                                        IConfigurationStore configurationStore)
     {
         _aggregationConfigurationRepository = aggregationConfigurationRepository;
         _db = redisConnection.GetDatabase();
         _messageBus = messageBus;
+        _configurationStore = configurationStore;
     }
 
     public async Task AddAggregationWithConfigurationsAsync(CreateAggregationConfigurationModel model)
@@ -40,31 +45,31 @@ public class AggregationConfigurationService : IAggregationConfigurationService
             model.Key
         );
 
-        await _aggregationConfigurationRepository.InsertAsync(aggregation);
-        await _aggregationConfigurationRepository.SaveChangesAsync();
+        await _aggregationConfigurationRepository.AddConfigurationsAsync(new List<AggregationConfiguration> { aggregation });
     }
 
     public async Task UpdateAggregationAsync(UpdateAggregationConfigurationModel model)
     {
-        var aggregation = await _aggregationConfigurationRepository.Query().FirstOrDefaultAsync(x => x.Id == model.Id);
+        var filter = Builders<AggregationConfiguration>.Filter.Eq(x => x.Id, model.Id);
+        var aggregation = await _aggregationConfigurationRepository.GetCollection().Find(filter).FirstOrDefaultAsync();
 
-        if (aggregation != default)
-        {
-            aggregation.Update(
-                model.EventProducer,
-                model.AggregationSubscriber,
-                model.Filters,
-                model.AggregationType,
-                model.EvaluationType,
-                model.PointEvaluationRules,
-                model.SelectionField,
-                model.Expiration,
-                model.PromotionId,
-                model.Key
-            );
+        if (aggregation == default)
+            throw new KeyNotFoundException($"Aggregation configuration with ID {model.Id} not found.");
 
-            await _aggregationConfigurationRepository.SaveChangesAsync();
-        }
+        aggregation.Update(
+            model.EventProducer,
+            model.AggregationSubscriber,
+            model.Filters,
+            model.AggregationType,
+            model.EvaluationType,
+            model.PointEvaluationRules,
+            model.SelectionField,
+            model.Expiration,
+            model.PromotionId,
+            model.Key
+        );
+
+        await _aggregationConfigurationRepository.UpdateAsync(aggregation, filter);
     }
 
     public async Task TriggerRequestAsync(TriggerAggregationEvent @event, AggregationConfiguration config)
@@ -97,7 +102,48 @@ public class AggregationConfigurationService : IAggregationConfigurationService
                         ConfigKey = config.Key,
                     }, config.AggregationSubscriber);
                 }
+
+                Console.WriteLine("TEST TRIGGER");
             }
         }
+    }
+
+    public async Task Test(TriggerAggregationEvent test, CancellationToken cancellationToken)
+    {
+        Console.WriteLine($"Received event: {System.Text.Json.JsonSerializer.Serialize(test)}");
+
+        await _configurationStore.ReloadConfigurationsAsync();
+
+        var filteredConfigurations = _configurationStore.GetAllConfigurations().Filter(test);
+
+        if (!filteredConfigurations.Any())
+        {
+            throw new InvalidOperationException($"No matching configurations found. Request: {System.Text.Json.JsonSerializer.Serialize(test)}");
+        }
+
+        var promotionIds = filteredConfigurations
+            .Select(config => config.PromotionId)
+            .Distinct()
+            .ToList();
+
+        Console.WriteLine($"Promotion IDs: {string.Join(", ", promotionIds)}");
+
+        var filter = Builders<AggregationConfiguration>.Filter.In(config => config.PromotionId, promotionIds);
+        var configurations = await _aggregationConfigurationRepository
+            .GetCollection()
+            .Find(filter)
+            .ToListAsync(cancellationToken);
+
+        if (!configurations.Any())
+        {
+            throw new InvalidOperationException($"No configurations found for PromotionIds: {string.Join(", ", promotionIds)}");
+        }
+
+        foreach (var config in configurations)
+        {
+            await TriggerRequestAsync(test, config);
+        }
+
+        Console.WriteLine("Trigger aggregation successfully processed.");
     }
 }

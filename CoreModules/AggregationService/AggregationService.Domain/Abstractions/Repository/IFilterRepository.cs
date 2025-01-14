@@ -1,4 +1,7 @@
 ﻿namespace AggregationService.Domain.Abstractions.Repository;
 
 
-public interface IFilterRepository : IBaseRepository<Filter> { }
+public interface IFilterRepository
+{
+
+}

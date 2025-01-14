@@ -6,15 +6,33 @@ namespace AggregationService.Domain.Extensions;
 
 public static class ConfigurationExtensions
 {
-    public static IEnumerable<AggregationConfiguration> Filter(this IEnumerable<AggregationConfiguration> aggregationConfigurations, TriggerAggregationEvent @event)
+    //public static IEnumerable<AggregationConfiguration> Filter(this IEnumerable<AggregationConfiguration> aggregationConfigurations, TriggerAggregationEvent @event)
+    //{
+    //    foreach (var config in aggregationConfigurations)
+    //    {
+    //        if (@event.PassesFilters(config))
+    //        {
+    //            yield return config;
+    //        }
+    //    }
+    //}
+    public static IEnumerable<AggregationConfiguration> Filter(
+    this IEnumerable<AggregationConfiguration> configurations,
+    TriggerAggregationEvent request)
     {
-        foreach (var config in aggregationConfigurations)
+        // Check if PromotionId exists in the request
+        if (!request.Data.TryGetValue("promotionId", out var promotionId))
         {
-            if (@event.PassesFilters(config))
-            {
-                yield return config;
-            }
+            throw new InvalidOperationException("PromotionId is missing in the event data.");
         }
+
+        // Filter configurations by PromotionId
+        var filtered = configurations.Where(config => config.PromotionId == promotionId);
+
+        Console.WriteLine($"Filtering by PromotionId: {promotionId}");
+        Console.WriteLine($"Filtered configurations: {System.Text.Json.JsonSerializer.Serialize(filtered)}");
+
+        return filtered;
     }
 
     private static string GenerateKeyBase(this AggregationConfiguration config, TriggerAggregationEvent @event)
