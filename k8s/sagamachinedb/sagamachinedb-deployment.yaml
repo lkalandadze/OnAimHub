@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sagamachinedb
+  namespace: onaimhub
+  labels:
+    app: sagamachinedb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sagamachinedb
+  template:
+    metadata:
+      labels:
+        app: sagamachinedb
+    spec:
+      containers:
+        - name: sagamachinedb
+          image: postgres:13
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: StateMachineDb
+            - name: POSTGRES_PASSWORD
+              value: '1234'
+            - name: POSTGRES_USER
+              value: postgres
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: sagamachinedb-data
+      restartPolicy: Always
+      volumes:
+        - name: sagamachinedb-data
+          persistentVolumeClaim:
+            claimName: sagamachinedb-data
