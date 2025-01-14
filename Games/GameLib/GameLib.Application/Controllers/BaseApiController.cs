@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿#nullable disable
+
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;

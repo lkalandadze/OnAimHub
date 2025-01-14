@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: levelapi
-          image: gvgroup/onaimhub-levelservice:latest  # Replace with your DockerHub image path
+          image: gvgroup/onaim-levelservice:latest  
           ports:
             - containerPort: 8080
           env:
@@ -27,11 +27,11 @@ spec:
               value: http://consul:8500
             - name: ConnectionStrings__Connection
               value: Host=leveldb;Port=5439;Database=OnAimLevel;Username=postgres;Password=Test1234!
-          command:
-            - "dotnet"
-            - "ef"
-            - "database"
-            - "update"
+          # command:
+          #   - "dotnet"
+          #   - "ef"
+          #   - "database"
+          #   - "update"
           resources:
             requests:
               memory: "256Mi"
@@ -44,6 +44,8 @@ spec:
               name: levelapi-cm0
               subPath: appsettings.json
       restartPolicy: Always
+      imagePullSecrets:
+        - name: dockerhub-secret
       volumes:
         - configMap:
             items:

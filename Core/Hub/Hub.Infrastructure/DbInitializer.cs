@@ -26,9 +26,17 @@ public class DbInitializer : BaseDbInitializer
     {
         if (!dbContext.Games.Any())
         {
-            var game = new Game("Wheel");
+            var games = new List<Game>
+            {
+                new Game("Wheel"),
+                new Game("PenaltyKicks"),
+            };
 
-            await dbContext.Games.AddAsync(game);
+            foreach (var game in games)
+            {
+                await dbContext.Games.AddAsync(game);
+            }
+
             await dbContext.SaveChangesAsync();
         }
     }
