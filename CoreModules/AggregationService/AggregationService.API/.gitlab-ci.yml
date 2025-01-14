@@ -48,7 +48,6 @@ tagged_latest_AggregationService:
     - main
   needs:
     - build_AggregationService
-  when: manual
 
 
 deploy_AggregationService:

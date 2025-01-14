@@ -48,8 +48,7 @@ tagged_latest_Core_Hub:
     - main
   needs:
     - build_Core_Hub
-  when: manual
-  
+
 
 deploy_Core_Hub:
   stage: deploy

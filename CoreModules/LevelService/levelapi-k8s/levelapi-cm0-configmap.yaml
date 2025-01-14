@@ -9,7 +9,7 @@ data:
         }
       },
       "ConnectionStrings": {
-        "OnAimLevel": "User ID=postgres;Password=Test1234!;Host=leveldb;Port=5439;Database=OnAimLevel;Pooling=true;" //Akaki
+        "OnAimLevel": "User ID=postgres;Password=Test1234!;Host=leveldb;Port=5439;Database=OnAimLevel;Pooling=true;" 
       },
       "JwtConfiguration": {
         "PublicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhRGzVPGyq8lyFY/6xgdZiQT06c5k6RLauQjuE8zk6iXNP1EX86xZ8iQ4K/pB4Pw6u4b3stAxwnbwyOYPBngVUA==",

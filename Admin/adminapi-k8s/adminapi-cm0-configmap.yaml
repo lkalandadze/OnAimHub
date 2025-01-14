@@ -4,7 +4,7 @@ data:
     {
       "ConnectionStrings": {
         "DefaultConnectionString": "Host=admindb;Port=5435;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;",
-        "HubDefaultConnectionString": "User ID=postgres;Password=1234;Server=hubdb;Port=5432;Database=OnAimHub;Pooling=true;",
+        "HubDefaultConnectionString": "User ID=postgres;Password=1234;Server=hubapidb;Port=5432;Database=OnAimHub;Pooling=true;",
         "LeaderBoardDefaultConnectionString": "User ID=postgres;Password=Test1234!;Server=leaderboarddb;Port=5432;Database=OnAimLeaderboard;Pooling=true;"
       },
       "MongoDB": {
