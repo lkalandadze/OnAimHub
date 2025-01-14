@@ -48,7 +48,6 @@ tagged_latest_Leaderboard:
     - main
   needs:
     - build_Leaderboard
-  when: manual
 
 deploy_Leaderboard:
   stage: deploy

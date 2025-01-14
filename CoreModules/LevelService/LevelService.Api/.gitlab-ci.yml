@@ -48,7 +48,7 @@ tagged_latest_LevelService:
     - main
   needs:
      - build_LevelService
-  when: manual
+
      
 deploy_LevelService:
   stage: deploy

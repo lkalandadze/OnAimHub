@@ -47,7 +47,7 @@ tagged_latest_admin:
     - main
   needs:
     - build_admin
-  when: manual
+
 
 deploy_admin:
   stage: deploy

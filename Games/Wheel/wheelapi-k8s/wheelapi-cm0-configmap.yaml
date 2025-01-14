@@ -10,8 +10,8 @@ data:
       },
       "AllowedHosts": "*",
       "ConnectionStrings": {
-        "GameConfig": "User ID =postgres;Password=1234;Server=192.168.10.49;Port=5432;Database=WheelConfig;Pooling=true;",
-        "GameHistory": "User ID =postgres;Password=1234;Server=192.168.10.49;Port=5432;Database=WheelHistory;Pooling=true;"
+        "GameConfig": "User ID =postgres;Password=Test1234!;Server=gameconfigdb;Port=5432;Database=WheelConfig;Pooling=true;",
+        "GameHistory": "User ID =postgres;Password=Test1234!;Server=gamehistorydb;Port=5433;Database=WheelHistory;Pooling=true;"
       },
       "GameInfoConfiguration": {
         "GameId": 1,
@@ -19,7 +19,7 @@ data:
         "ApiName": "WheelApi"
       },
       "HubApiConfiguration": {
-        "Host": "https://hubapi:8080/",
+        "Host": "https://hubapi:5002/",
         "Endpoints": {
           "BetTransaction": "HubApi/Game/BetTransaction",
           "WinTransaction": "HubApi/Game/WinTransaction"
@@ -58,7 +58,7 @@ data:
         "PrizeGenerationType": "RNG" //"Sequence"
       },
       "HubApi": {
-        "BaseUrl": "http://hubapi:8080/" //Akaki
+        "BaseUrl": "http://hubapi:5002/" 
       }
     }
 kind: ConfigMap

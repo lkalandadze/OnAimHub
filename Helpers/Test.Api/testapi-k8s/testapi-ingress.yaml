@@ -1,20 +1,21 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: aggregation-ingress
+  name: testapi-ingress
   namespace: onaimhub
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "false" # Set to "true" if SSL is configured
 spec:
+  ingressClassName: nginx
   rules:
-    - host: onaim.aggregation.dev.local
+    - host: onaim.testapi.dev.local
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: aggregation
+                name: testapi
                 port:
-                  number: 5006
+                  number: 5005
