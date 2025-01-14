@@ -1,11 +1,15 @@
 ﻿using AggregationService.Domain.Abstractions.Repository;
-using AggregationService.Domain.Entities;
-using AggregationService.Infrastructure.Persistance.Data;
+using AggregationService.Infrastructure.Persistance.MongoDB;
 
 namespace AggregationService.Infrastructure.Repositories;
 
-
-public class PointEvaluationRuleRepository(AggregationServiceContext context) : BaseRepository<AggregationServiceContext, PointEvaluationRule>(context), IPointEvaluationRuleRepository
+public class PointEvaluationRuleRepository : IPointEvaluationRuleRepository
 {
+    private readonly AggregationDbContext _databaseContext;
+
+    public PointEvaluationRuleRepository(AggregationDbContext databaseContext)
+    {
+        _databaseContext = databaseContext;
+    }
 }
 
