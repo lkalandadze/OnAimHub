@@ -9,8 +9,8 @@ using Microsoft.Extensions.Options;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
 using Shared.Infrastructure.Bus;
-using Wheel.Application.Models.Wheel;
 using Wheel.Application.Models.Round;
+using Wheel.Application.Models.Wheel;
 using Wheel.Application.Models.WheelPrize;
 using Wheel.Application.Services.Abstract;
 using Wheel.Domain.Entities;
@@ -68,7 +68,7 @@ public class WheelService : IWheelService
 
         return new InitialDataResponseModel()
         {
-            Prices = _configurationHolder.GetPrices(promotionId).OrderBy(p => p.Bet),
+            Prices = _configurationHolder.GetPrices(promotionId).OrderBy(p => p.BetAmount),
             Rounds = rounds,
         };
     }

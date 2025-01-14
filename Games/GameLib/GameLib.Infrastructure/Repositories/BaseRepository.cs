@@ -50,6 +50,13 @@ public abstract class BaseRepository<TContext, TAggregateRoot>(TContext context)
 
     public async Task SaveAsync()
     {
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 }
