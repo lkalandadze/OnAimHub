@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leveldb
+  namespace: onaimhub
+  labels:
+    app: leveldb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: leveldb
+  template:
+    metadata:
+      labels:
+        app: leveldb
+    spec:
+      containers:
+        - name: leveldb
+          image: postgres:13
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: OnAimLevel
+            - name: POSTGRES_PASSWORD
+              value: Test1234!
+            - name: POSTGRES_USER
+              value: postgres
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: leveldb-data
+      restartPolicy: Always
+      volumes:
+        - name: leveldb-data
+          persistentVolumeClaim:
+            claimName: leveldb-data
