@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: sagamachine
-          image: gvgroup/onaimhub-sagamachine:latest  
+          image: gvgroup/onaim-sagamachine:latest  
           ports:
             - containerPort: 8080
           # env:
@@ -43,6 +43,8 @@ spec:
               name: sagamachine-cm0
               subPath: appsettings.json
       restartPolicy: Always
+      imagePullSecrets:
+        - name: dockerhub-secret
       volumes:
         - configMap:
             items:

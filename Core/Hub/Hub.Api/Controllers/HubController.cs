@@ -10,6 +10,8 @@ using Hub.Application.Features.RewardFeatures.Commands.ClaimReward;
 using Hub.Application.Features.RewardFeatures.Dtos;
 using Hub.Application.Features.RewardFeatures.Queries.GetPlayerRewards;
 using Hub.Application.Models.Game;
+using Hub.Application.Services.Abstract;
+using Hub.Domain.Entities.DbEnums;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -22,6 +24,12 @@ namespace Hub.Api.Controllers;
 [ApiExplorerSettings(GroupName = "hub")]
 public class HubController : BaseApiController
 {
+    private readonly ITransactionService _transactionService;
+    public HubController(ITransactionService transactionService)
+    {
+        _transactionService = transactionService;
+    }
+
     #region Authentification
 
     [AllowAnonymous]
@@ -29,6 +37,24 @@ public class HubController : BaseApiController
     public async Task<ActionResult<Response<CreateAuthenticationTokenResponse>>> Authentificate(CreateAuthenticationTokenCommand request)
     {
         return Ok(await Mediator.Send(request));
+    }
+
+
+    [AllowAnonymous]
+    [HttpPost(nameof(TestTransaction))]
+    public async Task<IActionResult> TestTransaction()
+    {
+
+        int? gameId = 1;
+        string coinId = "37_string3";
+        decimal amount = 15;
+        AccountType fromAccount = Domain.Entities.DbEnums.AccountType.Game;
+        AccountType toAccount = Domain.Entities.DbEnums.AccountType.Player;
+        TransactionType transactionType = Domain.Entities.DbEnums.TransactionType.Bet;
+        int promotionId = 1;
+
+        await _transactionService.CreateTransactionWithEventAsync(gameId, coinId, amount, fromAccount, toAccount, transactionType, promotionId, null);
+        return Ok();
     }
 
     [AllowAnonymous]

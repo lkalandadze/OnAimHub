@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hubapi-ingress
+  name: sagamachine-ingress
   namespace: onaimhub
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
@@ -9,13 +9,13 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: onaim.hubapi.dev.local
+    - host: onaim.sagamachine.dev.local
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: hubapi
+                name: sagamachine
                 port:
-                  number: 5002
+                  number: 5007

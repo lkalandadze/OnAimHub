@@ -1,22 +1,15 @@
-﻿using Shared.Domain.Entities;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace AggregationService.Domain.Abstractions.Repository;
 
-public interface IBaseRepository<TAggregateRoot>
-    where TAggregateRoot : BaseEntity
+public interface IBaseRepository<T> where T : class
 {
-    Task<TAggregateRoot?> OfIdAsync(int id);
-
-    IQueryable<TAggregateRoot> Query(Expression<Func<TAggregateRoot, bool>>? expression = default);
-
-    Task<List<TAggregateRoot>> QueryAsync(Expression<Func<TAggregateRoot, bool>>? expression = default);
-
-    void Delete(TAggregateRoot aggregateRoot);
-
-    Task InsertAsync(TAggregateRoot aggregateRoot);
-
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
-
-    void Update(TAggregateRoot aggregateRoot);
+    Task AddAsync(T entity);
+    Task UpdateAsync(T entity, Expression<Func<T, bool>> predicate);
+    Task DeleteAsync(Expression<Func<T, bool>> predicate);
+    Task<T?> FindAsync(Expression<Func<T, bool>> predicate);
+    Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>>? predicate = null);
+    Task<long> CountAsync(Expression<Func<T, bool>>? predicate = null);
+    IQueryable<T> Query(Expression<Func<T, bool>>? predicate = null);
+    Task CommitChangesAsync();
 }

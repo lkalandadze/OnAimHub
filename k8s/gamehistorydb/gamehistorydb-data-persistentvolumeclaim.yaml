@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: leaderboarddb-data
+  name: gamehistorydb-data
   namespace: onaimhub
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
-
-
+      storage: 500Mi
+  storageClassName: local-path
+  

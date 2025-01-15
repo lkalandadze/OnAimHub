@@ -1,9 +1,10 @@
 ﻿using AggregationService.Application.Services.Abstract;
 using AggregationService.Domain.Abstractions.Repository;
+using AggregationService.Domain.Entities;
 using AggregationService.Domain.Extensions;
-using Consul;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using Shared.IntegrationEvents.IntegrationEvents.Aggregation;
 
 namespace AggregationService.Application.Consumers.Trigger;
@@ -29,21 +30,38 @@ public sealed class TriggerAggregationConsumer : IConsumer<TriggerAggregationEve
         var cancellationToken = context.CancellationToken;
         var request = context.Message;
 
+        Console.WriteLine($"Received event: {System.Text.Json.JsonSerializer.Serialize(request)}");
+
         var filteredConfigurations = _configurationStore.GetAllConfigurations().Filter(request);
 
-        var promotionIds = filteredConfigurations.Select(config => config.PromotionId).Distinct().ToList();
+        if (!filteredConfigurations.Any())
+        {
+            throw new InvalidOperationException($"No matching configurations found. Request: {System.Text.Json.JsonSerializer.Serialize(request)}");
+        }
 
-        if (!promotionIds.Any())
-            throw new InvalidOperationException($"No configurations found for the given event.");
+        var promotionIds = filteredConfigurations
+            .Select(config => config.PromotionId)
+            .Distinct()
+            .ToList();
 
-        var configurations = await _aggregationConfigurationRepository.Query()
-            .Where(config => promotionIds.Contains(config.PromotionId))
+        Console.WriteLine($"Promotion IDs: {string.Join(", ", promotionIds)}");
+
+        var filter = Builders<AggregationConfiguration>.Filter.In(config => config.PromotionId, promotionIds);
+        var configurations = await _aggregationConfigurationRepository
+            .GetCollection()
+            .Find(filter)
             .ToListAsync(cancellationToken);
 
         if (!configurations.Any())
+        {
             throw new InvalidOperationException($"No configurations found for PromotionIds: {string.Join(", ", promotionIds)}");
+        }
 
         foreach (var config in configurations)
+        {
             await _aggregationConfigurationService.TriggerRequestAsync(request, config);
+        }
+
+        Console.WriteLine("Trigger aggregation successfully processed.");
     }
 }

@@ -48,7 +48,7 @@ tagged_latest_ApiGateway:
     - main
   needs:
     - build_ApiGateway
-  when: manual
+
     
 deploy_ApiGateway:
   stage: deploy

@@ -1,11 +1,11 @@
-﻿using AggregationService.Application.Services.Abstract;
+﻿using AggregationService.Application.Consumers.Trigger;
+using AggregationService.Application.Services.Abstract;
 using AggregationService.Application.Services.Concrete;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Infrastructure.Bus;
 using Shared.Infrastructure.MassTransit;
-using Shared.IntegrationEvents.IntegrationEvents.Reward.Leaderboard;
 
 namespace AggregationService.Application;
 
@@ -33,7 +33,7 @@ public static class Extension
 
         services.AddMassTransit(x =>
         {
-            //x.AddConsumer<CreatePlayerAggregationConsumer>();
+            x.AddConsumer<TriggerAggregationConsumer>();
 
             x.UsingRabbitMq((context, cfg) =>
             {
@@ -41,6 +41,21 @@ public static class Extension
                 {
                     h.Username(rabbitMqOptions.User);
                     h.Password(rabbitMqOptions.Password);
+                });
+
+                var triggerAggregationQueue = rabbitMqOptions.Queues["TriggerAggregationQueue"];
+                cfg.ReceiveEndpoint(triggerAggregationQueue.QueueName, e =>
+                {
+                    var rabbitMqEndpoint = e as IRabbitMqReceiveEndpointConfigurator;
+                    foreach (var routingKey in triggerAggregationQueue.RoutingKeys)
+                    {
+                        rabbitMqEndpoint?.Bind(rabbitMqOptions.ExchangeName, x =>
+                        {
+                            x.RoutingKey = routingKey;
+                            x.ExchangeType = "fanout";
+                        });
+                    }
+                    e.ConfigureConsumer<TriggerAggregationConsumer>(context);
                 });
             });
         });

@@ -8,4 +8,5 @@ public interface IConfigurationStore
     IEnumerable<AggregationConfiguration> GetAllConfigurations();
     Task ReloadConfigurationsAsync();
     IEnumerable<AggregationConfiguration> GetConfigurationsByProducer(string eventProvider);
+
 }
