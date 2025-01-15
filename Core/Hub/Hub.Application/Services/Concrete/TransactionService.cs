@@ -51,7 +51,7 @@ public class TransactionService : ITransactionService
         // check and apply player balances
         await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, coinId, fromAccount, toAccount, amount, promotionId);
 
-        var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, null /* Needs Promotion id */);
+        var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, promotionId);
 
         await _transactionRepository.InsertAsync(transaction);
         await _unitOfWork.SaveAsync();
@@ -77,7 +77,7 @@ public class TransactionService : ITransactionService
         if (!player.HasPlayed)
             player.UpdateHasPlayed();
 
-        var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, null /* Needs Promotion id */);
+        var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, promotionId);
 
         await _transactionRepository.InsertAsync(transaction);
         await _unitOfWork.SaveAsync();
@@ -105,7 +105,7 @@ public class TransactionService : ITransactionService
 
             await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, coinId, fromAccount, toAccount, amount, promotionId);
 
-            var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, null);
+            var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, promotionId);
 
             await _transactionRepository.InsertAsync(transaction);
             await _unitOfWork.SaveAsync();
