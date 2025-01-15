@@ -5,6 +5,6 @@ using Wheel.Infrastructure.DataAccess;
 
 namespace Wheel.Infrastructure.Repositories;
 
-public class RoundRepository(WheelConfigDbContext context) : BaseRepository<WheelConfigDbContext, Round>(context), IRoundRepository
+public class WheelPrizeGroupRepository(WheelConfigDbContext context) : BaseRepository<WheelConfigDbContext, WheelPrizeGroup>(context), IWheelPrizeGroupRepository
 {
 }

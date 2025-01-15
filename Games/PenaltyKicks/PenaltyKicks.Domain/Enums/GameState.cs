@@ -3,6 +3,6 @@
 public enum GameState
 {
     InProgress = 1,
-    Won,
-    Lost
+    Won = 2,
+    Lost = 3,
 }

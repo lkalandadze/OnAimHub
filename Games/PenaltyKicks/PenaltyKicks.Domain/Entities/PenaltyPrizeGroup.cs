@@ -5,14 +5,14 @@ using Newtonsoft.Json;
 
 namespace PenaltyKicks.Domain.Entities;
 
-public class PenaltySeries : BasePrizeGroup<PenaltyPrize>
+public class PenaltyPrizeGroup : BasePrizeGroup<PenaltyPrize>
 {
-    public PenaltySeries()
+    public PenaltyPrizeGroup()
     {
         
     }
 
-    public PenaltySeries(IEnumerable<PenaltyPrize> prizes = null)
+    public PenaltyPrizeGroup(IEnumerable<PenaltyPrize> prizes = null)
     {
         Prizes = prizes.ToList() ?? [];
     }

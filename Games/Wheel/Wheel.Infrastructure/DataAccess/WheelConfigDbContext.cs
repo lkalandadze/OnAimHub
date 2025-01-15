@@ -10,7 +10,7 @@ public class WheelConfigDbContext(DbContextOptions<SharedGameConfigDbContext> op
     : SharedGameConfigDbContext<WheelConfiguration>(options)
 {
     public DbSet<WheelPrize> WheelPrizes { get; set; }
-    public DbSet<Round> Rounds { get; set; }
+    public DbSet<WheelPrizeGroup> WheelPrizeGroups { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

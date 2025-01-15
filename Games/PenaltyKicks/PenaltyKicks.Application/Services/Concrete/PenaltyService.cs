@@ -1,7 +1,6 @@
 ﻿using GameLib.Application.Configurations;
 using GameLib.Application.Holders;
 using GameLib.Application.Services.Abstract;
-using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -20,7 +19,6 @@ public class PenaltyService : IPenaltyService
 {
     private readonly IPriceRepository _priceRepository;
     private readonly IPenaltyGameRepository _gameRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IHubService _hubService;
     private readonly IAuthService _authService;
     private readonly ConfigurationHolder _configurationHolder;
@@ -30,7 +28,6 @@ public class PenaltyService : IPenaltyService
     public PenaltyService(
         IPriceRepository priceRepository,
         IPenaltyGameRepository gameRepository,
-        IUnitOfWork unitOfWork,
         IHubService hubService,
         IAuthService authService,
         ConfigurationHolder configurationHolder,
@@ -39,7 +36,6 @@ public class PenaltyService : IPenaltyService
     {
         _priceRepository = priceRepository;
         _gameRepository = gameRepository;
-        _unitOfWork = unitOfWork;
         _hubService = hubService;
         _authService = authService;
         _configurationHolder = configurationHolder;
@@ -105,8 +101,8 @@ public class PenaltyService : IPenaltyService
 
         await _hubService.BetTransactionAsync(_gameInfoConfig.GameId, promotionId, price.Value);
 
-        var penaltySeries = _configurationHolder.GetPrizeGroups(promotionId).Cast<PenaltySeries>().FirstOrDefault();
-        var prize = GeneratorHolder.GetPrize<PenaltyPrize>(penaltySeries!.Id);
+        var prizeGroup = _configurationHolder.GetPrizeGroups(promotionId).Cast<PenaltyPrizeGroup>().FirstOrDefault();
+        var prize = GeneratorHolder.GetPrize<PenaltyPrize>(prizeGroup!.Id);
 
         if (prize == null)
         {

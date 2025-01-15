@@ -4,7 +4,7 @@ using GameLib.Domain.Abstractions;
 
 namespace PenaltyKicks.Domain.Entities;
 
-public class PenaltyPrize : BasePrize<PenaltySeries>
+public class PenaltyPrize : BasePrize<PenaltyPrizeGroup>
 {
     public PenaltyPrize()
     {

@@ -3,6 +3,6 @@ using PenaltyKicks.Domain.Entities;
 
 namespace PenaltyKicks.Domain.Abstractions.Repository;
 
-public interface IPenaltySeriesRepository : IBaseRepository<PenaltySeries>
+public interface IPenaltyPrizeGroupRepository : IBaseRepository<PenaltyPrizeGroup>
 {
 }

@@ -2,9 +2,9 @@
 
 using Wheel.Application.Models.WheelPrize;
 
-namespace Wheel.Application.Models.Round;
+namespace Wheel.Application.Models.WheelPrizeGroup;
 
-public class RoundInitialData
+public class WheelPrizeGroupInitialData
 {
     public int Id { get; set; }
     public string Name { get; set; }

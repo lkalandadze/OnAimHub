@@ -114,7 +114,7 @@ namespace Wheel.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Rounds",
+                name: "WheelPrizeGroups",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -189,7 +189,7 @@ namespace Wheel.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_WheelPrizes_Rounds_PrizeGroupId",
                         column: x => x.PrizeGroupId,
-                        principalTable: "Rounds",
+                        principalTable: "WheelPrizeGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -221,7 +221,7 @@ namespace Wheel.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Rounds_ConfigurationId",
-                table: "Rounds",
+                table: "WheelPrizeGroups",
                 column: "ConfigurationId");
 
             migrationBuilder.CreateIndex(
@@ -257,7 +257,7 @@ namespace Wheel.Infrastructure.Migrations
                 name: "PrizeTypes");
 
             migrationBuilder.DropTable(
-                name: "Rounds");
+                name: "WheelPrizeGroups");
 
             migrationBuilder.DropTable(
                 name: "Coins");

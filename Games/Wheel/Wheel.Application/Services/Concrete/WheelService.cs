@@ -9,9 +9,9 @@ using Microsoft.Extensions.Options;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
 using Shared.Infrastructure.Bus;
-using Wheel.Application.Models.Round;
 using Wheel.Application.Models.Wheel;
 using Wheel.Application.Models.WheelPrize;
+using Wheel.Application.Models.WheelPrizeGroup;
 using Wheel.Application.Services.Abstract;
 using Wheel.Domain.Entities;
 
@@ -47,13 +47,13 @@ public class WheelService : IWheelService
 
     public InitialDataResponseModel GetInitialData(int promotionId)
     {
-        var mappedRounds = _configurationHolder.GetPrizeGroups(promotionId).Cast<Round>();
+        var mappedPrizeGroups = _configurationHolder.GetPrizeGroups(promotionId).Cast<WheelPrizeGroup>();
 
-        var rounds = mappedRounds.Select(round => new RoundInitialData
+        var prizeGroups = mappedPrizeGroups.Select(prizeGroup => new WheelPrizeGroupInitialData
         {
-            Id = round.Id,
-            Name = round.Name,
-            Prizes = round.GetBasePrizes()
+            Id = prizeGroup.Id,
+            Name = prizeGroup.Name,
+            Prizes = prizeGroup.GetBasePrizes()
                 .Cast<WheelPrize>()
                 .OrderBy(prize => prize.WheelIndex) // Sort prizes by WheelIndex
                 .Select(prize => new WheelPrizeInitialData
@@ -69,7 +69,7 @@ public class WheelService : IWheelService
         return new InitialDataResponseModel()
         {
             Prices = _configurationHolder.GetPrices(promotionId).OrderBy(p => p.BetAmount),
-            Rounds = rounds,
+            PrizeGroups = prizeGroups,
         };
     }
 
@@ -98,8 +98,8 @@ public class WheelService : IWheelService
 
         await _hubService.BetTransactionAsync(_gameInfoConfig.GameId, request.PromotionId, price.Value);
 
-        var round = _configurationHolder.GetPrizeGroups(request.PromotionId).Cast<Round>().FirstOrDefault();
-        var prize = GeneratorHolder.GetPrize<TPrize>(round!.Id);
+        var prizeGroup = _configurationHolder.GetPrizeGroups(request.PromotionId).Cast<WheelPrizeGroup>().FirstOrDefault();
+        var prize = GeneratorHolder.GetPrize<TPrize>(prizeGroup!.Id);
 
         if (prize == null)
         {

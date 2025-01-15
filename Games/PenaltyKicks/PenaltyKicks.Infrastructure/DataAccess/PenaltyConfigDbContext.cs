@@ -11,7 +11,7 @@ public class PenaltyConfigDbContext(DbContextOptions<SharedGameConfigDbContext> 
 {
     public DbSet<PenaltyGame> PenaltyGame { get; set; }
     public DbSet<PenaltyPrize> PenaltyPrizes { get; set; }
-    public DbSet<PenaltySeries> PenaltySeries { get; set; }
+    public DbSet<PenaltyPrizeGroup> PenaltyPrizeGroups { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

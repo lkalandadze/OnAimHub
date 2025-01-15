@@ -5,6 +5,6 @@ using PenaltyKicks.Infrastructure.DataAccess;
 
 namespace PenaltyKicks.Infrastructure.Repositories;
 
-public class PenaltySeriesRepository(PenaltyConfigDbContext context) : BaseRepository<PenaltyConfigDbContext, PenaltySeries>(context), IPenaltySeriesRepository
+public class PenaltyPrizeGroupRepository(PenaltyConfigDbContext context) : BaseRepository<PenaltyConfigDbContext, PenaltyPrizeGroup>(context), IPenaltyPrizeGroupRepository
 {
 }

@@ -11,12 +11,12 @@ public class PenaltyConfiguration : GameConfiguration<PenaltyConfiguration>
 
     }
 
-    public PenaltyConfiguration(string name, int value, int promotionId, Guid? correlationId = null, string templateId = null, IEnumerable<Price> prices = null, IEnumerable<PenaltySeries> penaltySeries = null)
+    public PenaltyConfiguration(string name, int value, int promotionId, Guid? correlationId = null, string templateId = null, IEnumerable<Price> prices = null, IEnumerable<PenaltyPrizeGroup> prizeGroups = null)
         : base(name, value, promotionId, correlationId, templateId, prices)
     {
-        PenaltySeries = penaltySeries.ToList() ?? [];
+        PenaltyPrizeGroups = prizeGroups.ToList() ?? [];
     }
 
     public int KicksCount { get; set; }
-    public ICollection<PenaltySeries> PenaltySeries { get; set; }
+    public ICollection<PenaltyPrizeGroup> PenaltyPrizeGroups { get; set; }
 }

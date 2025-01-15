@@ -1,13 +1,12 @@
-﻿using CheckmateValidations;
+﻿using Checkmate;
+using CheckmateValidations;
 using Wheel.Domain.Entities;
-using Checkmate;
-using System.Linq;
 
 namespace Wheel.Domain.Checkers;
 
-public class RoundChecker : Checkmate<Round>
+public class WheelPrizeGroupChecker : Checkmate<WheelPrizeGroup>
 {
-    public RoundChecker() : base()
+    public WheelPrizeGroupChecker() : base()
     {
         Check(x => x.Name)
             .IsNotNull()

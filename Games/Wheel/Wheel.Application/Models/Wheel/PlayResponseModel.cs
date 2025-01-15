@@ -1,7 +1,5 @@
 ﻿#nullable disable
 
-using Wheel;
-
 namespace Wheel.Application.Models.Wheel;
 
 public class PlayResponseModel

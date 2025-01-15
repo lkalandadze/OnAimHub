@@ -7,21 +7,21 @@ using Wheel.Domain.Checkers;
 namespace Wheel.Domain.Entities;
 
 [CheckMate<WheelPrizeChecker>]
-public class WheelPrize : BasePrize<Round>
+public class WheelPrize : BasePrize<WheelPrizeGroup>
 {
     public WheelPrize()
     {
 
     }
 
-    public WheelPrize(string name, int? roundId = null, int? wheelIndex = null) : base()
+    public WheelPrize(string name, int? prizeGroupId = null, int? wheelIndex = null) : base()
     {
         Name = name;
         WheelIndex = wheelIndex;
 
-        if (roundId != null)
+        if (prizeGroupId != null)
         {
-            PrizeGroupId = roundId.Value;
+            PrizeGroupId = prizeGroupId.Value;
         }
     }
 

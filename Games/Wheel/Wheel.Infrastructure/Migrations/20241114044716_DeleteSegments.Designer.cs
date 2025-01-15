@@ -166,7 +166,7 @@ namespace Wheel.Infrastructure.Migrations
                     b.ToTable("JackpotPrizeGroups");
                 });
 
-            modelBuilder.Entity("Wheel.Domain.Entities.Round", b =>
+            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrizeGroup", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -192,7 +192,7 @@ namespace Wheel.Infrastructure.Migrations
 
                     b.HasIndex("ConfigurationId");
 
-                    b.ToTable("Rounds");
+                    b.ToTable("WheelPrizeGroups");
                 });
 
             modelBuilder.Entity("Wheel.Domain.Entities.WheelConfiguration", b =>
@@ -281,7 +281,7 @@ namespace Wheel.Infrastructure.Migrations
 
             modelBuilder.Entity("Wheel.Domain.Entities.JackpotPrize", b =>
                 {
-                    b.HasOne("Wheel.Domain.Entities.JackpotPrizeGroup", "PrizeGroup")
+                    b.HasOne("Wheel.Domain.Entities.JackpotPrizeGroup", "WheelPrizeGroup")
                         .WithMany("Prizes")
                         .HasForeignKey("PrizeGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -293,15 +293,15 @@ namespace Wheel.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("PrizeGroup");
+                    b.Navigation("WheelPrizeGroup");
 
                     b.Navigation("PrizeType");
                 });
 
-            modelBuilder.Entity("Wheel.Domain.Entities.Round", b =>
+            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrizeGroup", b =>
                 {
                     b.HasOne("Wheel.Domain.Entities.WheelConfiguration", "Configuration")
-                        .WithMany("Rounds")
+                        .WithMany("WheelPrizeGroups")
                         .HasForeignKey("ConfigurationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -311,7 +311,7 @@ namespace Wheel.Infrastructure.Migrations
 
             modelBuilder.Entity("Wheel.Domain.Entities.WheelPrize", b =>
                 {
-                    b.HasOne("Wheel.Domain.Entities.Round", "PrizeGroup")
+                    b.HasOne("Wheel.Domain.Entities.WheelPrizeGroup", "WheelPrizeGroup")
                         .WithMany("Prizes")
                         .HasForeignKey("PrizeGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -323,7 +323,7 @@ namespace Wheel.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("PrizeGroup");
+                    b.Navigation("WheelPrizeGroup");
 
                     b.Navigation("PrizeType");
                 });
@@ -340,7 +340,7 @@ namespace Wheel.Infrastructure.Migrations
                     b.Navigation("Prizes");
                 });
 
-            modelBuilder.Entity("Wheel.Domain.Entities.Round", b =>
+            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrizeGroup", b =>
                 {
                     b.Navigation("Prizes");
                 });
@@ -349,7 +349,7 @@ namespace Wheel.Infrastructure.Migrations
                 {
                     b.Navigation("Prices");
 
-                    b.Navigation("Rounds");
+                    b.Navigation("WheelPrizeGroups");
                 });
 #pragma warning restore 612, 618
         }

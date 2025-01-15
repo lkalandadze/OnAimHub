@@ -7,15 +7,15 @@ using System.Text.Json.Serialization;
 
 namespace Wheel.Domain.Entities;
 
-[CheckMate<RoundChecker>]
-public class Round : BasePrizeGroup<WheelPrize>
+[CheckMate<WheelPrizeGroupChecker>]
+public class WheelPrizeGroup : BasePrizeGroup<WheelPrize>
 {
-    public Round()
+    public WheelPrizeGroup()
     {
 
     }
 
-    public Round(string name, IEnumerable<WheelPrize> prizes = null)
+    public WheelPrizeGroup(string name, IEnumerable<WheelPrize> prizes = null)
     {
         Name = name;
         Prizes = prizes.ToList() ?? [];

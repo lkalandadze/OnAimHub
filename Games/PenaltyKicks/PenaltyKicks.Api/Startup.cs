@@ -66,12 +66,12 @@ public class Startup
         services.AddScoped<IPenaltyConfigurationRepository, PenaltyConfigurationRepository>();
         services.AddScoped<IPenaltyGameRepository, PenaltyGameRepository>();
         services.AddScoped<IPenaltyPrizeRepository, PenaltyPrizeRepository>();
-        services.AddScoped<IPenaltySeriesRepository, PenaltySeriesRepository>();
+        services.AddScoped<IPenaltyPrizeGroupRepository, PenaltyPrizeGroupRepository>();
         services.AddScoped<IMessageBus, MessageBus>();
 
         services.AddScoped<IPenaltyService, PenaltyService>();
 
-        var prizeGroupTypes = new List<Type> { typeof(PenaltySeries) };
+        var prizeGroupTypes = new List<Type> { typeof(PenaltyPrizeGroup) };
         services.ResolveGameLibServices<PenaltyConfiguration>(Configuration, prizeGroupTypes);
 
         ConfigureMassTransit(services, Configuration, env, consumerAssemblyMarkerType: typeof(Program));

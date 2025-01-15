@@ -59,12 +59,12 @@ public class Startup
                            .AllowAnyHeader();
                 });
         });
-        services.AddScoped<IRoundRepository, RoundRepository>();
+        services.AddScoped<IWheelPrizeGroupRepository, WheelPrizeGroupRepository>();
         services.AddScoped<IWheelPrizeRepository, WheelPrizeRepository>();
         services.AddScoped<IWheelConfigurationRepository, WheelConfigurationRepository>();
         services.AddScoped<IMessageBus, MessageBus>();
 
-        var prizeGroupTypes = new List<Type> { typeof(Round) };
+        var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup) };
         services.ResolveGameLibServices<WheelConfiguration>(Configuration, prizeGroupTypes);
 
         services.AddScoped<IWheelService, WheelService>();
