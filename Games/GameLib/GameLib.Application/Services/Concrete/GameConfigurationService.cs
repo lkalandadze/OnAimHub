@@ -1,4 +1,5 @@
 ﻿using GameLib.Application.Generators;
+using GameLib.Application.Holders;
 using GameLib.Application.Models.Configuration;
 using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Abstractions;
@@ -18,17 +19,20 @@ public class GameConfigurationService : IGameConfigurationService
     private readonly IPriceRepository _priceRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly EntityGenerator _entityGenerator;
+    private readonly ConfigurationHolder _configurationHolder;
 
     public GameConfigurationService(
         IGameConfigurationRepository configurationRepository,
         IPriceRepository priceRepository,
         IUnitOfWork unitOfWork,
-        EntityGenerator entityGenerator)
+        EntityGenerator entityGenerator,
+        ConfigurationHolder configurationHolder)
     {
         _configurationRepository = configurationRepository;
         _priceRepository = priceRepository;
         _unitOfWork = unitOfWork;
         _entityGenerator = entityGenerator;
+        _configurationHolder = configurationHolder;
     }
 
     public Response<EntityMetadata?> GetConfigurationMetaData()
@@ -77,6 +81,11 @@ public class GameConfigurationService : IGameConfigurationService
                 nameof(BasePrize.CoinId),
                 (string coinId) => $"{configuration.PromotionId}_{coinId}");
 
+            lock (_configurationHolder.GameConfigurations)
+            {
+                _configurationHolder.GameConfigurations.Add(configuration.PromotionId, configuration);
+            }
+            
             _configurationRepository.InsertConfigurationTree(configuration);
             await _unitOfWork.SaveAsync();
         }
