@@ -45,6 +45,7 @@ public abstract class CreateCoinModel
                 asset.Description,
                 asset.ImageUrl,
                 promotionId,
+                asset.Value,
                 asset.TemplateId),
 
             CreateOutCoinModel outgoing => new OutCoin(
@@ -53,6 +54,7 @@ public abstract class CreateCoinModel
                 outgoing.Description,
                 outgoing.ImageUrl,
                 promotionId,
+                outgoing.Value,
                 outgoing.TemplateId,
                 withdrawOptions: withdrawOptions,
                 withdrawOptionGroups: withdrawOptionGroups),

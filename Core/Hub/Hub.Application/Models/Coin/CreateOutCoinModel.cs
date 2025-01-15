@@ -6,6 +6,7 @@ namespace Hub.Application.Models.Coin;
 
 public class CreateOutCoinModel : CreateCoinModel
 {
+    public decimal Value { get; set; }
     public string TemplateId { get; set; }
 
     public IEnumerable<int> WithdrawOptionIds { get; set; }

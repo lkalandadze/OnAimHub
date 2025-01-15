@@ -3,7 +3,7 @@ using Hub.Domain.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Hub.Infrastructure.TypeConfigurations;
+namespace Hub.Infrastructure.TypeConfigurations.CoinTypeConfigurations;
 
 public class CoinTypeConfiguration : IEntityTypeConfiguration<Coin>
 {

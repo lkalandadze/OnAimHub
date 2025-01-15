@@ -2,4 +2,4 @@
 
 namespace Hub.Application.Features.CoinFeatures.WithdrawOptionFeatures.Commands.DeleteWithdrawOptionGroup;
 
-public record DeleteWithdrawOptionGroup(int Id) : IRequest;
+public record DeleteWithdrawOptionGroup(IEnumerable<int> Ids) : IRequest;

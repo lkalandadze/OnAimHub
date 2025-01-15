@@ -53,9 +53,14 @@ public class HubController : BaseApiController
     #region Players
 
     [HttpGet(nameof(PlayerBalances))]
-    public async Task<ActionResult<GetPlayerBalanceResponse>> PlayerBalances()
+    public async Task<ActionResult<GetPlayerBalanceResponse>> PlayerBalances(int? promotionId)
     {
-        return Ok(await Mediator.Send(new GetPlayerBalanceQuery()));
+        var query = new GetPlayerBalanceQuery()
+        {
+            PromotionId = promotionId,
+        };
+
+        return Ok(await Mediator.Send(query));
     }
 
     [HttpGet(nameof(PlayerProgresses))]

@@ -11,13 +11,15 @@ public class OutCoin : Coin
         
     }
 
-    public OutCoin(string id, string name, string description, string imageUrl, int promotionId, string templateId = null, IEnumerable<WithdrawOption> withdrawOptions = null, IEnumerable<WithdrawOptionGroup> withdrawOptionGroups = null) 
+    public OutCoin(string id, string name, string description, string imageUrl, int promotionId, decimal value, string templateId = null, IEnumerable<WithdrawOption> withdrawOptions = null, IEnumerable<WithdrawOptionGroup> withdrawOptionGroups = null) 
         : base(id, name, description, imageUrl, CoinType.Out, promotionId, templateId)
     {
+        Value = value;
         WithdrawOptions = withdrawOptions?.ToList() ?? [];
         WithdrawOptionGroups = withdrawOptionGroups?.ToList() ?? [];
     }
 
+    public decimal Value { get; private set; }
     public ICollection<WithdrawOption> WithdrawOptions { get; private set; }
     public ICollection<WithdrawOptionGroup> WithdrawOptionGroups { get; private set; }
 

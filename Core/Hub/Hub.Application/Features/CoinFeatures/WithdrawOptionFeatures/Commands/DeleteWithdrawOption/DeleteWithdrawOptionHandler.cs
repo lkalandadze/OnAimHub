@@ -1,8 +1,6 @@
 ﻿using Hub.Domain.Abstractions;
 using Hub.Domain.Abstractions.Repository;
 using MediatR;
-using Shared.Application.Exceptions;
-using Shared.Application.Exceptions.Types;
 
 namespace Hub.Application.Features.CoinFeatures.WithdrawOptionFeatures.Commands.DeleteWithdrawOption;
 
@@ -19,15 +17,19 @@ public class DeleteWithdrawOptionHandler : IRequestHandler<DeleteWithdrawOption>
     
     public async Task<Unit> Handle(DeleteWithdrawOption request, CancellationToken cancellationToken)
     {
-        var withdrawOption = await _withdrawOptionRepository.OfIdAsync(request.Id);
-
-        if (withdrawOption == null)
+        foreach (var id in request.Ids)
         {
-            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"WithdrawOption with the specified ID: [{request.Id}] was not found.");
+            var withdrawOption = await _withdrawOptionRepository.OfIdAsync(id);
+
+            if (withdrawOption == null)
+            {
+                continue;
+            }
+
+            withdrawOption.Delete();
+            _withdrawOptionRepository.Update(withdrawOption);
         }
 
-        withdrawOption.Delete();
-        _withdrawOptionRepository.Update(withdrawOption);
         await _unitOfWork.SaveAsync(cancellationToken);
 
         return Unit.Value;

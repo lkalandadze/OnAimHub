@@ -9,8 +9,11 @@ public class AssetCoin : Coin
         
     }
 
-    public AssetCoin(string id, string name, string description, string imageUrl, int promotionId, string? templateId = null)
+    public AssetCoin(string id, string name, string description, string imageUrl, int promotionId, decimal value, string? templateId = null)
         : base(id, name, description, imageUrl, CoinType.Asset, promotionId, templateId)
     {
+        Value = value;
     }
+
+    public decimal Value { get; private set; }
 }

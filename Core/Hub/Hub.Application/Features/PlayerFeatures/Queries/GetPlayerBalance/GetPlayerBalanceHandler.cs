@@ -2,6 +2,7 @@
 using Hub.Application.Services.Abstract;
 using Hub.Domain.Abstractions.Repository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
 
@@ -27,11 +28,16 @@ public class GetPlayerBalanceHandler : IRequestHandler<GetPlayerBalanceQuery, Ge
             throw new ApiException(ApiExceptionCodeTypes.UnauthorizedAccessAttempt, "Unauthorized access attempt - player information is missing.");
         }
 
-        var balances = await _playerBalanceRepository.QueryAsync(x => x.PlayerId == player.Id);
+        var balances = _playerBalanceRepository.Query(x => x.PlayerId == player.Id);
+
+        if (request.PromotionId != null)
+        {
+            balances = balances.Where(b => b.PromotionId == request.PromotionId.Value);
+        }
 
         return new GetPlayerBalanceResponse
         {
-            Balances = balances.Select(x => PlayerBalanceBaseDtoModel.MapFrom(x)).OrderBy(b => b.Id),
+            Balances = (await balances.ToListAsync()).Select(x => PlayerBalanceBaseDtoModel.MapFrom(x)).OrderBy(b => b.Id),
             PlayerId = player.Id,
         };
     }
