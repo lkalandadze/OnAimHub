@@ -15,7 +15,7 @@ public class PenaltyGame : BaseEntity<int>
 
     public PenaltyGame(
         int playerId, 
-        string betPriceId, 
+        int betPriceId, 
         int prizeId,
         int prizeValue,
         decimal priceMultiplier,
@@ -36,7 +36,7 @@ public class PenaltyGame : BaseEntity<int>
     }
 
     public int PlayerId { get; private set; }
-    public string BetPriceId { get; private set; }
+    public int BetPriceId { get; private set; }
     public int PrizeId { get; private set; }
     public int PrizeValue { get; private set; }
     public decimal PriceMultiplier { get; private set; }

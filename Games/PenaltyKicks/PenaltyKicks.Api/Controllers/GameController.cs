@@ -23,7 +23,7 @@ public class GameController : BaseApiController
     }
 
     [HttpPost(nameof(PlaceBet))]
-    public async Task<ActionResult<BetResponseModel>> PlaceBet([Required] int promotionId, [Required] string betPriceId)
+    public async Task<ActionResult<BetResponseModel>> PlaceBet([Required] int promotionId, [Required] int betPriceId)
     {
         return Ok(await _penaltyService.PlaceBetAsync(promotionId, betPriceId));
     }

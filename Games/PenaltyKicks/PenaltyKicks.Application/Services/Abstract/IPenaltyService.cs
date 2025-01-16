@@ -7,7 +7,7 @@ public interface IPenaltyService
 {
     InitialDataResponseModel GetInitialDataAsync(int promotionId);
 
-    Task<BetResponseModel> PlaceBetAsync(int promotionId, string betPriceId);
+    Task<BetResponseModel> PlaceBetAsync(int promotionId, int betPriceId);
 
     Task<KickResponseModel> PenaltyKick(int promotionId);
 }

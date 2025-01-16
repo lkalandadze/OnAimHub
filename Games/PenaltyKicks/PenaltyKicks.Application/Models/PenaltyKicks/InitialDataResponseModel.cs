@@ -21,5 +21,5 @@ public class ActiveGameInfoInitialDataResponseModel
     public int CurrentKickIndex { get; set; }
     public int GoalsScored { get; set; }
     public int KicksRemaining { get; set; }
-    public string BetPriceId { get; set; }
+    public int BetPriceId { get; set; }
 }
