@@ -182,6 +182,16 @@ services:
       - leaderboarddb_data:/var/lib/postgresql/data
     command: -p 5438
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+ 
 volumes:
   admindb_data:
     driver: local
@@ -202,6 +212,8 @@ volumes:
   redis_data:
     driver: local
   rabbitmq:
+    driver: local
+  pgadmin_data:
     driver: local
 
  # postgres:
