@@ -12,8 +12,8 @@ using OnAim.Admin.Infrasturcture.Persistance.Data.Admin;
 namespace OnAim.Admin.Infrasturcture.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250106043611_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250115095933_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

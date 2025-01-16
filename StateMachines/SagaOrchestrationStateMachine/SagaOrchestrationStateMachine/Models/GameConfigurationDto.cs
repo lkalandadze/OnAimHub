@@ -10,5 +10,5 @@ public class GameConfigurationDto
     public int? PromotionId { get; set; }
     public string? FromTemplateId { get; set; }
     public List<PriceDto>? Prices { get; set; }
-    public List<RoundDto>? Rounds { get; set; }
+    public List<RoundDto>? WheelPrizeGroups { get; set; }
 }

@@ -21,7 +21,7 @@ public interface ICoinService
     Task<ApplicationResult> UpdateWithdrawOptionEndpoint(UpdateWithdrawOptionEndpointDto option);
     Task<ApplicationResult> CreateWithdrawOptionGroup(CreateWithdrawOptionGroupDto option);
     Task<ApplicationResult> UpdateWithdrawOptionGroup(UpdateWithdrawOptionGroupDto option);
-    Task<ApplicationResult> DeleteWithdrawOption(int id);
-    Task<ApplicationResult> DeleteWithdrawOptionEndpoint(int id);
-    Task<ApplicationResult> DeleteWithdrawOptiongroup(int id);
+    Task<ApplicationResult> DeleteWithdrawOption(List<int> id);
+    Task<ApplicationResult> DeleteWithdrawOptionEndpoint(List<int> id);
+    Task<ApplicationResult> DeleteWithdrawOptiongroup(List<int> id);
 }

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  ocelotapigateway:
+    build:
+      context: ../../
+      dockerfile: ApiGateways/ApiGateway/Dockerfile
+    ports:
+      - "5000:8080"
+    depends_on:
+      - consul
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - CONSUL_ADDRESS=${CONSUL_ADDRESS}
+    volumes:
+      - ./appsettings.json:/app/appsettings.json

@@ -46,21 +46,21 @@ public class UsersController : ApiControllerBase
 
     [HttpPost(nameof(Create))]
     [ProducesResponseType(typeof(CreateUserCommand), (int)HttpStatusCode.Created)]
-    [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(Contracts.ApplicationInfrastructure.Validation.Error), (int)HttpStatusCode.BadRequest)]
     public async Task<ApplicationResult> Create([FromBody] CreateUserCommand model)
         => await Mediator.Send(model);
 
     [HttpPost(nameof(Register))]
     [AllowAnonymous]
     [ProducesResponseType(typeof(RegistrationCommand), (int)HttpStatusCode.Created)]
-    [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(Contracts.ApplicationInfrastructure.Validation.Error), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Register([FromBody] RegistrationCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpPost(nameof(Login))]
     [AllowAnonymous]
     [ProducesResponseType(typeof(AuthResultDto), (int)HttpStatusCode.OK)]
-    [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(Contracts.ApplicationInfrastructure.Validation.Error), (int)HttpStatusCode.BadRequest)]
     public async Task<AuthResultDto> Login([FromBody] LoginUserRequest model)
         => await Mediator.Send(new LoginUserCommand(model));
 

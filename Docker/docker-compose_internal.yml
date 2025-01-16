@@ -1,0 +1,270 @@
+version: '3.9'
+
+services:
+  # redis:
+  #   image: redis:7
+  #   container_name: redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   command: ["redis-server", "--appendonly", "yes"]
+
+  # rabbitmq:
+  #   image: docker.io/masstransit/rabbitmq:latest
+  #   container_name: "rabbitmq"
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+
+  postgresql:
+    image: postgres:13
+    container_name: postgresql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test1234!
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+  
+  consul:
+    image: consul:1.7.14
+    ports:
+      - "8500:8500"
+    command: "consul agent -dev -client=0.0.0.0"
+
+  # ocelotapigateway:
+  #   build:
+  #     context: .
+  #     dockerfile: ApiGateways/ApiGateway/Dockerfile
+  #   ports:
+  #     - "5000:8080"
+  #   depends_on:
+  #     - consul
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+  #     - CONSUL_ADDRESS=${CONSUL_ADDRESS}
+
+  # wheelapi:
+  #   build:
+  #     context: .
+  #     dockerfile: Games/Wheel/Wheel.Api/Dockerfile
+  #   ports:
+  #     - "5001:8080"
+  #   depends_on:
+  #     - consul
+  #     - postgresql
+  #   environment:
+  #     - CONSUL_ADDRESS=${CONSUL_ADDRESS}
+  #     - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+  #     - ConnectionStrings__GameConfig=Host=postgresql;Port=5432;Database=WheelConfig;Username=postgres;Password=Test1234!
+  #     - ConnectionStrings__GameHistory=Host=postgresql;Port=5432;Database=WheelHistory;Username=postgres;Password=Test1234!
+       
+  hubapi:
+      extends:
+        file: ./hubapi/compose.yml
+        service: hubapi
+
+  # adminapi:
+  #   build:
+  #     context: .
+  #     dockerfile: Admin/OnAim.Admin.API/Dockerfile
+  #   ports:
+  #     - "5003:8080"
+  #   environment:
+  #     - ConnectionStrings__Connection=Host=postgresql;Port=5432;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;
+          
+
+  # aggregation:
+  #   build:
+  #     context: .
+  #     dockerfile: CoreModules/AggregationService/AggregationService.API/Dockerfile
+  #   ports:
+  #     - "5006:8080"
+  #   environment:
+  #     - ConnectionStrings__Connection=Host=postgresql;Port=5432;Database=aggregation;Username=postgres;Password=Test1234!;Pooling=true;
+
+  # sagamachine:
+  #   build: 
+  #     context: .
+  #     dockerfile: StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/Dockerfile
+  #   ports:
+  #     - "5007:8080"
+
+
+  # levelapi:
+  #   build:
+  #     context: .
+  #     dockerfile: CoreModules/LevelService/LevelService.Api/Dockerfile
+  #   ports:
+  #     - "5008:8080"
+  #   depends_on:
+  #     - consul
+  #     - postgresql
+  #   environment:
+  #     - CONSUL_ADDRESS=${CONSUL_ADDRESS}
+  #     - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+  #     - ConnectionStrings__Connection=Host=postgresql;Port=5432;Database=OnAimLevel;Username=postgres;Password=Test1234!
+      
+  # missionapi:
+  #   build:
+  #     context: .
+  #     dockerfile: CoreModules/MissionService/MissionService.Api/Dockerfile
+  #   ports:
+  #     - "5009:8080"
+  #   depends_on:
+  #     - consul
+  #     - postgresql
+  #   environment:
+  #     - CONSUL_ADDRESS=${CONSUL_ADDRESS}
+  #     - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+  #     - ConnectionStrings__OnAimMission=Host=postgresql;Port=5432;Database=OnAimMission;Username=postgres;Password=Test1234!
+      
+  # leaderboardapi:
+  #   build:
+  #     context: .
+  #     dockerfile: CoreModules/Leaderboard/Leaderboard.Api/Dockerfile
+  #   depends_on:
+  #     - consul
+  #   ports:
+  #     - "5004:8080"
+  #   environment:
+  #     - CONSUL_ADDRESS=${CONSUL_ADDRESS}
+  #     - ConnectionString__OnAimLeaderboard=Host=postgresql;Port=5432;Database=OnAimLeaderboard;Username=postgres;Password=Test1234!
+      
+  # testapi:
+  #   build:
+  #     context: .
+  #     dockerfile: Helpers/Test.Api/Dockerfile
+  #   ports:
+  #     - "5005:8080"
+
+  # hubdb:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: OnAimHub
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: Test1234!
+  #   ports:
+  #     - "5434:5432"
+  #   volumes:
+  #     - hubdb:/var/lib/postgresql/data
+
+
+  # gameconfigdb:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: WheelConfig
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: Test1234!
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - gameconfigdb_data:/var/lib/postgresql/data
+     
+  # gamehistorydb:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: WheelHistory
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: Test1234!
+  #   ports:
+  #     - "5433:5432"
+  #   volumes:
+  #     - gamehistorydb_data:/var/lib/postgresql/data
+
+  # admindb:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: OnAimAdmin
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: Test1234!
+  #   ports:
+  #     - "5435:5432"
+  #   volumes:
+  #     - admindb:/var/lib/postgresql/data
+      
+  # aggregationdb:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: aggregation
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: Test1234!
+  #   ports:
+  #     - "5438:5432"
+  #   volumes:
+  #     - aggregationdb:/var/lib/postgresql/data
+
+  # leveldb:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: OnAimLevel
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: Test1234!
+  #   ports:
+  #     - "5439:5432"
+  #   volumes:
+  #     - leveldb_data:/var/lib/postgresql/data
+      
+  # missiondb:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: OnAimMission
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: Test1234!
+  #   ports:
+  #     - "5437:5432"
+  #   volumes:
+  #     - missiondb_data:/var/lib/postgresql/data
+
+  # mongo:
+  #   image: mongo:latest
+  #   restart: always
+  #   container_name: mongo
+  #   ports:
+  #     - 27017:27017
+  #   volumes:
+  #     - mongo-data:/data/db
+  #   networks:
+  #     - mongo_net
+      
+  # leaderboarddb:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: OnAimLeaderboard
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: Test1234!
+  #   ports:
+  #     - "5436:5432"
+  #   volumes:
+  #     - leaderboarddb_data:/var/lib/postgresql/data
+
+volumes:
+  postgresql_data:
+    driver: local
+  gameconfigdb_data:
+    driver: local
+  gamehistorydb_data:
+    driver: local
+  admindb:
+    driver: local
+  mongo-data:
+    driver: local
+  missiondb_data:
+    driver: local
+  leveldb_data:
+    driver: local
+  leaderboarddb_data:
+    driver: local
+  aggregationdb:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  mongo_net:
+    driver: bridge

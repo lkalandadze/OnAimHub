@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using OnAim.Admin.API.Extensions;
+using OnAim.Admin.API.Middleware;
 using OnAim.Admin.APP;
 using OnAim.Admin.APP.Extensions;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
@@ -36,21 +37,21 @@ builder.Services.AddHttpClient<IHubApiClient, HubApiClient>(
 );
 
 
-builder.Services.Configure<SagaApiClientOptions>(
-builder.Configuration.GetSection("SagaApiClientOptions")
-);
-builder.Services.AddHttpClient<ISagaApiClient, SagaApiClient>(
-    (client, sp) =>
-    {
-        var catalogApiOptions = sp.GetRequiredService<IOptions<SagaApiClientOptions>>();
-        var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
-        catalogApiOptions.Value.NotBeNull();
+//builder.Services.Configure<SagaApiClientOptions>(
+//builder.Configuration.GetSection("SagaApiClientOptions")
+//);
+//builder.Services.AddHttpClient<ISagaApiClient, SagaApiClient>(
+//    (client, sp) =>
+//    {
+//        var catalogApiOptions = sp.GetRequiredService<IOptions<SagaApiClientOptions>>();
+//        var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
+//        catalogApiOptions.Value.NotBeNull();
 
-        var baseAddress = catalogApiOptions.Value.BaseApiAddress;
-        client.BaseAddress = new Uri(baseAddress);
-        return new SagaApiClient(client, catalogApiOptions, policyOptions, "admin", "password");
-    }
-);
+//        var baseAddress = catalogApiOptions.Value.BaseApiAddress;
+//        client.BaseAddress = new Uri(baseAddress);
+//        return new SagaApiClient(client, catalogApiOptions, policyOptions, "admin", "password");
+//    }
+//);
 
 builder.Services
                 .AddCustomAuthorization()
@@ -65,8 +66,6 @@ builder.AddCustomHttpClients();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddControllersWithViews()
-    //.AddNewtonsoftJson(options =>
-    //    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new CoinModelJsonConverter());
@@ -76,17 +75,19 @@ var app = builder.Build();
 
 app.UseSerilogRequestLogging();
 
+if (app.Environment.IsDevelopment())
+{
+}
+app.ApplyMigrations();
 app.UseSwagger();
 app.UseSwaggerUI();
-app.ApplyMigrations();
-
 app.UseCors("MyPolicy");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-//app.UseMiddleware<PermissionMiddleware>();
+app.UseMiddleware<PermissionMiddleware>();
 app.UseMiddleware<RequestHandlerMiddleware>();
 
 app.MapControllers();

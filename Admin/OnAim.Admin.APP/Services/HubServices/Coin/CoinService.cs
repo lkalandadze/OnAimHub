@@ -380,11 +380,11 @@ public class CoinService : ICoinService
         }
     }
 
-    public async Task<ApplicationResult> DeleteWithdrawOption(int id)
+    public async Task<ApplicationResult> DeleteWithdrawOption(List<int> ids)
     {
         var body = new 
         {
-            Id = id
+            Ids = ids
         };
 
         try
@@ -440,11 +440,11 @@ public class CoinService : ICoinService
         }
     }
 
-    public async Task<ApplicationResult> DeleteWithdrawOptionEndpoint(int id)
+    public async Task<ApplicationResult> DeleteWithdrawOptionEndpoint(List<int> ids)
     {
         var body = new
         {
-            Id = id
+            Ids = ids
         };
 
         try
@@ -500,11 +500,11 @@ public class CoinService : ICoinService
         }
     }
 
-    public async Task<ApplicationResult> DeleteWithdrawOptiongroup(int id)
+    public async Task<ApplicationResult> DeleteWithdrawOptiongroup(List<int> ids)
     {
         var body = new
         {
-            Id = id
+            Ids = ids
         };
 
         try

@@ -23581,7 +23581,7 @@ SELECT EXISTS (
 2024-12-05 13:41:02.647 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/api/Promotion/GetAllPromotion - null null
 2024-12-05 13:41:02.753 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.PromotionController.GetAllPromotion (OnAim.Admin.API)'
 2024-12-05 13:41:02.763 +04:00 [INF] Route matched with {action = "GetAllPromotion", controller = "Promotion"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllPromotion(OnAim.Admin.Contracts.Dtos.Promotion.PromotionFilter) on controller OnAim.Admin.API.Controllers.PromotionController (OnAim.Admin.API).
-2024-12-05 13:41:24.923 +04:00 [ERR] An error occurred using the connection to database 'OnAimHub' on server 'tcp://192.168.10.46:5432'.
+2024-12-05 13:41:24.923 +04:00 [ERR] An error occurred using the connection to database 'OnAimHub' on server 'tcp://192.168.88.142:5432'.
 2024-12-05 13:41:24.952 +04:00 [ERR] An exception occurred while iterating over the results of a query for context type 'OnAim.Admin.Infrasturcture.Persistance.Data.Hub.ReadOnlyDataContext'.
 System.InvalidOperationException: An exception has been raised that is likely due to a transient failure.
  ---> Npgsql.NpgsqlException (0x80004005): Exception while reading from stream
