@@ -7,5 +7,5 @@ namespace Wheel.Application.Models.Wheel;
 public class PlayRequestModel
 {
     public int PromotionId { get; set; }
-    public string BetPriceId { get; set; }
+    public int BetPriceId { get; set; }
 }

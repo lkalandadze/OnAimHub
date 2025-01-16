@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 namespace GameLib.Domain.Entities;
 
 [CheckMate<PriceChecker>]
-public class Price : BaseEntity<string>
+public class Price : BaseEntity<int>
 {
     public Price()
     {

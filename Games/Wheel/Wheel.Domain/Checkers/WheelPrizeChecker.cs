@@ -12,9 +12,9 @@ public class WheelPrizeChecker : Checkmate<WheelPrize>
           .IsNotNull()
           .WithMessage("The name should not be null.");
 
-        Check(x => x.Value)
-           .GreaterThan(0)
-           .WithMessage("The value must be positive");
+        //Check(x => x.Value)
+        //   .GreaterThan(0)
+        //   .WithMessage("The value must be positive");
 
         Check(x => x.Probability)
            .GreaterThan(0)
