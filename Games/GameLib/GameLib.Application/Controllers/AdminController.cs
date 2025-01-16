@@ -58,16 +58,16 @@ public class AdminController : BaseApiController
     }
 
     [HttpGet(nameof(Configurations))]
-    public async Task<ActionResult<IEnumerable<ConfigurationBaseGetModel>>> Configurations(int promotionId)
+    public async Task<ActionResult<IEnumerable<ConfigurationBaseGetModel>>> Configurations(int? configurationId, int? promotionId)
     {
-        return Ok(await _configurationService.GetAllAsync(promotionId));
+        return Ok(await _configurationService.GetAllAsync(configurationId, promotionId));
     }
 
-    [HttpGet(nameof(ConfigurationById))]
-    public async Task<ActionResult<GameConfiguration>> ConfigurationById(int id)
-    {
-        return Ok(await _configurationService.GetByIdAsync(id));
-    }
+    //[HttpGet(nameof(ConfigurationById))]
+    //public async Task<ActionResult<GameConfiguration>> ConfigurationById(int id)
+    //{
+    //    return Ok(await _configurationService.GetByIdAsync(id));
+    //}
 
     [HttpPost(nameof(CreateConfiguration))]
     public async Task<ActionResult> CreateConfiguration(GameConfiguration configuration)
