@@ -59,7 +59,7 @@ public static class Extension
         configureOptions?.Invoke(emailOptions);
         services.Configure<JwtConfiguration>(configuration.GetSection("JwtConfiguration"));
         services.AddSingleton<LeaderboardClientService>(sp =>
-        new LeaderboardClientService("http://192.168.10.42:8002", new HttpClient()));
+        new LeaderboardClientService("http://192.168.88.138:8002", new HttpClient()));
         services
             .AddScoped<IGameTemplateService, GameTemplateService>()
             .AddScoped<IPromotionService, PromotionService>()

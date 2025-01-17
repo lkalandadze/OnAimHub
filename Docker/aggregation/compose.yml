@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  aggregation:
+    build:
+      context: ../../../
+      dockerfile: CoreModules/AggregationService/AggregationService.API/Dockerfile
+    ports:
+      - "5006:8080"
+    environment:
+      - ConnectionStrings__Connection=Host=postgresql;Port=5432;Database=aggregation;Username=postgres;Password=Test1234!;Pooling=true;
+    volumes:
+      - ./appsettings.json:/app/appsettings.json
+
+  postgresql:
+    image: postgres:13
+    container_name: postgresql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test1234!
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+
+volumes:
+  postgresql_data:

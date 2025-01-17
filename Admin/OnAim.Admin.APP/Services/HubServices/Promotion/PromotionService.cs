@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.FileServices;
+using OnAim.Admin.APP.Services.GameServices;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
@@ -21,7 +24,7 @@ using OnAim.Admin.Infrasturcture.Repositories.Abstract;
 
 namespace OnAim.Admin.APP.Services.Hub.Promotion;
 
-public class PromotionService : IPromotionService
+public class PromotionService : BaseService, IPromotionService
 {
     private readonly IPromotionRepository<Domain.HubEntities.Promotion> _promotionRepository;
     private readonly IPromotionRepository<Domain.HubEntities.Coin.Coin> _coinRepo;
@@ -29,12 +32,15 @@ public class PromotionService : IPromotionService
     private readonly IReadOnlyRepository<Transaction> _transactionRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecord> _leaderboardRecordRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _leaderboardResultRepository;
-    private readonly ISagaApiClient _sagaApiClient;
+    //private readonly ISagaApiClient _sagaApiClient;
     private readonly IHubApiClient _hubApiClient;
     private readonly ISecurityContextAccessor _securityContextAccessor;
     private readonly IPromotionRepository<Service> _serviceRepository;
+    private readonly ILogger<PromotionService> _logger;
+    private readonly LeaderboardClientService _leaderboardClientService;
+    private readonly IGameService _gameService;
     private readonly HubApiClientOptions _options;
-    private readonly SagaApiClientOptions _sagaOptions;
+    //private readonly SagaApiClientOptions _sagaOptions;
 
     public PromotionService(
         IPromotionRepository<Domain.HubEntities.Promotion> promotionRepository,
@@ -43,12 +49,15 @@ public class PromotionService : IPromotionService
         IReadOnlyRepository<Transaction> transactionRepository,
         ILeaderBoardReadOnlyRepository<LeaderboardRecord> leaderboardRecordRepository,
         ILeaderBoardReadOnlyRepository<LeaderboardResult> leaderboardResultRepository,
-        ISagaApiClient sagaApiClient,
-        IOptions<SagaApiClientOptions> sagaOptions,
+        //ISagaApiClient sagaApiClient,
+        //IOptions<SagaApiClientOptions> sagaOptions,
         IHubApiClient hubApiClient,
         IOptions<HubApiClientOptions> options,
         ISecurityContextAccessor securityContextAccessor,
-        IPromotionRepository<Service> serviceRepository
+        IPromotionRepository<Service> serviceRepository,
+        ILogger<PromotionService> logger,
+        LeaderboardClientService leaderboardClientService,
+        IGameService gameService
         )
     {
         _promotionRepository = promotionRepository;
@@ -57,12 +66,15 @@ public class PromotionService : IPromotionService
         _transactionRepository = transactionRepository;
         _leaderboardRecordRepository = leaderboardRecordRepository;
         _leaderboardResultRepository = leaderboardResultRepository;
-        _sagaApiClient = sagaApiClient;
+        //_sagaApiClient = sagaApiClient;
         _hubApiClient = hubApiClient;
         _securityContextAccessor = securityContextAccessor;
         _serviceRepository = serviceRepository;
+        _logger = logger;
+        _leaderboardClientService = leaderboardClientService;
+        _gameService = gameService;
         _options = options.Value;
-        _sagaOptions = sagaOptions.Value;
+        //_sagaOptions = sagaOptions.Value;
     }
 
     public async Task<ApplicationResult> GetAllPromotions(PromotionFilter filter)
@@ -396,17 +408,162 @@ public class PromotionService : IPromotionService
         };
     }
 
-    public async Task<ApplicationResult> CreatePromotion(CreatePromotionDto create)
+    public async Task<ApplicationResult> CreatePromotion(CreatePromotionDto request)
     {
+        var correlationId = Guid.NewGuid();
         try
-        {        
-            create.CreatedByUserId = _securityContextAccessor.UserId;
-            var res = await _sagaApiClient.PostAsJsonAndSerializeResultTo<object>($"{_sagaOptions.Endpoint}", create);
-            return new ApplicationResult { Success = true, Data = res };
+        {
+            request.Promotion.CorrelationId = correlationId;
+            int promotionId;
+
+            try
+            {
+                var res = await CreatePromotionAsync(request.Promotion);
+                promotionId = res.PromotionId;
+                _logger.LogInformation("Promotion created successfully: {PromotionId}", promotionId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating promotion.");
+                await CompensateAsync(correlationId);
+
+                return await Fail(new Error
+                {
+                    Message = $"{ex.Message}",
+                    Code = StatusCodes.Status500InternalServerError,
+                });
+            }
+
+            if (request.Leaderboards.Count != 0)
+            {
+                try
+                {
+                    foreach (var leaderboard in request.Leaderboards)
+                    {
+                        leaderboard.CorrelationId = correlationId;
+                        leaderboard.PromotionId = promotionId;
+
+                        if (leaderboard != null)
+                        {
+                            try
+                            {
+                                var command = new CreateLeaderboardRecordCommand
+                                {
+                                    AnnouncementDate = leaderboard.AnnouncementDate,
+                                    CorrelationId = correlationId,
+                                    Description = leaderboard.Description,
+                                    EndDate = leaderboard.EndDate,
+                                    EventType = (EventType)leaderboard.EventType,
+                                    IsGenerated = leaderboard.IsGenerated,
+                                    LeaderboardPrizes = leaderboard.LeaderboardPrizes.Select(x => new CreateLeaderboardRecordPrizeCommandItem
+                                    {
+                                        CoinId = $"{promotionId}_{x.Coin}",
+                                        Amount = x.Amount,
+                                        EndRank = x.EndRank,
+                                        StartRank = x.StartRank,
+                                    }).ToList(),
+                                    PromotionId = promotionId,
+                                    PromotionName = leaderboard.PromotionName,
+                                    RepeatType = (RepeatType)leaderboard.RepeatType,
+                                    RepeatValue = leaderboard.RepeatValue,
+                                    ScheduleId = leaderboard.ScheduleId,
+                                    StartDate = leaderboard.StartDate,
+                                    Status = (LeaderboardRecordStatus)leaderboard.Status,
+                                    TemplateId = leaderboard.TemplateId,
+                                    Title = leaderboard.Title,
+                                    CreatedBy = _securityContextAccessor.UserId,
+                                };
+
+                                var leaderboardResponse = await CreateLeaderboardRecordAsync(command);
+                                _logger.LogInformation("LeaderboardRecord created successfully: {LeaderboardRecord}", leaderboardResponse);
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, "Error creating leaderboard record.");
+                                await CompensateAsync(correlationId);
+
+                                return await Fail(new Error
+                                {
+                                    Message = $"{ex.Message}",
+                                    Code = StatusCodes.Status500InternalServerError,
+                                });
+                            }
+                        }
+
+                        _logger.LogInformation("Leaderboard created successfully: {Leaderboard}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error processing leaderboards.");
+                    await CompensateAsync(correlationId);
+
+                    return await Fail(new Error
+                    {
+                        Message = $"{ex.Message}",
+                        Code = StatusCodes.Status500InternalServerError,
+                    });
+                }
+            }
+
+            if (request.GameConfiguration.Count != 0)
+            {
+                try
+                {
+                    foreach (var config in request.GameConfiguration)
+                    {
+                        //config.GameConfiguration.CorrelationId = correlationId;
+                        //config.GameConfiguration.PromotionId = promotionId;
+
+                        if (config != null)
+                        {
+                            try
+                            {
+                                var gameResponse = await CreateGameConfiguration(config.GameName, config.GameConfiguration);
+                                _logger.LogInformation("Game configuration created successfully: {ConfigId}", gameResponse);
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, "Error creating game configuration.");
+                                await CompensateAsync(correlationId);
+
+                                return await Fail(new Error
+                                {
+                                    Message = $"{ex.Message}",
+                                    Code = StatusCodes.Status500InternalServerError,
+                                });
+                            }
+                        }
+
+                        _logger.LogInformation("Game configuration created successfully: {Configuration}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error processing game configurations.");
+                    await CompensateAsync(correlationId);
+
+                    return await Fail(new Error
+                    {
+                        Message = $"{ex.Message}",
+                        Code = StatusCodes.Status500InternalServerError,
+                    });
+                }
+            }
+
+            _logger.LogInformation("Saga completed successfully.");
+            return new ApplicationResult { Success = true, Data = correlationId };
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message, ex);
+            _logger.LogError(ex, "Error during Saga execution.");
+            await CompensateAsync(correlationId);
+
+            return await Fail(new Error
+            {
+                Message = $"{ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
         }
     }
 
@@ -467,6 +624,67 @@ public class PromotionService : IPromotionService
             throw new Exception(ex.Message, ex);
         }
     }
+
+    private async Task<PromotionResponse> CreatePromotionAsync(CreatePromotionCommandDto request)
+    {
+        try
+        {
+            var promotionId = await _hubApiClient.PostAsJsonAndSerializeResultTo<PromotionResponse>($"{_options.Endpoint}Admin/CreatePromotion", request);
+            return promotionId;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to create promotion.");
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    private async Task<ApplicationResult> CreateLeaderboardRecordAsync(CreateLeaderboardRecordCommand leaderboard)
+    {
+        try
+        {
+            await _leaderboardClientService.CreateLeaderboardRecordAsync(leaderboard);
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    private async Task<ApplicationResult> CreateGameConfiguration(string name, object configurationJson)
+    {
+        try
+        {
+            await _gameService.CreateConfiguration(name, configurationJson);
+            return new ApplicationResult { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    private async Task CompensateAsync(Guid request)
+    {
+        try
+        {
+            var body = new
+            {
+
+            };
+            var lead = new DeleteLeaderboardRecordCommand();
+            lead.CorrelationId = request;
+            await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/DeletePromotion", body);
+            await _leaderboardClientService.DeleteLeaderboardRecordAsync(lead);
+            //await _wheelApiClientApiClient.Delete($"{_leaderBoardApiClientOptions.Endpoint}DeleteLeaderboardRecord", request);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to create promotion.");
+            throw new Exception(ex.Message, ex);
+        }
+    }
 }
 public class PlayerTransactionDto
 {
@@ -498,8 +716,17 @@ public class CreatePromotionCommandDto
 }
 public class CreatePromotionDto
 {
-    public int? CreatedByUserId { get; set; }
     public CreatePromotionCommandDto Promotion { get; set; }
     public List<CreateLeaderboardRecord>? Leaderboards { get; set; }
     public List<GameConfigDto>? GameConfiguration { get; set; }
+}
+public class PromotionResponse
+{
+    public int PromotionId { get; set; }
+    public List<PromotionResponseCoin> Coins { get; set; }
+}
+public class PromotionResponseCoin
+{
+    public string Id { get; set; }
+    public string CoinName { get; set; }
 }

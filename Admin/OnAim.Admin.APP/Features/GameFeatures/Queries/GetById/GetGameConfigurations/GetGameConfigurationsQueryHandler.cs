@@ -14,7 +14,7 @@ public class GetGameConfigurationsQueryHandler : IQueryHandler<GetGameConfigurat
     }
     public async Task<ApplicationResult> Handle(GetGameConfigurationsQuery request, CancellationToken cancellationToken)
     {
-        var res = await _gameService.GetConfigurations(request.Name, request.PromotionId);
+        var res = await _gameService.GetConfigurations(request.Name, request.PromotionId, request.ConfigurationId);
 
         return new ApplicationResult { Data = res };
     }

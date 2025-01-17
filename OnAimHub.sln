@@ -144,7 +144,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateways\A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{EE94F689-46A1-4602-B1E2-973885B7AA6C}"
 	ProjectSection(SolutionItems) = preProject
+		Docker\.dockerignore = Docker\.dockerignore
+		.env = .env
 		docker-compose.yml = docker-compose.yml
+		Docker\docker-compose_internal.yml = Docker\docker-compose_internal.yml
+		Docker\Infrastructure.yml = Docker\Infrastructure.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{85636CEE-9827-4A53-AF0B-370ACC7732FD}"
@@ -171,25 +175,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWheel.Infrastructure", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AggregationService", "AggregationService", "{4997A204-600A-4280-AC7D-BBEC16062EF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationService.API", "CoreModules\AggregationService\AggregationService.API\AggregationService.API.csproj", "{253F286A-A3C1-455F-8C2A-DA97534ECE8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AggregationService.API", "CoreModules\AggregationService\AggregationService.API\AggregationService.API.csproj", "{253F286A-A3C1-455F-8C2A-DA97534ECE8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationService.Application", "CoreModules\AggregationService\AggregationService.Application\AggregationService.Application.csproj", "{205E6970-FB63-4010-B2D9-31A73290D020}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AggregationService.Application", "CoreModules\AggregationService\AggregationService.Application\AggregationService.Application.csproj", "{205E6970-FB63-4010-B2D9-31A73290D020}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationService.Domain", "CoreModules\AggregationService\AggregationService.Domain\AggregationService.Domain.csproj", "{D5E7FAE2-AEC2-423A-8D46-B3109018A3DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AggregationService.Domain", "CoreModules\AggregationService\AggregationService.Domain\AggregationService.Domain.csproj", "{D5E7FAE2-AEC2-423A-8D46-B3109018A3DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationService.Infrastructure", "CoreModules\AggregationService\AggregationService.Infrastructure\AggregationService.Infrastructure.csproj", "{8544848C-4D48-402C-8816-2BC6E79E4557}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AggregationService.Infrastructure", "CoreModules\AggregationService\AggregationService.Infrastructure\AggregationService.Infrastructure.csproj", "{8544848C-4D48-402C-8816-2BC6E79E4557}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationService.IntegrationEvents", "CoreModules\AggregationService\AggregationService.IntegrationEvents\AggregationService.IntegrationEvents.csproj", "{96D75D30-5FCA-49FD-BF62-00A1E4CCD02F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AggregationService.IntegrationEvents", "CoreModules\AggregationService\AggregationService.IntegrationEvents\AggregationService.IntegrationEvents.csproj", "{96D75D30-5FCA-49FD-BF62-00A1E4CCD02F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PenaltyKicks", "PenaltyKicks", "{4DE19697-5278-4A2E-8052-1C3F7F3B4BA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenaltyKicks.Api", "Games\PenaltyKicks\PenaltyKicks.Api\PenaltyKicks.Api.csproj", "{487209D4-1A3C-4AF8-8CA0-FCF365BD40A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenaltyKicks.Api", "Games\PenaltyKicks\PenaltyKicks.Api\PenaltyKicks.Api.csproj", "{487209D4-1A3C-4AF8-8CA0-FCF365BD40A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenaltyKicks.Application", "Games\PenaltyKicks\PenaltyKicks.Application\PenaltyKicks.Application.csproj", "{D44D1B77-F19E-40DA-B289-FAA08C096D76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenaltyKicks.Application", "Games\PenaltyKicks\PenaltyKicks.Application\PenaltyKicks.Application.csproj", "{D44D1B77-F19E-40DA-B289-FAA08C096D76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenaltyKicks.Domain", "Games\PenaltyKicks\PenaltyKicks.Domain\PenaltyKicks.Domain.csproj", "{118F2BE1-A5A3-4E16-A42D-4E2DCDD060A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenaltyKicks.Domain", "Games\PenaltyKicks\PenaltyKicks.Domain\PenaltyKicks.Domain.csproj", "{118F2BE1-A5A3-4E16-A42D-4E2DCDD060A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PenaltyKicks.Infrastructure", "Games\PenaltyKicks\PenaltyKicks.Infrastructure\PenaltyKicks.Infrastructure.csproj", "{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenaltyKicks.Infrastructure", "Games\PenaltyKicks\PenaltyKicks.Infrastructure\PenaltyKicks.Infrastructure.csproj", "{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

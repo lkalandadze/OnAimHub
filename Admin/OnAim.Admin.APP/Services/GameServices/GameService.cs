@@ -68,22 +68,9 @@ public class GameService : IGameService
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
     }
 
-    public async Task<object> GetConfiguration(string name, int id)
+    public async Task<object> GetConfigurations(string name, int promotionId, int? configurationId)
     {
-        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}Api/Admin/ConfigurationById?id={id}");
-
-        if (response.IsSuccessStatusCode)
-        {
-            var jsonString = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<ConfigurationResponse>(jsonString);
-        }
-
-        throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
-    }
-
-    public async Task<object> GetConfigurations(string name, int promotionId)
-    {
-        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}Api/Admin/Configurations?promotionId={promotionId}");
+        var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}Api/Admin/Configurations?configurationId={configurationId}&promotionId={promotionId}");
 
         if (response.IsSuccessStatusCode)
         {
@@ -121,7 +108,7 @@ public class GameService : IGameService
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
     }
 
-    public async Task<object> CreateConfiguration(string name, GameConfigurationDto configurationJson)
+    public async Task<object> CreateConfiguration(string name, object configurationJson)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -152,7 +139,7 @@ public class GameService : IGameService
         }
     }
 
-    public async Task<object> UpdateConfiguration(string name, GameConfigurationDto configurationJson)
+    public async Task<object> UpdateConfiguration(string name, object configurationJson)
     {
         if (name != null)
         {

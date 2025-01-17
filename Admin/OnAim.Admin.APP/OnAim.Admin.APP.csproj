@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="OpenAPIs\swagger3.json" CodeGenerator="NSwagCSharp" Options="LeaderboardClientService" ClassName="LeaderboardClientService">
+    <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" Options="LeaderboardClientService" ClassName="LeaderboardClientService">
       <SourceUri>https://localhost:7041/swagger/v1/swagger.json</SourceUri>
     </OpenApiReference>
   </ItemGroup>
@@ -53,12 +53,6 @@
     <ProjectReference Include="..\OnAim.Admin.CrossCuttingConcerns\OnAim.Admin.CrossCuttingConcerns.csproj" />
     <ProjectReference Include="..\OnAim.Admin.Domain\OnAim.Admin.Domain.csproj" />
     <ProjectReference Include="..\OnAim.Admin.Infrasturcture\OnAim.Admin.Infrasturcture.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="OpenAPIs\swagger.json" ClassName="LeaderboardClientService" />
-    <None Update="OpenAPIs\swagger1.json" ClassName="LeaderboardClientService" />
-    <None Update="OpenAPIs\swagger2.json" ClassName="LeaderboardClientService" />
   </ItemGroup>
 
 </Project>

@@ -51,7 +51,7 @@ public class ImageClient
     {
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri("http://192.168.10.42:8006/")
+            BaseAddress = new Uri("http://192.168.88.138:8006/")
         };
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
@@ -111,7 +111,7 @@ public class HubClient
     {
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri("http://192.168.10.42:5002/")
+            BaseAddress = new Uri("http://192.168.88.138:5002/")
         };
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }

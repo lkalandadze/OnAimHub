@@ -1,5 +1,4 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure.Validation;
-using OnAim.Admin.Domain.Entities;
+﻿using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using SendGrid.Helpers.Errors.Model;
 using System.Net;
@@ -56,7 +55,7 @@ public class RequestHandlerMiddleware
     private static async Task HandleExceptionAsync(HttpContext context, Exception error)
     {
         context.Response.ContentType = "application/json";
-        var errorsList = new List<Error>();
+        var errorsList = new List<OnAim.Admin.Contracts.ApplicationInfrastructure.Error>();
         context.Response.StatusCode = error switch
         {
             OnAim.Admin.CrossCuttingConcerns.Exceptions.BadRequestException => (int)HttpStatusCode.BadRequest,
@@ -67,7 +66,7 @@ public class RequestHandlerMiddleware
             _ => (int)HttpStatusCode.InternalServerError
         };
 
-        errorsList.Add(new Error
+        errorsList.Add(new OnAim.Admin.Contracts.ApplicationInfrastructure.Error
         {
             Code = context.Response.StatusCode,
             Message = error switch

@@ -1085,8 +1085,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 08:56:38.334 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:5002/hubapi/Admin/CreateWithdrawOptionEndpoint
-2024-12-26 08:56:38.335 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:5002/hubapi/Admin/CreateWithdrawOptionEndpoint
+2024-12-26 08:56:38.334 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:5002/hubapi/Admin/CreateWithdrawOptionEndpoint
+2024-12-26 08:56:38.335 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:5002/hubapi/Admin/CreateWithdrawOptionEndpoint
 2024-12-26 08:56:38.411 +04:00 [INF] Received HTTP response headers after 74.2804ms - 200
 2024-12-26 08:56:38.412 +04:00 [INF] End processing HTTP request after 79.3906ms - 200
 2024-12-26 08:56:38.422 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -2181,8 +2181,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:00:10.072 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:5002/hubapi/Admin/CreateWithdrawOptionEndpoint
-2024-12-26 09:00:10.073 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:5002/hubapi/Admin/CreateWithdrawOptionEndpoint
+2024-12-26 09:00:10.072 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:5002/hubapi/Admin/CreateWithdrawOptionEndpoint
+2024-12-26 09:00:10.073 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:5002/hubapi/Admin/CreateWithdrawOptionEndpoint
 2024-12-26 09:00:10.152 +04:00 [INF] Received HTTP response headers after 76.4985ms - 200
 2024-12-26 09:00:10.153 +04:00 [INF] End processing HTTP request after 82.2162ms - 200
 2024-12-26 09:00:10.157 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -2204,8 +2204,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:00:26.184 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:5002/hubapi/Admin/CreateWithdrawOptionEndpoint
-2024-12-26 09:00:26.185 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:5002/hubapi/Admin/CreateWithdrawOptionEndpoint
+2024-12-26 09:00:26.184 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:5002/hubapi/Admin/CreateWithdrawOptionEndpoint
+2024-12-26 09:00:26.185 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:5002/hubapi/Admin/CreateWithdrawOptionEndpoint
 2024-12-26 09:00:26.356 +04:00 [INF] Received HTTP response headers after 170.6069ms - 200
 2024-12-26 09:00:26.357 +04:00 [INF] End processing HTTP request after 173.5787ms - 200
 2024-12-26 09:11:05.787 +04:00 [INF] Executed DbCommand (31ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
@@ -3341,8 +3341,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:16:10.407 +04:00 [INF] Start processing HTTP request PUT http://192.168.10.42:5002/hubapi/Admin/UpdateWithdrawOptionEndpoint
-2024-12-26 09:16:10.408 +04:00 [INF] Sending HTTP request PUT http://192.168.10.42:5002/hubapi/Admin/UpdateWithdrawOptionEndpoint
+2024-12-26 09:16:10.407 +04:00 [INF] Start processing HTTP request PUT http://192.168.88.138:5002/hubapi/Admin/UpdateWithdrawOptionEndpoint
+2024-12-26 09:16:10.408 +04:00 [INF] Sending HTTP request PUT http://192.168.88.138:5002/hubapi/Admin/UpdateWithdrawOptionEndpoint
 2024-12-26 09:16:10.467 +04:00 [INF] Received HTTP response headers after 57.2304ms - 200
 2024-12-26 09:16:10.468 +04:00 [INF] End processing HTTP request after 61.4721ms - 200
 2024-12-26 09:16:10.469 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -3387,8 +3387,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:16:34.682 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:5002/hubapi/Admin/CreateWithdrawOption
-2024-12-26 09:16:34.682 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:5002/hubapi/Admin/CreateWithdrawOption
+2024-12-26 09:16:34.682 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:5002/hubapi/Admin/CreateWithdrawOption
+2024-12-26 09:16:34.682 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:5002/hubapi/Admin/CreateWithdrawOption
 2024-12-26 09:16:34.736 +04:00 [INF] Received HTTP response headers after 53.0327ms - 200
 2024-12-26 09:16:34.736 +04:00 [INF] End processing HTTP request after 54.7113ms - 200
 2024-12-26 09:16:34.737 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -3545,8 +3545,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:17:16.429 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:5002/hubapi/Admin/CreateWithdrawOption
-2024-12-26 09:17:16.429 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:5002/hubapi/Admin/CreateWithdrawOption
+2024-12-26 09:17:16.429 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:5002/hubapi/Admin/CreateWithdrawOption
+2024-12-26 09:17:16.429 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:5002/hubapi/Admin/CreateWithdrawOption
 2024-12-26 09:17:16.508 +04:00 [INF] Received HTTP response headers after 77.7178ms - 200
 2024-12-26 09:17:16.508 +04:00 [INF] End processing HTTP request after 79.4538ms - 200
 2024-12-26 09:17:16.509 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -3568,8 +3568,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:17:30.367 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:5002/hubapi/Admin/CreateWithdrawOptionGroup
-2024-12-26 09:17:30.368 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:5002/hubapi/Admin/CreateWithdrawOptionGroup
+2024-12-26 09:17:30.367 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:5002/hubapi/Admin/CreateWithdrawOptionGroup
+2024-12-26 09:17:30.368 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:5002/hubapi/Admin/CreateWithdrawOptionGroup
 2024-12-26 09:17:30.472 +04:00 [INF] Received HTTP response headers after 104.3135ms - 200
 2024-12-26 09:17:30.473 +04:00 [INF] End processing HTTP request after 106.1777ms - 200
 2024-12-26 09:17:30.476 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -8151,8 +8151,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:29:32.516 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:5002/hubapi/Admin/AddBalanceToPlayer
-2024-12-26 09:29:32.518 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:5002/hubapi/Admin/AddBalanceToPlayer
+2024-12-26 09:29:32.516 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:5002/hubapi/Admin/AddBalanceToPlayer
+2024-12-26 09:29:32.518 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:5002/hubapi/Admin/AddBalanceToPlayer
 2024-12-26 09:29:32.632 +04:00 [INF] Received HTTP response headers after 112.8639ms - 400
 2024-12-26 09:29:32.633 +04:00 [INF] End processing HTTP request after 117.4527ms - 400
 2024-12-26 09:29:32.830 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PlayerController.AddBalanceToPlayer (OnAim.Admin.API) in 373.5265ms
@@ -8173,8 +8173,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:29:43.137 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:5002/hubapi/Admin/AddBalanceToPlayer
-2024-12-26 09:29:43.137 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:5002/hubapi/Admin/AddBalanceToPlayer
+2024-12-26 09:29:43.137 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:5002/hubapi/Admin/AddBalanceToPlayer
+2024-12-26 09:29:43.137 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:5002/hubapi/Admin/AddBalanceToPlayer
 2024-12-26 09:29:43.167 +04:00 [INF] Received HTTP response headers after 29.1389ms - 400
 2024-12-26 09:29:43.168 +04:00 [INF] End processing HTTP request after 30.8438ms - 400
 2024-12-26 09:29:43.232 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PlayerController.AddBalanceToPlayer (OnAim.Admin.API) in 101.8666ms
@@ -9264,8 +9264,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:30:41.976 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:5002/hubapi/Admin/AddBalanceToPlayer
-2024-12-26 09:30:41.977 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:5002/hubapi/Admin/AddBalanceToPlayer
+2024-12-26 09:30:41.976 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:5002/hubapi/Admin/AddBalanceToPlayer
+2024-12-26 09:30:41.977 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:5002/hubapi/Admin/AddBalanceToPlayer
 2024-12-26 09:30:42.009 +04:00 [INF] Received HTTP response headers after 29.8344ms - 400
 2024-12-26 09:30:42.010 +04:00 [INF] End processing HTTP request after 35.1427ms - 400
 2024-12-26 09:31:17.136 +04:00 [INF] Executed DbCommand (30ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
@@ -10351,8 +10351,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:31:44.404 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/AddBalanceToPlayer
-2024-12-26 09:31:44.405 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/AddBalanceToPlayer
+2024-12-26 09:31:44.404 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/AddBalanceToPlayer
+2024-12-26 09:31:44.405 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/AddBalanceToPlayer
 2024-12-26 09:31:44.453 +04:00 [INF] Received HTTP response headers after 46.4771ms - 400
 2024-12-26 09:31:44.454 +04:00 [INF] End processing HTTP request after 51.6804ms - 400
 2024-12-26 09:31:54.213 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PlayerController.AddBalanceToPlayer (OnAim.Admin.API) in 12382.5754ms
@@ -10373,8 +10373,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:32:03.316 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/AddBalanceToPlayer
-2024-12-26 09:32:03.317 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/AddBalanceToPlayer
+2024-12-26 09:32:03.316 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/AddBalanceToPlayer
+2024-12-26 09:32:03.317 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/AddBalanceToPlayer
 2024-12-26 09:32:03.347 +04:00 [INF] Received HTTP response headers after 29.5289ms - 400
 2024-12-26 09:32:03.347 +04:00 [INF] End processing HTTP request after 31.9618ms - 400
 2024-12-26 09:32:33.485 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PlayerController.AddBalanceToPlayer (OnAim.Admin.API) in 33028.5336ms
@@ -10395,8 +10395,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:33:36.698 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/AddBalanceToPlayer
-2024-12-26 09:33:36.699 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/AddBalanceToPlayer
+2024-12-26 09:33:36.698 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/AddBalanceToPlayer
+2024-12-26 09:33:36.699 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/AddBalanceToPlayer
 2024-12-26 09:33:37.086 +04:00 [INF] Received HTTP response headers after 386.081ms - 200
 2024-12-26 09:33:37.088 +04:00 [INF] End processing HTTP request after 390.1029ms - 200
 2024-12-26 09:33:38.699 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -10512,8 +10512,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:34:51.651 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/BanPlayer
-2024-12-26 09:34:51.652 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/BanPlayer
+2024-12-26 09:34:51.651 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/BanPlayer
+2024-12-26 09:34:51.652 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/BanPlayer
 2024-12-26 09:34:51.767 +04:00 [INF] Received HTTP response headers after 114.4864ms - 200
 2024-12-26 09:34:51.768 +04:00 [INF] End processing HTTP request after 116.339ms - 200
 2024-12-26 09:34:51.769 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -10557,8 +10557,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:35:03.220 +04:00 [INF] Start processing HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/RevokePlayerBan
-2024-12-26 09:35:03.220 +04:00 [INF] Sending HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/RevokePlayerBan
+2024-12-26 09:35:03.220 +04:00 [INF] Start processing HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/RevokePlayerBan
+2024-12-26 09:35:03.220 +04:00 [INF] Sending HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/RevokePlayerBan
 2024-12-26 09:35:03.254 +04:00 [INF] Received HTTP response headers after 33.3193ms - 400
 2024-12-26 09:35:03.255 +04:00 [INF] End processing HTTP request after 34.8911ms - 400
 2024-12-26 09:35:03.336 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PlayerController.RevokePlayerBan (OnAim.Admin.API) in 127.4961ms
@@ -10579,8 +10579,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:35:15.523 +04:00 [INF] Start processing HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/RevokePlayerBan
-2024-12-26 09:35:15.523 +04:00 [INF] Sending HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/RevokePlayerBan
+2024-12-26 09:35:15.523 +04:00 [INF] Start processing HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/RevokePlayerBan
+2024-12-26 09:35:15.523 +04:00 [INF] Sending HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/RevokePlayerBan
 2024-12-26 09:35:15.658 +04:00 [INF] Received HTTP response headers after 134.3576ms - 200
 2024-12-26 09:35:15.659 +04:00 [INF] End processing HTTP request after 136.4696ms - 200
 2024-12-26 09:35:15.660 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -10773,8 +10773,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:37:41.634 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8004/Saga
-2024-12-26 09:37:41.635 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8004/Saga
+2024-12-26 09:37:41.634 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8004/Saga
+2024-12-26 09:37:41.635 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8004/Saga
 2024-12-26 09:37:48.771 +04:00 [INF] Received HTTP response headers after 7134.9305ms - 500
 2024-12-26 09:37:48.772 +04:00 [INF] End processing HTTP request after 7137.6145ms - 500
 2024-12-26 09:37:48.826 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.CreatePromotion (OnAim.Admin.API) in 7253.7739ms
@@ -10809,8 +10809,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:38:24.012 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8004/Saga
-2024-12-26 09:38:24.013 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8004/Saga
+2024-12-26 09:38:24.012 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8004/Saga
+2024-12-26 09:38:24.013 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8004/Saga
 2024-12-26 09:38:24.483 +04:00 [INF] Received HTTP response headers after 469.2149ms - 500
 2024-12-26 09:38:24.483 +04:00 [INF] End processing HTTP request after 471.0787ms - 500
 2024-12-26 09:38:24.534 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.CreatePromotion (OnAim.Admin.API) in 529.0011ms
@@ -10831,8 +10831,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:38:35.696 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8004/Saga
-2024-12-26 09:38:35.697 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8004/Saga
+2024-12-26 09:38:35.696 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8004/Saga
+2024-12-26 09:38:35.697 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8004/Saga
 2024-12-26 09:38:36.114 +04:00 [INF] Received HTTP response headers after 416.3471ms - 500
 2024-12-26 09:38:36.115 +04:00 [INF] End processing HTTP request after 418.9961ms - 500
 2024-12-26 09:38:36.167 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.CreatePromotion (OnAim.Admin.API) in 478.5457ms
@@ -10853,8 +10853,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:40:14.022 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8004/Saga
-2024-12-26 09:40:14.023 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8004/Saga
+2024-12-26 09:40:14.022 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8004/Saga
+2024-12-26 09:40:14.023 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8004/Saga
 2024-12-26 09:40:14.567 +04:00 [INF] Received HTTP response headers after 544.2269ms - 500
 2024-12-26 09:40:14.569 +04:00 [INF] End processing HTTP request after 546.537ms - 500
 2024-12-26 09:40:14.619 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.CreatePromotion (OnAim.Admin.API) in 606.8866ms
@@ -10875,8 +10875,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:41:29.744 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8004/Saga
-2024-12-26 09:41:29.745 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8004/Saga
+2024-12-26 09:41:29.744 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8004/Saga
+2024-12-26 09:41:29.745 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8004/Saga
 2024-12-26 09:41:30.326 +04:00 [INF] Received HTTP response headers after 581.3276ms - 500
 2024-12-26 09:41:30.327 +04:00 [INF] End processing HTTP request after 583.107ms - 500
 2024-12-26 09:41:30.376 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.CreatePromotion (OnAim.Admin.API) in 639.5994ms
@@ -11966,8 +11966,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:50:36.062 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8004/Saga
-2024-12-26 09:50:36.064 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8004/Saga
+2024-12-26 09:50:36.062 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8004/Saga
+2024-12-26 09:50:36.064 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8004/Saga
 2024-12-26 09:50:36.590 +04:00 [INF] Received HTTP response headers after 524.7145ms - 500
 2024-12-26 09:50:36.592 +04:00 [INF] End processing HTTP request after 530.6451ms - 500
 2024-12-26 09:50:36.667 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.CreatePromotion (OnAim.Admin.API) in 799.4748ms
@@ -11988,8 +11988,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 09:51:06.877 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8004/Saga
-2024-12-26 09:51:06.878 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8004/Saga
+2024-12-26 09:51:06.877 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8004/Saga
+2024-12-26 09:51:06.878 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8004/Saga
 2024-12-26 09:51:07.430 +04:00 [INF] Received HTTP response headers after 551.6391ms - 500
 2024-12-26 09:51:07.431 +04:00 [INF] End processing HTTP request after 554.2531ms - 500
 2024-12-26 09:51:07.489 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.CreatePromotion (OnAim.Admin.API) in 647.2482ms
@@ -15389,8 +15389,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 10:20:35.805 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8004/Saga
-2024-12-26 10:20:35.806 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8004/Saga
+2024-12-26 10:20:35.805 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8004/Saga
+2024-12-26 10:20:35.806 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8004/Saga
 2024-12-26 10:20:37.651 +04:00 [INF] Received HTTP response headers after 1843.1606ms - 500
 2024-12-26 10:20:37.653 +04:00 [INF] End processing HTTP request after 1848.9083ms - 500
 2024-12-26 10:20:37.728 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.CreatePromotion (OnAim.Admin.API) in 2120.2529ms
@@ -15411,8 +15411,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 10:20:53.831 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8004/Saga
-2024-12-26 10:20:53.832 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8004/Saga
+2024-12-26 10:20:53.831 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8004/Saga
+2024-12-26 10:20:53.832 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8004/Saga
 2024-12-26 10:20:54.728 +04:00 [INF] Received HTTP response headers after 895.5529ms - 500
 2024-12-26 10:20:54.729 +04:00 [INF] End processing HTTP request after 897.6514ms - 500
 2024-12-26 10:20:54.791 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.CreatePromotion (OnAim.Admin.API) in 995.6295ms
@@ -15433,8 +15433,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 10:21:06.347 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8004/Saga
-2024-12-26 10:21:06.347 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8004/Saga
+2024-12-26 10:21:06.347 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8004/Saga
+2024-12-26 10:21:06.347 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8004/Saga
 2024-12-26 10:21:10.566 +04:00 [INF] Received HTTP response headers after 4217.583ms - 500
 2024-12-26 10:21:10.567 +04:00 [INF] End processing HTTP request after 4220.0025ms - 500
 2024-12-26 10:21:10.619 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.CreatePromotion (OnAim.Admin.API) in 4284.2522ms
@@ -15455,8 +15455,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 10:21:36.622 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8004/Saga
-2024-12-26 10:21:36.622 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8004/Saga
+2024-12-26 10:21:36.622 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8004/Saga
+2024-12-26 10:21:36.622 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8004/Saga
 2024-12-26 10:21:37.374 +04:00 [INF] Received HTTP response headers after 750.8633ms - 500
 2024-12-26 10:21:37.374 +04:00 [INF] End processing HTTP request after 752.7082ms - 500
 2024-12-26 10:21:37.427 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.CreatePromotion (OnAim.Admin.API) in 814.6054ms
@@ -15477,8 +15477,8 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_0
 LIMIT 1
-2024-12-26 10:21:46.494 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8004/Saga
-2024-12-26 10:21:46.495 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8004/Saga
+2024-12-26 10:21:46.494 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8004/Saga
+2024-12-26 10:21:46.495 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8004/Saga
 2024-12-26 10:21:47.443 +04:00 [INF] Received HTTP response headers after 947.2755ms - 500
 2024-12-26 10:21:47.444 +04:00 [INF] End processing HTTP request after 949.7069ms - 500
 2024-12-26 10:21:47.495 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.CreatePromotion (OnAim.Admin.API) in 1007.7802ms

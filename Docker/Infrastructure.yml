@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    networks:
+      - shared_network
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mongo_net
+
+  postgresql:
+    image: postgres:13
+    container_name: postgresql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test1234!
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    networks:
+      - shared_network
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: docker.io/masstransit/rabbitmq:latest
+    restart: unless-stopped
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq/mnesia/
+    networks:
+      - shared_network
+
+volumes:
+  redis:
+  mongo:
+  postgresql:
+  rabbitmq:
+  
+networks:
+  shared_network:
+    driver: bridge

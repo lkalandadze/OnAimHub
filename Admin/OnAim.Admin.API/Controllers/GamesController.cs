@@ -7,7 +7,6 @@ using OnAim.Admin.APP.Features.GameFeatures.Commands.UpdateConfiguration;
 using OnAim.Admin.APP.Features.GameFeatures.Queries.GetById;
 using OnAim.Admin.APP.Features.GameFeatures.Queries.GetById.GetConfigurationMetadata;
 using OnAim.Admin.APP.Features.GameFeatures.Queries.GetById.GetGameConfigurations;
-using OnAim.Admin.APP.Features.GameFeatures.Queries.GetById.GetGameConfigurations.GetConfiguration;
 using OnAim.Admin.APP.Features.GameFeatures.Template.Commands.Create;
 using OnAim.Admin.APP.Features.GameFeatures.Template.Commands.Delete;
 using OnAim.Admin.APP.Features.GameFeatures.Template.Queries.GetAll;
@@ -42,11 +41,7 @@ public class GamesController : ApiControllerBase
 
     [HttpGet(nameof(GetGameConfigurations))]
     public async Task<IActionResult> GetGameConfigurations([FromQuery] ConfigurationsRequest request)
-        => Ok(await Mediator.Send(new GetGameConfigurationsQuery(request.Name, request.PromotionId)));
-
-    [HttpGet(nameof(GetGameConfigurationById))]
-    public async Task<IActionResult> GetGameConfigurationById([FromQuery] ConfigurationRequest request)
-        => Ok(await Mediator.Send(new GetConfigurationQuery(request.Name, request.Id)));
+        => Ok(await Mediator.Send(new GetGameConfigurationsQuery(request.Name, request.PromotionId, request.ConfigurationId)));
 
     [HttpGet(nameof(GetGameConfigurationMetadata))]
     public async Task<IActionResult> GetGameConfigurationMetadata([FromQuery] string name)
