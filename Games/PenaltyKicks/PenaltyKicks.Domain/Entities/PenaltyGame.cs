@@ -1,7 +1,6 @@
 ﻿#nullable disable
 
 using PenaltyKicks.Domain.Enums;
-using Shared.Lib.Attributes;
 using Shared.Domain.Entities;
 
 namespace PenaltyKicks.Domain.Entities;

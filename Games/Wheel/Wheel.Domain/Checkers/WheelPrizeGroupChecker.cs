@@ -12,8 +12,8 @@ public class WheelPrizeGroupChecker : Checkmate<WheelPrizeGroup>
             .IsNotNull()
             .WithMessage("The name should not be null.");
 
-        Check(x => x.Prizes.Count)
-            .GreaterThan(2)
+        Check(x => x.Prizes)
+            .SetCondition(x => x.Count > 2)
             .WithMessage("The number of prizes must be greater than 2.");
 
         Check(x => x.Prizes)

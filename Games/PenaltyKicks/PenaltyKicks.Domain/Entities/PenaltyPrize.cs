@@ -11,13 +11,13 @@ public class PenaltyPrize : BasePrize<PenaltyPrizeGroup>
 
     }
 
-    public PenaltyPrize(string name, int? roundId = null) : base()
+    public PenaltyPrize(string name, int? prizeGroupId = null) : base()
     {
         Name = name;
 
-        if (roundId != null)
+        if (prizeGroupId != null)
         {
-            PrizeGroupId = roundId.Value;
+            PrizeGroupId = prizeGroupId.Value;
         }
     }
 

@@ -2,6 +2,7 @@
 
 using CheckmateValidations;
 using GameLib.Domain.Checkers;
+using OnAim.Lib.EntityExtension.GlobalAttributes.Attributes;
 using Shared.Domain.Entities;
 using System.Text.Json.Serialization;
 
@@ -22,8 +23,13 @@ public class Price : BaseEntity<int>
         CoinId = coinId;
     }
 
+    [GlobalDescription("Value of the price")]
     public decimal Value { get; set; }
+
+    [GlobalDescription("Multiplier of the price")]
     public decimal Multiplier { get; set; }
+
+    [GlobalDescription("CoinId of the price")]
     public string CoinId { get; set; }
 
     //[JsonIgnore]
