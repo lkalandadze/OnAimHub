@@ -45,7 +45,7 @@ public class AggregationController : ControllerBase
         return Ok(new { message = "Aggregation updated successfully." });
     }
     [HttpPost("Test")]
-    public async Task<IActionResult> Test([FromBody] TriggerAggregationEvent test, CancellationToken cancellationToken)
+    public async Task<IActionResult> Test([FromBody] AggregationTriggerEvent test, CancellationToken cancellationToken)
     {
         await _aggregationConfigurationService.Test(test, cancellationToken);
         return Ok();

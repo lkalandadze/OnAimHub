@@ -8,6 +8,6 @@ public interface IAggregationConfigurationService
 {
     Task AddAggregationWithConfigurationsAsync(CreateAggregationConfigurationModel model);
     Task UpdateAggregationAsync(UpdateAggregationConfigurationModel model);
-    Task TriggerRequestAsync(TriggerAggregationEvent @event, AggregationConfiguration config);
-    Task Test(TriggerAggregationEvent test, CancellationToken cancellationToken);
+    Task TriggerRequestAsync(AggregationTriggerEvent @event, AggregationConfiguration config);
+    Task Test(AggregationTriggerEvent test, CancellationToken cancellationToken);
 }

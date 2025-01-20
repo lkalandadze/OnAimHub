@@ -9,7 +9,7 @@ using Shared.IntegrationEvents.IntegrationEvents.Aggregation;
 
 namespace AggregationService.Application.Consumers.Trigger;
 
-public sealed class TriggerAggregationConsumer : IConsumer<TriggerAggregationEvent>
+public sealed class TriggerAggregationConsumer : IConsumer<AggregationTriggerEvent>
 {
     private readonly IAggregationConfigurationService _aggregationConfigurationService;
     private readonly IAggregationConfigurationRepository _aggregationConfigurationRepository;
@@ -25,19 +25,19 @@ public sealed class TriggerAggregationConsumer : IConsumer<TriggerAggregationEve
         _configurationStore = configurationStore;
     }
 
-    public async Task Consume(ConsumeContext<TriggerAggregationEvent> context)
+    public async Task Consume(ConsumeContext<AggregationTriggerEvent> context)
     {
         var cancellationToken = context.CancellationToken;
         var request = context.Message;
 
         Console.WriteLine($"Received event: {System.Text.Json.JsonSerializer.Serialize(request)}");
 
+        await _configurationStore.ReloadConfigurationsAsync();
+
         var filteredConfigurations = _configurationStore.GetAllConfigurations().Filter(request);
 
-        if (!filteredConfigurations.Any())
-        {
-            throw new InvalidOperationException($"No matching configurations found. Request: {System.Text.Json.JsonSerializer.Serialize(request)}");
-        }
+        //if (!filteredConfigurations.Any())
+        //    throw new InvalidOperationException($"No matching configurations found. Request: {System.Text.Json.JsonSerializer.Serialize(request)}");
 
         var promotionIds = filteredConfigurations
             .Select(config => config.PromotionId)
@@ -46,16 +46,17 @@ public sealed class TriggerAggregationConsumer : IConsumer<TriggerAggregationEve
 
         Console.WriteLine($"Promotion IDs: {string.Join(", ", promotionIds)}");
 
-        var filter = Builders<AggregationConfiguration>.Filter.In(config => config.PromotionId, promotionIds);
+        var filter = request.IsExternal
+               ? Builders<AggregationConfiguration>.Filter.Empty
+               : Builders<AggregationConfiguration>.Filter.In(config => config.PromotionId, promotionIds);
+
         var configurations = await _aggregationConfigurationRepository
             .GetCollection()
             .Find(filter)
             .ToListAsync(cancellationToken);
 
-        if (!configurations.Any())
-        {
-            throw new InvalidOperationException($"No configurations found for PromotionIds: {string.Join(", ", promotionIds)}");
-        }
+        //if (!configurations.Any())
+        //    throw new InvalidOperationException($"No configurations found for PromotionIds: {string.Join(", ", promotionIds)}");
 
         foreach (var config in configurations)
         {

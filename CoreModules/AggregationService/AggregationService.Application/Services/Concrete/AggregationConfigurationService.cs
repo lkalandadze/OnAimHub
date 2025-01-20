@@ -72,7 +72,7 @@ public class AggregationConfigurationService : IAggregationConfigurationService
         await _aggregationConfigurationRepository.UpdateAsync(aggregation, filter);
     }
 
-    public async Task TriggerRequestAsync(TriggerAggregationEvent @event, AggregationConfiguration config)
+    public async Task TriggerRequestAsync(AggregationTriggerEvent @event, AggregationConfiguration config)
     {
         var eventValue = @event.ExtractValue(config);
         if (eventValue > 0)
@@ -84,14 +84,17 @@ public class AggregationConfigurationService : IAggregationConfigurationService
 
             if (currentPoints > 0)
             {
-                var previousPoints = double.Parse(_db.StringGet(config.GenerateKeyForPoints(@event)));
 
+                var dbPreviousRecord = _db.StringGet(config.GenerateKeyForPoints(@event));
+                double.TryParse(dbPreviousRecord!, out double previousPoints);
 
-                if (previousPoints > currentPoints)
+                if (currentPoints > previousPoints)
                 {
                     _db.StringSet(config.GenerateKeyForPoints(@event), currentPoints);
 
                     var pointsAdded = currentPoints - previousPoints;
+
+                    var eventName = $"{config.AggregationSubscriber}Queue";
 
                     _ = _messageBus.PublishWithRouting(new AggregatedEvent
                     {
@@ -100,7 +103,7 @@ public class AggregationConfigurationService : IAggregationConfigurationService
                         AddedPoints = pointsAdded,
                         PromotionId = config.PromotionId,
                         ConfigKey = config.Key,
-                    }, config.AggregationSubscriber);
+                    }, eventName);
                 }
 
                 Console.WriteLine("TEST TRIGGER");
@@ -108,7 +111,7 @@ public class AggregationConfigurationService : IAggregationConfigurationService
         }
     }
 
-    public async Task Test(TriggerAggregationEvent test, CancellationToken cancellationToken)
+    public async Task Test(AggregationTriggerEvent test, CancellationToken cancellationToken)
     {
         Console.WriteLine($"Received event: {System.Text.Json.JsonSerializer.Serialize(test)}");
 
@@ -116,10 +119,10 @@ public class AggregationConfigurationService : IAggregationConfigurationService
 
         var filteredConfigurations = _configurationStore.GetAllConfigurations().Filter(test);
 
-        if (!filteredConfigurations.Any())
-        {
-            throw new InvalidOperationException($"No matching configurations found. Request: {System.Text.Json.JsonSerializer.Serialize(test)}");
-        }
+        //if (!filteredConfigurations.Any())
+        //{
+        //    throw new InvalidOperationException($"No matching configurations found. Request: {System.Text.Json.JsonSerializer.Serialize(test)}");
+        //}
 
         var promotionIds = filteredConfigurations
             .Select(config => config.PromotionId)
@@ -128,22 +131,25 @@ public class AggregationConfigurationService : IAggregationConfigurationService
 
         Console.WriteLine($"Promotion IDs: {string.Join(", ", promotionIds)}");
 
-        var filter = Builders<AggregationConfiguration>.Filter.In(config => config.PromotionId, promotionIds);
+        var filter = test.IsExternal
+            ? Builders<AggregationConfiguration>.Filter.Empty
+            : Builders<AggregationConfiguration>.Filter.In(config => config.PromotionId, promotionIds);
+
         var configurations = await _aggregationConfigurationRepository
             .GetCollection()
             .Find(filter)
             .ToListAsync(cancellationToken);
 
-        if (!configurations.Any())
-        {
-            throw new InvalidOperationException($"No configurations found for PromotionIds: {string.Join(", ", promotionIds)}");
-        }
+        //if (!configurations.Any())
+        //{
+        //    throw new InvalidOperationException($"No configurations found for PromotionIds: {string.Join(", ", promotionIds)}");
+        //}
 
         foreach (var config in configurations)
         {
             await TriggerRequestAsync(test, config);
         }
 
-        Console.WriteLine("Trigger aggregation successfully processed.");
+        Console.WriteLine($"Trigger aggregation successfully processed. with {configurations.Count} configurations. from event: \n {System.Text.Json.JsonSerializer.Serialize(test)}");
     }
 }

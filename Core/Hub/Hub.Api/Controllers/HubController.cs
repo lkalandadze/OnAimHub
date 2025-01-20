@@ -83,7 +83,7 @@ public class HubController : BaseApiController
     {
         var query = new GetPlayerBalanceQuery()
         {
-            PromotionId = promotionId,
+            //PromotionId = promotionId,
         };
 
         return Ok(await Mediator.Send(query));

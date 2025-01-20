@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Leaderboard.Application.Behaviours;
+using Leaderboard.Application.Consumers.Aggregation;
 using Leaderboard.Application.Consumers.Play;
 using Leaderboard.Application.Consumers.Players;
 using Leaderboard.Domain.Abstractions.Repository;
@@ -47,6 +48,7 @@ public static class ServiceExtensions
         {
             x.AddConsumer<CreatePlayerAggregationConsumer>();
             x.AddConsumer<PlayLeaderboardAggregationConsumer>();
+            x.AddConsumer<AggregatedEventConsumer>();
 
             x.UsingRabbitMq((context, cfg) =>
             {
@@ -105,6 +107,21 @@ public static class ServiceExtensions
                         });
                     }
                     e.ConfigureConsumer<PlayLeaderboardAggregationConsumer>(context);
+                });
+
+                var leaderboardQueue = rabbitMqOptions.Queues["LeaderboardQueue"];
+                cfg.ReceiveEndpoint(leaderboardQueue.QueueName, e =>
+                {
+                    var rabbitMqEndpoint = e as IRabbitMqReceiveEndpointConfigurator;
+                    foreach(var routingKey in leaderboardQueue.RoutingKeys)
+                    {
+                        rabbitMqEndpoint?.Bind(rabbitMqOptions.ExchangeName, x =>
+                        {
+                            x.RoutingKey = routingKey;
+                            x.ExchangeType = "fanout";
+                        });
+                    }
+                    e.ConfigureConsumer<AggregatedEventConsumer>(context);
                 });
             });
         });

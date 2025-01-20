@@ -110,13 +110,15 @@ public class TransactionService : ITransactionService
             await _transactionRepository.InsertAsync(transaction);
             await _unitOfWork.SaveAsync();
 
-            var @events = new TriggerAggregationEvent(
+            var @events = new AggregationTriggerEvent(
                 data: JsonConvert.SerializeObject(new Dictionary<string, string>
                 {
                         { "customerId", playerId.ToString() },
                         { "eventType", transactionType.ToString() },
-                        { "producer", "external" },
-                        { "promotionId", promotionId.ToString() }
+                        { "producer", "hub" },
+                        { "promotionId", promotionId.ToString() },
+                        { "value", "100"},
+                        { "subscriber", "Leaderboard"}
                 }),
                 producer: "TransactionService"
             );
