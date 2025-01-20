@@ -48,6 +48,11 @@ services:
       file: ./Games/Wheel/Wheel.Api/compose.yml
       service: wheelapi
 
+  penaltykicksapi:
+     extends:
+      file: ./Games/PenaltyKicks/PenaltyKicks.Api/compose.yml
+      service: penaltykicksapi
+
   hubapi:
       extends:
         file: ./Core/Hub/Hub.Api/compose.yml
@@ -140,6 +145,20 @@ services:
       - gamehistorydb_data:/var/lib/postgresql/data
     command: -p 5435  
 
+  penaltyconfigdb:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: PenaltyConfig
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test1234!
+    expose:
+        - "5445"
+    ports:
+      - "5445:5432"
+    volumes:
+      - penaltyconfigdb_data:/var/lib/postgresql/data
+    command: -p 5445  
+
   leveldb:
     image: postgres:13
     environment:
@@ -212,6 +231,8 @@ volumes:
   redis_data:
     driver: local
   rabbitmq:
+    driver: local
+  penaltyconfigdb_data:
     driver: local
   pgadmin_data:
     driver: local

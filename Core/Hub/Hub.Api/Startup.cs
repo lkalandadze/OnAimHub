@@ -188,7 +188,7 @@ public class Startup
             app.UseDeveloperExceptionPage();
         }
 
-        ConfigureSwagger(app);
+        ConfigureSwagger(app, env);
 
         app.UseForwardedHeaders();
         app.UseCertificateForwarding();
@@ -316,7 +316,7 @@ public class Startup
         });
     }
 
-    private void ConfigureSwagger(IApplicationBuilder app)
+    private void ConfigureSwagger(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseSwagger();
 
@@ -328,6 +328,26 @@ public class Startup
             c.RoutePrefix = $"swagger/{controller}";
             c.DocumentTitle = $"{controller.ToUpper()} | Hub.Api";
         }));
+
+        if (env.IsDevelopment())
+        {
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path == "/")
+                {
+                    context.Response.Redirect("/swagger/hub/index.html");
+                    return;
+                }
+
+                if (context.Request.Path == "/swagger")
+                {
+                    context.Response.Redirect("/swagger/hub/index.html");
+                    return;
+                }
+
+                await next();
+            });
+        }
     }
 
     private void ConfigureAuthentication(IServiceCollection services)

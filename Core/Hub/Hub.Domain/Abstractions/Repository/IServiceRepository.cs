@@ -5,4 +5,5 @@ namespace Hub.Domain.Abstractions.Repository;
 
 public interface IServiceRepository : IBaseEntityRepository<Service>
 {
+    Task<int> InsertAndSaveAsync(Service aggregateRoot);
 }

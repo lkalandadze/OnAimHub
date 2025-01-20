@@ -11,10 +11,13 @@ public class TestController : BaseApiController
 {
     private readonly IBus _bus;
     private readonly IGameService _activeGameService;
-    public TestController(IBus bus, IGameService gameService)
+    private readonly ConsulWatcherService _consulService;
+
+    public TestController(IBus bus, IGameService gameService, ConsulWatcherService consulService)
     {
         _bus = bus;
         _activeGameService = gameService;
+        _consulService = consulService;
     }
 
     [HttpPost("spin-wheel")]

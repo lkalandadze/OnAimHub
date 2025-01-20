@@ -6,16 +6,11 @@ namespace Hub.Application.Services.Concrete;
 
 public class GameService : IGameService
 {
-    private readonly ConcurrentDictionary<string, GameModel> _games;
-
-    public GameService()
-    {
-        _games = new ConcurrentDictionary<string, GameModel>();
-    }
-
+    private readonly ConcurrentDictionary<string, GameModel> _games = [];
+    
     public void AddOrUpdateGame(GameModel gameStatus)
     {
-        _games.AddOrUpdate(gameStatus.Id.ToString(), gameStatus, (key, existingValue) => gameStatus);
+        _games.AddOrUpdate(gameStatus.Address, gameStatus, (key, existingValue) => gameStatus);
     }
 
     public bool RemoveGame(string gameId)
