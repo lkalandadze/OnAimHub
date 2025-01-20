@@ -1,4 +1,5 @@
 ﻿using Consul;
+using Hub.Api.Models.Transaction;
 using Hub.Application.Features.GameFeatures.Queries.GetAllGame;
 using Hub.Application.Features.IdentityFeatures.Commands.ApplyPromoCode;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
@@ -44,18 +45,18 @@ public class HubController : BaseApiController
 
     [AllowAnonymous]
     [HttpPost(nameof(TestTransaction))]
-    public async Task<IActionResult> TestTransaction()
+    public async Task<IActionResult> TestTransaction([FromBody] TransactionRequestModel request)
     {
+        await _transactionService.CreateTransactionWithEventAsync(
+            request.GameId,
+            request.CoinId,
+            request.Amount,
+            request.FromAccount,
+            request.ToAccount,
+            request.TransactionType,
+            request.PromotionId,
+            request.AdditionalData);
 
-        int? gameId = 1;
-        string coinId = "37_string3";
-        decimal amount = 15;
-        AccountType fromAccount = Domain.Entities.DbEnums.AccountType.Game;
-        AccountType toAccount = Domain.Entities.DbEnums.AccountType.Player;
-        TransactionType transactionType = Domain.Entities.DbEnums.TransactionType.Bet;
-        int promotionId = 1;
-
-        await _transactionService.CreateTransactionWithEventAsync(gameId, coinId, amount, fromAccount, toAccount, transactionType, promotionId, null);
         return Ok();
     }
 
