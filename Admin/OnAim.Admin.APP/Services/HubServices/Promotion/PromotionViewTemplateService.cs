@@ -2,6 +2,7 @@
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Promotion;
+using OnAim.Admin.Contracts.Enums;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
@@ -23,6 +24,22 @@ public class PromotionViewTemplateService : IPromotionViewTemplateService
     public async Task<ApplicationResult> GetAllPromotionViewTemplates(BaseFilter filter)
     {
         var temps = await _promotionViewTemplateRepository.GetPromotionViewTemplates();
+        if (filter?.HistoryStatus.HasValue == true)
+        {
+            switch (filter.HistoryStatus.Value)
+            {
+                case HistoryStatus.Existing:
+                    temps = temps.Where(u => u.IsDeleted == false).ToList();
+                    break;
+                case HistoryStatus.Deleted:
+                    temps = temps.Where(u => u.IsDeleted == true).ToList();
+                    break;
+                case HistoryStatus.All:
+                    break;
+                default:
+                    break;
+            }
+        }
         var totalCount = temps.Count();
 
         var pageNumber = filter?.PageNumber ?? 1;

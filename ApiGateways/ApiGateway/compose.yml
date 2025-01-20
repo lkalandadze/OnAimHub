@@ -10,7 +10,8 @@ services:
     depends_on:
       - consul
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_ENVIRONMENT=Development
       - CONSUL_ADDRESS=http://consul:8500
     volumes:
       - ./appsettings.json:/app/appsettings.json
+      - ./ocelot.json:/app/ocelot.json 

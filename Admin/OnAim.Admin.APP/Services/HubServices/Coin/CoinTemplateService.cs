@@ -41,10 +41,10 @@ public class CoinTemplateService : ICoinTemplateService
             switch (filter.HistoryStatus.Value)
             {
                 case HistoryStatus.Existing:
-                    temps = (List<CoinTemplate>)temps.Where(u => u.IsDeleted == false);
+                    temps = temps.Where(u => u.IsDeleted == false).ToList(); ;
                     break;
                 case HistoryStatus.Deleted:
-                    temps = (List<CoinTemplate>)temps.Where(u => u.IsDeleted == true);
+                    temps = temps.Where(u => u.IsDeleted == true).ToList(); ;
                     break;
                 case HistoryStatus.All:
                     break;
@@ -82,16 +82,55 @@ public class CoinTemplateService : ICoinTemplateService
                 ImageUrl = z.WithdrawOptionGroup.ImageUrl,
                 PriorityIndex = z.WithdrawOptionGroup.PriorityIndex,
             }).ToList() ?? new List<WithdrawOptionGroupCoinTempDto>(),
-        });    
+        });
 
-        var res = coinTemplates
+        var coinTemplatess = temps.Select(x =>
+        x.CoinType != Domain.HubEntities.Enum.CoinType.Out
+        ? (dynamic)new CoinInTemplateDto
+        {
+            Id = x.Id,
+            Title = x.Name,
+            Description = x.Description,
+            CoinType = (CoinType)x.CoinType,
+            ImgUrl = x.ImageUrl,
+            IsDeleted = x.IsDeleted
+        }
+        : new CoinTemplateListDto
+        {
+            Id = x.Id,
+            Title = x.Name,
+            Description = x.Description,
+            CoinType = (Contracts.Dtos.Coin.CoinType)x.CoinType,
+            ImgUrl = x.ImageUrl,
+            WithdrawOptions = x.WithdrawOptions?.Select(xx => new WithdrawOptionCoinTempDto
+            {
+                Title = xx.WithdrawOption.Title,
+                Description = xx.WithdrawOption.Description,
+                ContentType = (Contracts.Dtos.Withdraw.EndpointContentType)xx.WithdrawOption.ContentType,
+                Endpoint = xx.WithdrawOption.Endpoint,
+                EndpointContent = xx.WithdrawOption.EndpointContent,
+                Id = xx.WithdrawOption.Id,
+                ImageUrl = xx.WithdrawOption.ImageUrl,
+            }).ToList() ?? new List<WithdrawOptionCoinTempDto>(),
+            WithdrawOptionGroups = x.WithdrawOptionGroups?.Select(z => new WithdrawOptionGroupCoinTempDto
+            {
+                Title = z.WithdrawOptionGroup.Title,
+                Description = z.WithdrawOptionGroup.Description,
+                Id = z.WithdrawOptionGroup.Id,
+                ImageUrl = z.WithdrawOptionGroup.ImageUrl,
+                PriorityIndex = z.WithdrawOptionGroup.PriorityIndex,
+            }).ToList() ?? new List<WithdrawOptionGroupCoinTempDto>(),
+        }).ToList();
+
+
+        var res = coinTemplatess
            .Skip((pageNumber - 1) * pageSize)
            .Take(pageSize);
 
         return new ApplicationResult
         {
             Success = true,
-            Data = new PaginatedResult<CoinTemplateListDto>
+            Data = new PaginatedResult<dynamic>
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,

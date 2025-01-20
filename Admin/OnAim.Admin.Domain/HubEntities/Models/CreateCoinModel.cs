@@ -36,12 +36,14 @@ public abstract class CreateCoinModel
                 internalCoin.ImageUrl,
                 promotionId),
 
-            CreateAssetCoinModel prize => new AssetCoin(
+            CreateAssetCoinModel asset => new AssetCoin(
                 coinId,
-                prize.Name,
-                prize.Description,
-                prize.ImageUrl,
-                promotionId),
+                asset.Name,
+                asset.Description,
+                asset.ImageUrl,
+                promotionId,
+                asset.Value,
+                asset.TemplateId),
 
             CreateOutCoinModel outgoing => new OutCoin(
                 coinId,

@@ -1,10 +1,12 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
+﻿using Newtonsoft.Json.Linq;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.Game;
+using OnAim.Admin.Contracts.Enums;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
+using System.Text.Json;
 
 namespace OnAim.Admin.APP.Services.GameServices;
 
@@ -17,11 +19,38 @@ public class GameTemplateService : IGameTemplateService
         _gameConfigurationTemplateRepository = gameConfigurationTemplateRepository;
     }
 
-    public async Task<ApplicationResult> GetAllGameConfigurationTemplates(BaseFilter filter)
+    public async Task<ApplicationResult> GetAllGameConfigurationTemplates(GameTemplateFilter filter)
     {
         var temps = await _gameConfigurationTemplateRepository.GetGameConfigurationTemplates();
 
+        if (filter?.Name != null)
+        {
+            temps = temps.Where(x => x.Game == filter.Name).ToList();
+        }
+
+        if (filter?.HistoryStatus.HasValue == true)
+        {
+            switch (filter.HistoryStatus.Value)
+            {
+                case HistoryStatus.Existing:
+                    temps = temps.Where(u => u.IsDeleted == false).ToList();
+                    break;
+                case HistoryStatus.Deleted:
+                    temps = temps.Where(u => u.IsDeleted == true).ToList();
+                    break;
+                case HistoryStatus.All:
+                    break;
+                default:
+                    break;
+            }
+        }
         var totalCount = temps.Count();
+
+        var result = temps.Select(x => new GameConfigurationTemplateDto
+        {
+            GameName = x.Game,
+            Configuration = x.GetConfigurationAsJsonElement()
+        });
 
         var pageNumber = filter?.PageNumber ?? 1;
         var pageSize = filter?.PageSize ?? 25;
@@ -33,12 +62,12 @@ public class GameTemplateService : IGameTemplateService
         return new ApplicationResult
         {
             Success = true,
-            Data = new PaginatedResult<GameConfigurationTemplate>
+            Data = new PaginatedResult<GameConfigurationTemplateDto>
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalCount = totalCount,
-                Items = res.ToList(),
+                Items = result.ToList(),
             },
         };
     }
@@ -52,36 +81,12 @@ public class GameTemplateService : IGameTemplateService
         return new ApplicationResult { Success = true, Data = coin };
     }
 
-    public async Task<GameConfigurationTemplate> CreateGameConfigurationTemplate(CreateGameConfigurationTemplateDto template)
+    public async Task<GameConfigurationTemplate> CreateGameConfigurationTemplate(string gameName, object template)
     {
         var temp = new GameConfigurationTemplate
         {
-            Game = template.Game,
-            Name = template.Name,
-            Value = template.Value,
-            IsActive = template.IsActive,
-            Prices = template.Prices.Select(x => new Price
-            {
-                Value = x.Value,
-                Multiplier = x.Multiplier,
-                CoinId = x.CoinId,
-            }).ToList(),
-            Rounds = template.Rounds.Select(xx => new Round
-            {
-                Sequence = xx.Sequence,
-                Name = xx.Name,
-                NextPrizeIndex = xx.NextPrizeIndex,
-                ConfigurationId = xx.ConfigurationId,
-                Prizes = xx.Prizes.Select(xxx => new Prize
-                {
-                    Value = xxx.Value,
-                    PrizeGroupId = xxx.PrizeGroupId,
-                    PrizeTypeId = xxx.PrizeTypeId,
-                    Probability = xxx.Probability,
-                    Name = xxx.Name,
-                    WheelIndex = xxx.WheelIndex,
-                }).ToList(),
-            }).ToList(),
+            Game = gameName,
+            Configuration = template.ToString(),
         };
 
         await _gameConfigurationTemplateRepository.AddGameConfigurationTemplateAsync(temp);
@@ -104,4 +109,9 @@ public class GameTemplateService : IGameTemplateService
 
         return new ApplicationResult { Success = true };
     }
+}
+public class GameConfigurationTemplateDto
+{
+    public string GameName { get; set; }
+    public JsonElement Configuration { get; set; }
 }

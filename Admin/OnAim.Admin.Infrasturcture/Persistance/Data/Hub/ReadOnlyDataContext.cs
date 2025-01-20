@@ -94,6 +94,12 @@ public class ReadOnlyDataContext : DbContext
         //           .OnDelete(DeleteBehavior.Cascade)
         //  );
 
+        modelBuilder.Entity<AssetCoin>().Property(ac => ac.Value)
+               .HasColumnName($"{nameof(AssetCoin)}_{nameof(AssetCoin.Value)}");
+
+        modelBuilder.Entity<AssetCoin>().HasDiscriminator<CoinType>(nameof(CoinType))
+               .HasValue<AssetCoin>(CoinType.Asset);
+
         modelBuilder.Entity<Coin>().HasDiscriminator<Domain.HubEntities.Enum.CoinType>(nameof(Domain.HubEntities.Enum.CoinType))
              .HasValue<Coin>(Domain.HubEntities.Enum.CoinType.Default) // Default value for the base type
              .HasValue<InCoin>(Domain.HubEntities.Enum.CoinType.In)

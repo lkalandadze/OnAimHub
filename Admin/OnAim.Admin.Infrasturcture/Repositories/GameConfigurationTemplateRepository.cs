@@ -21,18 +21,22 @@ public class GameConfigurationTemplateRepository : IGameConfigurationTemplateRep
 
     public async Task<List<GameConfigurationTemplate>> GetGameConfigurationTemplates()
     {
-        return await _dbContext.GameConfigurationTemplates.Find(_ => true).ToListAsync();
+        var templates = await _dbContext.GameConfigurationTemplates.Find(_ => true).ToListAsync();
+
+        return templates.Cast<GameConfigurationTemplate>().ToList();
     }
 
     public async Task<GameConfigurationTemplate?> GetGameConfigurationTemplateByIdAsync(string id)
     {
-        var filter = Builders<GameConfigurationTemplate>.Filter.Eq(ct => ct.Id, id);
-        return await _dbContext.GameConfigurationTemplates.Find(filter).FirstOrDefaultAsync();
+        var filter = Builders<GameConfigurationTemplate>.Filter.Eq("Id", id);
+        var result = await _dbContext.GameConfigurationTemplates.Find(filter).FirstOrDefaultAsync();
+
+        return result;
     }
 
     public async Task<GameConfigurationTemplate?> UpdateGameConfigurationTemplateAsync(string id, GameConfigurationTemplate updated)
     {
-        var filter = Builders<GameConfigurationTemplate>.Filter.Eq(ct => ct.Id, id);
+        var filter = Builders<GameConfigurationTemplate>.Filter.Eq("Id", id);
         var result = await _dbContext.GameConfigurationTemplates.ReplaceOneAsync(filter, updated);
 
         if (result.IsAcknowledged && result.ModifiedCount > 0)

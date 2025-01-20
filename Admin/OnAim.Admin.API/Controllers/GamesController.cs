@@ -56,7 +56,7 @@ public class GamesController : ApiControllerBase
         => Ok(await _gameService.DeactivateGame(name));
 
     [HttpPost(nameof(CreateConfiguration))]
-    public async Task<IActionResult> CreateConfiguration([FromQuery] string gameName, [FromBody] GameConfigurationDto configurationJson)
+    public async Task<IActionResult> CreateConfiguration([FromQuery] string gameName, [FromBody] object configurationJson)
         => Ok(await Mediator.Send(new CreateConfigurationCommand(gameName, configurationJson)));
 
     [HttpPut(nameof(UpdateConfiguration))]
@@ -74,15 +74,15 @@ public class GamesController : ApiControllerBase
     //Game Configuration Template
 
     [HttpPost(nameof(CreateGameConfigurationTemplate))]
-    public async Task<IActionResult> CreateGameConfigurationTemplate([FromBody] CreateGameConfigurationTemplateCommand command)
-        => Ok(await Mediator.Send(command));
+    public async Task<IActionResult> CreateGameConfigurationTemplate([FromQuery] string gameName, [FromBody] object command)
+        => Ok(await Mediator.Send(new CreateGameConfigurationTemplateCommand(gameName, command)));
 
     [HttpDelete(nameof(DeleteGameConfigurationTemplate))]
     public async Task<IActionResult> DeleteGameConfigurationTemplate([FromQuery] DeleteGameConfigurationTemplateCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpGet(nameof(GetAllGameConfigurationTemplates))]
-    public async Task<IActionResult> GetAllGameConfigurationTemplates([FromQuery] BaseFilter filter)
+    public async Task<IActionResult> GetAllGameConfigurationTemplates([FromQuery] GameTemplateFilter filter)
         => Ok(await Mediator.Send(new GetAllGameConfigurationTemplatesQuery(filter)));
 
     [HttpGet(nameof(GetGameConfigurationTemplateById))]

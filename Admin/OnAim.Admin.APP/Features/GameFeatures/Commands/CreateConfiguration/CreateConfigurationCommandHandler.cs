@@ -16,6 +16,6 @@ public class CreateConfigurationCommandHandler : ICommandHandler<CreateConfigura
     {
         var result = await _gameService.CreateConfiguration(request.gameName, request.ConfigurationJson);
 
-        return new ApplicationResult { Data = result };
+        return new ApplicationResult { Data = result, Success = true };
     }
 }
