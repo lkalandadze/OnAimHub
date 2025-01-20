@@ -15,7 +15,7 @@ services:
       - CONSUL_ADDRESS=http://consul:8500
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ConnectionStrings__GameConfig=Host=penaltyconfigdb;Port=5445;Database=PenaltyConfig;Username=postgres;Password=Test1234!
-      # - ConnectionStrings__GameHistory=Host=gamehistorydb;Port=5435;Database=WheelHistory;Username=postgres;Password=Test1234!
+      - ConnectionStrings__GameHistory=Host=penaltygamehistorydb;Port=5446;Database=PenaltyHistory;Username=postgres;Password=Test1234!
     volumes:
       - ./appsettings.json:/app/appsettings.json
     command: ["dotnet", "ef", "database update"]

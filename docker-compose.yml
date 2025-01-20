@@ -63,10 +63,10 @@ services:
          file: ./Admin/OnAim.Admin.API/compose.yml
          service: adminapi
 
-  # aggregation:
-  #     extends: 
-  #        file: ./Docker/aggregation/compose.yml
-  #        service: aggregation
+  aggregation:
+      extends: 
+         file: ./Docker/aggregation/compose.yml
+         service: aggregation
  
   levelapi:
      extends:
@@ -159,6 +159,20 @@ services:
       - penaltyconfigdb_data:/var/lib/postgresql/data
     command: -p 5445  
 
+  penaltygamehistorydb:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: PenaltyHistory
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test1234!
+    expose:
+        - "5446"
+    ports:
+      - "5435:5432"
+    volumes:
+      - penaltygamehistorydb_data:/var/lib/postgresql/data
+    command: -p 5446 
+
   leveldb:
     image: postgres:13
     environment:
@@ -201,6 +215,20 @@ services:
       - leaderboarddb_data:/var/lib/postgresql/data
     command: -p 5438
 
+  aggregationdb:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: OnAimAggregation
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test1234!
+    expose:
+        - "5439"
+    ports:
+      - "5439:5432"
+    volumes:
+      - aggregationdb_data:/var/lib/postgresql/data
+    command: -p 5439
+  
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: pgadmin
@@ -233,6 +261,10 @@ volumes:
   rabbitmq:
     driver: local
   penaltyconfigdb_data:
+    driver: local
+  penaltygamehistorydb_data:
+    driver: local
+  aggregationdb_data:
     driver: local
   pgadmin_data:
     driver: local
