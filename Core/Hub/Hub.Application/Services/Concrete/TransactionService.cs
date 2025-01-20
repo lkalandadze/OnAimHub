@@ -117,8 +117,8 @@ public class TransactionService : ITransactionService
                         { "eventType", transactionType.ToString() },
                         { "producer", "hub" },
                         { "promotionId", promotionId.ToString() },
-                        { "value", "100"},
-                        { "subscriber", "Leaderboard"}
+                        { "value", amount.ToString() },
+                        { "subscriber", transactionType.ToString()}
                 }),
                 producer: "TransactionService"
             );
