@@ -1,5 +1,4 @@
-﻿using Consul;
-using Hub.Api.Models.Games;
+﻿using Hub.Api.Models.Games;
 using Hub.Api.Models.Segments;
 using Hub.Application.Features.CoinFeatures.Commands.CreateCoinTemplate;
 using Hub.Application.Features.CoinFeatures.Commands.DeleteCoinTemplate;
@@ -39,12 +38,8 @@ using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentForPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentsForPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.UpdateSegment;
 using Hub.Application.Features.SettingFeatures.Commands.Update;
-using Hub.Application.Models.Game;
-using Hub.Application.Services.Abstract;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Application.Exceptions;
-using Shared.Application.Exceptions.Types;
 using Shared.Lib.Wrappers;
 
 namespace Hub.Api.Controllers;
