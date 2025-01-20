@@ -2,10 +2,12 @@
 
 public class CreateAssetCoinModel : CreateCoinModel
 {
+    public decimal Value { get; set; }
+    public string TemplateId { get; set; }
     // should be add configuration in future
 
     public CreateAssetCoinModel()
     {
-        CoinType = Enum.CoinType.Asset;
+        CoinType = Domain.HubEntities.Enum.CoinType.Asset;
     }
 }

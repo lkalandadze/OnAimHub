@@ -1,9 +1,12 @@
+using MediatR;
 using Microsoft.Extensions.Options;
 using OnAim.Admin.API.Extensions;
 using OnAim.Admin.API.Middleware;
 using OnAim.Admin.APP;
 using OnAim.Admin.APP.Extensions;
+using OnAim.Admin.APP.Feature.UserFeature.Commands.Login;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
+using OnAim.Admin.Contracts.Dtos.User;
 using OnAim.Admin.Infrasturcture;
 using Serilog;
 using Serilog.Events;
@@ -23,6 +26,7 @@ builder.Services.AddScoped<HttpClientService>();
 builder.Services.Configure<HubApiClientOptions>(
 builder.Configuration.GetSection("HubApiClientOptions")
 );
+//builder.Services.AddTransient<IRequestHandler<LoginUserCommand, AuthResultDto>, LoginUserCommandHandler>();
 builder.Services.AddHttpClient<IHubApiClient, HubApiClient>(
     (client, sp) =>
     {
@@ -36,6 +40,21 @@ builder.Services.AddHttpClient<IHubApiClient, HubApiClient>(
     }
 );
 
+builder.Services.Configure<LeaderBoardApiClientOptions>(
+    builder.Configuration.GetSection("LeaderBoardApiClientOptions")
+);
+
+builder.Services.AddHttpClient<ILeaderBoardApiClient, LeaderboardApiClient>(
+            (client, sp) =>
+            {
+                var catalogApiOptions = sp.GetRequiredService<IOptions<LeaderBoardApiClientOptions>>();
+                var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
+
+                var baseAddress = catalogApiOptions.Value.BaseApiAddress;
+                client.BaseAddress = new Uri(baseAddress);
+                return new LeaderboardApiClient(client, catalogApiOptions, policyOptions, "admin", "password");
+            }
+        );
 
 //builder.Services.Configure<SagaApiClientOptions>(
 //builder.Configuration.GetSection("SagaApiClientOptions")

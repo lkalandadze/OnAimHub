@@ -74,5 +74,5 @@ public record CreatePromotionTemplate(
     IEnumerable<string> SegmentIds,
     IEnumerable<CreateCoinModel>? Coins,
     IEnumerable<CreateLeaderboardRecordDto>? Leaderboards,
-    IEnumerable<CreateGameConfigurationTemplateDto> Games
+    IEnumerable<GameConfigPromDto> Games
     );

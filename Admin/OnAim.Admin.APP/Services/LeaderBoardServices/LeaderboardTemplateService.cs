@@ -6,6 +6,7 @@ using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Paging;
+using OnAim.Admin.Contracts.Enums;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 
@@ -21,6 +22,23 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
     public async Task<ApplicationResult> GetAllLeaderboardTemplates(BaseFilter filter)
     {
         var temps = await _leaderboardTemplateRepository.GetLeaderboardTemplates();
+
+        if (filter?.HistoryStatus.HasValue == true)
+        {
+            switch (filter.HistoryStatus.Value)
+            {
+                case HistoryStatus.Existing:
+                    temps = temps.Where(u => u.IsDeleted == false).ToList();
+                    break;
+                case HistoryStatus.Deleted:
+                    temps = temps.Where(u => u.IsDeleted == true).ToList();
+                    break;
+                case HistoryStatus.All:
+                    break;
+                default:
+                    break;
+            }
+        }
 
         var totalCount = temps.Count();
 
@@ -151,7 +169,7 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
 
         foreach (var prize in update.LeaderboardPrizes)
         {
-            template.UpdateLeaderboardPrizes(prize.Id, prize.StartRank, prize.EndRank, prize.CoinId, prize.Amount);
+            template.UpdateLeaderboardPrizes(prize.Id.ToString(), prize.StartRank, prize.EndRank, prize.CoinId, prize.Amount);
         }
 
         await _leaderboardTemplateRepository.UpdateLeaderboardTemplateAsync(update.Id, template);

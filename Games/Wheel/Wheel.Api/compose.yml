@@ -13,7 +13,7 @@ services:
       - gamehistorydb
     environment:
       - CONSUL_ADDRESS=http://consul:8500
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__GameConfig=Host=gameconfigdb;Port=5434;Database=WheelConfig;Username=postgres;Password=Test1234!
       - ConnectionStrings__GameHistory=Host=gamehistorydb;Port=5435;Database=WheelHistory;Username=postgres;Password=Test1234!
     volumes:

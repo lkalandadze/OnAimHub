@@ -7,21 +7,16 @@ services:
       dockerfile: Core/Hub/Hub.Api/Dockerfile
     ports:
       - '5002:8080'
+    depends_on:
+      - hubdb
+      - consul
     environment:
       - CONSUL_ADDRESS=http://consul:8500
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__Connection=Host=hubdb;Port=5433;Database=OnAimHub;Username=postgres;Password=Test1234!;Pooling=true;
     volumes:
       - ./appsettings.json:/app/appsettings.json
-    depends_on:
-      - hubdb
-      - consul
     command: ["dotnet", "ef", "database update"]
-  consul:
-    image: consul:latest
-    container_name: consul
-    ports:
-      - "8500:8500"
 
 volumes:
   hubdb_data:
