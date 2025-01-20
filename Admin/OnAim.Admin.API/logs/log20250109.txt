@@ -2572,7 +2572,7 @@ SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated",
 FROM "Endpoints" AS e
 WHERE e."Name" = @__endpoint_Name_0
 LIMIT 1
-2025-01-09 14:41:18.788 +04:00 [INF] Now listening on: http://192.168.10.42:5003
+2025-01-09 14:41:18.788 +04:00 [INF] Now listening on: http://192.168.88.138:5003
 2025-01-09 14:41:18.790 +04:00 [INF] Executed DbCommand (0ms) [Parameters=[@__endpoint_Name_0='?'], CommandType='"Text"', CommandTimeout='30']
 SELECT e."Id", e."CreatedBy", e."DateCreated", e."DateDeleted", e."DateUpdated", e."Description", e."IsActive", e."IsDeleted", e."Name", e."Path", e."Type"
 FROM "Endpoints" AS e
@@ -3323,87 +3323,87 @@ SELECT EXISTS (
 2025-01-09 14:41:19.469 +04:00 [INF] Request starting HTTP/1.1 GET http://localhost:5003/swagger/v1/swagger.json - null null
 2025-01-09 14:41:19.808 +04:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 337.5225 ms
 2025-01-09 14:41:19.810 +04:00 [INF] Request finished HTTP/1.1 GET http://localhost:5003/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 341.047ms
-2025-01-09 14:41:24.909 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/ - null null
+2025-01-09 14:41:24.909 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/ - null null
 2025-01-09 14:41:24.913 +04:00 [INF] HTTP GET /swagger/ responded 301 in 0.2972 ms
-2025-01-09 14:41:24.914 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/ - 301 0 null 5.5478ms
-2025-01-09 14:41:24.925 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/index.html - null null
+2025-01-09 14:41:24.914 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/ - 301 0 null 5.5478ms
+2025-01-09 14:41:24.925 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/index.html - null null
 2025-01-09 14:41:24.928 +04:00 [INF] HTTP GET /swagger/index.html responded 200 in 0.4066 ms
-2025-01-09 14:41:24.929 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/index.html - 200 null text/html;charset=utf-8 4.1629ms
-2025-01-09 14:41:24.957 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/swagger-ui.css - null null
-2025-01-09 14:41:25.002 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/swagger-ui-bundle.js - null null
-2025-01-09 14:41:25.002 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/swagger-ui-standalone-preset.js - null null
-2025-01-09 14:41:25.002 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/_framework/aspnetcore-browser-refresh.js - null null
-2025-01-09 14:41:25.012 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 9.5737ms
+2025-01-09 14:41:24.929 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/index.html - 200 null text/html;charset=utf-8 4.1629ms
+2025-01-09 14:41:24.957 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/swagger-ui.css - null null
+2025-01-09 14:41:25.002 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/swagger-ui-bundle.js - null null
+2025-01-09 14:41:25.002 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/swagger-ui-standalone-preset.js - null null
+2025-01-09 14:41:25.002 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/_framework/aspnetcore-browser-refresh.js - null null
+2025-01-09 14:41:25.012 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 9.5737ms
 2025-01-09 14:41:25.157 +04:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
 2025-01-09 14:41:25.159 +04:00 [INF] HTTP GET /swagger/swagger-ui.css responded 200 in 200.7030 ms
-2025-01-09 14:41:25.160 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/swagger-ui.css - 200 143943 text/css 203.5209ms
-2025-01-09 14:41:25.304 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/_vs/browserLink - null null
-2025-01-09 14:41:25.325 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/_vs/browserLink - 200 null text/javascript; charset=UTF-8 20.6352ms
+2025-01-09 14:41:25.160 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/swagger-ui.css - 200 143943 text/css 203.5209ms
+2025-01-09 14:41:25.304 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/_vs/browserLink - null null
+2025-01-09 14:41:25.325 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/_vs/browserLink - 200 null text/javascript; charset=UTF-8 20.6352ms
 2025-01-09 14:41:25.413 +04:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
 2025-01-09 14:41:25.414 +04:00 [INF] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 406.9931 ms
-2025-01-09 14:41:25.415 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/swagger-ui-standalone-preset.js - 200 339486 text/javascript 413.4835ms
+2025-01-09 14:41:25.415 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/swagger-ui-standalone-preset.js - 200 339486 text/javascript 413.4835ms
 2025-01-09 14:41:26.343 +04:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
 2025-01-09 14:41:26.345 +04:00 [INF] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 1341.3055 ms
-2025-01-09 14:41:26.347 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/swagger-ui-bundle.js - 200 1096145 text/javascript 1345.1361ms
-2025-01-09 14:41:26.834 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/v1/swagger.json - null null
-2025-01-09 14:41:26.848 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/favicon-32x32.png - null null
+2025-01-09 14:41:26.347 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/swagger-ui-bundle.js - 200 1096145 text/javascript 1345.1361ms
+2025-01-09 14:41:26.834 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/v1/swagger.json - null null
+2025-01-09 14:41:26.848 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/favicon-32x32.png - null null
 2025-01-09 14:41:26.850 +04:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
 2025-01-09 14:41:26.850 +04:00 [INF] HTTP GET /swagger/favicon-32x32.png responded 200 in 0.7300 ms
-2025-01-09 14:41:26.851 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/favicon-32x32.png - 200 628 image/png 2.9462ms
+2025-01-09 14:41:26.851 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/favicon-32x32.png - 200 628 image/png 2.9462ms
 2025-01-09 14:41:26.903 +04:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 67.5354 ms
-2025-01-09 14:41:26.904 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 69.9817ms
+2025-01-09 14:41:26.904 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 69.9817ms
 2025-01-09 14:41:27.276 +04:00 [INF] Request starting HTTP/1.1 HEAD http://localhost:5003/ - null null
 2025-01-09 14:41:27.278 +04:00 [WRN] Failed to determine the https port for redirect.
 2025-01-09 14:41:27.381 +04:00 [INF] HTTP HEAD / responded 404 in 103.7253 ms
 2025-01-09 14:41:27.389 +04:00 [INF] Request finished HTTP/1.1 HEAD http://localhost:5003/ - 404 null null 113.8827ms
 2025-01-09 14:41:27.392 +04:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: HEAD http://localhost:5003/, Response status code: 404
-2025-01-09 14:41:34.691 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/ - null null
+2025-01-09 14:41:34.691 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/ - null null
 2025-01-09 14:41:34.717 +04:00 [INF] HTTP GET / responded 404 in 12.8753 ms
-2025-01-09 14:41:34.718 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/ - 404 0 null 26.897ms
-2025-01-09 14:41:34.720 +04:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://192.168.10.42:5003/, Response status code: 404
-2025-01-09 14:41:35.875 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/index.html - null null
+2025-01-09 14:41:34.718 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/ - 404 0 null 26.897ms
+2025-01-09 14:41:34.720 +04:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://192.168.88.138:5003/, Response status code: 404
+2025-01-09 14:41:35.875 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/index.html - null null
 2025-01-09 14:41:35.879 +04:00 [INF] HTTP GET /swagger/index.html responded 200 in 0.3602 ms
-2025-01-09 14:41:35.881 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/index.html - 200 null text/html;charset=utf-8 5.8033ms
-2025-01-09 14:41:35.887 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/_vs/browserLink - null null
-2025-01-09 14:41:35.887 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/_framework/aspnetcore-browser-refresh.js - null null
-2025-01-09 14:41:35.895 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 7.6904ms
-2025-01-09 14:41:35.895 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/_vs/browserLink - 200 null text/javascript; charset=UTF-8 7.8061ms
-2025-01-09 14:41:35.927 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/v1/swagger.json - null null
-2025-01-09 14:41:35.937 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/favicon-32x32.png - null null
+2025-01-09 14:41:35.881 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/index.html - 200 null text/html;charset=utf-8 5.8033ms
+2025-01-09 14:41:35.887 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/_vs/browserLink - null null
+2025-01-09 14:41:35.887 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/_framework/aspnetcore-browser-refresh.js - null null
+2025-01-09 14:41:35.895 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 7.6904ms
+2025-01-09 14:41:35.895 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/_vs/browserLink - 200 null text/javascript; charset=UTF-8 7.8061ms
+2025-01-09 14:41:35.927 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/v1/swagger.json - null null
+2025-01-09 14:41:35.937 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/favicon-32x32.png - null null
 2025-01-09 14:41:35.939 +04:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
 2025-01-09 14:41:35.939 +04:00 [INF] HTTP GET /swagger/favicon-32x32.png responded 200 in 0.7992 ms
-2025-01-09 14:41:35.940 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/favicon-32x32.png - 200 628 image/png 3.4956ms
+2025-01-09 14:41:35.940 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/favicon-32x32.png - 200 628 image/png 3.4956ms
 2025-01-09 14:41:35.976 +04:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 47.3046 ms
-2025-01-09 14:41:35.978 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 50.1951ms
-2025-01-09 14:41:37.786 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger - null null
+2025-01-09 14:41:35.978 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 50.1951ms
+2025-01-09 14:41:37.786 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger - null null
 2025-01-09 14:41:37.801 +04:00 [INF] HTTP GET /swagger responded 301 in 0.1622 ms
-2025-01-09 14:41:37.803 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger - 301 0 null 17.2993ms
-2025-01-09 14:41:37.811 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/index.html - null null
+2025-01-09 14:41:37.803 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger - 301 0 null 17.2993ms
+2025-01-09 14:41:37.811 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/index.html - null null
 2025-01-09 14:41:37.814 +04:00 [INF] HTTP GET /swagger/index.html responded 200 in 0.2853 ms
-2025-01-09 14:41:37.815 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/index.html - 200 null text/html;charset=utf-8 4.0942ms
-2025-01-09 14:41:37.824 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/swagger-ui.css - null null
-2025-01-09 14:41:37.848 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/swagger-ui-bundle.js - null null
-2025-01-09 14:41:37.848 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/swagger-ui-standalone-preset.js - null null
-2025-01-09 14:41:37.848 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/_framework/aspnetcore-browser-refresh.js - null null
-2025-01-09 14:41:37.854 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 5.5198ms
-2025-01-09 14:41:37.881 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/_vs/browserLink - null null
+2025-01-09 14:41:37.815 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/index.html - 200 null text/html;charset=utf-8 4.0942ms
+2025-01-09 14:41:37.824 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/swagger-ui.css - null null
+2025-01-09 14:41:37.848 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/swagger-ui-bundle.js - null null
+2025-01-09 14:41:37.848 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/swagger-ui-standalone-preset.js - null null
+2025-01-09 14:41:37.848 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/_framework/aspnetcore-browser-refresh.js - null null
+2025-01-09 14:41:37.854 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 5.5198ms
+2025-01-09 14:41:37.881 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/_vs/browserLink - null null
 2025-01-09 14:41:37.970 +04:00 [INF] Sending file. Request path: '/swagger-ui.css'. Physical path: 'N/A'
 2025-01-09 14:41:37.972 +04:00 [INF] HTTP GET /swagger/swagger-ui.css responded 200 in 146.3516 ms
-2025-01-09 14:41:37.974 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/swagger-ui.css - 200 143943 text/css 150.5751ms
-2025-01-09 14:41:38.221 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/_vs/browserLink - 200 null text/javascript; charset=UTF-8 339.6653ms
+2025-01-09 14:41:37.974 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/swagger-ui.css - 200 143943 text/css 150.5751ms
+2025-01-09 14:41:38.221 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/_vs/browserLink - 200 null text/javascript; charset=UTF-8 339.6653ms
 2025-01-09 14:41:38.352 +04:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
 2025-01-09 14:41:38.353 +04:00 [INF] HTTP GET /swagger/swagger-ui-standalone-preset.js responded 200 in 501.3747 ms
-2025-01-09 14:41:38.354 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/swagger-ui-standalone-preset.js - 200 339486 text/javascript 505.8983ms
+2025-01-09 14:41:38.354 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/swagger-ui-standalone-preset.js - 200 339486 text/javascript 505.8983ms
 2025-01-09 14:41:39.037 +04:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
 2025-01-09 14:41:39.042 +04:00 [INF] HTTP GET /swagger/swagger-ui-bundle.js responded 200 in 1192.3554 ms
-2025-01-09 14:41:39.046 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/swagger-ui-bundle.js - 200 1096145 text/javascript 1198.0893ms
-2025-01-09 14:41:39.298 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/v1/swagger.json - null null
-2025-01-09 14:41:39.307 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.10.42:5003/swagger/favicon-32x32.png - null null
+2025-01-09 14:41:39.046 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/swagger-ui-bundle.js - 200 1096145 text/javascript 1198.0893ms
+2025-01-09 14:41:39.298 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/v1/swagger.json - null null
+2025-01-09 14:41:39.307 +04:00 [INF] Request starting HTTP/1.1 GET http://192.168.88.138:5003/swagger/favicon-32x32.png - null null
 2025-01-09 14:41:39.310 +04:00 [INF] Sending file. Request path: '/favicon-32x32.png'. Physical path: 'N/A'
 2025-01-09 14:41:39.311 +04:00 [INF] HTTP GET /swagger/favicon-32x32.png responded 200 in 1.0181 ms
-2025-01-09 14:41:39.313 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/favicon-32x32.png - 200 628 image/png 6.3334ms
+2025-01-09 14:41:39.313 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/favicon-32x32.png - 200 628 image/png 6.3334ms
 2025-01-09 14:41:39.337 +04:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 29.2017 ms
-2025-01-09 14:41:39.339 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.10.42:5003/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 40.8509ms
+2025-01-09 14:41:39.339 +04:00 [INF] Request finished HTTP/1.1 GET http://192.168.88.138:5003/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 40.8509ms
 2025-01-09 10:47:33.428 +00:00 [INF] Executed DbCommand (34ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
 SELECT EXISTS (
     SELECT 1 FROM pg_catalog.pg_class c

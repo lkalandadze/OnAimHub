@@ -143,7 +143,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateways\A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{EE94F689-46A1-4602-B1E2-973885B7AA6C}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose_old.yml = docker-compose_old.yml
+		Docker\.dockerignore = Docker\.dockerignore
+		.env = .env
+		docker-compose.yml = docker-compose.yml
+		Docker\docker-compose_internal.yml = Docker\docker-compose_internal.yml
+		Docker\Infrastructure.yml = Docker\Infrastructure.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{85636CEE-9827-4A53-AF0B-370ACC7732FD}"
@@ -189,8 +193,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenaltyKicks.Domain", "Games\PenaltyKicks\PenaltyKicks.Domain\PenaltyKicks.Domain.csproj", "{118F2BE1-A5A3-4E16-A42D-4E2DCDD060A3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenaltyKicks.Infrastructure", "Games\PenaltyKicks\PenaltyKicks.Infrastructure\PenaltyKicks.Infrastructure.csproj", "{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}"
-EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AF04F42A-5FBB-439B-860C-734F3FFF3E97}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

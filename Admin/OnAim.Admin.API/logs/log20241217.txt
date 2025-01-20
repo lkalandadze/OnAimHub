@@ -1092,8 +1092,8 @@ WHERE "Id" = @p1;
 2024-12-17 08:32:09.154 +04:00 [INF] CORS policy execution successful.
 2024-12-17 08:32:09.174 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.PromotionController.CreatePromotionView (OnAim.Admin.API)'
 2024-12-17 08:32:09.177 +04:00 [INF] Route matched with {action = "CreatePromotionView", controller = "Promotion"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreatePromotionView(OnAim.Admin.APP.CreatePromotionView) on controller OnAim.Admin.API.Controllers.PromotionController (OnAim.Admin.API).
-2024-12-17 08:32:09.361 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:5002/Admin/CreatePromotionView
-2024-12-17 08:32:09.362 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:5002/Admin/CreatePromotionView
+2024-12-17 08:32:09.361 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:5002/Admin/CreatePromotionView
+2024-12-17 08:32:09.362 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:5002/Admin/CreatePromotionView
 2024-12-17 08:32:11.510 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.CreatePromotionView (OnAim.Admin.API) in 2332.0412ms
 2024-12-17 08:32:11.512 +04:00 [INF] Executed endpoint 'OnAim.Admin.API.Controllers.PromotionController.CreatePromotionView (OnAim.Admin.API)'
 2024-12-17 08:32:11.563 +04:00 [ERR] HTTP POST /api/Promotion/CreatePromotionView responded 500 in 2409.7036 ms
@@ -2147,8 +2147,8 @@ SELECT EXISTS (
 2024-12-17 08:33:08.393 +04:00 [INF] CORS policy execution successful.
 2024-12-17 08:33:08.507 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.PromotionController.CreatePromotionView (OnAim.Admin.API)'
 2024-12-17 08:33:08.515 +04:00 [INF] Route matched with {action = "CreatePromotionView", controller = "Promotion"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreatePromotionView(OnAim.Admin.APP.CreatePromotionView) on controller OnAim.Admin.API.Controllers.PromotionController (OnAim.Admin.API).
-2024-12-17 08:33:10.346 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:5002/Admin/CreatePromotionView
-2024-12-17 08:33:10.348 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:5002/Admin/CreatePromotionView
+2024-12-17 08:33:10.346 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:5002/Admin/CreatePromotionView
+2024-12-17 08:33:10.348 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:5002/Admin/CreatePromotionView
 2024-12-17 08:33:49.106 +04:00 [INF] Executed DbCommand (27ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
 SELECT EXISTS (
     SELECT 1 FROM pg_catalog.pg_class c

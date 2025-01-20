@@ -75,7 +75,7 @@ public class PenaltyService : IPenaltyService
         };
     }
 
-    public async Task<BetResponseModel> PlaceBetAsync(int promotionId, string betPriceId)
+    public async Task<BetResponseModel> PlaceBetAsync(int promotionId, int betPriceId)
     {
         var playerId = _authService.GetCurrentPlayerId();
 

@@ -71,15 +71,15 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
                 throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "One or more Segment IDs are invalid.");
             }
 
-            var services = await _serviceRepository
-                    .Query()
-                    .Where(s => request.ServiceIds.Contains(s.Id))
-                    .ToListAsync(cancellationToken);
+            //var services = await _serviceRepository
+            //        .Query()
+            //        .Where(s => request.ServiceIds.Contains(s.Id))
+            //        .ToListAsync(cancellationToken);
 
-                            if (services.Count != request.ServiceIds.Count())
-                            {
-                                throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "One or more Service IDs are invalid.");
-                            }
+            //                if (services.Count != request.ServiceIds.Count())
+            //                {
+            //                    throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, "One or more Service IDs are invalid.");
+            //                }
 
             var promotion = new Promotion(
                 request.StartDate,
@@ -92,10 +92,10 @@ public class CreatePromotionCommandHandler : IRequestHandler<CreatePromotionComm
                 segments: segments
             );
 
-            foreach (var service in services)
-            {
-                promotion.Services.Add(service);
-            }
+            //foreach (var service in services)
+            //{
+            //    promotion.Services.Add(service);
+            //}
 
 
             await _promotionRepository.InsertAsync(promotion);

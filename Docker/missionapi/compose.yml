@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  missionapi:
+    build:
+      context: ../../
+      dockerfile: CoreModules/MissionService/MissionService.Api/Dockerfile
+    ports:
+      - "5009:8080"
+    depends_on:
+      - consul
+    environment:
+      - CONSUL_ADDRESS=${CONSUL_ADDRESS}
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ConnectionStrings__OnAimMission=Host=postgresql;Port=5432;Database=OnAimMission;Username=postgres;Password=Test1234!
+    volumes:
+      - ./appsettings.json:/app/appsettings.json
+
+
+  postgresql:
+    image: postgres:13
+    container_name: postgresql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test1234!
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+
+volumes:
+  postgresql_data:

@@ -1,9 +1,12 @@
 ﻿#nullable disable
 
+using CheckmateValidations;
 using GameLib.Domain.Entities;
+using Wheel.Domain.Checkers;
 
 namespace Wheel.Domain.Entities;
 
+[CheckMate<WheelConfigurationChecker>]
 public class WheelConfiguration : GameConfiguration<WheelConfiguration>
 {
     public WheelConfiguration()

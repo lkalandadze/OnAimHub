@@ -40,11 +40,21 @@ public class GameConfigurationService : IGameConfigurationService
         return new Response<EntityMetadata?> { Data = _entityGenerator.GenerateEntityMetadata(Globals.ConfigurationType) };
     }
 
-    public async Task<Response<IEnumerable<GameConfiguration>>> GetAllAsync(int promotionId)
+    public async Task<Response<IEnumerable<GameConfiguration>>> GetAllAsync(int? configurationId, int? promotionId)
     {
-        var configurations = await _configurationRepository.QueryAsync(x => x.PromotionId == promotionId);
+        var configurations = _configurationRepository.Query();
 
-        return new Response<IEnumerable<GameConfiguration>>() { Data = configurations };
+        if (configurationId != null)
+        {
+            configurations = configurations.Where(x => x.Id == configurationId);
+        }
+
+        if (promotionId != null)
+        {
+            configurations = configurations.Where(x => x.PromotionId == promotionId);
+        }
+
+        return new Response<IEnumerable<GameConfiguration>>() { Data = await configurations.ToListAsync() };
     }
 
     public async Task<Response<GameConfiguration>> GetByIdAsync(int id)

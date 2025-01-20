@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  hubapi:
+    build:
+      context: ../../
+      dockerfile: Core/Hub/Hub.Api/Dockerfile
+    ports:
+      - '8882:8080'
+    environment:
+      # - CONSUL_ADDRESS=${CONSUL_ADDRESS}
+      # - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ConnectionStrings__Connection=Host=postgresql;Port=5432;Database=OnAimHub;Username=postgres;Password=Test1234!;Pooling=true;
+    volumes:
+      - ./appsettings.json:/app/appsettings.json
+
+  postgresql:
+    image: postgres:13
+    container_name: postgresql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test1234!
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+
+volumes:
+  postgresql_data:

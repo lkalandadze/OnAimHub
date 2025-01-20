@@ -623,6 +623,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "promotionName": {
+            "type": "string",
+            "nullable": true
+          },
           "title": {
             "type": "string",
             "nullable": true
@@ -667,6 +671,11 @@
           },
           "templateId": {
             "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "correlationId": {
@@ -1174,6 +1183,14 @@
           "id": {
             "type": "integer",
             "format": "int32"
+          },
+          "promotionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "promotionName": {
+            "type": "string",
+            "nullable": true
           },
           "title": {
             "type": "string",

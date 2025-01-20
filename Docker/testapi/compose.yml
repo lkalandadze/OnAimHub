@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  testapi:
+    build:
+      context: ../../
+      dockerfile: Helpers/Test.Api/Dockerfile
+    ports:
+      - "5005:8080"
+    volumes:
+      - ./appsettings.json:/app/appsettings.json

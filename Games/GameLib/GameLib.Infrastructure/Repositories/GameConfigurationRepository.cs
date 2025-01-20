@@ -24,16 +24,18 @@ public class GameConfigurationRepository(SharedGameConfigDbContext context) : Ba
     {
         var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
         var type = RepositoryHelper.GetDbSetEntityType<GameConfiguration>(context);
+        var data = dbSet.IncludeNotHiddenAll(type);
 
-        return expression != null ? dbSet.IncludeNotHiddenAll(type).Where(expression) : dbSet.IncludeNotHiddenAll(type);
+        return expression != null ? data.Where(expression) : data;
     }
 
     public override async Task<List<GameConfiguration>> QueryAsync(Expression<Func<GameConfiguration, bool>>? expression = null)
     {
         var dbSet = RepositoryHelper.GetDbSet<GameConfiguration>(context);
         var type = RepositoryHelper.GetDbSetEntityType<GameConfiguration>(context);
+        var data = dbSet.IncludeNotHiddenAll(type);
 
-        return expression != null ? await dbSet.IncludeNotHiddenAll(type).Where(expression).ToListAsync() : await dbSet.IncludeNotHiddenAll(type).ToListAsync();
+        return expression != null ? await data.Where(expression).ToListAsync() : await data.ToListAsync();
     }
 
     public void DeleteConfigurationTree(GameConfiguration aggregateRoot)

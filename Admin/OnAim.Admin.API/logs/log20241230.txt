@@ -7515,8 +7515,8 @@ SELECT EXISTS (
 2024-12-30 15:46:12.527 +04:00 [INF] CORS policy execution successful.
 2024-12-30 15:46:12.650 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.PromotionController.DeletePromotion (OnAim.Admin.API)'
 2024-12-30 15:46:12.660 +04:00 [INF] Route matched with {action = "DeletePromotion", controller = "Promotion"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeletePromotion(Int32) on controller OnAim.Admin.API.Controllers.PromotionController (OnAim.Admin.API).
-2024-12-30 15:46:12.730 +04:00 [INF] Start processing HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/SoftDeletePromotion
-2024-12-30 15:46:12.731 +04:00 [INF] Sending HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/SoftDeletePromotion
+2024-12-30 15:46:12.730 +04:00 [INF] Start processing HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/SoftDeletePromotion
+2024-12-30 15:46:12.731 +04:00 [INF] Sending HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/SoftDeletePromotion
 2024-12-30 15:46:12.747 +04:00 [INF] Received HTTP response headers after 14.2318ms - 400
 2024-12-30 15:46:12.748 +04:00 [INF] End processing HTTP request after 18.7806ms - 400
 2024-12-30 15:46:12.947 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.DeletePromotion (OnAim.Admin.API) in 284.0755ms
@@ -8579,8 +8579,8 @@ SELECT EXISTS (
 2024-12-30 15:49:17.860 +04:00 [INF] CORS policy execution successful.
 2024-12-30 15:49:17.956 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.PromotionController.DeletePromotion (OnAim.Admin.API)'
 2024-12-30 15:49:17.964 +04:00 [INF] Route matched with {action = "DeletePromotion", controller = "Promotion"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeletePromotion(Int32) on controller OnAim.Admin.API.Controllers.PromotionController (OnAim.Admin.API).
-2024-12-30 15:49:21.776 +04:00 [INF] Start processing HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/SoftDeletePromotion
-2024-12-30 15:49:21.777 +04:00 [INF] Sending HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/SoftDeletePromotion
+2024-12-30 15:49:21.776 +04:00 [INF] Start processing HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/SoftDeletePromotion
+2024-12-30 15:49:21.777 +04:00 [INF] Sending HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/SoftDeletePromotion
 2024-12-30 15:49:21.799 +04:00 [INF] Received HTTP response headers after 19.6684ms - 400
 2024-12-30 15:49:21.800 +04:00 [INF] End processing HTTP request after 25.6575ms - 400
 2024-12-30 15:49:43.411 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.DeletePromotion (OnAim.Admin.API) in 25444.595ms
@@ -8591,8 +8591,8 @@ SELECT EXISTS (
 2024-12-30 15:52:29.355 +04:00 [INF] CORS policy execution successful.
 2024-12-30 15:52:29.359 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.PromotionController.DeletePromotion (OnAim.Admin.API)'
 2024-12-30 15:52:29.359 +04:00 [INF] Route matched with {action = "DeletePromotion", controller = "Promotion"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeletePromotion(Int32) on controller OnAim.Admin.API.Controllers.PromotionController (OnAim.Admin.API).
-2024-12-30 15:52:33.843 +04:00 [INF] Start processing HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/SoftDeletePromotion
-2024-12-30 15:52:33.844 +04:00 [INF] Sending HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/SoftDeletePromotion
+2024-12-30 15:52:33.843 +04:00 [INF] Start processing HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/SoftDeletePromotion
+2024-12-30 15:52:33.844 +04:00 [INF] Sending HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/SoftDeletePromotion
 2024-12-30 15:52:33.892 +04:00 [INF] Received HTTP response headers after 47.08ms - 400
 2024-12-30 15:52:33.894 +04:00 [INF] End processing HTTP request after 50.6618ms - 400
 2024-12-30 15:53:12.842 +04:00 [INF] Executed DbCommand (32ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
@@ -9651,8 +9651,8 @@ SELECT EXISTS (
 2024-12-30 15:54:06.837 +04:00 [INF] CORS policy execution successful.
 2024-12-30 15:54:06.925 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.PromotionController.DeletePromotion (OnAim.Admin.API)'
 2024-12-30 15:54:06.933 +04:00 [INF] Route matched with {action = "DeletePromotion", controller = "Promotion"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeletePromotion(Int32) on controller OnAim.Admin.API.Controllers.PromotionController (OnAim.Admin.API).
-2024-12-30 15:54:10.266 +04:00 [INF] Start processing HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/SoftDeletePromotion
-2024-12-30 15:54:10.268 +04:00 [INF] Sending HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/SoftDeletePromotion
+2024-12-30 15:54:10.266 +04:00 [INF] Start processing HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/SoftDeletePromotion
+2024-12-30 15:54:10.268 +04:00 [INF] Sending HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/SoftDeletePromotion
 2024-12-30 15:54:10.304 +04:00 [INF] Received HTTP response headers after 34.3159ms - 500
 2024-12-30 15:54:10.305 +04:00 [INF] End processing HTTP request after 40.0425ms - 500
 2024-12-30 15:54:13.892 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.DeletePromotion (OnAim.Admin.API) in 6955.3289ms
@@ -9663,8 +9663,8 @@ SELECT EXISTS (
 2024-12-30 15:54:20.522 +04:00 [INF] CORS policy execution successful.
 2024-12-30 15:54:20.525 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.PromotionController.DeletePromotion (OnAim.Admin.API)'
 2024-12-30 15:54:20.526 +04:00 [INF] Route matched with {action = "DeletePromotion", controller = "Promotion"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeletePromotion(Int32) on controller OnAim.Admin.API.Controllers.PromotionController (OnAim.Admin.API).
-2024-12-30 15:54:22.787 +04:00 [INF] Start processing HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/SoftDeletePromotion
-2024-12-30 15:54:22.788 +04:00 [INF] Sending HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/SoftDeletePromotion
+2024-12-30 15:54:22.787 +04:00 [INF] Start processing HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/SoftDeletePromotion
+2024-12-30 15:54:22.788 +04:00 [INF] Sending HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/SoftDeletePromotion
 2024-12-30 15:54:22.846 +04:00 [INF] Received HTTP response headers after 56.9991ms - 500
 2024-12-30 15:54:22.847 +04:00 [INF] End processing HTTP request after 59.6352ms - 500
 2024-12-30 15:54:30.036 +04:00 [INF] Executed action OnAim.Admin.API.Controllers.PromotionController.DeletePromotion (OnAim.Admin.API) in 9509.6522ms
@@ -9675,8 +9675,8 @@ SELECT EXISTS (
 2024-12-30 15:55:13.844 +04:00 [INF] CORS policy execution successful.
 2024-12-30 15:55:13.846 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.PromotionController.DeletePromotion (OnAim.Admin.API)'
 2024-12-30 15:55:13.848 +04:00 [INF] Route matched with {action = "DeletePromotion", controller = "Promotion"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeletePromotion(Int32) on controller OnAim.Admin.API.Controllers.PromotionController (OnAim.Admin.API).
-2024-12-30 15:55:16.447 +04:00 [INF] Start processing HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/SoftDeletePromotion
-2024-12-30 15:55:16.448 +04:00 [INF] Sending HTTP request PUT http://192.168.10.42:8003/hubapi/Admin/SoftDeletePromotion
+2024-12-30 15:55:16.447 +04:00 [INF] Start processing HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/SoftDeletePromotion
+2024-12-30 15:55:16.448 +04:00 [INF] Sending HTTP request PUT http://192.168.88.138:8003/hubapi/Admin/SoftDeletePromotion
 2024-12-30 15:55:16.488 +04:00 [INF] Received HTTP response headers after 38.9962ms - 200
 2024-12-30 15:55:16.489 +04:00 [INF] End processing HTTP request after 41.7858ms - 200
 2024-12-30 15:55:18.989 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9688,8 +9688,8 @@ SELECT EXISTS (
 2024-12-30 15:59:28.247 +04:00 [INF] CORS policy execution successful.
 2024-12-30 15:59:28.248 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOptionEndpoint (OnAim.Admin.API)'
 2024-12-30 15:59:28.252 +04:00 [INF] Route matched with {action = "CreateWithdrawOptionEndpoint", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOptionEndpoint(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionEndpointDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 15:59:28.264 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOptionEndpoint
-2024-12-30 15:59:28.265 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOptionEndpoint
+2024-12-30 15:59:28.264 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOptionEndpoint
+2024-12-30 15:59:28.265 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOptionEndpoint
 2024-12-30 15:59:28.310 +04:00 [INF] Received HTTP response headers after 44.8348ms - 200
 2024-12-30 15:59:28.311 +04:00 [INF] End processing HTTP request after 46.5053ms - 200
 2024-12-30 15:59:28.312 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9701,8 +9701,8 @@ SELECT EXISTS (
 2024-12-30 15:59:36.333 +04:00 [INF] CORS policy execution successful.
 2024-12-30 15:59:36.335 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOptionEndpoint (OnAim.Admin.API)'
 2024-12-30 15:59:36.336 +04:00 [INF] Route matched with {action = "CreateWithdrawOptionEndpoint", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOptionEndpoint(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionEndpointDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 15:59:36.339 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOptionEndpoint
-2024-12-30 15:59:36.340 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOptionEndpoint
+2024-12-30 15:59:36.339 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOptionEndpoint
+2024-12-30 15:59:36.340 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOptionEndpoint
 2024-12-30 15:59:36.376 +04:00 [INF] Received HTTP response headers after 34.7514ms - 200
 2024-12-30 15:59:36.376 +04:00 [INF] End processing HTTP request after 36.8284ms - 200
 2024-12-30 15:59:36.377 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9714,8 +9714,8 @@ SELECT EXISTS (
 2024-12-30 16:00:03.176 +04:00 [INF] CORS policy execution successful.
 2024-12-30 16:00:03.177 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOption (OnAim.Admin.API)'
 2024-12-30 16:00:03.179 +04:00 [INF] Route matched with {action = "CreateWithdrawOption", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOption(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 16:00:03.201 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
-2024-12-30 16:00:03.202 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:03.201 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:03.202 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
 2024-12-30 16:00:03.228 +04:00 [INF] Received HTTP response headers after 26.1142ms - 200
 2024-12-30 16:00:03.229 +04:00 [INF] End processing HTTP request after 28.1516ms - 200
 2024-12-30 16:00:03.230 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9727,8 +9727,8 @@ SELECT EXISTS (
 2024-12-30 16:00:05.167 +04:00 [INF] CORS policy execution successful.
 2024-12-30 16:00:05.168 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOption (OnAim.Admin.API)'
 2024-12-30 16:00:05.169 +04:00 [INF] Route matched with {action = "CreateWithdrawOption", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOption(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 16:00:05.171 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
-2024-12-30 16:00:05.171 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:05.171 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:05.171 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
 2024-12-30 16:00:05.214 +04:00 [INF] Received HTTP response headers after 41.75ms - 200
 2024-12-30 16:00:05.214 +04:00 [INF] End processing HTTP request after 43.6221ms - 200
 2024-12-30 16:00:05.215 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9740,8 +9740,8 @@ SELECT EXISTS (
 2024-12-30 16:00:05.362 +04:00 [INF] CORS policy execution successful.
 2024-12-30 16:00:05.363 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOption (OnAim.Admin.API)'
 2024-12-30 16:00:05.366 +04:00 [INF] Route matched with {action = "CreateWithdrawOption", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOption(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 16:00:05.368 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
-2024-12-30 16:00:05.369 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:05.368 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:05.369 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
 2024-12-30 16:00:05.414 +04:00 [INF] Received HTTP response headers after 43.047ms - 200
 2024-12-30 16:00:05.414 +04:00 [INF] End processing HTTP request after 46.1146ms - 200
 2024-12-30 16:00:05.415 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9753,8 +9753,8 @@ SELECT EXISTS (
 2024-12-30 16:00:05.529 +04:00 [INF] CORS policy execution successful.
 2024-12-30 16:00:05.530 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOption (OnAim.Admin.API)'
 2024-12-30 16:00:05.530 +04:00 [INF] Route matched with {action = "CreateWithdrawOption", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOption(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 16:00:05.532 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
-2024-12-30 16:00:05.533 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:05.532 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:05.533 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
 2024-12-30 16:00:05.561 +04:00 [INF] Received HTTP response headers after 26.906ms - 200
 2024-12-30 16:00:05.562 +04:00 [INF] End processing HTTP request after 29.4243ms - 200
 2024-12-30 16:00:05.562 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9766,8 +9766,8 @@ SELECT EXISTS (
 2024-12-30 16:00:05.690 +04:00 [INF] CORS policy execution successful.
 2024-12-30 16:00:05.691 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOption (OnAim.Admin.API)'
 2024-12-30 16:00:05.692 +04:00 [INF] Route matched with {action = "CreateWithdrawOption", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOption(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 16:00:05.693 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
-2024-12-30 16:00:05.694 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:05.693 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:05.694 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
 2024-12-30 16:00:05.739 +04:00 [INF] Received HTTP response headers after 44.1794ms - 200
 2024-12-30 16:00:05.739 +04:00 [INF] End processing HTTP request after 45.9856ms - 200
 2024-12-30 16:00:05.740 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9779,8 +9779,8 @@ SELECT EXISTS (
 2024-12-30 16:00:05.843 +04:00 [INF] CORS policy execution successful.
 2024-12-30 16:00:05.844 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOption (OnAim.Admin.API)'
 2024-12-30 16:00:05.845 +04:00 [INF] Route matched with {action = "CreateWithdrawOption", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOption(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 16:00:05.846 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
-2024-12-30 16:00:05.850 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:05.846 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:05.850 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
 2024-12-30 16:00:05.877 +04:00 [INF] Received HTTP response headers after 25.7296ms - 200
 2024-12-30 16:00:05.878 +04:00 [INF] End processing HTTP request after 31.6705ms - 200
 2024-12-30 16:00:05.878 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9792,8 +9792,8 @@ SELECT EXISTS (
 2024-12-30 16:00:05.999 +04:00 [INF] CORS policy execution successful.
 2024-12-30 16:00:06.000 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOption (OnAim.Admin.API)'
 2024-12-30 16:00:06.001 +04:00 [INF] Route matched with {action = "CreateWithdrawOption", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOption(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 16:00:06.004 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
-2024-12-30 16:00:06.004 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:06.004 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:06.004 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
 2024-12-30 16:00:06.081 +04:00 [INF] Received HTTP response headers after 76.3314ms - 200
 2024-12-30 16:00:06.085 +04:00 [INF] End processing HTTP request after 81.3686ms - 200
 2024-12-30 16:00:06.087 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9805,8 +9805,8 @@ SELECT EXISTS (
 2024-12-30 16:00:06.157 +04:00 [INF] CORS policy execution successful.
 2024-12-30 16:00:06.157 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOption (OnAim.Admin.API)'
 2024-12-30 16:00:06.158 +04:00 [INF] Route matched with {action = "CreateWithdrawOption", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOption(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 16:00:06.159 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
-2024-12-30 16:00:06.160 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:06.159 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:06.160 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
 2024-12-30 16:00:06.187 +04:00 [INF] Received HTTP response headers after 25.8292ms - 200
 2024-12-30 16:00:06.188 +04:00 [INF] End processing HTTP request after 28.3155ms - 200
 2024-12-30 16:00:06.188 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9818,8 +9818,8 @@ SELECT EXISTS (
 2024-12-30 16:00:06.322 +04:00 [INF] CORS policy execution successful.
 2024-12-30 16:00:06.323 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOption (OnAim.Admin.API)'
 2024-12-30 16:00:06.324 +04:00 [INF] Route matched with {action = "CreateWithdrawOption", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOption(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 16:00:06.326 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
-2024-12-30 16:00:06.327 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:06.326 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:06.327 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
 2024-12-30 16:00:06.356 +04:00 [INF] Received HTTP response headers after 28.7591ms - 200
 2024-12-30 16:00:06.357 +04:00 [INF] End processing HTTP request after 31.0629ms - 200
 2024-12-30 16:00:06.358 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9831,8 +9831,8 @@ SELECT EXISTS (
 2024-12-30 16:00:06.477 +04:00 [INF] CORS policy execution successful.
 2024-12-30 16:00:06.478 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOption (OnAim.Admin.API)'
 2024-12-30 16:00:06.479 +04:00 [INF] Route matched with {action = "CreateWithdrawOption", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOption(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 16:00:06.483 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
-2024-12-30 16:00:06.484 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:06.483 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:06.484 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
 2024-12-30 16:00:06.515 +04:00 [INF] Received HTTP response headers after 30.6822ms - 200
 2024-12-30 16:00:06.517 +04:00 [INF] End processing HTTP request after 33.6908ms - 200
 2024-12-30 16:00:06.518 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9844,8 +9844,8 @@ SELECT EXISTS (
 2024-12-30 16:00:06.618 +04:00 [INF] CORS policy execution successful.
 2024-12-30 16:00:06.619 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOption (OnAim.Admin.API)'
 2024-12-30 16:00:06.620 +04:00 [INF] Route matched with {action = "CreateWithdrawOption", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOption(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 16:00:06.622 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
-2024-12-30 16:00:06.623 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:06.622 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:06.623 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
 2024-12-30 16:00:06.660 +04:00 [INF] Received HTTP response headers after 36.5278ms - 200
 2024-12-30 16:00:06.661 +04:00 [INF] End processing HTTP request after 38.8681ms - 200
 2024-12-30 16:00:06.662 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.
@@ -9857,8 +9857,8 @@ SELECT EXISTS (
 2024-12-30 16:00:06.764 +04:00 [INF] CORS policy execution successful.
 2024-12-30 16:00:06.765 +04:00 [INF] Executing endpoint 'OnAim.Admin.API.Controllers.CoinController.CreateWithdrawOption (OnAim.Admin.API)'
 2024-12-30 16:00:06.766 +04:00 [INF] Route matched with {action = "CreateWithdrawOption", controller = "Coin"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateWithdrawOption(OnAim.Admin.Contracts.Dtos.Coin.CreateWithdrawOptionDto) on controller OnAim.Admin.API.Controllers.CoinController (OnAim.Admin.API).
-2024-12-30 16:00:06.768 +04:00 [INF] Start processing HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
-2024-12-30 16:00:06.769 +04:00 [INF] Sending HTTP request POST http://192.168.10.42:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:06.768 +04:00 [INF] Start processing HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
+2024-12-30 16:00:06.769 +04:00 [INF] Sending HTTP request POST http://192.168.88.138:8003/hubapi/Admin/CreateWithdrawOption
 2024-12-30 16:00:06.798 +04:00 [INF] Received HTTP response headers after 28.4121ms - 200
 2024-12-30 16:00:06.799 +04:00 [INF] End processing HTTP request after 30.4411ms - 200
 2024-12-30 16:00:06.800 +04:00 [INF] Executing OkObjectResult, writing value of type 'OnAim.Admin.Contracts.ApplicationInfrastructure.ApplicationResult'.

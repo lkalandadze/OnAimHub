@@ -4,7 +4,7 @@ namespace GameLib.Application.Models.Price;
 
 public class PriceBaseGetModel
 {
-    public string BetPriceId { get; set; }
+    public int BetPriceId { get; set; }
     public decimal BetAmount { get; set; }
     public string Coin { get; set; }
 

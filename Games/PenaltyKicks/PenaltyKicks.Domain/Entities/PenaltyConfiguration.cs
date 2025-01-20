@@ -1,9 +1,12 @@
 ﻿#nullable disable
 
+using CheckmateValidations;
 using GameLib.Domain.Entities;
+using PenaltyKicks.Domain.Checkers;
 
 namespace PenaltyKicks.Domain.Entities;
 
+[CheckMate<PenaltyConfigurationChecker>]
 public class PenaltyConfiguration : GameConfiguration<PenaltyConfiguration>
 {
     public PenaltyConfiguration()

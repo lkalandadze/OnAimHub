@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  hubapi:
+    build:
+      context: ../../../
+      dockerfile: Core/Hub/Hub.Api/Dockerfile
+    ports:
+      - '5002:8080'
+    environment:
+      - CONSUL_ADDRESS=http://consul:8500
+      # - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ConnectionStrings__Connection=Host=hubdb;Port=5433;Database=OnAimHub;Username=postgres;Password=Test1234!;Pooling=true;
+    volumes:
+      - ./appsettings.json:/app/appsettings.json
+    depends_on:
+      - hubdb
+    command: ["dotnet", "ef", "database update"]
+
+volumes:
+  hubdb_data:

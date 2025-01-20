@@ -36,7 +36,7 @@ public class CoinController : ApiControllerBase
         => Ok(await Mediator.Send(new UpdateWithdrawOptionCommand(create)));
 
     [HttpPost(nameof(DeleteWithdrawOption))]
-    public async Task<IActionResult> DeleteWithdrawOption([FromBody] int id)
+    public async Task<IActionResult> DeleteWithdrawOption([FromQuery] List<int> id)
         => Ok(await Mediator.Send(new DeleteWithdrawOptionCommand(id)));
 
     [HttpGet(nameof(GetAllWithdrawOptions))]
@@ -56,7 +56,7 @@ public class CoinController : ApiControllerBase
         => Ok(await Mediator.Send(new UpdateWithdrawOptionGroupCommand(create)));
 
     [HttpPost(nameof(DeleteWithdrawOptiongroup))]
-    public async Task<IActionResult> DeleteWithdrawOptiongroup([FromBody] int id)
+    public async Task<IActionResult> DeleteWithdrawOptiongroup([FromQuery] List<int> id)
         => Ok(await Mediator.Send(new DeleteWithdrawOptiongroupCommand(id)));
 
     [HttpGet(nameof(GetAllWithdrawOptionGroups))]
@@ -76,7 +76,7 @@ public class CoinController : ApiControllerBase
         => Ok(await Mediator.Send(new UpdateWithdrawOptionEndpointCommand(create)));
 
     [HttpPost(nameof(DeleteWithdrawOptionEndpoint))]
-    public async Task<IActionResult> DeleteWithdrawOptionEndpoint([FromBody] int id)
+    public async Task<IActionResult> DeleteWithdrawOptionEndpoint([FromQuery] List<int> id)
         => Ok(await Mediator.Send(new DeleteWithdrawOptionEndpointCommand(id)));
 
     [HttpGet(nameof(GetAllWithdrawOptionEndpoints))]

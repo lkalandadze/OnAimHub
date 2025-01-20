@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  sagamachine:
+    build:
+      context: ../../
+      dockerfile: StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/Dockerfile
+    ports:
+      - "5007:8080"
+    volumes:
+      - ./appsettings.json:/app/appsettings.json

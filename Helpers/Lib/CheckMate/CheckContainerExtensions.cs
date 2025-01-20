@@ -20,16 +20,17 @@ public static class CheckContainerExtensions
 
     public static ICheckContainer<TEntity, TMember> LessThan<TEntity, TMember>(this IToConditionCheckContainer<TEntity, TMember> checkContainer, TMember value)
     {
-        var exx = ToExpression<TMember>($"x < {value}");
-
         return checkContainer.SetCondition(ToExpression<TMember>($"x < {value}"));
     }
 
     public static ICheckContainer<TEntity, TMember> GreaterThan<TEntity, TMember>(this IToConditionCheckContainer<TEntity, TMember> checkContainer, TMember value)
     {
-        var exx = ToExpression<TMember>($"x > {value}");
-
         return checkContainer.SetCondition(ToExpression<TMember>($"x > {value}"));
+    }
+
+    public static ICheckContainer<TEntity, TMember> GreaterThanOrEqual<TEntity, TMember>(this IToConditionCheckContainer<TEntity, TMember> checkContainer, TMember value)
+    {
+        return checkContainer.SetCondition(ToExpression<TMember>($"x >= {value}"));
     }
 
     public static ICheckContainer<TEntity, TMember> Between<TEntity, TMember>(this IToConditionCheckContainer<TEntity, TMember> checkContainer, TMember value1, TMember value2)

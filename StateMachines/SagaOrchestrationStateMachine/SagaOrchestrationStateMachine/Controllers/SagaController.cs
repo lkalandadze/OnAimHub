@@ -138,8 +138,8 @@ public class SagaController : ControllerBase
                 {
                     foreach (var config in request.GameConfiguration)
                     {
-                        config.GameConfiguration.CorrelationId = correlationId;
-                        config.GameConfiguration.PromotionId = promotionId;                    
+                        //config.GameConfiguration.CorrelationId = correlationId;
+                        //config.GameConfiguration.PromotionId = promotionId;                    
 
                         if (config != null)
                         {
@@ -205,7 +205,7 @@ public class SagaController : ControllerBase
         }
     }
 
-    private async Task<IActionResult> CreateGameConfiguration(GameConfigurationDto model)
+    private async Task<IActionResult> CreateGameConfiguration(object model)
     {
         try
         {

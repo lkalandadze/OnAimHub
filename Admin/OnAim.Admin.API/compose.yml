@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+
+  adminapi:
+    build:
+      context: ../../
+      dockerfile: Admin/OnAim.Admin.API/Dockerfile
+    ports:
+      - "5003:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=admindb;Port=5432;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;
+      - MongoDB__Connection=mongodb://mongo:27017/
+      - MongoDB__DatabaseName=AdminMongoDb
+    volumes:
+      - ./appsettings.json:/app/appsettings.json
+    depends_on:
+      - admindb
+      - mongo
+    command: ["dotnet", "ef", "database update"]
+
+volumes:
+  admindb_data:
+  mongo_data:

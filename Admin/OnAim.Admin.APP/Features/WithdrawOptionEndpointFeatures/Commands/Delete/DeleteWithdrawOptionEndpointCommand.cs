@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.WithdrawOptionEndpointFeatures.Commands.Delete;
 
-public record DeleteWithdrawOptionEndpointCommand(int Id) : ICommand<ApplicationResult>;
+public record DeleteWithdrawOptionEndpointCommand(List<int> Id) : ICommand<ApplicationResult>;
 
 public sealed class DeleteWithdrawOptionEndpointCommandHandler : ICommandHandler<DeleteWithdrawOptionEndpointCommand, ApplicationResult>
 {
