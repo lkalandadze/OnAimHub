@@ -48,6 +48,7 @@ public static class ServiceExtensions
         {
             x.AddConsumer<CreatePlayerAggregationConsumer>();
             x.AddConsumer<PlayLeaderboardAggregationConsumer>();
+            x.AddConsumer<AggregatedEventConsumer>();
 
             x.UsingRabbitMq((context, cfg) =>
             {

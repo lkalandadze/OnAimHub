@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Infrastructure.Bus;
 using Shared.Infrastructure.MassTransit;
+using Shared.IntegrationEvents.IntegrationEvents.Aggregation;
+using Shared.IntegrationEvents.IntegrationEvents.Reward.Leaderboard;
 
 namespace AggregationService.Application;
 
@@ -41,6 +43,13 @@ public static class Extension
                 {
                     h.Username(rabbitMqOptions.User);
                     h.Password(rabbitMqOptions.Password);
+                });
+
+
+                cfg.Message<AggregatedEvent>(c => c.SetEntityName("leaderboard.fanout"));
+                cfg.Publish<AggregatedEvent>(p =>
+                {
+                    p.ExchangeType = "fanout";
                 });
 
                 var triggerAggregationQueue = rabbitMqOptions.Queues["TriggerAggregationQueue"];

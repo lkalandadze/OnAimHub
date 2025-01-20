@@ -24,11 +24,14 @@ public class MessageBus : IMessageBus
     {
         try
         {
+            Console.WriteLine($"Attempting to send event to queue: {queueName}");
             var sendEndpoint = await _bus.GetSendEndpoint(new Uri($"queue:{queueName}"));
             await sendEndpoint.Send(@event);
+            Console.WriteLine($"Event has been successfully sent to {queueName}. Event data: {System.Text.Json.JsonSerializer.Serialize(@event)}");
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"Error sending event to {queueName}. Exception: {ex.Message}");
             throw new InvalidOperationException($"Failed to send message to queue {queueName}", ex);
         }
     }

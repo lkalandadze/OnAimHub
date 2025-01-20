@@ -6,53 +6,54 @@ namespace AggregationService.Domain.Extensions;
 
 public static class ConfigurationExtensions
 {
-    //public static IEnumerable<AggregationConfiguration> Filter(this IEnumerable<AggregationConfiguration> aggregationConfigurations, TriggerAggregationEvent @event)
-    //{
-    //    foreach (var config in aggregationConfigurations)
-    //    {
-    //        if (@event.PassesFilters(config))
-    //        {
-    //            yield return config;
-    //        }
-    //    }
-    //}
-    public static IEnumerable<AggregationConfiguration> Filter(
-    this IEnumerable<AggregationConfiguration> configurations,
-    TriggerAggregationEvent request)
+    public static IEnumerable<AggregationConfiguration> Filter(this IEnumerable<AggregationConfiguration> aggregationConfigurations, AggregationTriggerEvent @event)
     {
-        // Check if PromotionId exists in the request
-        if (!request.Data.TryGetValue("promotionId", out var promotionId))
+        foreach (var config in aggregationConfigurations)
         {
-            throw new InvalidOperationException("PromotionId is missing in the event data.");
+            if (@event.PassesFilters(config))
+            {
+                yield return config;
+            }
         }
-
-        // Filter configurations by PromotionId
-        var filtered = configurations.Where(config => config.PromotionId == promotionId);
-
-        Console.WriteLine($"Filtering by PromotionId: {promotionId}");
-        Console.WriteLine($"Filtered configurations: {System.Text.Json.JsonSerializer.Serialize(filtered)}");
-
-        return filtered;
     }
+    //public static IEnumerable<AggregationConfiguration> Filter(
+    //this IEnumerable<AggregationConfiguration> configurations,
+    //TriggerAggregationEvent request)
+    //{
+    //    // Check if PromotionId exists in the request
+    //    if (!request.Data.TryGetValue("promotionId", out var promotionId))
+    //    {
+    //        throw new InvalidOperationException("PromotionId is missing in the event data.");
+    //    }
 
-    private static string GenerateKeyBase(this AggregationConfiguration config, TriggerAggregationEvent @event)
+    //    // Filter configurations by PromotionId
+    //    var filtered = configurations.Where(config => config.PromotionId == promotionId);
+
+    //    Console.WriteLine($"Filtering by PromotionId: {promotionId}");
+    //    Console.WriteLine($"Filtered configurations: {System.Text.Json.JsonSerializer.Serialize(filtered)}");
+
+    //    return filtered;
+    //}
+
+    private static string GenerateKeyBase(this AggregationConfiguration config, AggregationTriggerEvent @event)
     {
         return $"{config.PromotionId}_{config.Key}_{@event.CustomerId}";
     }
 
-    public static string GenerateLockKey(this AggregationConfiguration config, TriggerAggregationEvent @event)
+    public static string GenerateLockKey(this AggregationConfiguration config, AggregationTriggerEvent @event)
     {
         return config.GenerateKeyBase(@event);
     }
 
-    public static string GenerateKeyForValue(this AggregationConfiguration config, TriggerAggregationEvent @event)
+    public static string GenerateKeyForValue(this AggregationConfiguration config, AggregationTriggerEvent @event)
     {
         return $"{config.GenerateKeyBase(@event)}_eventValue";
     }
 
-    public static string GenerateKeyForPoints(this AggregationConfiguration config, TriggerAggregationEvent @event)
+    public static string GenerateKeyForPoints(this AggregationConfiguration config, AggregationTriggerEvent @event)
     {
-        return $"{config.GenerateKeyBase(@event)}_points";
+        var test = $"{config.GenerateKeyBase(@event)}_points";
+        return test;
     }
 
     public static int CalculatePoints(this AggregationConfiguration config, double currentTotal)
