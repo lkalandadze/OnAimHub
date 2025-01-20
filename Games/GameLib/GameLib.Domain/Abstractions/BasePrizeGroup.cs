@@ -2,6 +2,7 @@
 
 using CheckmateValidations;
 using GameLib.Domain.Checkers;
+using OnAim.Lib.EntityExtension.GlobalAttributes.Attributes;
 using Shared.Domain.Entities;
 
 namespace GameLib.Domain.Abstractions;
@@ -12,6 +13,7 @@ public abstract class BasePrizeGroup : BaseEntity<int>
     public List<int> Sequence { get; set; }
     public int? NextPrizeIndex { get; set; }
 
+    [IgnoreIncludeAll]
     public int ConfigurationId { get; set; }
 
     //TODO: leave this not mapped

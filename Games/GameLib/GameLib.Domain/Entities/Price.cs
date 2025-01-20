@@ -47,6 +47,7 @@ public class Price<T> : Price where T : Price<T>
         // Initialization logic for the generic segment, if any
     }
 
+    [IgnoreIncludeAll]
     [JsonIgnore]
     public T Configuration { get; set; }
 }

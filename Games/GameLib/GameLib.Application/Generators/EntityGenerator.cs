@@ -1,7 +1,6 @@
 ﻿#nullable disable
 
 using CheckmateValidations;
-using GameLib.Domain.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using OnAim.Lib.EntityExtension.GlobalAttributes;
 using OnAim.Lib.EntityExtension.GlobalAttributes.Attributes;

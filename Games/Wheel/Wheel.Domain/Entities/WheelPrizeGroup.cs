@@ -4,6 +4,7 @@ using CheckmateValidations;
 using GameLib.Domain.Abstractions;
 using Wheel.Domain.Checkers;
 using System.Text.Json.Serialization;
+using OnAim.Lib.EntityExtension.GlobalAttributes.Attributes;
 
 namespace Wheel.Domain.Entities;
 
@@ -23,6 +24,7 @@ public class WheelPrizeGroup : BasePrizeGroup<WheelPrize>
 
     public string Name { get; set; }
 
+    [IgnoreIncludeAll]
     [JsonIgnore]
     public WheelConfiguration Configuration { get; set; }
 }

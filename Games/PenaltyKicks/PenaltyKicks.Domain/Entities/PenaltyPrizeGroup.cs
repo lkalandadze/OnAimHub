@@ -3,6 +3,7 @@
 using CheckmateValidations;
 using GameLib.Domain.Abstractions;
 using Newtonsoft.Json;
+using OnAim.Lib.EntityExtension.GlobalAttributes.Attributes;
 using PenaltyKicks.Domain.Checkers;
 
 namespace PenaltyKicks.Domain.Entities;
@@ -20,6 +21,7 @@ public class PenaltyPrizeGroup : BasePrizeGroup<PenaltyPrize>
         Prizes = prizes.ToList() ?? [];
     }
 
+    [IgnoreIncludeAll]
     [JsonIgnore]
     public PenaltyConfiguration Configuration { get; set; }
 }
