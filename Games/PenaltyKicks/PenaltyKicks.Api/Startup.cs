@@ -118,7 +118,7 @@ public class Startup
                 Name = "penaltykicksapi",
                 Address = "penaltykicksapi",
                 Port = 8080,
-                Tags = ["Game", "Back"],
+                Tags = ["PenaltyKicks", "Game"],
                 Meta = new Dictionary<string, string>
                 {
                     { "GameData", serializedGameData }

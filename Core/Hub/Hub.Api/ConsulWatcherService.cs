@@ -30,83 +30,100 @@ public class ConsulWatcherService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        try
         {
-            var services = await _consulClient.Agent.Services(stoppingToken);
-            var currentServiceNames = new HashSet<string>();
-
-            using (var scope = _serviceProvider.CreateScope())
+            while (!stoppingToken.IsCancellationRequested)
             {
-                var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-                var _serviceRepository = scope.ServiceProvider.GetRequiredService<IServiceRepository>();
-                var _consulLogRepository = scope.ServiceProvider.GetRequiredService<IConsulLogRepository>();
+                var services = await GetServicesFromConsul(stoppingToken);
+                var currentServiceNames = new HashSet<string>();
 
-                foreach (var service in services.Response.Values)
+                using (var scope = _serviceProvider.CreateScope())
                 {
-                    if (service.Tags.Contains("Game") && service.Meta.TryGetValue("GameData", out var gameDataJson))
+                    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+                    var _serviceRepository = scope.ServiceProvider.GetRequiredService<IServiceRepository>();
+                    var _consulLogRepository = scope.ServiceProvider.GetRequiredService<IConsulLogRepository>();
+
+                    foreach (var service in services.Response.Values)
                     {
-                        var gameStatus = JsonSerializer.Deserialize<GameModel>(gameDataJson);
-
-                        if (gameStatus != null)
+                        if (service.Tags.Contains("Game") && service.Meta.TryGetValue("GameData", out var gameDataJson))
                         {
-                            gameStatus.Address = service.Address;
-                            _activeGameService.AddOrUpdateGame(gameStatus);
+                            var gameStatus = JsonSerializer.Deserialize<GameModel>(gameDataJson);
 
-                            // Check if the service has changed or is new
-                            if (!_trackedGames.TryGetValue(service.Service, out var previousGameDataJson) || previousGameDataJson != gameDataJson)
+                            if (gameStatus != null)
                             {
-                                var existingService = await _serviceRepository.Query().FirstOrDefaultAsync(s => s.Name == service.Service);
+                                gameStatus.Address = service.Address;
 
-                                if (existingService == null)
+                                // Check if the service has changed or is new
+                                if (!_trackedGames.TryGetValue(service.Service, out var previousGameDataJson) || previousGameDataJson != gameDataJson)
                                 {
-                                    var newService = new Service("Game", service.Service, true);
-                                    await _serviceRepository.InsertAsync(newService);
-                                }
-                                else
-                                {
-                                    existingService.IsActive = true;
-                                    _serviceRepository.Update(existingService);
-                                }
+                                    var existingService = await _serviceRepository.Query().FirstOrDefaultAsync(s => s.Name == service.Service);
 
-                                var log = new ConsulLog
-                                (
-                                    gameStatus.Id,
-                                    service.Service,
-                                    service.Port,
-                                    DateTime.UtcNow
-                                );
+                                    if (existingService == null)
+                                    {
+                                        var newService = new Service("Game", service.Service, true);
+                                        await _serviceRepository.InsertAsync(newService);
+                                        await unitOfWork.SaveAsync();
 
-                                await _consulLogRepository.InsertAsync(log);
-                                _trackedGames[service.Service] = gameDataJson;
+                                        gameStatus.Id = newService.Id;
+                                    }
+                                    else
+                                    {
+                                        existingService.IsActive = true;
+                                        _serviceRepository.Update(existingService);
+
+                                        gameStatus.Id = existingService.Id;
+                                    }
+
+                                    var log = new ConsulLog
+                                    (
+                                        gameStatus.Id,
+                                        service.Service,
+                                        service.Port,
+                                        DateTime.UtcNow
+                                    );
+
+                                    _activeGameService.AddOrUpdateGame(gameStatus);
+                                    await _consulLogRepository.InsertAsync(log);
+                                    _trackedGames[service.Service] = gameDataJson;
+                                }
                             }
                         }
+
+                        currentServiceNames.Add(service.Service);
                     }
 
-                    currentServiceNames.Add(service.Service);
-                }
-
-                // Handle services that are no longer active
-                var removedServiceNames = _trackedGames.Keys.Except(currentServiceNames).ToList();
-                foreach (var serviceName in removedServiceNames)
-                {
-                    if (_trackedGames.TryRemove(serviceName, out _))
+                    // Handle services that are no longer active
+                    var removedServiceNames = _trackedGames.Keys.Except(currentServiceNames).ToList();
+                    foreach (var serviceName in removedServiceNames)
                     {
-                        var existingService = await _serviceRepository.Query().FirstOrDefaultAsync(s => s.Name == serviceName);
-
-                        if (existingService != null && existingService.IsActive)
+                        if (_trackedGames.TryRemove(serviceName, out _))
                         {
-                            existingService.IsActive = false;
-                            _serviceRepository.Update(existingService);
-                        }
+                            var existingService = await _serviceRepository.Query().FirstOrDefaultAsync(s => s.Name == serviceName);
 
-                        _activeGameService.RemoveGame(serviceName);
+                            if (existingService != null && existingService.IsActive)
+                            {
+                                existingService.IsActive = false;
+                                _serviceRepository.Update(existingService);
+                            }
+
+                            _activeGameService.RemoveGame(serviceName);
+                        }
                     }
+
+                    await unitOfWork.SaveAsync();
                 }
 
-                await unitOfWork.SaveAsync();
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }
-
-            await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+
+    internal async Task<QueryResult<Dictionary<string, AgentService>>> GetServicesFromConsul(CancellationToken stoppingToken)
+    {
+        return await _consulClient.Agent.Services(stoppingToken);
     }
 }

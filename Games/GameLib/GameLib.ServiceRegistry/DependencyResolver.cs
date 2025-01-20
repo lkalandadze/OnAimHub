@@ -120,7 +120,7 @@ public static class DependencyResolver
         app.UseAuthentication();
         app.UseAuthorization();
 
-        ConfigureSwagger(app, apiName);
+        ConfigureSwagger(app, env, apiName);
 
         app.UseEndpoints(endpoints =>
         {
@@ -207,7 +207,7 @@ public static class DependencyResolver
         });
     }
 
-    private static void ConfigureSwagger(IApplicationBuilder app, string routePrefix)
+    private static void ConfigureSwagger(IApplicationBuilder app, IWebHostEnvironment env, string routePrefix)
     {
         app.UseSwagger();
 
@@ -219,6 +219,26 @@ public static class DependencyResolver
             c.RoutePrefix = $"swagger/{controller}";
             c.DocumentTitle = $"{controller.ToUpper()} | {routePrefix}";
         }));
+
+        if (env.IsDevelopment())
+        {
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path == "/")
+                {
+                    context.Response.Redirect("/swagger/game/index.html");
+                    return;
+                }
+
+                if (context.Request.Path == "/swagger")
+                {
+                    context.Response.Redirect("/swagger/game/index.html");
+                    return;
+                }
+
+                await next();
+            });
+        }
     }
 
     private static void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)

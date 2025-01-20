@@ -1,4 +1,5 @@
-﻿using Hub.Application.Features.GameFeatures.Queries.GetAllGame;
+﻿using Consul;
+using Hub.Application.Features.GameFeatures.Queries.GetAllGame;
 using Hub.Application.Features.IdentityFeatures.Commands.ApplyPromoCode;
 using Hub.Application.Features.IdentityFeatures.Commands.CreateAuthenticationToken;
 using Hub.Application.Features.IdentityFeatures.Commands.RefreshTokens;
@@ -25,6 +26,7 @@ namespace Hub.Api.Controllers;
 public class HubController : BaseApiController
 {
     private readonly ITransactionService _transactionService;
+
     public HubController(ITransactionService transactionService)
     {
         _transactionService = transactionService;
@@ -125,6 +127,13 @@ public class HubController : BaseApiController
 
     #endregion
 
+    #region LeaderBoards
+
     [HttpPost(nameof(PlayLeaderboard))]
-    public async Task PlayLeaderboard(PlayLeaderboardCommand request) => await Mediator.Send(request);
+    public async Task PlayLeaderboard(PlayLeaderboardCommand request)
+    {
+        await Mediator.Send(request);
+    }
+
+    #endregion
 }
