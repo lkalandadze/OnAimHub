@@ -4,4 +4,4 @@ using OnAim.Admin.Contracts.Dtos.Base;
 
 namespace OnAim.Admin.APP.Features.GameFeatures.Template.Queries.GetAll;
 
-public record GetAllGameConfigurationTemplatesQuery(BaseFilter Filter) : IQuery<ApplicationResult>;
+public record GetAllGameConfigurationTemplatesQuery(GameTemplateFilter Filter) : IQuery<ApplicationResult>;

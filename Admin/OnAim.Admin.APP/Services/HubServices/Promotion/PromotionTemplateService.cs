@@ -8,6 +8,7 @@ using OnAim.Admin.Contracts.Dtos.Game;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Contracts.Dtos.Withdraw;
+using OnAim.Admin.Contracts.Enums;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
@@ -17,7 +18,6 @@ using OnAim.Admin.Domain.HubEntities.Models;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
-using PrizeDto = OnAim.Admin.Contracts.Dtos.Game.PrizeDto;
 
 namespace OnAim.Admin.APP.Services.HubServices.Promotion;
 
@@ -52,6 +52,23 @@ public class PromotionTemplateService : IPromotionTemplateService
     public async Task<ApplicationResult> GetAllPromotionTemplates(BaseFilter filter)
     {
         var temps = await _promotionTemplateRepository.GetPromotionTemplates();
+        if (filter?.HistoryStatus.HasValue == true)
+        {
+            switch (filter.HistoryStatus.Value)
+            {
+                case HistoryStatus.Existing:
+                    temps = temps.Where(u => u.IsDeleted == false).ToList();
+                    break;
+                case HistoryStatus.Deleted:
+                    temps = temps.Where(u => u.IsDeleted == true).ToList();
+                    break;
+                case HistoryStatus.All:
+                    break;
+                default:
+                    break;
+            }
+        }
+
         var totalCount = temps.Count();
 
         var pageNumber = filter?.PageNumber ?? 1;
@@ -143,6 +160,7 @@ public class PromotionTemplateService : IPromotionTemplateService
                 ScheduleId = y.ScheduleId,
                 LeaderboardTemplatePrizes = y.LeaderboardRecordPrizes.Select(z => new leaderboardTemplatePrizesDto
                 {
+                    Id = z.Id.ToString(),
                     Amount = z.Amount,
                     CoinId = z.CoinId,
                     StartRank = z.StartRank,
@@ -152,32 +170,8 @@ public class PromotionTemplateService : IPromotionTemplateService
             }).ToList(),
             Games = x.Games.Select(w => new GameConfigurationPromTemplateListDto
             {
-                Name = w.Name,
-                Value = w.Value,
-                IsActive = w.IsActive,
-                Prices = w.Prices.Select(x => new PriceDto
-                {
-                    Value = x.Value,
-                    Multiplier = x.Multiplier,
-                    CoinId = x.CoinId,
-                }).ToList(),
-                Rounds = w.Rounds.Select(x => new RoundDto
-                {
-                    Sequence = x.Sequence,
-                    Name = x.Name,
-                    NextPrizeIndex = x.NextPrizeIndex,
-                    ConfigurationId = x.ConfigurationId,
-                    Id = x.Id,
-                    Prizes = x.Prizes.Select(xx => new PrizeDto
-                    {
-                        Value = xx.Value,
-                        PrizeGroupId = xx.Id,
-                        PrizeTypeId = xx.Id,
-                        Probability = xx.Probability,
-                        Name = xx.Name,
-                        WheelIndex = xx.WheelIndex,
-                    }).ToList()
-                }).ToList(),
+                GameName = w.Game,
+                Configuration = w.Configuration,
             }).ToList(),
         });
 
@@ -300,32 +294,8 @@ public class PromotionTemplateService : IPromotionTemplateService
             }).ToList(),
             Games = template.Games.Select(w => new GameConfigurationPromTemplateListDto
             {
-                Name = w.Name,
-                Value = w.Value,
-                IsActive = w.IsActive,
-                Prices = w.Prices.Select(x => new PriceDto
-                {
-                    Value = x.Value,
-                    Multiplier = x.Multiplier,
-                    CoinId = x.CoinId,
-                }).ToList(),
-                Rounds = w.Rounds.Select(x => new RoundDto
-                {
-                    Sequence = x.Sequence,
-                    Name = x.Name,
-                    NextPrizeIndex = x.NextPrizeIndex,
-                    ConfigurationId = x.ConfigurationId,
-                    Id = x.Id,
-                    Prizes = x.Prizes.Select(xx => new PrizeDto
-                    {
-                        Value = xx.Value,
-                        PrizeGroupId = xx.Id,
-                        PrizeTypeId = xx.Id,
-                        Probability = xx.Probability,
-                        Name = xx.Name,
-                        WheelIndex = xx.WheelIndex,
-                    }).ToList()
-                }).ToList(),
+                GameName = w.Game,
+                Configuration = w.Configuration,
             }).ToList(),
         };
 
@@ -395,7 +365,7 @@ public class PromotionTemplateService : IPromotionTemplateService
         var games = new List<GameConfigurationTemplate>();
         foreach (var item in template.Games)
         {
-            var conf = await _gameTemplateService.CreateGameConfigurationTemplate(item);
+            var conf = await _gameTemplateService.CreateGameConfigurationTemplate(item.GameName, item.CreateGame);
             games.Add(conf);
             temp.Games = games;
         }

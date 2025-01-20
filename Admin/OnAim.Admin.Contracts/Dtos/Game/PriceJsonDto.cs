@@ -14,5 +14,5 @@ public class PriceJsonDto
     public string CoinId { get; set; }
 
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public int Id { get; set; }
 }

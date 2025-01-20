@@ -46,7 +46,7 @@ public class LeaderboardTemplate
         LeaderboardTemplatePrizes.Add(prize);
     }
 
-    public void UpdateLeaderboardPrizes(int? id, int startRank, int endRank, string coinId, int amount)
+    public void UpdateLeaderboardPrizes(string? id, int startRank, int endRank, string coinId, int amount)
     {
         if (id != null)
         {

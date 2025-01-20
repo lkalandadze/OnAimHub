@@ -15,6 +15,6 @@ public sealed class CreateGameConfigurationTemplateCommandHandler : ICommandHand
 
     public async Task<GameConfigurationTemplate> Handle(CreateGameConfigurationTemplateCommand request, CancellationToken cancellationToken)
     {
-        return await _gameTemplateService.CreateGameConfigurationTemplate(request.Create);
+        return await _gameTemplateService.CreateGameConfigurationTemplate(request.GameName, request.Create);
     }
 }

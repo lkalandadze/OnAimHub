@@ -11,3 +11,7 @@ public class BaseFilter
     public bool? IsActive { get; set; }
     public HistoryStatus? HistoryStatus { get; set; }
 }
+public class GameTemplateFilter : BaseFilter 
+{ 
+    public string? Name { get; set; }
+}

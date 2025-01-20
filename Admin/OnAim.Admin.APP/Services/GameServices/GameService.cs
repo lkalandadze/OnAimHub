@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Amazon.Runtime.Internal.Util;
+using DnsClient.Internal;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OnAim.Admin.APP.Services.GameServices;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.Contracts.Dtos.Game;
@@ -13,15 +16,18 @@ public class GameService : IGameService
     private readonly HttpClient _httpClientFactory;
     private readonly HubApiClientOptions _options;
     private readonly IHubApiClient _hubApiClient;
+    private readonly ILogger<GameService> _logger;
 
     public GameService(
         IHubApiClient hubApiClient,
         IOptions<HubApiClientOptions> options,
-        IHttpClientFactory httpClientFactory
+        IHttpClientFactory httpClientFactory,
+        ILogger<GameService> logger
         )
     {
         _httpClientFactory = httpClientFactory.CreateClient("ApiGateway");
         _hubApiClient = hubApiClient;
+        _logger = logger;
         _options = options.Value;
     }
 
@@ -117,10 +123,10 @@ public class GameService : IGameService
 
         try
         {
-            var jsonContent = JsonSerializer.Serialize(configurationJson);
+            var jsonString = configurationJson.ToString();
+            var jsonContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-            using var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = await _httpClientFactory.PostAsync($"/{Uri.EscapeDataString(name)}Api/Admin/CreateConfiguration", content);
+            var response = await _httpClientFactory.PostAsync($"/{Uri.EscapeDataString(name)}Api/Admin/CreateConfiguration", jsonContent);
 
             if (response.IsSuccessStatusCode)
             {

@@ -236,6 +236,8 @@ volumes:
     driver: local
   pgadmin_data:
     driver: local
+  consul_data:
+    driver: local
 
  # postgres:
  #    image: postgres:13

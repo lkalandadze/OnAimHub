@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.FileServices;
@@ -21,6 +22,8 @@ using OnAim.Admin.Domain.HubEntities.Models;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
+using System.Dynamic;
+using System.Text.Json;
 
 namespace OnAim.Admin.APP.Services.Hub.Promotion;
 
@@ -32,15 +35,15 @@ public class PromotionService : BaseService, IPromotionService
     private readonly IReadOnlyRepository<Transaction> _transactionRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecord> _leaderboardRecordRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _leaderboardResultRepository;
-    //private readonly ISagaApiClient _sagaApiClient;
     private readonly IHubApiClient _hubApiClient;
     private readonly ISecurityContextAccessor _securityContextAccessor;
     private readonly IPromotionRepository<Service> _serviceRepository;
     private readonly ILogger<PromotionService> _logger;
     private readonly LeaderboardClientService _leaderboardClientService;
     private readonly IGameService _gameService;
+    private readonly ILeaderBoardApiClient _leaderBoardApiClient;
+    private readonly LeaderBoardApiClientOptions _leaderBoardApiClientOptions;
     private readonly HubApiClientOptions _options;
-    //private readonly SagaApiClientOptions _sagaOptions;
 
     public PromotionService(
         IPromotionRepository<Domain.HubEntities.Promotion> promotionRepository,
@@ -49,15 +52,15 @@ public class PromotionService : BaseService, IPromotionService
         IReadOnlyRepository<Transaction> transactionRepository,
         ILeaderBoardReadOnlyRepository<LeaderboardRecord> leaderboardRecordRepository,
         ILeaderBoardReadOnlyRepository<LeaderboardResult> leaderboardResultRepository,
-        //ISagaApiClient sagaApiClient,
-        //IOptions<SagaApiClientOptions> sagaOptions,
         IHubApiClient hubApiClient,
         IOptions<HubApiClientOptions> options,
         ISecurityContextAccessor securityContextAccessor,
         IPromotionRepository<Service> serviceRepository,
         ILogger<PromotionService> logger,
         LeaderboardClientService leaderboardClientService,
-        IGameService gameService
+        IGameService gameService,
+        IOptions<LeaderBoardApiClientOptions> leaderBoardApiClientOptions,
+        ILeaderBoardApiClient leaderBoardApiClient
         )
     {
         _promotionRepository = promotionRepository;
@@ -66,15 +69,15 @@ public class PromotionService : BaseService, IPromotionService
         _transactionRepository = transactionRepository;
         _leaderboardRecordRepository = leaderboardRecordRepository;
         _leaderboardResultRepository = leaderboardResultRepository;
-        //_sagaApiClient = sagaApiClient;
         _hubApiClient = hubApiClient;
         _securityContextAccessor = securityContextAccessor;
         _serviceRepository = serviceRepository;
         _logger = logger;
         _leaderboardClientService = leaderboardClientService;
         _gameService = gameService;
+        _leaderBoardApiClient = leaderBoardApiClient;
+        _leaderBoardApiClientOptions = leaderBoardApiClientOptions.Value;
         _options = options.Value;
-        //_sagaOptions = sagaOptions.Value;
     }
 
     public async Task<ApplicationResult> GetAllPromotions(PromotionFilter filter)
@@ -294,23 +297,40 @@ public class PromotionService : BaseService, IPromotionService
 
     public async Task<ApplicationResult> GetPromotionLeaderboards(int promotionId, BaseFilter filter)
     {
-        var data = _leaderboardRecordRepository.Query().Where(x => x.PromotionId == promotionId);
+        var data = _leaderboardRecordRepository.Query().Include(x => x.LeaderboardSchedule).Where(x => x.PromotionId == promotionId);
+
+        var allPrizes = await data.SelectMany(x => x.LeaderboardRecordPrizes)
+            .GroupBy(prize => prize.CoinId)
+            .Select(group => new PromotionLeaderboardPrizesDto
+            {
+                Prize = group.Key,
+                Count = group.Count()
+            })
+            .ToListAsync();
 
         var totalCount = await data.CountAsync();
 
         var pageNumber = filter.PageNumber ?? 1;
         var pageSize = filter.PageSize ?? 25;
 
-        var items = data.Select(x => new PromotionLeaderboardDto
+        var items = data.Select(x => new PromotionLeaderboardItemsDto
         {
             Id = x.Id,
             Title = x.Title,
-            Place = 0,
-            //RepeatType = (RepeatType)x.LeaderboardSchedule.RepeatType,
             StartDate = x.StartDate,
             EndDate = x.EndDate,
         }).Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize);
+          .Take(pageSize);
+
+
+        var leaderboardResult = new List<PromotionLeaderboardDto>
+    {
+        new PromotionLeaderboardDto
+        {
+            Leaderboards = await items.ToListAsync(),
+            Prizes = allPrizes
+        }
+    };
 
         return new ApplicationResult
         {
@@ -320,11 +340,12 @@ public class PromotionService : BaseService, IPromotionService
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalCount = totalCount,
-                Items = await items.ToListAsync(),
+                Items = leaderboardResult,
                 SortableFields = new List<string>(),
             },
         };
     }
+
 
     public async Task<ApplicationResult> GetPromotionLeaderboardDetails(int leaderboardId, BaseFilter filter)
     {
@@ -387,7 +408,7 @@ public class PromotionService : BaseService, IPromotionService
                 Id = xx.Id,
                 Name = xx.Name,
                 Description = xx.Description,
-                ImageUrl = xx.ImageUrl,
+                ImageUrl = xx.ImageUrl,               
                 CoinType = (Contracts.Dtos.Coin.CoinType)xx.CoinType,
             }).ToList(),
             Segments = promotion.Segments.Select(s => s.Id).ToList(),
@@ -447,28 +468,22 @@ public class PromotionService : BaseService, IPromotionService
                         {
                             try
                             {
-                                var command = new CreateLeaderboardRecordCommand
+                                var command = new CreateLeaderboardRecord
                                 {
                                     AnnouncementDate = leaderboard.AnnouncementDate,
                                     CorrelationId = correlationId,
                                     Description = leaderboard.Description,
                                     EndDate = leaderboard.EndDate,
-                                    EventType = (EventType)leaderboard.EventType,
+                                    EventType = leaderboard.EventType,
                                     IsGenerated = leaderboard.IsGenerated,
-                                    LeaderboardPrizes = leaderboard.LeaderboardPrizes.Select(x => new CreateLeaderboardRecordPrizeCommandItem
-                                    {
-                                        CoinId = $"{promotionId}_{x.Coin}",
-                                        Amount = x.Amount,
-                                        EndRank = x.EndRank,
-                                        StartRank = x.StartRank,
-                                    }).ToList(),
-                                    PromotionId = promotionId,
                                     PromotionName = leaderboard.PromotionName,
-                                    RepeatType = (RepeatType)leaderboard.RepeatType,
+                                    LeaderboardPrizes = leaderboard.LeaderboardPrizes,
+                                    PromotionId = promotionId,
+                                    RepeatType = leaderboard.RepeatType,
                                     RepeatValue = leaderboard.RepeatValue,
                                     ScheduleId = leaderboard.ScheduleId,
                                     StartDate = leaderboard.StartDate,
-                                    Status = (LeaderboardRecordStatus)leaderboard.Status,
+                                    Status = leaderboard.Status,
                                     TemplateId = leaderboard.TemplateId,
                                     Title = leaderboard.Title,
                                     CreatedBy = _securityContextAccessor.UserId,
@@ -512,15 +527,20 @@ public class PromotionService : BaseService, IPromotionService
                 {
                     foreach (var config in request.GameConfiguration)
                     {
-                        //config.GameConfiguration.CorrelationId = correlationId;
-                        //config.GameConfiguration.PromotionId = promotionId;
+                        JsonElement gameConfigElement = (JsonElement)config.GameConfiguration;
+
+                        string jsonString = gameConfigElement.GetRawText();
+
+                        JObject gameConfig = JObject.Parse(jsonString);
+                        gameConfig["correlationId"] = correlationId;
+                        gameConfig["promotionId"] = promotionId;
 
                         if (config != null)
                         {
                             try
                             {
-                                var gameResponse = await CreateGameConfiguration(config.GameName, config.GameConfiguration);
-                                _logger.LogInformation("Game configuration created successfully: {ConfigId}", gameResponse);
+                                var gameResponse = await CreateGameConfiguration(config.GameName, gameConfig);
+                                _logger.LogInformation("Game configuration created successfully: {configs}", gameResponse);
                             }
                             catch (Exception ex)
                             {
@@ -639,17 +659,27 @@ public class PromotionService : BaseService, IPromotionService
         }
     }
 
-    private async Task<ApplicationResult> CreateLeaderboardRecordAsync(CreateLeaderboardRecordCommand leaderboard)
+    private async Task<ApplicationResult> CreateLeaderboardRecordAsync(CreateLeaderboardRecord leaderboard)
     {
         try
         {
-            await _leaderboardClientService.CreateLeaderboardRecordAsync(leaderboard);
-            return new ApplicationResult { Success = true };
+            var promotionId = await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}CreateLeaderboardRecord", leaderboard);
+            return new ApplicationResult { Data = promotionId};
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Failed to create leaderboard.");
             throw new Exception(ex.Message, ex);
         }
+        //try
+        //{
+        //    await _leaderboardClientService.CreateLeaderboardRecordAsync(leaderboard);
+        //    return new ApplicationResult { Success = true };
+        //}
+        //catch (Exception ex)
+        //{
+        //    throw new Exception(ex.Message, ex);
+        //}
     }
 
     private async Task<ApplicationResult> CreateGameConfiguration(string name, object configurationJson)

@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.Text.Json;
 
 namespace OnAim.Admin.Domain.Entities.Templates;
 
@@ -15,11 +16,7 @@ public class GameConfigurationTemplate
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
     public string Game {  get; set; }
-    public string Name { get; set; }
-    public int Value { get; set; }
-    public bool IsActive { get; set; }
-    public List<Price> Prices { get; set; } = new List<Price>();
-    public List<Round> Rounds { get; set; } = new List<Round>();
+    public string Configuration { get; set; }
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DateDeleted { get; set; }
     public int Usage { get; set; }
@@ -28,6 +25,11 @@ public class GameConfigurationTemplate
     {
         IsDeleted = true;
         DateDeleted = DateTimeOffset.UtcNow;
+    }
+
+    public JsonElement GetConfigurationAsJsonElement()
+    {
+        return JsonSerializer.Deserialize<JsonElement>(Configuration);
     }
 }
 public class Price

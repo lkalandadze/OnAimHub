@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-
-namespace OnAim.Admin.Domain.LeaderBoradEntities;
+﻿namespace OnAim.Admin.Domain.LeaderBoradEntities;
 
 public class BasePrize
 {
