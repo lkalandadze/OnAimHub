@@ -274,7 +274,7 @@ public class CoinTemplateService : ICoinTemplateService
             }).ToList() ?? new List<WithdrawOptionGroupCoinTempDto>(),
         };
 
-        if (data.WithdrawOptions.Count == 0 && data.WithdrawOptionGroups.Count == 0)
+        if (data.CoinType != CoinType.Out)
         {
             return new ApplicationResult
             {

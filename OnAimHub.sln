@@ -146,8 +146,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{EE94F6
 		Docker\.dockerignore = Docker\.dockerignore
 		.env = .env
 		Docker\docker-compose_internal.yml = Docker\docker-compose_internal.yml
-		docker-compose.yml = docker-compose.yml
 		Docker\Infrastructure.yml = Docker\Infrastructure.yml
+		docker-compose_old.yml = docker-compose_old.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{85636CEE-9827-4A53-AF0B-370ACC7732FD}"
@@ -193,6 +193,172 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenaltyKicks.Domain", "Games\PenaltyKicks\PenaltyKicks.Domain\PenaltyKicks.Domain.csproj", "{118F2BE1-A5A3-4E16-A42D-4E2DCDD060A3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PenaltyKicks.Infrastructure", "Games\PenaltyKicks\PenaltyKicks.Infrastructure\PenaltyKicks.Infrastructure.csproj", "{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "adminapi-k8s", "adminapi-k8s", "{48A360E8-585F-4506-80F8-EFBB8B300A2B}"
+	ProjectSection(SolutionItems) = preProject
+		Admin\adminapi-k8s\adminapi-cm0-configmap.yaml = Admin\adminapi-k8s\adminapi-cm0-configmap.yaml
+		Admin\adminapi-k8s\adminapi-deployment.yaml = Admin\adminapi-k8s\adminapi-deployment.yaml
+		Admin\adminapi-k8s\adminapi-ingress.yaml = Admin\adminapi-k8s\adminapi-ingress.yaml
+		Admin\adminapi-k8s\adminapi-service.yaml = Admin\adminapi-k8s\adminapi-service.yaml
+		Admin\adminapi-k8s\secret.yaml = Admin\adminapi-k8s\secret.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "hubapi-k8s", "hubapi-k8s", "{0BE5DE96-973F-4415-8916-261165E68E10}"
+	ProjectSection(SolutionItems) = preProject
+		Core\Hub\hubapi-k8s\hubapi-cm0-configmap.yaml = Core\Hub\hubapi-k8s\hubapi-cm0-configmap.yaml
+		Core\Hub\hubapi-k8s\hubapi-deployment.yaml = Core\Hub\hubapi-k8s\hubapi-deployment.yaml
+		Core\Hub\hubapi-k8s\hubapi-ingress.yaml = Core\Hub\hubapi-k8s\hubapi-ingress.yaml
+		Core\Hub\hubapi-k8s\hubapi-service.yaml = Core\Hub\hubapi-k8s\hubapi-service.yaml
+		Core\Hub\hubapi-k8s\secret.yaml = Core\Hub\hubapi-k8s\secret.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aggregation-k8s", "aggregation-k8s", "{9F85B95C-C1B9-4A9A-A1B6-17357CE97E2F}"
+	ProjectSection(SolutionItems) = preProject
+		CoreModules\AggregationService\aggregation-k8s\aggregation-cm0-configmap.yaml = CoreModules\AggregationService\aggregation-k8s\aggregation-cm0-configmap.yaml
+		CoreModules\AggregationService\aggregation-k8s\aggregation-deployment.yaml = CoreModules\AggregationService\aggregation-k8s\aggregation-deployment.yaml
+		CoreModules\AggregationService\aggregation-k8s\aggregation-ingress.yaml = CoreModules\AggregationService\aggregation-k8s\aggregation-ingress.yaml
+		CoreModules\AggregationService\aggregation-k8s\aggregation-service.yaml = CoreModules\AggregationService\aggregation-k8s\aggregation-service.yaml
+		CoreModules\AggregationService\aggregation-k8s\secret.yaml = CoreModules\AggregationService\aggregation-k8s\secret.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "leaderboardapi-k8s", "leaderboardapi-k8s", "{CD9217C6-E60E-42DA-8092-6D1CF0FFE83D}"
+	ProjectSection(SolutionItems) = preProject
+		CoreModules\Leaderboard\leaderboardapi-k8s\leaderboardapi-cm0-configmap.yaml = CoreModules\Leaderboard\leaderboardapi-k8s\leaderboardapi-cm0-configmap.yaml
+		CoreModules\Leaderboard\leaderboardapi-k8s\leaderboardapi-deployment.yaml = CoreModules\Leaderboard\leaderboardapi-k8s\leaderboardapi-deployment.yaml
+		CoreModules\Leaderboard\leaderboardapi-k8s\leaderboardapi-ingress.yaml = CoreModules\Leaderboard\leaderboardapi-k8s\leaderboardapi-ingress.yaml
+		CoreModules\Leaderboard\leaderboardapi-k8s\leaderboardapi-service.yaml = CoreModules\Leaderboard\leaderboardapi-k8s\leaderboardapi-service.yaml
+		CoreModules\Leaderboard\leaderboardapi-k8s\secret.yaml = CoreModules\Leaderboard\leaderboardapi-k8s\secret.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{88862DA0-97F7-4FD3-9028-61AA9FD0AC60}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "admindb", "admindb", "{622D47EE-5B97-4D7C-B409-FD9BEAC3D0BB}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\admindb\admindb-deployment.yaml = k8s\admindb\admindb-deployment.yaml
+		k8s\admindb\admindb-persistentvolumeclaim.yaml = k8s\admindb\admindb-persistentvolumeclaim.yaml
+		k8s\admindb\admindb-service.yaml = k8s\admindb\admindb-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aggregationdb", "aggregationdb", "{0A31F44F-1044-4CA4-8020-BEC0EDD6063C}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\aggregationdb\aggregationdb-deployment.yaml = k8s\aggregationdb\aggregationdb-deployment.yaml
+		k8s\aggregationdb\aggregationdb-persistentvolumeclaim.yaml = k8s\aggregationdb\aggregationdb-persistentvolumeclaim.yaml
+		k8s\aggregationdb\aggregationdb-service.yaml = k8s\aggregationdb\aggregationdb-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "consul", "consul", "{9ACCC64E-D254-437F-94DB-9C35A26FF4D3}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\consul\consul-deployment.yaml = k8s\consul\consul-deployment.yaml
+		k8s\consul\consul-service.yaml = k8s\consul\consul-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gameconfigdb", "gameconfigdb", "{6BF71611-10ED-4D2B-86C2-5C934DC3B673}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\gameconfigdb\gameconfigdb-data-persistentvolumeclaim.yaml = k8s\gameconfigdb\gameconfigdb-data-persistentvolumeclaim.yaml
+		k8s\gameconfigdb\gameconfigdb-deployment.yaml = k8s\gameconfigdb\gameconfigdb-deployment.yaml
+		k8s\gameconfigdb\gameconfigdb-service.yaml = k8s\gameconfigdb\gameconfigdb-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gamehistorydb", "gamehistorydb", "{01625424-B390-40C4-A0EE-18FD3411B47A}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\gamehistorydb\gamehistorydb-data-persistentvolumeclaim.yaml = k8s\gamehistorydb\gamehistorydb-data-persistentvolumeclaim.yaml
+		k8s\gamehistorydb\gamehistorydb-deployment.yaml = k8s\gamehistorydb\gamehistorydb-deployment.yaml
+		k8s\gamehistorydb\gamehistorydb-service.yaml = k8s\gamehistorydb\gamehistorydb-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "hubapidb", "hubapidb", "{4391FBA5-788F-4188-9B54-6DF74F508121}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\hubapidb\hubapidb-data-persistentvolumeclaim.yaml = k8s\hubapidb\hubapidb-data-persistentvolumeclaim.yaml
+		k8s\hubapidb\hubapidb-deployment.yaml = k8s\hubapidb\hubapidb-deployment.yaml
+		k8s\hubapidb\hubapidb-service.yaml = k8s\hubapidb\hubapidb-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "leaderboarddb", "leaderboarddb", "{610CB062-486F-4993-8BF2-A21E30A0A944}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\leaderboarddb\leaderboarddb-data-persistentvolumeclaim.yaml = k8s\leaderboarddb\leaderboarddb-data-persistentvolumeclaim.yaml
+		k8s\leaderboarddb\leaderboarddb-deployment.yaml = k8s\leaderboarddb\leaderboarddb-deployment.yaml
+		k8s\leaderboarddb\leaderboarddb-service.yaml = k8s\leaderboarddb\leaderboarddb-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "leveldb", "leveldb", "{918E774F-386D-439E-BA56-74111727D706}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\leveldb\leveldb-data-persistentvolumeclaim.yaml = k8s\leveldb\leveldb-data-persistentvolumeclaim.yaml
+		k8s\leveldb\leveldb-deployment.yaml = k8s\leveldb\leveldb-deployment.yaml
+		k8s\leveldb\leveldb-service.yaml = k8s\leveldb\leveldb-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "missiondb", "missiondb", "{00A49856-96FA-465A-85C2-BEA20814B26B}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\missiondb\missiondb-data-persistentvolumeclaim.yaml = k8s\missiondb\missiondb-data-persistentvolumeclaim.yaml
+		k8s\missiondb\missiondb-deployment.yaml = k8s\missiondb\missiondb-deployment.yaml
+		k8s\missiondb\missiondb-service.yaml = k8s\missiondb\missiondb-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mongo", "mongo", "{3164E6C5-0E65-47AA-BD2F-3C0D5C62033B}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\mongo\mongo-data-persistentvolumeclaim.yaml = k8s\mongo\mongo-data-persistentvolumeclaim.yaml
+		k8s\mongo\mongo-deployment.yaml = k8s\mongo\mongo-deployment.yaml
+		k8s\mongo\mongo-service.yaml = k8s\mongo\mongo-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rabbitmq", "rabbitmq", "{3CB95107-836F-4929-9150-5C742EE5C4D3}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\rabbitmq\rabbitmq-data-persistentvolumeclaim.yaml = k8s\rabbitmq\rabbitmq-data-persistentvolumeclaim.yaml
+		k8s\rabbitmq\rabbitmq-deployment.yaml = k8s\rabbitmq\rabbitmq-deployment.yaml
+		k8s\rabbitmq\rabbitmq-service.yaml = k8s\rabbitmq\rabbitmq-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "redis", "redis", "{72B6C443-2E51-4D32-BF5C-CCAD79EE58A2}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\redis\redis-data-persistentvolumeclaim.yaml = k8s\redis\redis-data-persistentvolumeclaim.yaml
+		k8s\redis\redis-deployment.yaml = k8s\redis\redis-deployment.yaml
+		k8s\redis\redis-service.yaml = k8s\redis\redis-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sagamachinedb", "sagamachinedb", "{60A209B9-8D65-47B7-B4BC-22E680970ECC}"
+	ProjectSection(SolutionItems) = preProject
+		k8s\sagamachinedb\sagamachinedb-data-persistentvolumeclaim.yaml = k8s\sagamachinedb\sagamachinedb-data-persistentvolumeclaim.yaml
+		k8s\sagamachinedb\sagamachinedb-deployment.yaml = k8s\sagamachinedb\sagamachinedb-deployment.yaml
+		k8s\sagamachinedb\sagamachinedb-service.yaml = k8s\sagamachinedb\sagamachinedb-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "levelapi-k8s", "levelapi-k8s", "{AB70A17F-26E3-4937-A8F8-21DE3F916B71}"
+	ProjectSection(SolutionItems) = preProject
+		CoreModules\LevelService\levelapi-k8s\levelapi-cm0-configmap.yaml = CoreModules\LevelService\levelapi-k8s\levelapi-cm0-configmap.yaml
+		CoreModules\LevelService\levelapi-k8s\levelapi-deployment.yaml = CoreModules\LevelService\levelapi-k8s\levelapi-deployment.yaml
+		CoreModules\LevelService\levelapi-k8s\levelapi-ingress.yaml = CoreModules\LevelService\levelapi-k8s\levelapi-ingress.yaml
+		CoreModules\LevelService\levelapi-k8s\levelapi-service.yaml = CoreModules\LevelService\levelapi-k8s\levelapi-service.yaml
+		CoreModules\LevelService\levelapi-k8s\secret.yaml = CoreModules\LevelService\levelapi-k8s\secret.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "missionapi-k8s", "missionapi-k8s", "{2677DF34-8F2B-4F41-B870-5C54C260798D}"
+	ProjectSection(SolutionItems) = preProject
+		CoreModules\MissionService\missionapi-k8s\missionapi-cm0-configmap.yaml = CoreModules\MissionService\missionapi-k8s\missionapi-cm0-configmap.yaml
+		CoreModules\MissionService\missionapi-k8s\missionapi-deployment.yaml = CoreModules\MissionService\missionapi-k8s\missionapi-deployment.yaml
+		CoreModules\MissionService\missionapi-k8s\missionapi-ingress.yaml = CoreModules\MissionService\missionapi-k8s\missionapi-ingress.yaml
+		CoreModules\MissionService\missionapi-k8s\missionapi-service.yaml = CoreModules\MissionService\missionapi-k8s\missionapi-service.yaml
+		CoreModules\MissionService\missionapi-k8s\secret.yaml = CoreModules\MissionService\missionapi-k8s\secret.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "wheelapi-k8s", "wheelapi-k8s", "{3E820445-AF3F-4755-95C7-4328041369FD}"
+	ProjectSection(SolutionItems) = preProject
+		Games\Wheel\wheelapi-k8s\secret.yaml = Games\Wheel\wheelapi-k8s\secret.yaml
+		Games\Wheel\wheelapi-k8s\wheelapi-cm0-configmap.yaml = Games\Wheel\wheelapi-k8s\wheelapi-cm0-configmap.yaml
+		Games\Wheel\wheelapi-k8s\wheelapi-deployment.yaml = Games\Wheel\wheelapi-k8s\wheelapi-deployment.yaml
+		Games\Wheel\wheelapi-k8s\wheelapi-ingress.yaml = Games\Wheel\wheelapi-k8s\wheelapi-ingress.yaml
+		Games\Wheel\wheelapi-k8s\wheelapi-service.yaml = Games\Wheel\wheelapi-k8s\wheelapi-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "penaltykicksapi-k8s", "penaltykicksapi-k8s", "{40214696-81B6-431B-9A75-3AD2116E35E2}"
+	ProjectSection(SolutionItems) = preProject
+		penaltykicksapi-cm0-configmap.yml = penaltykicksapi-cm0-configmap.yml
+		penaltykicksapi-deployment.yml = penaltykicksapi-deployment.yml
+		penaltykicksapi-ingress.yml = penaltykicksapi-ingress.yml
+		penaltykicksapi-service.yml = penaltykicksapi-service.yml
+		Games\PenaltyKicks\penaltykicksapi-k8s\secret.yml = Games\PenaltyKicks\penaltykicksapi-k8s\secret.yml
+	EndProjectSection
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3A25B187-F218-4D6E-AE48-118C8332C1E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -460,10 +626,10 @@ Global
 		{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AF04F42A-5FBB-439B-860C-734F3FFF3E97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF04F42A-5FBB-439B-860C-734F3FFF3E97}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF04F42A-5FBB-439B-860C-734F3FFF3E97}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF04F42A-5FBB-439B-860C-734F3FFF3E97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A25B187-F218-4D6E-AE48-118C8332C1E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A25B187-F218-4D6E-AE48-118C8332C1E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A25B187-F218-4D6E-AE48-118C8332C1E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A25B187-F218-4D6E-AE48-118C8332C1E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -548,6 +714,27 @@ Global
 		{D44D1B77-F19E-40DA-B289-FAA08C096D76} = {4DE19697-5278-4A2E-8052-1C3F7F3B4BA8}
 		{118F2BE1-A5A3-4E16-A42D-4E2DCDD060A3} = {4DE19697-5278-4A2E-8052-1C3F7F3B4BA8}
 		{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5} = {4DE19697-5278-4A2E-8052-1C3F7F3B4BA8}
+		{48A360E8-585F-4506-80F8-EFBB8B300A2B} = {1D153E14-4B13-413B-ACA0-200CEE0D39E2}
+		{0BE5DE96-973F-4415-8916-261165E68E10} = {5B114121-70BA-495E-B484-1D580402C72C}
+		{9F85B95C-C1B9-4A9A-A1B6-17357CE97E2F} = {4997A204-600A-4280-AC7D-BBEC16062EF3}
+		{CD9217C6-E60E-42DA-8092-6D1CF0FFE83D} = {B24D12B4-8046-42D7-917F-BEA0A34BDAE6}
+		{622D47EE-5B97-4D7C-B409-FD9BEAC3D0BB} = {88862DA0-97F7-4FD3-9028-61AA9FD0AC60}
+		{0A31F44F-1044-4CA4-8020-BEC0EDD6063C} = {88862DA0-97F7-4FD3-9028-61AA9FD0AC60}
+		{9ACCC64E-D254-437F-94DB-9C35A26FF4D3} = {88862DA0-97F7-4FD3-9028-61AA9FD0AC60}
+		{6BF71611-10ED-4D2B-86C2-5C934DC3B673} = {88862DA0-97F7-4FD3-9028-61AA9FD0AC60}
+		{01625424-B390-40C4-A0EE-18FD3411B47A} = {88862DA0-97F7-4FD3-9028-61AA9FD0AC60}
+		{4391FBA5-788F-4188-9B54-6DF74F508121} = {88862DA0-97F7-4FD3-9028-61AA9FD0AC60}
+		{610CB062-486F-4993-8BF2-A21E30A0A944} = {88862DA0-97F7-4FD3-9028-61AA9FD0AC60}
+		{918E774F-386D-439E-BA56-74111727D706} = {88862DA0-97F7-4FD3-9028-61AA9FD0AC60}
+		{00A49856-96FA-465A-85C2-BEA20814B26B} = {88862DA0-97F7-4FD3-9028-61AA9FD0AC60}
+		{3164E6C5-0E65-47AA-BD2F-3C0D5C62033B} = {88862DA0-97F7-4FD3-9028-61AA9FD0AC60}
+		{3CB95107-836F-4929-9150-5C742EE5C4D3} = {88862DA0-97F7-4FD3-9028-61AA9FD0AC60}
+		{72B6C443-2E51-4D32-BF5C-CCAD79EE58A2} = {88862DA0-97F7-4FD3-9028-61AA9FD0AC60}
+		{60A209B9-8D65-47B7-B4BC-22E680970ECC} = {88862DA0-97F7-4FD3-9028-61AA9FD0AC60}
+		{AB70A17F-26E3-4937-A8F8-21DE3F916B71} = {6E18BD1A-79F3-4426-BCC0-C2B3D0252D16}
+		{2677DF34-8F2B-4F41-B870-5C54C260798D} = {D3581D6D-E32F-4BEC-A272-8B94B6D18647}
+		{3E820445-AF3F-4755-95C7-4328041369FD} = {A41788BA-A633-452E-B173-F2F8393FC2D3}
+		{40214696-81B6-431B-9A75-3AD2116E35E2} = {4DE19697-5278-4A2E-8052-1C3F7F3B4BA8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2083D19C-3851-4364-95A9-449C10AD54E0}

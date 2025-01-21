@@ -9,17 +9,12 @@ services:
       - "5001:8080"
     depends_on:
       - consul
-      - gameconfigdb
-      - gamehistorydb
+      - postgres
     environment:
       - CONSUL_ADDRESS=http://consul:8500
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__GameConfig=Host=gameconfigdb;Port=5434;Database=WheelConfig;Username=postgres;Password=Test1234!
-      - ConnectionStrings__GameHistory=Host=gamehistorydb;Port=5435;Database=WheelHistory;Username=postgres;Password=Test1234!
+      - ConnectionStrings__GameConfig=Host=postgres;Port=5432;Database=WheelConfig;Username=postgres;Password=Test1234!
+      - ConnectionStrings__GameHistory=Host=postgres;Port=5432;Database=WheelHistory;Username=postgres;Password=Test1234!
     volumes:
       - ./appsettings.json:/app/appsettings.json
-    command: ["dotnet", "ef", "database update"]
-
-volumes:
-  gameconfigdb_data:
-  gamehistorydb_data:  
+    command: ["dotnet", "ef", "database update"] 

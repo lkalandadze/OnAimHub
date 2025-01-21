@@ -3,7 +3,7 @@ data:
   appsettings.json: |
     {
       "ConnectionStrings": {
-        "DefaultConnectionString": "Host=aggregationdb;Port=5438;Database=aggregation;Username=postgres;Password=Test1234!"
+        "DefaultConnectionString": "Host=postgres;Port=5432;Database=OnAimAggregation;Username=postgres;Password=Test1234!"
       },
       "RabbitMQSettings": {
         "ConnectionName": "aggregation-service",

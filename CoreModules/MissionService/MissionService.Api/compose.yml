@@ -9,14 +9,11 @@ services:
       - "5009:8080"
     depends_on:
       - consul
-      - missiondb
+      - postgres
     environment:
       - CONSUL_ADDRESS=http://consul:8500
       # - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
-      - ConnectionStrings__OnAimMission=Host=missiondb;Port=5437;Database=OnAimMission;Username=postgres;Password=Test1234!
+      - ConnectionStrings__OnAimMission=Host=postgres;Port=5432;Database=OnAimMission;Username=postgres;Password=Test1234!
     volumes:
       - ./appsettings.json:/app/appsettings.json
     command: ["dotnet", "ef", "database update"]
-
-volumes:
-  missiondb_data:

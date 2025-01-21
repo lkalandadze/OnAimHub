@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wheelapi
+  name: penaltykicksapi
   namespace: onaimhub
   labels:
-    app: wheelapi
+    app: penaltykicksapi
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: wheelapi
+      app: penaltykicksapi
   template:
     metadata:
       labels:
-        app: wheelapi
+        app: penaltykicksapi
     spec:
       containers:
-        - name: wheelapi
-          image: gvgroup/onaim-wheel:latest  # Replace with DockerHub path
+        - name: penaltykicksapi
+          image: gvgroup/onaim-penaltykicks:latest  # Replace with DockerHub path
           ports:
             - containerPort: 8080
           env:
@@ -26,9 +26,9 @@ spec:
             - name: CONSUL_ADDRESS
               value: http://consul:8500
             - name: ConnectionStrings__GameConfig
-              value: Host=postgres;Port=5432;Database=WheelConfig;Username=postgres;Password=Test1234!
+              value: Host=postgres;Port=5432;Database=PenaltyConfig;Username=postgres;Password=Test1234!
             - name: ConnectionStrings__GameHistory
-              value: Host=postgres;Port=5432;Database=WheelHistory;Username=postgres;Password=Test1234!
+              value: Host=postgres;Port=5432;Database=PenaltyHistory;Username=postgres;Password=Test1234!
           resources:
             requests:
               memory: "256Mi"
@@ -38,7 +38,7 @@ spec:
               cpu: "500m"
           volumeMounts:
             - mountPath: /app/appsettings.json
-              name: wheelapi-cm0
+              name: penaltykicksapi-cm0
               subPath: appsettings.json
       restartPolicy: Always
       imagePullSecrets:
@@ -48,5 +48,5 @@ spec:
             items:
               - key: appsettings.json
                 path: appsettings.json
-            name: wheelapi-cm0
-          name: wheelapi-cm0
+            name: penaltykicksapi-cm0
+          name: penaltykicksapi-cm0

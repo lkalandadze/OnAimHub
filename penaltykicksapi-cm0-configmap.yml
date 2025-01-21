@@ -1,6 +1,14 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: penaltykicksapi
+  name: penaltykicksapi-cm0
+  namespace: onaimhub
 data:
-  appsettings.json: |-
+  appsettings.json: |
     {
       "Logging": {
         "LogLevel": {
@@ -10,13 +18,13 @@ data:
       },
       "AllowedHosts": "*",
       "ConnectionStrings": {
-        "GameConfig": "User ID =postgres;Password=Test1234!;Server=postgres;Port=5432;Database=WheelConfig;Pooling=true;",
-        "GameHistory": "User ID =postgres;Password=Test1234!;Server=postgres;Port=5432;Database=WheelHistory;Pooling=true;"
+        "GameConfig": "User ID=postgres;Password=Test1234!;Server=postgres;Port=5432;Database=PenaltyConfig;Pooling=true;",
+        "GameHistory": "User ID=postgres;Password=Test1234!;Server=postgres;Port=5432;Database=PenaltyHistory;Pooling=true;"
       },
       "GameInfoConfiguration": {
-        "GameId": 1,
-        "Name": "Wheel",
-        "ApiName": "WheelApi"
+        "GameId": 2,
+        "Name": "PenaltyKicks",
+        "ApiName": "PenaltyKicksApi"
       },
       "HubApiConfiguration": {
         "Host": "https://hubapi:5002/",
@@ -36,13 +44,13 @@ data:
       },
       "Consul": {
         "Host": "http://consul:8500",
-        "ServiceName": "OnAimWheel",
+        "ServiceName": "OnAimPenalty",
         "ServiceId": "YourServiceId",
         "ServiceAddress": "http://localhost",
         "ServicePort": 7069
       },
       "RabbitMQSettings": {
-        "Host": "rabbitmq",
+        "Host": "192.168.8.115",
         "Port": "5672",
         "User": "guest",
         "Password": "guest",
@@ -51,21 +59,10 @@ data:
           "PlayerExperienceQueue": {
             "QueueName": "UpdatePlayerExperienceQueue",
             "RoutingKey": "levels_updatePlayerExperienceEvent"
-          },
+          }
         }
       },
       "PrizeGenerationConfiguration": {
-        "PrizeGenerationType": "RNG" //"Sequence"
-      },
-      "HubApi": {
-        "BaseUrl": "http://hubapi:5002/" 
+        "PrizeGenerationType": "Sequence"
       }
     }
-kind: ConfigMap
-metadata:
-  annotations:
-    use-subpath: "true"
-  labels:
-    io.kompose.service: wheelapi
-  name: wheelapi-cm0
-  namespace: onaimhub
