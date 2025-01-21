@@ -107,7 +107,7 @@ Below are the Swagger URLs for the various services in the OnAim project:
 | Aggregation Service                 | `http://onaim.aggregation.dev.local:30001/swagger/index.html`         |
 | Admin API                           | `http://onaim.adminapi.dev.local:30001/swagger/index.html`      |
 | Ocelot API Gateway                  | `http://onaim.ocelotapigateway.dev.local:30001/swagger/index.html`    |
-| Hub API                             | `http://onaim.hubapi.dev.local:30001/swagger/index.html`              |
+| Hub API                             | `http://onaim.hubapi.dev.local:30001/swagger/admin/index.html`              |
 | Leaderboard API                     | `http://onaim.leaderboardapi.dev.local:30001/swagger/index.html`      |
 | Level Service                       | `http://onaim.levelapi.dev.local:30001/swagger/index.html`            |
 | Mission Service                     | `http://onaim.missionapi.dev.local:30001/swagger/index.html`          |
