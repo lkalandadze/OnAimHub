@@ -9,7 +9,7 @@ data:
         }
       },
       "ConnectionStrings": {
-        "OnAimMission": "User ID =postgres;Password=Test1234!;Server=missiondb;Port=5437;Database=OnAimMission;Pooling=true;" 
+        "OnAimMission": "User ID =postgres;Password=Test1234!;Server=postgres;Port=5432;Database=OnAimMission;Pooling=true;" 
       },
       "JwtConfiguration": {
         "PublicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhRGzVPGyq8lyFY/6xgdZiQT06c5k6RLauQjuE8zk6iXNP1EX86xZ8iQ4K/pB4Pw6u4b3stAxwnbwyOYPBngVUA==",

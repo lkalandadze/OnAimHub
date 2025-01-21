@@ -26,7 +26,7 @@ spec:
             - name: CONSUL_ADDRESS
               value: http://consul:8500
             - name: ConnectionStrings__Connection
-              value: Host=leveldb;Port=5439;Database=OnAimLevel;Username=postgres;Password=Test1234!
+              value: Host=postgres;Port=5432;Database=OnAimLevel;Username=postgres;Password=Test1234!
           # command:
           #   - "dotnet"
           #   - "ef"

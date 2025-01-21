@@ -8,6 +8,6 @@ services:
     ports:
       - "5006:8080"
     environment:
-      - ConnectionStrings__Connection=Host=aggregationdb;Port=5439;Database=OnAimAggregation;Username=postgres;Password=Test1234!;Pooling=true;
+      - ConnectionStrings__Connection=Host=postgres;Port=5432;Database=OnAimAggregation;Username=postgres;Password=Test1234!;Pooling=true;
     volumes:
       - ./appsettings.json:/app/appsettings.json

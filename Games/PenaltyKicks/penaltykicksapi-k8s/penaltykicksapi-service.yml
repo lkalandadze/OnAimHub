@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: penaltykicksapi
+  namespace: onaimhub
+spec:
+  ports:
+    - name: http
+      port: 5011
+      targetPort: 8080
+  selector:
+    app: penaltykicksapi
+  type: ClusterIP
+
+

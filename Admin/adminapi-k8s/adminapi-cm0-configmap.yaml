@@ -3,9 +3,9 @@ data:
   appsettings.json: |
     {
       "ConnectionStrings": {
-        "DefaultConnectionString": "Host=admindb;Port=5435;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;",
-        "HubDefaultConnectionString": "User ID=postgres;Password=1234;Server=hubapidb;Port=5432;Database=OnAimHub;Pooling=true;",
-        "LeaderBoardDefaultConnectionString": "User ID=postgres;Password=Test1234!;Server=leaderboarddb;Port=5432;Database=OnAimLeaderboard;Pooling=true;"
+        "DefaultConnectionString": "Host=postgres;Port=5432;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;",
+        "HubDefaultConnectionString": "User ID =postgres;Password=Test1234!;Server=postgres;Port=5432;Database=OnAimHub;Pooling=true;",
+        "LeaderBoardDefaultConnectionString": "User ID =postgres;Password=Test1234!;Server=postgres;Port=5432;Database=OnAimLeaderboard;Pooling=true;"
       },
       "MongoDB": {
         "Connection": "mongodb://mongo::27017/",

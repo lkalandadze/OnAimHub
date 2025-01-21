@@ -4,7 +4,7 @@ data:
   appsettings.json: |-
     {
       "ConnectionStrings": {
-        "OnAimHub": "User ID =postgres;Password=1234;Server=hubapidb;Port=5432;Database=OnAimHub;Pooling=true;" 
+        "OnAimHub": "User ID =postgres;Password=1234;Server=postgres;Port=5432;Database=OnAimHub;Pooling=true;" 
       },
       "CasinoApiConfiguration": {
          "Host": "http://testapi:5005/",

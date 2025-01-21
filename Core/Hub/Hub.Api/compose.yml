@@ -8,15 +8,12 @@ services:
     ports:
       - '5002:8080'
     depends_on:
-      - hubdb
+      - postgres
       - consul
     environment:
       - CONSUL_ADDRESS=http://consul:8500
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__Connection=Host=hubdb;Port=5433;Database=OnAimHub;Username=postgres;Password=Test1234!;Pooling=true;
+      - ConnectionStrings__Connection=Host=postgres;Port=5432;Database=OnAimHub;Username=postgres;Password=Test1234!;Pooling=true;
     volumes:
       - ./appsettings.json:/app/appsettings.json
     command: ["dotnet", "ef", "database update"]
-
-volumes:
-  hubdb_data:

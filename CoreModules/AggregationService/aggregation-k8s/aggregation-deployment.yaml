@@ -22,7 +22,7 @@ spec:
             - containerPort: 8080
           env:
             - name: ConnectionStrings__Connection
-              value: Host=aggregationdb;Port=5438;Database=aggregation;Username=postgres;Password=Test1234!;Pooling=true;
+              value: Host=postgres;Port=5432;Database=OnAimAggregation;Username=postgres;Password=Test1234!;Pooling=true;
           resources:
             limits:
               memory: "512Mi"

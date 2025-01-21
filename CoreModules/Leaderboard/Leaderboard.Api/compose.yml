@@ -9,13 +9,10 @@ services:
       - "5004:8080"
     depends_on:
       - consul
-      - leaderboarddb
+      - postgres
     environment:
       - CONSUL_ADDRESS=http://consul:8500
-      - ConnectionString__OnAimLeaderboard=Host=leaderboarddb;Port=5438;Database=OnAimLeaderboard;Username=postgres;Password=Test1234!
+      - ConnectionString__OnAimLeaderboard=Host=postgres;Port=5432;Database=OnAimLeaderboard;Username=postgres;Password=Test1234!
     volumes:
       - ./appsettings.json:/app/appsettings.json
     command: ["dotnet", "ef", "database update"]
-
-volumes:
-  leaderboarddb_data:

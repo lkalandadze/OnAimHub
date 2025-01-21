@@ -22,7 +22,7 @@ spec:
             - containerPort: 8080
           env:
             - name: ConnectionString__OnAimLeaderboard
-              value: Host=leaderboarddb;Port=5436;Database=OnAimLeaderboard;Username=postgres;Password=Test1234!
+              value: Host=postgres;Port=5432;Database=OnAimLeaderboard;Username=postgres;Password=Test1234!
           resources:
             requests:
               memory: "256Mi"

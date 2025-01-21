@@ -9,14 +9,11 @@ services:
       - "5008:8080"
     depends_on:
       - consul
+      - postgres
     environment:
       - CONSUL_ADDRESS=http://consul:8500
       # - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
-      - ConnectionStrings__Connection=Host=leveldb;Port=5436;Database=OnAimLevel;Username=postgres;Password=Test1234!
+      - ConnectionStrings__Connection=Host=postgres;Port=5432;Database=OnAimLevel;Username=postgres;Password=Test1234!
     volumes:
       - ./appsettings.json:/app/appsettings.json
     command: ["dotnet", "ef", "database update"]
-
-
-volumes:
-  leveldb_data:

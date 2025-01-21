@@ -24,7 +24,7 @@ spec:
             - containerPort: 8080
           env:
             - name: ConnectionStrings__Connection
-              value: Host=admindb;Port=5435;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;
+              value: Host=postgres;Port=5432;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;
           resources:
             requests:
               memory: "256Mi"
