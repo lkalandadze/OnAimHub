@@ -13,7 +13,7 @@ public class PenaltyConfigurationChecker : Checkmate<PenaltyConfiguration>
            .WithMessage("Kicks count should be at least 3.");
 
         Check(x => x.PenaltyPrizeGroups)
-           .SetCondition(x => x.Count > 0)
+           .SetCondition(x => x.Count() > 0)
            .WithMessage("Configuration should have at least 1 penalty prize group.");
     }
 }

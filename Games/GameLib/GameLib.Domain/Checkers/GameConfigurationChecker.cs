@@ -25,7 +25,7 @@ public class GameConfigurationChecker : Checkmate<GameConfiguration>
             .WithMessage("The correlation id should not be null.");
 
         Check(x => x.Prices)
-            .SetCondition(x => x.Count > 0)
+            .SetCondition(x => x.Count() > 0)
             .WithMessage("Configuration should have at least 1 price.");
     }
 }

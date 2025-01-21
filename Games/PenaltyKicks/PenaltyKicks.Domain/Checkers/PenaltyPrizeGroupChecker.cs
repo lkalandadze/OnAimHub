@@ -8,7 +8,7 @@ public class PenaltyPrizeGroupChecker : Checkmate<PenaltyPrizeGroup>
     public PenaltyPrizeGroupChecker() : base()
     {
         Check(x => x.Prizes)
-            .SetCondition(x => x.Count > 2)
+            .SetCondition(x => x.Count() > 2)
             .WithMessage("The number of prizes must be greater than 2.");
     }
 }

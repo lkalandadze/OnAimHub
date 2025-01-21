@@ -37,7 +37,7 @@ public class Check<TEntity, TMember> : Check
 
     private string ToLowerFirstCharOfMethod(string input)
     {
-        var members = new[] { "Sum", "Select", "Where", "OrderBy", "GroupBy", "Join", "First", "Last", "Any", "All", "Length" };
+        var members = new[] { "Count", "Sum", "Average", "Min", "Max", "Where", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy", "Join", "First", "Last", "Any", "All", "Length" };
 
         var regex = new Regex(@"\b(" + string.Join("|", members) + @")\b");
 

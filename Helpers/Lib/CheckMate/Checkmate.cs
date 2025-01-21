@@ -133,6 +133,9 @@ public abstract class Checkmate<TEntity> : Checkmate where TEntity : class
         if (expression is MemberExpression memberExpression)
         {
             var parent = GetPropertyChain(memberExpression.Expression);
+            var aaa = memberExpression.Member;
+            var bbb = memberExpression.Member.Name;
+
             return string.IsNullOrEmpty(parent) ? memberExpression.Member.Name : $"{parent}.{memberExpression.Member.Name}";
         }
 
