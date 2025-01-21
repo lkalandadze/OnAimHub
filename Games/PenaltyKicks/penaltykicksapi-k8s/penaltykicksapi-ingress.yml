@@ -18,4 +18,4 @@ spec:
               service:
                 name: penaltykicksapi
                 port:
-                  number: 5001
+                  number: 5011
