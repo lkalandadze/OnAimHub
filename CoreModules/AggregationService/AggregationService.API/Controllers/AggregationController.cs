@@ -30,6 +30,16 @@ public class AggregationController : ControllerBase
         _configurationStore = configurationStore;
     }
 
+    [HttpPost(nameof(CreateConfigurations))]
+    public async Task<IActionResult> CreateConfigurations([FromBody] List<CreateAggregationConfigurationModel> configs)
+    {
+        configs.ForEach(async config =>
+        {
+            await _aggregationConfigurationService.AddAggregationWithConfigurationsAsync(config);
+        });
+
+        return Ok(new { message = "Aggregation created successfully." });
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateAggregationConfigurationModel filter)

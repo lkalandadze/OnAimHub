@@ -1,6 +1,4 @@
-﻿using Amazon.Runtime.Internal.Util;
-using DnsClient.Internal;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OnAim.Admin.APP.Services.GameServices;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
@@ -74,14 +72,14 @@ public class GameService : IGameService
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
     }
 
-    public async Task<object> GetConfigurations(string name, int promotionId, int? configurationId)
+    public async Task<object> GetConfigurations(string name, int? promotionId, int? configurationId)
     {
         var response = await _httpClientFactory.GetAsync($"/{Uri.EscapeDataString(name)}Api/Admin/Configurations?configurationId={configurationId}&promotionId={promotionId}");
 
         if (response.IsSuccessStatusCode)
         {
             var jsonString = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<ConfigurationsResponse>(jsonString);
+            return JsonSerializer.Deserialize<object>(jsonString);
         }
 
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
@@ -182,6 +180,28 @@ public class GameService : IGameService
         try
         {
             var url = $"/{Uri.EscapeDataString(name)}Api/Admin/DeactivateConfiguration?id={id}";
+
+            var response = await _httpClientFactory.PatchAsync(url, null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+
+            throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in DeactivateConfiguration: {ex.Message}");
+            throw;
+        }
+    }
+
+    public async Task<object> DeleteConfiguration(string name, Guid id)
+    {
+        try
+        {
+            var url = $"/{Uri.EscapeDataString(name)}Api/Admin/DeleteConfiguration?id={id}";
 
             var response = await _httpClientFactory.PatchAsync(url, null);
 

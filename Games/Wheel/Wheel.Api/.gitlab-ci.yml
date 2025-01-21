@@ -48,7 +48,6 @@ tagged_latest_Wheel:
     - main
   needs:
     - build_Wheel
-  when: manual
 
 deploy_Wheel:
   stage: deploy

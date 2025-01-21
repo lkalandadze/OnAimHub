@@ -46,4 +46,12 @@ public class GameConfigurationTemplateRepository : IGameConfigurationTemplateRep
 
         return null;
     }
+
+    public async Task<bool> DeleteGameConfigurationTemplateAsync(string id)
+    {
+        var filter = Builders<GameConfigurationTemplate>.Filter.Eq("Id", id);
+        var result = await _dbContext.GameConfigurationTemplates.DeleteOneAsync(filter);
+
+        return result.IsAcknowledged && result.DeletedCount > 0;
+    }
 }

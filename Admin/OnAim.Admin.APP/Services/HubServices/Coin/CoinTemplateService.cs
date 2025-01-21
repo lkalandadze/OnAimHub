@@ -84,18 +84,7 @@ public class CoinTemplateService : ICoinTemplateService
             }).ToList() ?? new List<WithdrawOptionGroupCoinTempDto>(),
         });
 
-        var coinTemplatess = temps.Select(x =>
-        x.CoinType != Domain.HubEntities.Enum.CoinType.Out
-        ? (dynamic)new CoinInTemplateDto
-        {
-            Id = x.Id,
-            Title = x.Name,
-            Description = x.Description,
-            CoinType = (CoinType)x.CoinType,
-            ImgUrl = x.ImageUrl,
-            IsDeleted = x.IsDeleted
-        }
-        : new CoinTemplateListDto
+        var coinTemplatess = temps.Select(x => new CoinTemplateListDto
         {
             Id = x.Id,
             Title = x.Name,
@@ -130,7 +119,7 @@ public class CoinTemplateService : ICoinTemplateService
         return new ApplicationResult
         {
             Success = true,
-            Data = new PaginatedResult<dynamic>
+            Data = new PaginatedResult<CoinTemplateListDto>
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,

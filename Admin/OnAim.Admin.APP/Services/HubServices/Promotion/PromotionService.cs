@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.FileServices;
@@ -22,7 +21,6 @@ using OnAim.Admin.Domain.HubEntities.Models;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Infrasturcture.Repositories.Abstract;
-using System.Dynamic;
 using System.Text.Json;
 
 namespace OnAim.Admin.APP.Services.Hub.Promotion;
@@ -346,7 +344,6 @@ public class PromotionService : BaseService, IPromotionService
         };
     }
 
-
     public async Task<ApplicationResult> GetPromotionLeaderboardDetails(int leaderboardId, BaseFilter filter)
     {
         var data = _leaderboardResultRepository
@@ -446,7 +443,7 @@ public class PromotionService : BaseService, IPromotionService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating promotion.");
-                await CompensateAsync(correlationId);
+                await CompensateAsync(correlationId, null);
 
                 return await Fail(new Error
                 {
@@ -495,7 +492,7 @@ public class PromotionService : BaseService, IPromotionService
                             catch (Exception ex)
                             {
                                 _logger.LogError(ex, "Error creating leaderboard record.");
-                                await CompensateAsync(correlationId);
+                                await CompensateAsync(correlationId, null);
 
                                 return await Fail(new Error
                                 {
@@ -511,7 +508,7 @@ public class PromotionService : BaseService, IPromotionService
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error processing leaderboards.");
-                    await CompensateAsync(correlationId);
+                    await CompensateAsync(correlationId, null);
 
                     return await Fail(new Error
                     {
@@ -545,7 +542,7 @@ public class PromotionService : BaseService, IPromotionService
                             catch (Exception ex)
                             {
                                 _logger.LogError(ex, "Error creating game configuration.");
-                                await CompensateAsync(correlationId);
+                                await CompensateAsync(correlationId, config.GameName);
 
                                 return await Fail(new Error
                                 {
@@ -561,7 +558,7 @@ public class PromotionService : BaseService, IPromotionService
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error processing game configurations.");
-                    await CompensateAsync(correlationId);
+                    await CompensateAsync(correlationId, null);
 
                     return await Fail(new Error
                     {
@@ -577,7 +574,7 @@ public class PromotionService : BaseService, IPromotionService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during Saga execution.");
-            await CompensateAsync(correlationId);
+            await CompensateAsync(correlationId, null);
 
             return await Fail(new Error
             {
@@ -669,17 +666,13 @@ public class PromotionService : BaseService, IPromotionService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to create leaderboard.");
-            throw new Exception(ex.Message, ex);
+
+            return await Fail(new Error
+            {
+                Message = $"{ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
         }
-        //try
-        //{
-        //    await _leaderboardClientService.CreateLeaderboardRecordAsync(leaderboard);
-        //    return new ApplicationResult { Success = true };
-        //}
-        //catch (Exception ex)
-        //{
-        //    throw new Exception(ex.Message, ex);
-        //}
     }
 
     private async Task<ApplicationResult> CreateGameConfiguration(string name, object configurationJson)
@@ -691,23 +684,31 @@ public class PromotionService : BaseService, IPromotionService
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message, ex);
+            return await Fail(new Error
+            {
+                Message = $"{ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
         }
     }
 
-    private async Task CompensateAsync(Guid request)
+    private async Task CompensateAsync(Guid request, string? gameName)
     {
         try
         {
             var body = new
             {
-
+                CorrelationId = request,
             };
             var lead = new DeleteLeaderboardRecordCommand();
             lead.CorrelationId = request;
             await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/DeletePromotion", body);
             await _leaderboardClientService.DeleteLeaderboardRecordAsync(lead);
-            //await _wheelApiClientApiClient.Delete($"{_leaderBoardApiClientOptions.Endpoint}DeleteLeaderboardRecord", request);
+            if (gameName != null)
+            {
+                _gameService.DeleteConfiguration(gameName, request);
+            }
+
         }
         catch (Exception ex)
         {
@@ -749,14 +750,4 @@ public class CreatePromotionDto
     public CreatePromotionCommandDto Promotion { get; set; }
     public List<CreateLeaderboardRecord>? Leaderboards { get; set; }
     public List<GameConfigDto>? GameConfiguration { get; set; }
-}
-public class PromotionResponse
-{
-    public int PromotionId { get; set; }
-    public List<PromotionResponseCoin> Coins { get; set; }
-}
-public class PromotionResponseCoin
-{
-    public string Id { get; set; }
-    public string CoinName { get; set; }
 }

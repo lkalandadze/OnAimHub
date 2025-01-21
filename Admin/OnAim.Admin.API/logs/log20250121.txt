@@ -1731,3 +1731,4 @@ LIMIT 1
 2025-01-21 05:33:42.688 +00:00 [INF] Executed endpoint 'OnAim.Admin.API.Controllers.LeaderBoardController.CreateLeaderBoardRecord (OnAim.Admin.API)'
 2025-01-21 05:33:42.717 +00:00 [INF] HTTP POST /api/LeaderBoard/CreateLeaderBoardRecord responded 200 in 661.4041 ms
 2025-01-21 05:33:42.721 +00:00 [INF] Request finished HTTP/1.1 POST http://localhost:5003/api/LeaderBoard/CreateLeaderBoardRecord - 200 null application/json; charset=utf-8 689.8277ms
+2025-01-21 15:03:16.195 +04:00 [INF] Starting database migration. Connection String: Host=postgres;Port=5432;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;
