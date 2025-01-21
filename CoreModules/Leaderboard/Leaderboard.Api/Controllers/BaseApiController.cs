@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Leaderboard.Api.Controllers;
 
 [ApiController]
-[Route("api/v{version:apiVersion}/[controller]")]
+[Route("[controller]")]
 public abstract class BaseApiController : ControllerBase
 {
     private IMediator _mediator;

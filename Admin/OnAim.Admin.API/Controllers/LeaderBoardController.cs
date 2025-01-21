@@ -22,6 +22,7 @@ namespace OnAim.Admin.API.Controllers;
 
 public class LeaderBoardController : ApiControllerBase
 {
+    #region LeaderBoard
     [HttpPost(nameof(CreateLeaderBoardRecord))]
     public async Task<IActionResult> CreateLeaderBoardRecord([FromBody] CreateLeaderboardCommand command)
         => Ok(await Mediator.Send(command));
@@ -61,9 +62,9 @@ public class LeaderBoardController : ApiControllerBase
     [HttpGet(nameof(GetCalendar))]
     public async Task<IActionResult> GetCalendar([FromQuery] GetCalendarQuery getCalendar)
         => Ok(await Mediator.Send(getCalendar));
+    #endregion
 
-
-    ///LeaderBoard Template
+    #region LeaderBoard Template
 
     [HttpPost(nameof(CreateLeaderBoardTemplate))]
     public async Task<IActionResult> CreateLeaderBoardTemplate([FromBody] CreateLeaderboardTemplateCommand command)
@@ -84,4 +85,5 @@ public class LeaderBoardController : ApiControllerBase
     [HttpGet(nameof(GetLeaderboardTemplateById))]
     public async Task<IActionResult> GetLeaderboardTemplateById([FromQuery] GetLeaderboardTemplateByIdQuery query)
         => Ok(await Mediator.Send(query));
+    #endregion
 }

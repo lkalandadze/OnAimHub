@@ -1,12 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
+﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
+using OnAim.Admin.Contracts.Dtos.Game;
 using OnAim.Admin.Contracts.Enums;
 using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.Entities.Templates;
 using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
-using System.Text.Json;
 
 namespace OnAim.Admin.APP.Services.GameServices;
 
@@ -48,8 +47,9 @@ public class GameTemplateService : IGameTemplateService
 
         var result = temps.Select(x => new GameConfigurationTemplateDto
         {
+           Id = x.Id,
             GameName = x.Game,
-            Configuration = x.GetConfigurationAsJsonElement()
+            Configuration = x.GetConfigurationAsJsonElement(),
         });
 
         var pageNumber = filter?.PageNumber ?? 1;
@@ -96,22 +96,8 @@ public class GameTemplateService : IGameTemplateService
 
     public async Task<ApplicationResult> DeleteGameConfigurationTemplate(string id)
     {
-        var template = await _gameConfigurationTemplateRepository.GetGameConfigurationTemplateByIdAsync(id);
-
-        if (template == null)
-        {
-            throw new NotFoundException("Template Not Found");
-        }
-
-        template.Delete();
-
-        await _gameConfigurationTemplateRepository.UpdateGameConfigurationTemplateAsync(id, template);
+        var template = await _gameConfigurationTemplateRepository.DeleteGameConfigurationTemplateAsync(id);      
 
         return new ApplicationResult { Success = true };
     }
-}
-public class GameConfigurationTemplateDto
-{
-    public string GameName { get; set; }
-    public JsonElement Configuration { get; set; }
 }
