@@ -28,8 +28,11 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
     {
         _leaderboardService.ValidateLeaderboardPrizes(request.LeaderboardPrizes);
 
+        int nextExternalId = await _leaderboardRecordRepository.GetMaxExternalIdAsync(cancellationToken) + 1;
+
         var leaderboard = new LeaderboardRecord(
             request.PromotionId,
+            nextExternalId,
             request.PromotionName,
             request.Title,
             request.Description,
@@ -43,6 +46,7 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
             request.CreatedBy,
             request.CorrelationId
         );
+
 
         foreach (var prize in request.LeaderboardPrizes)
         {
