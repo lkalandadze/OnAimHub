@@ -1,0 +1,66 @@
+stages:
+  - build
+  - test
+  - tagged_latest
+  - deploy
+
+
+variables:
+  DOCKER_IMAGE_TAG: $CI_COMMIT_REF_SLUG-$CI_PIPELINE_ID
+  DOCKER_NAMESPACE: gvgroup
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+
+services:
+  - docker:dind
+
+build_PenaltyKicks:
+  image: docker
+  stage: build
+  script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - echo "Building PenaltyKicks"
+    - docker build -t $DOCKER_NAMESPACE/onaim-penaltykicks:$DOCKER_IMAGE_TAG -f Games/PenaltyKicks/PenaltyKicks.Api/Dockerfile .
+    - echo "Pushing Docker image for PenaltyKicks to Docker Hub..."
+    - docker push $DOCKER_NAMESPACE/onaim-penaltykicks:$DOCKER_IMAGE_TAG
+  tags:
+    - docker-runner
+
+test_PenaltyKicks:
+  stage: test
+  script:
+    - echo "Running tests for PenaltyKicks"
+  tags:
+    - docker-runner
+
+tagged_latest_PenaltyKicks:
+  image: docker
+  stage: tagged_latest
+  script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - echo "Pushing PenaltyKicks"
+    - docker pull $DOCKER_NAMESPACE/onaim-penaltykicks:$DOCKER_IMAGE_TAG
+    - docker tag $DOCKER_NAMESPACE/onaim-penaltykicks:$DOCKER_IMAGE_TAG $DOCKER_NAMESPACE/onaim-penaltykicks:latest
+    - docker push $DOCKER_NAMESPACE/onaim-penaltykicks:latest
+  tags:
+    - docker-runner
+  only:   
+    - main
+  needs:
+    - build_PenaltyKicks
+
+deploy_PenaltyKicks:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - echo "Deploying PenaltyKicks"
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - sed -i "s|gvgroup/onaim-penaltykicks:latest|gvgroup/onaim-penaltykicks:$DOCKER_IMAGE_TAG|g" Games/PenaltyKicks/penaltykicks-k8s/penaltykicks-deployment.yaml
+    - kubectl apply -f Games/PenaltyKicks/penaltykicks-k8s/penaltykicks-deployment.yaml Games/PenaltyKicks/penaltykicks-k8s/penaltykicks-service.yaml Games/PenaltyKicks/penaltykicks-k8s/penaltykicks-ingress.yaml Games/PenaltyKicks/penaltykicks-k8s/penaltykicks-cm0-configmap.yaml Games/PenaltyKicks/penaltykicks-k8s/secret.yaml
+  only:
+    - main
+  when: manual
+  tags:
+    - docker-runner

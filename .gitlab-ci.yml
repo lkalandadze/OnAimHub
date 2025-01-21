@@ -8,6 +8,28 @@ stages:
   - rabbitmq
   - mongo
   - admindb
+  - consul
+  - posgres
+  - missiondb
+  - leaderboarddb
+  - aggregationdb
+  - gameconfigdb
+  - gamehistorydb
+  - hubapidb
+  - leveldb
+  - sagamachinedb
+
+deploy_postgres:
+  stage: posgres
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: ['']
+  script:
+    - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+    - kubectl apply -f k8s/postgres/postgres-deployment.yaml -f k8s/postgres/postgres-service.yaml -f k8s/postgres/postgres-persistentvolumeclaim.yaml 
+  tags:
+    - docker-runner
+  when: manual
 
 deploy_redis:
   stage: redis
@@ -16,7 +38,7 @@ deploy_redis:
     entrypoint: ['']
   script:
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f k8s/redis/*.yaml 
+    - kubectl apply -f k8s/redis/redis-deployment.yaml -f k8s/redis/redis-service.yaml -f k8s/redis/redis-data-persistentvolumeclaim.yaml 
   tags:
     - docker-runner
   when: manual
@@ -28,10 +50,12 @@ deploy_rabbitmq:
     entrypoint: ['']
   script:
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f k8s/rabbitmq/*.yaml 
+    - kubectl apply -f k8s/rabbitmq/rabbitmq-deployment.yaml -f k8s/rabbitmq/rabbitmq-service.yaml -f k8s/rabbitmq/rabbitmq-data-persistentvolumeclaim.yaml
   tags:
     - docker-runner
   when: manual
+
+
 
 deploy_mongo:
   stage: mongo
@@ -40,22 +64,130 @@ deploy_mongo:
     entrypoint: ['']
   script:
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f k8s/mongo/*.yaml 
+    - kubectl apply -f k8s/mongo/mongo-deployment.yaml -f k8s/mongo/mongo-service.yaml -f k8s/mongo/mongo-data-persistentvolumeclaim.yaml
   tags:
     - docker-runner
   when: manual
 
-deploy_admindb:
-  stage: admindb
+deploy_consul:
+  stage: deploy_consul
   image:
     name: bitnami/kubectl:latest
     entrypoint: ['']
   script:
     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
-    - kubectl apply -f k8s/admindb/*.yaml 
+    - kubectl apply -f k8s/consul/consul-deployment.yaml -f k8s/consul/consul-service.yaml
   tags:
     - docker-runner
   when: manual
+
+# deploy_sagamachinedb:
+#   stage: sagamachinedb
+#   image:
+#     name: bitnami/kubectl:latest
+#     entrypoint: ['']
+#   script:
+#     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+#     - kubectl apply -f k8s/sagamachinedb/sagamachinedb-deployment.yaml -f k8s/sagamachinedb/sagamachinedb-service.yaml -f k8s/sagamachinedb/sagamachinedb-data-persistentvolumeclaim.yaml
+#   tags:
+#     - docker-runner
+#   when: manual
+
+# deploy_leveldb:
+#   stage: leveldb
+#   image:
+#     name: bitnami/kubectl:latest
+#     entrypoint: ['']
+#   script:
+#     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+#     - kubectl apply -f k8s/leveldb/leveldb-deployment.yaml -f k8s/leveldb/leveldb-service.yaml -f k8s/leveldb/leveldb-data-persistentvolumeclaim.yaml
+#   tags:
+#     - docker-runner
+#   when: manual
+
+# deploy_missiondb:
+#   stage: missiondb
+#   image:
+#     name: bitnami/kubectl:latest
+#     entrypoint: ['']
+#   script:
+#     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+#     - kubectl apply -f k8s/missiondb/missiondb-deployment.yaml -f k8s/missiondb/missiondb-service.yaml -f k8s/missiondb/missiondb-data-persistentvolumeclaim.yaml
+#   tags:
+#     - docker-runner
+#   when: manual
+
+# deploy_leaderboarddb:
+#   stage: leaderboarddb
+#   image:
+#     name: bitnami/kubectl:latest
+#     entrypoint: ['']
+#   script:
+#     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+#     - kubectl apply -f k8s/leaderboarddb/leaderboarddb-deployment.yaml -f k8s/leaderboarddb/leaderboarddb-service.yaml -f k8s/leaderboarddb/leaderboarddb-data-persistentvolumeclaim.yaml
+#   tags:
+#     - docker-runner
+#   when: manual
+
+# deploy_gamehistorydb:
+#   stage: gamehistorydb
+#   image:
+#     name: bitnami/kubectl:latest
+#     entrypoint: ['']
+#   script:
+#     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+#     - kubectl apply -f k8s/gamehistorydb/gamehistorydb-deployment.yaml -f k8s/gamehistorydb/gamehistorydb-service.yaml -f k8s/gamehistorydb/gamehistorydb-data-persistentvolumeclaim.yaml
+#   tags:
+#     - docker-runner
+#   when: manual
+
+# deploy_gameconfigdb:
+#   stage: gameconfigdb
+#   image:
+#     name: bitnami/kubectl:latest
+#     entrypoint: ['']
+#   script:
+#     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+#     - kubectl apply -f k8s/gameconfigdb/gameconfigdb-deployment.yaml -f k8s/gameconfigdb/gameconfigdb-service.yaml -f k8s/gameconfigdb/gameconfigdb-data-persistentvolumeclaim.yaml
+#   tags:
+#     - docker-runner
+#   when: manual
+
+# deploy_aggregationdb:
+#   stage: aggregationdb
+#   image:
+#     name: bitnami/kubectl:latest
+#     entrypoint: ['']
+#   script:
+#     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+#     - kubectl apply -f k8s/aggregationdb/aggregationdb-deployment.yaml -f k8s/aggregationdb/aggregationdb-service.yaml -f k8s/aggregationdb/aggregationdb-persistentvolumeclaim.yaml
+#   tags:
+#     - docker-runner
+#   when: manual
+
+# deploy_hubapidb:
+#   stage: hubapidb
+#   image:
+#     name: bitnami/kubectl:latest
+#     entrypoint: ['']
+#   script:
+#     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+#     - kubectl apply -f k8s/hubapidb/hubapidb-deployment.yaml -f k8s/hubapidb/hubapidb-service.yaml -f k8s/hubapidb/hubapidb-data-persistentvolumeclaim.yaml
+#   tags:
+#     - docker-runner
+#   when: manual
+
+# deploy_admindb:
+#   stage: admindb
+#   image:
+#     name: bitnami/kubectl:latest
+#     entrypoint: ['']
+#   script:
+#     - kubectl config use-context onaim/onaimback/k8s-connection:k8s-connection
+#     - kubectl apply -f k8s/admindb/admindb-deployment.yaml -f k8s/admindb/admindb-service.yaml -f k8s/admindb/admindb-persistentvolumeclaim.yaml
+#   tags:
+#     - docker-runner
+#   when: manual
 
 include:
   - local: 'Admin/OnAim.Admin.API/.gitlab-ci.yml'
@@ -63,10 +195,10 @@ include:
       - if: '$CI_COMMIT_BRANCH =~ /^admin\/.*/'
         changes:
           - 'Admin/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
-        when: always
-        changes:
-          - 'Admin/**/*'
+      # - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+      #   when: always
+      #   changes:
+      #     - 'Admin/**/*'
       - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^admin\/.*/'
         when: always
   - local: 'ApiGateways/ApiGateway/.gitlab-ci.yml'
@@ -74,9 +206,9 @@ include:
        - if: '$CI_COMMIT_BRANCH =~ /^api_gateway\/.*/'
          changes:
           - 'ApiGateways/ApiGateway/**/*'
-       - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
-         changes:
-          - 'ApiGateways/ApiGateway/**/*'
+      #  - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+      #    changes:
+      #     - 'ApiGateways/ApiGateway/**/*'
        - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^api_gateway\/.*/'
          when: always
   - local: 'Core/Hub/Hub.Api/.gitlab-ci.yml'
@@ -84,9 +216,9 @@ include:
       - if: '$CI_COMMIT_BRANCH =~ /^hub_api\/.*/'
         changes:
           - 'Core/Hub/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
-        changes:
-          - 'Core/Hub/**/*'
+      # - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+      #   changes:
+      #     - 'Core/Hub/**/*'
       - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^hub_api\/.*/'
         when: always
   - local: 'CoreModules/Leaderboard/Leaderboard.Api/.gitlab-ci.yml'
@@ -94,68 +226,78 @@ include:
       - if: '$CI_COMMIT_BRANCH =~ /^leaderboard\/.*/'
         changes:
           - 'CoreModules/Leaderboard/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
-        changes:
-          - 'CoreModules/Leaderboard/**/*'
+      # - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+      #   changes:
+      #     - 'CoreModules/Leaderboard/**/*'
       - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^leaderboard\/.*/'
         when: always
   - local: 'CoreModules/LevelService/LevelService.Api/.gitlab-ci.yml'
     rules:
-      - if: '$CI_COMMIT_BRANCH =~ /^level_service\/.*/'
+      - if: '$CI_COMMIT_BRANCH =~ /^levelservice\/.*/'
         changes:
           - 'CoreModules/LevelService/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
-        changes:
-          - 'CoreModules/LevelService/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^level_service\/.*/'
+      # - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+      #   changes:
+      #     - 'CoreModules/LevelService/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^levelservice\/.*/'
         when: always
   - local: 'CoreModules/MissionService/MissionService.Api/.gitlab-ci.yml'
     rules:
-      - if: '$CI_COMMIT_BRANCH =~ /^mission_service\/.*/'
+      - if: '$CI_COMMIT_BRANCH =~ /^missionservice\/.*/'
         changes:
           - 'CoreModules/MissionService/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
-        changes:
-          - 'CoreModules/MissionService/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^mission_service\/.*/'
+      # - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+      #   changes:
+      #     - 'CoreModules/MissionService/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^missionservice\/.*/'
         when: always
   - local: 'CoreModules/AggregationService/AggregationService.API/.gitlab-ci.yml'
     rules:
-      - if: '$CI_COMMIT_BRANCH =~ /^aggregation_service\/.*/'
+      - if: '$CI_COMMIT_BRANCH =~ /^aggregationservice\/.*/'
         changes:
           - 'CoreModules/AggregationService/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
-        changes:
-          - 'CoreModules/AggregationService/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^aggregation_service\/.*/'
+      # - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+      #   changes:
+      #     - 'CoreModules/AggregationService/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^aggregationservice\/.*/'
         when: always
   - local: 'Games/Wheel/Wheel.Api/.gitlab-ci.yml'
     rules:
       - if: '$CI_COMMIT_BRANCH =~ /^wheel\/.*/'
         changes:
           - 'Games/Wheel/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
-        changes:
-          - 'Games/Wheel/**/*'
+      # - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+      #   changes:
+      #     - 'Games/Wheel/**/*'
       - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^wheel\/.*/'
+        when: always
+  - local: 'Games/PenaltyKicks/PenaltyKicks.Api/.gitlab-ci.yml'
+    rules:
+      - if: '$CI_COMMIT_BRANCH =~ /^penaltykicks\/.*/'
+        changes:
+          - 'Games/PenaltyKicks/**/*'
+      # - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+      #   changes:
+      #     - 'Games/PenaltyKicks/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^penaltykicks\/.*/'
         when: always
   - local: 'Helpers/Test.Api/.gitlab-ci.yml'
     rules:
-      - if: '$CI_COMMIT_BRANCH =~ /^test_api\/.*/'
+      - if: '$CI_COMMIT_BRANCH =~ /^testapi\/.*/'
         changes:
           - 'Helpers/Test.Api/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
-        changes:
-          - 'Helpers/Test.Api/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^test_api\/.*/'
+      # - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+      #   changes:
+      #     - 'Helpers/Test.Api/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^testapi\/.*/'
         when: always
   - local: 'StateMachines/SagaOrchestrationStateMachine/SagaOrchestrationStateMachine/.gitlab-ci.yml'
     rules:
-      - if: '$CI_COMMIT_BRANCH =~ /^saga_orchestration_state_machine\/.*/'
+      - if: '$CI_COMMIT_BRANCH =~ /^sagamachine\/.*/'
         changes:
           - 'StateMachines/SagaOrchestrationStateMachine/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
-        changes:
-          - 'StateMachines/SagaOrchestrationStateMachine/**/*'
-      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^saga_orchestration_state_machine\/.*/'
+      # - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+      #   changes:
+      #     - 'StateMachines/SagaOrchestrationStateMachine/**/*'
+      - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^sagamachine\/.*/'
         when: always
