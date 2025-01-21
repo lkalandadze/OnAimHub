@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Leaderboard.Api.Controllers;
 
-[Route("api/v1/[controller]")]
+[Route("LeaderboardApi/[controller]")]
 [ApiController]
 public class LeaderboardProgressController : BaseApiController
 {
