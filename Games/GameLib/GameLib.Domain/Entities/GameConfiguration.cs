@@ -31,12 +31,15 @@ public class GameConfiguration : BaseEntity<int>
     [GlobalDescription("Value of the configuration")]
     public int Value { get; set; }
 
+    [IgnoreIncludeAll]
     [GlobalDescription("IsActive of the configuration")]
     public bool IsActive { get; set; }
 
+    [IgnoreIncludeAll]
     [GlobalDescription("Promotion Id of the configuration")]
     public int PromotionId { get; set; }
 
+    [IgnoreIncludeAll]
     [GlobalDescription("Correlation Id of the configuration")]
     public Guid? CorrelationId { get; set; }
 
