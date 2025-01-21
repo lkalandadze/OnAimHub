@@ -15,10 +15,11 @@ public class Transaction : BaseEntity<int>
         
     }
 
-    public Transaction(decimal amount, int? gameId, int playerId, AccountType fromAccount, AccountType toAccount, string coinId, TransactionStatus status, TransactionType type, int? promotionId)
+    public Transaction(decimal amount, int? keyId, string? sourceServiceName, int playerId, AccountType fromAccount, AccountType toAccount, string coinId, TransactionStatus status, TransactionType type, int? promotionId)
     {
         Amount = amount;
-        GameId = gameId;
+        KeyId = keyId;
+        SourceServiceName = sourceServiceName;
         PlayerId = playerId;
         FromAccountId = fromAccount.Id;
         ToAccountId = toAccount.Id;
@@ -26,12 +27,14 @@ public class Transaction : BaseEntity<int>
         StatusId = status.Id;
         TypeId = type.Id;
         PromotionId = promotionId;
+        DateCreated = DateTime.UtcNow;
     }
 
     public decimal Amount { get; private set; }
 
-    public int? GameId { get; private set; }
-    public Game Game { get; private set; }
+    public int? KeyId { get; private set; }
+    public string SourceServiceName {get; private set; }
+    //public Service Service { get; private set; }
 
     public int PlayerId { get; private set; }
     public Player Player { get; private set; }
@@ -53,6 +56,8 @@ public class Transaction : BaseEntity<int>
 
     public int? PromotionId { get; private set; }
     public Promotion Promotion { get; private set; }
+
+    public DateTimeOffset DateCreated { get; private set; }
 
     public void SetStatus(TransactionStatus status)
     {

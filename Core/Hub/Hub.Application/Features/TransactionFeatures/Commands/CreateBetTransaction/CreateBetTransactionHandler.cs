@@ -41,7 +41,8 @@ public class CreateBetTransactionHandler : IRequestHandler<CreateBetTransactionC
         var inCoin = promotion.Coins.First(c => c.CoinType == CoinType.In).Id;
 
         return await _transactionService.CreateTransactionAndApplyBalanceAsync(
-            request.GameId, 
+            request.KeyId,
+            request.SourceServiceName,
             inCoin, 
             request.Amount, 
             AccountType.Player,

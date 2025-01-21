@@ -34,7 +34,7 @@ public class TransactionService : ITransactionService
         _messageBus = messageBus;
     }
 
-    public async Task<TransactionResponseModel> CreateTransactionAndApplyBalanceAsync(int? gameId, string coinId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType, int promotionId)
+    public async Task<TransactionResponseModel> CreateTransactionAndApplyBalanceAsync(int? keyId, string sourceServiceName, string coinId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType, int promotionId)
     {
         var playerId = _authService.GetCurrentPlayerId();
 
@@ -51,7 +51,7 @@ public class TransactionService : ITransactionService
         // check and apply player balances
         await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, coinId, fromAccount, toAccount, amount, promotionId);
 
-        var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, promotionId);
+        var transaction = new Transaction(amount, keyId, sourceServiceName, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, promotionId);
 
         await _transactionRepository.InsertAsync(transaction);
         await _unitOfWork.SaveAsync();
@@ -63,7 +63,7 @@ public class TransactionService : ITransactionService
         };
     }
 
-    public async Task<TransactionResponseModel> CreateLeaderboardTransactionAndApplyBalanceAsync(int? gameId, string coinId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType, int promotionId, int playerId)
+    public async Task<TransactionResponseModel> CreateLeaderboardTransactionAndApplyBalanceAsync(int? keyId, string sourceServiceName, string coinId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType, int promotionId, int playerId)
     {
         await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, coinId, fromAccount, toAccount, amount, promotionId);
 
@@ -77,7 +77,7 @@ public class TransactionService : ITransactionService
         if (!player.HasPlayed)
             player.UpdateHasPlayed();
 
-        var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, promotionId);
+        var transaction = new Transaction(amount, keyId, sourceServiceName, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, promotionId);
 
         await _transactionRepository.InsertAsync(transaction);
         await _unitOfWork.SaveAsync();
@@ -89,7 +89,7 @@ public class TransactionService : ITransactionService
         };
     }
 
-    public async Task<TransactionResponseModel> CreateTransactionWithEventAsync(int? gameId, string coinId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType, int promotionId, string eventDetails)
+    public async Task<TransactionResponseModel> CreateTransactionWithEventAsync(int? keyId, string sourceServiceName, string coinId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType, int promotionId, string eventDetails)
     {
         try
         {
@@ -105,7 +105,7 @@ public class TransactionService : ITransactionService
 
             await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, coinId, fromAccount, toAccount, amount, promotionId);
 
-            var transaction = new Transaction(amount, gameId, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, promotionId);
+            var transaction = new Transaction(amount, keyId, sourceServiceName, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, promotionId);
 
             await _transactionRepository.InsertAsync(transaction);
             await _unitOfWork.SaveAsync();

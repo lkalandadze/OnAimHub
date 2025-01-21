@@ -46,7 +46,8 @@ public class CreateWinTransactionHandler : IRequestHandler<CreateWinTransactionC
         }
 
         return await _transactionService.CreateTransactionAndApplyBalanceAsync(
-            request.GameId,
+            request.KeyId,
+            request.SourceServiceName,
             request.CoinId,
             request.Amount,
             AccountType.Game,

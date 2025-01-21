@@ -2,7 +2,8 @@
 
 public class TransactionRequestModel
 {
-    public int? GameId { get; set; }
+    public int? KeyId { get; set; }
+    public string SourceServiceName { get; set; }
     public string CoinId { get; set; }
     public decimal Amount { get; set; }
     public Domain.Entities.DbEnums.AccountType FromAccount { get; set; }

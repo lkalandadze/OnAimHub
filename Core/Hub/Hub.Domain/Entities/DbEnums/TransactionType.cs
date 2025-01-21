@@ -12,3 +12,22 @@ public class TransactionType : DbEnum<int, TransactionType>
     public static TransactionType Mission => FromId(6);
     public static TransactionType Leaderboard => FromId(7);
 }
+
+
+// playerId
+// amount
+// coinId
+// transactionType
+// promotionId
+// timestamp
+// serviceId
+// 
+//
+//
+//
+//
+//
+//
+//
+//
+//

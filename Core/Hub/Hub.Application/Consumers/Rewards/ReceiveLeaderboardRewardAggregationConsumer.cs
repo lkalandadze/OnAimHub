@@ -39,13 +39,15 @@ public sealed class ReceiveLeaderboardRewardAggregationConsumer : IConsumer<Rece
         var data = context.Message;
 
         var groupedRewards = data.Rewards
-            .GroupBy(r => new { r.PlayerId, r.CoinId, r.PromotionId })
+            .GroupBy(r => new { r.PlayerId, r.CoinId, r.PromotionId, r.KeyId, r.SourceServiceName })
             .Select(g => new
             {
                 g.Key.PlayerId,
                 g.Key.CoinId,
                 TotalAmount = g.Sum(r => r.Amount),
-                g.Key.PromotionId
+                g.Key.PromotionId,
+                g.Key.KeyId,
+                g.Key.SourceServiceName
             })
             .ToList();
 
@@ -89,7 +91,8 @@ public sealed class ReceiveLeaderboardRewardAggregationConsumer : IConsumer<Rece
                 }
 
                 await _transactionService.CreateLeaderboardTransactionAndApplyBalanceAsync(
-                    null,
+                    reward.KeyId,
+                    reward.SourceServiceName,
                     reward.CoinId,
                     reward.TotalAmount,
                     AccountType.Leaderboard,

@@ -96,7 +96,7 @@ public class WheelService : IWheelService
             throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Price with the specified ID: [{request.BetPriceId}] was not found.");
         }
 
-        await _hubService.BetTransactionAsync(_gameInfoConfig.GameId, request.PromotionId, price.Value);
+        await _hubService.BetTransactionAsync(_configurationHolder.GetConfiguration<WheelConfiguration>(request.PromotionId).Id, "Wheel", request.PromotionId, price.Value);
 
         var prizeGroup = _configurationHolder.GetPrizeGroups(request.PromotionId).Cast<WheelPrizeGroup>().FirstOrDefault();
         var prize = GeneratorHolder.GetPrize<TPrize>(prizeGroup!.Id);
@@ -111,7 +111,7 @@ public class WheelService : IWheelService
 
         if (prize.Value > 0)
         {
-            await _hubService.WinTransactionAsync(_gameInfoConfig.GameId, prize.CoinId, request.PromotionId, price.Multiplier * prize.Value);
+            await _hubService.WinTransactionAsync(_configurationHolder.GetConfiguration<WheelConfiguration>(request.PromotionId).Id, "Wheel", prize.CoinId, request.PromotionId, price.Multiplier * prize.Value);
         }
 
         //var @event = new UpdatePlayerExperienceEvent(Guid.NewGuid(), model.Amount, model.CurrencyId, _authService.GetCurrentPlayerId());

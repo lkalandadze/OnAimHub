@@ -53,7 +53,7 @@ public class ClaimRewardHandler : IRequestHandler<ClaimRewardCommand>
             {
                 var transactionType = DetermineTransactionType(reward.Source);
 
-                await _transactionService.CreateTransactionAndApplyBalanceAsync(null, prize.CoinId, prize.Value, AccountType.Casino, AccountType.Player, transactionType, prize.Coins.PromotionId);
+                await _transactionService.CreateTransactionAndApplyBalanceAsync(null, null, prize.CoinId, prize.Value, AccountType.Casino, AccountType.Player, transactionType, prize.Coins.PromotionId);
             }
         }
 

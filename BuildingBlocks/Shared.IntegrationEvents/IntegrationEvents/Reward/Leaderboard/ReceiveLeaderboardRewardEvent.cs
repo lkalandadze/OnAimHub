@@ -18,15 +18,19 @@ public class ReceiveLeaderboardRewardEvent : IIntegrationEvent
 
 public class RewardDetail
 {
-    public RewardDetail(int playerId, string coinId, decimal amount, int promotionId)
+    public RewardDetail(int playerId, string coinId, decimal amount, int promotionId, int keyId, string sourceServiceName)
     {
         PlayerId = playerId;
         CoinId = coinId;
         Amount = amount;
         PromotionId = promotionId;
+        KeyId = keyId;
+        SourceServiceName = sourceServiceName;
     }
 
     public int PlayerId { get; set; }
+    public int KeyId { get; set; }
+    public string SourceServiceName { get; set; }
     public string CoinId { get; set; }
     public decimal Amount { get; set; }
     public int PromotionId { get; set; }

@@ -62,7 +62,9 @@ public sealed class FinishLeaderboardCommandHandler : IRequestHandler<FinishLead
                     progress.PlayerId,
                     prize.CoinId,
                     prize.Amount,
-                    leaderboardRecord.PromotionId
+                    leaderboardRecord.PromotionId,
+                    leaderboardRecord.Id,
+                    "Leaderboard"
                 ));
             }
 

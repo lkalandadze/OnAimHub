@@ -61,7 +61,8 @@ public class AddBalanceHandler : IRequestHandler<AddBalanceCommand, TransactionR
         );
 
         var transaction = new Transaction(
-            request.Amount, 
+            request.Amount,
+            null,
             null,
             player.Id,
             AccountType.Casino,

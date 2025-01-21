@@ -48,7 +48,8 @@ public class HubController : BaseApiController
     public async Task<IActionResult> TestTransaction([FromBody] TransactionRequestModel request)
     {
         await _transactionService.CreateTransactionWithEventAsync(
-            request.GameId,
+            request.KeyId,
+            request.SourceServiceName,
             request.CoinId,
             request.Amount,
             request.FromAccount,

@@ -8,7 +8,7 @@ public class TransactionTypeConfiguration : IEntityTypeConfiguration<Transaction
 {
     public void Configure(EntityTypeBuilder<Transaction> builder)
     {
-        builder.Property(s => s.GameId)
-               .IsRequired(false);
+        //builder.Property(s => s.ServiceId)
+        //       .IsRequired(false);
     }
 }

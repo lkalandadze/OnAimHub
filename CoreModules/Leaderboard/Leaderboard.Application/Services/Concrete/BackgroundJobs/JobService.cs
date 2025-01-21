@@ -225,7 +225,9 @@ public class JobService : IJobService
                     progress.PlayerId,
                     prize.CoinId,
                     prize.Amount,
-                    leaderboardRecord.PromotionId
+                    leaderboardRecord.PromotionId,
+                    leaderboardRecordId,
+                    "Leaderboard"
                 ));
             }
 
