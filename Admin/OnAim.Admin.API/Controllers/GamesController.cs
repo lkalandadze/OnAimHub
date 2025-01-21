@@ -41,7 +41,7 @@ public class GamesController : ApiControllerBase
 
     [HttpGet(nameof(GetGameConfigurations))]
     public async Task<IActionResult> GetGameConfigurations([FromQuery] ConfigurationsRequest request)
-        => Ok(await Mediator.Send(new GetGameConfigurationsQuery(request.Name, request.PromotionId, request.ConfigurationId)));
+        => Ok(await _gameService.GetConfigurations(request.Name, request.PromotionId, request.ConfigurationId));
 
     [HttpGet(nameof(GetGameConfigurationMetadata))]
     public async Task<IActionResult> GetGameConfigurationMetadata([FromQuery] string name)

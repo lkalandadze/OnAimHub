@@ -22,4 +22,6 @@ public interface IGameConfigurationService
     Task DeactivateAsync(int id);
 
     Task DeleteAsync(int id);
+
+    Task DeleteByCorrelationIdAsync(Guid correlationId);
 }

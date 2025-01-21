@@ -5,6 +5,7 @@ using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace GameLib.Application.Controllers;
 
@@ -98,9 +99,16 @@ public class AdminController : BaseApiController
     }
 
     [HttpDelete(nameof(DeleteConfiguration))]
-    public async Task<ActionResult> DeleteConfiguration(int id)
+    public async Task<ActionResult> DeleteConfiguration([Required] int id)
     {
         await _configurationService.DeleteAsync(id);
+        return StatusCode(200);
+    }
+
+    [HttpDelete(nameof(DeleteByCorrelationId))]
+    public async Task<ActionResult> DeleteByCorrelationId([Required] Guid id)
+    {
+        await _configurationService.DeleteByCorrelationIdAsync(id);
         return StatusCode(200);
     }
 

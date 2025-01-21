@@ -1,10 +1,13 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using AggregationService.Domain.Entities;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace OnAim.Admin.Domain.HubEntities.Coin;
 
 [BsonDiscriminator("InCoin")]
 public class InCoin : Coin
 {
+    public List<AggregationConfiguration> AggregationConfiguration { get; set; }
+
     public InCoin()
     {
 
