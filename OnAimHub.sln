@@ -146,8 +146,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{EE94F6
 		Docker\.dockerignore = Docker\.dockerignore
 		.env = .env
 		Docker\docker-compose_internal.yml = Docker\docker-compose_internal.yml
+		docker-compose.yml = docker-compose.yml
 		Docker\Infrastructure.yml = Docker\Infrastructure.yml
-		docker-compose_old.yml = docker-compose_old.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{85636CEE-9827-4A53-AF0B-370ACC7732FD}"
