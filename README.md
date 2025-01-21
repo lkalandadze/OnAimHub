@@ -111,7 +111,7 @@ Below are the Swagger URLs for the various services in the OnAim project:
 | Leaderboard API                     | `http://onaim.leaderboardapi.dev.local:30001/swagger/index.html`      |
 | Level Service                       | `http://onaim.levelapi.dev.local:30001/swagger/index.html`            |
 | Mission Service                     | `http://onaim.missionapi.dev.local:30001/swagger/index.html`          |
-| Wheel API                           | `http://onaim.wheelapi.dev.local:30001/swagger/index.html`            |
+| Wheel API                           | `http://onaim.wheelapi.dev.local:30001/swagger/game/index.html`            |
 | Test API                            | `http://onaim.testapi.dev.local:30001/swagger/index.html`             |
 | Saga Orchestration State Machine    | `http://onaim.sagamachine.dev.local:30001/swagger/index.html`         |
 | Penalty Kicks API                   | `http://onaim.penaltykicksapi.dev.local:30001/swagger/index.html`     |
