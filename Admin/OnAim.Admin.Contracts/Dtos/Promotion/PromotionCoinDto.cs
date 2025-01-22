@@ -14,7 +14,6 @@ public class PromotionCoinDto
     public DateTimeOffset? DateDeleted { get; set; }
 
     public int PromotionId { get; set; }
-    //public PromotionDto Promotion { get; set; }
 
     public ICollection<WithdrawOptionDto> WithdrawOptions { get; set; }
 }

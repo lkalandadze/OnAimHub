@@ -13,6 +13,8 @@ using OnAim.Admin.APP.Services.HubServices.Player;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using Microsoft.Extensions.Options;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
+using OnAim.Admin.Infrasturcture.Repositories.Abstract;
+using OnAim.Admin.Contracts.Dtos.Base;
 
 namespace OnAim.Admin.APP.Services.Hub.Player;
 
@@ -29,6 +31,7 @@ public class PlayerService : IPlayerService
     private readonly IReadOnlyRepository<PlayerLog> _playerLogRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _leaderboardResultRepository;
     private readonly IReadOnlyRepository<PlayerProgress> _playerProgressRepository;
+    private readonly IReadOnlyRepository<Domain.HubEntities.Segment> _segmentRepo;
 
     public PlayerService(
         IHubApiClient hubApiClient,
@@ -41,7 +44,8 @@ public class PlayerService : IPlayerService
         IReadOnlyRepository<PlayerBalance> playerBalanaceRepository,
         IReadOnlyRepository<PlayerLog> playerLogRepository,
         ILeaderBoardReadOnlyRepository<LeaderboardResult> leaderboardResultRepository,
-        IReadOnlyRepository<PlayerProgress> playerProgressRepository
+        IReadOnlyRepository<PlayerProgress> playerProgressRepository,
+        IReadOnlyRepository<Domain.HubEntities.Segment> segmentRepo
         )
     {
         _hubApiClient = hubApiClient;
@@ -55,6 +59,7 @@ public class PlayerService : IPlayerService
         _playerLogRepository = playerLogRepository;
         _leaderboardResultRepository = leaderboardResultRepository;
         _playerProgressRepository = playerProgressRepository;
+        _segmentRepo = segmentRepo;
     }
 
     public async Task<ApplicationResult> BanPlayer(int playerId, DateTimeOffset? expireDate, bool isPermanent, string description)
@@ -192,19 +197,6 @@ public class PlayerService : IPlayerService
         if (player == null)
             throw new NotFoundException("Player Not Found!");
 
-        var transactions = await _transactionRepository.Query(x => x.PlayerId == player.Id)
-            .Include(x => x.Status)
-            .ToListAsync();
-
-        var totalCount = transactions.Count;
-
-        var res = transactions.Select(x => new TransactionDto
-        {
-            Id = x.Id,
-            Amount = x.Amount,
-            Status = x.Status?.Name,
-        }).ToList();
-
         var referee = await _referalRepository.Query(x => x.ReferrerId == player.ReferrerId).FirstOrDefaultAsync();
 
         var referrals = await _referalRepository
@@ -222,19 +214,18 @@ public class PlayerService : IPlayerService
         if (referee != null)
             refPlayer = await _playerRepository.Query(x => x.ReferrerId == referee.ReferrerId).FirstOrDefaultAsync();
 
-        var logs = await _playerLogRepository.Query(x => x.PlayerId == player.Id).Include(x => x.PlayerLogType).ToListAsync();
+        //var logs = await _playerLogRepository.Query(x => x.PlayerId == player.Id).Include(x => x.PlayerLogType).ToListAsync();
 
         var result = new PlayerDto
         {
             Id = player.Id,
             PlayerName = player.UserName,
             IsBanned = player.IsBanned,
-            Segments = player.Segments.Select(x => new SegmentListDto
+            Segments = player.Segments.Select(x => new SegmentDto
             {
                 Id = x.Id,
                 Description = x.Description,
             }).ToList(),
-            Transactions = res,
             RegistrationDate = player.RegistredOn,
             LastVisit = player.LastVisitedOn,
             Referee = referee != null ? new RefereeDto
@@ -243,13 +234,13 @@ public class PlayerService : IPlayerService
                 UserName = refPlayer?.UserName,
                 InvitedDateTime = referee.DateCreated
             } : null,
-            PlayerLogs = logs.Select(x => new PlayerLogDto
-            {
-                Id = x.Id,
-                Log = x.Log,
-                TimeStamp = x.Timestamp,
-                PlayerLogType = x.PlayerLogType?.Name,
-            }).ToList(),
+            //PlayerLogs = logs.Select(x => new PlayerLogDto
+            //{
+            //    Id = x.Id,
+            //    Log = x.Log,
+            //    TimeStamp = x.Timestamp,
+            //    PlayerLogType = x.PlayerLogType?.Name,
+            //}).ToList(),
             Referrals = referrals
         };
 
@@ -354,6 +345,62 @@ public class PlayerService : IPlayerService
         {
             Success = true,
             Data = result
+        };
+    }
+
+    public async Task<ApplicationResult> GetPlayerTransaction(int id, BaseFilter filter)
+    {
+        var transaction = _transactionRepository.Query(x => x.PlayerId == id);
+
+        var totalCount = await transaction.CountAsync();
+
+        var pageNumber = filter.PageNumber ?? 1;
+        var pageSize = filter.PageSize ?? 25;
+
+        var res = transaction
+            .Select(x => new PlayerTransactionDto
+            {
+                Id = x.Id,
+                Game = null,
+                Type = x.Type.Id,
+                Amount = x.Amount,
+                Coin = x.Coin.Name,
+                //Date = null,
+                Status = x.Status.Name,
+            })
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize);
+
+        return new ApplicationResult
+        {
+            Data = res,
+            Success = true
+        };
+    }
+
+    public async Task<ApplicationResult> GetPlayerLogs(int id, BaseFilter filter)
+    {
+        var logs = _playerLogRepository.Query(x => x.PlayerId == id).Include(x => x.PlayerLogType);
+
+        var totalCount = await logs.CountAsync();
+        var pageNumber = filter.PageNumber ?? 1;
+        var pageSize = filter.PageSize ?? 25;
+
+        var res = logs
+            .Select(x => new PlayerLogDto
+            {
+                Id = x.Id,
+                Log = x.Log,
+                Action = x.PlayerLogType.Name,
+                Date = x.Timestamp,
+            })
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize);
+
+        return new ApplicationResult
+        {
+            Data = res,
+            Success = true
         };
     }
 }

@@ -342,8 +342,8 @@ public class SegmentService : ISegmentService
 
         var res = new SegmentDto
         {
-            SegmentId = segment.Id,
-            SegmentName = segment.Id,
+            Id = segment.Id,
+            Description = segment.Id,
             PriorityLevel = segment.PriorityLevel,
         };
 

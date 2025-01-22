@@ -1,4 +1,5 @@
-﻿using OnAim.Admin.Contracts.Dtos.Withdraw;
+﻿using AggregationService.Domain.Entities;
+using OnAim.Admin.Contracts.Dtos.Withdraw;
 
 namespace OnAim.Admin.Contracts.Dtos.Coin;
 
@@ -12,4 +13,5 @@ public class CoinTemplateListDto
     public bool IsDeleted { get; set; }
     public List<WithdrawOptionCoinTempDto> WithdrawOptions { get; set; }
     public List<WithdrawOptionGroupCoinTempDto> WithdrawOptionGroups { get; set; }
+    public List<AggregationConfiguration> Configurations { get; set; }
 }

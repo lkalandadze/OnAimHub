@@ -11,12 +11,21 @@ using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBannedPlayers;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetById;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetLeaderBoardResultByPlayerId;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetProgress;
+using OnAim.Admin.APP.Services.HubServices.Player;
+using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Player;
 
 namespace OnAim.Admin.API.Controllers;
 
 public class PlayerController : ApiControllerBase
 {
+    private readonly IPlayerService _playerService;
+
+    public PlayerController(IPlayerService playerService)
+    {
+        _playerService = playerService;
+    }
+
     [HttpGet(nameof(GetAll))]
     public async Task<IActionResult> GetAll([FromQuery] PlayerFilter filter)
         => Ok(await Mediator.Send(new GetAllPlayerQuery(filter)));
@@ -40,6 +49,14 @@ public class PlayerController : ApiControllerBase
     [HttpGet(nameof(GetLeaderBoardResultByPlayerId) + "/{id}")]
     public async Task<IActionResult> GetLeaderBoardResultByPlayerId([FromRoute] int id)
         => Ok(await Mediator.Send(new GetLeaderBoardResultByPlayerIdQuery(id)));
+
+    [HttpGet(nameof(GetPlayerTransaction) + "/{id}")]
+    public async Task<IActionResult> GetPlayerTransaction([FromRoute] int id, [FromQuery] BaseFilter filter)
+        => Ok(await _playerService.GetPlayerTransaction(id, filter));
+
+    [HttpGet(nameof(GetPlayerLogs) + "/{id}")]
+    public async Task<IActionResult> GetPlayerLogs([FromRoute] int id, [FromQuery] BaseFilter filter)
+        => Ok(await _playerService.GetPlayerLogs(id, filter));
 
     [HttpGet(nameof(GetBannedPlayers))]
     public async Task<IActionResult> GetBannedPlayers()

@@ -1,9 +1,11 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 using Shared.Domain.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AggregationService.Domain.Entities;
 
+[NotMapped]
 public class PointEvaluationRule
 {
     public PointEvaluationRule(int step, int point)

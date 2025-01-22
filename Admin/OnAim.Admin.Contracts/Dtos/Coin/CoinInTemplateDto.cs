@@ -1,11 +1,8 @@
-﻿namespace OnAim.Admin.Contracts.Dtos.Coin;
+﻿using AggregationService.Domain.Entities;
 
-public class CoinInTemplateDto
+namespace OnAim.Admin.Contracts.Dtos.Coin;
+
+public class CoinInTemplateDto : CoinTemplateDto
 {
-    public string Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public CoinType CoinType { get; set; }
-    public string ImgUrl { get; set; }
-    public bool IsDeleted { get; set; }
+    public IEnumerable<AggregationConfiguration> Configurations { get; set; }
 }

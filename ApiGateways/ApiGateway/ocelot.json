@@ -18,15 +18,15 @@
       ]
     },
     {
-      "DownstreamPathTemplate": "/penaltykicksapi/{everything}",
+      "DownstreamPathTemplate": "/hubapi/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "penaltykicksapi",
+          "Host": "hubapi",
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/penaltykicksapi/{everything}",
+      "UpstreamPathTemplate": "/hubapi/{everything}",
       "UpstreamHttpMethod": [
         "Get",
         "Post",
@@ -44,6 +44,23 @@
         }
       ],
       "UpstreamPathTemplate": "/leaderboardapi/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/penaltykicksapi/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "penaltykicksapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/penaltykicksapi/{everything}",
       "UpstreamHttpMethod": [
         "Get",
         "Post",
