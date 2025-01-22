@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Leaderboard.Application.Features.LeaderboardRecordFeatures.Commands.Create;
 
-public sealed class CreateLeaderboardRecordCommand : IRequest
+public sealed class CreateLeaderboardRecordCommand : IRequest<int>
 {
     public int PromotionId { get; set; }
     public string PromotionName { get; set; }

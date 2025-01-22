@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Leaderboard.Application.Features.LeaderboardRecordFeatures.Commands.Create;
 
-public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeaderboardRecordCommand>
+public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeaderboardRecordCommand, int>
 {
     private readonly ILeaderboardRecordRepository _leaderboardRecordRepository;
     private readonly ILeaderboardScheduleRepository _leaderboardScheduleRepository;
@@ -24,7 +24,7 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
         _leaderboardService = leaderboardService;
     }
 
-    public async Task Handle(CreateLeaderboardRecordCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(CreateLeaderboardRecordCommand request, CancellationToken cancellationToken)
     {
         _leaderboardService.ValidateLeaderboardPrizes(request.LeaderboardPrizes);
 
@@ -78,5 +78,7 @@ public class CreateLeaderboardRecordCommandHandler : IRequestHandler<CreateLeade
 
             _backgroundJobScheduler.ScheduleJob(schedule);
         }
+
+        return leaderboard.ExternalId;
     }
 }
