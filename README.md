@@ -99,6 +99,25 @@ The pipeline will automatically detect and run the CI/CD jobs for the `leaderboa
 
 ---
 
+## Swagger Hosts
+Below are the Swagger URLs for the various services in the OnAim project:
+
+| **Service**                         | **Swagger URL**                                                 |
+|-------------------------------------|-----------------------------------------------------------------|
+| Aggregation Service                 | `http://onaim.aggregation.dev.local:30001/swagger/index.html`         |
+| Admin API                           | `http://onaim.adminapi.dev.local:30001/swagger/index.html`      |
+| Ocelot API Gateway                  | `http://onaim.ocelotapigateway.dev.local:30001/swagger/index.html`    |
+| Hub API                             | `http://onaim.hubapi.dev.local:30001/swagger/admin/index.html`              |
+| Leaderboard API                     | `http://onaim.leaderboardapi.dev.local:30001/swagger/index.html`      |
+| Level Service                       | `http://onaim.levelapi.dev.local:30001/swagger/index.html`            |
+| Mission Service                     | `http://onaim.missionapi.dev.local:30001/swagger/index.html`          |
+| Wheel API                           | `http://onaim.wheelapi.dev.local:30001/swagger/game/index.html`            |
+| Test API                            | `http://onaim.testapi.dev.local:30001/swagger/index.html`             |
+| Saga Orchestration State Machine    | `http://onaim.sagamachine.dev.local:30001/swagger/index.html`         |
+| Penalty Kicks API                   | `http://onaim.penaltykicksapi.dev.local:30001/swagger/index.html`     |
+
+---
+
 ## Additional Resources
 - [Kubernetes Documentation](https://kubernetes.io/docs/)
 - [GitLab CI/CD Documentation](https://docs.gitlab.com/ee/ci/)
