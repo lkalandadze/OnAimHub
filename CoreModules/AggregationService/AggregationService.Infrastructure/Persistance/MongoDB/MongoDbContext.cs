@@ -23,6 +23,7 @@ public abstract class MongoDbContext
     public IMongoCollection<AggregationConfiguration> AggregationConfigurations { get; }
     public IMongoCollection<Filter> Filters { get; }
     public IMongoCollection<PointEvaluationRule> PointEvaluationRules { get; }
+    public IMongoCollection<LogEntry> LogEntry { get; }
     public IMongoCollection<TEntity> GetCollection<TEntity>(string name = "")
     {
         if (string.IsNullOrEmpty(name))

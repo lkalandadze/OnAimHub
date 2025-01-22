@@ -18,16 +18,19 @@ public class AggregationConfigurationService : IAggregationConfigurationService
     private readonly IDatabase _db;
     private readonly IMessageBus _messageBus;
     private readonly IConfigurationStore _configurationStore;
+    private readonly ILogEntryRepository _logRepository;
     public AggregationConfigurationService(
                                         IAggregationConfigurationRepository aggregationConfigurationRepository,
                                         IConnectionMultiplexer redisConnection,
                                         IMessageBus messageBus,
-                                        IConfigurationStore configurationStore)
+                                        IConfigurationStore configurationStore,
+                                        ILogEntryRepository logRepository)
     {
         _aggregationConfigurationRepository = aggregationConfigurationRepository;
         _db = redisConnection.GetDatabase();
         _messageBus = messageBus;
         _configurationStore = configurationStore;
+        _logRepository = logRepository;
     }
 
     public async Task AddAggregationWithConfigurationsAsync(CreateAggregationConfigurationModel model)
@@ -96,14 +99,22 @@ public class AggregationConfigurationService : IAggregationConfigurationService
 
                     var eventName = $"{config.AggregationSubscriber}Queue";
 
-                    _ = _messageBus.PublishWithRouting(new AggregatedEvent
+                    var aggregatedEvent = new AggregatedEvent
                     {
                         PlayerId = @event.CustomerId,
                         Timestamp = DateTime.Now,
                         AddedPoints = pointsAdded,
                         PromotionId = config.PromotionId,
                         ConfigKey = config.Key,
-                    }, eventName);
+                    };
+
+                    _ = _messageBus.PublishWithRouting(aggregatedEvent, eventName);
+
+                    await _logRepository.LogEventAsync(
+                            subscriber: config.AggregationSubscriber,
+                            producer: config.Key,
+                            eventDetails: System.Text.Json.JsonSerializer.Serialize(aggregatedEvent)
+                    );
                 }
 
                 Console.WriteLine("TEST TRIGGER");

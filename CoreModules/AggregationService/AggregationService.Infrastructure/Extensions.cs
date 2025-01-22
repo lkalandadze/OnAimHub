@@ -33,6 +33,7 @@ public static class Extensions
             .AddScoped<IMessageBus, MessageBus>()
             .AddScoped<IAggregationConfigurationRepository, AggregationConfigurationRepository>()
             .AddScoped<IFilterRepository, FilterRepository>()
+            .AddScoped<ILogEntryRepository, LogEntryRepository>()
             .AddScoped<IPointEvaluationRuleRepository, PointEvaluationRuleRepository>()
             .AddScoped<IConfigurationStore, ConfigurationStore>()
             ;
