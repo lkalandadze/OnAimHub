@@ -8,7 +8,7 @@ namespace GameLib.Application;
 
 public class GameSettings : Settings
 {
-    public GameSettings() : base(RepositoryManager.GetGameSettingRepository())
+    public GameSettings() : base(RepositoryManager.GameSettingRepository())
     {
     }
 

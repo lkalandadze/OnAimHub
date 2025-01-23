@@ -14,8 +14,8 @@ public class WheelConfiguration : GameConfiguration<WheelConfiguration>
         
     }
 
-    public WheelConfiguration(string name, int value, int promotionId, Guid? correlationId = null, string templateId = null, IEnumerable<Price> prices = null, IEnumerable<WheelPrizeGroup> prizeGroups = null)
-        : base(name, value, promotionId, correlationId, templateId, prices)
+    public WheelConfiguration(string name, int value, int promotionId, string description = null, Guid? correlationId = null, string templateId = null, IEnumerable<Price> prices = null, IEnumerable<WheelPrizeGroup> prizeGroups = null)
+        : base(name, value, promotionId, description, correlationId, templateId, prices)
     {
         IsActive = true;
         WheelPrizeGroups = prizeGroups.ToList() ?? [];

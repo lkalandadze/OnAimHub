@@ -102,7 +102,7 @@ public class PenaltyService : IPenaltyService
         await _hubService.BetTransactionAsync(_gameInfoConfig.GameId, "PenaltyKick", promotionId, price.Value);
 
         var prizeGroup = _configurationHolder.GetPrizeGroups(promotionId).Cast<PenaltyPrizeGroup>().FirstOrDefault();
-        var prize = GeneratorHolder.GetPrize<PenaltyPrize>(prizeGroup!.Id);
+        var prize = GeneratorHolder.GetPrizeAsync<PenaltyPrize>(prizeGroup!.Id);
 
         if (prize == null)
         {

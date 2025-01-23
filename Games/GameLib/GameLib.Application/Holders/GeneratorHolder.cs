@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Options;
-using GameLib.Application.Configurations;
+﻿using GameLib.Application.Configurations;
 using GameLib.Application.Generators;
 using GameLib.Application.Managers;
 using GameLib.Domain.Abstractions;
+using Microsoft.Extensions.Options;
 
 namespace GameLib.Application.Holders;
 
@@ -25,7 +25,7 @@ public class GeneratorHolder
     {
         prizeGroupTypes.ForEach(type =>
         {
-            var prizeGroups = RepositoryManager.GetPrizeGroupRepository(type).QueryWithPrizes();
+            var prizeGroups = RepositoryManager.PrizeGroupRepository(type).QueryWithPrizes();
 
             foreach (var prizeGroup in prizeGroups)
             {
@@ -37,12 +37,11 @@ public class GeneratorHolder
         });
     }
 
-    public static TPrize GetPrize<TPrize>(int prizeGroupId, Predicate<BasePrizeGroup>? predicate = null)
+    public static async Task<TPrize> GetPrizeAsync<TPrize>(int prizeGroupId, int? playerId = null, Predicate<BasePrizeGroup>? predicate = null)
         where TPrize : BasePrize
     {
         var generator = GetGenerator<TPrize>(prizeGroupId, predicate);
-
-        return (TPrize)generator.GetPrize();
+        return (TPrize)generator.GetPrize(playerId);
     }
 
     internal static Generator GetGenerator<TPrize>(int prizeGroupId, Predicate<BasePrizeGroup>? predicate)

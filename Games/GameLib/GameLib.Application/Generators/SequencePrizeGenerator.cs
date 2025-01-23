@@ -1,4 +1,5 @@
-﻿using GameLib.Domain.Abstractions;
+﻿using GameLib.Application.Managers;
+using GameLib.Domain.Abstractions;
 
 namespace GameLib.Application.Generators;
 
@@ -10,26 +11,30 @@ internal class SequencePrizeGenerator : Generator
 
     internal override PrizeGenerationType PrizeGenerationType => PrizeGenerationType.Sequence;
 
-    public SequencePrizeGenerator(int id, List<BasePrize> prizes, List<int> sequence, int nextPrizeIndex)
-        : base(id, prizes)
+    public SequencePrizeGenerator(BasePrizeGroup prizeGroup, List<BasePrize> prizes, List<int> sequence, int nextPrizeIndex)
+        : base(prizeGroup, prizes)
     {
         NextPrizeIndex = nextPrizeIndex;
         Sequence = sequence;
     }
 
-    internal override BasePrize GetPrize()
+    internal override BasePrize GeneratePrize()
     {
         lock (_sync)
         {
-            var currentPrizeIndex = NextPrizeIndex;
-            NextPrizeIndex++;
+            BasePrize? prize;
+            var prizeId = Sequence[NextPrizeIndex];
+            prize = Prizes.First(p => p.Id == prizeId);
 
-            if(NextPrizeIndex >= Sequence.Count)
-            {
-                NextPrizeIndex = 0;
-            }
+            NextPrizeIndex = (NextPrizeIndex + 1) % Sequence.Count;
 
-            return Prizes[currentPrizeIndex];
+            //TODO: save NextPrizeIndex in database (temporary)
+            var prizeGroupRepository = RepositoryManager.PrizeGroupRepository(PrizeGroup.GetType());
+            var existingPrizeGroup = prizeGroupRepository.OfIdAsync(PrizeGroup.Id).Result;
+            existingPrizeGroup.NextPrizeIndex = NextPrizeIndex;
+            prizeGroupRepository.Update(existingPrizeGroup);
+
+            return prize;
         }
     }
 }

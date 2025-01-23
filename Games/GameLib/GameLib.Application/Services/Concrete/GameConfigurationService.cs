@@ -1,6 +1,5 @@
 ﻿using GameLib.Application.Generators;
 using GameLib.Application.Holders;
-using GameLib.Application.Models.Configuration;
 using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Abstractions;
 using GameLib.Domain.Abstractions.Repository;
@@ -95,9 +94,11 @@ public class GameConfigurationService : IGameConfigurationService
             {
                 _configurationHolder.GameConfigurations.Add(configuration.PromotionId, configuration);
             }
-            
+
             _configurationRepository.InsertConfigurationTree(configuration);
             await _unitOfWork.SaveAsync();
+
+            await GeneratePrizeSequenceAsync(configuration);
         }
         catch (Exception ex)
         {
@@ -182,6 +183,84 @@ public class GameConfigurationService : IGameConfigurationService
         }
 
         _configurationRepository.DeleteConfigurationTree(configuration);
+        await _unitOfWork.SaveAsync();
+    }
+
+    private async Task GeneratePrizeSequenceAsync(GameConfiguration configuration)
+    {
+        var configType = configuration.GetType();
+
+        var prizeGroupProperty = configType.GetProperties()
+            .FirstOrDefault(p =>
+                p.PropertyType.IsGenericType &&
+                p.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>) &&
+                typeof(BasePrizeGroup).IsAssignableFrom(p.PropertyType.GetGenericArguments()[0]));
+
+        if (prizeGroupProperty == null)
+        {
+            throw new ApiException(ApiExceptionCodeTypes.InvalidType,
+                "No property of type ICollection<BasePrizeGroup> or its derivatives found.");
+        }
+
+        var prizeGroups = prizeGroupProperty.GetValue(configuration) as IEnumerable<object>;
+
+        if (prizeGroups == null)
+        {
+            throw new ApiException(ApiExceptionCodeTypes.InvalidType,
+                "PrizeGroups are not of the expected type ICollection<BasePrizeGroup>.");
+        }
+
+        foreach (var prizeGroup in prizeGroups)
+        {
+            var prizeGroupType = prizeGroup.GetType();
+
+            var prizesProperty = prizeGroupType.GetProperties()
+                .FirstOrDefault(p =>
+                    p.PropertyType.IsGenericType &&
+                    p.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>) &&
+                    typeof(BasePrize).IsAssignableFrom(p.PropertyType.GetGenericArguments()[0]));
+
+            if (prizesProperty == null)
+            {
+                throw new ApiException(ApiExceptionCodeTypes.InvalidType,
+                    "Prizes property of type ICollection<BasePrize> not found in PrizeGroup.");
+            }
+
+            var prizes = prizesProperty.GetValue(prizeGroup) as IEnumerable<BasePrize>;
+
+            if (prizes == null)
+            {
+                throw new ApiException(ApiExceptionCodeTypes.InvalidType,
+                    "Prizes are not of the expected type ICollection<BasePrize>.");
+            }
+
+            var newSequence = new List<int>();
+
+            foreach (var prize in prizes)
+            {
+                for (int i = 0; i < prize.Probability; i++)
+                {
+                    newSequence.Add(prize.Id);
+                }
+            }
+
+            // Shuffle the sequence
+            newSequence = newSequence.OrderBy(_ => Random.Shared.Next()).ToList();
+
+            var prizeSequenceProperty = prizeGroupType.GetProperty(nameof(BasePrizeGroup.Sequence));
+
+            if (prizeSequenceProperty != null)
+            {
+                prizeSequenceProperty.SetValue(prizeGroup, newSequence);
+            }
+            else
+            {
+                throw new ApiException(ApiExceptionCodeTypes.InvalidType,
+                    "Sequence property not found in PrizeGroup.");
+            }
+        }
+
+        _configurationRepository.Update(configuration);
         await _unitOfWork.SaveAsync();
     }
 }

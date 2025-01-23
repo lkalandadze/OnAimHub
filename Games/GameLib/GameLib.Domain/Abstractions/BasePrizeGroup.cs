@@ -4,14 +4,20 @@ using CheckmateValidations;
 using GameLib.Domain.Checkers;
 using OnAim.Lib.EntityExtension.GlobalAttributes.Attributes;
 using Shared.Domain.Entities;
+using System.Text.Json.Serialization;
 
 namespace GameLib.Domain.Abstractions;
 
 [CheckMate<BasePrizeGroupChecker>]
 public abstract class BasePrizeGroup : BaseEntity<int>
 {
+    [IgnoreIncludeAll]
+    [JsonIgnore]
     public List<int> Sequence { get; set; }
-    public int? NextPrizeIndex { get; set; }
+
+    [IgnoreIncludeAll]
+    [JsonIgnore]
+    public int? NextPrizeIndex { get; set; } = 0;
 
     [IgnoreIncludeAll]
     public int ConfigurationId { get; set; }

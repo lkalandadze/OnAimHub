@@ -13,7 +13,7 @@ public class ConfigurationHolder
 
     public ConfigurationHolder()
     {
-        var gameConfigurations = RepositoryManager.GetGameConfigurationRepository().QueryAsync().Result;
+        var gameConfigurations = RepositoryManager.GameConfigurationRepository().QueryAsync().Result;
         GameConfigurations = gameConfigurations.ToDictionary(config => config.PromotionId, config => config);
     }
 

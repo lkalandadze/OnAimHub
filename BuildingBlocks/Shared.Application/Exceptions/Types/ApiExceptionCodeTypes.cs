@@ -25,6 +25,7 @@ public enum ApiExceptionCodeTypes
     MissingRequiredColumn = 4502,
     InvalidDataFormat = 4503,
     KeyNotFound = 4504,
+    InvalidType = 4505,
 
     // 5xxx: Custom Business Logic Errors
     BusinessRuleViolation = 5500,
