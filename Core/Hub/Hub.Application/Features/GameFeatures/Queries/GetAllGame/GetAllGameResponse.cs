@@ -3,6 +3,6 @@ using Shared.Lib.Wrappers;
 
 namespace Hub.Application.Features.GameFeatures.Queries.GetAllGame;
 
-public class GetAllGameResponse : Response<IEnumerable<GameBaseDtoModel>>
+public class GetAllGameResponse : Response<PagedResponse<GameBaseDtoModel>>
 {
 }

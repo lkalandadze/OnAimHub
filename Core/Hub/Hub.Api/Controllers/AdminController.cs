@@ -91,6 +91,8 @@ public class AdminController : BaseApiController
         {
             Name = model.Name,
             PromotionId = model.PromotionId,
+            PageNumber = model.PageNumber,
+            PageSize = model.PageSize,
         };
 
         return Ok(await Mediator.Send(query));

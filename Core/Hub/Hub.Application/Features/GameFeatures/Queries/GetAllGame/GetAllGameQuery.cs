@@ -1,8 +1,9 @@
 ﻿using MediatR;
+using Shared.Lib.Wrappers;
 
 namespace Hub.Application.Features.GameFeatures.Queries.GetAllGame;
 
-public class GetAllGameQuery : IRequest<GetAllGameResponse>
+public class GetAllGameQuery : PagedRequest, IRequest<GetAllGameResponse>
 {
     public GetAllGameQuery(bool isAuthorized = true)
     {
