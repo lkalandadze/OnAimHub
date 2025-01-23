@@ -37,7 +37,7 @@ public class GeneratorHolder
         });
     }
 
-    public static async Task<TPrize> GetPrizeAsync<TPrize>(int prizeGroupId, int? playerId = null, Predicate<BasePrizeGroup>? predicate = null)
+    public static async Task<TPrize> GetPrizeAsync<TPrize>(int prizeGroupId, int playerId, Predicate<BasePrizeGroup>? predicate = null)
         where TPrize : BasePrize
     {
         var generator = GetGenerator<TPrize>(prizeGroupId, predicate);

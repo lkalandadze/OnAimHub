@@ -24,7 +24,7 @@ internal abstract class Generator
             : new SequencePrizeGenerator(prizeGroup, prizeGroup.GetBasePrizes(), prizeGroup.Sequence, prizeGroup.NextPrizeIndex!.Value);
     }
 
-    internal BasePrize GetPrize(int? playerId = null)
+    internal BasePrize GetPrize(int playerId)
     {
         BasePrize? prize = null;
         int tryCounts = 0;
@@ -65,7 +65,7 @@ internal abstract class Generator
                 }
                 else
                 {
-                    var limitedPrizeCount = new LimitedPrizeCountsByPlayer(playerId!.Value, prize.Id);
+                    var limitedPrizeCount = new LimitedPrizeCountsByPlayer(playerId, prize.Id);
                     limitedPrizeCount.IncreaseCount();
                     repository.InsertAsync(limitedPrizeCount);
                 }
