@@ -31,7 +31,8 @@ public class GameService : IGameService
 
     public async Task<object> GetAll(FilterGamesDto? filter)
     {
-        var response = await _hubApiClient.Get<object>($"{_options.Endpoint}Admin/AllGames?Name={filter.Name}&PromotionId={filter.PromotionId}");
+        var response = await _hubApiClient.Get<object>(
+            $"{_options.Endpoint}Admin/AllGames?Name={filter.Name}&PromotionId={filter.PromotionId}&PageNumber={filter.PageNumber}&PageSize={filter.PageSize}");
 
         return response;
     }

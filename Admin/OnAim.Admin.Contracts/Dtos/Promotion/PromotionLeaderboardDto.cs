@@ -2,9 +2,9 @@
 
 namespace OnAim.Admin.Contracts.Dtos.Promotion;
 
-public class PromotionLeaderboardDto
+public class PromotionLeaderboardDto<T>
 {
-    public List<PromotionLeaderboardItemsDto> Leaderboards { get; set; }
+    public T Leaderboards { get; set; }
     public List<PromotionLeaderboardPrizesDto> Prizes { get; set; }
 }
 public class PromotionLeaderboardPrizesDto

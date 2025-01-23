@@ -99,25 +99,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    command: >
-      bash -c "
-        docker-entrypoint.sh postgres & 
-        until pg_isready -h localhost -p 5432; do
-          echo 'Waiting for PostgreSQL to start...';
-          sleep 2;
-        done;
-        psql -U postgres -c 'CREATE DATABASE OnAimAdmin;';
-        psql -U postgres -c 'CREATE DATABASE OnAimHub;';
-        psql -U postgres -c 'CREATE DATABASE WheelConfig;';
-        psql -U postgres -c 'CREATE DATABASE WheelHistory;';
-        psql -U postgres -c 'CREATE DATABASE PenaltyConfig;';
-        psql -U postgres -c 'CREATE DATABASE PenaltyHistory;';
-        psql -U postgres -c 'CREATE DATABASE OnAimLevel;';
-        psql -U postgres -c 'CREATE DATABASE OnAimMission;';
-        psql -U postgres -c 'CREATE DATABASE OnAimLeaderboard;';
-        psql -U postgres -c 'CREATE DATABASE OnAimAggregation;';
-        wait
-      "
 
   pgadmin:
     image: dpage/pgadmin4:latest

@@ -149,7 +149,7 @@ public class PromotionService : BaseService, IPromotionService
                 Id = x.Id,
                 Title = x.Title,
                 Description = x.Description,
-                Status = (Contracts.Dtos.Promotion.PromotionStatus)x.Status,
+                Status = (PromotionStatus)x.Status,
                 StartDate = x.StartDate,
                 EndDate = x.EndDate,
                 Segments = x.Segments.Select(s => s.Id).ToList(),
@@ -181,11 +181,11 @@ public class PromotionService : BaseService, IPromotionService
         };
     }
 
-    public async Task<ApplicationResult> GetAllPromotionGames(int promotionId, BaseFilter? filter)
+    public async Task<object> GetAllPromotionGames(int promotionId, BaseFilter? filter)
     {
-        ResponseData response = await _hubApiClient.Get<ResponseData>($"{_options.Endpoint}Admin/AllGames?Name=&PromotionId={promotionId}");
+        object response = await _hubApiClient.Get<object>($"{_options.Endpoint}Admin/AllGames?Name=&PromotionId={promotionId}");
 
-        return new ApplicationResult { Success = true, Data = response.Data };
+        return response;
     }
 
     public async Task<ApplicationResult> GetPromotionPlayers(int promotionId, PlayerFilter filter)
@@ -330,9 +330,16 @@ public class PromotionService : BaseService, IPromotionService
           .Take(pageSize);
 
 
-        var leaderboardResult = new PromotionLeaderboardDto
+        var leaderboardResult = new PromotionLeaderboardDto<object>
         {
-            Leaderboards = await items.ToListAsync(),
+            Leaderboards = new PaginatedResult<PromotionLeaderboardItemsDto>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = await items.ToListAsync(),
+                SortableFields = new List<string> { "Id", "Name", "Status" },
+            },
             Prizes = allPrizes
         };
     
@@ -757,10 +764,8 @@ public class PromotionService : BaseService, IPromotionService
     {
         try
         {
-            var lead = new DeleteLeaderboardRecordCommand();
-            lead.CorrelationId = request;
             await _hubApiClient.Delete($"{_options.Endpoint}Admin/DeletePromotion?CorrelationId={request}");
-            await _leaderboardClientService.DeleteLeaderboardRecordAsync(lead);
+            await _leaderBoardApiClient.Delete($"{_leaderBoardApiClientOptions.Endpoint}DeleteLeaderboardRecord?CorrelationId={request}");
             if (gameName != null)
             {
                 _gameService.DeleteConfiguration(gameName, request);

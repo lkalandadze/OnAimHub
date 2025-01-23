@@ -38,6 +38,10 @@ using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentForPlayer;
 using Hub.Application.Features.SegmentFeatures.Commands.UnblockSegmentsForPlayers;
 using Hub.Application.Features.SegmentFeatures.Commands.UpdateSegment;
 using Hub.Application.Features.SettingFeatures.Commands.Update;
+using Hub.Domain.Abstractions;
+using Hub.Domain.Abstractions.Repository;
+using Hub.Domain.Entities;
+using Hub.Domain.Entities.Coins;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Lib.Wrappers;
@@ -48,30 +52,61 @@ namespace Hub.Api.Controllers;
 [ApiExplorerSettings(GroupName = "admin")]
 public class AdminController : BaseApiController
 {
-    #region EventDocumentation
-    [HttpGet(nameof(GetEventsDocumentation))]
-    public ActionResult<string> GetEventsDocumentation()
+    private readonly IPromotionRepository _promotionRepository;
+    private readonly ICoinRepository _coinRepository;
+    private readonly IPlayerRepository _playerRepository;
+    private readonly IPlayerBalanceRepository _playerBalanceRepository;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public AdminController(IPromotionRepository promotionRepository, ICoinRepository coinRepository, IPlayerRepository playerRepository, IPlayerBalanceRepository playerBalanceRepository, IUnitOfWork unitOfWork)
     {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "eventDocumentation.json");
-        var jsonContent = System.IO.File.ReadAllText(filePath);
-        return  Content(jsonContent, "application/json");
+        _promotionRepository = promotionRepository;
+        _coinRepository = coinRepository;
+        _playerRepository = playerRepository;
+        _playerBalanceRepository = playerBalanceRepository;
+        _unitOfWork = unitOfWork;
     }
 
-    [HttpGet(nameof(EventsQueueName))]
-    public ActionResult<string> EventsQueueName() //Todo
-    {
-        return "Leaderboard";
-    }
+    #region Temporary
 
-    [HttpGet(nameof(EventProducerName))]
-    public ActionResult<string> EventProducerName() //Todo
+    [HttpPost(nameof(CreatePromotionWithCoinPlayerBalance))]
+    public async Task<ActionResult<int>> CreatePromotionWithCoinPlayerBalance()
     {
-        return "Hub";
+        var randomId = Random.Shared.Next(100, 10000);
+        var player = new Player(randomId, randomId.ToString());
+
+        await _playerRepository.InsertAsync(player);
+
+        var promotion = new Promotion(
+            DateTimeOffset.UtcNow, 
+            DateTimeOffset.UtcNow, 
+            randomId.ToString(), 
+            randomId.ToString(), 
+            Guid.NewGuid());
+
+        await _promotionRepository.InsertAsync(promotion);
+        await _unitOfWork.SaveAsync();
+
+        var coin = new InCoin(
+            $"{promotion.Id}_{randomId}",
+            randomId.ToString(),
+            randomId.ToString(),
+            randomId.ToString(),
+            promotion.Id);
+
+        await _coinRepository.InsertAsync(coin);
+
+        var playerBalance = new PlayerBalance(100, player.Id, coin.Id, promotion.Id);
+        
+        await _playerBalanceRepository.InsertAsync(playerBalance);
+        await _unitOfWork.SaveAsync();
+
+        return Ok(new { PromotionId = promotion.Id, PlayerId = player.Id, CoinId = coin.Id, PlayerBalance = playerBalance });
     }
 
     #endregion
 
-    #region Promotions
+        #region Promotions
 
     [HttpPost(nameof(CreatePromotion))]
     public async Task<ActionResult<int>> CreatePromotion(CreatePromotionCommand command)

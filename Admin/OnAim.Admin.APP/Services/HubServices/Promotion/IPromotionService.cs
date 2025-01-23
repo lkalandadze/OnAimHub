@@ -16,7 +16,7 @@ public interface IPromotionService
     Task<ApplicationResult> GetAllService();
     Task<ApplicationResult> GetPromotionById(int id);
     Task<ApplicationResult> GetAllPromotions(PromotionFilter baseFilter);
-    Task<ApplicationResult> GetAllPromotionGames(int promotionId, BaseFilter filter);
+    Task<object> GetAllPromotionGames(int promotionId, BaseFilter filter);
     Task<ApplicationResult> GetPromotionPlayers(int promotionId, PlayerFilter filter);
     Task<ApplicationResult> GetPromotionLeaderboards(int promotionId, BaseFilter filter);
     Task<ApplicationResult> GetPromotionLeaderboardDetails(int leaderboardId, BaseFilter filter);

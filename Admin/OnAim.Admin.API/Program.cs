@@ -93,7 +93,26 @@ app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
 {
+
 }
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/")
+    {
+        context.Response.Redirect("/swagger/index.html");
+        return;
+    }
+
+    if (context.Request.Path == "/swagger")
+    {
+        context.Response.Redirect("/swagger/index.html");
+        return;
+    }
+
+    await next();
+});
+
 app.ApplyMigrations();
 app.UseSwagger();
 app.UseSwaggerUI();

@@ -8,6 +8,8 @@ using MassTransit.Initializers;
 using OnAim.Admin.APP.Services.LeaderBoardServices;
 using OnAim.Admin.Infrasturcture.Interfaces;
 using OnAim.Admin.Contracts.Dtos.Promotion;
+using Microsoft.Extensions.Options;
+using OnAim.Admin.APP.Services.Hub.ClientServices;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 
@@ -16,21 +18,27 @@ public class LeaderBoardService : ILeaderBoardService
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecord> _leaderboardRecordRepository;
     private readonly ILeaderBoardReadOnlyRepository<Prize> _prizeRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecordPrize> _leaderboardRecordPrize;
-    private readonly LeaderboardClientService _leaderboardClientService;
+    private readonly ILeaderBoardApiClient _leaderBoardApiClient;
+    private readonly LeaderBoardApiClientOptions _leaderBoardApiClientOptions;
+
+    //private readonly LeaderboardClientService _leaderboardClientService;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _leaderboardResultRepository;
 
     public LeaderBoardService(
         ILeaderBoardReadOnlyRepository<LeaderboardRecord> leaderboardRecordRepository,
         ILeaderBoardReadOnlyRepository<Prize> prizeRepository,
         ILeaderBoardReadOnlyRepository<LeaderboardRecordPrize> leaderboardRecordPrize,
-        LeaderboardClientService leaderboardClientService,
+        IOptions<LeaderBoardApiClientOptions> leaderBoardApiClientOptions,
+        ILeaderBoardApiClient leaderBoardApiClient,
         ILeaderBoardReadOnlyRepository<LeaderboardResult> leaderboardResultRepository
         )
     {
         _leaderboardRecordRepository = leaderboardRecordRepository;
         _prizeRepository = prizeRepository;
         _leaderboardRecordPrize = leaderboardRecordPrize;
-        _leaderboardClientService = leaderboardClientService;
+        _leaderBoardApiClient = leaderBoardApiClient;
+        _leaderBoardApiClientOptions = leaderBoardApiClientOptions.Value;
+        //_leaderboardClientService = leaderboardClientService;
         _leaderboardResultRepository = leaderboardResultRepository;
     }
 
@@ -151,7 +159,7 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            await _leaderboardClientService.CreateLeaderboardRecordAsync(createLeaderboardRecordDto);
+            await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}CreateLeaderboardRecord", createLeaderboardRecordDto);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -164,7 +172,7 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            await _leaderboardClientService.UpdateLeaderboardRecordAsync(updateLeaderboardRecordDto);
+            await _leaderBoardApiClient.PutAsJson($"{_leaderBoardApiClientOptions.Endpoint}UpdateLeaderboardRecord", updateLeaderboardRecordDto);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -177,7 +185,7 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            await _leaderboardClientService.DeleteLeaderboardRecordAsync(delete);
+            await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}DeleteLeaderboardRecord", delete);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -190,7 +198,8 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            var res = await _leaderboardClientService.GetLeaderboardSchedulesAsync(pageNumber, pageSize);
+            var res = await _leaderBoardApiClient.Get<object>(
+                $"{_leaderBoardApiClientOptions.Endpoint}GetLeaderboardSchedules?PageNumber={pageNumber}&PageSize={pageSize}");
             return new ApplicationResult { Data = res, Success = true };
         }
         catch (Exception ex)
@@ -203,7 +212,7 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            await _leaderboardClientService.CreateLeaderboardScheduleAsync(createLeaderboardSchedule);
+            await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}CreateLeaderboardSchedule", createLeaderboardSchedule);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -216,7 +225,7 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            await _leaderboardClientService.UpdateLeaderboardScheduleAsync(updateLeaderboardSchedule);
+            await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}UpdateLeaderboardSchedule", updateLeaderboardSchedule);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)
@@ -229,7 +238,8 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            var res = await _leaderboardClientService.GetCalendarAsync(startDate, endDate);
+            var res = await _leaderBoardApiClient.Get<object>(
+                $"{_leaderBoardApiClientOptions.Endpoint}GetCalendar?StartDate={startDate}&EndDate={endDate}");
 
             return new ApplicationResult { Data = res, Success = true };
         }

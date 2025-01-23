@@ -30,7 +30,7 @@ public class LeaderboardController : BaseApiController
     public async Task<int> CreateLeaderboardRecord(CreateLeaderboardRecordCommand request) => await Mediator.Send(request);
 
     [HttpPost(nameof(DeleteLeaderboardRecord))]
-    public async Task DeleteLeaderboardRecord(DeleteLeaderboardRecordCommand request) => await Mediator.Send(request);
+    public async Task DeleteLeaderboardRecord([FromQuery] DeleteLeaderboardRecordCommand request) => await Mediator.Send(request);
 
     [HttpPut(nameof(UpdateLeaderboardRecord))]
     public async Task UpdateLeaderboardRecord(UpdateLeaderboardRecordCommand request) => await Mediator.Send(request);
