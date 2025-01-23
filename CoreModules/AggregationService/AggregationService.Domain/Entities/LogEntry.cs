@@ -5,7 +5,7 @@ namespace AggregationService.Domain.Entities;
 public class LogEntry
 {
     [BsonId]
-    public string Id { get; set; }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
     public string Subscriber { get; set; }
     public string Producer { get; set; }
     public string EventDetails { get; set; }

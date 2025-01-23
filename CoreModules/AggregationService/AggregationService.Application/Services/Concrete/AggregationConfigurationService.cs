@@ -99,6 +99,16 @@ public class AggregationConfigurationService : IAggregationConfigurationService
 
                     var eventName = $"{config.AggregationSubscriber}Queue";
 
+
+                    //_ = _messageBus.PublishWithRouting(new AggregatedEvent
+                    //{
+                    //    PlayerId = @event.CustomerId,
+                    //    Timestamp = DateTime.Now,
+                    //    AddedPoints = pointsAdded,
+                    //    PromotionId = config.PromotionId,
+                    //    ConfigKey = config.Key,
+                    //}, eventName);
+
                     var aggregatedEvent = new AggregatedEvent
                     {
                         PlayerId = @event.CustomerId,
@@ -130,10 +140,10 @@ public class AggregationConfigurationService : IAggregationConfigurationService
 
         var filteredConfigurations = _configurationStore.GetAllConfigurations().Filter(test);
 
-        //if (!filteredConfigurations.Any())
-        //{
-        //    throw new InvalidOperationException($"No matching configurations found. Request: {System.Text.Json.JsonSerializer.Serialize(test)}");
-        //}
+        if (!filteredConfigurations.Any())
+        {
+            throw new InvalidOperationException($"No matching configurations found. Request: {System.Text.Json.JsonSerializer.Serialize(test)}");
+        }
 
         var promotionIds = filteredConfigurations
             .Select(config => config.PromotionId)
@@ -151,10 +161,10 @@ public class AggregationConfigurationService : IAggregationConfigurationService
             .Find(filter)
             .ToListAsync(cancellationToken);
 
-        //if (!configurations.Any())
-        //{
-        //    throw new InvalidOperationException($"No configurations found for PromotionIds: {string.Join(", ", promotionIds)}");
-        //}
+        if (!configurations.Any())
+        {
+            throw new InvalidOperationException($"No configurations found for PromotionIds: {string.Join(", ", promotionIds)}");
+        }
 
         foreach (var config in configurations)
         {

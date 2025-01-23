@@ -48,6 +48,29 @@ namespace Hub.Api.Controllers;
 [ApiExplorerSettings(GroupName = "admin")]
 public class AdminController : BaseApiController
 {
+    #region EventDocumentation
+    [HttpGet(nameof(GetEventsDocumentation))]
+    public ActionResult<string> GetEventsDocumentation()
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "eventDocumentation.json");
+        var jsonContent = System.IO.File.ReadAllText(filePath);
+        return  Content(jsonContent, "application/json");
+    }
+
+    [HttpGet(nameof(EventsQueueName))]
+    public ActionResult<string> EventsQueueName() //Todo
+    {
+        return "Leaderboard";
+    }
+
+    [HttpGet(nameof(EventProducerName))]
+    public ActionResult<string> EventProducerName() //Todo
+    {
+        return "Hub";
+    }
+
+    #endregion
+
     #region Promotions
 
     [HttpPost(nameof(CreatePromotion))]

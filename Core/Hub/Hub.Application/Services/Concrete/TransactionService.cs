@@ -110,21 +110,27 @@ public class TransactionService : ITransactionService
             await _transactionRepository.InsertAsync(transaction);
             await _unitOfWork.SaveAsync();
 
-            var @events = new AggregationTriggerEvent(
-                data: JsonConvert.SerializeObject(new Dictionary<string, string>
-                {
-                        { "customerId", playerId.ToString() },
-                        { "eventType", transactionType.ToString() },
-                        { "producer", "hub" },
-                        { "promotionId", promotionId.ToString() },
-                        { "value", amount.ToString() },
-                        { "subscriber", transactionType.ToString()}
-                }),
-                producer: "TransactionService"
-            );
+            if (transactionType == TransactionType.Bet || transactionType == TransactionType.Win)
+            {
+                var @events = new AggregationTriggerEvent(
+                   data: JsonConvert.SerializeObject(new Dictionary<string, string>
+                   {
+                            { "customerId", playerId.ToString() },
+                            { "transactionType", transactionType.Name.ToString() },
+                            { "timestamp", DateTime.Now.ToString() },
+                            { "producer", "Hub" },
+                            { "promotionId", promotionId.ToString() },
+                            { "value", amount.ToString() },
+                            { "deviceType" , "Mobile" },
+                            { "coin", coinId }
+                   }),
 
-            await _messageBus.Publish(@events);
-            Console.WriteLine(@events.Data);
+                  producer: "Hub"
+                );
+
+                await _messageBus.Publish(@events);
+                Console.WriteLine(@events.Data);
+            }
 
             return new TransactionResponseModel
             {
