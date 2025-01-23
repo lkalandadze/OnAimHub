@@ -89,6 +89,13 @@ public class WheelService : IWheelService
         //    );
         //}
 
+        var configuration = _configurationHolder.GetConfiguration<WheelConfiguration>(request.PromotionId);
+
+        if (configuration == null)
+        {
+            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Configuration with the specified promotion ID: [{request.PromotionId}] was not found.");
+        }
+
         var price = await _priceRepository.Query(p => p.Id == request.BetPriceId).FirstOrDefaultAsync();
 
         if (price == null)
@@ -96,22 +103,13 @@ public class WheelService : IWheelService
             throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Price with the specified ID: [{request.BetPriceId}] was not found.");
         }
 
-        await _hubService.BetTransactionAsync(_configurationHolder.GetConfiguration<WheelConfiguration>(request.PromotionId).Id, "Wheel", request.PromotionId, price.Value);
+        await _hubService.BetTransactionAsync(configuration.Id, "Wheel", request.PromotionId, price.Value);
 
-        var prizeGroup = _configurationHolder.GetPrizeGroups(request.PromotionId).Cast<WheelPrizeGroup>().FirstOrDefault();
-        var prize = GeneratorHolder.GetPrize<TPrize>(prizeGroup!.Id);
-
-        if (prize == null)
-        {
-            throw new ApiException(
-                ApiExceptionCodeTypes.KeyNotFound,
-                "The prize generation failed. No prize was generated for the specified criteria. Please try again or contact support."
-            );
-        }
-
+        var prize = await GetPrizeFromGeneratorAsync<TPrize>(request.PromotionId);
+        
         if (prize.Value > 0)
         {
-            await _hubService.WinTransactionAsync(_configurationHolder.GetConfiguration<WheelConfiguration>(request.PromotionId).Id, "Wheel", prize.CoinId, request.PromotionId, price.Multiplier * prize.Value);
+            await _hubService.WinTransactionAsync(configuration.Id, "Wheel", prize.CoinId, request.PromotionId, price.Multiplier * prize.Value);
         }
 
         //var @event = new UpdatePlayerExperienceEvent(Guid.NewGuid(), model.Amount, model.CurrencyId, _authService.GetCurrentPlayerId());
@@ -121,8 +119,24 @@ public class WheelService : IWheelService
         {
             IsWin = prize.Value > 0,
             PrizeId = prize.Id,
-            WheelIndex = (prize as WheelPrize)?.WheelIndex,
+            WheelIndex = prize.WheelIndex,
             WinAmount = prize.Value > 0 ? price.Multiplier * prize.Value : null
         };
+    }
+
+    private async Task<WheelPrize> GetPrizeFromGeneratorAsync<TPrize>(int promotionId) where TPrize : BasePrize
+    {
+        var prizeGroup = _configurationHolder.GetPrizeGroups(promotionId).Cast<WheelPrizeGroup>().FirstOrDefault();
+        var prize = (await GeneratorHolder.GetPrizeAsync<TPrize>(prizeGroup!.Id, _authService.GetCurrentPlayerId()) as WheelPrize)!;
+        
+        if (prize == null)
+        {
+            throw new ApiException(
+                ApiExceptionCodeTypes.KeyNotFound,
+                "The prize generation failed. No prize was generated for the specified criteria. Please try again or contact support."
+            );
+        }
+
+        return prize!;
     }
 }

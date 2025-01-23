@@ -64,6 +64,7 @@ public static class DependencyResolver
         //services.AddScoped<IPrizeTypeRepository, PrizeTypeRepository>();
         services.AddScoped<IGameConfigurationRepository, GameConfigurationRepository>();
         services.AddScoped<IPrizeHistoryRepository, PrizeHistoryRepository>();
+        services.AddScoped<ILimitedPrizeCountsByPlayerRepository, LimitedPrizeCountsByPlayerRepository>();
         services.AddScoped<ISettingRepository, GameSettingRepository<TGameConfiguration>>();
 
         services.AddScoped<IConsulClient, ConsulClient>();

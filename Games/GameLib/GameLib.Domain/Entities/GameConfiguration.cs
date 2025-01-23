@@ -15,9 +15,10 @@ public class GameConfiguration : BaseEntity<int>
 
     }
 
-    public GameConfiguration(string name, int value, int promotionId, Guid? correlationId = null, string templateId = null, IEnumerable<Price> prices = null)
+    public GameConfiguration(string name, int value, int promotionId, string description = null, Guid? correlationId = null, string templateId = null, IEnumerable<Price> prices = null)
     {
         Name = name;
+        Description = description;
         Value = value;
         PromotionId = promotionId;
         CorrelationId = correlationId;
@@ -27,6 +28,9 @@ public class GameConfiguration : BaseEntity<int>
 
     [GlobalDescription("Name of the configuration")]
     public string Name { get; set; }
+
+    [GlobalDescription("Description of the configuration")]
+    public string Description { get; set; }
 
     [GlobalDescription("Value of the configuration")]
     public int Value { get; set; }
@@ -73,8 +77,8 @@ public class GameConfiguration<T> : GameConfiguration where T : GameConfiguratio
 
     }
 
-    public GameConfiguration(string name, int value, int promotionId, Guid? correlationId = null, string templateId = null, IEnumerable<Price> prices = null)
-        : base(name, value, promotionId, correlationId, templateId, prices)
+    public GameConfiguration(string name, int value, int promotionId, string description = null, Guid? correlationId = null, string templateId = null, IEnumerable<Price> prices = null)
+        : base(name, value, promotionId, description, correlationId, templateId, prices)
     { 
     
     }

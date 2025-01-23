@@ -8,23 +8,23 @@ internal class RNGPrizeGenerator : Generator
 
     internal override PrizeGenerationType PrizeGenerationType => PrizeGenerationType.RNG;
 
-    internal RNGPrizeGenerator(int id, List<BasePrize> prizes) 
-        : base(id, prizes)
+    internal RNGPrizeGenerator(BasePrizeGroup prizeGroup, List<BasePrize> prizes)
+        : base(prizeGroup, prizes)
     {
     }
 
-    internal override BasePrize GetPrize()
+    internal override BasePrize GeneratePrize()
     {
         var randomNumber = RNG.RNG.Next(ProbabilitySum);
         var sum = 0;
 
-        for (int i = 0; i < Prizes.Count; i++)
+        foreach (var prize in Prizes)
         {
-            sum += Prizes[i].Probability;
+            sum += prize.Probability;
 
-            if(randomNumber < sum)
+            if (randomNumber < sum)
             {
-                return Prizes[i];
+                return prize;
             }
         }
 

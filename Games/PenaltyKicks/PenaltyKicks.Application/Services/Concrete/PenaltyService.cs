@@ -99,10 +99,10 @@ public class PenaltyService : IPenaltyService
             throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Price with the specified ID: [{betPriceId}] was not found.");
         }
 
-        await _hubService.BetTransactionAsync(_gameInfoConfig.GameId, "PenaltyKick", promotionId, price.Value);
+        await _hubService.BetTransactionAsync(configuration.Id, "PenaltyKick", promotionId, price.Value);
 
         var prizeGroup = _configurationHolder.GetPrizeGroups(promotionId).Cast<PenaltyPrizeGroup>().FirstOrDefault();
-        var prize = GeneratorHolder.GetPrize<PenaltyPrize>(prizeGroup!.Id);
+        var prize = await GeneratorHolder.GetPrizeAsync<PenaltyPrize>(prizeGroup!.Id, playerId);
 
         if (prize == null)
         {
@@ -202,7 +202,7 @@ public class PenaltyService : IPenaltyService
 
             if (gameState == GameState.Won)
             {
-                await _hubService.WinTransactionAsync(_gameInfoConfig.GameId, "PenaltyKick", game.CoinId, promotionId, game.PriceMultiplier * game.PrizeValue);
+                await _hubService.WinTransactionAsync(configuration.Id, "PenaltyKick", game.CoinId, promotionId, game.PriceMultiplier * game.PrizeValue);
             }
         }
 

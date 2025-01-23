@@ -16,25 +16,30 @@ public class RepositoryManager
         _serviceScopeFactory = serviceScopeFactory;
     }
 
-    internal static PrizeGroupRepositoryProxy GetPrizeGroupRepository(Type type)
+    internal static PrizeGroupRepositoryProxy PrizeGroupRepository(Type type)
     {
         var genericType = _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService(typeof(IPrizeGroupRepository<>).MakeGenericType(type));
         return new PrizeGroupRepositoryProxy(genericType);
     }
 
-    internal static IGameConfigurationRepository GetGameConfigurationRepository()
+    internal static IGameConfigurationRepository GameConfigurationRepository()
     {
         return _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IGameConfigurationRepository>();
     }
 
-    internal static IPriceRepository GetPriceRepository()
+    internal static IPriceRepository PriceRepository()
     {
         return _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IPriceRepository>();
     }
 
-    internal static ISettingRepository GetGameSettingRepository()
+    internal static ISettingRepository GameSettingRepository()
     {
         return _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<ISettingRepository>();
+    }
+
+    internal static ILimitedPrizeCountsByPlayerRepository LimitedPrizeCountsByPlayerRepository()
+    {
+        return _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<ILimitedPrizeCountsByPlayerRepository>();
     }
 }
 

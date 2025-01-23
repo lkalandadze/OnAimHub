@@ -49,6 +49,7 @@ public class Startup
 
         services.AddDbContext<SharedGameHistoryDbContext>(opt =>
             opt.UseNpgsql(Configuration.GetConnectionString("GameHistory")));
+
         services.AddCors(options =>
         {
             options.AddPolicy("AllowAll",

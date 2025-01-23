@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using Shared.Application.Exceptions;
 using Shared.Application.Exceptions.Types;
 using Shared.Lib.Extensions;
-using System.Linq;
+using Shared.Lib.Wrappers;
 
 namespace Hub.Application.Features.GameFeatures.Queries.GetAllGame;
 
@@ -48,7 +48,6 @@ public class GetAllGameHandler : IRequestHandler<GetAllGameQuery, GetAllGameResp
         #region Filters
 
         //TODO: temporary, should be changed
-
         if (!string.IsNullOrEmpty(request.Name))
         {
             allGame = allGame.Where(g => g.Name.Contains(request.Name)).ToList();
@@ -64,7 +63,13 @@ public class GetAllGameHandler : IRequestHandler<GetAllGameQuery, GetAllGameResp
         return new GetAllGameResponse
         {
             Succeeded = true,
-            Data = allGame,
+            Data = new PagedResponse<GameBaseDtoModel>
+            (
+                allGame.Pagination(request),
+                request.PageNumber,
+                request.PageSize,
+                allGame.Count()
+            ),
         };
     }
 }

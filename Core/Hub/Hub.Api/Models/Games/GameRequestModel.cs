@@ -1,6 +1,8 @@
-﻿namespace Hub.Api.Models.Games;
+﻿using Shared.Lib.Wrappers;
 
-public class GameRequestModel
+namespace Hub.Api.Models.Games;
+
+public class GameRequestModel : PagedRequest
 {
     public string? Name { get; set; }
     public int? PromotionId { get; set; }

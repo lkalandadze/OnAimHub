@@ -14,8 +14,8 @@ public class PenaltyConfiguration : GameConfiguration<PenaltyConfiguration>
 
     }
 
-    public PenaltyConfiguration(string name, int value, int promotionId, Guid? correlationId = null, string templateId = null, IEnumerable<Price> prices = null, IEnumerable<PenaltyPrizeGroup> prizeGroups = null)
-        : base(name, value, promotionId, correlationId, templateId, prices)
+    public PenaltyConfiguration(string name, int value, int promotionId, string description = null, Guid? correlationId = null, string templateId = null, IEnumerable<Price> prices = null, IEnumerable<PenaltyPrizeGroup> prizeGroups = null)
+        : base(name, value, promotionId, description, correlationId, templateId, prices)
     {
         PenaltyPrizeGroups = prizeGroups.ToList() ?? [];
     }
