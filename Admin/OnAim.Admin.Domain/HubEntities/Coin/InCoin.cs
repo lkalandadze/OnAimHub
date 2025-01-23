@@ -6,6 +6,7 @@ namespace OnAim.Admin.Domain.HubEntities.Coin;
 [BsonDiscriminator("InCoin")]
 public class InCoin : Coin
 {
+    //[BsonIgnore]
     public IEnumerable<AggregationConfiguration> AggregationConfiguration { get; set; }
 
     public InCoin()

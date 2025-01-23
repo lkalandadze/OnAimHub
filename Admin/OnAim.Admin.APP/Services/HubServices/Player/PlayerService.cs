@@ -373,7 +373,14 @@ public class PlayerService : IPlayerService
 
         return new ApplicationResult
         {
-            Data = res,
+            Data = new PaginatedResult<PlayerTransactionDto>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = await res.ToListAsync(),
+                SortableFields = new List<string>(),
+            },
             Success = true
         };
     }
@@ -399,7 +406,14 @@ public class PlayerService : IPlayerService
 
         return new ApplicationResult
         {
-            Data = res,
+            Data = new PaginatedResult<PlayerLogDto>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = await res.ToListAsync(),
+                SortableFields = new List<string>(),
+            },
             Success = true
         };
     }

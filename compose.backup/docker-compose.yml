@@ -1,0 +1,144 @@
+version: '3.9'
+ 
+services: 
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+  
+  rabbitmq:
+    container_name: rabbitmq
+    image: docker.io/masstransit/rabbitmq:latest
+    restart: unless-stopped
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq/mnesia/
+
+  consul:
+    image: consul:1.7.14
+    ports:
+      - "8500:8500"
+    command: "consul agent -dev -client=0.0.0.0"
+ 
+  ocelotapigateway:
+    extends:
+       file: ./ApiGateways/ApiGateway/compose.yml
+       service: ocelotapigateway
+ 
+  wheelapi:
+     extends:
+      file: ./Games/Wheel/Wheel.Api/compose.yml
+      service: wheelapi
+
+  penaltykicksapi:
+     extends:
+      file: ./Games/PenaltyKicks/PenaltyKicks.Api/compose.yml
+      service: penaltykicksapi
+
+  hubapi:
+      extends:
+        file: ./Core/Hub/Hub.Api/compose.yml
+        service: hubapi
+ 
+  adminapi:
+      extends:
+         file: ./Admin/OnAim.Admin.API/compose.yml
+         service: adminapi
+
+  aggregation:
+      extends: 
+         file: ./CoreModules/AggregationService/AggregationService.API/compose.yml
+         service: aggregation
+ 
+  levelapi:
+     extends:
+        file: ./CoreModules/LevelService/LevelService.Api/compose.yml
+        service: levelapi
+
+  missionapi:
+     extends:
+        file: ./CoreModules/MissionService/MissionService.Api/compose.yml
+        service: missionapi
+
+  leaderboardapi:
+     extends:
+        file: ./CoreModules/Leaderboard/Leaderboard.Api/compose.yml
+        service: leaderboardapi
+
+  testapi:
+     extends:
+        file: ./Helpers/Test.Api/compose.yml
+        service: testapi
+   
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Test1234!
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    command: >
+      bash -c "
+        docker-entrypoint.sh postgres & 
+        until pg_isready -h localhost -p 5432; do
+          echo 'Waiting for PostgreSQL to start...';
+          sleep 2;
+        done;
+        psql -U postgres -c 'CREATE DATABASE OnAimAdmin;';
+        psql -U postgres -c 'CREATE DATABASE OnAimHub;';
+        psql -U postgres -c 'CREATE DATABASE WheelConfig;';
+        psql -U postgres -c 'CREATE DATABASE WheelHistory;';
+        psql -U postgres -c 'CREATE DATABASE PenaltyConfig;';
+        psql -U postgres -c 'CREATE DATABASE PenaltyHistory;';
+        psql -U postgres -c 'CREATE DATABASE OnAimLevel;';
+        psql -U postgres -c 'CREATE DATABASE OnAimMission;';
+        psql -U postgres -c 'CREATE DATABASE OnAimLeaderboard;';
+        psql -U postgres -c 'CREATE DATABASE OnAimAggregation;';
+        wait
+      "
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+ 
+volumes:
+  postgres_data:
+    driver: local
+  mongo-data:
+    driver: local
+  redis_data:
+    driver: local
+  rabbitmq:
+    driver: local
+  pgadmin_data:
+    driver: local
+  consul_data:
+    driver: local
