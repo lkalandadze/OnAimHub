@@ -11,6 +11,8 @@ namespace GameLib.Domain.Abstractions;
 [CheckMate<BasePrizeGroupChecker>]
 public abstract class BasePrizeGroup : BaseEntity<int>
 {
+    public string Name { get; set; }
+
     [IgnoreIncludeAll]
     [JsonIgnore]
     public List<int> Sequence { get; set; }

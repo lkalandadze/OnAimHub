@@ -16,13 +16,10 @@ public class WheelPrizeGroup : BasePrizeGroup<WheelPrize>
 
     }
 
-    public WheelPrizeGroup(string name, IEnumerable<WheelPrize> prizes = null)
+    public WheelPrizeGroup(IEnumerable<WheelPrize> prizes = null)
     {
-        Name = name;
         Prizes = prizes.ToList() ?? [];
     }
-
-    public string Name { get; set; }
 
     [IgnoreIncludeAll]
     [JsonIgnore]
