@@ -95,6 +95,7 @@ public class GameConfigurationService : IGameConfigurationService
                 _configurationHolder.GameConfigurations.Add(configuration.PromotionId, configuration);
             }
 
+            configuration.IsActive = true;
             _configurationRepository.InsertConfigurationTree(configuration);
             await _unitOfWork.SaveAsync();
 
