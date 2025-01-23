@@ -1,12 +1,9 @@
-using MediatR;
 using Microsoft.Extensions.Options;
 using OnAim.Admin.API.Extensions;
 using OnAim.Admin.API.Middleware;
 using OnAim.Admin.APP;
 using OnAim.Admin.APP.Extensions;
-using OnAim.Admin.APP.Feature.UserFeature.Commands.Login;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
-using OnAim.Admin.Contracts.Dtos.User;
 using OnAim.Admin.Infrasturcture;
 using Serilog;
 using Serilog.Events;
@@ -56,21 +53,21 @@ builder.Services.AddHttpClient<ILeaderBoardApiClient, LeaderboardApiClient>(
             }
         );
 
-//builder.Services.Configure<SagaApiClientOptions>(
-//builder.Configuration.GetSection("SagaApiClientOptions")
-//);
-//builder.Services.AddHttpClient<ISagaApiClient, SagaApiClient>(
-//    (client, sp) =>
-//    {
-//        var catalogApiOptions = sp.GetRequiredService<IOptions<SagaApiClientOptions>>();
-//        var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
-//        catalogApiOptions.Value.NotBeNull();
+builder.Services.Configure<AggregationClientOptions>(
+builder.Configuration.GetSection("AggregationClientOptions")
+);
+builder.Services.AddHttpClient<IAggregationClient, AggregationClient>(
+    (client, sp) =>
+    {
+        var catalogApiOptions = sp.GetRequiredService<IOptions<AggregationClientOptions>>();
+        var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
+        catalogApiOptions.Value.NotBeNull();
 
-//        var baseAddress = catalogApiOptions.Value.BaseApiAddress;
-//        client.BaseAddress = new Uri(baseAddress);
-//        return new SagaApiClient(client, catalogApiOptions, policyOptions, "admin", "password");
-//    }
-//);
+        var baseAddress = catalogApiOptions.Value.BaseApiAddress;
+        client.BaseAddress = new Uri(baseAddress);
+        return new AggregationClient(client, catalogApiOptions, policyOptions);
+    }
+);
 
 builder.Services
                 .AddCustomAuthorization()

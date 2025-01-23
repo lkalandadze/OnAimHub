@@ -1,15 +1,15 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/penaltykicksapi/{everything}",
+      "DownstreamPathTemplate": "/leaderboardapi/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "penaltykicksapi",
+          "Host": "leaderboardapi",
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/penaltykicksapi/{everything}",
+      "UpstreamPathTemplate": "/leaderboardapi/{everything}",
       "UpstreamHttpMethod": [
         "Get",
         "Post",
@@ -35,15 +35,32 @@
       ]
     },
     {
-      "DownstreamPathTemplate": "/leaderboardapi/{everything}",
+      "DownstreamPathTemplate": "/wheelapi/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "leaderboardapi",
+          "Host": "wheelapi",
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/leaderboardapi/{everything}",
+      "UpstreamPathTemplate": "/wheelapi/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/hubapi/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hubapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/hubapi/{everything}",
       "UpstreamHttpMethod": [
         "Get",
         "Post",

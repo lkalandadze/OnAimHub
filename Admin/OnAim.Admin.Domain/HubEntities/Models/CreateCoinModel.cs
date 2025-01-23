@@ -27,7 +27,10 @@ public abstract class CreateCoinModel
                 incoming.Name,
                 incoming.Description,
                 incoming.ImageUrl,
-                promotionId),
+                promotionId,
+                incoming.Configurations,
+                incoming.TemplateId
+                ),
 
             CreateInternalCoinModel internalCoin => new InternalCoin(
                 coinId,

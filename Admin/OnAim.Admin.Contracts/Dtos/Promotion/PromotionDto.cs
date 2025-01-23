@@ -9,16 +9,12 @@ public class PromotionDto
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
     public DateTimeOffset CreateDate { get; set; }
-    public DateTimeOffset? DateDeleted { get; set; }
     public bool IsDeleted { get; set; }
 
     public ICollection<string> Segments { get; set; }
-    public ICollection<PromotionServiceDto> Services { get; set; }
     public ICollection<string> PageViews { get; set; }
-    public List<GamePromotionDto> Games { get; set; }
 
     public ICollection<PromotionCoinDto> PromotionCoins { get; set; }
-    public ICollection<TransactionDto> Transactions { get; set; }
 }
 public class GamePromotionDto
 {

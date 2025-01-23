@@ -11,29 +11,22 @@ using System.Text.Json;
 
 namespace OnAim.Admin.APP.Services.Hub.ClientServices;
 
-public class HubApiClient : IHubApiClient
+public class AggregationClient : IAggregationClient
 {
     private readonly HttpClient _httpClient;
-    private readonly HubApiClientOptions _options;
+    private readonly AggregationClientOptions _options;
     private readonly AsyncPolicyWrap<HttpResponseMessage> _combinedPolicy;
     private readonly string _username;
     private readonly string _password;
 
-    public HubApiClient(
+    public AggregationClient(
         HttpClient httpClient,
-        IOptions<HubApiClientOptions> options,
-        IOptions<PolicyOptions> policyOptions,
-        string username,
-        string password
+        IOptions<AggregationClientOptions> options,
+        IOptions<PolicyOptions> policyOptions
         )
     {
         _httpClient = httpClient.NotBeNull();
         _options = options.Value;
-        _username = username;
-        _password = password;
-
-        var byteArray = Encoding.ASCII.GetBytes($"admin:password");
-        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
         var retryPolicy = Policy
        .Handle<HttpRequestException>()
@@ -99,7 +92,10 @@ public class HubApiClient : IHubApiClient
         );
 
         if (!res.IsSuccessStatusCode)
-            throw new HubAPIRequestFailedException(res);
+        {
+            var errorContent = await res.Content.ReadAsStringAsync();
+            throw new HubAPIRequestFailedException($"Request failed with status code {res.StatusCode}. Response content: {errorContent}");
+        }
 
         return res;
 

@@ -15,3 +15,8 @@ public class SagaApiClientOptions
     public string BaseApiAddress { get; set; } = default!;
     public string Endpoint { get; set; } = default!;
 }
+public class AggregationClientOptions
+{
+    public string BaseApiAddress { get; set; } = default!;
+    public string Endpoint { get; set; } = default!;
+}

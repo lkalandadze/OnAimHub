@@ -6,4 +6,4 @@ using OnAim.Admin.Domain.Entities.Templates;
 
 namespace OnAim.Admin.APP.Features.CoinFeatures.Template.Commands.Create;
 
-public record CreateCoinTemplateCommand(CreateCoinTemplateDto create) : ICommand<ApplicationResult>;
+public record CreateCoinTemplateCommand(CreateCoinTemplateDto create) : ICommand<bool>;

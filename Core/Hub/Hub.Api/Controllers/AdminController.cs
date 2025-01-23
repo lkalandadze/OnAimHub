@@ -98,7 +98,7 @@ public class AdminController : BaseApiController
     }
 
     [HttpDelete(nameof(DeletePromotion))]
-    public async Task<Unit> DeletePromotion(DeletePromotionCommand command) => await Mediator.Send(command);
+    public async Task<Unit> DeletePromotion([FromQuery] DeletePromotionCommand command) => await Mediator.Send(command);
 
     [HttpPut(nameof(SoftDeletePromotion))]
     public async Task<Unit> SoftDeletePromotion(SoftDeletePromotionCommand command) => await Mediator.Send(command);
