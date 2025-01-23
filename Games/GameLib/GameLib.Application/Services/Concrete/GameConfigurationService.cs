@@ -186,6 +186,24 @@ public class GameConfigurationService : IGameConfigurationService
         await _unitOfWork.SaveAsync();
     }
 
+    public async Task DeleteByCorrelationIdAsync(Guid correlationId)
+    {
+        var configuration = await (_configurationRepository.Query(c => c.CorrelationId == correlationId)).FirstOrDefaultAsync();
+
+        if (configuration == null)
+        {
+            throw new ApiException(ApiExceptionCodeTypes.BusinessRuleViolation, $"Configuration with the specified correlation ID: [{correlationId}] was not found.");
+        }
+
+        foreach (var price in configuration.Prices)
+        {
+            _priceRepository.Delete(price);
+        }
+
+        _configurationRepository.DeleteConfigurationTree(configuration);
+        await _unitOfWork.SaveAsync();
+    }
+
     private async Task GeneratePrizeSequenceAsync(GameConfiguration configuration)
     {
         var configType = configuration.GetType();

@@ -12,6 +12,7 @@ public class LeaderboardRecord : BaseEntity<int>
     }
 
     public LeaderboardRecord(int promotionId,
+                             int externalId,
                              string promotionName,
                              string title,
                              string description,
@@ -26,6 +27,7 @@ public class LeaderboardRecord : BaseEntity<int>
                              Guid? correlationId)
     {
         PromotionId = promotionId;
+        ExternalId = externalId;
         PromotionName = promotionName;
         Title = title;
         Description = description;
@@ -43,6 +45,7 @@ public class LeaderboardRecord : BaseEntity<int>
     }
     // External Id
     public int PromotionId { get; set; }
+    public int ExternalId { get; set; }
     public string PromotionName { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }

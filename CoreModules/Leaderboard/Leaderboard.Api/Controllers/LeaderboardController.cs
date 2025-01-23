@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Leaderboard.Api.Controllers;
 
-[Route("api/v1/[controller]")]
+[Route("LeaderboardApi/[controller]")]
 [ApiController]
 public class LeaderboardController : BaseApiController
 {
@@ -27,7 +27,7 @@ public class LeaderboardController : BaseApiController
     #region LeaderboardRecord
 
     [HttpPost(nameof(CreateLeaderboardRecord))]
-    public async Task CreateLeaderboardRecord(CreateLeaderboardRecordCommand request) => await Mediator.Send(request);
+    public async Task<int> CreateLeaderboardRecord(CreateLeaderboardRecordCommand request) => await Mediator.Send(request);
 
     [HttpPost(nameof(DeleteLeaderboardRecord))]
     public async Task DeleteLeaderboardRecord(DeleteLeaderboardRecordCommand request) => await Mediator.Send(request);

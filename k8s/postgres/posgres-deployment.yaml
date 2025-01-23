@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      initContainers:
+      - name: init-postgres
+        image: postgres:13
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: Test1234!
+        command:
+        - bash
+        - -c
+        - |  
+          until pg_isready -h postgres -p 5432; do
+            echo 'Waiting for PostgreSQL to start...';
+            sleep 2;
+          done;
+          psql -U postgres -c 'CREATE DATABASE OnAimAdmin;';
+          psql -U postgres -c 'CREATE DATABASE OnAimHub;';
+          psql -U postgres -c 'CREATE DATABASE WheelConfig;';
+          psql -U postgres -c 'CREATE DATABASE WheelHistory;';
+          psql -U postgres -c 'CREATE DATABASE PenaltyConfig;';
+          psql -U postgres -c 'CREATE DATABASE PenaltyHistory;';
+          psql -U postgres -c 'CREATE DATABASE OnAimLevel;';
+          psql -U postgres -c 'CREATE DATABASE OnAimMission;';
+          psql -U postgres -c 'CREATE DATABASE OnAimLeaderboard;';
+          psql -U postgres -c 'CREATE DATABASE OnAimAggregation;';
+          psql -U postgres -c 'CREATE DATABASE StateMachineDb;';
+      containers:
+      - name: postgres
+        image: postgres:13
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: Test1234!
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: postgres

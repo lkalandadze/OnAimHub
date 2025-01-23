@@ -50,6 +50,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\Shared.Application\Shared.Application.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Shared.Infrastructure\Shared.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\CoreModules\AggregationService\AggregationService.Application\AggregationService.Application.csproj" />
     <ProjectReference Include="..\OnAim.Admin.CrossCuttingConcerns\OnAim.Admin.CrossCuttingConcerns.csproj" />
     <ProjectReference Include="..\OnAim.Admin.Domain\OnAim.Admin.Domain.csproj" />
     <ProjectReference Include="..\OnAim.Admin.Infrasturcture\OnAim.Admin.Infrasturcture.csproj" />

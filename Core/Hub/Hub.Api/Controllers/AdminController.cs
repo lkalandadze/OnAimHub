@@ -48,6 +48,29 @@ namespace Hub.Api.Controllers;
 [ApiExplorerSettings(GroupName = "admin")]
 public class AdminController : BaseApiController
 {
+    #region EventDocumentation
+    [HttpGet(nameof(GetEventsDocumentation))]
+    public ActionResult<string> GetEventsDocumentation()
+    {
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "eventDocumentation.json");
+        var jsonContent = System.IO.File.ReadAllText(filePath);
+        return  Content(jsonContent, "application/json");
+    }
+
+    [HttpGet(nameof(EventsQueueName))]
+    public ActionResult<string> EventsQueueName() //Todo
+    {
+        return "Leaderboard";
+    }
+
+    [HttpGet(nameof(EventProducerName))]
+    public ActionResult<string> EventProducerName() //Todo
+    {
+        return "Hub";
+    }
+
+    #endregion
+
     #region Promotions
 
     [HttpPost(nameof(CreatePromotion))]
@@ -75,7 +98,7 @@ public class AdminController : BaseApiController
     }
 
     [HttpDelete(nameof(DeletePromotion))]
-    public async Task<Unit> DeletePromotion(DeletePromotionCommand command) => await Mediator.Send(command);
+    public async Task<Unit> DeletePromotion([FromQuery] DeletePromotionCommand command) => await Mediator.Send(command);
 
     [HttpPut(nameof(SoftDeletePromotion))]
     public async Task<Unit> SoftDeletePromotion(SoftDeletePromotionCommand command) => await Mediator.Send(command);

@@ -2,8 +2,8 @@
 
 public class SegmentDto
 {
-    public string SegmentId { get; set; }
-    public string SegmentName { get; set; }
+    public string Id { get; set; }
+    public string Description { get; set; }
     public int PriorityLevel { get; set; }
     //public int TotalActivePlayers { get; set; }
     //public int TotalBlackListedPlayers { get; set; }

@@ -1,8 +1,10 @@
-﻿namespace OnAim.Admin.Domain.HubEntities.Models;
+﻿using AggregationService.Domain.Entities;
+
+namespace OnAim.Admin.Domain.HubEntities.Models;
 
 public class CreateInCoinModel : CreateCoinModel
 {
-    // should be add configuration in future
+    public IEnumerable<AggregationConfiguration> Configurations { get; set; }
 
     public CreateInCoinModel()
     {

@@ -53,6 +53,9 @@ namespace Leaderboard.Infrastructure.Migrations
                     b.Property<int>("EventType")
                         .HasColumnType("integer");
 
+                    b.Property<int>("ExternalId")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("IsGenerated")
                         .HasColumnType("boolean");
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.Hub.ClientServices;
@@ -14,7 +15,7 @@ using OnAim.Admin.Infrasturcture.Interfaces;
 
 namespace OnAim.Admin.APP.Services.HubServices.Coin;
 
-public class CoinService : ICoinService
+public class CoinService : BaseService, ICoinService
 {
     private readonly IReadOnlyRepository<WithdrawOption> _withdrawOptionRepository;
     private readonly IReadOnlyRepository<WithdrawOptionGroup> _withdrawOptionGroupRepository;
@@ -40,46 +41,78 @@ public class CoinService : ICoinService
         _options = options.Value;
     }
 
-    public async Task<IEnumerable<WithdrawOption>> GetWithdrawOptions(Domain.HubEntities.Models.CreateOutCoinModel? outCoinModel)
+    #region WO
+    public async Task<ApplicationResult> CreateWithdrawOption(CreateWithdrawOptionDto option)
     {
-        if (outCoinModel == null)
+        try
         {
-            throw new Exception(
-                "The provided model is null. Please ensure that a valid OutCoin model is supplied."
-            );
+            var body = new
+            {
+                Title = option.Title,
+                Description = option.Description,
+                ImageUrl = option.ImageUrl,
+                Value = option.Value,
+                Endpoint = option.Endpoint,
+                EndpointContentType = option.EndpointContentType,
+                EndpointContent = option.EndpointContent,
+                WithdrawOptionEndpointId = option.WithdrawOptionEndpointId,
+                WithdrawOptionGroupIds = option.WithdrawOptionGroupIds,
+                CreatedByUserId = _securityContextAccessor.UserId
+            };
+
+            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOption", body);
+
+            return new ApplicationResult { Data = res.StatusCode, Success = true };
         }
-
-        var withdrawOptions = _withdrawOptionRepository.Query(wo => outCoinModel.WithdrawOptionIds.Any(woId => woId == wo.Id));
-
-        if (withdrawOptions == null || !withdrawOptions.Any())
+        catch (Exception ex)
         {
-            throw new Exception(
-                "No withdraw options were found for the provided list of IDs. Please ensure the IDs are valid and correspond to existing segments."
-            );
+            return await Fail(new Error
+            {
+                Message = $"{ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
         }
-
-        return withdrawOptions;
     }
 
-    public async Task<IEnumerable<WithdrawOptionGroup>> GetWithdrawOptionGroups(Domain.HubEntities.Models.CreateOutCoinModel? outCoinModel)
+    public async Task<ApplicationResult> UpdateWithdrawOption(UpdateWithdrawOptionDto option)
     {
-        if (outCoinModel == null)
+        try
         {
-            throw new Exception(
-                "The provided model is null. Please ensure that a valid OutCoin model is supplied."
-            );
+            var res = await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/UpdateWithdrawOption", option);
+
+            return new ApplicationResult { Success = true, Data = res.StatusCode };
         }
-
-        var withdrawOptionGroups = _withdrawOptionGroupRepository.Query(wog => outCoinModel.WithdrawOptionGroupIds.Any(wogId => wogId == wog.Id));
-
-        if (withdrawOptionGroups == null || !withdrawOptionGroups.Any())
+        catch (Exception ex)
         {
-            throw new Exception(
-                "No withdraw option groups were found for the provided list of IDs. Please ensure the IDs are valid and correspond to existing segments."
-            );
+            return await Fail(new Error
+            {
+                Message = $"failed to update withdraw option  {ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
         }
+    }
 
-        return withdrawOptionGroups;
+    public async Task<ApplicationResult> DeleteWithdrawOption(List<int> ids)
+    {
+        var body = new
+        {
+            Ids = ids
+        };
+
+        try
+        {
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOption", body);
+
+            return new ApplicationResult { Data = "Successfully deleted withdraw option", Success = true };
+        }
+        catch (Exception ex)
+        {
+            return await Fail(new Error
+            {
+                Message = $"failed to delete withdraw option  {ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
+        }
     }
 
     public async Task<ApplicationResult> GetAllWithdrawOptions(BaseFilter filter)
@@ -202,6 +235,78 @@ public class CoinService : ICoinService
         return new ApplicationResult { Data = item, Success = true };
     }
 
+    #endregion
+
+    #region WOG
+    public async Task<ApplicationResult> CreateWithdrawOptionGroup(CreateWithdrawOptionGroupDto option)
+    {
+        try
+        {
+            var body = new
+            {
+                Title = option.Title,
+                Description = option.Description,
+                ImageUrl = option.ImageUrl,
+                PriorityIndex = option.PriorityIndex,
+                WithdrawOptionIds = option.WithdrawOptionIds,
+                CreatedByUserId = _securityContextAccessor.UserId,
+            };
+
+            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOptionGroup", option);
+
+            return new ApplicationResult { Success = true, Data = res.StatusCode };
+        }
+        catch (Exception ex)
+        {
+            return await Fail(new Error
+            {
+                Message = $"failed to save withdraw option Group  {ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
+        }
+    }
+
+    public async Task<ApplicationResult> UpdateWithdrawOptionGroup(UpdateWithdrawOptionGroupDto option)
+    {
+        try
+        {
+            var res = await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/UpdateWithdrawOptionGroup", option);
+
+            return new ApplicationResult { Success = true, Data = res.StatusCode };
+        }
+        catch (Exception ex)
+        {
+            return await Fail(new Error
+            {
+                Message = $"failed to update withdraw option Group  {ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
+        }
+    }
+
+    public async Task<ApplicationResult> DeleteWithdrawOptiongroup(List<int> ids)
+    {
+        var body = new
+        {
+            Ids = ids
+        };
+
+        try
+        {
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOptionGroup", body);
+
+            return new ApplicationResult { Success = true, Data = "Deleted Successfully" };
+        }
+        catch (Exception ex)
+        {
+            return await Fail(new Error
+            {
+                Message = $"failed to delete withdraw option Group  {ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
+        }
+    }
+
     public async Task<ApplicationResult> GetAllWithdrawOptionGroups(BaseFilter filter)
     {
         var data = _withdrawOptionGroupRepository.Query().Include(x => x.OutCoins).Include(x => x.WithdrawOptions);
@@ -283,6 +388,79 @@ public class CoinService : ICoinService
         return new ApplicationResult { Data = item, Success = true };
     }
 
+    #endregion
+
+    #region WOE
+
+    public async Task<ApplicationResult> CreateWithdrawOptionEndpoint(CreateWithdrawOptionEndpointDto option)
+    {
+        try
+        {
+            var body = new
+            {
+                Name = option.Name,
+                Endpoint = option.Endpoint,
+                Content = option.Content,
+                CreatedByUserId = _securityContextAccessor.UserId,
+                ContentType = option.ContentType
+            };
+
+
+            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOptionEndpoint", body);
+
+            return new ApplicationResult { Success = true, Data = res.StatusCode };
+        }
+        catch (Exception ex)
+        {
+            return await Fail(new Error
+            {
+                Message = $"failed to save withdraw option endpoint  {ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
+        }
+    }
+
+    public async Task<ApplicationResult> UpdateWithdrawOptionEndpoint(UpdateWithdrawOptionEndpointDto option)
+    {
+        try
+        {
+            var res = await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/UpdateWithdrawOptionEndpoint", option);
+
+            return new ApplicationResult { Success = true, Data = res.StatusCode };
+        }
+        catch (Exception ex)
+        {
+            return await Fail(new Error
+            {
+                Message = $"failed to update withdraw option endpoint  {ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
+        }
+    }
+
+    public async Task<ApplicationResult> DeleteWithdrawOptionEndpoint(List<int> ids)
+    {
+        var body = new
+        {
+            Ids = ids
+        };
+
+        try
+        {
+            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOptionEndpoint", body);
+
+            return new ApplicationResult { Success = true, Data = "Deleted Successfully" };
+        }
+        catch (Exception ex)
+        {
+            return await Fail(new Error
+            {
+                Message = $"failed to delete withdraw option  {ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
+        }
+    }
+
     public async Task<ApplicationResult> GetWithdrawOptionEndpoints(BaseFilter filter)
     {
         var data = _withdrawOptionEndpointRepository.Query();
@@ -336,189 +514,7 @@ public class CoinService : ICoinService
         return new ApplicationResult { Data = item, Success = true };
     }
 
-    public async Task<ApplicationResult> CreateWithdrawOption(CreateWithdrawOptionDto option)
-    {
-        try
-        {
-            var body = new
-            {
-                Title = option.Title,
-                Description = option.Description,
-                ImageUrl = option.ImageUrl,
-                Value = option.Value,
-                Endpoint = option.Endpoint,
-                EndpointContentType = option.EndpointContentType,
-                EndpointContent = option.EndpointContent,
-                WithdrawOptionEndpointId = option.WithdrawOptionEndpointId,
-                WithdrawOptionGroupIds = option.WithdrawOptionGroupIds,
-                CreatedByUserId = _securityContextAccessor.UserId
-            };
-
-            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOption", body);
-
-            return new ApplicationResult { Data = res.StatusCode, Success = true };
-        }
-        catch (Exception e)
-        {
-
-            throw new Exception($"failed to save withdraw option : {e.Message}");
-        }
-    }
-
-    public async Task<ApplicationResult> UpdateWithdrawOption(UpdateWithdrawOptionDto option)
-    {
-        try
-        {
-            var res = await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/UpdateWithdrawOption", option);
-
-            return new ApplicationResult { Success = true, Data = res.StatusCode };
-        }
-        catch (Exception)
-        {
-
-            throw new Exception("failed to update withdraw option");
-        }
-    }
-
-    public async Task<ApplicationResult> DeleteWithdrawOption(List<int> ids)
-    {
-        var body = new 
-        {
-            Ids = ids
-        };
-
-        try
-        {
-            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOption", body);
-
-            return new ApplicationResult { Data = "Successfully deleted withdraw option", Success = true };
-        }
-        catch (Exception e)
-        {
-
-            throw new Exception($"failed to delete withdraw option : {e.Message}");
-        }
-    }
-
-    public async Task<ApplicationResult> CreateWithdrawOptionEndpoint(CreateWithdrawOptionEndpointDto option)
-    {
-        try
-        {
-            var body = new
-            {
-                Name = option.Name,
-                Endpoint = option.Endpoint,
-                Content = option.Content,
-                CreatedByUserId = _securityContextAccessor.UserId,
-                ContentType = option.ContentType
-            };
-
-
-            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOptionEndpoint", body);
-
-            return new ApplicationResult { Success = true, Data = res.StatusCode };
-        }
-        catch (Exception)
-        {
-
-            throw new Exception("failed to save withdraw option endpoint");
-        }
-    }
-
-    public async Task<ApplicationResult> UpdateWithdrawOptionEndpoint(UpdateWithdrawOptionEndpointDto option)
-    {
-        try
-        {
-            var res = await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/UpdateWithdrawOptionEndpoint", option);
-
-            return new ApplicationResult { Success = true, Data = res.StatusCode };
-        }
-        catch (Exception)
-        {
-
-            throw new Exception("failed to update withdraw option endpoint");
-        }
-    }
-
-    public async Task<ApplicationResult> DeleteWithdrawOptionEndpoint(List<int> ids)
-    {
-        var body = new
-        {
-            Ids = ids
-        };
-
-        try
-        {
-            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOptionEndpoint", body);
-
-            return new ApplicationResult { Success = true, Data = "Deleted Successfully" };
-        }
-        catch (Exception)
-        {
-
-            throw new Exception("failed to delete withdraw option");
-        }
-    }
-
-    public async Task<ApplicationResult> CreateWithdrawOptionGroup(CreateWithdrawOptionGroupDto option)
-    {
-        try
-        {
-            var body = new
-            {
-                Title = option.Title,
-                Description = option.Description,
-                ImageUrl = option.ImageUrl,
-                PriorityIndex = option.PriorityIndex,
-                WithdrawOptionIds = option.WithdrawOptionIds,
-                CreatedByUserId = _securityContextAccessor.UserId,
-            };
-
-            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOptionGroup", option);
-
-            return new ApplicationResult { Success = true, Data = res.StatusCode };
-        }
-        catch (Exception)
-        {
-
-            throw new Exception("failed to save withdraw option Group");
-        }
-    }
-
-    public async Task<ApplicationResult> UpdateWithdrawOptionGroup(UpdateWithdrawOptionGroupDto option)
-    {
-        try
-        {
-            var res = await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/UpdateWithdrawOptionGroup", option);
-
-            return new ApplicationResult { Success = true, Data = res.StatusCode };
-        }
-        catch (Exception)
-        {
-
-            throw new Exception("failed to update withdraw option Group");
-        }
-    }
-
-    public async Task<ApplicationResult> DeleteWithdrawOptiongroup(List<int> ids)
-    {
-        var body = new
-        {
-            Ids = ids
-        };
-
-        try
-        {
-            await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOptionGroup", body);
-
-            return new ApplicationResult { Success = true, Data = "Deleted Successfully" };
-        }
-        catch (Exception e)
-        {
-
-            throw new Exception($"failed to delete withdraw option Group: {e.Message}");
-        }
-    }
+    #endregion
 
     public async Task<ApplicationResult> CreateReward(PlayerPrizeDto dto)
     {
@@ -533,14 +529,17 @@ public class CoinService : ICoinService
 
         try
         {
-            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateReward", body);
+            var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateReward", dto);
 
             return new ApplicationResult { Success = true, Data = res.StatusCode };
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-
-            throw new Exception($"failed to create: {e.Message}");
+            return await Fail(new Error
+            {
+                Message = $"{ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
         }
     }
 
@@ -557,10 +556,55 @@ public class CoinService : ICoinService
 
             return new ApplicationResult { Success = true, Data = "Deleted Successfully" };
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-
-            throw new Exception($"failed to delete reward: {e.Message}");
+            return await Fail(new Error
+            {
+                Message = $"{ex.Message}",
+                Code = StatusCodes.Status500InternalServerError,
+            });
         }
+    }
+
+    public async Task<IEnumerable<WithdrawOption>> GetWithdrawOptions(Domain.HubEntities.Models.CreateOutCoinModel? outCoinModel)
+    {
+        if (outCoinModel == null)
+        {
+            throw new Exception(
+                "The provided model is null. Please ensure that a valid OutCoin model is supplied."
+            );
+        }
+
+        var withdrawOptions = _withdrawOptionRepository.Query(wo => outCoinModel.WithdrawOptionIds.Any(woId => woId == wo.Id));
+
+        if (withdrawOptions == null || !withdrawOptions.Any())
+        {
+            throw new Exception(
+                "No withdraw options were found for the provided list of IDs. Please ensure the IDs are valid and correspond to existing segments."
+            );
+        }
+
+        return withdrawOptions;
+    }
+
+    public async Task<IEnumerable<WithdrawOptionGroup>> GetWithdrawOptionGroups(Domain.HubEntities.Models.CreateOutCoinModel? outCoinModel)
+    {
+        if (outCoinModel == null)
+        {
+            throw new Exception(
+                "The provided model is null. Please ensure that a valid OutCoin model is supplied."
+            );
+        }
+
+        var withdrawOptionGroups = _withdrawOptionGroupRepository.Query(wog => outCoinModel.WithdrawOptionGroupIds.Any(wogId => wogId == wog.Id));
+
+        if (withdrawOptionGroups == null || !withdrawOptionGroups.Any())
+        {
+            throw new Exception(
+                "No withdraw option groups were found for the provided list of IDs. Please ensure the IDs are valid and correspond to existing segments."
+            );
+        }
+
+        return withdrawOptionGroups;
     }
 }

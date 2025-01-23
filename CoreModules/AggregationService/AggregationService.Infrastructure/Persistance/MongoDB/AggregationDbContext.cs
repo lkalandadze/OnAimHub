@@ -11,9 +11,11 @@ public class AggregationDbContext : MongoDbContext
         AggregationConfigurations = GetCollection<AggregationConfiguration>();
         Filters = GetCollection<Filter>();
         PointEvaluationRules = GetCollection<PointEvaluationRule>();
+        LogEntries = GetCollection<LogEntry>();
     }
 
     public IMongoCollection<AggregationConfiguration> AggregationConfigurations { get; }
     public IMongoCollection<Filter> Filters { get; }
     public IMongoCollection<PointEvaluationRule> PointEvaluationRules { get; }
+    public IMongoCollection<LogEntry> LogEntries{ get; }
 }

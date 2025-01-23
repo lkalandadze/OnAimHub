@@ -141,15 +141,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateways", "ApiGateways"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateways\ApiGateway\ApiGateway.csproj", "{AA034460-D026-4417-B48A-613CF68152F8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{EE94F689-46A1-4602-B1E2-973885B7AA6C}"
-	ProjectSection(SolutionItems) = preProject
-		Docker\.dockerignore = Docker\.dockerignore
-		.env = .env
-		Docker\docker-compose_internal.yml = Docker\docker-compose_internal.yml
-		docker-compose.yml = docker-compose.yml
-		Docker\Infrastructure.yml = Docker\Infrastructure.yml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{85636CEE-9827-4A53-AF0B-370ACC7732FD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StateMachines", "StateMachines", "{82D0D6EE-CFB9-4685-8C77-4A6012297C0F}"
@@ -358,7 +349,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "penaltykicksapi-k8s", "pena
 		Games\PenaltyKicks\penaltykicksapi-k8s\secret.yml = Games\PenaltyKicks\penaltykicksapi-k8s\secret.yml
 	EndProjectSection
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3A25B187-F218-4D6E-AE48-118C8332C1E4}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8D766890-C1A1-4053-BAD1-45C17A37BEC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -626,10 +617,10 @@ Global
 		{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B892B53-6F0C-46AF-B1B8-A6ABE7FBB8D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3A25B187-F218-4D6E-AE48-118C8332C1E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3A25B187-F218-4D6E-AE48-118C8332C1E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3A25B187-F218-4D6E-AE48-118C8332C1E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3A25B187-F218-4D6E-AE48-118C8332C1E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D766890-C1A1-4053-BAD1-45C17A37BEC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D766890-C1A1-4053-BAD1-45C17A37BEC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D766890-C1A1-4053-BAD1-45C17A37BEC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D766890-C1A1-4053-BAD1-45C17A37BEC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

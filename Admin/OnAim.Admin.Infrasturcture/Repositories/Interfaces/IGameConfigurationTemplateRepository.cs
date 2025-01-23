@@ -8,4 +8,5 @@ public interface IGameConfigurationTemplateRepository
     Task AddGameConfigurationTemplateAsync(GameConfigurationTemplate template);
     Task<GameConfigurationTemplate?> GetGameConfigurationTemplateByIdAsync(string id);
     Task<GameConfigurationTemplate?> UpdateGameConfigurationTemplateAsync(string id, GameConfigurationTemplate updated);
+    Task<bool> DeleteGameConfigurationTemplateAsync(string id);
 }
