@@ -13,8 +13,7 @@ public class ConfigurationHolder
 
     public ConfigurationHolder()
     {
-        var gameConfigurations = RepositoryManager.GameConfigurationRepository().QueryAsync().Result;
-        GameConfigurations = gameConfigurations.ToDictionary(config => config.PromotionId, config => config);
+        SetGenerators();
     }
 
     public IEnumerable<BasePrizeGroup> GetPrizeGroups(int promotionId)
@@ -53,5 +52,17 @@ public class ConfigurationHolder
     public T GetConfiguration<T>(int promotionId) where T : GameConfiguration
     {
         return (GameConfigurations.Where(c => c.Value.PromotionId == promotionId).FirstOrDefault().Value as T)!;
+    }
+
+    public void ResetGenerators()
+    {
+        GameConfigurations.Clear();
+        SetGenerators();
+    }
+
+    private void SetGenerators()
+    {
+        var gameConfigurations = RepositoryManager.GameConfigurationRepository().QueryAsync().Result;
+        GameConfigurations = gameConfigurations.ToDictionary(config => config.PromotionId, config => config);
     }
 }

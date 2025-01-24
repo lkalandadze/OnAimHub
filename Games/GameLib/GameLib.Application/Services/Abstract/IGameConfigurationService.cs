@@ -7,6 +7,8 @@ namespace GameLib.Application.Services.Abstract;
 
 public interface IGameConfigurationService
 {
+    void ResetGenerators();
+
     Response<EntityMetadata?> GetConfigurationMetaData();
 
     Task<Response<IEnumerable<GameConfiguration>>> GetAllAsync(int? configurationId, int? promotionId);

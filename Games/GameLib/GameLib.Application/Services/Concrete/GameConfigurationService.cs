@@ -34,6 +34,11 @@ public class GameConfigurationService : IGameConfigurationService
         _configurationHolder = configurationHolder;
     }
 
+    public void ResetGenerators()
+    {
+        _configurationHolder.ResetGenerators();
+    }
+
     public Response<EntityMetadata?> GetConfigurationMetaData()
     {
         return new Response<EntityMetadata?> { Data = _entityGenerator.GenerateEntityMetadata(Globals.ConfigurationType) };

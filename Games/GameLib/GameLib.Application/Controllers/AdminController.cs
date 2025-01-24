@@ -1,9 +1,7 @@
 ﻿using GameLib.Application.Generators;
 using GameLib.Application.Models.Configuration;
-using GameLib.Application.Models.PrizeType;
 using GameLib.Application.Services.Abstract;
 using GameLib.Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -26,14 +24,22 @@ public class AdminController : BaseApiController
 
     #region Game
 
+    [HttpPost(nameof(ResetGenerators))]
+    public ActionResult ResetGenerators()
+    {
+        _configurationService.ResetGenerators();
+
+        return Ok(new { Message = "Generators have been reset." });
+    }
+
     [HttpGet(nameof(GameStatus))]
-    public IActionResult GameStatus()
+    public ActionResult GameStatus()
     {
         return Ok(_gameService.GameStatus());
     }
 
     [HttpPost(nameof(ActivateGame))]
-    public IActionResult ActivateGame()
+    public ActionResult ActivateGame()
     {
         _gameService.ActivateGame();
 
@@ -41,7 +47,7 @@ public class AdminController : BaseApiController
     }
 
     [HttpPost(nameof(DeactivateGame))]
-    public IActionResult DeactivateGame()
+    public ActionResult DeactivateGame()
     {
         _gameService.DeactivateGame();
 
