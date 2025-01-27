@@ -1,6 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using Shared.Domain.Entities;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AggregationService.Domain.Entities;
@@ -10,12 +9,13 @@ public class PointEvaluationRule
 {
     public PointEvaluationRule(int step, int point)
     {
+        Id = Guid.NewGuid().ToString();
         Step = step;
         Point = point;
     }
 
     [BsonId]
-    public ObjectId Id { get; set; }
+    public string Id { get; set; }
     public int Step { get; set; }
     public int Point { get; set; }
 
