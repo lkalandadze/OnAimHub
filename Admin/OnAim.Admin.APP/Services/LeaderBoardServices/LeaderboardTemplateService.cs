@@ -19,7 +19,7 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
         _leaderboardTemplateRepository = leaderboardTemplateRepository;
     }
 
-    public async Task<ApplicationResult> GetAllLeaderboardTemplates(BaseFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<LeaderBoardTemplateListDto>>> GetAllLeaderboardTemplates(BaseFilter filter)
     {
         var temps = await _leaderboardTemplateRepository.GetLeaderboardTemplates();
 
@@ -70,7 +70,7 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
            .Skip((pageNumber - 1) * pageSize)
            .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<LeaderBoardTemplateListDto>>
         {
             Success = true,
             Data = new PaginatedResult<LeaderBoardTemplateListDto>
@@ -83,7 +83,7 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
         };
     }
 
-    public async Task<ApplicationResult> GetLeaderboardTemplateById(string id)
+    public async Task<ApplicationResult<LeaderBoardTemplateListDto>> GetLeaderboardTemplateById(string id)
     {
         var template = await _leaderboardTemplateRepository.GetLeaderboardTemplateByIdAsync(id);
 
@@ -110,7 +110,7 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
             }).ToList()
         };
 
-        return new ApplicationResult { Success = true, Data = temp };
+        return new ApplicationResult<LeaderBoardTemplateListDto> { Success = true, Data = temp };
     }
 
     public async Task<LeaderboardTemplate> CreateLeaderboardTemplate(CreateLeaderboardTemplateDto create)
@@ -137,7 +137,7 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
         return leaderboardTemplate;
     }
 
-    public async Task<ApplicationResult> DeleteLeaderboardTemplate(string temp)
+    public async Task<ApplicationResult<bool>> DeleteLeaderboardTemplate(string temp)
     {
         var template = await _leaderboardTemplateRepository.GetLeaderboardTemplateByIdAsync(temp);
 
@@ -148,10 +148,10 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
 
         await _leaderboardTemplateRepository.UpdateLeaderboardTemplateAsync(temp, template);
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
-    public async Task<ApplicationResult> UpdateLeaderboardTemplate(UpdateLeaderboardTemplateDto update)
+    public async Task<ApplicationResult<bool>> UpdateLeaderboardTemplate(UpdateLeaderboardTemplateDto update)
     {
         var template = await _leaderboardTemplateRepository.GetLeaderboardTemplateByIdAsync(update.Id);
 
@@ -174,6 +174,6 @@ public class LeaderboardTemplateService : ILeaderboardTemplateService
 
         await _leaderboardTemplateRepository.UpdateLeaderboardTemplateAsync(update.Id, template);
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 }

@@ -21,5 +21,10 @@ public class ApiControllerBase : ControllerBase
 
             return _mediator!;
         }
-    }    
+    }
+
+    //protected ActionResult<T> Ok<T>(T result)
+    //{
+    //    return base.Ok(result);
+    //}
 }

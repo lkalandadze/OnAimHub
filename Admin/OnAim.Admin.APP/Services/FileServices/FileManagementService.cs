@@ -51,7 +51,7 @@ public class ImageClient
     {
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri("http://192.168.88.138:8006/")
+            BaseAddress = new Uri("http://192.168.88.138:5007/")
         };
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }

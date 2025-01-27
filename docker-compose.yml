@@ -88,6 +88,11 @@ services:
         file: ./Helpers/Test.Api/compose.yml
         service: testapi
    
+  fileservice:
+     extends:
+        file: ./Helpers/FileManagement/FileService/compose.yml
+        service: fileservice
+
   postgres:
     image: postgres:13
     container_name: postgres

@@ -1,0 +1,22 @@
+﻿{
+  "customerId": "CustomerId",
+  "eventType": [ "Bet1", "Win" ],
+  "timeStamp": "EventDate",
+
+  "deviceType": [ "Mobile", "Desktop" ],
+  "promotionId": "string",
+
+
+  "customProperties": {
+    "Bet1": {
+      "gameName": "string",
+      "value": "number",
+      "coinId": "string"
+    },
+    "Win": {
+      "gameName": "string",
+      "value": "number",
+      "coinId": "string"
+    }
+  }
+}

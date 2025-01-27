@@ -1,0 +1,11 @@
+﻿version: '3.8'
+
+services:
+  fileservice:
+    build:
+      context: ../../../
+      dockerfile: Helpers/FileManagement/FileService/Dockerfile
+    ports:
+      - "5007:8080"
+    volumes:
+      - ./appsettings.json:/app/appsettings.json

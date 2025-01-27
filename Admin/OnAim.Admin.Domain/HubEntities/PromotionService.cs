@@ -1,5 +1,6 @@
 ﻿namespace OnAim.Admin.Domain.HubEntities;
 
+//todo: gvanca
 public class PromotionService : BaseEntity<int>
 {
     public PromotionService()

@@ -11,9 +11,9 @@ public class PromotionCoinDto
     public string ImageUrl { get; set; }
     public CoinType CoinType { get; set; }
     public bool IsDeleted { get; set; }
-    public DateTimeOffset? DateDeleted { get; set; }
+    //public DateTimeOffset? DateDeleted { get; set; }
 
-    public int PromotionId { get; set; }
+    //public int PromotionId { get; set; }
 
-    public ICollection<WithdrawOptionDto> WithdrawOptions { get; set; }
+    //public ICollection<WithdrawOptionDto> WithdrawOptions { get; set; }
 }

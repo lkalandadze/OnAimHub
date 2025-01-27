@@ -1,4 +1,6 @@
-﻿namespace OnAim.Admin.Contracts.Dtos.LeaderBoard;
+﻿using AggregationService.Domain.Entities;
+
+namespace OnAim.Admin.Contracts.Dtos.LeaderBoard;
 
 public sealed class CreateLeaderboardRecord
 {
@@ -19,4 +21,5 @@ public sealed class CreateLeaderboardRecord
     public int? CreatedBy { get; set; }
     public Guid CorrelationId { get; set; }
     public List<CreateLeaderboardRecordPrizeCommandItem> LeaderboardPrizes { get; set; }
+    public List<AggregationConfiguration>? AggregationConfigurations { get; set; }
 }

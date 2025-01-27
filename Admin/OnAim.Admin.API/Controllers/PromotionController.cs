@@ -15,12 +15,15 @@ using OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Commands
 using OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Commands.Delete;
 using OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Queries.GetAll;
 using OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Queries.GetById;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using System.Text.Json;
 
 namespace OnAim.Admin.API.Controllers
 {
     public class PromotionController : ApiControllerBase
     {
         private readonly IPromotionService _promotionService;
+        private readonly string _dataDirectory = Path.Combine(Directory.GetCurrentDirectory(), "EventDescriptions");
 
         public PromotionController(IPromotionService promotionService)
         {
@@ -28,17 +31,16 @@ namespace OnAim.Admin.API.Controllers
         }
 
         #region Promotion
-
         [HttpPost(nameof(CreatePromotion))]
-        public async Task<IActionResult> CreatePromotion([FromBody] CreatePromotionDto create)
+        public async Task<ActionResult<ApplicationResult<Guid>>> CreatePromotion([FromBody] CreatePromotionDto create)
             => Ok(await _promotionService.CreatePromotion(create));
 
         [HttpGet(nameof(GetAllPromotion))]
-        public async Task<IActionResult> GetAllPromotion([FromQuery] PromotionFilter filter)
+        public async Task<ActionResult<int>> GetAllPromotion([FromQuery] PromotionFilter filter)
             => Ok(await Mediator.Send(new GetAllPromotionsQuery(filter)));
 
         [HttpGet(nameof(GetPromotionById))]
-        public async Task<IActionResult> GetPromotionById([FromQuery] int id)
+        public async Task<ActionResult<ApplicationResult<PromotionDto>>> GetPromotionById([FromQuery] int id)
             => Ok(await Mediator.Send(new GetPromotionByIdQuery(id)));
 
         [HttpGet(nameof(GetAllPromotionGames) + "/{id}")]
@@ -118,5 +120,43 @@ namespace OnAim.Admin.API.Controllers
             => Ok(await Mediator.Send(command));
 
         #endregion
+
+
+        [HttpGet(nameof(GetJsonFiles))]
+        public async Task<IActionResult> GetJsonFiles()
+        {
+            if (!Directory.Exists(_dataDirectory))
+            {
+                return NotFound("Data directory not found.");
+            }
+
+            var filesContent = new List<object>();
+            var files = Directory.GetFiles(_dataDirectory, "*.json");
+
+            foreach (var file in files)
+            {
+                try
+                {
+                    var content = await System.IO.File.ReadAllTextAsync(file);
+                    var parsedJson = JsonSerializer.Deserialize<object>(content);
+
+                    filesContent.Add(new
+                    {
+                        Service = Path.GetFileNameWithoutExtension(file),
+                        Content = parsedJson
+                    });
+                }
+                catch
+                {
+                    filesContent.Add(new
+                    {
+                        FileName = Path.GetFileNameWithoutExtension(file),
+                        Content = "Invalid or unreadable JSON"
+                    });
+                }
+            }
+
+            return Ok(filesContent);
+        }
     }
 }

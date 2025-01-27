@@ -27,6 +27,8 @@ public class GamesController : ApiControllerBase
         _gameTemplateService = gameTemplateService;
     }
 
+    #region game
+
     [HttpGet(nameof(GetAll))]
     public async Task<IActionResult> GetAll([FromQuery] FilterGamesDto filter)
         => Ok(await _gameService.GetAll(filter));
@@ -71,7 +73,9 @@ public class GamesController : ApiControllerBase
     public async Task<IActionResult> DeactivateConfiguration([FromQuery] ConfigurationRequest request)
         => Ok(await Mediator.Send(new DeactivateConfigurationCommand(request.Name, request.Id)));
 
-    //Game Configuration Template
+    #endregion
+
+    #region Game Configuration Template
 
     [HttpPost(nameof(CreateGameConfigurationTemplate))]
     public async Task<IActionResult> CreateGameConfigurationTemplate([FromQuery] string gameName, [FromBody] object command)
@@ -88,4 +92,6 @@ public class GamesController : ApiControllerBase
     [HttpGet(nameof(GetGameConfigurationTemplateById))]
     public async Task<IActionResult> GetGameConfigurationTemplateById([FromQuery] string id)
         => Ok(await _gameTemplateService.GetGameConfigurationTemplateById(id));
+
+    #endregion
 }

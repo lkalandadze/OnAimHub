@@ -1,12 +1,13 @@
 ﻿using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.APP.Services.LeaderBoardServices;
 
 public interface ILeaderBoardService
 {
-    Task<ApplicationResult> GetAllLeaderBoard(LeaderBoardFilter? filter);
-    Task<ApplicationResult> GetLeaderboardRecordById(int id);
+    Task<ApplicationResult<PaginatedResult<LeaderBoardListDto>>> GetAllLeaderBoard(LeaderBoardFilter? filter);
+    Task<ApplicationResult<LeaderBoard.LeaderBoardData>> GetLeaderboardRecordById(int id);
     Task<ApplicationResult> GetAllPrizes();
     Task<ApplicationResult> CreateLeaderBoardRecord(CreateLeaderboardRecordCommand createLeaderboardRecordDto);
     Task<ApplicationResult> UpdateLeaderBoardRecord(UpdateLeaderboardRecordCommand updateLeaderboardRecordDto);

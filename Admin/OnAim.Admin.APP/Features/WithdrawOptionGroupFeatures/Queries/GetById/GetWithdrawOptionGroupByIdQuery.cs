@@ -1,12 +1,13 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.HubServices.Coin;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.Withdraw;
 
 namespace OnAim.Admin.APP.Features.WithdrawOptionGroupFeatures.Queries.GetById;
 
-public record GetWithdrawOptionGroupByIdQuery(int Id) : IQuery<ApplicationResult>;
+public record GetWithdrawOptionGroupByIdQuery(int Id) : IQuery<ApplicationResult<WithdrawOptionGroupDto>>;
 
-public sealed class GetWithdrawOptionGroupByIdQueryHandler : IQueryHandler<GetWithdrawOptionGroupByIdQuery, ApplicationResult>
+public sealed class GetWithdrawOptionGroupByIdQueryHandler : IQueryHandler<GetWithdrawOptionGroupByIdQuery, ApplicationResult<WithdrawOptionGroupDto>>
 {
     private readonly ICoinService _coinService;
 
@@ -15,10 +16,10 @@ public sealed class GetWithdrawOptionGroupByIdQueryHandler : IQueryHandler<GetWi
         _coinService = coinService;
     }
 
-    public async Task<ApplicationResult> Handle(GetWithdrawOptionGroupByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<WithdrawOptionGroupDto>> Handle(GetWithdrawOptionGroupByIdQuery request, CancellationToken cancellationToken)
     {
         var res = await _coinService.GetWithdrawOptionGroupById(request.Id);    
 
-        return new ApplicationResult { Data = res.Data, Success = res.Success };
+        return new ApplicationResult<WithdrawOptionGroupDto> { Data = res.Data, Success = res.Success };
     }
 }
