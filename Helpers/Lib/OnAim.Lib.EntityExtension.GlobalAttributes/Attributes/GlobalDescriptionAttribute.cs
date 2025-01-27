@@ -7,6 +7,6 @@ public class GlobalDescriptionAttribute : Attribute
     {
         Description = description;
     }
-    public string Description { get; }
 
+    public string Description { get; }
 }

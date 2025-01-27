@@ -48,31 +48,45 @@ internal abstract class Generator
                 continue;
             }
 
-            var limitedPlayerPrize = RepositoryManager.LimitedPrizeCountsByPlayerRepository()
+            if (prize.RemainingGlobalSetLimit <= 0)
+            {
+                continue;
+            }
+
+            var limitedPlayerPrizeRepository = RepositoryManager.LimitedPrizeCountsByPlayerRepository();
+
+            var limitedPlayerPrize = limitedPlayerPrizeRepository
                 .Query(pp => pp.PrizeId == prize.Id && pp.PlayerId == playerId)
                 .FirstOrDefault();
 
-            if (!(limitedPlayerPrize?.Count >= prize.PerPlayerLimit))
+            if (!(limitedPlayerPrize?.Count >= prize.PerPlayerSetLimit))
             {
                 prize.DecrementRemainingGlobalLimit();
-                var repository = RepositoryManager.LimitedPrizeCountsByPlayerRepository();
-
+                
                 if (limitedPlayerPrize != null)
                 {
                     limitedPlayerPrize.IncreaseCount();
-                    repository.Update(limitedPlayerPrize);
-                    
+                    limitedPlayerPrizeRepository.Update(limitedPlayerPrize);
                 }
                 else
                 {
                     var limitedPrizeCount = new LimitedPrizeCountsByPlayer(playerId, prize.Id);
                     limitedPrizeCount.IncreaseCount();
-                    repository.InsertAsync(limitedPrizeCount);
+                    limitedPlayerPrizeRepository.InsertAsync(limitedPrizeCount);
                 }
 
-                repository.SaveAsync();
+                var totalSetWinCount = limitedPlayerPrizeRepository
+                    .Query(pp => pp.PrizeId == prize.Id && pp.Count >= prize.SetSize)
+                    .Count();
 
-                // save prize RemainingGlobalLimit
+                if ((prize.GlobalSetLimit - totalSetWinCount) > prize.RemainingGlobalSetLimit)
+                {
+                    prize.RemainingGlobalSetLimit = prize.GlobalSetLimit - totalSetWinCount;
+                }
+
+                //TODO: save remaining ...
+                //RepositoryManager.PrizeGroupRepository(Prizes.First().GetType()).Update(PrizeGroup);
+                limitedPlayerPrizeRepository.SaveAsync();
 
                 break;
             }

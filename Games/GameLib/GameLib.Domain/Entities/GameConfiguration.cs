@@ -37,7 +37,7 @@ public class GameConfiguration : BaseEntity<int>
 
     [IgnoreIncludeAll]
     [GlobalDescription("IsActive of the configuration")]
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
 
     [IgnoreIncludeAll]
     [GlobalDescription("Promotion Id of the configuration")]
