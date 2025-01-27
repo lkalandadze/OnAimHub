@@ -6,8 +6,12 @@ namespace AggregationService.Application.Models.AggregationConfigurations;
 
 public class CreateAggregationConfigurationModel
 {
+    //"external" when sent from casion
+    //"Hub" when sent from hub
     public string EventProducer { get; set; }
+    //"Leaderboard" when LB wants to give scores according to (e.g.) bet
     public string AggregationSubscriber { get; set; }
+    //"eventType:bet"
     public List<FilterModel> Filters { get; set; }
     public AggregationType AggregationType { get; set; }
     public EvaluationType EvaluationType { get; set; }

@@ -42,7 +42,7 @@ public class LeaderBoardService : ILeaderBoardService
         _leaderboardResultRepository = leaderboardResultRepository;
     }
 
-    public async Task<ApplicationResult> GetAllLeaderBoard(LeaderBoardFilter? filter)
+    public async Task<ApplicationResult<PaginatedResult<LeaderBoardListDto>>> GetAllLeaderBoard(LeaderBoardFilter? filter)
     {
         var leaderboards = _leaderboardRecordRepository.Query().Include(x => x.LeaderboardRecordPrizes);
 
@@ -93,7 +93,7 @@ public class LeaderBoardService : ILeaderBoardService
            .Skip((pageNumber - 1) * pageSize)
            .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<LeaderBoardListDto>>
         {
             Success = true,
             Data = new PaginatedResult<LeaderBoardListDto>
@@ -106,7 +106,7 @@ public class LeaderBoardService : ILeaderBoardService
         };
     }
 
-    public async Task<ApplicationResult> GetLeaderboardRecordById(int id)
+    public async Task<ApplicationResult<LeaderBoardData>> GetLeaderboardRecordById(int id)
     {
         var leaderboard = await _leaderboardRecordRepository.Query(x => x.Id == id)
             .FirstOrDefaultAsync();
@@ -152,7 +152,7 @@ public class LeaderBoardService : ILeaderBoardService
             }).ToList(),
         };
 
-        return new ApplicationResult { Data = res, Success = true };
+        return new ApplicationResult<LeaderBoardData> { Data = res, Success = true };
     }
 
     public async Task<ApplicationResult> CreateLeaderBoardRecord(CreateLeaderboardRecordCommand createLeaderboardRecordDto)

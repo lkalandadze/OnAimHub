@@ -9,7 +9,7 @@ namespace OnAim.Admin.APP.Services.HubServices.Promotion;
 public interface IPromotionService
 {
     Task<ApplicationResult> DeletePromotion(int id);
-    Task<ApplicationResult> CreatePromotion(CreatePromotionDto create);
+    Task<ApplicationResult<Guid>> CreatePromotion(CreatePromotionDto create);
     Task<ApplicationResult> CreatePromotionView(CreatePromotionView create);
     Task<ApplicationResult> UpdatePromotionStatus(UpdatePromotionStatusDto update);
 

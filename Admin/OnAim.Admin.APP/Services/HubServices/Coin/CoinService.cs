@@ -115,7 +115,7 @@ public class CoinService : BaseService, ICoinService
         }
     }
 
-    public async Task<ApplicationResult> GetAllWithdrawOptions(BaseFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<WithdrawOptionDto>>> GetAllWithdrawOptions(BaseFilter filter)
     {
         var data = _withdrawOptionRepository.Query().Include(x => x.WithdrawOptionEndpoint).Include(x => x.OutCoins);
 
@@ -183,7 +183,7 @@ public class CoinService : BaseService, ICoinService
            .Skip((pageNumber - 1) * pageSize)
            .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<WithdrawOptionDto>>
         {
             Success = true,
             Data = new PaginatedResult<WithdrawOptionDto>
@@ -196,7 +196,7 @@ public class CoinService : BaseService, ICoinService
         };
     }
 
-    public async Task<ApplicationResult> GetWithdrawOptionById(int id)
+    public async Task<ApplicationResult<WithdrawOptionDto>> GetWithdrawOptionById(int id)
     {
         var data = await _withdrawOptionRepository.Query().Include(x => x.WithdrawOptionGroups).Include(x => x.OutCoins).Include(x => x.WithdrawOptionEndpoint).FirstOrDefaultAsync(x => x.Id == id);
 
@@ -232,7 +232,7 @@ public class CoinService : BaseService, ICoinService
             }).ToList() ?? new List<WithdrawOptionGroupDto>(),
         };
 
-        return new ApplicationResult { Data = item, Success = true };
+        return new ApplicationResult<WithdrawOptionDto> { Data = item, Success = true };
     }
 
     #endregion
@@ -307,7 +307,7 @@ public class CoinService : BaseService, ICoinService
         }
     }
 
-    public async Task<ApplicationResult> GetAllWithdrawOptionGroups(BaseFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<WithdrawOptionGroupDto>>> GetAllWithdrawOptionGroups(BaseFilter filter)
     {
         var data = _withdrawOptionGroupRepository.Query().Include(x => x.OutCoins).Include(x => x.WithdrawOptions);
 
@@ -342,7 +342,7 @@ public class CoinService : BaseService, ICoinService
            .Skip((pageNumber - 1) * pageSize)
            .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<WithdrawOptionGroupDto>>
         {
             Success = true,
             Data = new PaginatedResult<WithdrawOptionGroupDto>
@@ -355,7 +355,7 @@ public class CoinService : BaseService, ICoinService
         };
     }
 
-    public async Task<ApplicationResult> GetWithdrawOptionGroupById(int id)
+    public async Task<ApplicationResult<WithdrawOptionGroupDto>> GetWithdrawOptionGroupById(int id)
     {
         var data = await _withdrawOptionGroupRepository.Query().Include(x => x.WithdrawOptions).Include(x => x.OutCoins).FirstOrDefaultAsync(x => x.Id == id);
 
@@ -385,7 +385,7 @@ public class CoinService : BaseService, ICoinService
             }).ToList()
         };
 
-        return new ApplicationResult { Data = item, Success = true };
+        return new ApplicationResult<WithdrawOptionGroupDto> { Data = item, Success = true };
     }
 
     #endregion
@@ -461,7 +461,7 @@ public class CoinService : BaseService, ICoinService
         }
     }
 
-    public async Task<ApplicationResult> GetWithdrawOptionEndpoints(BaseFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<WithdrawOptionEndpointDto>>> GetWithdrawOptionEndpoints(BaseFilter filter)
     {
         var data = _withdrawOptionEndpointRepository.Query();
 
@@ -482,7 +482,7 @@ public class CoinService : BaseService, ICoinService
            .Skip((pageNumber - 1) * pageSize)
            .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<WithdrawOptionEndpointDto>>
         {
             Success = true,
             Data = new PaginatedResult<WithdrawOptionEndpointDto>
@@ -495,7 +495,7 @@ public class CoinService : BaseService, ICoinService
         };
     }
 
-    public async Task<ApplicationResult> GetWithdrawOptionEndpointById(int id)
+    public async Task<ApplicationResult<WithdrawOptionEndpointDto>> GetWithdrawOptionEndpointById(int id)
     {
         var data = await _withdrawOptionEndpointRepository.Query().FirstOrDefaultAsync(x => x.Id == id);
 
@@ -511,7 +511,7 @@ public class CoinService : BaseService, ICoinService
             Name = data.Name,
         };
 
-        return new ApplicationResult { Data = item, Success = true };
+        return new ApplicationResult<WithdrawOptionEndpointDto> { Data = item, Success = true };
     }
 
     #endregion

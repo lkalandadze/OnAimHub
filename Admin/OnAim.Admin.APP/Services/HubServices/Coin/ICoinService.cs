@@ -1,6 +1,8 @@
 ﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Coin;
+using OnAim.Admin.Contracts.Dtos.Withdraw;
+using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.Domain.HubEntities;
 
 namespace OnAim.Admin.APP.Services.HubServices.Coin;
@@ -9,12 +11,12 @@ public interface ICoinService
 {
     Task<IEnumerable<WithdrawOption>> GetWithdrawOptions(Domain.HubEntities.Models.CreateOutCoinModel? outCoinModel);
     Task<IEnumerable<WithdrawOptionGroup>> GetWithdrawOptionGroups(Domain.HubEntities.Models.CreateOutCoinModel? outCoinModel);
-    Task<ApplicationResult> GetAllWithdrawOptions(BaseFilter filter);
-    Task<ApplicationResult> GetWithdrawOptionById(int id);
-    Task<ApplicationResult> GetAllWithdrawOptionGroups(BaseFilter filter);
-    Task<ApplicationResult> GetWithdrawOptionGroupById(int id);
-    Task<ApplicationResult> GetWithdrawOptionEndpoints(BaseFilter filter);
-    Task<ApplicationResult> GetWithdrawOptionEndpointById(int id);
+    Task<ApplicationResult<PaginatedResult<WithdrawOptionDto>>> GetAllWithdrawOptions(BaseFilter filter);
+    Task<ApplicationResult<WithdrawOptionDto>> GetWithdrawOptionById(int id);
+    Task<ApplicationResult<PaginatedResult<WithdrawOptionGroupDto>>> GetAllWithdrawOptionGroups(BaseFilter filter);
+    Task<ApplicationResult<WithdrawOptionGroupDto>> GetWithdrawOptionGroupById(int id);
+    Task<ApplicationResult<PaginatedResult<WithdrawOptionEndpointDto>>> GetWithdrawOptionEndpoints(BaseFilter filter);
+    Task<ApplicationResult<WithdrawOptionEndpointDto>> GetWithdrawOptionEndpointById(int id);
     Task<ApplicationResult> CreateWithdrawOption(CreateWithdrawOptionDto option);
     Task<ApplicationResult> UpdateWithdrawOption(UpdateWithdrawOptionDto option);
     Task<ApplicationResult> CreateWithdrawOptionEndpoint(CreateWithdrawOptionEndpointDto option);

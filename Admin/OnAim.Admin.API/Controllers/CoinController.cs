@@ -20,13 +20,17 @@ using OnAim.Admin.APP.Features.WithdrawOptionGroupFeatures.Commands.Delete;
 using OnAim.Admin.APP.Features.WithdrawOptionGroupFeatures.Commands.Update;
 using OnAim.Admin.APP.Features.WithdrawOptionGroupFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.WithdrawOptionGroupFeatures.Queries.GetById;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Coin;
+using OnAim.Admin.Contracts.Dtos.Withdraw;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.API.Controllers;
 
 public class CoinController : ApiControllerBase
 {
+    #region coin
     [HttpPost(nameof(CreateWithdrawOption))]
     public async Task<IActionResult> CreateWithdrawOption([FromBody] CreateWithdrawOptionDto create)
         => Ok(await Mediator.Send(new CreateWithdrawOptionCommand(create)));
@@ -40,11 +44,11 @@ public class CoinController : ApiControllerBase
         => Ok(await Mediator.Send(new DeleteWithdrawOptionCommand(id)));
 
     [HttpGet(nameof(GetAllWithdrawOptions))]
-    public async Task<IActionResult> GetAllWithdrawOptions([FromQuery] BaseFilter filter)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<WithdrawOptionDto>>>> GetAllWithdrawOptions([FromQuery] BaseFilter filter)
         => Ok(await Mediator.Send(new GetAllWithdrawOptionsQuery(filter)));
 
     [HttpGet(nameof(GetWithdrawOptionById))] 
-    public async Task<IActionResult> GetWithdrawOptionById([FromQuery] int id)
+    public async Task<ActionResult<ApplicationResult<WithdrawOptionDto>>> GetWithdrawOptionById([FromQuery] int id)
         => Ok(await Mediator.Send(new GetWithdrawOptionByIdQuery(id)));
 
     [HttpPost(nameof(CreateWithdrawOptionGroup))]
@@ -86,8 +90,9 @@ public class CoinController : ApiControllerBase
     [HttpGet(nameof(GetWithdrawOptionEndpointById))]
     public async Task<IActionResult> GetWithdrawOptionEndpointById([FromQuery] int id)
         => Ok(await Mediator.Send(new GetWithdrawOptionEndpointByIdQuery(id)));
+    #endregion
 
-    //Template
+    #region coin template
 
     [HttpPost(nameof(CreateCoinTemplate))]
     public async Task<IActionResult> CreateCoinTemplate([FromBody] CreateCoinTemplateCommand coinTemplate)
@@ -108,4 +113,5 @@ public class CoinController : ApiControllerBase
     [HttpGet(nameof(GetCoinTemplateById))]
     public async Task<IActionResult> GetCoinTemplateById([FromQuery] string id)
         => Ok(await Mediator.Send(new GetCoinTemplateByIdQuery(id)));
+    #endregion
 }

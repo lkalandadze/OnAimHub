@@ -1,5 +1,5 @@
 ﻿using AggregationService.Application.Models.AggregationConfigurations;
-using AggregationService.Domain.Entities;
+using AggregationService.Application.Models.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,7 +12,6 @@ using OnAim.Admin.APP.Services.Hub.ClientServices;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.Game;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.Dtos.Player;
 using OnAim.Admin.Contracts.Dtos.Promotion;
@@ -418,7 +417,6 @@ public class PromotionService : BaseService, IPromotionService
             Segments = promotion.Segments.Select(s => s.Id).ToList(),
         };
 
-
         return new ApplicationResult { Success = true, Data = result };
     }
 
@@ -433,10 +431,10 @@ public class PromotionService : BaseService, IPromotionService
         };
     }
 
-    public async Task<ApplicationResult> CreatePromotion(CreatePromotionDto request)
+    public async Task<ApplicationResult<Guid>> CreatePromotion(CreatePromotionDto request)
     {
         var correlationId = Guid.NewGuid();
-        var aggreg = new CreateAggregationConfigurationModel();
+        var aggreg = new List<CreateAggregationConfigurationModel>();
         try
         {
             request.Promotion.CorrelationId = correlationId;
@@ -446,8 +444,6 @@ public class PromotionService : BaseService, IPromotionService
             {
                 var res = await CreatePromotionAsync(request.Promotion);
                 promotionId = res.PromotionId;
-
-                aggreg.PromotionId = promotionId.ToString();
 
                 var mappedCoins = request.Promotion.Coins.Select(coin => CreateCoinModel.ConvertToEntity(coin, promotionId))
                                            .ToList();
@@ -460,18 +456,29 @@ public class PromotionService : BaseService, IPromotionService
 
                     foreach (var config in inCoin.AggregationConfiguration)
                     {
-                        aggreg.AggregationType = config.AggregationType;
-                        aggreg.SelectionField = config.SelectionField;
-                        aggreg.Filters = config.Filters.Select(x => new AggregationService.Application.Models.Filters.FilterModel
+                        var aggregationModel = new CreateAggregationConfigurationModel
                         {
-                            Operator = x.Operator,
-                            Value = x.Value,
-                            Property = x.Property
-                        }).ToList();
-                        aggreg.EvaluationType = config.EvaluationType;
-                        aggreg.PointEvaluationRules = new List<PointEvaluationRule>();
-                        aggreg.EventProducer = "Hub";
-                        aggreg.AggregationSubscriber = "Leaderboard";
+                            AggregationType = config.AggregationType,
+                            SelectionField = config.SelectionField,
+                            Filters = config.Filters.Select(x => new FilterModel
+                            {
+                                Property = x.Property,
+                                Operator = x.Operator,
+                                Value = x.Value
+                            }).ToList(),
+                            EvaluationType = config.EvaluationType,
+                            PointEvaluationRules = config.PointEvaluationRules.Select(x => new AggregationService.Application.Models.PointEvaluationRules.PointEvaluationRuleModel
+                            {
+                                Point = x.Point,
+                                Step = x.Step
+                            }).ToList(),
+                            EventProducer = config.EventProducer,
+                            AggregationSubscriber = "Hub",
+                            PromotionId = promotionId.ToString(),
+                            Key = ""
+                        };
+
+                        aggreg.Add(aggregationModel);
                     }
                 }
 
@@ -482,7 +489,7 @@ public class PromotionService : BaseService, IPromotionService
                 _logger.LogError(ex, "Error creating promotion.");
                 await CompensateAsync(correlationId, null);
 
-                return await Fail(new Error
+                return await Fail<Guid>(new Error
                 {
                     Message = $"{ex.Message}",
                     Code = StatusCodes.Status500InternalServerError,
@@ -521,11 +528,41 @@ public class PromotionService : BaseService, IPromotionService
                                     TemplateId = leaderboard.TemplateId,
                                     Title = leaderboard.Title,
                                     CreatedBy = _securityContextAccessor.UserId,
+                                    AggregationConfigurations = null
                                 };
 
                                 var leaderboardResponse = await CreateLeaderboardRecordAsync(command);
                                 leaderboardId = leaderboardResponse;
-                                aggreg.Key = leaderboardId.ToString();
+
+                                command.AggregationConfigurations = leaderboard.AggregationConfigurations;
+
+                                foreach (var item in command.AggregationConfigurations)
+                                {
+                                    var aggregation = new CreateAggregationConfigurationModel
+                                    {
+                                        AggregationType = item.AggregationType,
+                                        SelectionField = item.SelectionField,
+                                        Filters = item.Filters.Select(x => new FilterModel
+                                        {
+                                            Property = x.Property,
+                                            Operator = x.Operator,
+                                            Value = x.Value
+                                        }).ToList(),
+                                        EvaluationType = item.EvaluationType,
+                                        PointEvaluationRules = item.PointEvaluationRules.Select(x => new AggregationService.Application.Models.PointEvaluationRules.PointEvaluationRuleModel
+                                        {
+                                            Point = x.Point,
+                                            Step = x.Step
+                                        }).ToList(),
+                                        EventProducer = item.EventProducer,
+                                        Expiration = item.Expiration,
+                                        PromotionId = promotionId.ToString(),
+                                        Key = leaderboardId.ToString(),
+                                        AggregationSubscriber = "Leaderboard"
+                                    };
+
+                                    aggreg.Add(aggregation);
+                                }
 
                                 try
                                 {
@@ -537,12 +574,13 @@ public class PromotionService : BaseService, IPromotionService
 
                                     await CompensateAsync(correlationId, null);
 
-                                    return await Fail(new Error
+                                    return await Fail<Guid>(new Error
                                     {
                                         Message = $"{ex.Message}",
                                         Code = StatusCodes.Status500InternalServerError,
                                     });
                                 }
+
                                 _logger.LogInformation("LeaderboardRecord created successfully: {LeaderboardRecord}", leaderboardResponse);
                             }
                             catch (Exception ex)
@@ -550,7 +588,7 @@ public class PromotionService : BaseService, IPromotionService
                                 _logger.LogError(ex, "Error creating leaderboard record.");
                                 await CompensateAsync(correlationId, null);
 
-                                return await Fail(new Error
+                                return await Fail<Guid>(new Error
                                 {
                                     Message = $"{ex.Message}",
                                     Code = StatusCodes.Status500InternalServerError,
@@ -558,7 +596,7 @@ public class PromotionService : BaseService, IPromotionService
                             }
                         }
 
-                        _logger.LogInformation("Leaderboard created successfully: {Leaderboard}");
+                        _logger.LogInformation($"Leaderboard created successfully");
                     }
                 }
                 catch (Exception ex)
@@ -566,7 +604,7 @@ public class PromotionService : BaseService, IPromotionService
                     _logger.LogError(ex, "Error processing leaderboards.");
                     await CompensateAsync(correlationId, null);
 
-                    return await Fail(new Error
+                    return await Fail<Guid>(new Error
                     {
                         Message = $"{ex.Message}",
                         Code = StatusCodes.Status500InternalServerError,
@@ -600,7 +638,7 @@ public class PromotionService : BaseService, IPromotionService
                                 _logger.LogError(ex, "Error creating game configuration.");
                                 await CompensateAsync(correlationId, config.GameName);
 
-                                return await Fail(new Error
+                                return await Fail<Guid>(new Error
                                 {
                                     Message = $"{ex.Message}",
                                     Code = StatusCodes.Status500InternalServerError,
@@ -616,7 +654,7 @@ public class PromotionService : BaseService, IPromotionService
                     _logger.LogError(ex, "Error processing game configurations.");
                     await CompensateAsync(correlationId, null);
 
-                    return await Fail(new Error
+                    return await Fail<Guid>(new Error
                     {
                         Message = $"{ex.Message}",
                         Code = StatusCodes.Status500InternalServerError,
@@ -625,14 +663,14 @@ public class PromotionService : BaseService, IPromotionService
             }
 
             _logger.LogInformation("Saga completed successfully.");
-            return new ApplicationResult { Success = true, Data = correlationId };
+            return new ApplicationResult<Guid> { Success = true, Data = correlationId };
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during Saga execution.");
             await CompensateAsync(correlationId, null);
 
-            return await Fail(new Error
+            return await Fail<Guid>(new Error
             {
                 Message = $"{ex.Message}",
                 Code = StatusCodes.Status500InternalServerError,
@@ -743,11 +781,11 @@ public class PromotionService : BaseService, IPromotionService
         }
     }
 
-    private async Task<ApplicationResult> CreateAggregationConfiguration(CreateAggregationConfigurationModel configuration)
+    private async Task<ApplicationResult> CreateAggregationConfiguration(List<CreateAggregationConfigurationModel> configuration)
     {
         try
         {
-            await _aggregationClient.PostAsJson($"{_aggregationClientOptions.Endpoint}", configuration);
+            await _aggregationClient.PostAsJson($"{_aggregationClientOptions.Endpoint}CreateConfigurations", configuration);
             return new ApplicationResult { Success = true };
         }
         catch (Exception ex)

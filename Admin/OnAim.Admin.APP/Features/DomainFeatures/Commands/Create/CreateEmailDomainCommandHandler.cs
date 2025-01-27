@@ -5,7 +5,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.DomainFeatures.Commands.Create;
 
-public class CreateEmailDomainCommandHandler : ICommandHandler<CreateEmailDomainCommand, ApplicationResult>
+public class CreateEmailDomainCommandHandler : ICommandHandler<CreateEmailDomainCommand, ApplicationResult<bool>>
 {
     private readonly IDomainService _domainService;
     private readonly IValidator<CreateEmailDomainCommand> _validator;
@@ -16,7 +16,7 @@ public class CreateEmailDomainCommandHandler : ICommandHandler<CreateEmailDomain
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(CreateEmailDomainCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(CreateEmailDomainCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
@@ -25,6 +25,6 @@ public class CreateEmailDomainCommandHandler : ICommandHandler<CreateEmailDomain
 
         var result = await _domainService.CreateOrUpdateDomain(request.Domains, request.Domain, request.IsActive);
 
-        return new ApplicationResult { Success = result.Success };
+        return new ApplicationResult<bool> { Success = result.Success };
     }
 }
