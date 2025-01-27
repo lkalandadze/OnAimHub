@@ -1,5 +1,6 @@
 ﻿using AggregationService.Application.Models.AggregationConfigurations;
 using AggregationService.Application.Models.Filters;
+using AggregationService.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -566,7 +567,7 @@ public class PromotionService : BaseService, IPromotionService
 
                                 try
                                 {
-                                    await CreateAggregationConfiguration(aggreg);
+                                    //await CreateAggregationConfiguration(aggreg);
                                 }
                                 catch (Exception ex)
                                 {
@@ -736,7 +737,7 @@ public class PromotionService : BaseService, IPromotionService
         }
     }
 
-    private async Task<PromotionResponse> CreatePromotionAsync(CreatePromotionCommandDto request)
+    public async Task<PromotionResponse> CreatePromotionAsync(CreatePromotionCommandDto request)
     {
         try
         {
@@ -750,7 +751,7 @@ public class PromotionService : BaseService, IPromotionService
         }
     }
 
-    private async Task<int> CreateLeaderboardRecordAsync(CreateLeaderboardRecord leaderboard)
+    public async Task<int> CreateLeaderboardRecordAsync(CreateLeaderboardRecord leaderboard)
     {
         try
         {
@@ -764,7 +765,7 @@ public class PromotionService : BaseService, IPromotionService
         }
     }
 
-    private async Task<ApplicationResult> CreateGameConfiguration(string name, object configurationJson)
+    public async Task<ApplicationResult> CreateGameConfiguration(string name, object configurationJson)
     {
         try
         {
@@ -781,7 +782,7 @@ public class PromotionService : BaseService, IPromotionService
         }
     }
 
-    private async Task<ApplicationResult> CreateAggregationConfiguration(List<CreateAggregationConfigurationModel> configuration)
+    public async Task<ApplicationResult> CreateAggregationConfiguration(List<AggregationConfiguration> configuration)
     {
         try
         {
@@ -798,7 +799,7 @@ public class PromotionService : BaseService, IPromotionService
         }
     }
 
-    private async Task CompensateAsync(Guid request, string? gameName)
+    public async Task CompensateAsync(Guid request, string? gameName)
     {
         try
         {
