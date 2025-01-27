@@ -1,0 +1,43 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fileservice
+  namespace: onaimhub
+  labels:
+    app: fileservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fileservice
+  template:
+    metadata:
+      labels:
+        app: fileservice
+    spec:
+      containers:
+        - name: fileservice
+          image: gvgroup/onaim-helpers_filemanagement_fileservice:latest  # Replace with your DockerHub image path
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          volumeMounts:
+            - mountPath: /app/appsettings.json
+              name: fileservice-cm0
+              subPath: appsettings.json
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: dockerhub-secret
+      volumes:
+        - configMap:
+            items:
+              - key: appsettings.json
+                path: appsettings.json
+            name: fileservice-cm0
+          name: fileservice-cm0

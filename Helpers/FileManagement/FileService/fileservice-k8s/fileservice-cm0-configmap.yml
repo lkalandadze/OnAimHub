@@ -1,0 +1,27 @@
+﻿apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fileservice-config
+  namespace: onaimhub
+  annotations:
+    use-subpath: "true"
+  labels:
+    io.kompose.service: fileservice
+data:
+  appsettings.json: |
+    {
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft.AspNetCore": "Warning"
+        }
+      },
+      "AllowedHosts": "*",
+      "FileService": {
+        "Host": "file://192.168.88.180/onAim/Avto"
+      },
+      "ImageStorage": {
+        "Directory": "images",
+        "AllowedExtensions": [ ".jpg", ".jpeg", ".png", ".gif", ".jfif" ]
+      }
+    }

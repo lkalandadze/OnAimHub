@@ -1,0 +1,21 @@
+﻿apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fileservice-ingress
+  namespace: onaimhub
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false" # Set to "true" if SSL is configured
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: onaim.fileservice.dev.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fileservice
+                port:
+                  number: 5007
