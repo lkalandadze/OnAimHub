@@ -13,6 +13,8 @@ public class AggregationConfiguration
         
     }
     public AggregationConfiguration(
+        string name,
+        string description,
         string eventProducer,
         string aggregationSubscriber,
         List<Filter> filters,
@@ -25,6 +27,8 @@ public class AggregationConfiguration
         string key)
     {
         Id = Guid.NewGuid().ToString();
+        Name = name;
+        Description = description;
         EventProducer = eventProducer;
         AggregationSubscriber = aggregationSubscriber;
         Filters = filters;
@@ -39,6 +43,8 @@ public class AggregationConfiguration
     [BsonId]
     [BsonRepresentation(BsonType.String)]
     public string Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
     public string EventProducer { get; set; } // Example: Hub
     public string AggregationSubscriber { get; set; } // Example: Leaderboard
     public List<Filter> Filters { get; set; } = new();
@@ -51,6 +57,8 @@ public class AggregationConfiguration
     public string Key { get; set; } // Example: LeaderboardId
 
     public void Update(
+        string name,
+        string description,
         string eventProducer,
         string aggregationSubscriber,
         List<Filter> filters,
@@ -62,6 +70,8 @@ public class AggregationConfiguration
         string promotionId,
         string key)
     {
+        Name = name;
+        Description = description;
         EventProducer = eventProducer;
         AggregationSubscriber = aggregationSubscriber;
         Filters = filters;

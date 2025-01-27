@@ -6,6 +6,8 @@ namespace AggregationService.Application.Models.AggregationConfigurations;
 
 public class CreateAggregationConfigurationModel
 {
+    public string Name { get; set; }
+    public string Description { get; set; }
     public string EventProducer { get; set; }
     public string AggregationSubscriber { get; set; }
     public List<FilterModel> Filters { get; set; }
