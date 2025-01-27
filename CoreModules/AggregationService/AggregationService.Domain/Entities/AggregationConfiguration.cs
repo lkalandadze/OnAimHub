@@ -1,4 +1,5 @@
 ﻿using AggregationService.Domain.Enum;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Shared.Domain.Entities;
 
@@ -36,6 +37,7 @@ public class AggregationConfiguration
         Key = key;
     }
     [BsonId]
+    [BsonRepresentation(BsonType.String)]
     public string Id { get; set; }
     public string EventProducer { get; set; } // Example: Hub
     public string AggregationSubscriber { get; set; } // Example: Leaderboard

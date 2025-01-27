@@ -15,6 +15,7 @@ public class PointEvaluationRule
     }
 
     [BsonId]
+    [BsonRepresentation(BsonType.String)]
     public string Id { get; set; }
     public int Step { get; set; }
     public int Point { get; set; }

@@ -16,6 +16,7 @@ public class Filter
     }
 
     [BsonId]
+    [BsonRepresentation(BsonType.String)]
     //[NotMapped]
     public string Id { get; set; }
     public string Property { get; set; }
