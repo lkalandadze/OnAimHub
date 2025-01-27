@@ -10,7 +10,9 @@ public class PenaltyConfigurationChecker : Checkmate<PenaltyConfiguration>
     {
         Check(x => x.KicksCount)
            .GreaterThan(2)
-           .WithMessage("Kicks count should be at least 3.");
+           .WithMessage("Kicks count should be at least 3.")
+           .LessThan(16)
+           .WithMessage("Kicks count should be less than 15.");
 
         Check(x => x.PenaltyPrizeGroups)
            .SetCondition(x => x.Count() > 0)
