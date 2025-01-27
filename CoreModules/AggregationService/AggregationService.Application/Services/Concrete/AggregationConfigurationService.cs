@@ -41,7 +41,7 @@ public class AggregationConfigurationService : IAggregationConfigurationService
             model.Filters.Select(f => new Filter(f.Property, f.Operator, f.Value)).ToList(),
             model.AggregationType,
             model.EvaluationType,
-            model.PointEvaluationRules,
+            model.PointEvaluationRules.Select(p => new PointEvaluationRule(p.Step, p.Point)).ToList(),
             model.SelectionField,
             model.Expiration,
             model.PromotionId,

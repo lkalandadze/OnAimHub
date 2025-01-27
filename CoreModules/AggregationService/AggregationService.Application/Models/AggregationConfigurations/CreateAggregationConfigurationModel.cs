@@ -1,7 +1,6 @@
 ﻿using AggregationService.Application.Models.Filters;
-using AggregationService.Domain.Entities;
+using AggregationService.Application.Models.PointEvaluationRules;
 using AggregationService.Domain.Enum;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace AggregationService.Application.Models.AggregationConfigurations;
 
@@ -12,7 +11,7 @@ public class CreateAggregationConfigurationModel
     public List<FilterModel> Filters { get; set; }
     public AggregationType AggregationType { get; set; }
     public EvaluationType EvaluationType { get; set; }
-    public IEnumerable<PointEvaluationRule> PointEvaluationRules { get; set; } = new List<PointEvaluationRule>();
+    public IEnumerable<PointEvaluationRuleModel> PointEvaluationRules { get; set; }
     public string SelectionField { get; set; }
     public DateTime Expiration { get; set; }
     public string PromotionId { get; set; }
