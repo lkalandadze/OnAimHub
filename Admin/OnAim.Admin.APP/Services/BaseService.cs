@@ -1,6 +1,4 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
-
-namespace OnAim.Admin.APP.Services;
+﻿namespace OnAim.Admin.APP.Services;
 
 public abstract class BaseService
 {

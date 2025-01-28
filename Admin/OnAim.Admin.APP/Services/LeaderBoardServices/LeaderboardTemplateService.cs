@@ -1,12 +1,4 @@
 ﻿using OnAim.Admin.APP.Services.LeaderBoardServices;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.LeaderBoard;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Domain.Entities.Templates;
-using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
-using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.Contracts.Enums;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 

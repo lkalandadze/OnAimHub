@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace OnAim.Admin.APP.Features.EndpointFeatures.Commands.Update;
+﻿namespace OnAim.Admin.APP.Features.EndpointFeatures.Commands.Update;
 
 public class UpdateEndpointCommandValidator : AbstractValidator<UpdateEndpointCommand>
 {

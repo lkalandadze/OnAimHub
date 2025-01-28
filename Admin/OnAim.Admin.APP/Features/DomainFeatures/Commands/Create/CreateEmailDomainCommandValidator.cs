@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace OnAim.Admin.APP.Features.DomainFeatures.Commands.Create;
+﻿namespace OnAim.Admin.APP.Features.DomainFeatures.Commands.Create;
 
 public class CreateEmailDomainCommandValidator : AbstractValidator<CreateEmailDomainCommand>
 {

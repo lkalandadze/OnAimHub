@@ -1,8 +1,6 @@
 ﻿using OnAim.Admin.APP.Feature.UserFeature.Commands.ProfileUpdate;
 using OnAim.Admin.APP.Feature.UserFeature.Queries.GetUserLogs;
 using OnAim.Admin.Contracts.Dtos.User;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.Contracts.Dtos.AuditLog;
 
 namespace OnAim.Admin.APP.Services.AdminServices.User;

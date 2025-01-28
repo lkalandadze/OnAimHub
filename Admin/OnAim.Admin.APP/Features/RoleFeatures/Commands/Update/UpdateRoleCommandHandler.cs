@@ -1,6 +1,5 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.APP.CQRS.Command;
-using FluentValidation;
+﻿using OnAim.Admin.APP.CQRS.Command;
+using ValidationException = FluentValidation.ValidationException;
 using OnAim.Admin.APP.Services.AdminServices.Role;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Commands.Update;

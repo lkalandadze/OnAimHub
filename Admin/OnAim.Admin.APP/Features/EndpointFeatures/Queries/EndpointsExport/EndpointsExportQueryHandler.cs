@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Contracts.Helpers;
+﻿using OnAim.Admin.Contracts.Helpers;
 using OnAim.Admin.Contracts.Dtos.Endpoint;
-using Microsoft.AspNetCore.Http;
 using System.Dynamic;
 using System.Net.Mime;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;

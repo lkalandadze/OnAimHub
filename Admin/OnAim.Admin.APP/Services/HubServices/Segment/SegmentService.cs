@@ -1,16 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPlayers;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
+﻿using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPlayers;
 using OnAim.Admin.Contracts.Dtos.Segment;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.Domain.HubEntities.PlayerEntities;
 using OnAim.Admin.APP.Services.HubServices.Segment;
-using OnAim.Admin.Infrasturcture.Interfaces;
-using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.Hub.ClientServices;
 using System.Net.Http.Headers;
 
 namespace OnAim.Admin.APP.Services.Hub.Segment;

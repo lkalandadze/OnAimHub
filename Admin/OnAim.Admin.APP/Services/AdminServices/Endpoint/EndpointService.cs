@@ -1,15 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
+﻿using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Contracts.Dtos.Endpoint;
 using OnAim.Admin.Contracts.Dtos.EndpointGroup;
 using OnAim.Admin.Contracts.Dtos.User;
 using OnAim.Admin.Contracts.Helpers;
 using OnAim.Admin.Contracts.Models;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.Contracts.Enums;
-using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.AdminServices.Endpoint;
 
 namespace OnAim.Admin.APP.Services.Admin.Endpoint;

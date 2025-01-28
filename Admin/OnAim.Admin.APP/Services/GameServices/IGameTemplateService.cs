@@ -1,8 +1,4 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.Game;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.Domain.Entities.Templates;
+﻿using OnAim.Admin.Contracts.Dtos.Game;
 
 namespace OnAim.Admin.APP.Services.GameServices;
 

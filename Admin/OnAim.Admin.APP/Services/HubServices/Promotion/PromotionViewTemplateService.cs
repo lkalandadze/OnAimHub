@@ -1,14 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.Promotion;
-using OnAim.Admin.Contracts.Enums;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Domain.Entities.Templates;
-using OnAim.Admin.Infrasturcture.Repositories.Abstract;
-
-namespace OnAim.Admin.APP.Services.HubServices.Promotion;
+﻿namespace OnAim.Admin.APP.Services.HubServices.Promotion;
 
 public class PromotionViewTemplateService : IPromotionViewTemplateService
 {

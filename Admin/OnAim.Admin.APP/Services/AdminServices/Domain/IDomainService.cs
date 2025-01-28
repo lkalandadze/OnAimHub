@@ -1,7 +1,5 @@
 ﻿using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Contracts.Dtos.EmailDomain;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.APP.Services.AdminServices.Domain;
 

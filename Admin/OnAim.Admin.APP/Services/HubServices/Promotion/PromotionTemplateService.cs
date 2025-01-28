@@ -1,23 +1,8 @@
-﻿using OnAim.Admin.APP.Services.GameServices;
-using OnAim.Admin.APP.Services.HubServices.Coin;
+﻿using OnAim.Admin.APP.Services.HubServices.Coin;
 using OnAim.Admin.APP.Services.LeaderBoardServices;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Coin;
 using OnAim.Admin.Contracts.Dtos.Game;
-using OnAim.Admin.Contracts.Dtos.LeaderBoard;
-using OnAim.Admin.Contracts.Dtos.Promotion;
 using OnAim.Admin.Contracts.Dtos.Withdraw;
-using OnAim.Admin.Contracts.Enums;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Domain.Entities.Templates;
-using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Domain.HubEntities.Coin;
-using OnAim.Admin.Domain.HubEntities.Models;
-using OnAim.Admin.Domain.LeaderBoradEntities;
-using OnAim.Admin.Infrasturcture.Interfaces;
-using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
 
 namespace OnAim.Admin.APP.Services.HubServices.Promotion;
 

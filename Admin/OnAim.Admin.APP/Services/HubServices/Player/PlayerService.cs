@@ -1,19 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Domain.LeaderBoradEntities;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Player;
-using OnAim.Admin.Contracts.Dtos.Refer;
+﻿using OnAim.Admin.Contracts.Dtos.Refer;
 using OnAim.Admin.Contracts.Dtos.Segment;
 using OnAim.Admin.Contracts.Dtos.Transaction;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.HubEntities.PlayerEntities;
 using OnAim.Admin.APP.Services.HubServices.Player;
-using OnAim.Admin.Infrasturcture.Interfaces;
-using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.Hub.ClientServices;
-using OnAim.Admin.Contracts.Dtos.Base;
 
 namespace OnAim.Admin.APP.Services.Hub.Player;
 

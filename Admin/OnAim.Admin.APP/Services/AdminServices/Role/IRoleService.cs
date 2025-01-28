@@ -1,6 +1,4 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Role;
-using OnAim.Admin.Contracts.Paging;
+﻿using OnAim.Admin.Contracts.Dtos.Role;
 
 namespace OnAim.Admin.APP.Services.AdminServices.Role;
 

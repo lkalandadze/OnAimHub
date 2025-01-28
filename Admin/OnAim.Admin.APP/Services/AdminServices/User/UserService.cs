@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Feature.UserFeature.Commands.Create;
+﻿using OnAim.Admin.APP.Feature.UserFeature.Commands.Create;
 using OnAim.Admin.APP.Feature.UserFeature.Commands.ProfileUpdate;
 using OnAim.Admin.APP.Feature.UserFeature.Commands.Registration;
 using OnAim.Admin.APP.Feature.UserFeature.Queries.GetUserLogs;
@@ -11,21 +10,13 @@ using OnAim.Admin.Contracts.Dtos.Endpoint;
 using OnAim.Admin.Contracts.Dtos.EndpointGroup;
 using OnAim.Admin.Contracts.Dtos.Role;
 using OnAim.Admin.Contracts.Dtos.User;
-using OnAim.Admin.Contracts.Enums;
 using OnAim.Admin.Contracts.Helpers;
 using OnAim.Admin.Contracts.Helpers.Password;
 using OnAim.Admin.Contracts.Models;
-using OnAim.Admin.Contracts.Paging;
-using System.Linq.Expressions;
-using System.Security.Claims;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.APP.Services.Admin.AuthServices;
-using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.AdminServices.Domain;
 using OnAim.Admin.APP.Services.AdminServices.EmailServices;
 using OnAim.Admin.APP.Services.AdminServices.User;
-using OnAim.Admin.Infrasturcture.Interfaces;
 
 namespace OnAim.Admin.APP.Services.Admin.User;
 

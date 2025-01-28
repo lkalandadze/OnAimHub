@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+﻿using ValidationException = FluentValidation.ValidationException;
 using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Services.AdminServices.User;
 using OnAim.Admin.Contracts.Dtos.User;

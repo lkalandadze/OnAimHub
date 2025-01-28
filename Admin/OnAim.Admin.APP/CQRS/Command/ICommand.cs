@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace OnAim.Admin.APP.CQRS.Command;
+﻿namespace OnAim.Admin.APP.CQRS.Command;
 
 public interface ICommand : ICommand<Unit>
 {

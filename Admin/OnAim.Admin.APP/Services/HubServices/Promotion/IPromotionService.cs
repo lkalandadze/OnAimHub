@@ -1,12 +1,4 @@
-﻿using AggregationService.Domain.Entities;
-using OnAim.Admin.APP.Services.Hub.Promotion;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.LeaderBoard;
-using OnAim.Admin.Contracts.Dtos.Player;
-using OnAim.Admin.Contracts.Dtos.Promotion;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.Domain.HubEntities;
+﻿using OnAim.Admin.APP.Services.Hub.Promotion;
 
 namespace OnAim.Admin.APP.Services.HubServices.Promotion;
 

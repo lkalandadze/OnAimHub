@@ -1,8 +1,4 @@
-﻿using OnAim.Admin.Contracts.Dtos.LeaderBoard;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Paging;
-
-namespace OnAim.Admin.APP.Services.LeaderBoardServices;
+﻿namespace OnAim.Admin.APP.Services.LeaderBoardServices;
 
 public interface ILeaderBoardService
 {

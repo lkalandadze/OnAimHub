@@ -1,32 +1,4 @@
-﻿using AggregationService.Application.Models.AggregationConfigurations;
-using AggregationService.Application.Models.Filters;
-using AggregationService.Domain.Entities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
-using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
-using OnAim.Admin.APP.Services.FileServices;
-using OnAim.Admin.APP.Services.GameServices;
-using OnAim.Admin.APP.Services.Hub.ClientServices;
-using OnAim.Admin.APP.Services.HubServices.Promotion;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.LeaderBoard;
-using OnAim.Admin.Contracts.Dtos.Player;
-using OnAim.Admin.Contracts.Dtos.Promotion;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Domain.HubEntities.Coin;
-using OnAim.Admin.Domain.HubEntities.Models;
-using OnAim.Admin.Domain.LeaderBoradEntities;
-using OnAim.Admin.Infrasturcture.Interfaces;
-using OnAim.Admin.Infrasturcture.Repositories.Abstract;
-using System.Text.Json;
-
-namespace OnAim.Admin.APP.Services.Hub.Promotion;
+﻿namespace OnAim.Admin.APP.Services.Hub.Promotion;
 
 public class PromotionService : BaseService, IPromotionService
 {

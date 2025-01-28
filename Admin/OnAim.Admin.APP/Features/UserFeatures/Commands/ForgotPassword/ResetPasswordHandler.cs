@@ -1,7 +1,6 @@
-﻿using FluentValidation;
-using OnAim.Admin.APP.CQRS.Command;
+﻿using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Services.AdminServices.User;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.ForgotPassword;
 

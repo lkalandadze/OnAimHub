@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using System.Net.Http.Headers;
-using System.Text;
+﻿using System.Net.Http.Headers;
 
 namespace OnAim.Admin.APP.Services.FileServices;
 

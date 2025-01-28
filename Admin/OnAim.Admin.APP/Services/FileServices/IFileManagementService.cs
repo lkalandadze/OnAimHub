@@ -1,6 +1,4 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
-
-namespace OnAim.Admin.APP.Services.FileServices;
+﻿namespace OnAim.Admin.APP.Services.FileServices;
 
 public interface IFileManagementService
 {

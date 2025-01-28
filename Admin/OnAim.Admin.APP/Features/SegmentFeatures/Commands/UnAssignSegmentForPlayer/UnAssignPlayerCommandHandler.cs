@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+﻿using ValidationException = FluentValidation.ValidationException;
 using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Services.HubServices.Segment;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;

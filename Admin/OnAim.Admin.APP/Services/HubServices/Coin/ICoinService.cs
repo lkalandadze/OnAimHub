@@ -1,9 +1,5 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.Coin;
+﻿using OnAim.Admin.Contracts.Dtos.Coin;
 using OnAim.Admin.Contracts.Dtos.Withdraw;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.Domain.HubEntities;
 
 namespace OnAim.Admin.APP.Services.HubServices.Coin;
 

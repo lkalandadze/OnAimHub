@@ -1,22 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Contracts.Dtos.LeaderBoard;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.Domain.LeaderBoradEntities;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using MassTransit.Initializers;
-using OnAim.Admin.APP.Services.LeaderBoardServices;
-using OnAim.Admin.Infrasturcture.Interfaces;
-using OnAim.Admin.Contracts.Dtos.Promotion;
-using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.Hub.ClientServices;
+﻿using OnAim.Admin.APP.Services.LeaderBoardServices;
 
 namespace OnAim.Admin.APP.Services.LeaderBoard;
 
 public class LeaderBoardService : ILeaderBoardService
 {
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecord> _leaderboardRecordRepository;
-    private readonly ILeaderBoardReadOnlyRepository<Prize> _prizeRepository;
+    private readonly ILeaderBoardReadOnlyRepository<Domain.LeaderBoradEntities.Prize> _prizeRepository;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecordPrize> _leaderboardRecordPrize;
     private readonly ILeaderBoardApiClient _leaderBoardApiClient;
     private readonly LeaderBoardApiClientOptions _leaderBoardApiClientOptions;
@@ -26,7 +15,7 @@ public class LeaderBoardService : ILeaderBoardService
 
     public LeaderBoardService(
         ILeaderBoardReadOnlyRepository<LeaderboardRecord> leaderboardRecordRepository,
-        ILeaderBoardReadOnlyRepository<Prize> prizeRepository,
+        ILeaderBoardReadOnlyRepository<Domain.LeaderBoradEntities.Prize> prizeRepository,
         ILeaderBoardReadOnlyRepository<LeaderboardRecordPrize> leaderboardRecordPrize,
         IOptions<LeaderBoardApiClientOptions> leaderBoardApiClientOptions,
         ILeaderBoardApiClient leaderBoardApiClient,

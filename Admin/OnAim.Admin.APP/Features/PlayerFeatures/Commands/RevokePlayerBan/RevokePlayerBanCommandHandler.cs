@@ -1,7 +1,6 @@
-﻿using FluentValidation;
-using OnAim.Admin.APP.CQRS.Command;
+﻿using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Services.HubServices.Player;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Commands.RevokePlayerBan;
 

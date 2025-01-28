@@ -1,6 +1,4 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Endpoint;
-using OnAim.Admin.Contracts.Paging;
+﻿using OnAim.Admin.Contracts.Dtos.Endpoint;
 
 namespace OnAim.Admin.APP.Services.AdminServices.Endpoint;
 

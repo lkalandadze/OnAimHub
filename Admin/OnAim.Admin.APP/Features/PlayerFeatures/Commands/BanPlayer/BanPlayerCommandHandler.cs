@@ -1,9 +1,7 @@
-﻿using FluentValidation;
-using OnAim.Admin.APP.CQRS.Command;
+﻿using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Features.PlayerFeatures.Commands.BanPlayer;
 using OnAim.Admin.APP.Services.HubServices.Player;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-
+using ValidationException = FluentValidation.ValidationException;
 public class BanPlayerCommandHandler : ICommandHandler<BanPlayerCommand, ApplicationResult<bool>>
 {
     private readonly IPlayerService _playerService;

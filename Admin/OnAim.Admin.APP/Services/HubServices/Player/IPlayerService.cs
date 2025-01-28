@@ -1,11 +1,5 @@
-﻿using OnAim.Admin.APP.Services.Hub.Player;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.Player;
-using OnAim.Admin.Contracts.Dtos.Transaction;
-using OnAim.Admin.Contracts.Paging;
+﻿using OnAim.Admin.Contracts.Dtos.Transaction;
 using OnAim.Admin.Domain.HubEntities.PlayerEntities;
-using OnAim.Admin.Domain.LeaderBoradEntities;
 
 namespace OnAim.Admin.APP.Services.HubServices.Player;
 

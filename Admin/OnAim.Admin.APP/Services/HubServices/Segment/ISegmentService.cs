@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPlayers;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
+﻿using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPlayers;
 using OnAim.Admin.Contracts.Dtos.Segment;
-using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.APP.Services.HubServices.Segment;
 
