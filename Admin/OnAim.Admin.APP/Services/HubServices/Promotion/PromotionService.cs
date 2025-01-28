@@ -727,7 +727,7 @@ public class PromotionService : BaseService, IPromotionService
     {
         try
         {
-            var leadId = await _leaderBoardApiClient.PostAsJsonAndSerializeResultTo<int>($"{_leaderBoardApiClientOptions.Endpoint}CreateLeaderboardRecord", leaderboard);
+            var leadId = await _leaderBoardApiClient.PostAsJsonAndSerializeResultTo<int>($"{_leaderBoardApiClientOptions.Endpoint}Leaderboard/CreateLeaderboardRecord", leaderboard);
             return leadId;
         }
         catch (Exception ex)

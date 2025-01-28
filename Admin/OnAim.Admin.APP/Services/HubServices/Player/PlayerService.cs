@@ -20,6 +20,8 @@ public class PlayerService : IPlayerService
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _leaderboardResultRepository;
     private readonly IReadOnlyRepository<PlayerProgress> _playerProgressRepository;
     private readonly IReadOnlyRepository<Domain.HubEntities.Segment> _segmentRepo;
+    private readonly ILeaderBoardApiClient _leaderBoardApiClient;
+    private readonly LeaderBoardApiClientOptions _leaderBoardOptions;
 
     public PlayerService(
         IHubApiClient hubApiClient,
@@ -33,7 +35,9 @@ public class PlayerService : IPlayerService
         IReadOnlyRepository<PlayerLog> playerLogRepository,
         ILeaderBoardReadOnlyRepository<LeaderboardResult> leaderboardResultRepository,
         IReadOnlyRepository<PlayerProgress> playerProgressRepository,
-        IReadOnlyRepository<Domain.HubEntities.Segment> segmentRepo
+        IReadOnlyRepository<Domain.HubEntities.Segment> segmentRepo,
+        ILeaderBoardApiClient leaderBoardApiClient,
+        IOptions<LeaderBoardApiClientOptions> leaderBoardOptions
         )
     {
         _hubApiClient = hubApiClient;
@@ -48,6 +52,8 @@ public class PlayerService : IPlayerService
         _leaderboardResultRepository = leaderboardResultRepository;
         _playerProgressRepository = playerProgressRepository;
         _segmentRepo = segmentRepo;
+        _leaderBoardApiClient = leaderBoardApiClient;
+        _leaderBoardOptions = leaderBoardOptions.Value;
     }
 
     public async Task<ApplicationResult<bool>> BanPlayer(int playerId, DateTimeOffset? expireDate, bool isPermanent, string description)
@@ -306,16 +312,15 @@ public class PlayerService : IPlayerService
         };
     }
 
-    public async Task<ApplicationResult<List<LeaderboardResult>>> GetLeaderBoardResultByPlayer(int playerId)
+    public async Task<ApplicationResult<object>> GetLeaderBoardResultByPlayer(int playerId)
     {
-        var leaderboardResults = _leaderboardResultRepository.Query().Where(x => x.PlayerId == playerId);
+        var leaderboardResults = await _leaderBoardApiClient.Get<object>(
+            $"{_leaderBoardOptions.Endpoint}LeaderboardProgress/GetLeaderboardProgressForUser?LeaderboardRecordId={playerId}");
 
-        var total = leaderboardResults.Count();
-
-        return new ApplicationResult<List<LeaderboardResult>>
+        return new ApplicationResult<object>
         {
             Success = true,
-            Data = await leaderboardResults.ToListAsync(),
+            Data = leaderboardResults,
         };
     }
 

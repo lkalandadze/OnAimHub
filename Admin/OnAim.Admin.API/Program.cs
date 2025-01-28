@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Options;
 using OnAim.Admin.API.Extensions;
 using OnAim.Admin.API.Middleware;
 using OnAim.Admin.APP;
@@ -10,6 +9,9 @@ using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ----------------------------------------------------
+// Logging Configuration
+// ----------------------------------------------------
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -18,65 +20,27 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog();
+
+// ----------------------------------------------------
+// Service Registration
+// ----------------------------------------------------
+// Authentication
 builder.Services.AddCustomJwtAuthentication(builder.Configuration);
+
+// Custom HTTP Clients
 builder.Services.AddScoped<HttpClientService>();
-builder.Services.Configure<HubApiClientOptions>(
-builder.Configuration.GetSection("HubApiClientOptions")
-);
-builder.Services.AddHttpClient<IHubApiClient, HubApiClient>(
-    (client, sp) =>
-    {
-        var catalogApiOptions = sp.GetRequiredService<IOptions<HubApiClientOptions>>();
-        var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
-        catalogApiOptions.Value.NotBeNull();
+builder.AddCustomHttpClients();
 
-        var baseAddress = catalogApiOptions.Value.BaseApiAddress;
-        client.BaseAddress = new Uri(baseAddress);
-        return new HubApiClient(client, catalogApiOptions, policyOptions, "admin", "password");
-    }
-);
-
-builder.Services.Configure<LeaderBoardApiClientOptions>(
-    builder.Configuration.GetSection("LeaderBoardApiClientOptions")
-);
-
-builder.Services.AddHttpClient<ILeaderBoardApiClient, LeaderboardApiClient>(
-            (client, sp) =>
-            {
-                var catalogApiOptions = sp.GetRequiredService<IOptions<LeaderBoardApiClientOptions>>();
-                var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
-
-                var baseAddress = catalogApiOptions.Value.BaseApiAddress;
-                client.BaseAddress = new Uri(baseAddress);
-                return new LeaderboardApiClient(client, catalogApiOptions, policyOptions, "admin", "password");
-            }
-        );
-
-builder.Services.Configure<AggregationClientOptions>(
-builder.Configuration.GetSection("AggregationClientOptions")
-);
-builder.Services.AddHttpClient<IAggregationClient, AggregationClient>(
-    (client, sp) =>
-    {
-        var catalogApiOptions = sp.GetRequiredService<IOptions<AggregationClientOptions>>();
-        var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
-        catalogApiOptions.Value.NotBeNull();
-
-        var baseAddress = catalogApiOptions.Value.BaseApiAddress;
-        client.BaseAddress = new Uri(baseAddress);
-        return new AggregationClient(client, catalogApiOptions, policyOptions);
-    }
-);
-
+// Additional Services and Extensions
 builder.Services
                 .AddCustomAuthorization()
                 .AddCustomCors()
-                .AddCustomServices()
+                .AddCustomServices(builder.Configuration)
                 .AddControllers()
                 .Services.AddCustomSwagger()
                 .AddApp(builder.Configuration, consumerAssemblyMarkerType: typeof(Program))
-                .AddInfrastructure(builder.Configuration)
-                ;
+                .AddInfrastructure(builder.Configuration);
+
 builder.AddCustomHttpClients();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -88,42 +52,45 @@ builder.Services.AddControllersWithViews()
 
 var app = builder.Build();
 
+// Logging Middleware
 app.UseSerilogRequestLogging();
 
-if (app.Environment.IsDevelopment())
-{
-
-}
-
+// Middleware for Redirecting to Swagger
 app.Use(async (context, next) =>
 {
-    if (context.Request.Path == "/")
+    if (context.Request.Path == "/" || context.Request.Path == "/swagger")
     {
         context.Response.Redirect("/swagger/index.html");
         return;
     }
-
-    if (context.Request.Path == "/swagger")
-    {
-        context.Response.Redirect("/swagger/index.html");
-        return;
-    }
-
     await next();
 });
 
+// Apply Migrations
 app.ApplyMigrations();
+
+// Swagger Configuration
 app.UseSwagger();
 app.UseSwaggerUI();
+
+// Enable CORS
 app.UseCors("MyPolicy");
+
+// Enable HTTPS Redirection
 app.UseHttpsRedirection();
 
+// Authentication and Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-//app.UseMiddleware<PermissionMiddleware>();
+// Custom Middleware
+// app.UseMiddleware<PermissionMiddleware>();
 app.UseMiddleware<RequestHandlerMiddleware>();
 
+// Map Controllers
 app.MapControllers();
 
+// ----------------------------------------------------
+// Run the Application
+// ----------------------------------------------------
 app.Run();

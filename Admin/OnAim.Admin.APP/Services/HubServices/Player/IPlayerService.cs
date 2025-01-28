@@ -15,7 +15,7 @@ public interface IPlayerService
     Task<ApplicationResult<bool>> AddBalanceToPlayer(AddBalanceDto command);
     Task<ApplicationResult<PlayerBan>> GetBannedPlayer(int id);
     Task<ApplicationResult<List<BannedPlayerListDto>>> GetAllBannedPlayers();
-    Task<ApplicationResult<List<LeaderboardResult>>> GetLeaderBoardResultByPlayer(int playerId);
+    Task<ApplicationResult<object>> GetLeaderBoardResultByPlayer(int playerId);
     Task<ApplicationResult<PlayerProgressDto>> GetPlayerProgress(int id);
     Task<ApplicationResult<PaginatedResult<PlayerTransactionDto>>> GetPlayerTransaction(int id, BaseFilter filter);
     Task<ApplicationResult<PaginatedResult<PlayerLogDto>>> GetPlayerLogs(int id, BaseFilter filter);

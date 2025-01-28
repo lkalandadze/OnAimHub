@@ -9,9 +9,11 @@ using OnAim.Admin.APP.Feature.Identity;
 using OnAim.Admin.Contracts.ApplicationInfrastructure.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Shared.Lib;
 using OnAim.Admin.Domain.HubEntities.Models;
 using Shared.Lib.SwaggerFilters;
+using Microsoft.Extensions.Options;
+using OnAim.Admin.APP.Services.Hub.ClientServices;
+using OnAim.Admin.APP.Extensions;
 
 namespace OnAim.Admin.API.Extensions;
 
@@ -139,10 +141,51 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddCustomServices(this IServiceCollection services)
+    public static IServiceCollection AddCustomServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IEndpointService, EndpointService>();
         services.AddHttpContextAccessor();
+
+        // Configure Hub API Client
+        services.Configure<HubApiClientOptions>(
+            configuration.GetSection("HubApiClientOptions")
+        );
+        services.AddHttpClient<IHubApiClient, HubApiClient>((client, sp) =>
+        {
+            var options = sp.GetRequiredService<IOptions<HubApiClientOptions>>();
+            var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
+            options.Value.NotBeNull();
+
+            client.BaseAddress = new Uri(options.Value.BaseApiAddress);
+            return new HubApiClient(client, options, policyOptions, "admin", "password");
+        });
+
+        // Configure Leaderboard API Client
+        services.Configure<LeaderBoardApiClientOptions>(
+            configuration.GetSection("LeaderBoardApiClientOptions")
+        );
+        services.AddHttpClient<ILeaderBoardApiClient, LeaderboardApiClient>((client, sp) =>
+        {
+            var options = sp.GetRequiredService<IOptions<LeaderBoardApiClientOptions>>();
+            var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
+
+            client.BaseAddress = new Uri(options.Value.BaseApiAddress);
+            return new LeaderboardApiClient(client, options, policyOptions, "admin", "password");
+        });
+
+        // Configure Aggregation Client
+        services.Configure<AggregationClientOptions>(
+            configuration.GetSection("AggregationClientOptions")
+        );
+        services.AddHttpClient<IAggregationClient, AggregationClient>((client, sp) =>
+        {
+            var options = sp.GetRequiredService<IOptions<AggregationClientOptions>>();
+            var policyOptions = sp.GetRequiredService<IOptions<PolicyOptions>>();
+            options.Value.NotBeNull();
+
+            client.BaseAddress = new Uri(options.Value.BaseApiAddress);
+            return new AggregationClient(client, options, policyOptions);
+        });
 
         return services;
     }

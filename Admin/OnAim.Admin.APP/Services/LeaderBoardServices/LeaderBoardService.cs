@@ -9,8 +9,6 @@ public class LeaderBoardService : ILeaderBoardService
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardRecordPrize> _leaderboardRecordPrize;
     private readonly ILeaderBoardApiClient _leaderBoardApiClient;
     private readonly LeaderBoardApiClientOptions _leaderBoardApiClientOptions;
-
-    //private readonly LeaderboardClientService _leaderboardClientService;
     private readonly ILeaderBoardReadOnlyRepository<LeaderboardResult> _leaderboardResultRepository;
 
     public LeaderBoardService(
@@ -27,7 +25,6 @@ public class LeaderBoardService : ILeaderBoardService
         _leaderboardRecordPrize = leaderboardRecordPrize;
         _leaderBoardApiClient = leaderBoardApiClient;
         _leaderBoardApiClientOptions = leaderBoardApiClientOptions.Value;
-        //_leaderboardClientService = leaderboardClientService;
         _leaderboardResultRepository = leaderboardResultRepository;
     }
 
@@ -148,7 +145,7 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}CreateLeaderboardRecord", createLeaderboardRecordDto);
+            await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}Leaderboard/CreateLeaderboardRecord", createLeaderboardRecordDto);
             return new ApplicationResult<bool> { Success = true };
         }
         catch (Exception ex)
@@ -161,7 +158,7 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            await _leaderBoardApiClient.PutAsJson($"{_leaderBoardApiClientOptions.Endpoint}UpdateLeaderboardRecord", updateLeaderboardRecordDto);
+            await _leaderBoardApiClient.PutAsJson($"{_leaderBoardApiClientOptions.Endpoint}Leaderboard/UpdateLeaderboardRecord", updateLeaderboardRecordDto);
             return new ApplicationResult<bool> { Success = true };
         }
         catch (Exception ex)
@@ -174,7 +171,7 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}DeleteLeaderboardRecord", delete);
+            await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}Leaderboard/DeleteLeaderboardRecord", delete);
             return new ApplicationResult<bool> { Success = true };
         }
         catch (Exception ex)
@@ -188,7 +185,7 @@ public class LeaderBoardService : ILeaderBoardService
         try
         {
             var res = await _leaderBoardApiClient.Get<object>(
-                $"{_leaderBoardApiClientOptions.Endpoint}GetLeaderboardSchedules?PageNumber={pageNumber}&PageSize={pageSize}");
+                $"{_leaderBoardApiClientOptions.Endpoint}Leaderboard/GetLeaderboardSchedules?PageNumber={pageNumber}&PageSize={pageSize}");
             return new ApplicationResult<object> { Data = res, Success = true };
         }
         catch (Exception ex)
@@ -201,7 +198,7 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}CreateLeaderboardSchedule", createLeaderboardSchedule);
+            await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}Leaderboard/CreateLeaderboardSchedule", createLeaderboardSchedule);
             return new ApplicationResult<bool> { Success = true };
         }
         catch (Exception ex)
@@ -214,7 +211,7 @@ public class LeaderBoardService : ILeaderBoardService
     {
         try
         {
-            await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}UpdateLeaderboardSchedule", updateLeaderboardSchedule);
+            await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}Leaderboard/UpdateLeaderboardSchedule", updateLeaderboardSchedule);
             return new ApplicationResult<bool> { Success = true };
         }
         catch (Exception ex)
@@ -228,7 +225,7 @@ public class LeaderBoardService : ILeaderBoardService
         try
         {
             var res = await _leaderBoardApiClient.Get<object>(
-                $"{_leaderBoardApiClientOptions.Endpoint}GetCalendar?StartDate={startDate}&EndDate={endDate}");
+                $"{_leaderBoardApiClientOptions.Endpoint}Leaderboard/GetCalendar?StartDate={startDate}&EndDate={endDate}");
 
             return new ApplicationResult<object> { Data = res, Success = true };
         }
@@ -247,6 +244,100 @@ public class LeaderBoardService : ILeaderBoardService
             Success = true,
             Data = await prizes.ToListAsync(),
         };
+    }
+
+    public async Task<object> UpsertProgress(int leaderboardRecordId, int generatedAmount)
+    {
+        try
+        {
+            var body = new
+            {
+                LeaderboardRecordId = leaderboardRecordId,
+                GeneratedAmount = generatedAmount,
+            };
+
+            await _leaderBoardApiClient.PostAsJson(
+                $"{_leaderBoardApiClientOptions.Endpoint}LeaderboardProgress/UpsertProgress", body);
+            return new ApplicationResult<bool> { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<object> FinishLeaderboard(int leaderboardRecordId)
+    {
+        try
+        {
+            await _leaderBoardApiClient.PostAsJson(
+                $"{_leaderBoardApiClientOptions.Endpoint}LeaderboardProgress/FinishLeaderboard?LeaderboardRecordId={leaderboardRecordId}", "");
+            return new ApplicationResult<bool> { Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<object> GetLeaderboardProgress(int leaderboardRecordId, int pageNumber, int pageSize)
+    {
+        try
+        {
+            var res = await _leaderBoardApiClient.Get<object>(
+                $"{_leaderBoardApiClientOptions.Endpoint}LeaderboardProgress/GetLeaderboardProgress?LeaderboardRecordId={leaderboardRecordId}&PageNumber={pageNumber}&PageSize={pageSize}");
+
+            return new ApplicationResult<object> { Data = res, Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<object> GetLeaderboardProgressForUser(int playerId, int pageNumber, int pageSize)
+    {
+        try
+        {
+            var res = await _leaderBoardApiClient.Get<object>(
+                $"{_leaderBoardApiClientOptions.Endpoint}LeaderboardProgress/GetLeaderboardProgressForUser?LeaderboardRecordId={playerId}&PageNumber={pageNumber}&PageSize={pageSize}");
+
+            return new ApplicationResult<object> { Data = res, Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<object> GetLeaderboardResults(int leaderboardRecordId, int pageNumber, int pageSize)
+    {
+        try
+        {
+            var res = await _leaderBoardApiClient.Get<object>(
+                $"{_leaderBoardApiClientOptions.Endpoint}LeaderboardResult/GetLeaderboardResults?LeaderboardRecordId={leaderboardRecordId}&PageNumber={pageNumber}&PageSize={pageSize}");
+
+            return new ApplicationResult<object> { Data = res, Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<object> GetLeaderboardByPlayerIdResults(int playerId, int pageNumber, int pageSize)
+    {
+        try
+        {
+            var res = await _leaderBoardApiClient.Get<object>(
+                $"{_leaderBoardApiClientOptions.Endpoint}LeaderboardResult/GetLeaderboardByPlayerIdResults?PlayerId={playerId}&PageNumber={pageNumber}&PageSize={pageSize}");
+
+            return new ApplicationResult<object> { Data = res, Success = true };
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
     }
 }
 public class LeaderBoardData

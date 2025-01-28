@@ -12,4 +12,11 @@ public interface ILeaderBoardService
     Task<ApplicationResult<object>> GetLeaderboardSchedules(int? pageNumber, int? pageSize);
     Task<ApplicationResult<bool>> CreateLeaderboardSchedule(CreateLeaderboardScheduleCommand createLeaderboardSchedule);
     Task<ApplicationResult<bool>> UpdateLeaderboardSchedule(UpdateLeaderboardScheduleCommand updateLeaderboardSchedule);
+
+    Task<object> UpsertProgress(int leaderboardRecordId, int generatedAmount);
+    Task<object> FinishLeaderboard(int leaderboardRecordId);
+    Task<object> GetLeaderboardProgress(int leaderboardRecordId, int pageNumber, int pageSize);
+    Task<object> GetLeaderboardProgressForUser(int playerId, int pageNumber, int pageSize);
+    Task<object> GetLeaderboardResults(int leaderboardRecordId, int pageNumber, int pageSize);
+    Task<object> GetLeaderboardByPlayerIdResults(int playerId, int pageNumber, int pageSize);
 }
