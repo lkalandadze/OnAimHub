@@ -90,27 +90,27 @@ public class WheelService : IWheelService
         //}
         try
         {
-            var configuration = _configurationHolder.GetConfiguration<WheelConfiguration>(request.PromotionId);
+            var configuration = _configurationHolder.GetConfiguration<WheelConfiguration>(promotionId);
 
             if (configuration == null)
             {
-                throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Configuration with the specified promotion ID: [{request.PromotionId}] was not found.");
+                throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Configuration with the specified promotion ID: [{promotionId}] was not found.");
             }
 
-            var price = await _priceRepository.Query(p => p.Id == request.BetPriceId).FirstOrDefaultAsync();
+            var price = await _priceRepository.Query(p => p.Id == betPriceId).FirstOrDefaultAsync();
 
             if (price == null)
             {
-                throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Price with the specified ID: [{request.BetPriceId}] was not found.");
+                throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Price with the specified ID: [{betPriceId}] was not found.");
             }
 
-            await _hubService.BetTransactionAsync(configuration.Id, "Wheel", request.PromotionId, price.Value);
+            await _hubService.BetTransactionAsync(configuration.Id, "Wheel", promotionId, price.Value);
 
-            var prize = await GetPrizeFromGeneratorAsync<TPrize>(request.PromotionId);
+            var prize = GetPrizeFromGenerator<TPrize>(promotionId);
 
             if (prize.Value > 0)
             {
-                await _hubService.WinTransactionAsync(configuration.Id, "Wheel", prize.CoinId, request.PromotionId, price.Multiplier * prize.Value);
+                await _hubService.WinTransactionAsync(configuration.Id, "Wheel", prize.CoinId, promotionId, price.Multiplier * prize.Value);
             }
 
             //var @event = new UpdatePlayerExperienceEvent(Guid.NewGuid(), model.Amount, model.CurrencyId, _authService.GetCurrentPlayerId());
