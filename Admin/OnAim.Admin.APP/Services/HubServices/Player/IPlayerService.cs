@@ -1,4 +1,5 @@
-﻿using OnAim.Admin.Contracts.Dtos.Transaction;
+﻿using OnAim.Admin.APP.Services.Hub.Player;
+using OnAim.Admin.Contracts.Dtos.Transaction;
 using OnAim.Admin.Domain.HubEntities.PlayerEntities;
 
 namespace OnAim.Admin.APP.Services.HubServices.Player;
@@ -15,7 +16,7 @@ public interface IPlayerService
     Task<ApplicationResult<bool>> AddBalanceToPlayer(AddBalanceDto command);
     Task<ApplicationResult<PlayerBan>> GetBannedPlayer(int id);
     Task<ApplicationResult<List<BannedPlayerListDto>>> GetAllBannedPlayers();
-    Task<ApplicationResult<object>> GetLeaderBoardResultByPlayer(int playerId);
+    Task<UserActiveLeaderboards> GetLeaderBoardResultByPlayer(int playerId);
     Task<ApplicationResult<PlayerProgressDto>> GetPlayerProgress(int id);
     Task<ApplicationResult<PaginatedResult<PlayerTransactionDto>>> GetPlayerTransaction(int id, BaseFilter filter);
     Task<ApplicationResult<PaginatedResult<PlayerLogDto>>> GetPlayerLogs(int id, BaseFilter filter);

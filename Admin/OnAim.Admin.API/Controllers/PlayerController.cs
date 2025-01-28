@@ -11,6 +11,7 @@ using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBannedPlayers;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetById;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetLeaderBoardResultByPlayerId;
 using OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetProgress;
+using OnAim.Admin.APP.Services.Hub.Player;
 using OnAim.Admin.APP.Services.HubServices.Player;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
@@ -52,7 +53,7 @@ public class PlayerController : ApiControllerBase
         => Ok(await Mediator.Send(new GetPlayerProgressQuery(id)));
 
     [HttpGet(nameof(GetLeaderBoardResultByPlayerId) + "/{id}")]
-    public async Task<ActionResult<ApplicationResult<List<LeaderboardResult>>>> GetLeaderBoardResultByPlayerId([FromRoute] int id)
+    public async Task<ActionResult<UserActiveLeaderboards>> GetLeaderBoardResultByPlayerId([FromRoute] int id)
         => Ok(await Mediator.Send(new GetLeaderBoardResultByPlayerIdQuery(id)));
 
     [HttpGet(nameof(GetPlayerTransaction) + "/{id}")]

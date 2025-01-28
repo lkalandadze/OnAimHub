@@ -1,9 +1,10 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
+using OnAim.Admin.APP.Services.Hub.Player;
 using OnAim.Admin.APP.Services.HubServices.Player;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetLeaderBoardResultByPlayerId;
 
-public class GetLeaderBoardResultByPlayerIdQueryHandler : IQueryHandler<GetLeaderBoardResultByPlayerIdQuery, ApplicationResult<object>>
+public class GetLeaderBoardResultByPlayerIdQueryHandler : IQueryHandler<GetLeaderBoardResultByPlayerIdQuery, UserActiveLeaderboards>
 {
     private readonly IPlayerService _playerService;
 
@@ -11,7 +12,7 @@ public class GetLeaderBoardResultByPlayerIdQueryHandler : IQueryHandler<GetLeade
     {
         _playerService = playerService;
     }
-    public async Task<ApplicationResult<object>> Handle(GetLeaderBoardResultByPlayerIdQuery request, CancellationToken cancellationToken)
+    public async Task<UserActiveLeaderboards> Handle(GetLeaderBoardResultByPlayerIdQuery request, CancellationToken cancellationToken)
     {         
         return await _playerService.GetLeaderBoardResultByPlayer(request.PlayerId);
     }

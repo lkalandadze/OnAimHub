@@ -312,16 +312,12 @@ public class PlayerService : IPlayerService
         };
     }
 
-    public async Task<ApplicationResult<object>> GetLeaderBoardResultByPlayer(int playerId)
+    public async Task<UserActiveLeaderboards> GetLeaderBoardResultByPlayer(int playerId)
     {
-        var leaderboardResults = await _leaderBoardApiClient.Get<object>(
-            $"{_leaderBoardOptions.Endpoint}LeaderboardProgress/GetLeaderboardProgressForUser?LeaderboardRecordId={playerId}");
+        var leaderboardResults = await _leaderBoardApiClient.Get<UserActiveLeaderboards>(
+            $"{_leaderBoardOptions.Endpoint}LeaderboardProgress/GetUserActiveLeaderboards?PlayerId={playerId}");
 
-        return new ApplicationResult<object>
-        {
-            Success = true,
-            Data = leaderboardResults,
-        };
+        return leaderboardResults;
     }
 
     public async Task<ApplicationResult<PlayerProgressDto>> GetPlayerProgress(int id)
