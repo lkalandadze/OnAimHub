@@ -32,9 +32,6 @@ public class HubApiClient : IHubApiClient
         _username = username;
         _password = password;
 
-        var byteArray = Encoding.ASCII.GetBytes($"admin:password");
-        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-
         var retryPolicy = Policy
        .Handle<HttpRequestException>()
        .OrResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)

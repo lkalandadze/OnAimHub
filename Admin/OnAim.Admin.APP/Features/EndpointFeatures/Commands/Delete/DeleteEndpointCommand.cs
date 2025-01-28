@@ -3,4 +3,4 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Commands.Delete;
 
-public record DeleteEndpointCommand(List<int> Ids) : ICommand<ApplicationResult>;
+public record DeleteEndpointCommand(List<int> Ids) : ICommand<ApplicationResult<bool>>;

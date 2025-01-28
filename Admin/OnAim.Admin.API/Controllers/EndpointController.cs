@@ -5,8 +5,10 @@ using OnAim.Admin.APP.Features.EndpointFeatures.Commands.Delete;
 using OnAim.Admin.APP.Features.EndpointFeatures.Commands.Update;
 using OnAim.Admin.APP.Features.EndpointFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.EndpointFeatures.Queries.GetById;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.ApplicationInfrastructure.Validation;
 using OnAim.Admin.Contracts.Dtos.Endpoint;
+using OnAim.Admin.Contracts.Paging;
 using System.Net;
 
 namespace OnAim.Admin.API.Controllers;
@@ -15,7 +17,7 @@ public class EndpointController : ApiControllerBase
 {
     [HttpPost(nameof(Create))]
     [ProducesResponseType(typeof(CreateEndpointCommand), (int)HttpStatusCode.Created)]
-    [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(Contracts.ApplicationInfrastructure.Error), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Create([FromBody] CreateEndpointCommand command)
          => Ok(await Mediator.Send(command));
 
@@ -24,11 +26,11 @@ public class EndpointController : ApiControllerBase
         => Ok(await Mediator.Send(new UpdateEndpointCommand { Id = id, Endpoint = model }));
 
     [HttpGet(nameof(GetAll))]
-    public async Task<IActionResult> GetAll([FromQuery] EndpointFilter filter)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<EndpointResponseModel>>>> GetAll([FromQuery] EndpointFilter filter)
         => Ok(await Mediator.Send(new GetAllEndpointQuery(filter)));
 
     [HttpGet(nameof(Get) + "/{id}")]
-    public async Task<IActionResult> Get([FromRoute] int id)
+    public async Task<ActionResult<ApplicationResult<EndpointResponseModel>>> Get([FromRoute] int id)
         => Ok(await Mediator.Send(new GetEndpointByIdQuery(id)));
 
     [HttpPost(nameof(Delete))]

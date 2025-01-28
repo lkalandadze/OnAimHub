@@ -4,4 +4,4 @@ using OnAim.Admin.Contracts.Dtos.Promotion;
 
 namespace OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetById;
 
-public record class GetPromotionByIdQuery(int Id) : IQuery<ApplicationResult>;
+public record class GetPromotionByIdQuery(int Id) : IQuery<ApplicationResult<PromotionDto>>;

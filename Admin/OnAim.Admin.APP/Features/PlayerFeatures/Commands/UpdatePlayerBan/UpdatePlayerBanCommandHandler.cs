@@ -5,7 +5,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Commands.UpdatePlayerBan;
 
-public class UpdatePlayerBanCommandHandler : ICommandHandler<UpdatePlayerBanCommand, ApplicationResult>
+public class UpdatePlayerBanCommandHandler : ICommandHandler<UpdatePlayerBanCommand, ApplicationResult<bool>>
 {
     private readonly IPlayerService _playerService;
     private readonly IValidator<UpdatePlayerBanCommand> _validator;
@@ -16,15 +16,13 @@ public class UpdatePlayerBanCommandHandler : ICommandHandler<UpdatePlayerBanComm
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(UpdatePlayerBanCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(UpdatePlayerBanCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var result = await _playerService.UpdateBan(request.Id, request.ExpireDate, request.IsPermanent, request.Description);
-
-        return new ApplicationResult { Success = result.Success };
+        return await _playerService.UpdateBan(request.Id, request.ExpireDate, request.IsPermanent, request.Description);
     }
 }

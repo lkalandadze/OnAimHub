@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Commands.Delete;
 
-public sealed class DeletePromotionViewTemplateCommandHandler : ICommandHandler<DeletePromotionViewTemplateCommand, ApplicationResult>
+public sealed class DeletePromotionViewTemplateCommandHandler : ICommandHandler<DeletePromotionViewTemplateCommand, ApplicationResult<bool>>
 {
     private readonly IPromotionViewTemplateService _promotionViewTemplateService;
 
@@ -13,10 +13,8 @@ public sealed class DeletePromotionViewTemplateCommandHandler : ICommandHandler<
         _promotionViewTemplateService = promotionViewTemplateService;
     }
 
-    public async Task<ApplicationResult> Handle(DeletePromotionViewTemplateCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(DeletePromotionViewTemplateCommand request, CancellationToken cancellationToken)
     {
-        var result = await _promotionViewTemplateService.DeletePromotionViewTemplate(request.Id);
-
-        return new ApplicationResult { Data = result.Data , Success = result.Success };
+        return await _promotionViewTemplateService.DeletePromotionViewTemplate(request.Id);
     }
 }

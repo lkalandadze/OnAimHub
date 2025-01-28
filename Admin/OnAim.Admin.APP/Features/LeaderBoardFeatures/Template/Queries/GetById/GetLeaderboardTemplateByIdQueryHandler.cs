@@ -1,10 +1,11 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.LeaderBoardServices;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 
 namespace OnAim.Admin.APP.Features.LeaderBoardFeatures.Template.Queries.GetById;
 
-public sealed class GetLeaderboardTemplateByIdQueryHandler : IQueryHandler<GetLeaderboardTemplateByIdQuery, ApplicationResult>
+public sealed class GetLeaderboardTemplateByIdQueryHandler : IQueryHandler<GetLeaderboardTemplateByIdQuery, ApplicationResult<LeaderBoardTemplateListDto>>
 {
     private readonly ILeaderboardTemplateService _leaderboardTemplateService;
 
@@ -13,10 +14,8 @@ public sealed class GetLeaderboardTemplateByIdQueryHandler : IQueryHandler<GetLe
         _leaderboardTemplateService = leaderboardTemplateService;
     }
 
-    public async Task<ApplicationResult> Handle(GetLeaderboardTemplateByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<LeaderBoardTemplateListDto>> Handle(GetLeaderboardTemplateByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await _leaderboardTemplateService.GetLeaderboardTemplateById(request.Id);
-
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return await _leaderboardTemplateService.GetLeaderboardTemplateById(request.Id);
     }
 }

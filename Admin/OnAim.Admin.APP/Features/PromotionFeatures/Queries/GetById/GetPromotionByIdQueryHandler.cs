@@ -2,10 +2,11 @@
 using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.Promotion;
 
 namespace OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetById;
 
-public class GetPromotionByIdQueryHandler : IQueryHandler<GetPromotionByIdQuery, ApplicationResult>
+public class GetPromotionByIdQueryHandler : IQueryHandler<GetPromotionByIdQuery, ApplicationResult<PromotionDto>>
 {
     private readonly IPromotionService _promotionService;
 
@@ -13,10 +14,8 @@ public class GetPromotionByIdQueryHandler : IQueryHandler<GetPromotionByIdQuery,
     {
         _promotionService = promotionService;
     }
-    public async Task<ApplicationResult> Handle(GetPromotionByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<PromotionDto>> Handle(GetPromotionByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await _promotionService.GetPromotionById(request.Id);
-
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return await _promotionService.GetPromotionById(request.Id);
     }
 }

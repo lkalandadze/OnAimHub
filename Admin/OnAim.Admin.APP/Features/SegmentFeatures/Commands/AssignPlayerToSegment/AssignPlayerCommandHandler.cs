@@ -5,7 +5,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.AssignPlayer;
 
-public class AssignPlayerCommandHandler : ICommandHandler<AssignPlayerCommand, ApplicationResult>
+public class AssignPlayerCommandHandler : ICommandHandler<AssignPlayerCommand, ApplicationResult<bool>>
 {
     private readonly ISegmentService _segmentService;
     private readonly IValidator<AssignPlayerCommand> _validator;
@@ -16,15 +16,13 @@ public class AssignPlayerCommandHandler : ICommandHandler<AssignPlayerCommand, A
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(AssignPlayerCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(AssignPlayerCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var result = await _segmentService.AssignSegmentToPlayer(request.SegmentId, request.PlayerId);
-
-        return new ApplicationResult { Success = result.Success, Data = result.Data };
+        return await _segmentService.AssignSegmentToPlayer(request.SegmentId, request.PlayerId);
     }
 }

@@ -4,4 +4,4 @@ using OnAim.Admin.Contracts.Dtos.User;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Update;
 
-public sealed record UpdateUserCommand(int Id, UpdateUserRequest Model) : ICommand<ApplicationResult>;
+public sealed record UpdateUserCommand(int Id, UpdateUserRequest Model) : ICommand<ApplicationResult<string>>;

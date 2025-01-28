@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.CoinFeatures.Template.Commands.Delete;
 
-public sealed class DeleteCoinTemplateCommandHandler : ICommandHandler<DeleteCoinTemplateCommand, ApplicationResult>
+public sealed class DeleteCoinTemplateCommandHandler : ICommandHandler<DeleteCoinTemplateCommand, ApplicationResult<bool>>
 {
     private readonly ICoinTemplateService _coinTemplateService;
 
@@ -13,10 +13,10 @@ public sealed class DeleteCoinTemplateCommandHandler : ICommandHandler<DeleteCoi
         _coinTemplateService = coinTemplateService;
     }
 
-    public async Task<ApplicationResult> Handle(DeleteCoinTemplateCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(DeleteCoinTemplateCommand request, CancellationToken cancellationToken)
     {
         var result = await _coinTemplateService.DeleteCoinTemplate(request.Id);
 
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return new ApplicationResult<bool> { Data = result.Data, Success = result.Success };
     }
 }

@@ -4,9 +4,9 @@ namespace OnAim.Admin.APP.Services;
 
 public abstract class BaseService
 {
-    protected Task<ApplicationResult> Ok<T>(T data)
+    protected Task<ApplicationResult<T>> Ok<T>(T data)
     {
-        var result = new ApplicationResult
+        var result = new ApplicationResult<T>
         {
             Data = data,
             Success = true
@@ -14,9 +14,9 @@ public abstract class BaseService
         return Task.FromResult(result);
     }
 
-    protected Task<ApplicationResult> Ok<T>(T data, IEnumerable<Error> errors)
+    protected Task<ApplicationResult<T>> Ok<T>(T data, IEnumerable<Error> errors)
     {
-        var result = new ApplicationResult
+        var result = new ApplicationResult<T>
         {
             Data = data,
             Errors = errors,
@@ -25,9 +25,9 @@ public abstract class BaseService
         return Task.FromResult(result);
     }
 
-    protected Task<ApplicationResult> Fail(params Error[] errorMessages)
+    protected Task<ApplicationResult<object>> Fail(params Error[] errorMessages)
     {
-        var commandExecutionResult = new ApplicationResult
+        var commandExecutionResult = new ApplicationResult<object>
         {
             Success = false,
             Errors = errorMessages.ToList()

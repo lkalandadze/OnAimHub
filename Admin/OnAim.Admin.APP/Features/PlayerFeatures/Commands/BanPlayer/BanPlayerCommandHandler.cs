@@ -4,7 +4,7 @@ using OnAim.Admin.APP.Features.PlayerFeatures.Commands.BanPlayer;
 using OnAim.Admin.APP.Services.HubServices.Player;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
-public class BanPlayerCommandHandler : ICommandHandler<BanPlayerCommand, ApplicationResult>
+public class BanPlayerCommandHandler : ICommandHandler<BanPlayerCommand, ApplicationResult<bool>>
 {
     private readonly IPlayerService _playerService;
     private readonly IValidator<BanPlayerCommand> _validator;
@@ -15,15 +15,13 @@ public class BanPlayerCommandHandler : ICommandHandler<BanPlayerCommand, Applica
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(BanPlayerCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(BanPlayerCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var result = await _playerService.BanPlayer(request.PlayerId, request.ExpireDate, request.IsPermanent, request.Description);
-
-        return new ApplicationResult { Success = result.Success };
+        return await _playerService.BanPlayer(request.PlayerId, request.ExpireDate, request.IsPermanent, request.Description);
     }
 }

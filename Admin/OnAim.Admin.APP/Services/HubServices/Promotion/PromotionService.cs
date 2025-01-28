@@ -87,7 +87,7 @@ public class PromotionService : BaseService, IPromotionService
         _options = options.Value;
     }
 
-    public async Task<ApplicationResult> GetAllPromotions(PromotionFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<PromotionDto>>> GetAllPromotions(PromotionFilter filter)
     {
         var promotions = _promotionRepository.Query(
                          x =>
@@ -167,7 +167,7 @@ public class PromotionService : BaseService, IPromotionService
             .Take(pageSize);
 
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<PromotionDto>>
         {
             Success = true,
             Data = new PaginatedResult<PromotionDto>
@@ -188,7 +188,7 @@ public class PromotionService : BaseService, IPromotionService
         return response;
     }
 
-    public async Task<ApplicationResult> GetPromotionPlayers(int promotionId, PlayerFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<PlayerListDto>>> GetPromotionPlayers(int promotionId, PlayerFilter filter)
     {
         var sortableFields = new List<string> { "Id", "UserName" };
 
@@ -245,7 +245,7 @@ public class PromotionService : BaseService, IPromotionService
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<PlayerListDto>>
         {
             Success = true,
             Data = new PaginatedResult<PlayerListDto>
@@ -259,7 +259,7 @@ public class PromotionService : BaseService, IPromotionService
         };
     }
 
-    public async Task<ApplicationResult> GetPromotionPlayerTransaction(int promotionId, PlayerTransactionFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<PlayerTransactionDto>>> GetPromotionPlayerTransaction(int promotionId, PlayerTransactionFilter filter)
     {
         var transaction = _transactionRepository.Query()
             .Include(x => x.Coin)
@@ -288,7 +288,7 @@ public class PromotionService : BaseService, IPromotionService
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<PlayerTransactionDto>>
         {
             Success = true,
             Data = new PaginatedResult<PlayerTransactionDto>
@@ -302,7 +302,7 @@ public class PromotionService : BaseService, IPromotionService
         };
     }
 
-    public async Task<ApplicationResult> GetPromotionLeaderboards(int promotionId, BaseFilter filter)
+    public async Task<ApplicationResult<PromotionLeaderboardDto<object>>> GetPromotionLeaderboards(int promotionId, BaseFilter filter)
     {
         var data = _leaderboardRecordRepository.Query().Include(x => x.LeaderboardSchedule).Where(x => x.PromotionId == promotionId);
 
@@ -344,14 +344,14 @@ public class PromotionService : BaseService, IPromotionService
         };
     
 
-        return new ApplicationResult
+        return new ApplicationResult<PromotionLeaderboardDto<object>>
         {
             Success = true,
             Data = leaderboardResult
         };
     }
 
-    public async Task<ApplicationResult> GetPromotionLeaderboardDetails(int leaderboardId, BaseFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<PromotionLeaderboardDetailDto>>> GetPromotionLeaderboardDetails(int leaderboardId, BaseFilter filter)
     {
         var data = _leaderboardResultRepository
             .Query()
@@ -378,7 +378,7 @@ public class PromotionService : BaseService, IPromotionService
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<PromotionLeaderboardDetailDto>>
         {
             Success = true,
             Data = new PaginatedResult<PromotionLeaderboardDetailDto>
@@ -392,7 +392,7 @@ public class PromotionService : BaseService, IPromotionService
         };
     }
 
-    public async Task<ApplicationResult> GetPromotionById(int id)
+    public async Task<ApplicationResult<PromotionDto>> GetPromotionById(int id)
     {
         var promotion = await _promotionRepository.Query().Include(x => x.Segments).FirstOrDefaultAsync(x => x.Id == id);
 
@@ -418,14 +418,14 @@ public class PromotionService : BaseService, IPromotionService
             Segments = promotion.Segments.Select(s => s.Id).ToList(),
         };
 
-        return new ApplicationResult { Success = true, Data = result };
+        return new ApplicationResult<PromotionDto> { Success = true, Data = result };
     }
 
-    public async Task<ApplicationResult> GetAllService()
+    public async Task<ApplicationResult<List<Service>>> GetAllService()
     {
         var service = _serviceRepository.Query();
 
-        return new ApplicationResult
+        return new ApplicationResult<List<Service>>
         {
             Data = await service.ToListAsync(),
             Success = true
@@ -679,7 +679,7 @@ public class PromotionService : BaseService, IPromotionService
         }
     }
 
-    public async Task<ApplicationResult> CreatePromotionView(CreatePromotionView create)
+    public async Task<ApplicationResult<object>> CreatePromotionView(CreatePromotionView create)
     {
         try
         {
@@ -694,12 +694,12 @@ public class PromotionService : BaseService, IPromotionService
                     var viewUrl = jObject["viewUrl"]?.ToString();
                     if (!string.IsNullOrEmpty(viewUrl))
                     {
-                        return new ApplicationResult { Success = true, Data = viewUrl };
+                        return new ApplicationResult<object> { Success = true, Data = viewUrl };
                     }
                 }
             }
 
-            return new ApplicationResult { Success = false, Data = "viewUrl not found in the response data" };
+            return new ApplicationResult<object> { Success = false, Data = "viewUrl not found in the response data" };
         }
         catch (Exception ex)
         {
@@ -707,12 +707,12 @@ public class PromotionService : BaseService, IPromotionService
         }
     }
 
-    public async Task<ApplicationResult> UpdatePromotionStatus(UpdatePromotionStatusDto update)
+    public async Task<ApplicationResult<bool>> UpdatePromotionStatus(UpdatePromotionStatusDto update)
     {
         try
         {
             await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/UpdatePromotionStatus", update);
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
         catch (Exception ex)
         {
@@ -720,7 +720,7 @@ public class PromotionService : BaseService, IPromotionService
         }
     }
 
-    public async Task<ApplicationResult> DeletePromotion(int id)
+    public async Task<ApplicationResult<bool>> DeletePromotion(int id)
     {
         try
         {
@@ -729,7 +729,7 @@ public class PromotionService : BaseService, IPromotionService
                 Id = id,
             };
             await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/SoftDeletePromotion", body);
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
         catch (Exception ex)
         {
@@ -765,12 +765,12 @@ public class PromotionService : BaseService, IPromotionService
         }
     }
 
-    public async Task<ApplicationResult> CreateGameConfiguration(string name, object configurationJson)
+    public async Task<ApplicationResult<object>> CreateGameConfiguration(string name, object configurationJson)
     {
         try
         {
             await _gameService.CreateConfiguration(name, configurationJson);
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<object> { Success = true };
         }
         catch (Exception ex)
         {
@@ -782,12 +782,12 @@ public class PromotionService : BaseService, IPromotionService
         }
     }
 
-    public async Task<ApplicationResult> CreateAggregationConfiguration(List<AggregationConfiguration> configuration)
+    public async Task<ApplicationResult<object>> CreateAggregationConfiguration(List<AggregationConfiguration> configuration)
     {
         try
         {
             await _aggregationClient.PostAsJson($"{_aggregationClientOptions.Endpoint}CreateConfigurations", configuration);
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<object> { Success = true };
         }
         catch (Exception ex)
         {

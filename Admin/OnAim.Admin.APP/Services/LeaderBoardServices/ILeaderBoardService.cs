@@ -8,12 +8,12 @@ public interface ILeaderBoardService
 {
     Task<ApplicationResult<PaginatedResult<LeaderBoardListDto>>> GetAllLeaderBoard(LeaderBoardFilter? filter);
     Task<ApplicationResult<LeaderBoard.LeaderBoardData>> GetLeaderboardRecordById(int id);
-    Task<ApplicationResult> GetAllPrizes();
-    Task<ApplicationResult> CreateLeaderBoardRecord(CreateLeaderboardRecordCommand createLeaderboardRecordDto);
-    Task<ApplicationResult> UpdateLeaderBoardRecord(UpdateLeaderboardRecordCommand updateLeaderboardRecordDto);
-    Task<ApplicationResult> DeleteLeaderBoardRecord(DeleteLeaderboardRecordCommand delete);
-    Task<ApplicationResult> GetCalendar(DateTimeOffset? startDate, DateTimeOffset? endDate);
-    Task<ApplicationResult> GetLeaderboardSchedules(int? pageNumber, int? pageSize);
-    Task<ApplicationResult> CreateLeaderboardSchedule(CreateLeaderboardScheduleCommand createLeaderboardSchedule);
-    Task<ApplicationResult> UpdateLeaderboardSchedule(UpdateLeaderboardScheduleCommand updateLeaderboardSchedule);
+    Task<ApplicationResult<object>> GetAllPrizes();
+    Task<ApplicationResult<bool>> CreateLeaderBoardRecord(CreateLeaderboardRecordCommand createLeaderboardRecordDto);
+    Task<ApplicationResult<bool>> UpdateLeaderBoardRecord(UpdateLeaderboardRecordCommand updateLeaderboardRecordDto);
+    Task<ApplicationResult<bool>> DeleteLeaderBoardRecord(DeleteLeaderboardRecordCommand delete);
+    Task<ApplicationResult<object>> GetCalendar(DateTimeOffset? startDate, DateTimeOffset? endDate);
+    Task<ApplicationResult<object>> GetLeaderboardSchedules(int? pageNumber, int? pageSize);
+    Task<ApplicationResult<bool>> CreateLeaderboardSchedule(CreateLeaderboardScheduleCommand createLeaderboardSchedule);
+    Task<ApplicationResult<bool>> UpdateLeaderboardSchedule(UpdateLeaderboardScheduleCommand updateLeaderboardSchedule);
 }

@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.CoinFeatures.Template.Commands.Update;
 
-public sealed class UpdateCoinTemplateCommandHandler : ICommandHandler<UpdateCoinTemplateCommand, ApplicationResult>
+public sealed class UpdateCoinTemplateCommandHandler : ICommandHandler<UpdateCoinTemplateCommand, ApplicationResult<bool>>
 {
     private readonly ICoinTemplateService _coinTemplateService;
 
@@ -13,10 +13,10 @@ public sealed class UpdateCoinTemplateCommandHandler : ICommandHandler<UpdateCoi
         _coinTemplateService = coinTemplateService;
     }
 
-    public async Task<ApplicationResult> Handle(UpdateCoinTemplateCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(UpdateCoinTemplateCommand request, CancellationToken cancellationToken)
     {
         var result = await _coinTemplateService.UpdateCoinTemplate(request.update);
 
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return new ApplicationResult<bool> { Data = result.Data, Success = result.Success };
     }
 }

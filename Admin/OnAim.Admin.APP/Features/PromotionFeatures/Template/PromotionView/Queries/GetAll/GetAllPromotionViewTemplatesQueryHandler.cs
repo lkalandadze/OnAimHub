@@ -1,10 +1,12 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Paging;
+using OnAim.Admin.Domain.Entities.Templates;
 
 namespace OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Queries.GetAll;
 
-public sealed class GetAllPromotionViewTemplatesQueryHandler : IQueryHandler<GetAllPromotionViewTemplatesQuery, ApplicationResult>
+public sealed class GetAllPromotionViewTemplatesQueryHandler : IQueryHandler<GetAllPromotionViewTemplatesQuery, ApplicationResult<PaginatedResult<PromotionViewTemplate>>>
 {
     private readonly IPromotionViewTemplateService _promotionViewTemplateService;
 
@@ -13,10 +15,8 @@ public sealed class GetAllPromotionViewTemplatesQueryHandler : IQueryHandler<Get
         _promotionViewTemplateService = promotionViewTemplateService;
     }
 
-    public async Task<ApplicationResult> Handle(GetAllPromotionViewTemplatesQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<PaginatedResult<PromotionViewTemplate>>> Handle(GetAllPromotionViewTemplatesQuery request, CancellationToken cancellationToken)
     {
-        var result = await _promotionViewTemplateService.GetAllPromotionViewTemplates(request.Filter);
-
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return await _promotionViewTemplateService.GetAllPromotionViewTemplates(request.Filter);
     }
 }

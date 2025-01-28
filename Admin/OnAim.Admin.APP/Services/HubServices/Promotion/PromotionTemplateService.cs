@@ -49,7 +49,7 @@ public class PromotionTemplateService : IPromotionTemplateService
         _withdrawOptionGroupRepository = withdrawOptionGroupRepository;
     }
 
-    public async Task<ApplicationResult> GetAllPromotionTemplates(BaseFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<PromotionTemplateListDto>>> GetAllPromotionTemplates(BaseFilter filter)
     {
         var temps = await _promotionTemplateRepository.GetPromotionTemplates();
         if (filter?.HistoryStatus.HasValue == true)
@@ -180,7 +180,7 @@ public class PromotionTemplateService : IPromotionTemplateService
            .Skip((pageNumber - 1) * pageSize)
            .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<PromotionTemplateListDto>>
         {
             Success = true,
             Data = new PaginatedResult<PromotionTemplateListDto>
@@ -193,7 +193,7 @@ public class PromotionTemplateService : IPromotionTemplateService
         };
     }
 
-    public async Task<ApplicationResult> GetPromotionTemplateById(string id)
+    public async Task<ApplicationResult<PromotionTemplateListDto>> GetPromotionTemplateById(string id)
     {
         var template = await _promotionTemplateRepository.GetPromotionTemplateByIdAsync(id);
 
@@ -299,10 +299,10 @@ public class PromotionTemplateService : IPromotionTemplateService
             }).ToList(),
         };
 
-        return new ApplicationResult { Success = true, Data = data };
+        return new ApplicationResult<PromotionTemplateListDto> { Success = true, Data = data };
     }
 
-    public async Task<ApplicationResult> CreatePromotionTemplate(CreatePromotionTemplate template)
+    public async Task<ApplicationResult<bool>> CreatePromotionTemplate(CreatePromotionTemplate template)
     {
         var temp = new PromotionTemplate
         {
@@ -372,10 +372,10 @@ public class PromotionTemplateService : IPromotionTemplateService
 
         await _promotionTemplateRepository.AddPromotionTemplateAsync(temp);
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
-    public async Task<ApplicationResult> DeletePromotionTemplate(string id)
+    public async Task<ApplicationResult<bool>> DeletePromotionTemplate(string id)
     {
         var template = await _promotionTemplateRepository.GetPromotionTemplateByIdAsync(id);
 
@@ -388,10 +388,10 @@ public class PromotionTemplateService : IPromotionTemplateService
 
         await _promotionTemplateRepository.UpdatePromotionTemplateAsync(id, template);
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
-    public async Task<ApplicationResult> UpdatePromotionTemplate(UpdatePromotionTemplateDto update)
+    public async Task<ApplicationResult<bool>> UpdatePromotionTemplate(UpdatePromotionTemplateDto update)
     {
         var template = await _promotionTemplateRepository.GetPromotionTemplateByIdAsync(update.Id);
 
@@ -402,6 +402,6 @@ public class PromotionTemplateService : IPromotionTemplateService
        
         await _promotionTemplateRepository.UpdatePromotionTemplateAsync(update.Id, template);
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 }

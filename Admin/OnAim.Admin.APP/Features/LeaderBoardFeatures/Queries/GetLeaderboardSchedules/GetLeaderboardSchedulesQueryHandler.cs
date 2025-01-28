@@ -1,10 +1,9 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.LeaderBoardServices;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetLeaderboardSchedules;
 
-public class GetLeaderboardSchedulesQueryHandler : IQueryHandler<GetLeaderboardSchedulesQuery, ApplicationResult>
+public class GetLeaderboardSchedulesQueryHandler : IQueryHandler<GetLeaderboardSchedulesQuery, object>
 {
     private readonly ILeaderBoardService _leaderBoardService;
 
@@ -12,14 +11,8 @@ public class GetLeaderboardSchedulesQueryHandler : IQueryHandler<GetLeaderboardS
     {
         _leaderBoardService = leaderBoardService;
     }
-    public async Task<ApplicationResult> Handle(GetLeaderboardSchedulesQuery request, CancellationToken cancellationToken)
+    public async Task<object> Handle(GetLeaderboardSchedulesQuery request, CancellationToken cancellationToken)
     {
-        var result = await _leaderBoardService.GetLeaderboardSchedules(request.PageNumber, request.PageSize);
-
-        return new ApplicationResult
-        {
-            Data = result.Data,
-            Success = result.Success,
-        };
+        return await _leaderBoardService.GetLeaderboardSchedules(request.PageNumber, request.PageSize);
     }
 }

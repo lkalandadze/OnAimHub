@@ -15,7 +15,7 @@ public class Promotion
           string title,
           string description,
           //Guid correlationId,
-          IEnumerable<PromotionService> services = null,
+          IEnumerable<Service> services = null,
           IEnumerable<Segment> segments = null,
           IEnumerable<Coin.Coin> coins = null,
           IEnumerable<PromotionView> views = null)

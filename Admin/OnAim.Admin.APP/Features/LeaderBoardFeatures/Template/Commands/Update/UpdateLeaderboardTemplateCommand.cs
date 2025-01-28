@@ -4,4 +4,4 @@ using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 
 namespace OnAim.Admin.APP.Features.LeaderBoardFeatures.Template.Commands.Update;
 
-public record UpdateLeaderboardTemplateCommand(UpdateLeaderboardTemplateDto Update) : ICommand<ApplicationResult>;
+public record UpdateLeaderboardTemplateCommand(UpdateLeaderboardTemplateDto Update) : ICommand<ApplicationResult<bool>>;

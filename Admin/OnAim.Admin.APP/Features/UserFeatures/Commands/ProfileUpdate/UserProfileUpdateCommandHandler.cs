@@ -5,7 +5,7 @@ using OnAim.Admin.APP.Services.AdminServices.User;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.ProfileUpdate;
 
-public class UserProfileUpdateCommandHandler : ICommandHandler<UserProfileUpdateCommand, ApplicationResult>
+public class UserProfileUpdateCommandHandler : ICommandHandler<UserProfileUpdateCommand, ApplicationResult<bool>>
 {
     private readonly IUserService _userService;
     private readonly IValidator<UserProfileUpdateCommand> _validator;
@@ -16,15 +16,13 @@ public class UserProfileUpdateCommandHandler : ICommandHandler<UserProfileUpdate
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(UserProfileUpdateCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(UserProfileUpdateCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var result = await _userService.ProfileUpdate(request.Id, request.ProfileUpdateRequest);
-
-        return new ApplicationResult { Success = result.Success, Data = result.Data };
+        return await _userService.ProfileUpdate(request.Id, request.ProfileUpdateRequest);
     }
 }

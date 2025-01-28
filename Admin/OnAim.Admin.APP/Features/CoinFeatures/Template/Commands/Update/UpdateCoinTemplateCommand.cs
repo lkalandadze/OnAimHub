@@ -4,4 +4,4 @@ using OnAim.Admin.Contracts.Dtos.Coin;
 
 namespace OnAim.Admin.APP.Features.CoinFeatures.Template.Commands.Update;
 
-public record UpdateCoinTemplateCommand(UpdateCoinTemplateDto update) : ICommand<ApplicationResult>;
+public record UpdateCoinTemplateCommand(UpdateCoinTemplateDto update) : ICommand<ApplicationResult<bool>>;

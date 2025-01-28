@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Commands.Create;
 
-public sealed class CreatePromotionViewTemplateCommandHandler : ICommandHandler<CreatePromotionViewTemplateCommand, ApplicationResult>
+public sealed class CreatePromotionViewTemplateCommandHandler : ICommandHandler<CreatePromotionViewTemplateCommand, ApplicationResult<bool>>
 {
     private readonly IPromotionViewTemplateService _promotionViewTemplateService;
 
@@ -13,10 +13,8 @@ public sealed class CreatePromotionViewTemplateCommandHandler : ICommandHandler<
         _promotionViewTemplateService = promotionViewTemplateService;
     }
 
-    public async Task<ApplicationResult> Handle(CreatePromotionViewTemplateCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(CreatePromotionViewTemplateCommand request, CancellationToken cancellationToken)
     {
-        var result = await _promotionViewTemplateService.CreatePromotionViewTemplateAsync(request.Create);
-
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return await _promotionViewTemplateService.CreatePromotionViewTemplateAsync(request.Create);
     }
 }

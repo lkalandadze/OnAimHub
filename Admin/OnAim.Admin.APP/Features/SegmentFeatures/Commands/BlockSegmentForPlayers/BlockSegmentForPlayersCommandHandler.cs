@@ -5,7 +5,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.BlockSegmentForPlayers;
 
-public class BlockSegmentForPlayersCommandHandler : ICommandHandler<BlockSegmentForPlayersCommand, ApplicationResult>
+public class BlockSegmentForPlayersCommandHandler : ICommandHandler<BlockSegmentForPlayersCommand, ApplicationResult<object>>
 {
     private readonly ISegmentService _segmentService;
     private readonly IValidator<BlockSegmentForPlayersCommand> _validator;
@@ -16,15 +16,13 @@ public class BlockSegmentForPlayersCommandHandler : ICommandHandler<BlockSegment
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(BlockSegmentForPlayersCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<object>> Handle(BlockSegmentForPlayersCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var result = await _segmentService.BlockSegmentForPlayers(request.SegmentId, request.File);
-
-        return new ApplicationResult { Success = result.Success, Data = result.Data };
+        return await _segmentService.BlockSegmentForPlayers(request.SegmentId, request.File);
     }
 }

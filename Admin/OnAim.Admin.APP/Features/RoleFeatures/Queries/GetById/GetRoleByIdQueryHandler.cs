@@ -1,10 +1,11 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.AdminServices.Role;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.Role;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Queries.GetById;
 
-public class GetRoleByIdQueryHandler : IQueryHandler<GetRoleByIdQuery, ApplicationResult>
+public class GetRoleByIdQueryHandler : IQueryHandler<GetRoleByIdQuery, ApplicationResult<RoleResponseModel>>
 {
     private readonly IRoleService _roleService;
 
@@ -12,14 +13,8 @@ public class GetRoleByIdQueryHandler : IQueryHandler<GetRoleByIdQuery, Applicati
     {
         _roleService = roleService;
     }
-    public async Task<ApplicationResult> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<RoleResponseModel>> Handle(GetRoleByIdQuery request, CancellationToken cancellationToken)
     {
-       var result = await _roleService.GetById(request.Id);  
-
-        return new ApplicationResult
-        {
-            Success = result.Success,
-            Data = result.Data,
-        };
+       return await _roleService.GetById(request.Id);  
     }
 }

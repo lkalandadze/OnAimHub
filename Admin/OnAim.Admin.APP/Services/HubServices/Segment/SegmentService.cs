@@ -41,7 +41,7 @@ public class SegmentService : ISegmentService
         _securityContextAccessor = securityContextAccessor;
     }
 
-    public async Task<ApplicationResult> AssignSegmentToPlayers(IEnumerable<string> segmentIds, IFormFile file)
+    public async Task<ApplicationResult<object>> AssignSegmentToPlayers(IEnumerable<string> segmentIds, IFormFile file)
     {
         using var multipartContent = new MultipartFormDataContent();
 
@@ -63,14 +63,14 @@ public class SegmentService : ISegmentService
             throw new HubAPIRequestFailedException($"Failed to assign players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
         }
 
-        return new ApplicationResult
+        return new ApplicationResult<object>
         {
             Success = true,
             Data = await response.Content.ReadAsStringAsync(),
         };
     }
 
-    public async Task<ApplicationResult> AssignSegmentToPlayer(string segmentId, int playerId)
+    public async Task<ApplicationResult<bool>> AssignSegmentToPlayer(string segmentId, int playerId)
     {
         var req = new
         {
@@ -86,13 +86,13 @@ public class SegmentService : ISegmentService
 
         if (result != null)
         {
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
 
         throw new Exception("Failed to assign segment");
     }
 
-    public async Task<ApplicationResult> BlockSegmentForPlayers(IEnumerable<string> segmentIds, IFormFile file)
+    public async Task<ApplicationResult<object>> BlockSegmentForPlayers(IEnumerable<string> segmentIds, IFormFile file)
     {
         using var multipartContent = new MultipartFormDataContent();
 
@@ -114,14 +114,14 @@ public class SegmentService : ISegmentService
             throw new HubAPIRequestFailedException($"Failed to Block Players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
         }
 
-        return new ApplicationResult
+        return new ApplicationResult<object>
         {
             Success = true,
             Data = await response.Content.ReadAsStringAsync(),
         };
     }
 
-    public async Task<ApplicationResult> BlockSegmentForPlayer(string segmentId, int playerId)
+    public async Task<ApplicationResult<bool>> BlockSegmentForPlayer(string segmentId, int playerId)
     {
         var req = new
         {
@@ -134,13 +134,13 @@ public class SegmentService : ISegmentService
 
         if (result.IsSuccessStatusCode)
         {
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
 
         throw new Exception("Failed to block segment for player");
     }
 
-    public async Task<ApplicationResult> CreateSegment(string id, string description, int priorityLevel)
+    public async Task<ApplicationResult<bool>> CreateSegment(string id, string description, int priorityLevel)
     {
         var req = new
         {
@@ -154,25 +154,25 @@ public class SegmentService : ISegmentService
 
         if (result != null)
         {
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
 
         throw new Exception("Failed to add segment");
     }
 
-    public async Task<ApplicationResult> DeleteSegment(string id)
+    public async Task<ApplicationResult<bool>> DeleteSegment(string id)
     {
         var result = await _hubApiClient.Delete($"{_options.Endpoint}Admin/DeleteSegment?id={id}");
 
         if (result.IsSuccessStatusCode)
         {
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
 
         throw new Exception("Failed to delete segment");
     }
 
-    public async Task<ApplicationResult> UnAssignPlayersToSegment(IEnumerable<string> segmentIds, IFormFile file)
+    public async Task<ApplicationResult<object>> UnAssignPlayersToSegment(IEnumerable<string> segmentIds, IFormFile file)
     {
         using var multipartContent = new MultipartFormDataContent();
 
@@ -194,14 +194,14 @@ public class SegmentService : ISegmentService
             throw new HubAPIRequestFailedException($"Failed to unassign players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
         }
 
-        return new ApplicationResult
+        return new ApplicationResult<object>
         {
             Success = true,
             Data = await response.Content.ReadAsStringAsync(),
         };
     }
 
-    public async Task<ApplicationResult> UnAssignSegmentForPlayer(string segmentId, int playerId)
+    public async Task<ApplicationResult<bool>> UnAssignSegmentForPlayer(string segmentId, int playerId)
     {
         var req = new
         {
@@ -214,13 +214,13 @@ public class SegmentService : ISegmentService
 
         if (result.IsSuccessStatusCode)
         {
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
 
         throw new Exception("Failed to unassign segment");
     }
 
-    public async Task<ApplicationResult> UnBlockSegmentForPlayer(string segmentId, int playerId)
+    public async Task<ApplicationResult<bool>> UnBlockSegmentForPlayer(string segmentId, int playerId)
     {
         var req = new
         {
@@ -233,13 +233,13 @@ public class SegmentService : ISegmentService
 
         if (result.IsSuccessStatusCode)
         {
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
 
         throw new Exception("Failed to unblock segment for player");
     }
 
-    public async Task<ApplicationResult> UnBlockSegmentForPlayers(IEnumerable<string> segmentIds, IFormFile file)
+    public async Task<ApplicationResult<object>> UnBlockSegmentForPlayers(IEnumerable<string> segmentIds, IFormFile file)
     {
         using var multipartContent = new MultipartFormDataContent();
 
@@ -261,7 +261,7 @@ public class SegmentService : ISegmentService
             throw new HubAPIRequestFailedException($"Failed to Unblock Players to segment. Status Code: {response.StatusCode}. Response: {errorContent}");
         }
 
-        return new ApplicationResult
+        return new ApplicationResult<object>
         {
             Success = true,
             Data = await response.Content.ReadAsStringAsync(),
@@ -270,7 +270,7 @@ public class SegmentService : ISegmentService
     }
 
 
-    public async Task<ApplicationResult> UpdateSegment(string id, string description, int priorityLevel)
+    public async Task<ApplicationResult<bool>> UpdateSegment(string id, string description, int priorityLevel)
     {
         var request = new
         {
@@ -282,13 +282,13 @@ public class SegmentService : ISegmentService
 
         if (result.IsSuccessStatusCode)
         {
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
 
         throw new Exception("Failed to update segment");
     }
 
-    public async Task<ApplicationResult> GetAll(int? pageNumber, int? pageSize)
+    public async Task<ApplicationResult<PaginatedResult<SegmentListDto>>> GetAll(int? pageNumber, int? pageSize)
     {
         var segments = _segmentRepository.Query().AsNoTracking();
 
@@ -312,7 +312,7 @@ public class SegmentService : ISegmentService
        .Skip((pageNumberr - 1) * pageSizee)
        .Take(pageSizee);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<SegmentListDto>>
         {
             Success = true,
             Data = new PaginatedResult<SegmentListDto>
@@ -325,7 +325,7 @@ public class SegmentService : ISegmentService
         };
     }
 
-    public async Task<ApplicationResult> GetById(string id)
+    public async Task<ApplicationResult<SegmentDto>> GetById(string id)
     {
         var segment = await _segmentRepository
             .Query(x => x.Id == id)
@@ -347,10 +347,10 @@ public class SegmentService : ISegmentService
             PriorityLevel = segment.PriorityLevel,
         };
 
-        return new ApplicationResult { Success = true, Data = res };
+        return new ApplicationResult<SegmentDto> { Success = true, Data = res };
     }
 
-    public async Task<ApplicationResult> GetActivePlayers(string segmentId, FilterBy filter)
+    public async Task<ApplicationResult<PaginatedResult<SegmentPlayerDto>>> GetActivePlayers(string segmentId, FilterBy filter)
     {
         if (segmentId == null)
             throw new BadRequestException("Segment Not Found");
@@ -388,7 +388,7 @@ public class SegmentService : ISegmentService
             .Take(pageSize)
             .ToListAsync();
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<SegmentPlayerDto>>
         {
             Success = true,
             Data = new PaginatedResult<SegmentPlayerDto>
@@ -401,7 +401,7 @@ public class SegmentService : ISegmentService
         };
     }
 
-    public async Task<ApplicationResult> GetBlackListedPlayers(string segmentId, FilterBy filter)
+    public async Task<ApplicationResult<PaginatedResult<SegmentPlayerDto>>> GetBlackListedPlayers(string segmentId, FilterBy filter)
     {
         if (string.IsNullOrEmpty(segmentId))
             throw new BadRequestException("Segment ID is required.");
@@ -433,7 +433,7 @@ public class SegmentService : ISegmentService
             })
             .ToListAsync();
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<SegmentPlayerDto>>
         {
             Success = true,
             Data = new PaginatedResult<SegmentPlayerDto>
@@ -446,7 +446,7 @@ public class SegmentService : ISegmentService
         };
     }
 
-    public async Task<ApplicationResult> GetActs(string segmentId)
+    public async Task<ApplicationResult<IEnumerable<ActsDto>>> GetActs(string segmentId)
     {
         var playerSegmentActs = await _playerSegmentActRepository.Query(x => x.SegmentId == segmentId).Include(x => x.Action).ToListAsync();
 
@@ -458,14 +458,14 @@ public class SegmentService : ISegmentService
             Type = x.Action?.Name,
         });
 
-        return new ApplicationResult
+        return new ApplicationResult<IEnumerable<ActsDto>>
         {
             Success = true,
             Data = res
         };
     }
 
-    public async Task<ApplicationResult> GetActsHistory(int playerSegmentActId)
+    public async Task<ApplicationResult<IEnumerable<ActsHistoryDto>>> GetActsHistory(int playerSegmentActId)
     {
         var history = await _playerSegmentActHistoryRepository
            .Query(x => x.PlayerSegmentActId == playerSegmentActId)
@@ -485,14 +485,14 @@ public class SegmentService : ISegmentService
             Type = x.PlayerSegmentAct?.Action?.Name,
         });
 
-        return new ApplicationResult
+        return new ApplicationResult<IEnumerable<ActsHistoryDto>>
         {
             Success = true,
             Data = res
         };
     }
 
-    public async Task<ApplicationResult> GetGeneralSegmentActs(SegmentActsFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<ActsDto>>> GetGeneralSegmentActs(SegmentActsFilter filter)
     {
         var query = _playerSegmentActRepository.Query();
 
@@ -540,7 +540,7 @@ public class SegmentService : ISegmentService
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<ActsDto>>
         {
             Success = true,
             Data = new PaginatedResult<ActsDto>
@@ -553,7 +553,7 @@ public class SegmentService : ISegmentService
         };
     }
 
-    public async Task<ApplicationResult> GetGeneralSegmentActsHistory(SegmentActsFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<ActsHistoryDto>>> GetGeneralSegmentActsHistory(SegmentActsFilter filter)
     {
         var query = _playerSegmentActHistoryRepository.Query();
 
@@ -589,7 +589,7 @@ public class SegmentService : ISegmentService
             .ToListAsync();
 
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<ActsHistoryDto>>
         {
             Success = true,
             Data = new PaginatedResult<ActsHistoryDto>

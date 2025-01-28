@@ -5,9 +5,9 @@ using OnAim.Admin.Contracts.Dtos.Coin;
 
 namespace OnAim.Admin.APP.Features.WithdrawOptionEndpointFeatures.Commands.Create;
 
-public record CreateWithdrawOptionEndpointCommand(CreateWithdrawOptionEndpointDto Command) : ICommand<ApplicationResult>;
+public record CreateWithdrawOptionEndpointCommand(CreateWithdrawOptionEndpointDto Command) : ICommand<ApplicationResult<object>>;
 
-public sealed class CreateWithdrawOptionEndpointCommandHandler : ICommandHandler<CreateWithdrawOptionEndpointCommand, ApplicationResult>
+public sealed class CreateWithdrawOptionEndpointCommandHandler : ICommandHandler<CreateWithdrawOptionEndpointCommand, ApplicationResult<object>>
 {
     private readonly ICoinService _coinService;
 
@@ -16,10 +16,8 @@ public sealed class CreateWithdrawOptionEndpointCommandHandler : ICommandHandler
         _coinService = coinService;
     }
 
-    public async Task<ApplicationResult> Handle(CreateWithdrawOptionEndpointCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<object>> Handle(CreateWithdrawOptionEndpointCommand request, CancellationToken cancellationToken)
     {
-        var res = await _coinService.CreateWithdrawOptionEndpoint(request.Command);
-
-        return new ApplicationResult { Data = res.Data, Success = res.Success };
+        return await _coinService.CreateWithdrawOptionEndpoint(request.Command);
     }
 }

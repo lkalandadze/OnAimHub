@@ -32,15 +32,15 @@ public class CoinController : ApiControllerBase
 {
     #region coin
     [HttpPost(nameof(CreateWithdrawOption))]
-    public async Task<IActionResult> CreateWithdrawOption([FromBody] CreateWithdrawOptionDto create)
+    public async Task<ActionResult<ApplicationResult<object>>> CreateWithdrawOption([FromBody] CreateWithdrawOptionDto create)
         => Ok(await Mediator.Send(new CreateWithdrawOptionCommand(create)));
 
     [HttpPut(nameof(UpdateWithdrawOption))]
-    public async Task<IActionResult> UpdateWithdrawOption([FromBody] UpdateWithdrawOptionDto create)
+    public async Task<ActionResult<ApplicationResult<object>>> UpdateWithdrawOption([FromBody] UpdateWithdrawOptionDto create)
         => Ok(await Mediator.Send(new UpdateWithdrawOptionCommand(create)));
 
     [HttpPost(nameof(DeleteWithdrawOption))]
-    public async Task<IActionResult> DeleteWithdrawOption([FromQuery] List<int> id)
+    public async Task<ActionResult<ApplicationResult<object>>> DeleteWithdrawOption([FromQuery] List<int> id)
         => Ok(await Mediator.Send(new DeleteWithdrawOptionCommand(id)));
 
     [HttpGet(nameof(GetAllWithdrawOptions))]
@@ -52,15 +52,15 @@ public class CoinController : ApiControllerBase
         => Ok(await Mediator.Send(new GetWithdrawOptionByIdQuery(id)));
 
     [HttpPost(nameof(CreateWithdrawOptionGroup))]
-    public async Task<IActionResult> CreateWithdrawOptionGroup([FromBody] CreateWithdrawOptionGroupDto create)
+    public async Task<ActionResult<ApplicationResult<object>>> CreateWithdrawOptionGroup([FromBody] CreateWithdrawOptionGroupDto create)
         => Ok(await Mediator.Send(new CreateWithdrawOptionGroupCommand(create)));
 
     [HttpPut(nameof(UpdateWithdrawOptionGroup))]
-    public async Task<IActionResult> UpdateWithdrawOptionGroup([FromBody] UpdateWithdrawOptionGroupDto create)
+    public async Task<ActionResult<ApplicationResult<object>>> UpdateWithdrawOptionGroup([FromBody] UpdateWithdrawOptionGroupDto create)
         => Ok(await Mediator.Send(new UpdateWithdrawOptionGroupCommand(create)));
 
     [HttpPost(nameof(DeleteWithdrawOptiongroup))]
-    public async Task<IActionResult> DeleteWithdrawOptiongroup([FromQuery] List<int> id)
+    public async Task<ActionResult<ApplicationResult<object>>> DeleteWithdrawOptiongroup([FromQuery] List<int> id)
         => Ok(await Mediator.Send(new DeleteWithdrawOptiongroupCommand(id)));
 
     [HttpGet(nameof(GetAllWithdrawOptionGroups))]
@@ -68,27 +68,27 @@ public class CoinController : ApiControllerBase
         => Ok(await Mediator.Send(new GetAllWithdrawOptionGroupsQuery(filter)));
 
     [HttpGet(nameof(GetWithdrawOptionGroupById))]
-    public async Task<IActionResult> GetWithdrawOptionGroupById([FromQuery] int id)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<WithdrawOptionGroupDto>>>> GetWithdrawOptionGroupById([FromQuery] int id)
         => Ok(await Mediator.Send(new GetWithdrawOptionGroupByIdQuery(id)));
 
     [HttpPost(nameof(CreateWithdrawOptionEndpoint))]
-    public async Task<IActionResult> CreateWithdrawOptionEndpoint([FromBody] CreateWithdrawOptionEndpointDto create)
+    public async Task<ActionResult<ApplicationResult<object>>> CreateWithdrawOptionEndpoint([FromBody] CreateWithdrawOptionEndpointDto create)
         => Ok(await Mediator.Send(new CreateWithdrawOptionEndpointCommand(create)));
 
     [HttpPut(nameof(UpdateWithdrawOptionEndpoint))]
-    public async Task<IActionResult> UpdateWithdrawOptionEndpoint([FromBody] UpdateWithdrawOptionEndpointDto create)
+    public async Task<ActionResult<ApplicationResult<object>>> UpdateWithdrawOptionEndpoint([FromBody] UpdateWithdrawOptionEndpointDto create)
         => Ok(await Mediator.Send(new UpdateWithdrawOptionEndpointCommand(create)));
 
     [HttpPost(nameof(DeleteWithdrawOptionEndpoint))]
-    public async Task<IActionResult> DeleteWithdrawOptionEndpoint([FromQuery] List<int> id)
+    public async Task<ActionResult<ApplicationResult<object>>> DeleteWithdrawOptionEndpoint([FromQuery] List<int> id)
         => Ok(await Mediator.Send(new DeleteWithdrawOptionEndpointCommand(id)));
 
     [HttpGet(nameof(GetAllWithdrawOptionEndpoints))]
-    public async Task<IActionResult> GetAllWithdrawOptionEndpoints([FromQuery] BaseFilter filter)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<WithdrawOptionEndpointDto>>>> GetAllWithdrawOptionEndpoints([FromQuery] BaseFilter filter)
         => Ok(await Mediator.Send(new GetWithdrawOptionEndpointsQuery(filter)));
 
     [HttpGet(nameof(GetWithdrawOptionEndpointById))]
-    public async Task<IActionResult> GetWithdrawOptionEndpointById([FromQuery] int id)
+    public async Task<ActionResult<ApplicationResult<WithdrawOptionEndpointDto>>> GetWithdrawOptionEndpointById([FromQuery] int id)
         => Ok(await Mediator.Send(new GetWithdrawOptionEndpointByIdQuery(id)));
     #endregion
 
@@ -107,11 +107,11 @@ public class CoinController : ApiControllerBase
         => Ok(await Mediator.Send(command));
 
     [HttpGet(nameof(GetAllCoinTemplates))]
-    public async Task<IActionResult> GetAllCoinTemplates([FromQuery] BaseFilter filter)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<CoinTemplateListDto>>>> GetAllCoinTemplates([FromQuery] BaseFilter filter)
         => Ok(await Mediator.Send(new GetAllCoinTemplatesQuery(filter)));
 
     [HttpGet(nameof(GetCoinTemplateById))]
-    public async Task<IActionResult> GetCoinTemplateById([FromQuery] string id)
+    public async Task<ActionResult<ApplicationResult<CoinTemplateDto>>> GetCoinTemplateById([FromQuery] string id)
         => Ok(await Mediator.Send(new GetCoinTemplateByIdQuery(id)));
     #endregion
 }

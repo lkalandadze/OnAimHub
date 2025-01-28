@@ -5,4 +5,4 @@ using OnAim.Admin.Contracts.Dtos.Game;
 
 namespace OnAim.Admin.APP.Features.GameFeatures.Commands.UpdateConfiguration;
 
-public record UpdateConfigurationCommand(string gameName, GameConfigurationDto ConfigurationJson) : ICommand<ApplicationResult>;
+public record UpdateConfigurationCommand(string gameName, GameConfigurationDto ConfigurationJson) : ICommand<object>;

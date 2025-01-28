@@ -1,10 +1,12 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.HubServices.Player;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.Player;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetAll;
 
-public class GetAllPlayerQueryHandler : IQueryHandler<GetAllPlayerQuery, ApplicationResult>
+public class GetAllPlayerQueryHandler : IQueryHandler<GetAllPlayerQuery, ApplicationResult<PaginatedResult<PlayerListDto>>>
 {
     private readonly IPlayerService _playerService;
 
@@ -12,10 +14,8 @@ public class GetAllPlayerQueryHandler : IQueryHandler<GetAllPlayerQuery, Applica
     {
         _playerService = playerService;
     } 
-    public async Task<ApplicationResult> Handle(GetAllPlayerQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<PaginatedResult<PlayerListDto>>> Handle(GetAllPlayerQuery request, CancellationToken cancellationToken)
     {
-        var result = await _playerService.GetAll(request.Filter);
-
-        return new ApplicationResult { Success = result.Success, Data = result.Data };
+        return await _playerService.GetAll(request.Filter);
     }
 }

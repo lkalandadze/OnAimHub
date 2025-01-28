@@ -1,10 +1,11 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.GameServices;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Domain.Entities.Templates;
 
 namespace OnAim.Admin.APP.Features.GameFeatures.Template.Queries.GetById;
 
-public sealed class GetGameConfigurationTemplateByIdQueryHandler : IQueryHandler<GetGameConfigurationTemplateByIdQuery, ApplicationResult>
+public sealed class GetGameConfigurationTemplateByIdQueryHandler : IQueryHandler<GetGameConfigurationTemplateByIdQuery, ApplicationResult<GameConfigurationTemplate>>
 {
     private readonly IGameTemplateService _gameTemplateService;
 
@@ -13,10 +14,8 @@ public sealed class GetGameConfigurationTemplateByIdQueryHandler : IQueryHandler
         _gameTemplateService = gameTemplateService;
     }
 
-    public async Task<ApplicationResult> Handle(GetGameConfigurationTemplateByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<GameConfigurationTemplate>> Handle(GetGameConfigurationTemplateByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await _gameTemplateService.GetGameConfigurationTemplateById(request.Id);
-
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return await _gameTemplateService.GetGameConfigurationTemplateById(request.Id);
     }
 }

@@ -4,9 +4,9 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.WithdrawOptionEndpointFeatures.Commands.Delete;
 
-public record DeleteWithdrawOptionEndpointCommand(List<int> Id) : ICommand<ApplicationResult>;
+public record DeleteWithdrawOptionEndpointCommand(List<int> Id) : ICommand<ApplicationResult<object>>;
 
-public sealed class DeleteWithdrawOptionEndpointCommandHandler : ICommandHandler<DeleteWithdrawOptionEndpointCommand, ApplicationResult>
+public sealed class DeleteWithdrawOptionEndpointCommandHandler : ICommandHandler<DeleteWithdrawOptionEndpointCommand, ApplicationResult<object>>
 {
     private readonly ICoinService _coinService;
 
@@ -15,10 +15,8 @@ public sealed class DeleteWithdrawOptionEndpointCommandHandler : ICommandHandler
         _coinService = coinService;
     }
 
-    public async Task<ApplicationResult> Handle(DeleteWithdrawOptionEndpointCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<object>> Handle(DeleteWithdrawOptionEndpointCommand request, CancellationToken cancellationToken)
     {
-        var res = await _coinService.DeleteWithdrawOptionEndpoint(request.Id);
-
-        return new ApplicationResult { Data = res.Data, Success = res.Success };
+        return await _coinService.DeleteWithdrawOptionEndpoint(request.Id);
     }
 }

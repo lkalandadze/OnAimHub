@@ -4,4 +4,4 @@ using OnAim.Admin.Contracts.Dtos.Role;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Commands.Create;
 
-public record CreateRoleCommand(CreateRoleRequest Request) : ICommand<ApplicationResult>;
+public record CreateRoleCommand(CreateRoleRequest Request) : ICommand<ApplicationResult<string>>;

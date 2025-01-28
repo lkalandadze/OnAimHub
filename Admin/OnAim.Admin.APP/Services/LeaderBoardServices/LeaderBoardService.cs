@@ -155,12 +155,12 @@ public class LeaderBoardService : ILeaderBoardService
         return new ApplicationResult<LeaderBoardData> { Data = res, Success = true };
     }
 
-    public async Task<ApplicationResult> CreateLeaderBoardRecord(CreateLeaderboardRecordCommand createLeaderboardRecordDto)
+    public async Task<ApplicationResult<bool>> CreateLeaderBoardRecord(CreateLeaderboardRecordCommand createLeaderboardRecordDto)
     {
         try
         {
             await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}CreateLeaderboardRecord", createLeaderboardRecordDto);
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
         catch (Exception ex)
         {
@@ -168,12 +168,12 @@ public class LeaderBoardService : ILeaderBoardService
         }
     }
 
-    public async Task<ApplicationResult> UpdateLeaderBoardRecord(UpdateLeaderboardRecordCommand updateLeaderboardRecordDto)
+    public async Task<ApplicationResult<bool>> UpdateLeaderBoardRecord(UpdateLeaderboardRecordCommand updateLeaderboardRecordDto)
     {
         try
         {
             await _leaderBoardApiClient.PutAsJson($"{_leaderBoardApiClientOptions.Endpoint}UpdateLeaderboardRecord", updateLeaderboardRecordDto);
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
         catch (Exception ex)
         {
@@ -181,12 +181,12 @@ public class LeaderBoardService : ILeaderBoardService
         }
     }
 
-    public async Task<ApplicationResult> DeleteLeaderBoardRecord(DeleteLeaderboardRecordCommand delete)
+    public async Task<ApplicationResult<bool>> DeleteLeaderBoardRecord(DeleteLeaderboardRecordCommand delete)
     {
         try
         {
             await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}DeleteLeaderboardRecord", delete);
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
         catch (Exception ex)
         {
@@ -194,13 +194,13 @@ public class LeaderBoardService : ILeaderBoardService
         }
     }
 
-    public async Task<ApplicationResult> GetLeaderboardSchedules(int? pageNumber, int? pageSize)
+    public async Task<ApplicationResult<object>> GetLeaderboardSchedules(int? pageNumber, int? pageSize)
     {
         try
         {
             var res = await _leaderBoardApiClient.Get<object>(
                 $"{_leaderBoardApiClientOptions.Endpoint}GetLeaderboardSchedules?PageNumber={pageNumber}&PageSize={pageSize}");
-            return new ApplicationResult { Data = res, Success = true };
+            return new ApplicationResult<object> { Data = res, Success = true };
         }
         catch (Exception ex)
         {
@@ -208,12 +208,12 @@ public class LeaderBoardService : ILeaderBoardService
         }
     }
 
-    public async Task<ApplicationResult> CreateLeaderboardSchedule(CreateLeaderboardScheduleCommand createLeaderboardSchedule)
+    public async Task<ApplicationResult<bool>> CreateLeaderboardSchedule(CreateLeaderboardScheduleCommand createLeaderboardSchedule)
     {
         try
         {
             await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}CreateLeaderboardSchedule", createLeaderboardSchedule);
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
         catch (Exception ex)
         {
@@ -221,12 +221,12 @@ public class LeaderBoardService : ILeaderBoardService
         }
     }
 
-    public async Task<ApplicationResult> UpdateLeaderboardSchedule(UpdateLeaderboardScheduleCommand updateLeaderboardSchedule)
+    public async Task<ApplicationResult<bool>> UpdateLeaderboardSchedule(UpdateLeaderboardScheduleCommand updateLeaderboardSchedule)
     {
         try
         {
             await _leaderBoardApiClient.PostAsJson($"{_leaderBoardApiClientOptions.Endpoint}UpdateLeaderboardSchedule", updateLeaderboardSchedule);
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
         catch (Exception ex)
         {
@@ -234,14 +234,14 @@ public class LeaderBoardService : ILeaderBoardService
         }
     }
 
-    public async Task<ApplicationResult> GetCalendar(DateTimeOffset? startDate, DateTimeOffset? endDate)
+    public async Task<ApplicationResult<object>> GetCalendar(DateTimeOffset? startDate, DateTimeOffset? endDate)
     {
         try
         {
             var res = await _leaderBoardApiClient.Get<object>(
                 $"{_leaderBoardApiClientOptions.Endpoint}GetCalendar?StartDate={startDate}&EndDate={endDate}");
 
-            return new ApplicationResult { Data = res, Success = true };
+            return new ApplicationResult<object> { Data = res, Success = true };
         }
         catch (Exception ex)
         {
@@ -249,11 +249,11 @@ public class LeaderBoardService : ILeaderBoardService
         }
     }
 
-    public async Task<ApplicationResult> GetAllPrizes()
+    public async Task<ApplicationResult<object>> GetAllPrizes()
     {
         var prizes = _prizeRepository.Query();
 
-        return new ApplicationResult
+        return new ApplicationResult<object>
         {
             Success = true,
             Data = await prizes.ToListAsync(),

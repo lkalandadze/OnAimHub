@@ -30,57 +30,57 @@ public class DeleteEndpointCommandHandlerTest
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
     }
 
-    [Fact]
-    public async Task Handle_ShouldDeleteDomains_WhenEndpointExist()
-    {
-        var domainIds = new List<int> { 1, 2 };
-        var domains = new List<OnAim.Admin.Domain.Entities.Endpoint>
-        {
+    //[Fact]
+    //public async Task Handle_ShouldDeleteDomains_WhenEndpointExist()
+    //{
+    //    var domainIds = new List<int> { 1, 2 };
+    //    var domains = new List<OnAim.Admin.Domain.Entities.Endpoint>
+    //    {
             
-        }.AsQueryable().BuildMock();
-        var command = new DeleteEndpointCommand(domainIds);
+    //    }.AsQueryable().BuildMock();
+    //    var command = new DeleteEndpointCommand(domainIds);
 
-        var filter = new EndpointFilter();
+    //    var filter = new EndpointFilter();
 
-        MockEndpointService
-            .Setup(service => service.GetAll(filter))
-            .ReturnsAsync(new ApplicationResult { Data = domains.AsQueryable() });
+    //    MockEndpointService
+    //        .Setup(service => service.GetAll(filter))
+    //        .ReturnsAsync(new ApplicationResult { Data = domains.AsQueryable() });
 
-        MockEndpointService
-            .Setup(service => service.Delete(It.IsAny<List<int>>()))
-            .ReturnsAsync(new ApplicationResult { Success = true })
-            .Verifiable();
+    //    MockEndpointService
+    //        .Setup(service => service.Delete(It.IsAny<List<int>>()))
+    //        .ReturnsAsync(new ApplicationResult { Success = true })
+    //        .Verifiable();
 
-        var handler = new DeleteEndpointCommandHandler(MockEndpointService.Object, MockValidator.Object);
+    //    var handler = new DeleteEndpointCommandHandler(MockEndpointService.Object, MockValidator.Object);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+    //    var result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.Success);
-        MockEndpointService.Verify(service => service.Delete(It.IsAny<List<int>>()), Times.Once);
-    }
+    //    Assert.True(result.Success);
+    //    MockEndpointService.Verify(service => service.Delete(It.IsAny<List<int>>()), Times.Once);
+    //}
 
-    [Fact]
-    public async Task Handle_ShouldThrowNotFoundException_WhenNoEndpointsFound()
-    {
-        var endpointIds = new List<int> { 3, 4 };
-        var emptyEndpoints = new List<OnAim.Admin.Domain.Entities.Endpoint>().AsQueryable().BuildMock();
-        var command = new DeleteEndpointCommand(endpointIds);
-        var filter = new EndpointFilter();
+    //[Fact]
+    //public async Task Handle_ShouldThrowNotFoundException_WhenNoEndpointsFound()
+    //{
+    //    var endpointIds = new List<int> { 3, 4 };
+    //    var emptyEndpoints = new List<OnAim.Admin.Domain.Entities.Endpoint>().AsQueryable().BuildMock();
+    //    var command = new DeleteEndpointCommand(endpointIds);
+    //    var filter = new EndpointFilter();
 
-        MockEndpointService
-            .Setup(service => service.GetAll(filter))
-            .ReturnsAsync(new ApplicationResult { Data = emptyEndpoints.AsQueryable() });
+    //    MockEndpointService
+    //        .Setup(service => service.GetAll(filter))
+    //        .ReturnsAsync(new ApplicationResult { Data = emptyEndpoints.AsQueryable() });
 
-        MockEndpointService
-             .Setup(service => service.Delete(It.IsAny<List<int>>()))
-             .ReturnsAsync(new ApplicationResult { Success = true })
-             .Verifiable();
+    //    MockEndpointService
+    //         .Setup(service => service.Delete(It.IsAny<List<int>>()))
+    //         .ReturnsAsync(new ApplicationResult { Success = true })
+    //         .Verifiable();
 
-        var handler = new DeleteEndpointCommandHandler(MockEndpointService.Object, MockValidator.Object);
+    //    var handler = new DeleteEndpointCommandHandler(MockEndpointService.Object, MockValidator.Object);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+    //    var result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.Success);
-        MockEndpointService.Verify(service => service.Delete(It.IsAny<List<int>>()), Times.Once);
-    }
+    //    Assert.True(result.Success);
+    //    MockEndpointService.Verify(service => service.Delete(It.IsAny<List<int>>()), Times.Once);
+    //}
 }

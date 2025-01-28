@@ -1,4 +1,6 @@
-﻿namespace OnAim.Admin.Domain.LeaderBoradEntities;
+﻿using AggregationService.Domain.Entities;
+
+namespace OnAim.Admin.Domain.LeaderBoradEntities;
 
 public class LeaderboardRecord
 {
@@ -51,7 +53,7 @@ public class LeaderboardRecord
     public LeaderboardSchedule LeaderboardSchedule { get; set; }
     public ICollection<LeaderboardProgress> LeaderboardProgresses { get; set; } = new List<LeaderboardProgress>();
     public ICollection<LeaderboardRecordPrize> LeaderboardRecordPrizes { get; set; } = new List<LeaderboardRecordPrize>();
-
+    public ICollection<AggregationConfiguration> AggregationConfigurations { get; set; } = new List<AggregationConfiguration>();
     public void AddLeaderboardRecordPrizes(int id, int startRank, int endRank, string coinId, int amount)
     {
         var prize = new LeaderboardRecordPrize(id, startRank, endRank, coinId, amount);

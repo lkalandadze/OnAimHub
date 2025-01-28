@@ -1,10 +1,12 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.Promotion;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.APP.Features.PromotionFeatures.Queries.GetAll;
 
-public class GetAllPromotionsQueryHandler : IQueryHandler<GetAllPromotionsQuery, ApplicationResult>
+public class GetAllPromotionsQueryHandler : IQueryHandler<GetAllPromotionsQuery, ApplicationResult<PaginatedResult<PromotionDto>>>
 {
     private readonly IPromotionService _promotionService;
 
@@ -12,10 +14,8 @@ public class GetAllPromotionsQueryHandler : IQueryHandler<GetAllPromotionsQuery,
     {
         _promotionService = promotionService;
     }
-    public async Task<ApplicationResult> Handle(GetAllPromotionsQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<PaginatedResult<PromotionDto>>> Handle(GetAllPromotionsQuery request, CancellationToken cancellationToken)
     {
-        var result = await _promotionService.GetAllPromotions(request.Filter);
-
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return await _promotionService.GetAllPromotions(request.Filter);
     }
 }

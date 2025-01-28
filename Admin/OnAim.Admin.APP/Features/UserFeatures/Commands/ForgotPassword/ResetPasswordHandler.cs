@@ -5,7 +5,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.ForgotPassword;
 
-public class ResetPasswordHandler : ICommandHandler<ResetPassword, ApplicationResult>
+public class ResetPasswordHandler : ICommandHandler<ResetPassword, ApplicationResult<bool>>
 {
     private readonly IUserService _userService;
     private readonly IValidator<ResetPassword> _validator;
@@ -16,15 +16,13 @@ public class ResetPasswordHandler : ICommandHandler<ResetPassword, ApplicationRe
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(ResetPassword request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(ResetPassword request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var result = await _userService.ResetPassword(request.Email, request.Code, request.Password);
-
-        return new ApplicationResult { Success = result.Success, Data = result.Data };
+        return await _userService.ResetPassword(request.Email, request.Code, request.Password);
     }
 }

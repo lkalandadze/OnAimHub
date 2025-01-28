@@ -1,10 +1,9 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.GameServices;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.GameFeatures.Queries.GetById;
 
-public class GetGameQueryHandler : IQueryHandler<GetGameQuery, ApplicationResult>
+public class GetGameQueryHandler : IQueryHandler<GetGameQuery, object>
 {
     private readonly IGameService _gameService;
 
@@ -12,10 +11,8 @@ public class GetGameQueryHandler : IQueryHandler<GetGameQuery, ApplicationResult
     {
         _gameService = gameService;
     }
-    public async Task<ApplicationResult> Handle(GetGameQuery request, CancellationToken cancellationToken)
+    public async Task<object> Handle(GetGameQuery request, CancellationToken cancellationToken)
     {
-        var res = await _gameService.GetGame(request.name);
-
-        return new ApplicationResult { Data = res };
+        return await _gameService.GetGame(request.name);
     }
 }

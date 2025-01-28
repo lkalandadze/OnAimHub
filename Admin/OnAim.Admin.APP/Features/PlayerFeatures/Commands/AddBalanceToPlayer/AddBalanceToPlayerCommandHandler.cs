@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Commands.AddBalanceToPlayer;
 
-public sealed class AddBalanceToPlayerCommandHandler : ICommandHandler<AddBalanceToPlayerCommand, ApplicationResult>
+public sealed class AddBalanceToPlayerCommandHandler : ICommandHandler<AddBalanceToPlayerCommand, ApplicationResult<bool>>
 {
     private readonly IPlayerService _playerService;
 
@@ -13,10 +13,8 @@ public sealed class AddBalanceToPlayerCommandHandler : ICommandHandler<AddBalanc
         _playerService = playerService;
     }
 
-    public async Task<ApplicationResult> Handle(AddBalanceToPlayerCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(AddBalanceToPlayerCommand request, CancellationToken cancellationToken)
     {
-        var res = await _playerService.AddBalanceToPlayer(request.Command);
-
-        return new ApplicationResult { Data = res.Data, Success = res.Success };
+        return await _playerService.AddBalanceToPlayer(request.Command);
     }
 }

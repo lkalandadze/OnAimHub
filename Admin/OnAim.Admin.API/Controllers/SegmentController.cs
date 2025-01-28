@@ -16,7 +16,9 @@ using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetById.BlackListedPlayer
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetGeneralSegmentActsHistory;
 using OnAim.Admin.APP.Features.SegmentFeatures.Queries.GetSegmentActs;
 using OnAim.Admin.APP.Services.HubServices.Segment;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Segment;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.API.Controllers;
 
@@ -30,23 +32,23 @@ public class SegmentController : ApiControllerBase
     }
 
     [HttpGet(nameof(GetAll))]
-    public async Task<IActionResult> GetAll([FromQuery] GetAllSegmentQuery query)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<SegmentListDto>>>> GetAll([FromQuery] GetAllSegmentQuery query)
         => Ok(await Mediator.Send(query));
 
     [HttpGet(nameof(GetGeneralSegmentActs))]
-    public async Task<IActionResult> GetGeneralSegmentActs([FromQuery] SegmentActsFilter filter)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<ActsDto>>>> GetGeneralSegmentActs([FromQuery] SegmentActsFilter filter)
         => Ok(await Mediator.Send(new GetSegmentActsQuery(filter)));
 
     [HttpGet(nameof(GetGeneralSegmentActsHistory))]
-    public async Task<IActionResult> GetGeneralSegmentActsHistory([FromQuery] SegmentActsFilter filter)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<ActsHistoryDto>>>> GetGeneralSegmentActsHistory([FromQuery] SegmentActsFilter filter)
         => Ok(await Mediator.Send(new GetGeneralSegmentActsHistoryQuery(filter)));
 
     [HttpGet(nameof(GetById) + "/{segmentId}")]
-    public async Task<IActionResult> GetById([FromRoute] string segmentId)
+    public async Task<ActionResult<ApplicationResult<SegmentDto>>> GetById([FromRoute] string segmentId)
         => Ok(await Mediator.Send(new GetSegmentByIdQuery(segmentId)));
 
     [HttpGet(nameof(GetBlackListedPlayers) + "/{segmentId}")]
-    public async Task<IActionResult> GetBlackListedPlayers([FromRoute] string segmentId, [FromQuery] FilterBy filter)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<SegmentPlayerDto>>>> GetBlackListedPlayers([FromRoute] string segmentId, [FromQuery] FilterBy filter)
         => Ok(await Mediator.Send(new GetBlackListedPlayersBySegmentIdQuery(segmentId, filter)));
 
     [HttpGet(nameof(GetActivePlayers) + "/{segmentId}")]
@@ -54,11 +56,11 @@ public class SegmentController : ApiControllerBase
     => Ok(await Mediator.Send(new GetActivePlayersBySegmentIdQuery(segmentId, filter)));
 
     [HttpGet(nameof(GetSegmentActsById) + "/{segmentId}")]
-    public async Task<IActionResult> GetSegmentActsById([FromRoute] string segmentId)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<SegmentPlayerDto>>>> GetSegmentActsById([FromRoute] string segmentId)
         => Ok(await Mediator.Send(new GetSegmentActsByIdQuery(segmentId)));
 
     [HttpGet(nameof(GetSegmentActsHistoryById) + "/{playerSegmentActId}")]
-    public async Task<IActionResult> GetSegmentActsHistoryById([FromRoute] int playerSegmentActId)
+    public async Task<ActionResult<ApplicationResult<IEnumerable<ActsHistoryDto>>>> GetSegmentActsHistoryById([FromRoute] int playerSegmentActId)
         => Ok(await Mediator.Send(new GetSegmentActsHistoryByIdQuery(playerSegmentActId)));
 
     [HttpPost(nameof(Create))]

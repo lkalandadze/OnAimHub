@@ -4,4 +4,4 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.AssignPlayersToSegment;
 
-public record AssignSegmentToPlayersCommand(IEnumerable<string> SegmentId, IFormFile File) : ICommand<ApplicationResult>;
+public record AssignSegmentToPlayersCommand(IEnumerable<string> SegmentId, IFormFile File) : ICommand<ApplicationResult<object>>;

@@ -32,7 +32,7 @@ public class CoinTemplateService : ICoinTemplateService
         _coinRepository = coinRepository;
     }
 
-    public async Task<ApplicationResult> GetAllCoinTemplates(BaseFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<CoinTemplateListDto>>> GetAllCoinTemplates(BaseFilter filter)
     {
         var temps = await _coinRepository.GetCoinTemplates();
 
@@ -109,7 +109,7 @@ public class CoinTemplateService : ICoinTemplateService
             .Take(pageSize)
             .ToList();
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<CoinTemplateListDto>>
         {
             Success = true,
             Data = new PaginatedResult<CoinTemplateListDto>
@@ -122,7 +122,7 @@ public class CoinTemplateService : ICoinTemplateService
         };
     }
 
-    public async Task<ApplicationResult> GetCoinTemplateById(string id)
+    public async Task<ApplicationResult<CoinTemplateDto>> GetCoinTemplateById(string id)
     {
         var coin = await _coinRepository.GetCoinTemplateByIdAsync(id);
 
@@ -130,7 +130,7 @@ public class CoinTemplateService : ICoinTemplateService
 
         if (coin.CoinType == Domain.HubEntities.Enum.CoinType.In)
         {
-            return new ApplicationResult
+            return new ApplicationResult<CoinTemplateDto>
             {
                 Data = new CoinInTemplateDto
                 {
@@ -173,11 +173,11 @@ public class CoinTemplateService : ICoinTemplateService
                 }).ToList() ?? new List<WithdrawOptionGroupCoinTempDto>(),
             };
 
-            return new ApplicationResult { Success = true, Data = coinTemplate };
+            return new ApplicationResult<CoinTemplateDto> { Success = true, Data = coinTemplate };
         }
         else
         {
-            return new ApplicationResult
+            return new ApplicationResult<CoinTemplateDto>
             {
                 Data = new CoinTemplateDto
                 {
@@ -254,7 +254,7 @@ public class CoinTemplateService : ICoinTemplateService
         return true;
     }
 
-    public async Task<ApplicationResult> DeleteCoinTemplate(string CoinTemplateId)
+    public async Task<ApplicationResult<bool>> DeleteCoinTemplate(string CoinTemplateId)
     {
         var coinTemplate = await _coinRepository.GetCoinTemplateByIdAsync(CoinTemplateId);
 
@@ -267,10 +267,10 @@ public class CoinTemplateService : ICoinTemplateService
 
         await _coinRepository.UpdateCoinTemplateAsync(CoinTemplateId, coinTemplate);
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
-    public async Task<ApplicationResult> UpdateCoinTemplate(UpdateCoinTemplateDto update)
+    public async Task<ApplicationResult<bool>> UpdateCoinTemplate(UpdateCoinTemplateDto update)
     {
         var coinTemplate = await _coinRepository.GetCoinTemplateByIdAsync(update.Id);
 
@@ -311,6 +311,6 @@ public class CoinTemplateService : ICoinTemplateService
 
         await _coinRepository.UpdateCoinTemplateAsync(update.Id, coinTemplate);
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 }

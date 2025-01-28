@@ -5,7 +5,7 @@ using OnAim.Admin.APP.Services.AdminServices.Endpoint;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Commands.Delete;
 
-public class DeleteEndpointCommandHandler : ICommandHandler<DeleteEndpointCommand, ApplicationResult>
+public class DeleteEndpointCommandHandler : ICommandHandler<DeleteEndpointCommand, ApplicationResult<bool>>
 {
     private readonly IEndpointService _endpointService;
     private readonly IValidator<DeleteEndpointCommand> _validator;
@@ -16,15 +16,13 @@ public class DeleteEndpointCommandHandler : ICommandHandler<DeleteEndpointComman
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(DeleteEndpointCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(DeleteEndpointCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var result = await _endpointService.Delete(request.Ids);
-
-        return new ApplicationResult { Success = result.Success, Data = result };
+        return await _endpointService.Delete(request.Ids);
     }
 }

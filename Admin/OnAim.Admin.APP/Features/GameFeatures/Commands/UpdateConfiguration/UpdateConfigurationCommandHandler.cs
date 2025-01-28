@@ -1,10 +1,9 @@
 ﻿using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Services.GameServices;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.GameFeatures.Commands.UpdateConfiguration;
 
-public class UpdateConfigurationCommandHandler : ICommandHandler<UpdateConfigurationCommand, ApplicationResult>
+public class UpdateConfigurationCommandHandler : ICommandHandler<UpdateConfigurationCommand, object>
 {
     private readonly IGameService _gameService;
 
@@ -12,10 +11,8 @@ public class UpdateConfigurationCommandHandler : ICommandHandler<UpdateConfigura
     {
         _gameService = gameService;
     }
-    public async Task<ApplicationResult> Handle(UpdateConfigurationCommand request, CancellationToken cancellationToken)
+    public async Task<object> Handle(UpdateConfigurationCommand request, CancellationToken cancellationToken)
     {
-        var result = await _gameService.UpdateConfiguration(request.gameName, request.ConfigurationJson);
-
-        return new ApplicationResult { Data = result };
+        return await _gameService.UpdateConfiguration(request.gameName, request.ConfigurationJson);
     }
 }

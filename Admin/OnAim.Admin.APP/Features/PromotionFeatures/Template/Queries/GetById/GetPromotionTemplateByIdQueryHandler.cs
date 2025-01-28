@@ -1,10 +1,11 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.HubServices.Promotion;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.Promotion;
 
 namespace OnAim.Admin.APP.Features.PromotionFeatures.Template.Queries.GetById;
 
-public sealed class GetPromotionTemplateByIdQueryHandler : IQueryHandler<GetPromotionTemplateByIdQuery, ApplicationResult>
+public sealed class GetPromotionTemplateByIdQueryHandler : IQueryHandler<GetPromotionTemplateByIdQuery, ApplicationResult<PromotionTemplateListDto>>
 {
     private readonly IPromotionTemplateService _promotionTemplateService;
 
@@ -13,10 +14,8 @@ public sealed class GetPromotionTemplateByIdQueryHandler : IQueryHandler<GetProm
         _promotionTemplateService = promotionTemplateService;
     }
 
-    public async Task<ApplicationResult> Handle(GetPromotionTemplateByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<PromotionTemplateListDto>> Handle(GetPromotionTemplateByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await _promotionTemplateService.GetPromotionTemplateById(request.Id);
-
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return await _promotionTemplateService.GetPromotionTemplateById(request.Id);
     }
 }

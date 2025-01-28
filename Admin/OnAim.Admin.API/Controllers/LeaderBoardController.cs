@@ -26,11 +26,11 @@ public class LeaderBoardController : ApiControllerBase
 {
     #region LeaderBoard
     [HttpPost(nameof(CreateLeaderBoardRecord))]
-    public async Task<ActionResult<ApplicationResult>> CreateLeaderBoardRecord([FromBody] CreateLeaderboardCommand command)
+    public async Task<IActionResult> CreateLeaderBoardRecord([FromBody] CreateLeaderboardCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpPut(nameof(UpdateLeaderBoardRecord))]
-    public async Task<ActionResult<ApplicationResult>> UpdateLeaderBoardRecord([FromBody] UpdateLeaderBoardCommand command)
+    public async Task<IActionResult> UpdateLeaderBoardRecord([FromBody] UpdateLeaderBoardCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpGet(nameof(GetAllLeaderBoards))]
@@ -38,19 +38,19 @@ public class LeaderBoardController : ApiControllerBase
         => Ok(await Mediator.Send(new GetAllLeaderBoardQuery(query)));    
 
     [HttpGet(nameof(GetLeaderboardRecordById))]
-    public async Task<ActionResult<ApplicationResult>> GetLeaderboardRecordById([FromQuery] int id)
+    public async Task<ActionResult<ApplicationResult<LeaderBoardData>>> GetLeaderboardRecordById([FromQuery] int id)
         => Ok(await Mediator.Send(new GetLeaderboardRecordByIdQuery(id)));
 
     [HttpPost(nameof(CreateLeaderboardSchedule))]
-    public async Task<ActionResult<ApplicationResult>> CreateLeaderboardSchedule([FromBody] CreateScheduleCommand command)
+    public async Task<IActionResult> CreateLeaderboardSchedule([FromBody] CreateScheduleCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpPut(nameof(UpdateLeaderboardSchedule))]
-    public async Task<ActionResult<ApplicationResult>> UpdateLeaderboardSchedule([FromBody] UpdateScheduleCommand command)
+    public async Task<IActionResult> UpdateLeaderboardSchedule([FromBody] UpdateScheduleCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpGet(nameof(GetLeaderboardSchedules))]
-    public async Task<ActionResult<ApplicationResult>> GetLeaderboardSchedules([FromQuery] GetLeaderboardSchedulesQuery query)
+    public async Task<IActionResult> GetLeaderboardSchedules([FromQuery] GetLeaderboardSchedulesQuery query)
         => Ok(await Mediator.Send(query));
 
     [HttpGet(nameof(GetLeaderboardRecordStatuses))]
@@ -58,11 +58,11 @@ public class LeaderBoardController : ApiControllerBase
         => Ok(EnumHelper.GetEnumValues<APP.LeaderboardRecordStatus>());
 
     [HttpGet(nameof(GetAllPrizes))]
-    public async Task<ActionResult<ApplicationResult>> GetAllPrizes()
+    public async Task<IActionResult> GetAllPrizes()
         => Ok(await Mediator.Send(new GetAllPrizesQuery())); 
     
     [HttpGet(nameof(GetCalendar))]
-    public async Task<ActionResult<ApplicationResult>> GetCalendar([FromQuery] GetCalendarQuery getCalendar)
+    public async Task<IActionResult> GetCalendar([FromQuery] GetCalendarQuery getCalendar)
         => Ok(await Mediator.Send(getCalendar));
     #endregion
 
@@ -81,11 +81,11 @@ public class LeaderBoardController : ApiControllerBase
         => Ok(await Mediator.Send(command));
 
     [HttpGet(nameof(GetAllLeaderBoardTemplates))]
-    public async Task<IActionResult> GetAllLeaderBoardTemplates([FromQuery] BaseFilter filter)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<LeaderBoardTemplateListDto>>>> GetAllLeaderBoardTemplates([FromQuery] BaseFilter filter)
         => Ok(await Mediator.Send(new GetAllLeaderboardTemplatesQuery(filter)));
 
     [HttpGet(nameof(GetLeaderboardTemplateById))]
-    public async Task<IActionResult> GetLeaderboardTemplateById([FromQuery] GetLeaderboardTemplateByIdQuery query)
+    public async Task<ActionResult<ApplicationResult<LeaderBoardTemplateListDto>>> GetLeaderboardTemplateById([FromQuery] GetLeaderboardTemplateByIdQuery query)
         => Ok(await Mediator.Send(query));
     #endregion
 }

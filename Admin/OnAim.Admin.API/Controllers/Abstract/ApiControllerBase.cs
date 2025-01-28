@@ -4,8 +4,8 @@ using OnAim.Admin.API.Attributes;
 
 namespace OnAim.Admin.API.Controllers.Abstract;
 
-//[CheckEndpointStatusAttribute]
-//[Permission]
+[CheckEndpointStatusAttribute]
+[Permission]
 [ApiController]
 [Route("api/[controller]")]
 public class ApiControllerBase : ControllerBase

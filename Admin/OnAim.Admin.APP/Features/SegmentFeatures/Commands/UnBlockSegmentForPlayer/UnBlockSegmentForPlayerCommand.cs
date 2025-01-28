@@ -3,4 +3,4 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.UnBlockPlayer;
 
-public record UnBlockSegmentForPlayerCommand(string SegmentId, int PlayerId) : ICommand<ApplicationResult>;
+public record UnBlockSegmentForPlayerCommand(string SegmentId, int PlayerId) : ICommand<ApplicationResult<bool>>;

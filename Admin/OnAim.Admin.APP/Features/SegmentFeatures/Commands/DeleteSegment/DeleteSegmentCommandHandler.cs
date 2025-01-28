@@ -5,7 +5,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.SegmentFeatures.Commands.Delete;
 
-public class DeleteSegmentCommandHandler : ICommandHandler<DeleteSegmentCommand, ApplicationResult>
+public class DeleteSegmentCommandHandler : ICommandHandler<DeleteSegmentCommand, ApplicationResult<bool>>
 {
     private readonly ISegmentService _segmentService;
     private readonly IValidator<DeleteSegmentCommand> _validator;
@@ -16,15 +16,13 @@ public class DeleteSegmentCommandHandler : ICommandHandler<DeleteSegmentCommand,
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(DeleteSegmentCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(DeleteSegmentCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var result = await _segmentService.DeleteSegment(request.Id);
-
-        return new ApplicationResult { Success = result.Success, Data = result.Data };
+        return await _segmentService.DeleteSegment(request.Id);
     }
 }

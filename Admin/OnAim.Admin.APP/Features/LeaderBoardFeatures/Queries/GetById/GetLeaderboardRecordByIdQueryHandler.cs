@@ -1,10 +1,11 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
+using OnAim.Admin.APP.Services.LeaderBoard;
 using OnAim.Admin.APP.Services.LeaderBoardServices;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetLeaderboardRecordById;
 
-public class GetLeaderboardRecordByIdQueryHandler : IQueryHandler<GetLeaderboardRecordByIdQuery, ApplicationResult>
+public class GetLeaderboardRecordByIdQueryHandler : IQueryHandler<GetLeaderboardRecordByIdQuery, ApplicationResult<LeaderBoardData>>
 {
     private readonly ILeaderBoardService _leaderBoardService;
 
@@ -12,10 +13,8 @@ public class GetLeaderboardRecordByIdQueryHandler : IQueryHandler<GetLeaderboard
     {
         _leaderBoardService = leaderBoardService;
     }
-    public async Task<ApplicationResult> Handle(GetLeaderboardRecordByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<LeaderBoardData>> Handle(GetLeaderboardRecordByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await _leaderBoardService.GetLeaderboardRecordById(request.Id);
-
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return await _leaderBoardService.GetLeaderboardRecordById(request.Id);
     }
 }

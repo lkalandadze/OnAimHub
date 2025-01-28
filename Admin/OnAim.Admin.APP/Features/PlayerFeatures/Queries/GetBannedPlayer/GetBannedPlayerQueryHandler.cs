@@ -1,10 +1,11 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.HubServices.Player;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Domain.HubEntities.PlayerEntities;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Queries.GetBannedPlayer;
 
-public class GetBannedPlayerQueryHandler : IQueryHandler<GetBannedPlayerQuery, ApplicationResult>
+public class GetBannedPlayerQueryHandler : IQueryHandler<GetBannedPlayerQuery, ApplicationResult<PlayerBan>>
 {
     private readonly IPlayerService _playerService;
 
@@ -12,14 +13,8 @@ public class GetBannedPlayerQueryHandler : IQueryHandler<GetBannedPlayerQuery, A
     {
         _playerService = playerService;
     }
-    public async Task<ApplicationResult> Handle(GetBannedPlayerQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<PlayerBan>> Handle(GetBannedPlayerQuery request, CancellationToken cancellationToken)
     {
-        var result = await _playerService.GetBannedPlayer(request.Id);
-
-        return new ApplicationResult
-        {
-            Success = result.Success,
-            Data = result.Data,
-        };
+        return await _playerService.GetBannedPlayer(request.Id);
     }
 }

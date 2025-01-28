@@ -1,13 +1,14 @@
 ﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Role;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.APP.Services.AdminServices.Role;
 
 public interface IRoleService
 {
-    Task<ApplicationResult> Create(CreateRoleRequest request);
-    Task<ApplicationResult> Delete(List<int> ids);
-    Task<ApplicationResult> Update(int id, UpdateRoleRequest request);
-    Task<ApplicationResult> GetAll(RoleFilter filter);
-    Task<ApplicationResult> GetById(int id);
+    Task<ApplicationResult<string>> Create(CreateRoleRequest request);
+    Task<ApplicationResult<bool>> Delete(List<int> ids);
+    Task<ApplicationResult<string>> Update(int id, UpdateRoleRequest request);
+    Task<ApplicationResult<PaginatedResult<RoleShortResponseModel>>> GetAll(RoleFilter filter);
+    Task<ApplicationResult<RoleResponseModel>> GetById(int id);
 }

@@ -5,7 +5,7 @@ using OnAim.Admin.APP.Services.AdminServices.Role;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Commands.Delete;
 
-public class DeleteRoleCommandHandler : ICommandHandler<DeleteRoleCommand, ApplicationResult>
+public class DeleteRoleCommandHandler : ICommandHandler<DeleteRoleCommand, ApplicationResult<bool>>
 {
     private readonly IRoleService _roleService;
     private readonly IValidator<DeleteRoleCommand> _validator;
@@ -16,15 +16,13 @@ public class DeleteRoleCommandHandler : ICommandHandler<DeleteRoleCommand, Appli
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if(!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var result = await _roleService.Delete(request.Ids);
-
-        return new ApplicationResult { Success = result.Success };
+        return await _roleService.Delete(request.Ids);
     }
 }

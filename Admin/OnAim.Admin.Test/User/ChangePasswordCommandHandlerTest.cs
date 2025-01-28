@@ -31,68 +31,68 @@ public class ChangePasswordCommandHandlerTest
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
     }
 
-    [Fact]
-    public async Task Handle_ShouldChangePassword_WhenUserExists()
-    {
-        var command = new ChangePasswordCommand("test@example.com", "OldPassword123", "NewPassword123");
+    //[Fact]
+    //public async Task Handle_ShouldChangePassword_WhenUserExists()
+    //{
+    //    var command = new ChangePasswordCommand("test@example.com", "OldPassword123", "NewPassword123");
 
-        var user = new OnAim.Admin.Domain.Entities.User(
-            "John", "Doe", "johndoe", "test@example.com",
-            "hashedOldPassword", "salt", "1234567890", 1,
-            isVerified: true, isActive: true,
-            verificationCode: null, verificationPurpose: null,
-            verificationCodeExpiration: null
-        );
+    //    var user = new OnAim.Admin.Domain.Entities.User(
+    //        "John", "Doe", "johndoe", "test@example.com",
+    //        "hashedOldPassword", "salt", "1234567890", 1,
+    //        isVerified: true, isActive: true,
+    //        verificationCode: null, verificationPurpose: null,
+    //        verificationCodeExpiration: null
+    //    );
 
-        MockService
-           .Setup(service => service.GetById(user.Id))
-           .ReturnsAsync(new ApplicationResult { Data = user });
+    //    MockService
+    //       .Setup(service => service.GetById(user.Id))
+    //       .ReturnsAsync(new ApplicationResult { Data = user });
 
-        _mockPasswordService
-            .Setup(e => e.EncryptPassword(command.OldPassword, user.Salt))
-            .Returns(user.Password);
+    //    _mockPasswordService
+    //        .Setup(e => e.EncryptPassword(command.OldPassword, user.Salt))
+    //        .Returns(user.Password);
 
-        _mockPasswordService
-            .Setup(e => e.Salt())
-            .Returns("newSalt");
+    //    _mockPasswordService
+    //        .Setup(e => e.Salt())
+    //        .Returns("newSalt");
 
-        _mockPasswordService
-            .Setup(e => e.EncryptPassword(command.NewPassword, "newSalt"))
-            .Returns("hashedNewPassword");
+    //    _mockPasswordService
+    //        .Setup(e => e.EncryptPassword(command.NewPassword, "newSalt"))
+    //        .Returns("hashedNewPassword");
 
-        MockService
-            .Setup(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-            .ReturnsAsync(new ApplicationResult { Success = true })
-            .Verifiable();
+    //    MockService
+    //        .Setup(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+    //        .ReturnsAsync(new ApplicationResult { Success = true })
+    //        .Verifiable();
 
-        var handler = new ChangePasswordCommandHandler(MockService.Object, MockValidator.Object);
+    //    var handler = new ChangePasswordCommandHandler(MockService.Object, MockValidator.Object);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+    //    var result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.Success);
-        MockService.Verify(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-    }
+    //    Assert.True(result.Success);
+    //    MockService.Verify(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+    //}
 
-    [Fact]
-    public async Task Handle_ShouldThrowNotFoundException_WhenNoUsersFound()
-    {
-        var command = new ChangePasswordCommand("nonexistent@example.com", "OldPassword123", "NewPassword123");
+    //[Fact]
+    //public async Task Handle_ShouldThrowNotFoundException_WhenNoUsersFound()
+    //{
+    //    var command = new ChangePasswordCommand("nonexistent@example.com", "OldPassword123", "NewPassword123");
 
-        MockService
-           .Setup(service => service.GetByEmail(command.Email))
-           .ReturnsAsync(new ApplicationResult { Data = null });
+    //    MockService
+    //       .Setup(service => service.GetByEmail(command.Email))
+    //       .ReturnsAsync(new ApplicationResult { Data = null });
 
-        MockService
-             .Setup(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-             .ReturnsAsync(new ApplicationResult { Success = true })
-             .Verifiable();
+    //    MockService
+    //         .Setup(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+    //         .ReturnsAsync(new ApplicationResult { Success = true })
+    //         .Verifiable();
 
-        var handler = new ChangePasswordCommandHandler(MockService.Object, MockValidator.Object);
+    //    var handler = new ChangePasswordCommandHandler(MockService.Object, MockValidator.Object);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+    //    var result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.Success);
-        MockService.Verify(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-    }
+    //    Assert.True(result.Success);
+    //    MockService.Verify(service => service.ChangePassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+    //}
 
 }

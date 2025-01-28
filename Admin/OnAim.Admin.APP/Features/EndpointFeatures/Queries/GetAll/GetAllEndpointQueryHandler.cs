@@ -1,10 +1,12 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.AdminServices.Endpoint;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.Endpoint;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Queries.GetAll;
 
-public class GetAllEndpointQueryHandler : IQueryHandler<GetAllEndpointQuery, ApplicationResult>
+public class GetAllEndpointQueryHandler : IQueryHandler<GetAllEndpointQuery, ApplicationResult<PaginatedResult<EndpointResponseModel>>>
 {
     private readonly IEndpointService _endpointService;
 
@@ -12,14 +14,8 @@ public class GetAllEndpointQueryHandler : IQueryHandler<GetAllEndpointQuery, App
     {
         _endpointService = endpointService;
     }
-    public async Task<ApplicationResult> Handle(GetAllEndpointQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<PaginatedResult<EndpointResponseModel>>> Handle(GetAllEndpointQuery request, CancellationToken cancellationToken)
     {
-        var result = await _endpointService.GetAll(request.Filter);
-
-        return new ApplicationResult
-        {
-            Success = true,
-            Data = result
-        };
+        return await _endpointService.GetAll(request.Filter);
     }
 }

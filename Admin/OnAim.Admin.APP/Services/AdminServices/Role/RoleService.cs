@@ -13,6 +13,7 @@ using OnAim.Admin.Contracts.Paging;
 using OnAim.Admin.Contracts.Enums;
 using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.AdminServices.Role;
+using System.Linq.Dynamic.Core;
 
 namespace OnAim.Admin.APP.Services.Admin.Role;
 
@@ -39,7 +40,7 @@ public class RoleService : IRoleService
         _securityContextAccessor = securityContextAccessor;
     }
 
-    public async Task<ApplicationResult> Create(CreateRoleRequest request)
+    public async Task<ApplicationResult<string>> Create(CreateRoleRequest request)
     {
         var existsName = _roleRepository.Query(x => x.Name.ToLower() == request.Name.ToLower()).Any();
         if (existsName)
@@ -69,14 +70,14 @@ public class RoleService : IRoleService
 
         await _configurationRepository.CommitChanges();
 
-        return new ApplicationResult
+        return new ApplicationResult<string>
         {
             Success = true,
             Data = $"Role {role.Name} Successfully Created!",
         };
     }
 
-    public async Task<ApplicationResult> Delete(List<int> ids)
+    public async Task<ApplicationResult<bool>> Delete(List<int> ids)
     {
         var roles = await _roleRepository.Query(x => ids.Contains(x.Id)).ToListAsync();
 
@@ -91,10 +92,10 @@ public class RoleService : IRoleService
 
         await _roleRepository.CommitChanges();
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
-    public async Task<ApplicationResult> Update(int id, UpdateRoleRequest request)
+    public async Task<ApplicationResult<string>> Update(int id, UpdateRoleRequest request)
     {
         var role = await _roleRepository.Query(x => x.Id == id)
                                  .Include(r => r.RoleEndpointGroups)
@@ -155,14 +156,14 @@ public class RoleService : IRoleService
         await _roleRepository.CommitChanges();
         await _configurationRepository.CommitChanges();
 
-        return new ApplicationResult
+        return new ApplicationResult<string>
         {
             Success = true,
             Data = $"Role {role.Name} Successfully Updated!",
         };
     }
 
-    public async Task<ApplicationResult> GetAll(RoleFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<RoleShortResponseModel>>> GetAll(RoleFilter filter)
     {
         var roleQuery = _roleRepository
             .Query(x =>
@@ -218,14 +219,14 @@ public class RoleService : IRoleService
            new List<string> { "Id", "Name" }
        );
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<RoleShortResponseModel>>
         {
             Success = true,
             Data = paginatedResult
         };
     }
 
-    public async Task<ApplicationResult> GetById(int id)
+    public async Task<ApplicationResult<RoleResponseModel>> GetById(int id)
     {
         var role = await _roleRepository
           .Query(x => x.Id == id)
@@ -239,7 +240,7 @@ public class RoleService : IRoleService
 
         var user = await _userRepository.Query(x => x.Id == role.CreatedBy).FirstOrDefaultAsync();
 
-        if (role == null) { return new ApplicationResult { Success = false, Data = $"Role Not Found!" }; }
+        if (role == null) { throw new NotFoundException("Role Not Found"); }
 
         var result = new RoleResponseModel
         {
@@ -283,7 +284,7 @@ public class RoleService : IRoleService
             }
         };
 
-        return new ApplicationResult
+        return new ApplicationResult<RoleResponseModel>
         {
             Success = true,
             Data = result,

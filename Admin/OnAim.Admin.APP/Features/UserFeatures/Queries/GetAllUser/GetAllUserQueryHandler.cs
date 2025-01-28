@@ -1,10 +1,12 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.AdminServices.User;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.User;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Queries.GetAllUser;
 
-public sealed class GetAllUserQueryHandler : IQueryHandler<GetAllUserQuery, ApplicationResult>
+public sealed class GetAllUserQueryHandler : IQueryHandler<GetAllUserQuery, ApplicationResult<PaginatedResult<UsersModel>>>
 {
     private readonly IUserService _userService;
 
@@ -13,14 +15,8 @@ public sealed class GetAllUserQueryHandler : IQueryHandler<GetAllUserQuery, Appl
         _userService = userService;
     }
 
-    public async Task<ApplicationResult> Handle(GetAllUserQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<PaginatedResult<UsersModel>>> Handle(GetAllUserQuery request, CancellationToken cancellationToken)
     {
-        var result = await _userService.GetAll(request.UserFilter);
-
-        return new ApplicationResult
-        {
-            Success = result.Success,
-            Data = result.Data
-        };
+        return await _userService.GetAll(request.UserFilter);
     }
 }

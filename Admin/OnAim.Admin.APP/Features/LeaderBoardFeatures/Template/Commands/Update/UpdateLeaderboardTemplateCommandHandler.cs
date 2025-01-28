@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.LeaderBoardFeatures.Template.Commands.Update;
 
-public sealed class UpdateLeaderboardTemplateCommandHandler : ICommandHandler<UpdateLeaderboardTemplateCommand, ApplicationResult>
+public sealed class UpdateLeaderboardTemplateCommandHandler : ICommandHandler<UpdateLeaderboardTemplateCommand, ApplicationResult<bool>>
 {
     private readonly ILeaderboardTemplateService _leaderboardTemplateService;
 
@@ -13,10 +13,8 @@ public sealed class UpdateLeaderboardTemplateCommandHandler : ICommandHandler<Up
         _leaderboardTemplateService = leaderboardTemplateService;
     }
 
-    public async Task<ApplicationResult> Handle(UpdateLeaderboardTemplateCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(UpdateLeaderboardTemplateCommand request, CancellationToken cancellationToken)
     {
-        var result = await _leaderboardTemplateService.UpdateLeaderboardTemplate(request.Update);
-
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return await _leaderboardTemplateService.UpdateLeaderboardTemplate(request.Update);
     }
 }
