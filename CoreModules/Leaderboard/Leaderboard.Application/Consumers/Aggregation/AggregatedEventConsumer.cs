@@ -33,16 +33,16 @@ public sealed class AggregatedEventConsumer : IConsumer<AggregatedEvent>
         if (player == default)
             throw new InvalidOperationException("player not found");
 
-        var leaderboardRecordId = int.Parse(request.ConfigKey);
+        var leaderboardExternalId = int.Parse(request.ConfigKey);
         var leaderboard = await _leaderboardRecordRepository
             .Query()
-            .FirstOrDefaultAsync(x => x.Id == leaderboardRecordId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.ExternalId == leaderboardExternalId && x.Status == LeaderboardRecordStatus.InProgress , cancellationToken);
 
-        if (leaderboard == null || leaderboard.Status != LeaderboardRecordStatus.InProgress)
-            throw new InvalidOperationException("Leaderboard not found or is not in progress.");
+        //if (leaderboard == default)
+        //    throw new Exception($"Leaderboard not found or is not in progress. leaderboardExternalId: {leaderboardExternalId} ---- LeaderboardId: {leaderboard.Id} ------ LeaderboardStatus: {leaderboard.Status}");
 
         var existingProgress = await _leaderboardProgressRepository
-            .GetProgressAsync(player.Id, leaderboardRecordId, cancellationToken);
+            .GetProgressAsync(player.Id, leaderboard.Id, cancellationToken);
 
         if (existingProgress != null)
         {
@@ -55,7 +55,7 @@ public sealed class AggregatedEventConsumer : IConsumer<AggregatedEvent>
         {
             var newProgress = new LeaderboardProgress(player.Id, player.UserName, (int)request.AddedPoints)
             {
-                LeaderboardRecordId = leaderboardRecordId
+                LeaderboardRecordId = leaderboard.Id
             };
 
             await _leaderboardProgressRepository

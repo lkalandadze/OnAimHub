@@ -7,5 +7,5 @@ namespace Hub.Domain.Entities.DbEnums;
 
 public class PlayerLogType : DbEnum<int, PlayerLogType>
 {
-    public static PlayerLogType Auth => FromId(1);
+    public static PlayerLogType Auth => FromId(1, nameof(Auth));
 }

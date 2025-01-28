@@ -43,23 +43,23 @@ public class HubController : BaseApiController
     }
 
 
-    [AllowAnonymous]
-    [HttpPost(nameof(TestTransaction))]
-    public async Task<IActionResult> TestTransaction([FromBody] TransactionRequestModel request)
-    {
-        await _transactionService.CreateTransactionWithEventAsync(
-            request.KeyId,
-            request.SourceServiceName,
-            request.CoinId,
-            request.Amount,
-            request.FromAccount,
-            request.ToAccount,
-            request.TransactionType,
-            request.PromotionId,
-            request.AdditionalData);
+    //[AllowAnonymous]
+    //[HttpPost(nameof(TestTransaction))]
+    //public async Task<IActionResult> TestTransaction([FromBody] TransactionRequestModel request)
+    //{
+    //    await _transactionService.CreateTransactionWithEventAsync(
+    //        request.KeyId,
+    //        request.SourceServiceName,
+    //        request.CoinId,
+    //        request.Amount,
+    //        request.FromAccount,
+    //        request.ToAccount,
+    //        request.TransactionType,
+    //        request.PromotionId,
+    //        request.AdditionalData);
 
-        return Ok();
-    }
+    //    return Ok();
+    //}
 
     [AllowAnonymous]
     [HttpPost(nameof(RefreshAuthentification))]
