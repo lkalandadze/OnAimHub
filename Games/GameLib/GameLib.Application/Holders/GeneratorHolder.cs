@@ -21,6 +21,36 @@ public class GeneratorHolder
         SetGenerators();
     }
 
+    public void ResetGenerators()
+    {
+        lock (_sync)
+        {
+            Generators.Clear();
+            SetGenerators();
+        }
+    }
+
+    public static TPrize GetPrize<TPrize>(int prizeGroupId, int playerId, Predicate<BasePrizeGroup>? predicate = null)
+        where TPrize : BasePrize
+    {
+        var generator = GetGenerator<TPrize>(prizeGroupId, predicate);
+        return (TPrize)generator.GetPrize(playerId);
+    }
+
+    internal static Generator GetGenerator<TPrize>(int prizeGroupId, Predicate<BasePrizeGroup>? predicate)
+        where TPrize : BasePrize
+    {
+        lock (_sync)
+        {
+            return Generators
+                .Where(x => x.Key.Id == prizeGroupId)
+                .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any())
+                .Where(x => x.Key.GetBasePrizes().First().GetType() == typeof(TPrize))
+                .First(x => predicate?.Invoke(x.Key) ?? true)
+                .Value!;
+        }
+    }
+
     private void SetGenerators()
     {
         prizeGroupTypes.ForEach(type =>
@@ -35,55 +65,5 @@ public class GeneratorHolder
                 Generators.Add(prizeGroup, generator);
             }
         });
-    }
-
-    public static async Task<TPrize> GetPrizeAsync<TPrize>(int prizeGroupId, int playerId, Predicate<BasePrizeGroup>? predicate = null)
-        where TPrize : BasePrize
-    {
-        var generator = GetGenerator<TPrize>(prizeGroupId, predicate);
-        return (TPrize)generator.GetPrize(playerId);
-    }
-
-    internal static Generator GetGenerator<TPrize>(int prizeGroupId, Predicate<BasePrizeGroup>? predicate)
-        where TPrize : BasePrize
-    {
-        lock (_sync)
-        {
-            var a = Generators
-                .Where(x => x.Key.Id == prizeGroupId);
-
-            var b = Generators
-                .Where(x => x.Key.Id == prizeGroupId)
-                .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any());
-
-            var c = Generators
-                .Where(x => x.Key.Id == prizeGroupId)
-                .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any())
-                .Where(x => x.Key.GetBasePrizes().First().GetType() == typeof(TPrize));
-
-            var d = Generators
-                .Where(x => x.Key.Id == prizeGroupId)
-                .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any())
-                .Where(x => x.Key.GetBasePrizes().First().GetType() == typeof(TPrize))
-                .First(x => predicate?.Invoke(x.Key) ?? true);
-
-            var e = Generators
-                .Where(x => x.Key.GetBasePrizes().First().GetType() == typeof(TPrize));
-
-
-            var f = Generators
-                .Where(x => x.Key.Id == prizeGroupId)
-                .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any())
-                .Where(x => x.Key.GetBasePrizes().First().GetType() == typeof(TPrize))
-                .First(x => predicate?.Invoke(x.Key) ?? true)
-                .Value!;
-
-            return Generators
-                .Where(x => x.Key.Id == prizeGroupId)
-                .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any())
-                .Where(x => x.Key.GetBasePrizes().First().GetType() == typeof(TPrize))
-                .First(x => predicate?.Invoke(x.Key) ?? true)
-                .Value!;
-        }
     }
 }

@@ -7,7 +7,7 @@ namespace GameLib.Application.Services.Abstract;
 
 public interface IGameConfigurationService
 {
-    void ResetGenerators();
+    void ResetInMemoryData();
 
     Response<EntityMetadata?> GetConfigurationMetaData();
 

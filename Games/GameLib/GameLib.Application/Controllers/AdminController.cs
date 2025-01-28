@@ -24,12 +24,12 @@ public class AdminController : BaseApiController
 
     #region Game
 
-    [HttpPost(nameof(ResetGenerators))]
-    public ActionResult ResetGenerators()
+    [HttpPost(nameof(ResetInMemoryData))]
+    public ActionResult ResetInMemoryData()
     {
-        _configurationService.ResetGenerators();
+        _configurationService.ResetInMemoryData();
 
-        return Ok(new { Message = "Generators have been reset." });
+        return Ok(new { Message = "In memory data have been reset." });
     }
 
     [HttpGet(nameof(GameStatus))]

@@ -9,11 +9,13 @@ namespace GameLib.Application.Holders;
 
 public class ConfigurationHolder
 {
-    public Dictionary<int, GameConfiguration> GameConfigurations { get; private set; }
+    internal Dictionary<int, GameConfiguration> GameConfigurations { get; private set; }
+
+    private static object _sync = new();
 
     public ConfigurationHolder()
     {
-        SetGenerators();
+        SetGameConfigurations();
     }
 
     public IEnumerable<BasePrizeGroup> GetPrizeGroups(int promotionId)
@@ -51,16 +53,22 @@ public class ConfigurationHolder
 
     public T GetConfiguration<T>(int promotionId) where T : GameConfiguration
     {
-        return (GameConfigurations.Where(c => c.Value.PromotionId == promotionId).FirstOrDefault().Value as T)!;
+        lock (_sync)
+        {
+            return (GameConfigurations.Where(c => c.Value.PromotionId == promotionId).FirstOrDefault().Value as T)!;
+        }
     }
 
-    public void ResetGenerators()
+    public void ResetGameConfigurations()
     {
-        GameConfigurations.Clear();
-        SetGenerators();
+        lock (_sync)
+        {
+            GameConfigurations.Clear();
+            SetGameConfigurations();
+        }
     }
 
-    private void SetGenerators()
+    private void SetGameConfigurations()
     {
         var gameConfigurations = RepositoryManager.GameConfigurationRepository().QueryAsync().Result;
         GameConfigurations = gameConfigurations.ToDictionary(config => config.PromotionId, config => config);
