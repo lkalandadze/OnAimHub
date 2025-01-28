@@ -1,16 +1,13 @@
 ﻿using Leaderboard.Application.Features.LeaderboardProgressFeatures.DataModels;
-using Leaderboard.Application.Features.LeaderboardProgressFeatures.Queries.Get;
 using Leaderboard.Domain.Abstractions.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Shared.Lib.Extensions;
 using Shared.Lib.Wrappers;
 using StackExchange.Redis;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace Leaderboard.Application.Features.LeaderboardProgressFeatures.Queries.GetForUser;
+namespace Leaderboard.Application.Features.LeaderboardProgressFeatures.Queries.User.GetForUser;
 
 public class GetLeaderboardProgressForUserQueryHandler : IRequestHandler<GetLeaderboardProgressForUserQuery, GetLeaderboardProgressForUserQueryResponse>
 {

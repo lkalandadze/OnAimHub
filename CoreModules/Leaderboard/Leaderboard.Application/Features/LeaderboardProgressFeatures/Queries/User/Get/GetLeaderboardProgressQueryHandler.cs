@@ -6,7 +6,7 @@ using Shared.Lib.Extensions;
 using Shared.Lib.Wrappers;
 using System.Security.Claims;
 
-namespace Leaderboard.Application.Features.LeaderboardProgressFeatures.Queries.Get;
+namespace Leaderboard.Application.Features.LeaderboardProgressFeatures.Queries.User.Get;
 
 public class GetLeaderboardProgressQueryHandler : IRequestHandler<GetLeaderboardProgressQuery, GetLeaderboardProgressQueryResponse>
 {

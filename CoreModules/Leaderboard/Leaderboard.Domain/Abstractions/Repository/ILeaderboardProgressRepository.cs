@@ -7,6 +7,8 @@ public interface ILeaderboardProgressRepository
     Task SaveProgressAsync(LeaderboardProgress progress, TimeSpan expiry, CancellationToken cancellationToken);
     Task<LeaderboardProgress?> GetProgressAsync(int playerId, int leaderboardRecordId, CancellationToken cancellationToken);
     Task<IEnumerable<LeaderboardProgress>> GetAllProgressAsync(int leaderboardRecordId, CancellationToken cancellationToken);
+    Task<IEnumerable<LeaderboardProgress>> GetUserAllActiveProgressesAsync(int playerId, CancellationToken cancellationToken);
+    Task<int> GetPlacementAsync(int leaderboardRecordId, int playerId, CancellationToken cancellationToken);
     Task DeleteProgressAsync(int playerId, int leaderboardRecordId, CancellationToken cancellationToken);
     Task ClearLeaderboardProgressAsync(int leaderboardRecordId, CancellationToken cancellationToken);
 }

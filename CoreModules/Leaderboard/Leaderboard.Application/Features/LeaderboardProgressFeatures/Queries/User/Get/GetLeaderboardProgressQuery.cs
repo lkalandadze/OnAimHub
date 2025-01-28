@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Shared.Lib.Wrappers;
 
-namespace Leaderboard.Application.Features.LeaderboardProgressFeatures.Queries.Get;
+namespace Leaderboard.Application.Features.LeaderboardProgressFeatures.Queries.User.Get;
 
 public class GetLeaderboardProgressQuery : PagedRequest, IRequest<GetLeaderboardProgressQueryResponse>
 {

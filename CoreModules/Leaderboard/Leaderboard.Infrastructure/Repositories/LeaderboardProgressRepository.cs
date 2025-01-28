@@ -1,7 +1,5 @@
 ﻿using Leaderboard.Domain.Abstractions.Repository;
 using Leaderboard.Domain.Entities;
-using Leaderboard.Infrastructure.DataAccess;
-using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using System.Text.Json;
 
@@ -47,6 +45,45 @@ public class LeaderboardProgressRepository : ILeaderboardProgressRepository
         }
 
         return progressList;
+    }
+
+    public async Task<IEnumerable<LeaderboardProgress>> GetUserAllActiveProgressesAsync(int playerId, CancellationToken cancellationToken)
+    {
+        var server = _redisDatabase.Multiplexer.GetServer(_redisDatabase.Multiplexer.GetEndPoints().First());
+
+        var pattern = $"LeaderboardProgress:*:{playerId}";
+        var keys = server.Keys(pattern: pattern, pageSize: 1000, database: _redisDatabase.Database);
+
+        var progressList = new List<LeaderboardProgress>();
+
+        foreach (var key in keys)
+        {
+            var data = await _redisDatabase.StringGetAsync(key);
+            if (!data.IsNullOrEmpty)
+            {
+                var progress = JsonSerializer.Deserialize<LeaderboardProgress>(data);
+
+                if (progress != null)
+                    progressList.Add(progress);
+            }
+        }
+
+        return progressList;
+    }
+
+    public async Task<int> GetPlacementAsync(int leaderboardRecordId, int playerId, CancellationToken cancellationToken)
+    {
+        var allProgressRecords = await GetAllProgressAsync(leaderboardRecordId, cancellationToken);
+
+        var sortedProgressRecords = allProgressRecords
+            .OrderByDescending(x => x.Amount)
+            .ToList();
+
+        var placement = sortedProgressRecords
+            .Select((progress, index) => new { progress.PlayerId, Placement = index + 1 })
+            .FirstOrDefault(x => x.PlayerId == playerId);
+
+        return placement?.Placement ?? 0;
     }
 
     public async Task DeleteProgressAsync(int playerId, int leaderboardRecordId, CancellationToken cancellationToken)
