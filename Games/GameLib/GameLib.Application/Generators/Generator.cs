@@ -39,6 +39,7 @@ internal abstract class Generator
                 UpdatePlayerPrizeLimits(prize, playerId, limitedPlayerPrize);
                 return prize;
             }
+        }
 
             attempts++;
         }

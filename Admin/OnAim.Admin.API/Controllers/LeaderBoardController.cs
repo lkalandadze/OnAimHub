@@ -14,9 +14,11 @@ using OnAim.Admin.APP.Features.LeaderBoardFeatures.Template.Commands.Delete;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Template.Commands.Update;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Template.Queries.GetAll;
 using OnAim.Admin.APP.Features.LeaderBoardFeatures.Template.Queries.GetById;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.Helpers;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.API.Controllers;
 
@@ -24,31 +26,31 @@ public class LeaderBoardController : ApiControllerBase
 {
     #region LeaderBoard
     [HttpPost(nameof(CreateLeaderBoardRecord))]
-    public async Task<IActionResult> CreateLeaderBoardRecord([FromBody] CreateLeaderboardCommand command)
+    public async Task<ActionResult<ApplicationResult>> CreateLeaderBoardRecord([FromBody] CreateLeaderboardCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpPut(nameof(UpdateLeaderBoardRecord))]
-    public async Task<IActionResult> UpdateLeaderBoardRecord([FromBody] UpdateLeaderBoardCommand command)
+    public async Task<ActionResult<ApplicationResult>> UpdateLeaderBoardRecord([FromBody] UpdateLeaderBoardCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpGet(nameof(GetAllLeaderBoards))]
-    public async Task<IActionResult> GetAllLeaderBoards([FromQuery] LeaderBoardFilter query)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<LeaderBoardListDto>>>> GetAllLeaderBoards([FromQuery] LeaderBoardFilter query)
         => Ok(await Mediator.Send(new GetAllLeaderBoardQuery(query)));    
 
     [HttpGet(nameof(GetLeaderboardRecordById))]
-    public async Task<IActionResult> GetLeaderboardRecordById([FromQuery] int id)
+    public async Task<ActionResult<ApplicationResult>> GetLeaderboardRecordById([FromQuery] int id)
         => Ok(await Mediator.Send(new GetLeaderboardRecordByIdQuery(id)));
 
     [HttpPost(nameof(CreateLeaderboardSchedule))]
-    public async Task<IActionResult> CreateLeaderboardSchedule([FromBody] CreateScheduleCommand command)
+    public async Task<ActionResult<ApplicationResult>> CreateLeaderboardSchedule([FromBody] CreateScheduleCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpPut(nameof(UpdateLeaderboardSchedule))]
-    public async Task<IActionResult> UpdateLeaderboardSchedule([FromBody] UpdateScheduleCommand command)
+    public async Task<ActionResult<ApplicationResult>> UpdateLeaderboardSchedule([FromBody] UpdateScheduleCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpGet(nameof(GetLeaderboardSchedules))]
-    public async Task<IActionResult> GetLeaderboardSchedules([FromQuery] GetLeaderboardSchedulesQuery query)
+    public async Task<ActionResult<ApplicationResult>> GetLeaderboardSchedules([FromQuery] GetLeaderboardSchedulesQuery query)
         => Ok(await Mediator.Send(query));
 
     [HttpGet(nameof(GetLeaderboardRecordStatuses))]
@@ -56,11 +58,11 @@ public class LeaderBoardController : ApiControllerBase
         => Ok(EnumHelper.GetEnumValues<APP.LeaderboardRecordStatus>());
 
     [HttpGet(nameof(GetAllPrizes))]
-    public async Task<IActionResult> GetAllPrizes()
+    public async Task<ActionResult<ApplicationResult>> GetAllPrizes()
         => Ok(await Mediator.Send(new GetAllPrizesQuery())); 
     
     [HttpGet(nameof(GetCalendar))]
-    public async Task<IActionResult> GetCalendar([FromQuery] GetCalendarQuery getCalendar)
+    public async Task<ActionResult<ApplicationResult>> GetCalendar([FromQuery] GetCalendarQuery getCalendar)
         => Ok(await Mediator.Send(getCalendar));
     #endregion
 

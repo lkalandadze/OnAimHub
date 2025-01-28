@@ -36,12 +36,14 @@ public class AggregationConfigurationService : IAggregationConfigurationService
     public async Task AddAggregationWithConfigurationsAsync(CreateAggregationConfigurationModel model)
     {
         var aggregation = new AggregationConfiguration(
+            model.Name,
+            model.Description,
             model.EventProducer,
             model.AggregationSubscriber,
             model.Filters.Select(f => new Filter(f.Property, f.Operator, f.Value)).ToList(),
             model.AggregationType,
             model.EvaluationType,
-            model.PointEvaluationRules,
+            model.PointEvaluationRules.Select(p => new PointEvaluationRule(p.Step, p.Point)).ToList(),
             model.SelectionField,
             model.Expiration,
             model.PromotionId,
@@ -60,6 +62,8 @@ public class AggregationConfigurationService : IAggregationConfigurationService
             throw new KeyNotFoundException($"Aggregation configuration with ID {model.Id} not found.");
 
         aggregation.Update(
+            model.Name,
+            model.Description,
             model.EventProducer,
             model.AggregationSubscriber,
             model.Filters,

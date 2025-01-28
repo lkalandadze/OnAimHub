@@ -42,6 +42,35 @@ public class GeneratorHolder
     {
         lock (_sync)
         {
+            var a = Generators
+                .Where(x => x.Key.Id == prizeGroupId);
+
+            var b = Generators
+                .Where(x => x.Key.Id == prizeGroupId)
+                .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any());
+
+            var c = Generators
+                .Where(x => x.Key.Id == prizeGroupId)
+                .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any())
+                .Where(x => x.Key.GetBasePrizes().First().GetType() == typeof(TPrize));
+
+            var d = Generators
+                .Where(x => x.Key.Id == prizeGroupId)
+                .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any())
+                .Where(x => x.Key.GetBasePrizes().First().GetType() == typeof(TPrize))
+                .First(x => predicate?.Invoke(x.Key) ?? true);
+
+            var e = Generators
+                .Where(x => x.Key.GetBasePrizes().First().GetType() == typeof(TPrize));
+
+
+            var f = Generators
+                .Where(x => x.Key.Id == prizeGroupId)
+                .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any())
+                .Where(x => x.Key.GetBasePrizes().First().GetType() == typeof(TPrize))
+                .First(x => predicate?.Invoke(x.Key) ?? true)
+                .Value!;
+
             return Generators
                 .Where(x => x.Key.Id == prizeGroupId)
                 .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any())

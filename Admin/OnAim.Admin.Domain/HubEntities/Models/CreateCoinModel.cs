@@ -9,7 +9,7 @@ public abstract class CreateCoinModel
     public string Name { get; set; }
     public string Description { get; set; }
     public string ImageUrl { get; set; }
-    public CoinType CoinType { get; set; }
+    public CoinType CoinType { get; protected set; }
     public string? TemplateId { get; set; }
 
     public static Coin.Coin ConvertToEntity(

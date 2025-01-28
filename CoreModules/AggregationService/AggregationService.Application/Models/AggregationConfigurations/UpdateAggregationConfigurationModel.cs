@@ -6,6 +6,8 @@ namespace AggregationService.Application.Models.AggregationConfigurations;
 public class UpdateAggregationConfigurationModel
 {
     public string Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
     public string EventProducer { get; set; }
     public string AggregationSubscriber { get; set; }
     public List<Filter> Filters { get; set; } = new();

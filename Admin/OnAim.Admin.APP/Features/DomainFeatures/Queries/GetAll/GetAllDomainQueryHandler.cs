@@ -1,10 +1,12 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.AdminServices.Domain;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Dtos.EmailDomain;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.APP.Features.DomainFeatures.Queries.GetAll;
 
-public class GetAllDomainQueryHandler : IQueryHandler<GetAllDomainQuery, ApplicationResult>
+public class GetAllDomainQueryHandler : IQueryHandler<GetAllDomainQuery, ApplicationResult<PaginatedResult<DomainDto>>>
 {
     private readonly IDomainService _domainService;
 
@@ -12,11 +14,11 @@ public class GetAllDomainQueryHandler : IQueryHandler<GetAllDomainQuery, Applica
     {
         _domainService = domainService;
     }
-    public async Task<ApplicationResult> Handle(GetAllDomainQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<PaginatedResult<DomainDto>>> Handle(GetAllDomainQuery request, CancellationToken cancellationToken)
     {
         var list = await _domainService.GetAllDomain(request.Filter);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<DomainDto>>
         { 
             Success = list.Success, 
             Data = list.Data

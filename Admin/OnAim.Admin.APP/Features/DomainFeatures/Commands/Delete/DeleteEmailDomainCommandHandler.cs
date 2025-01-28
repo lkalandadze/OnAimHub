@@ -5,7 +5,7 @@ using OnAim.Admin.APP.Services.AdminServices.Domain;
 
 namespace OnAim.Admin.APP.Features.DomainFeatures.Commands.Delete;
 
-public class DeleteEmailDomainCommandHandler : ICommandHandler<DeleteEmailDomainCommand, ApplicationResult>
+public class DeleteEmailDomainCommandHandler : ICommandHandler<DeleteEmailDomainCommand, ApplicationResult<bool>>
 {
     private readonly IDomainService _domainService;
     private readonly IValidator<DeleteEmailDomainCommand> _validator;
@@ -16,7 +16,7 @@ public class DeleteEmailDomainCommandHandler : ICommandHandler<DeleteEmailDomain
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(DeleteEmailDomainCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(DeleteEmailDomainCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
@@ -25,6 +25,6 @@ public class DeleteEmailDomainCommandHandler : ICommandHandler<DeleteEmailDomain
 
         var result = await _domainService.DeleteEmailDomain(request.Ids);
 
-        return new ApplicationResult { Success = result.Success };
+        return new ApplicationResult<bool> { Success = result.Success };
     }
 }

@@ -9,14 +9,16 @@ public class Filter
 {
     public Filter(string property, Operator @operator, string value)
     {
+        Id = Guid.NewGuid().ToString();
         Property = property;
         Operator = @operator;
         Value = value;
     }
 
     [BsonId]
+    [BsonRepresentation(BsonType.String)]
     //[NotMapped]
-    public ObjectId Id { get; set; }
+    public string Id { get; set; }
     public string Property { get; set; }
     public Operator Operator { get; set; }
     public string Value { get; set; }

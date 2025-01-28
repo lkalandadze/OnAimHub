@@ -25,7 +25,7 @@ public class DomainService : IDomainService
         _securityContextAccessor = SecurityContextAccessor;
     }
 
-    public async Task<ApplicationResult> CreateOrUpdateDomain(List<DomainDto>? domains, string domain, bool? isActive)
+    public async Task<ApplicationResult<bool>> CreateOrUpdateDomain(List<DomainDto>? domains, string domain, bool? isActive)
     {
         // Update
         if (domains != null && domains.Any())
@@ -40,7 +40,7 @@ public class DomainService : IDomainService
             }
 
             await _repository.CommitChanges();
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
 
         //Create If Deleted
@@ -53,7 +53,7 @@ public class DomainService : IDomainService
                 existingDomain.IsActive = true;
                 existingDomain.IsDeleted = false;
                 await _repository.CommitChanges();
-                return new ApplicationResult { Success = true };
+                return new ApplicationResult<bool> { Success = true };
             }
 
             throw new BadRequestException("Domain Already Exists");
@@ -64,10 +64,10 @@ public class DomainService : IDomainService
         await _repository.Store(newDomain);
         await _repository.CommitChanges();
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
-    public async Task<ApplicationResult> DeleteEmailDomain(List<int> domainIds)
+    public async Task<ApplicationResult<bool>> DeleteEmailDomain(List<int> domainIds)
     {
         var domainList = await _repository.Query(x => domainIds.Contains(x.Id)).ToListAsync();
 
@@ -82,10 +82,10 @@ public class DomainService : IDomainService
 
         await _repository.CommitChanges();
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
-    public async Task<ApplicationResult> GetAllDomain(DomainFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<DomainDto>>> GetAllDomain(DomainFilter filter)
     {
         var domains = _repository.Query(x =>
                      string.IsNullOrEmpty(filter.domain) || x.Domain.Contains(filter.domain)).AsNoTracking();
@@ -134,7 +134,7 @@ public class DomainService : IDomainService
             new List<string> { "Id", "Domain" }
         );
 
-        return new ApplicationResult { Success = true, Data = paginatedResult };
+        return new ApplicationResult<PaginatedResult<DomainDto>> { Success = true, Data = paginatedResult };
     }
 
     public async Task<AllowedEmailDomain> GetById(int id)

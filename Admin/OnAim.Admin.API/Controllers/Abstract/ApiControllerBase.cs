@@ -4,8 +4,8 @@ using OnAim.Admin.API.Attributes;
 
 namespace OnAim.Admin.API.Controllers.Abstract;
 
-[CheckEndpointStatusAttribute]
-[Permission]
+//[CheckEndpointStatusAttribute]
+//[Permission]
 [ApiController]
 [Route("api/[controller]")]
 public class ApiControllerBase : ControllerBase
@@ -21,5 +21,10 @@ public class ApiControllerBase : ControllerBase
 
             return _mediator!;
         }
-    }    
+    }
+
+    //protected ActionResult<T> Ok<T>(T result)
+    //{
+    //    return base.Ok(result);
+    //}
 }

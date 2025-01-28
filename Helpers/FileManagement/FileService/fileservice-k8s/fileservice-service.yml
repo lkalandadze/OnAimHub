@@ -1,0 +1,16 @@
+﻿apiVersion: v1
+kind: Service
+metadata:
+  name: fileservice
+  namespace: onaimhub
+spec:
+  ports:
+    - name: "5007"
+      port: 5007
+      targetPort: 8080
+  selector:
+    app: fileservice
+  type: ClusterIP
+
+
+

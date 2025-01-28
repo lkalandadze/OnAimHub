@@ -35,14 +35,19 @@ public abstract class BaseService
         return Task.FromResult(commandExecutionResult);
     }
 
-    protected Task<ApplicationResult> Fail<T>(T data, params Error[] errorMessages)
+    protected Task<ApplicationResult<T>> Fail<T>(T data, params Error[] errorMessages)
     {
-        var commandExecutionResult = new ApplicationResult
+        var commandExecutionResult = new ApplicationResult<T>
         {
             Success = false,
             Data = data,
             Errors = errorMessages.ToList()
         };
         return Task.FromResult(commandExecutionResult);
+    }
+
+    protected Task<ApplicationResult<T>> Fail<T>(params Error[] errorMessages)
+    {
+        return Fail(Activator.CreateInstance<T>(), errorMessages);
     }
 }

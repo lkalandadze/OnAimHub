@@ -23,7 +23,6 @@ builder.Services.AddScoped<HttpClientService>();
 builder.Services.Configure<HubApiClientOptions>(
 builder.Configuration.GetSection("HubApiClientOptions")
 );
-//builder.Services.AddTransient<IRequestHandler<LoginUserCommand, AuthResultDto>, LoginUserCommandHandler>();
 builder.Services.AddHttpClient<IHubApiClient, HubApiClient>(
     (client, sp) =>
     {
@@ -122,7 +121,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<PermissionMiddleware>();
+//app.UseMiddleware<PermissionMiddleware>();
 app.UseMiddleware<RequestHandlerMiddleware>();
 
 app.MapControllers();
