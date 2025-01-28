@@ -18,24 +18,10 @@ namespace Wheel.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("GameLib.Domain.Entities.Coin", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text")
-                        .HasColumnOrder(1);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Coins");
-                });
 
             modelBuilder.Entity("GameLib.Domain.Entities.GameSetting", b =>
                 {
@@ -57,11 +43,32 @@ namespace Wheel.Infrastructure.Migrations
                     b.ToTable("GameSettings");
                 });
 
+            modelBuilder.Entity("GameLib.Domain.Entities.LimitedPrizeCountsByPlayer", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PrizeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Count")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("PlayerId", "PrizeId");
+
+                    b.ToTable("LimitedPrizeCountsByPlayer");
+                });
+
             modelBuilder.Entity("GameLib.Domain.Entities.Price", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
                         .HasColumnOrder(1);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CoinId")
                         .HasColumnType("text");
@@ -77,119 +84,9 @@ namespace Wheel.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CoinId");
-
                     b.HasIndex("WheelConfigurationId");
 
                     b.ToTable("Prices");
-                });
-
-            modelBuilder.Entity("GameLib.Domain.Entities.PrizeType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnOrder(1);
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CoinId")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsMultiplied")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CoinId");
-
-                    b.ToTable("PrizeTypes");
-                });
-
-            modelBuilder.Entity("Wheel.Domain.Entities.JackpotPrize", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnOrder(1);
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("PrizeGroupId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PrizeTypeId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Probability")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PrizeGroupId");
-
-                    b.HasIndex("PrizeTypeId");
-
-                    b.ToTable("JackpotPrizes");
-                });
-
-            modelBuilder.Entity("Wheel.Domain.Entities.JackpotPrizeGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnOrder(1);
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ConfigurationId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("NextPrizeIndex")
-                        .HasColumnType("integer");
-
-                    b.Property<List<int>>("Sequence")
-                        .IsRequired()
-                        .HasColumnType("integer[]");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("JackpotPrizeGroups");
-                });
-
-            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrizeGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnOrder(1);
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ConfigurationId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("NextPrizeIndex")
-                        .HasColumnType("integer");
-
-                    b.Property<List<int>>("Sequence")
-                        .IsRequired()
-                        .HasColumnType("integer[]");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConfigurationId");
-
-                    b.ToTable("WheelPrizeGroups");
                 });
 
             modelBuilder.Entity("Wheel.Domain.Entities.WheelConfiguration", b =>
@@ -201,11 +98,23 @@ namespace Wheel.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid?>("CorrelationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FromTemplateId")
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<int>("PromotionId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("Value")
                         .HasColumnType("integer");
@@ -224,19 +133,37 @@ namespace Wheel.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CoinId")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("GlobalLimit")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("GlobalSetLimit")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<int>("PrizeGroupId")
+                    b.Property<int?>("PerPlayerLimit")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PrizeTypeId")
+                    b.Property<int?>("PerPlayerSetLimit")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PrizeGroupId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Probability")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("RoundId")
+                    b.Property<int?>("RemainingGlobalLimit")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("RemainingGlobalSetLimit")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("SetSize")
                         .HasColumnType("integer");
 
                     b.Property<int>("Value")
@@ -249,50 +176,53 @@ namespace Wheel.Infrastructure.Migrations
 
                     b.HasIndex("PrizeGroupId");
 
-                    b.HasIndex("PrizeTypeId");
-
                     b.ToTable("WheelPrizes");
+                });
+
+            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrizeGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnOrder(1);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ConfigurationId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("NextPrizeIndex")
+                        .HasColumnType("integer");
+
+                    b.Property<List<int>>("Sequence")
+                        .HasColumnType("integer[]");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConfigurationId");
+
+                    b.ToTable("WheelPrizeGroups");
                 });
 
             modelBuilder.Entity("GameLib.Domain.Entities.Price", b =>
                 {
-                    b.HasOne("GameLib.Domain.Entities.Coin", "Coin")
-                        .WithMany("Prices")
-                        .HasForeignKey("CoinId");
-
                     b.HasOne("Wheel.Domain.Entities.WheelConfiguration", null)
                         .WithMany("Prices")
                         .HasForeignKey("WheelConfigurationId");
-
-                    b.Navigation("Coin");
                 });
 
-            modelBuilder.Entity("GameLib.Domain.Entities.PrizeType", b =>
+            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrize", b =>
                 {
-                    b.HasOne("GameLib.Domain.Entities.Coin", "Coin")
-                        .WithMany("PrizeTypes")
-                        .HasForeignKey("CoinId");
-
-                    b.Navigation("Coin");
-                });
-
-            modelBuilder.Entity("Wheel.Domain.Entities.JackpotPrize", b =>
-                {
-                    b.HasOne("Wheel.Domain.Entities.JackpotPrizeGroup", "WheelPrizeGroup")
+                    b.HasOne("Wheel.Domain.Entities.WheelPrizeGroup", "PrizeGroup")
                         .WithMany("Prizes")
                         .HasForeignKey("PrizeGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GameLib.Domain.Entities.PrizeType", "PrizeType")
-                        .WithMany()
-                        .HasForeignKey("PrizeTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("WheelPrizeGroup");
-
-                    b.Navigation("PrizeType");
+                    b.Navigation("PrizeGroup");
                 });
 
             modelBuilder.Entity("Wheel.Domain.Entities.WheelPrizeGroup", b =>
@@ -306,47 +236,16 @@ namespace Wheel.Infrastructure.Migrations
                     b.Navigation("Configuration");
                 });
 
-            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrize", b =>
-                {
-                    b.HasOne("Wheel.Domain.Entities.WheelPrizeGroup", "WheelPrizeGroup")
-                        .WithMany("Prizes")
-                        .HasForeignKey("PrizeGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GameLib.Domain.Entities.PrizeType", "PrizeType")
-                        .WithMany()
-                        .HasForeignKey("PrizeTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("WheelPrizeGroup");
-
-                    b.Navigation("PrizeType");
-                });
-
-            modelBuilder.Entity("GameLib.Domain.Entities.Coin", b =>
-                {
-                    b.Navigation("Prices");
-
-                    b.Navigation("PrizeTypes");
-                });
-
-            modelBuilder.Entity("Wheel.Domain.Entities.JackpotPrizeGroup", b =>
-                {
-                    b.Navigation("Prizes");
-                });
-
-            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrizeGroup", b =>
-                {
-                    b.Navigation("Prizes");
-                });
-
             modelBuilder.Entity("Wheel.Domain.Entities.WheelConfiguration", b =>
                 {
                     b.Navigation("Prices");
 
                     b.Navigation("WheelPrizeGroups");
+                });
+
+            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrizeGroup", b =>
+                {
+                    b.Navigation("Prizes");
                 });
 #pragma warning restore 612, 618
         }

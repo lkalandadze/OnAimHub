@@ -5,7 +5,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace PenaltyKicks.Infrastructure.Migrations
+namespace Wheel.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -19,8 +19,8 @@ namespace PenaltyKicks.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    KicksCount = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     Value = table.Column<int>(type: "integer", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     PromotionId = table.Column<int>(type: "integer", nullable: false),
@@ -47,49 +47,16 @@ namespace PenaltyKicks.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PenaltyGame",
+                name: "LimitedPrizeCountsByPlayer",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     PlayerId = table.Column<int>(type: "integer", nullable: false),
-                    BetPriceId = table.Column<int>(type: "integer", nullable: false),
                     PrizeId = table.Column<int>(type: "integer", nullable: false),
-                    PrizeValue = table.Column<int>(type: "integer", nullable: false),
-                    PriceMultiplier = table.Column<decimal>(type: "numeric", nullable: false),
-                    CoinId = table.Column<string>(type: "text", nullable: true),
-                    KickSequence = table.Column<List<bool>>(type: "boolean[]", nullable: true),
-                    GoalsScored = table.Column<int>(type: "integer", nullable: false),
-                    CurrentKickIndex = table.Column<int>(type: "integer", nullable: false),
-                    GameState = table.Column<int>(type: "integer", nullable: false),
-                    StartDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    EndDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    IsFinished = table.Column<bool>(type: "boolean", nullable: false)
+                    Count = table.Column<int>(type: "integer", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PenaltyGame", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PenaltyPrizeGroups",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Sequence = table.Column<List<int>>(type: "integer[]", nullable: true),
-                    NextPrizeIndex = table.Column<int>(type: "integer", nullable: true),
-                    ConfigurationId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PenaltyPrizeGroups", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PenaltyPrizeGroups_GameConfigurations_ConfigurationId",
-                        column: x => x.ConfigurationId,
-                        principalTable: "GameConfigurations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_LimitedPrizeCountsByPlayer", x => new { x.PlayerId, x.PrizeId });
                 });
 
             migrationBuilder.CreateTable(
@@ -101,55 +68,85 @@ namespace PenaltyKicks.Infrastructure.Migrations
                     Value = table.Column<decimal>(type: "numeric", nullable: false),
                     Multiplier = table.Column<decimal>(type: "numeric", nullable: false),
                     CoinId = table.Column<string>(type: "text", nullable: true),
-                    PenaltyConfigurationId = table.Column<int>(type: "integer", nullable: true)
+                    WheelConfigurationId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Prices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Prices_GameConfigurations_PenaltyConfigurationId",
-                        column: x => x.PenaltyConfigurationId,
+                        name: "FK_Prices_GameConfigurations_WheelConfigurationId",
+                        column: x => x.WheelConfigurationId,
                         principalTable: "GameConfigurations",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "PenaltyPrizes",
+                name: "WheelPrizeGroups",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
+                    Sequence = table.Column<List<int>>(type: "integer[]", nullable: true),
+                    NextPrizeIndex = table.Column<int>(type: "integer", nullable: true),
+                    ConfigurationId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WheelPrizeGroups", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WheelPrizeGroups_GameConfigurations_ConfigurationId",
+                        column: x => x.ConfigurationId,
+                        principalTable: "GameConfigurations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WheelPrizes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    WheelIndex = table.Column<int>(type: "integer", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: true),
                     Value = table.Column<int>(type: "integer", nullable: false),
                     Probability = table.Column<int>(type: "integer", nullable: false),
                     CoinId = table.Column<string>(type: "text", nullable: true),
+                    PerPlayerLimit = table.Column<int>(type: "integer", nullable: true),
+                    GlobalLimit = table.Column<int>(type: "integer", nullable: true),
+                    RemainingGlobalLimit = table.Column<int>(type: "integer", nullable: true),
+                    SetSize = table.Column<int>(type: "integer", nullable: true),
+                    PerPlayerSetLimit = table.Column<int>(type: "integer", nullable: true),
+                    GlobalSetLimit = table.Column<int>(type: "integer", nullable: true),
+                    RemainingGlobalSetLimit = table.Column<int>(type: "integer", nullable: true),
                     PrizeGroupId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PenaltyPrizes", x => x.Id);
+                    table.PrimaryKey("PK_WheelPrizes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PenaltyPrizes_PenaltyPrizeGroups_PrizeGroupId",
+                        name: "FK_WheelPrizes_WheelPrizeGroups_PrizeGroupId",
                         column: x => x.PrizeGroupId,
-                        principalTable: "PenaltyPrizeGroups",
+                        principalTable: "WheelPrizeGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PenaltyPrizeGroups_ConfigurationId",
-                table: "PenaltyPrizeGroups",
+                name: "IX_Prices_WheelConfigurationId",
+                table: "Prices",
+                column: "WheelConfigurationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WheelPrizeGroups_ConfigurationId",
+                table: "WheelPrizeGroups",
                 column: "ConfigurationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PenaltyPrizes_PrizeGroupId",
-                table: "PenaltyPrizes",
+                name: "IX_WheelPrizes_PrizeGroupId",
+                table: "WheelPrizes",
                 column: "PrizeGroupId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Prices_PenaltyConfigurationId",
-                table: "Prices",
-                column: "PenaltyConfigurationId");
         }
 
         /// <inheritdoc />
@@ -159,16 +156,16 @@ namespace PenaltyKicks.Infrastructure.Migrations
                 name: "GameSettings");
 
             migrationBuilder.DropTable(
-                name: "PenaltyGame");
-
-            migrationBuilder.DropTable(
-                name: "PenaltyPrizes");
+                name: "LimitedPrizeCountsByPlayer");
 
             migrationBuilder.DropTable(
                 name: "Prices");
 
             migrationBuilder.DropTable(
-                name: "PenaltyPrizeGroups");
+                name: "WheelPrizes");
+
+            migrationBuilder.DropTable(
+                name: "WheelPrizeGroups");
 
             migrationBuilder.DropTable(
                 name: "GameConfigurations");
