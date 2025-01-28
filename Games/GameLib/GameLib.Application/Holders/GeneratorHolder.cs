@@ -44,10 +44,8 @@ public class GeneratorHolder
         {
             return Generators
                 .Where(x => x.Key.Id == prizeGroupId)
-                .Where(x => x.Key.GetBasePrizes().Any() && x.Value.Prizes.Any())
-                .Where(x => x.Key.GetBasePrizes().First().GetType() == typeof(TPrize))
                 .First(x => predicate?.Invoke(x.Key) ?? true)
-                .Value!;
+                .Value;
         }
     }
 
