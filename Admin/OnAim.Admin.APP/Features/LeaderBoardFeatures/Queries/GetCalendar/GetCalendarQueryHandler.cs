@@ -1,10 +1,9 @@
 ﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.LeaderBoardServices;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetCalendar;
 
-public class GetCalendarQueryHandler : IQueryHandler<GetCalendarQuery, ApplicationResult>
+public class GetCalendarQueryHandler : IQueryHandler<GetCalendarQuery, object>
 {
     private readonly ILeaderBoardService _leaderBoardService;
 
@@ -12,10 +11,8 @@ public class GetCalendarQueryHandler : IQueryHandler<GetCalendarQuery, Applicati
     {
         _leaderBoardService = leaderBoardService;
     }
-    public async Task<ApplicationResult> Handle(GetCalendarQuery request, CancellationToken cancellationToken)
+    public async Task<object> Handle(GetCalendarQuery request, CancellationToken cancellationToken)
     {
-        var result = await _leaderBoardService.GetCalendar(request.StartDate, request.EndDate);
-
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return await _leaderBoardService.GetCalendar(request.StartDate, request.EndDate);
     }
 }

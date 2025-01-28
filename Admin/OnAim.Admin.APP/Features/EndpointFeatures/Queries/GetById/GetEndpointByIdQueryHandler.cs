@@ -1,10 +1,10 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.APP.CQRS.Query;
+﻿using OnAim.Admin.APP.CQRS.Query;
 using OnAim.Admin.APP.Services.AdminServices.Endpoint;
+using OnAim.Admin.Contracts.Dtos.Endpoint;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Queries.GetById;
 
-public class GetEndpointByIdQueryHandler : IQueryHandler<GetEndpointByIdQuery, ApplicationResult>
+public class GetEndpointByIdQueryHandler : IQueryHandler<GetEndpointByIdQuery, ApplicationResult<EndpointResponseModel>>
 {
     private readonly IEndpointService _endpointService;
 
@@ -12,14 +12,8 @@ public class GetEndpointByIdQueryHandler : IQueryHandler<GetEndpointByIdQuery, A
     {
         _endpointService = endpointService;
     }
-    public async Task<ApplicationResult> Handle(GetEndpointByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<EndpointResponseModel>> Handle(GetEndpointByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await _endpointService.GetById(request.Id);
-
-        return new ApplicationResult
-        {
-            Success = true,
-            Data = result.Data
-        };
+        return await _endpointService.GetById(request.Id);
     }
 }

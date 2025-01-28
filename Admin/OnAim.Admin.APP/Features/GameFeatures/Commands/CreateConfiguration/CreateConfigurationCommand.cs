@@ -3,4 +3,4 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.GameFeatures.Commands.CreateConfiguration;
 
-public record CreateConfigurationCommand(string gameName, object ConfigurationJson) : ICommand<ApplicationResult>;
+public record CreateConfigurationCommand(string gameName, object ConfigurationJson) : ICommand<object>;

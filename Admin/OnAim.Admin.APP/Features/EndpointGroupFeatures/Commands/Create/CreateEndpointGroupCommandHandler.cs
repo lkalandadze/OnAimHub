@@ -1,11 +1,10 @@
-﻿using FluentValidation;
-using OnAim.Admin.APP.CQRS.Command;
+﻿using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Services.AdminServices.EndpointGroup;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace OnAim.Admin.APP.Features.EndpointGroupFeatures.Commands.Create;
 
-public class CreateEndpointGroupCommandHandler : ICommandHandler<CreateEndpointGroupCommand, ApplicationResult>
+public class CreateEndpointGroupCommandHandler : ICommandHandler<CreateEndpointGroupCommand, ApplicationResult<string>>
 {
     private readonly IEndpointGroupService _endpointGroupService;
     private readonly IValidator<CreateEndpointGroupCommand> _validator;
@@ -16,15 +15,13 @@ public class CreateEndpointGroupCommandHandler : ICommandHandler<CreateEndpointG
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(CreateEndpointGroupCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<string>> Handle(CreateEndpointGroupCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var result = await _endpointGroupService.Create(request.Model);
-
-        return new ApplicationResult { Success = result.Success, Data = result };
+        return await _endpointGroupService.Create(request.Model);
     }
 }

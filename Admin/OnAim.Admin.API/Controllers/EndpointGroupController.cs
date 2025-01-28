@@ -6,8 +6,9 @@ using OnAim.Admin.APP.Features.EndpointGroupFeatures.Commands.Update;
 using OnAim.Admin.APP.Features.EndpointGroupFeatures.Queries.GetAll;
 using OnAim.Admin.APP.Features.EndpointGroupFeatures.Queries.GetById;
 using OnAim.Admin.Contracts.Dtos.EndpointGroup;
-using OnAim.Admin.Contracts.ApplicationInfrastructure.Validation;
 using System.Net;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
+using OnAim.Admin.Contracts.Paging;
 
 namespace OnAim.Admin.API.Controllers;
 
@@ -15,7 +16,7 @@ public class EndpointGroupController : ApiControllerBase
 {
     [HttpPost(nameof(Create))]
     [ProducesResponseType(typeof(CreateEndpointGroupCommand), (int)HttpStatusCode.Created)]
-    [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(Contracts.ApplicationInfrastructure.Error), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Create([FromBody] CreateEndpointGroupCommand command)
        => Ok(await Mediator.Send(command));
 
@@ -24,11 +25,11 @@ public class EndpointGroupController : ApiControllerBase
         => Ok(await Mediator.Send(new UpdateEndpointGroupCommand(id, model)));
 
     [HttpGet(nameof(GetAll))]
-    public async Task<IActionResult> GetAll([FromQuery] EndpointGroupFilter filter)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<EndpointGroupModel>>>> GetAll([FromQuery] EndpointGroupFilter filter)
         => Ok(await Mediator.Send(new GetAllEndpointGroupQuery(filter)));
 
     [HttpGet(nameof(Get) + "/{id}")]
-    public async Task<IActionResult> Get([FromRoute] int id)
+    public async Task<ActionResult<ApplicationResult<EndpointGroupResponseDto>>> Get([FromRoute] int id)
         => Ok(await Mediator.Send(new GetEndpointGroupByIdQuery(id)));
 
     [HttpPost(nameof(Delete))]

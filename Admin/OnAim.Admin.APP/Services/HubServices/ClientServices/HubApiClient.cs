@@ -1,15 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using Polly;
-using Polly.Timeout;
-using Polly.Wrap;
-using System.Text;
-using OnAim.Admin.APP.Extensions;
-using System.Text.Json;
-
-namespace OnAim.Admin.APP.Services.Hub.ClientServices;
+﻿namespace OnAim.Admin.APP.Services.Hub.ClientServices;
 
 public class HubApiClient : IHubApiClient
 {
@@ -31,9 +20,6 @@ public class HubApiClient : IHubApiClient
         _options = options.Value;
         _username = username;
         _password = password;
-
-        var byteArray = Encoding.ASCII.GetBytes($"admin:password");
-        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
         var retryPolicy = Policy
        .Handle<HttpRequestException>()

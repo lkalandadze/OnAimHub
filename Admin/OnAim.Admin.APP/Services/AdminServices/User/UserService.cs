@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.APP.Feature.UserFeature.Commands.Create;
+﻿using OnAim.Admin.APP.Feature.UserFeature.Commands.Create;
 using OnAim.Admin.APP.Feature.UserFeature.Commands.ProfileUpdate;
 using OnAim.Admin.APP.Feature.UserFeature.Commands.Registration;
 using OnAim.Admin.APP.Feature.UserFeature.Queries.GetUserLogs;
@@ -11,21 +10,13 @@ using OnAim.Admin.Contracts.Dtos.Endpoint;
 using OnAim.Admin.Contracts.Dtos.EndpointGroup;
 using OnAim.Admin.Contracts.Dtos.Role;
 using OnAim.Admin.Contracts.Dtos.User;
-using OnAim.Admin.Contracts.Enums;
 using OnAim.Admin.Contracts.Helpers;
 using OnAim.Admin.Contracts.Helpers.Password;
 using OnAim.Admin.Contracts.Models;
-using OnAim.Admin.Contracts.Paging;
-using System.Linq.Expressions;
-using System.Security.Claims;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.APP.Services.Admin.AuthServices;
-using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.AdminServices.Domain;
 using OnAim.Admin.APP.Services.AdminServices.EmailServices;
 using OnAim.Admin.APP.Services.AdminServices.User;
-using OnAim.Admin.Infrasturcture.Interfaces;
 
 namespace OnAim.Admin.APP.Services.Admin.User;
 
@@ -67,7 +58,7 @@ public class UserService : IUserService
         _securityContextAccessor = securityContextAccessor;
     }
 
-    public async Task<ApplicationResult> ActivateAccount(string email, string code)
+    public async Task<ApplicationResult<string>> ActivateAccount(string email, string code)
     {
         var user = await _userRepository.Query(x => x.Email == email && !x.IsDeleted).FirstOrDefaultAsync();
 
@@ -85,10 +76,10 @@ public class UserService : IUserService
 
         await _userRepository.CommitChanges();
 
-        return new ApplicationResult { Success = true, Data = "Account activated successfully." };
+        return new ApplicationResult<string> { Success = true, Data = "Account activated successfully." };
     }
 
-    public async Task<ApplicationResult> ChangePassword(string email, string oldPassword, string newPassword)
+    public async Task<ApplicationResult<bool>> ChangePassword(string email, string oldPassword, string newPassword)
     {
         var user = await _userRepository.Query(x => x.Email == email).FirstOrDefaultAsync();
 
@@ -119,13 +110,13 @@ public class UserService : IUserService
             throw new BadRequestException("An error occurred while updating the password.");
         }
 
-        return new ApplicationResult
+        return new ApplicationResult<bool>
         {
             Success = true,
         };
     }
 
-    public async Task<ApplicationResult> Create(string email, string firstName, string lastName, string phone)
+    public async Task<ApplicationResult<bool>> Create(string email, string firstName, string lastName, string phone)
     {
         var existingUser = await _userRepository.Query(x => x.Email == email && !x.IsDeleted).FirstOrDefaultAsync();
 
@@ -156,10 +147,10 @@ public class UserService : IUserService
 
         await CreateUserWithTemporaryPassword(request);
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
-    public async Task<ApplicationResult> Delete(List<int> userIds)
+    public async Task<ApplicationResult<bool>> Delete(List<int> userIds)
     {
         var users = await _userRepository.Query(x => userIds.Contains(x.Id)).ToListAsync();
 
@@ -174,10 +165,10 @@ public class UserService : IUserService
 
         await _userRepository.CommitChanges();
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
-    public async Task<ApplicationResult> ForgotPassword(string email)
+    public async Task<ApplicationResult<bool>> ForgotPassword(string email)
     {
         var user = await _userRepository.Query(x => x.Email == email).FirstOrDefaultAsync();
 
@@ -214,10 +205,10 @@ public class UserService : IUserService
 
         await _emailService.SendActivationEmailAsync(user.Email, "Password Reset", htmlBody);
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
-    public async Task<ApplicationResult> ResetPassword(string email, string code, string password)
+    public async Task<ApplicationResult<bool>> ResetPassword(string email, string code, string password)
     {
         var user = await _userRepository.Query(x =>
              x.Email == email &&
@@ -240,7 +231,7 @@ public class UserService : IUserService
 
         await _userRepository.CommitChanges();
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
     public async Task<AuthResultDto> Login(LoginUserRequest model)
@@ -305,7 +296,7 @@ public class UserService : IUserService
         };
     }
 
-    public async Task<ApplicationResult> ProfileUpdate(int id, ProfileUpdateRequest profileUpdateRequest)
+    public async Task<ApplicationResult<bool>> ProfileUpdate(int id, ProfileUpdateRequest profileUpdateRequest)
     {
         var user = await _userRepository.Query(x => x.Id == id).FirstOrDefaultAsync();
 
@@ -317,10 +308,10 @@ public class UserService : IUserService
         user.Phone = profileUpdateRequest.Phone;
         await _userRepository.CommitChanges();
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
-    public async Task<ApplicationResult> Registration(string email, string password, string firstName, string lastName, string phone, DateTime DateOfBirth)
+    public async Task<ApplicationResult<bool>> Registration(string email, string password, string firstName, string lastName, string phone, DateTime DateOfBirth)
     {
         var existingUser = await GetExistingUserAsync(email);
 
@@ -354,7 +345,7 @@ public class UserService : IUserService
             await CreateNewUser(request);
         }
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
     public async Task<AuthResultDto> TwoFA(string email, string otpCode)
@@ -390,7 +381,7 @@ public class UserService : IUserService
         throw new UnauthorizedAccessException("Invalid OTP");
     }
 
-    public async Task<ApplicationResult> Update(int id, UpdateUserRequest model)
+    public async Task<ApplicationResult<string>> Update(int id, UpdateUserRequest model)
     {
         var existingUser = await _userRepository.Query(x => x.Id == id).FirstOrDefaultAsync();
 
@@ -426,7 +417,7 @@ public class UserService : IUserService
         await _userRepository.CommitChanges();
         await _configurationRepository.CommitChanges();
 
-        return new ApplicationResult
+        return new ApplicationResult<string>
         {
             Success = true,
             Data = $"User {existingUser.FirstName} {existingUser.LastName} Updated Successfully"
@@ -685,7 +676,7 @@ public class UserService : IUserService
         await _emailService.SendActivationEmailAsync(user.Email, "Activation Code", htmlBody);
     }
 
-    public async Task<ApplicationResult> GetAll(UserFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<UsersModel>>> GetAll(UserFilter filter)
     {
         var query = _userRepository.Query(x =>
             string.IsNullOrEmpty(filter.Name) ||
@@ -759,14 +750,14 @@ public class UserService : IUserService
             new List<string> { "Id", "FirstName", "LastName" }
             );
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<UsersModel>>
         {
             Success = true,
             Data = paginatedResult
         };
     }
 
-    public async Task<ApplicationResult> GetById(int id)
+    public async Task<ApplicationResult<GetUserModel>> GetById(int id)
     {
         var query = await _userRepository
             .Query(x => x.Id == id)
@@ -827,10 +818,10 @@ public class UserService : IUserService
             DateUpdated = query.DateUpdated
         };
 
-        return new ApplicationResult{ Success = true, Data = user };
+        return new ApplicationResult<GetUserModel>  { Success = true, Data = user };
     }
 
-    public async Task<ApplicationResult> GetUserLogs(int id, AuditLogFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<AuditLogDto>>> GetUserLogs(int id, AuditLogFilter filter)
     {
         var logs = await _logRepository.GetUserLogs(id);
 
@@ -871,7 +862,7 @@ public class UserService : IUserService
             })
             .ToList();
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<AuditLogDto>>
         {
             Success = true,
             Data = new PaginatedResult<AuditLogDto>
@@ -917,7 +908,7 @@ public class UserService : IUserService
                                    .GetValue(p, null)).ToList();
     }
 
-    public async Task<ApplicationResult> GetByEmail(string email)
+    public async Task<ApplicationResult<OnAim.Admin.Domain.Entities.User>> GetByEmail(string email)
     {
         var query = await _userRepository
             .Query(x => x.Email == email)
@@ -929,6 +920,6 @@ public class UserService : IUserService
             .ThenInclude(x => x.Endpoint)
             .FirstOrDefaultAsync();
 
-        return new ApplicationResult { Data = query };
+        return new ApplicationResult<OnAim.Admin.Domain.Entities.User> { Data = query };
     }
 }

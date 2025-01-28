@@ -16,8 +16,9 @@ using OnAim.Admin.APP.Feature.UserFeature.Queries.GetById;
 using OnAim.Admin.APP.Feature.UserFeature.Queries.GetUserLogs;
 using OnAim.Admin.APP.Features.UserFeatures.Commands.TwoFA;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.ApplicationInfrastructure.Validation;
+using OnAim.Admin.Contracts.Dtos.AuditLog;
 using OnAim.Admin.Contracts.Dtos.User;
+using OnAim.Admin.Contracts.Paging;
 using System.Net;
 using System.Security.Claims;
 
@@ -33,21 +34,21 @@ public class UsersController : ApiControllerBase
     }
 
     [HttpGet(nameof(GetAll))]
-    public async Task<IActionResult> GetAll([FromQuery] UserFilter model)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<UsersModel>>>> GetAll([FromQuery] UserFilter model)
         => Ok(await Mediator.Send(new GetAllUserQuery(model)));
 
     [HttpGet(nameof(Get) + "/{id}")]
-    public async Task<IActionResult> Get([FromRoute] int id)
+    public async Task<ActionResult<ApplicationResult<GetUserModel>>> Get([FromRoute] int id)
         => Ok(await Mediator.Send(new GetUserByIdQuery(id)));
 
     [HttpGet(nameof(UserLogs) + "/{id}")]
-    public async Task<IActionResult> UserLogs([FromRoute] int id, [FromQuery] AuditLogFilter filter)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<AuditLogDto>>>> UserLogs([FromRoute] int id, [FromQuery] AuditLogFilter filter)
         => Ok(await Mediator.Send(new GetUserLogsQuery(id, filter)));
 
     [HttpPost(nameof(Create))]
     [ProducesResponseType(typeof(CreateUserCommand), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(Contracts.ApplicationInfrastructure.Validation.Error), (int)HttpStatusCode.BadRequest)]
-    public async Task<ApplicationResult> Create([FromBody] CreateUserCommand model)
+    public async Task<ApplicationResult<bool>> Create([FromBody] CreateUserCommand model)
         => await Mediator.Send(model);
 
     [HttpPost(nameof(Register))]

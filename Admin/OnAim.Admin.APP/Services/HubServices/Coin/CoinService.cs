@@ -1,17 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
-using OnAim.Admin.APP.Services.Hub.ClientServices;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.Coin;
+﻿using OnAim.Admin.Contracts.Dtos.Coin;
 using OnAim.Admin.Contracts.Dtos.Withdraw;
-using OnAim.Admin.Contracts.Enums;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Infrasturcture.Interfaces;
 
 namespace OnAim.Admin.APP.Services.HubServices.Coin;
 
@@ -42,7 +30,7 @@ public class CoinService : BaseService, ICoinService
     }
 
     #region WO
-    public async Task<ApplicationResult> CreateWithdrawOption(CreateWithdrawOptionDto option)
+    public async Task<ApplicationResult<object>> CreateWithdrawOption(CreateWithdrawOptionDto option)
     {
         try
         {
@@ -62,7 +50,7 @@ public class CoinService : BaseService, ICoinService
 
             var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOption", body);
 
-            return new ApplicationResult { Data = res.StatusCode, Success = true };
+            return new ApplicationResult<object> { Data = res.StatusCode, Success = true };
         }
         catch (Exception ex)
         {
@@ -74,13 +62,13 @@ public class CoinService : BaseService, ICoinService
         }
     }
 
-    public async Task<ApplicationResult> UpdateWithdrawOption(UpdateWithdrawOptionDto option)
+    public async Task<ApplicationResult<object>> UpdateWithdrawOption(UpdateWithdrawOptionDto option)
     {
         try
         {
             var res = await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/UpdateWithdrawOption", option);
 
-            return new ApplicationResult { Success = true, Data = res.StatusCode };
+            return new ApplicationResult<object> { Success = true, Data = res.StatusCode };
         }
         catch (Exception ex)
         {
@@ -92,7 +80,7 @@ public class CoinService : BaseService, ICoinService
         }
     }
 
-    public async Task<ApplicationResult> DeleteWithdrawOption(List<int> ids)
+    public async Task<ApplicationResult<object>> DeleteWithdrawOption(List<int> ids)
     {
         var body = new
         {
@@ -103,7 +91,7 @@ public class CoinService : BaseService, ICoinService
         {
             await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOption", body);
 
-            return new ApplicationResult { Data = "Successfully deleted withdraw option", Success = true };
+            return new ApplicationResult<object> { Data = "Successfully deleted withdraw option", Success = true };
         }
         catch (Exception ex)
         {
@@ -238,7 +226,7 @@ public class CoinService : BaseService, ICoinService
     #endregion
 
     #region WOG
-    public async Task<ApplicationResult> CreateWithdrawOptionGroup(CreateWithdrawOptionGroupDto option)
+    public async Task<ApplicationResult<object>> CreateWithdrawOptionGroup(CreateWithdrawOptionGroupDto option)
     {
         try
         {
@@ -254,7 +242,7 @@ public class CoinService : BaseService, ICoinService
 
             var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOptionGroup", option);
 
-            return new ApplicationResult { Success = true, Data = res.StatusCode };
+            return new ApplicationResult<object> { Success = true, Data = res.StatusCode };
         }
         catch (Exception ex)
         {
@@ -266,13 +254,13 @@ public class CoinService : BaseService, ICoinService
         }
     }
 
-    public async Task<ApplicationResult> UpdateWithdrawOptionGroup(UpdateWithdrawOptionGroupDto option)
+    public async Task<ApplicationResult<object>> UpdateWithdrawOptionGroup(UpdateWithdrawOptionGroupDto option)
     {
         try
         {
             var res = await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/UpdateWithdrawOptionGroup", option);
 
-            return new ApplicationResult { Success = true, Data = res.StatusCode };
+            return new ApplicationResult<object> { Success = true, Data = res.StatusCode };
         }
         catch (Exception ex)
         {
@@ -284,7 +272,7 @@ public class CoinService : BaseService, ICoinService
         }
     }
 
-    public async Task<ApplicationResult> DeleteWithdrawOptiongroup(List<int> ids)
+    public async Task<ApplicationResult<object>> DeleteWithdrawOptiongroup(List<int> ids)
     {
         var body = new
         {
@@ -295,7 +283,7 @@ public class CoinService : BaseService, ICoinService
         {
             await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOptionGroup", body);
 
-            return new ApplicationResult { Success = true, Data = "Deleted Successfully" };
+            return new ApplicationResult<object> { Success = true, Data = "Deleted Successfully" };
         }
         catch (Exception ex)
         {
@@ -392,7 +380,7 @@ public class CoinService : BaseService, ICoinService
 
     #region WOE
 
-    public async Task<ApplicationResult> CreateWithdrawOptionEndpoint(CreateWithdrawOptionEndpointDto option)
+    public async Task<ApplicationResult<object>> CreateWithdrawOptionEndpoint(CreateWithdrawOptionEndpointDto option)
     {
         try
         {
@@ -408,7 +396,7 @@ public class CoinService : BaseService, ICoinService
 
             var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateWithdrawOptionEndpoint", body);
 
-            return new ApplicationResult { Success = true, Data = res.StatusCode };
+            return new ApplicationResult<object> { Success = true, Data = res.StatusCode };
         }
         catch (Exception ex)
         {
@@ -420,13 +408,13 @@ public class CoinService : BaseService, ICoinService
         }
     }
 
-    public async Task<ApplicationResult> UpdateWithdrawOptionEndpoint(UpdateWithdrawOptionEndpointDto option)
+    public async Task<ApplicationResult<object>> UpdateWithdrawOptionEndpoint(UpdateWithdrawOptionEndpointDto option)
     {
         try
         {
             var res = await _hubApiClient.PutAsJson($"{_options.Endpoint}Admin/UpdateWithdrawOptionEndpoint", option);
 
-            return new ApplicationResult { Success = true, Data = res.StatusCode };
+            return new ApplicationResult<object> { Success = true, Data = res.StatusCode };
         }
         catch (Exception ex)
         {
@@ -438,7 +426,7 @@ public class CoinService : BaseService, ICoinService
         }
     }
 
-    public async Task<ApplicationResult> DeleteWithdrawOptionEndpoint(List<int> ids)
+    public async Task<ApplicationResult<object>> DeleteWithdrawOptionEndpoint(List<int> ids)
     {
         var body = new
         {
@@ -449,7 +437,7 @@ public class CoinService : BaseService, ICoinService
         {
             await _hubApiClient.PostAsJsonAndSerializeResultTo<object>($"{_options.Endpoint}Admin/DeleteWithdrawOptionEndpoint", body);
 
-            return new ApplicationResult { Success = true, Data = "Deleted Successfully" };
+            return new ApplicationResult<object> { Success = true, Data = "Deleted Successfully" };
         }
         catch (Exception ex)
         {
@@ -516,7 +504,7 @@ public class CoinService : BaseService, ICoinService
 
     #endregion
 
-    public async Task<ApplicationResult> CreateReward(PlayerPrizeDto dto)
+    public async Task<ApplicationResult<object>> CreateReward(PlayerPrizeDto dto)
     {
         var body = new
         {
@@ -531,7 +519,7 @@ public class CoinService : BaseService, ICoinService
         {
             var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/CreateReward", dto);
 
-            return new ApplicationResult { Success = true, Data = res.StatusCode };
+            return new ApplicationResult<object> { Success = true, Data = res.StatusCode };
         }
         catch (Exception ex)
         {
@@ -543,7 +531,7 @@ public class CoinService : BaseService, ICoinService
         }
     }
 
-    public async Task<ApplicationResult> DeleteReward(int id)
+    public async Task<ApplicationResult<object>> DeleteReward(int id)
     {
         var body = new
         {
@@ -554,7 +542,7 @@ public class CoinService : BaseService, ICoinService
         {
             await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/DeleteReward", body);
 
-            return new ApplicationResult { Success = true, Data = "Deleted Successfully" };
+            return new ApplicationResult<object> { Success = true, Data = "Deleted Successfully" };
         }
         catch (Exception ex)
         {

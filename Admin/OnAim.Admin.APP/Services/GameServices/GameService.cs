@@ -1,11 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.GameServices;
-using OnAim.Admin.APP.Services.Hub.ClientServices;
-using OnAim.Admin.Contracts.Dtos.Game;
+﻿using OnAim.Admin.Contracts.Dtos.Game;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 
 namespace OnAim.Admin.APP.Services.Game;
 
@@ -80,7 +74,7 @@ public class GameService : IGameService
         if (response.IsSuccessStatusCode)
         {
             var jsonString = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<object>(jsonString);
+            return System.Text.Json.JsonSerializer.Deserialize<object>(jsonString);
         }
 
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
@@ -93,7 +87,7 @@ public class GameService : IGameService
         if (response.IsSuccessStatusCode)
         {
             var outerJson = await response.Content.ReadAsStringAsync();
-            var outerObject = JsonSerializer.Deserialize<ConfigurationMetadataResponse>(outerJson);
+            var outerObject = System.Text.Json.JsonSerializer.Deserialize<ConfigurationMetadataResponse>(outerJson);
             return outerObject;
         }
 
@@ -107,7 +101,7 @@ public class GameService : IGameService
         if (response.IsSuccessStatusCode)
         {
             var jsonString = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<GameShortInfo>(jsonString);
+            return System.Text.Json.JsonSerializer.Deserialize<GameShortInfo>(jsonString);
         }
 
         throw new HttpRequestException($"Failed to retrieve data: {response.StatusCode}");
@@ -148,7 +142,7 @@ public class GameService : IGameService
     {
         if (name != null)
         {
-            var jsonContent = JsonSerializer.Serialize(configurationJson);
+            var jsonContent = System.Text.Json.JsonSerializer.Serialize(configurationJson);
             using var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
             var response = await _httpClientFactory.PutAsJsonAsync<object>($"/{Uri.EscapeDataString(name)}Api/Admin/CreateConfiguration", content);

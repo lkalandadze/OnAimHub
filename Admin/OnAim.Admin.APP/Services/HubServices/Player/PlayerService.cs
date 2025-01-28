@@ -1,20 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.HubEntities;
-using OnAim.Admin.Domain.LeaderBoradEntities;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Player;
-using OnAim.Admin.Contracts.Dtos.Refer;
+﻿using OnAim.Admin.Contracts.Dtos.Refer;
 using OnAim.Admin.Contracts.Dtos.Segment;
 using OnAim.Admin.Contracts.Dtos.Transaction;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using OnAim.Admin.Domain.HubEntities.PlayerEntities;
 using OnAim.Admin.APP.Services.HubServices.Player;
-using OnAim.Admin.Infrasturcture.Interfaces;
-using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.Hub.ClientServices;
-using OnAim.Admin.Infrasturcture.Repositories.Abstract;
-using OnAim.Admin.Contracts.Dtos.Base;
 
 namespace OnAim.Admin.APP.Services.Hub.Player;
 
@@ -62,7 +50,7 @@ public class PlayerService : IPlayerService
         _segmentRepo = segmentRepo;
     }
 
-    public async Task<ApplicationResult> BanPlayer(int playerId, DateTimeOffset? expireDate, bool isPermanent, string description)
+    public async Task<ApplicationResult<bool>> BanPlayer(int playerId, DateTimeOffset? expireDate, bool isPermanent, string description)
     {
         var request = new
         {
@@ -76,13 +64,13 @@ public class PlayerService : IPlayerService
 
         if (result.IsSuccessStatusCode)
         {
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
 
         throw new BadRequestException("Failed to Ban player");
     }
 
-    public async Task<ApplicationResult> RevokeBan(int id)
+    public async Task<ApplicationResult<bool>> RevokeBan(int id)
     {
         var request = new
         {
@@ -93,13 +81,13 @@ public class PlayerService : IPlayerService
 
         if (result.IsSuccessStatusCode)
         {
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
 
         throw new BadRequestException("Failed to revoke ban!");
     }
 
-    public async Task<ApplicationResult> UpdateBan(int id, DateTimeOffset? expireDate, bool isPermanent, string description)
+    public async Task<ApplicationResult<bool>> UpdateBan(int id, DateTimeOffset? expireDate, bool isPermanent, string description)
     {
         var request = new
         {
@@ -112,13 +100,13 @@ public class PlayerService : IPlayerService
 
         if (result.IsSuccessStatusCode)
         {
-            return new ApplicationResult { Success = true };
+            return new ApplicationResult<bool> { Success = true };
         }
 
         throw new BadRequestException("Failed to update ban!");
     }
 
-    public async Task<ApplicationResult> GetAll(PlayerFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<PlayerListDto>>> GetAll(PlayerFilter filter)
     {
         var sortableFields = new List<string> { "Id", "UserName" };
 
@@ -173,7 +161,7 @@ public class PlayerService : IPlayerService
             .Take(pageSize);
 
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<PlayerListDto>>
         {
             Success = true,
             Data = new PaginatedResult<PlayerListDto>
@@ -187,7 +175,7 @@ public class PlayerService : IPlayerService
         };
     }
 
-    public async Task<ApplicationResult> GetById(int id)
+    public async Task<ApplicationResult<PlayerDto>> GetById(int id)
     {
         var player = await _playerRepository
            .Query(x => x.Id == id)
@@ -244,14 +232,14 @@ public class PlayerService : IPlayerService
             Referrals = referrals
         };
 
-        return new ApplicationResult
+        return new ApplicationResult<PlayerDto>
         {
             Data = result,
             Success = true,
         };
     }
 
-    public async Task<ApplicationResult> GetBalance(int id)
+    public async Task<ApplicationResult<List<PlayerBalanceDto>>> GetBalance(int id)
     {
         var balances = _playerBalanceRepository.Query(x => x.PlayerId == id);
 
@@ -262,19 +250,19 @@ public class PlayerService : IPlayerService
             Currency = x.Coin.Name,
         });
 
-        return new ApplicationResult
+        return new ApplicationResult<List<PlayerBalanceDto>>
         {
             Success = true,
             Data = await result.ToListAsync()
         };
     }
 
-    public async Task<ApplicationResult> AddBalanceToPlayer(AddBalanceDto command)
+    public async Task<ApplicationResult<bool>> AddBalanceToPlayer(AddBalanceDto command)
     {
         try
         {
             var res = await _hubApiClient.PostAsJson($"{_options.Endpoint}Admin/AddBalanceToPlayer", command);
-            return new ApplicationResult { Success = true, Data = res.StatusCode };
+            return new ApplicationResult<bool> { Success = true };
         }
         catch (Exception ex)
         {
@@ -282,18 +270,18 @@ public class PlayerService : IPlayerService
         }
     }
 
-    public async Task<ApplicationResult> GetBannedPlayer(int id)
+    public async Task<ApplicationResult<PlayerBan>> GetBannedPlayer(int id)
     {
         var palyer = await _playerBanRepository.Query(x => x.Id == id).FirstOrDefaultAsync();
 
-        return new ApplicationResult
+        return new ApplicationResult<PlayerBan>
         {
             Success = true,
             Data = palyer ?? null,
         };
     }
 
-    public async Task<ApplicationResult> GetAllBannedPlayers()
+    public async Task<ApplicationResult<List<BannedPlayerListDto>>> GetAllBannedPlayers()
     {
         var banned = _playerBanRepository.Query();
 
@@ -311,27 +299,27 @@ public class PlayerService : IPlayerService
         });
 
 
-        return new ApplicationResult
+        return new ApplicationResult<List<BannedPlayerListDto>>
         {
             Success = true,
             Data = await result.ToListAsync()
         };
     }
 
-    public async Task<ApplicationResult> GetLeaderBoardResultByPlayer(int playerId)
+    public async Task<ApplicationResult<List<LeaderboardResult>>> GetLeaderBoardResultByPlayer(int playerId)
     {
         var leaderboardResults = _leaderboardResultRepository.Query().Where(x => x.PlayerId == playerId);
 
         var total = leaderboardResults.Count();
 
-        return new ApplicationResult
+        return new ApplicationResult<List<LeaderboardResult>>
         {
             Success = true,
             Data = await leaderboardResults.ToListAsync(),
         };
     }
 
-    public async Task<ApplicationResult> GetPlayerProgress(int id)
+    public async Task<ApplicationResult<PlayerProgressDto>> GetPlayerProgress(int id)
     {
         var progress = await _playerProgressRepository.Query(x => x.PlayerId == id).FirstOrDefaultAsync();
 
@@ -341,14 +329,14 @@ public class PlayerService : IPlayerService
             TotalProgress = progress?.Progress ?? 0
         };
 
-        return new ApplicationResult
+        return new ApplicationResult<PlayerProgressDto>
         {
             Success = true,
             Data = result
         };
     }
 
-    public async Task<ApplicationResult> GetPlayerTransaction(int id, BaseFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<PlayerTransactionDto>>> GetPlayerTransaction(int id, BaseFilter filter)
     {
         var transaction = _transactionRepository.Query(x => x.PlayerId == id);
 
@@ -371,7 +359,7 @@ public class PlayerService : IPlayerService
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<PlayerTransactionDto>>
         {
             Data = new PaginatedResult<PlayerTransactionDto>
             {
@@ -385,7 +373,7 @@ public class PlayerService : IPlayerService
         };
     }
 
-    public async Task<ApplicationResult> GetPlayerLogs(int id, BaseFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<PlayerLogDto>>> GetPlayerLogs(int id, BaseFilter filter)
     {
         var logs = _playerLogRepository.Query(x => x.PlayerId == id).Include(x => x.PlayerLogType);
 
@@ -404,7 +392,7 @@ public class PlayerService : IPlayerService
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<PlayerLogDto>>
         {
             Data = new PaginatedResult<PlayerLogDto>
             {

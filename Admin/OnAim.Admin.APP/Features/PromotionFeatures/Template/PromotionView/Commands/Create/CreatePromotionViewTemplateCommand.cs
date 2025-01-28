@@ -4,4 +4,4 @@ using OnAim.Admin.Contracts.Dtos.Promotion;
 
 namespace OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Commands.Create;
 
-public record CreatePromotionViewTemplateCommand(CreatePromotionViewTemplateAsyncDto Create) : ICommand<ApplicationResult>;
+public record CreatePromotionViewTemplateCommand(CreatePromotionViewTemplateAsyncDto Create) : ICommand<ApplicationResult<bool>>;

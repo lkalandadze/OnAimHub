@@ -4,4 +4,4 @@ using OnAim.Admin.Contracts.Dtos.Coin;
 
 namespace OnAim.Admin.APP.Features.WithdrawOptionFeatures.Commands.Update;
 
-public record UpdateWithdrawOptionCommand(UpdateWithdrawOptionDto Command) : ICommand<ApplicationResult>;
+public record UpdateWithdrawOptionCommand(UpdateWithdrawOptionDto Command) : ICommand<ApplicationResult<object>>;

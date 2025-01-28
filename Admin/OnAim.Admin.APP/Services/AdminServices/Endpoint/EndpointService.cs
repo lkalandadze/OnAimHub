@@ -1,15 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
+﻿using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.Contracts.Dtos.Endpoint;
 using OnAim.Admin.Contracts.Dtos.EndpointGroup;
 using OnAim.Admin.Contracts.Dtos.User;
 using OnAim.Admin.Contracts.Helpers;
 using OnAim.Admin.Contracts.Models;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.Contracts.Enums;
-using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.AdminServices.Endpoint;
 
 namespace OnAim.Admin.APP.Services.Admin.Endpoint;
@@ -30,7 +24,7 @@ public class EndpointService : IEndpointService
         _securityContextAccessor = securityContextAccessor;
     }
 
-    public async Task<ApplicationResult> Create(List<CreateEndpointDto> endpoints)
+    public async Task<ApplicationResult<string>> Create(List<CreateEndpointDto> endpoints)
     {
         var results = new List<OnAim.Admin.Domain.Entities.Endpoint>();
 
@@ -60,14 +54,14 @@ public class EndpointService : IEndpointService
 
         await _repository.CommitChanges();
 
-        return new ApplicationResult
+        return new ApplicationResult<string>
         {
             Success = true,
             Data = string.Join(", ", results.Select(x => x.Name)),
         };
     }
 
-    public async Task<ApplicationResult> Delete(List<int> ids)
+    public async Task<ApplicationResult<bool>> Delete(List<int> ids)
     {
         var endpoints = await _repository.Query(x => ids.Contains(x.Id)).ToListAsync();
 
@@ -82,10 +76,10 @@ public class EndpointService : IEndpointService
 
         await _repository.CommitChanges();
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
-    public async Task<ApplicationResult> Update(int id, UpdateEndpointDto endpoint)
+    public async Task<ApplicationResult<string>> Update(int id, UpdateEndpointDto endpoint)
     {
         var ep = await _repository.Query(x => x.Id == id).FirstOrDefaultAsync();
 
@@ -97,14 +91,14 @@ public class EndpointService : IEndpointService
 
         await _repository.CommitChanges();
 
-        return new ApplicationResult
+        return new ApplicationResult<string>
         {
             Success = true,
             Data = $"Permmission {ep.Name} Successfully Updated"
         };
     }
 
-    public async Task<ApplicationResult> GetAll(EndpointFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<EndpointResponseModel>>> GetAll(EndpointFilter filter)
     {
         var query = _repository
         .Query(x =>
@@ -165,14 +159,14 @@ public class EndpointService : IEndpointService
             new List<string> { "Id", "Name" }
         );
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<EndpointResponseModel>>
         {
             Success = true,
             Data = paginatedResult
         };
     }
 
-    public async Task<ApplicationResult> GetById(int id)
+    public async Task<ApplicationResult<EndpointResponseModel>> GetById(int id)
     {
         var endpoint = await _repository
            .Query(x => x.Id == id)
@@ -211,7 +205,7 @@ public class EndpointService : IEndpointService
             }).ToList(),
         };
 
-        return new ApplicationResult
+        return new ApplicationResult<EndpointResponseModel>
         {
             Success = true,
             Data = result,

@@ -3,5 +3,5 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.LeaderBoardFeatures.Queries.GetAllPrizes;
 
-public record GetAllPrizesQuery : IQuery<ApplicationResult>;
+public record GetAllPrizesQuery : IQuery<object>;
 

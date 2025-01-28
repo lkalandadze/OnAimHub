@@ -1,11 +1,9 @@
-﻿using FluentValidation;
-using OnAim.Admin.APP.CQRS.Command;
+﻿using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Services.AdminServices.Endpoint;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.EndpointFeatures.Commands.Create;
 
-public class CreateEndpointCommandHandler : ICommandHandler<CreateEndpointCommand, ApplicationResult>
+public class CreateEndpointCommandHandler : ICommandHandler<CreateEndpointCommand, ApplicationResult<string>>
 {
     private readonly IEndpointService _permissionService;
     private readonly IValidator<CreateEndpointCommand> _validator;
@@ -16,15 +14,13 @@ public class CreateEndpointCommandHandler : ICommandHandler<CreateEndpointComman
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(CreateEndpointCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<string>> Handle(CreateEndpointCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
-            throw new ValidationException(validationResult.Errors);
+            throw new FluentValidation.ValidationException(validationResult.Errors);
 
-        var result = await _permissionService.Create(request.Endpoints);
-
-        return new ApplicationResult { Success = result.Success, Data = result };
+        return await _permissionService.Create(request.Endpoints);
     }
 }

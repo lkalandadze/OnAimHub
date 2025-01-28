@@ -1,11 +1,4 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.Game;
-using OnAim.Admin.Contracts.Enums;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Domain.Entities.Templates;
-using OnAim.Admin.Infrasturcture.Repositories.Interfaces;
+﻿using OnAim.Admin.Contracts.Dtos.Game;
 
 namespace OnAim.Admin.APP.Services.GameServices;
 
@@ -18,7 +11,7 @@ public class GameTemplateService : IGameTemplateService
         _gameConfigurationTemplateRepository = gameConfigurationTemplateRepository;
     }
 
-    public async Task<ApplicationResult> GetAllGameConfigurationTemplates(GameTemplateFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<GameConfigurationTemplateDto>>> GetAllGameConfigurationTemplates(GameTemplateFilter filter)
     {
         var temps = await _gameConfigurationTemplateRepository.GetGameConfigurationTemplates();
 
@@ -59,7 +52,7 @@ public class GameTemplateService : IGameTemplateService
            .Skip((pageNumber - 1) * pageSize)
            .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<GameConfigurationTemplateDto>>
         {
             Success = true,
             Data = new PaginatedResult<GameConfigurationTemplateDto>
@@ -72,13 +65,13 @@ public class GameTemplateService : IGameTemplateService
         };
     }
 
-    public async Task<ApplicationResult> GetGameConfigurationTemplateById(string id)
+    public async Task<ApplicationResult<GameConfigurationTemplate>> GetGameConfigurationTemplateById(string id)
     {
         var coin = await _gameConfigurationTemplateRepository.GetGameConfigurationTemplateByIdAsync(id);
 
         if (coin == null) throw new NotFoundException("template Not Found");
 
-        return new ApplicationResult { Success = true, Data = coin };
+        return new ApplicationResult<GameConfigurationTemplate> { Success = true, Data = coin };
     }
 
     public async Task<GameConfigurationTemplate> CreateGameConfigurationTemplate(string gameName, object template)
@@ -94,10 +87,10 @@ public class GameTemplateService : IGameTemplateService
         return temp;
     }
 
-    public async Task<ApplicationResult> DeleteGameConfigurationTemplate(string id)
+    public async Task<ApplicationResult<bool>> DeleteGameConfigurationTemplate(string id)
     {
         var template = await _gameConfigurationTemplateRepository.DeleteGameConfigurationTemplateAsync(id);      
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 }

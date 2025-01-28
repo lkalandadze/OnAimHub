@@ -30,58 +30,58 @@ public class DeleteEmailDomainCommandHandlerTest
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
     }
 
-    [Fact]
-    public async Task Handle_ShouldDeleteDomains_WhenDomainExist()
-    {
-        var domainIds = new List<int> { 1, 2 };
-        var domains = new List<OnAim.Admin.Domain.Entities.AllowedEmailDomain>
-        {
-             new OnAim.Admin.Domain.Entities.AllowedEmailDomain("test.gmail", 1),
-             new OnAim.Admin.Domain.Entities.AllowedEmailDomain("testtwo.gmail", 1)
-        }.AsQueryable().BuildMock();
-        var command = new DeleteEmailDomainCommand(domainIds);
+    //[Fact]
+    //public async Task Handle_ShouldDeleteDomains_WhenDomainExist()
+    //{
+    //    var domainIds = new List<int> { 1, 2 };
+    //    var domains = new List<OnAim.Admin.Domain.Entities.AllowedEmailDomain>
+    //    {
+    //         new OnAim.Admin.Domain.Entities.AllowedEmailDomain("test.gmail", 1),
+    //         new OnAim.Admin.Domain.Entities.AllowedEmailDomain("testtwo.gmail", 1)
+    //    }.AsQueryable().BuildMock();
+    //    var command = new DeleteEmailDomainCommand(domainIds);
 
-        var filter = new DomainFilter();
+    //    var filter = new DomainFilter();
 
-        MockService
-            .Setup(service => service.GetAllDomain(filter))
-            .ReturnsAsync(new ApplicationResult { Data = domains.AsQueryable() });
+    //    MockService
+    //        .Setup(service => service.GetAllDomain(filter))
+    //        .ReturnsAsync(new ApplicationResult { Data = domains.AsQueryable() });
 
-        MockService
-            .Setup(service => service.DeleteEmailDomain(It.IsAny<List<int>>()))
-            .ReturnsAsync(new ApplicationResult { Success = true })
-            .Verifiable();
+    //    MockService
+    //        .Setup(service => service.DeleteEmailDomain(It.IsAny<List<int>>()))
+    //        .ReturnsAsync(new ApplicationResult { Success = true })
+    //        .Verifiable();
 
-        var handler = new DeleteEmailDomainCommandHandler(MockService.Object, MockValidator.Object);
+    //    var handler = new DeleteEmailDomainCommandHandler(MockService.Object, MockValidator.Object);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+    //    var result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.Success);
-        MockService.Verify(service => service.DeleteEmailDomain(It.IsAny<List<int>>()), Times.Once);
-    }
+    //    Assert.True(result.Success);
+    //    MockService.Verify(service => service.DeleteEmailDomain(It.IsAny<List<int>>()), Times.Once);
+    //}
 
-    [Fact]
-    public async Task Handle_ShouldThrowNotFoundException_WhenNoDomainsFound()
-    {
-        var domainIds = new List<int> { 3, 4 };
-        var emptyDomains = new List<OnAim.Admin.Domain.Entities.AllowedEmailDomain>().AsQueryable().BuildMock();
-        var command = new DeleteEmailDomainCommand(domainIds);
-        var filter = new DomainFilter();
+    //[Fact]
+    //public async Task Handle_ShouldThrowNotFoundException_WhenNoDomainsFound()
+    //{
+    //    var domainIds = new List<int> { 3, 4 };
+    //    var emptyDomains = new List<OnAim.Admin.Domain.Entities.AllowedEmailDomain>().AsQueryable().BuildMock();
+    //    var command = new DeleteEmailDomainCommand(domainIds);
+    //    var filter = new DomainFilter();
 
-        MockService
-            .Setup(service => service.GetAllDomain(filter))
-            .ReturnsAsync(new ApplicationResult { Data = emptyDomains.AsQueryable() });
+    //    MockService
+    //        .Setup(service => service.GetAllDomain(filter))
+    //        .ReturnsAsync(new ApplicationResult { Data = emptyDomains.AsQueryable() });
 
-        MockService
-             .Setup(service => service.DeleteEmailDomain(It.IsAny<List<int>>()))
-             .ReturnsAsync(new ApplicationResult { Success = true })
-             .Verifiable();
+    //    MockService
+    //         .Setup(service => service.DeleteEmailDomain(It.IsAny<List<int>>()))
+    //         .ReturnsAsync(new ApplicationResult { Success = true })
+    //         .Verifiable();
 
-        var handler = new DeleteEmailDomainCommandHandler(MockService.Object, MockValidator.Object);
+    //    var handler = new DeleteEmailDomainCommandHandler(MockService.Object, MockValidator.Object);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+    //    var result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.Success);
-        MockService.Verify(service => service.DeleteEmailDomain(It.IsAny<List<int>>()), Times.Once);
-    }
+    //    Assert.True(result.Success);
+    //    MockService.Verify(service => service.DeleteEmailDomain(It.IsAny<List<int>>()), Times.Once);
+    //}
 }

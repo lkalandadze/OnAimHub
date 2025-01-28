@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.Schedule.Update;
 
-public class UpdateLeaderboardScheduleCommandHandler : ICommandHandler<UpdateScheduleCommand, ApplicationResult>
+public class UpdateLeaderboardScheduleCommandHandler : ICommandHandler<UpdateScheduleCommand, ApplicationResult<bool>>
 {
     private readonly ILeaderBoardService _leaderBoardService;
 
@@ -12,14 +12,8 @@ public class UpdateLeaderboardScheduleCommandHandler : ICommandHandler<UpdateSch
     {
         _leaderBoardService = leaderBoardService;
     }
-    public async Task<ApplicationResult> Handle(UpdateScheduleCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(UpdateScheduleCommand request, CancellationToken cancellationToken)
     {
-        var result = await _leaderBoardService.UpdateLeaderboardSchedule(request.Update);
-
-        return new ApplicationResult
-        {
-            Data = result.Data,
-            Success = result.Success,
-        };
+        return await _leaderBoardService.UpdateLeaderboardSchedule(request.Update);
     }
 }

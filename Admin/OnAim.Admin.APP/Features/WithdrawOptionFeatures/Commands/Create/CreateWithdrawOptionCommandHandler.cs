@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.WithdrawOptionFeatures.Commands.Create;
 
-public sealed class CreateWithdrawOptionCommandHandler : ICommandHandler<CreateWithdrawOptionCommand, ApplicationResult>
+public sealed class CreateWithdrawOptionCommandHandler : ICommandHandler<CreateWithdrawOptionCommand, ApplicationResult<object>>
 {
     private readonly ICoinService _coinService;
 
@@ -13,10 +13,8 @@ public sealed class CreateWithdrawOptionCommandHandler : ICommandHandler<CreateW
         _coinService = coinService;
     }
 
-    public async Task<ApplicationResult> Handle(CreateWithdrawOptionCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<object>> Handle(CreateWithdrawOptionCommand request, CancellationToken cancellationToken)
     {
-        var res = await _coinService.CreateWithdrawOption(request.Command);
-
-        return new ApplicationResult { Data = res.Data, Success = res.Success };
+        return await _coinService.CreateWithdrawOption(request.Command);
     }
 }

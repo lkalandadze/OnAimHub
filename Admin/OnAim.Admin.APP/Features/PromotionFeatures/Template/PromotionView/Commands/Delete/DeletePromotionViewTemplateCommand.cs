@@ -3,4 +3,4 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PromotionFeatures.Template.PromotionView.Commands.Delete;
 
-public record DeletePromotionViewTemplateCommand(string Id) : ICommand<ApplicationResult>;
+public record DeletePromotionViewTemplateCommand(string Id) : ICommand<ApplicationResult<bool>>;

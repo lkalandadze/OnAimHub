@@ -1,5 +1,4 @@
 ﻿using GameLib.Application.Generators;
-using GameLib.Application.Models.Configuration;
 using GameLib.Domain.Entities;
 using Shared.Lib.Wrappers;
 
@@ -7,7 +6,7 @@ namespace GameLib.Application.Services.Abstract;
 
 public interface IGameConfigurationService
 {
-    void ResetGenerators();
+    void ResetInMemoryData();
 
     Response<EntityMetadata?> GetConfigurationMetaData();
 

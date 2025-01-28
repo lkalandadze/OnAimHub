@@ -1,10 +1,9 @@
 ﻿using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Services.GameServices;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.GameFeatures.Commands.DeactivateConfiguration;
 
-public class DeactivateConfigurationCommandHandler : ICommandHandler<DeactivateConfigurationCommand, ApplicationResult>
+public class DeactivateConfigurationCommandHandler : ICommandHandler<DeactivateConfigurationCommand, object>
 {
     private readonly IGameService _gameService;
 
@@ -12,10 +11,8 @@ public class DeactivateConfigurationCommandHandler : ICommandHandler<DeactivateC
     {
         _gameService = gameService;
     }
-    public async Task<ApplicationResult> Handle(DeactivateConfigurationCommand request, CancellationToken cancellationToken)
+    public async Task<object> Handle(DeactivateConfigurationCommand request, CancellationToken cancellationToken)
     {
-        var result = await _gameService.DeactivateConfiguration(request.Name, request.Id);
-
-        return new ApplicationResult { Data = result };
+        return await _gameService.DeactivateConfiguration(request.Name, request.Id);
     }
 }

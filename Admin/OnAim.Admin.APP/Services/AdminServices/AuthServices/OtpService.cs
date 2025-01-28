@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Contracts.Enums;
+﻿using OnAim.Admin.Infrasturcture.Repository.Abstract;
 using OnAim.Admin.APP.Services.AdminServices.EmailServices;
 
 namespace OnAim.Admin.APP.Services.Admin.AuthServices;

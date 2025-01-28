@@ -1,14 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.Contracts.Dtos.Base;
-using OnAim.Admin.Contracts.Dtos.Promotion;
-using OnAim.Admin.Contracts.Enums;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using OnAim.Admin.Domain.Entities.Templates;
-using OnAim.Admin.Infrasturcture.Repositories.Abstract;
-
-namespace OnAim.Admin.APP.Services.HubServices.Promotion;
+﻿namespace OnAim.Admin.APP.Services.HubServices.Promotion;
 
 public class PromotionViewTemplateService : IPromotionViewTemplateService
 {
@@ -21,7 +11,7 @@ public class PromotionViewTemplateService : IPromotionViewTemplateService
         _viewConfig = viewConfig.Value;
     }
 
-    public async Task<ApplicationResult> GetAllPromotionViewTemplates(BaseFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<PromotionViewTemplate>>> GetAllPromotionViewTemplates(BaseFilter filter)
     {
         var temps = await _promotionViewTemplateRepository.GetPromotionViewTemplates();
         if (filter?.HistoryStatus.HasValue == true)
@@ -49,7 +39,7 @@ public class PromotionViewTemplateService : IPromotionViewTemplateService
            .Skip((pageNumber - 1) * pageSize)
            .Take(pageSize);
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<PromotionViewTemplate>>
         {
             Success = true,
             Data = new PaginatedResult<PromotionViewTemplate>
@@ -62,16 +52,16 @@ public class PromotionViewTemplateService : IPromotionViewTemplateService
         };
     }
 
-    public async Task<ApplicationResult> GetPromotionViewTemplateById(string id)
+    public async Task<ApplicationResult<PromotionViewTemplate>> GetPromotionViewTemplateById(string id)
     {
         var coin = await _promotionViewTemplateRepository.GetPromotionViewTemplateByIdAsync(id);
 
         if (coin == null) throw new NotFoundException("template Not Found");
 
-        return new ApplicationResult { Success = true, Data = coin };
+        return new ApplicationResult<PromotionViewTemplate> { Success = true, Data = coin };
     }
 
-    public async Task<ApplicationResult> CreatePromotionViewTemplateAsync(CreatePromotionViewTemplateAsyncDto create)
+    public async Task<ApplicationResult<bool>> CreatePromotionViewTemplateAsync(CreatePromotionViewTemplateAsyncDto create)
     {
         var viewUrl = GenerateTemplateViewUrl(create.ViewContent);
 
@@ -84,10 +74,10 @@ public class PromotionViewTemplateService : IPromotionViewTemplateService
         await _promotionViewTemplateRepository.AddPromotionViewTemplateAsync(promotionViewTemplate);
 
 
-        return new ApplicationResult();
+        return new ApplicationResult<bool> { Success = true};
     }
 
-    public async Task<ApplicationResult> DeletePromotionViewTemplate(string id)
+    public async Task<ApplicationResult<bool>> DeletePromotionViewTemplate(string id)
     {
         var template = await _promotionViewTemplateRepository.GetPromotionViewTemplateByIdAsync(id);
 
@@ -100,7 +90,7 @@ public class PromotionViewTemplateService : IPromotionViewTemplateService
 
         await _promotionViewTemplateRepository.UpdatePromotionViewTemplateAsync(id, template);
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
     public string GenerateTemplateViewUrl(string viewContent)

@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PromotionFeatures.Commands.Create;
 
-public class CreatePromotionCommandHandler : ICommandHandler<CreatePromotionCommand, ApplicationResult>
+public class CreatePromotionCommandHandler : ICommandHandler<CreatePromotionCommand, ApplicationResult<Guid>>
 {
     private readonly IPromotionService _promotionService;
 
@@ -12,10 +12,8 @@ public class CreatePromotionCommandHandler : ICommandHandler<CreatePromotionComm
     {
         _promotionService = promotionService;
     }
-    public async Task<ApplicationResult> Handle(CreatePromotionCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<Guid>> Handle(CreatePromotionCommand request, CancellationToken cancellationToken)
     {
-        var result = await _promotionService.CreatePromotion(request.Create);
-
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return await _promotionService.CreatePromotion(request.Create);
     }
 }

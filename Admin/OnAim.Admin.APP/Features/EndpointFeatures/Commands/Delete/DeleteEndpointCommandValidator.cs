@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace OnAim.Admin.APP.Features.EndpointFeatures.Commands.Delete;
+﻿namespace OnAim.Admin.APP.Features.EndpointFeatures.Commands.Delete;
 
 public class DeleteEndpointCommandValidator : AbstractValidator<DeleteEndpointCommand>
 {

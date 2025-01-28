@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using AggregationService.Domain.Entities;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using OnAim.Admin.Domain.LeaderBoradEntities;
 
@@ -38,6 +39,7 @@ public class LeaderboardTemplate
     public DateTimeOffset DateDeleted { get; set; }
     public int Usage { get; set; }
 
+    public ICollection<AggregationConfiguration> AggregationConfigurations { get; set; } = new List<AggregationConfiguration>();
     public ICollection<LeaderboardTemplatePrize> LeaderboardTemplatePrizes { get; set; } = new List<LeaderboardTemplatePrize>();
 
     public void AddLeaderboardTemplatePrizes(int startRank, int endRank, string coinId, int amount)

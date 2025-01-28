@@ -73,12 +73,12 @@ public class WheelService : IWheelService
         };
     }
 
-    public async Task<PlayResponseModel> PlayWheelAsync(PlayRequestModel model)
+    public async Task<PlayResponseModel> PlayWheelAsync(int promotionId, int betPriceId)
     {
-        return await PlayAsync<WheelPrize>(model);
+        return await PlayAsync<WheelPrize>(promotionId, betPriceId);
     }
 
-    private async Task<PlayResponseModel> PlayAsync<TPrize>(PlayRequestModel request)
+    private async Task<PlayResponseModel> PlayAsync<TPrize>(int promotionId, int betPriceId)
         where TPrize : BasePrize
     {
         //if (!_gameSettings.IsActive.Value)
@@ -130,10 +130,10 @@ public class WheelService : IWheelService
         }
     }
 
-    private async Task<WheelPrize> GetPrizeFromGeneratorAsync<TPrize>(int promotionId) where TPrize : BasePrize
+    private WheelPrize GetPrizeFromGenerator<TPrize>(int promotionId) where TPrize : BasePrize
     {
         var prizeGroup = _configurationHolder.GetPrizeGroups(promotionId).Cast<WheelPrizeGroup>().FirstOrDefault();
-        var prize = (await GeneratorHolder.GetPrizeAsync<TPrize>(prizeGroup!.Id, _authService.GetCurrentPlayerId()) as WheelPrize)!;
+        var prize = (GeneratorHolder.GetPrize<TPrize>(prizeGroup!.Id, _authService.GetCurrentPlayerId()) as WheelPrize)!;
         
         if (prize == null)
         {

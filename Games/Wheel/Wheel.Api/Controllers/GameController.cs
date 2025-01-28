@@ -1,5 +1,6 @@
 ﻿using GameLib.Application.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using Wheel.Application.Models.Wheel;
 using Wheel.Application.Services.Abstract;
 
@@ -16,14 +17,14 @@ public class GameController : BaseApiController
     }
 
     [HttpGet(nameof(InitialData))]
-    public ActionResult<InitialDataResponseModel> InitialData(int promotionId)
+    public ActionResult<InitialDataResponseModel> InitialData([Required] int promotionId)
     {
         return Ok(_gameService.GetInitialData(promotionId));
     }
 
     [HttpPost(nameof(PlayWheel))]
-    public async Task<ActionResult<PlayResponseModel>> PlayWheel([FromBody] PlayRequestModel model)
+    public async Task<ActionResult<PlayResponseModel>> PlayWheel([Required] int promotionId, [Required] int betPriceId)
     {
-        return Ok(await _gameService.PlayWheelAsync(model));
+        return Ok(await _gameService.PlayWheelAsync(promotionId, betPriceId));
     }
 }

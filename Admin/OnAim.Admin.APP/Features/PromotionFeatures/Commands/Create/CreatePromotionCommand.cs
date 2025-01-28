@@ -4,4 +4,4 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PromotionFeatures.Commands.Create;
 
-public record CreatePromotionCommand(CreatePromotionDto Create) : ICommand<ApplicationResult>;
+public record CreatePromotionCommand(CreatePromotionDto Create) : ICommand<ApplicationResult<Guid>>;

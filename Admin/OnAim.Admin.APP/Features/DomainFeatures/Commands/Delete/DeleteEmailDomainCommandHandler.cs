@@ -1,6 +1,4 @@
 ﻿using OnAim.Admin.APP.CQRS.Command;
-using FluentValidation;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.APP.Services.AdminServices.Domain;
 
 namespace OnAim.Admin.APP.Features.DomainFeatures.Commands.Delete;
@@ -21,7 +19,7 @@ public class DeleteEmailDomainCommandHandler : ICommandHandler<DeleteEmailDomain
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
-            throw new ValidationException(validationResult.Errors);
+            throw new FluentValidation.ValidationException(validationResult.Errors);
 
         var result = await _domainService.DeleteEmailDomain(request.Ids);
 

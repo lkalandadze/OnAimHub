@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace OnAim.Admin.APP.Features.EndpointFeatures.Commands.Create;
+﻿namespace OnAim.Admin.APP.Features.EndpointFeatures.Commands.Create;
 
 public class CreateEndpointCommandValidator : AbstractValidator<CreateEndpointCommand>
 {

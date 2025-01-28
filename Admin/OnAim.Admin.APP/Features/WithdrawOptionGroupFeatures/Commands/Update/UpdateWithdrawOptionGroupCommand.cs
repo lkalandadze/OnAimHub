@@ -5,9 +5,9 @@ using OnAim.Admin.Contracts.Dtos.Coin;
 
 namespace OnAim.Admin.APP.Features.WithdrawOptionGroupFeatures.Commands.Update;
 
-public record UpdateWithdrawOptionGroupCommand(UpdateWithdrawOptionGroupDto Command) : ICommand<ApplicationResult>;
+public record UpdateWithdrawOptionGroupCommand(UpdateWithdrawOptionGroupDto Command) : ICommand<ApplicationResult<object>>;
 
-public sealed class UpdateWithdrawOptionGroupCommandHandler : ICommandHandler<UpdateWithdrawOptionGroupCommand, ApplicationResult>
+public sealed class UpdateWithdrawOptionGroupCommandHandler : ICommandHandler<UpdateWithdrawOptionGroupCommand, ApplicationResult<object>>
 {
     private readonly ICoinService _coinService;
 
@@ -16,10 +16,8 @@ public sealed class UpdateWithdrawOptionGroupCommandHandler : ICommandHandler<Up
         _coinService = coinService;
     }
 
-    public async Task<ApplicationResult> Handle(UpdateWithdrawOptionGroupCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<object>> Handle(UpdateWithdrawOptionGroupCommand request, CancellationToken cancellationToken)
     {
-        var res = await _coinService.UpdateWithdrawOptionGroup(request.Command);
-
-        return new ApplicationResult { Data = res.Data, Success = res.Success };
+        return await _coinService.UpdateWithdrawOptionGroup(request.Command);
     }
 }

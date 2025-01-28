@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace OnAim.Admin.APP.Features.DomainFeatures.Commands.Delete;
+﻿namespace OnAim.Admin.APP.Features.DomainFeatures.Commands.Delete;
 
 public class DeleteEmailDomainCommandValidator : AbstractValidator<DeleteEmailDomainCommand>
 {

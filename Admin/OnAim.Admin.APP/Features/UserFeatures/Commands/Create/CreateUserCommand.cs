@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Create;
 
-public class CreateUserCommand : ICommand<ApplicationResult>
+public class CreateUserCommand : ICommand<ApplicationResult<bool>>
 {
     [EmailAddress]
     public string Email { get; set; }

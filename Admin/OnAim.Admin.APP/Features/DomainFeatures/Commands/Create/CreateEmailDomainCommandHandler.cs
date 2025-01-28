@@ -1,7 +1,5 @@
-﻿using FluentValidation;
-using OnAim.Admin.APP.CQRS.Command;
+﻿using OnAim.Admin.APP.CQRS.Command;
 using OnAim.Admin.APP.Services.AdminServices.Domain;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.DomainFeatures.Commands.Create;
 
@@ -21,7 +19,7 @@ public class CreateEmailDomainCommandHandler : ICommandHandler<CreateEmailDomain
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
-            throw new ValidationException(validationResult.Errors);
+            throw new FluentValidation.ValidationException(validationResult.Errors);
 
         var result = await _domainService.CreateOrUpdateDomain(request.Domains, request.Domain, request.IsActive);
 

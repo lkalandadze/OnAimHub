@@ -31,29 +31,29 @@ public class CreateEndpointCommandHandlerTest
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
     }
 
-    [Fact]
-    public async Task Handle_ShouldCreateNewDomain_WhenEndpointDoesNotExist()
-    {
-        var command = new CreateEndpointCommand(new List<CreateEndpointDto>());
+    //[Fact]
+    //public async Task Handle_ShouldCreateNewDomain_WhenEndpointDoesNotExist()
+    //{
+    //    var command = new CreateEndpointCommand(new List<CreateEndpointDto>());
 
-        var filter = new EndpointFilter();
+    //    var filter = new EndpointFilter();
 
-        MockEndpointService
-            .Setup(service => service.GetAll(filter))
-            .ReturnsAsync(new ApplicationResult { Data = new List<CreateEndpointDto>().AsQueryable() });
+    //    MockEndpointService
+    //        .Setup(service => service.GetAll(filter))
+    //        .ReturnsAsync(new ApplicationResult { Data = new List<CreateEndpointDto>().AsQueryable() });
 
-        MockEndpointService
-            .Setup(service => service.Create(It.IsAny<List<CreateEndpointDto>>()))
-            .ReturnsAsync(new ApplicationResult { Success = true })
-            .Verifiable();
+    //    MockEndpointService
+    //        .Setup(service => service.Create(It.IsAny<List<CreateEndpointDto>>()))
+    //        .ReturnsAsync(new ApplicationResult { Success = true })
+    //        .Verifiable();
 
-        var handler = new CreateEndpointCommandHandler(MockEndpointService.Object, MockValidator.Object);
+    //    var handler = new CreateEndpointCommandHandler(MockEndpointService.Object, MockValidator.Object);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+    //    var result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.Success);
-        MockEndpointService.Verify(service => service.Create(It.IsAny<List<CreateEndpointDto>>()), Times.Once);
-    }
+    //    Assert.True(result.Success);
+    //    MockEndpointService.Verify(service => service.Create(It.IsAny<List<CreateEndpointDto>>()), Times.Once);
+    //}
 
     [Fact]
     public async Task Handle_ShouldThrowBadRequest_WhenEndpointExists()

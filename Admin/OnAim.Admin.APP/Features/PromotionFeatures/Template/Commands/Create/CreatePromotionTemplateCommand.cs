@@ -4,4 +4,4 @@ using OnAim.Admin.Domain.Entities.Templates;
 
 namespace OnAim.Admin.APP.Features.PromotionFeatures.Template.Commands.Create;
 
-public record CreatePromotionTemplateCommand(CreatePromotionTemplate Create) : ICommand<ApplicationResult>;
+public record CreatePromotionTemplateCommand(CreatePromotionTemplate Create) : ICommand<ApplicationResult<bool>>;

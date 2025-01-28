@@ -6,13 +6,15 @@ using OnAim.Admin.APP.Features.GameFeatures.Commands.DeactivateConfiguration;
 using OnAim.Admin.APP.Features.GameFeatures.Commands.UpdateConfiguration;
 using OnAim.Admin.APP.Features.GameFeatures.Queries.GetById;
 using OnAim.Admin.APP.Features.GameFeatures.Queries.GetById.GetConfigurationMetadata;
-using OnAim.Admin.APP.Features.GameFeatures.Queries.GetById.GetGameConfigurations;
 using OnAim.Admin.APP.Features.GameFeatures.Template.Commands.Create;
 using OnAim.Admin.APP.Features.GameFeatures.Template.Commands.Delete;
 using OnAim.Admin.APP.Features.GameFeatures.Template.Queries.GetAll;
 using OnAim.Admin.APP.Services.GameServices;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
 using OnAim.Admin.Contracts.Dtos.Game;
+using OnAim.Admin.Contracts.Paging;
+using OnAim.Admin.Domain.Entities.Templates;
 
 namespace OnAim.Admin.API.Controllers;
 
@@ -78,7 +80,7 @@ public class GamesController : ApiControllerBase
     #region Game Configuration Template
 
     [HttpPost(nameof(CreateGameConfigurationTemplate))]
-    public async Task<IActionResult> CreateGameConfigurationTemplate([FromQuery] string gameName, [FromBody] object command)
+    public async Task<ActionResult<GameConfigurationTemplate>> CreateGameConfigurationTemplate([FromQuery] string gameName, [FromBody] object command)
         => Ok(await Mediator.Send(new CreateGameConfigurationTemplateCommand(gameName, command)));
 
     [HttpDelete(nameof(DeleteGameConfigurationTemplate))]
@@ -86,11 +88,11 @@ public class GamesController : ApiControllerBase
         => Ok(await Mediator.Send(command));
 
     [HttpGet(nameof(GetAllGameConfigurationTemplates))]
-    public async Task<IActionResult> GetAllGameConfigurationTemplates([FromQuery] GameTemplateFilter filter)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<GameConfigurationTemplateDto>>>> GetAllGameConfigurationTemplates([FromQuery] GameTemplateFilter filter)
         => Ok(await Mediator.Send(new GetAllGameConfigurationTemplatesQuery(filter)));
 
     [HttpGet(nameof(GetGameConfigurationTemplateById))]
-    public async Task<IActionResult> GetGameConfigurationTemplateById([FromQuery] string id)
+    public async Task<ActionResult<ApplicationResult<GameConfigurationTemplate>>> GetGameConfigurationTemplateById([FromQuery] string id)
         => Ok(await _gameTemplateService.GetGameConfigurationTemplateById(id));
 
     #endregion

@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.LeaderBoardRecord.Delete;
 
-public sealed class DeleteLeaderBoardRecordCommandHandler : ICommandHandler<DeleteLeaderBoardRecordCommand, ApplicationResult>
+public sealed class DeleteLeaderBoardRecordCommandHandler : ICommandHandler<DeleteLeaderBoardRecordCommand, ApplicationResult<bool>>
 {
     private readonly ILeaderBoardService _leaderBoardService;
 
@@ -13,10 +13,8 @@ public sealed class DeleteLeaderBoardRecordCommandHandler : ICommandHandler<Dele
         _leaderBoardService = leaderBoardService;
     }
 
-    public async Task<ApplicationResult> Handle(DeleteLeaderBoardRecordCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<bool>> Handle(DeleteLeaderBoardRecordCommand request, CancellationToken cancellationToken)
     {
-        var result = await _leaderBoardService.DeleteLeaderBoardRecord(request.Delete);
-
-        return new ApplicationResult { Data = result.Data, Success = result.Success };
+        return await _leaderBoardService.DeleteLeaderBoardRecord(request.Delete);
     }
 }

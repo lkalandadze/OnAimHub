@@ -3,4 +3,4 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.LeaderBoardFeatures.Commands.LeaderBoardRecord.Delete;
 
-public record DeleteLeaderBoardRecordCommand(DeleteLeaderboardRecordCommand Delete) : ICommand<ApplicationResult>;
+public record DeleteLeaderBoardRecordCommand(DeleteLeaderboardRecordCommand Delete) : ICommand<ApplicationResult<bool>>;

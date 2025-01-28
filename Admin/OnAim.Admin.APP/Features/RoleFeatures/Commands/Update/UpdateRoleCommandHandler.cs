@@ -1,11 +1,10 @@
-﻿using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.APP.CQRS.Command;
-using FluentValidation;
+﻿using OnAim.Admin.APP.CQRS.Command;
+using ValidationException = FluentValidation.ValidationException;
 using OnAim.Admin.APP.Services.AdminServices.Role;
 
 namespace OnAim.Admin.APP.Features.RoleFeatures.Commands.Update;
 
-public class UpdateRoleCommandHandler : ICommandHandler<UpdateRoleCommand, ApplicationResult>
+public class UpdateRoleCommandHandler : ICommandHandler<UpdateRoleCommand, ApplicationResult<string>>
 {
     private readonly IRoleService _roleService;
     private readonly IValidator<UpdateRoleCommand> _validator;
@@ -16,15 +15,13 @@ public class UpdateRoleCommandHandler : ICommandHandler<UpdateRoleCommand, Appli
         _validator = validator;
     }
 
-    public async Task<ApplicationResult> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<string>> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
             throw new ValidationException(validationResult.Errors);
 
-        var result = await _roleService.Update(request.Id, request.Model);
-
-        return new ApplicationResult { Success = result.Success, Data = result.Data };
+        return await _roleService.Update(request.Id, request.Model);
     }
 }

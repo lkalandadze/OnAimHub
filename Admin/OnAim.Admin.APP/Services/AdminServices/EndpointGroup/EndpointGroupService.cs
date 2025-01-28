@@ -1,17 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OnAim.Admin.Domain.Entities;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
+﻿using OnAim.Admin.Domain.Entities;
 using OnAim.Admin.Infrasturcture.Repository.Abstract;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Endpoint;
 using OnAim.Admin.Contracts.Dtos.EndpointGroup;
 using OnAim.Admin.Contracts.Dtos.Role;
 using OnAim.Admin.Contracts.Dtos.User;
 using OnAim.Admin.Contracts.Helpers;
 using OnAim.Admin.Contracts.Models;
-using OnAim.Admin.Contracts.Paging;
-using OnAim.Admin.Contracts.Enums;
-using OnAim.Admin.APP.Services.Admin.AuthServices.Auth;
 using OnAim.Admin.APP.Services.AdminServices.EndpointGroup;
 
 namespace OnAim.Admin.APP.Services.Admin.EndpointGroup;
@@ -39,7 +33,7 @@ public class EndpointGroupService : IEndpointGroupService
         _securityContextAccessor = securityContextAccessor;
     }
 
-    public async Task<ApplicationResult> Create(CreateEndpointGroupRequest model)
+    public async Task<ApplicationResult<string>> Create(CreateEndpointGroupRequest model)
     {
         var existedGroupName = await _repository.Query(x => x.Name == model.Name.ToLower()).FirstOrDefaultAsync();
 
@@ -74,14 +68,14 @@ public class EndpointGroupService : IEndpointGroupService
             throw new BadRequestException("Permmission Group with that name already exists!");
         }
 
-        return new ApplicationResult
+        return new ApplicationResult<string>
         {
             Success = true,
             Data = $"Permmission Group {model.Name} Successfully Created",
         };
     }
 
-    public async Task<ApplicationResult> Delete(List<int> ids)
+    public async Task<ApplicationResult<bool>> Delete(List<int> ids)
     {
         var groups = await _repository.Query(x => ids.Contains(x.Id)).ToListAsync();
 
@@ -96,10 +90,10 @@ public class EndpointGroupService : IEndpointGroupService
 
         await _repository.CommitChanges();
 
-        return new ApplicationResult { Success = true };
+        return new ApplicationResult<bool> { Success = true };
     }
 
-    public async Task<ApplicationResult> Update(int id, UpdateEndpointGroupRequest model)
+    public async Task<ApplicationResult<string>> Update(int id, UpdateEndpointGroupRequest model)
     {
         var group = await _repository
             .Query(x => x.Id == id)
@@ -163,14 +157,14 @@ public class EndpointGroupService : IEndpointGroupService
 
         await _endpointGroupEndpointRepository.CommitChanges();
 
-        return new ApplicationResult
+        return new ApplicationResult<string>
         {
             Success = true,
             Data = $"Permmission Group {model.Name} Successfully Updated",
         };
     }
 
-    public async Task<ApplicationResult> GetAll(EndpointGroupFilter filter)
+    public async Task<ApplicationResult<PaginatedResult<EndpointGroupModel>>> GetAll(EndpointGroupFilter filter)
     {
         var query = _repository.Query(x =>
         (string.IsNullOrEmpty(filter.Name) || x.Name.ToLower().Contains(filter.Name.ToLower())) &&
@@ -242,14 +236,14 @@ public class EndpointGroupService : IEndpointGroupService
             new List<string> { "Id", "Name" }
             );
 
-        return new ApplicationResult
+        return new ApplicationResult<PaginatedResult<EndpointGroupModel>>
         {
             Success = true,
             Data = paginatedResult
         };
     }
 
-    public async Task<ApplicationResult> GetById(int id)
+    public async Task<ApplicationResult<EndpointGroupResponseDto>> GetById(int id)
     {
         var group = await _repository
            .Query(x => x.Id == id)
@@ -296,7 +290,7 @@ public class EndpointGroupService : IEndpointGroupService
             }).ToList()
         };
 
-        return new ApplicationResult
+        return new ApplicationResult<EndpointGroupResponseDto>
         {
             Success = true,
             Data = res,

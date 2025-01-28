@@ -11,21 +11,43 @@ namespace GameLib.Domain.Abstractions;
 [CheckMate<BasePrizeChecker>]
 public abstract class BasePrize : BaseEntity<int>
 {
-    protected BasePrize()
-    {
-        RemainingGlobalLimit = MaxGlobalLimit;
-    }
+    private int? _globalLimit;
+    private int? _globalSetLimit;
 
     public string Name { get; set; }
     public int Value { get; set; }
     public int Probability { get; set; }
     public string CoinId { get; set; }
-    public int? PerPlayerLimit { get; set; }
-    public int? MaxGlobalLimit { get; set; }
+
+    public int? PerPlayerSetLimit { get; set; }
+    public int? GlobalLimit
+    {
+        get => _globalLimit;
+        set
+        {
+            _globalLimit = value;
+            RemainingGlobalLimit = _globalLimit;
+        }
+    }
 
     [IgnoreIncludeAll]
     [JsonIgnore]
     public int? RemainingGlobalLimit { get; set; }
+
+    public int? SetSize { get; set; }
+    public int? GlobalSetLimit
+    {
+        get => _globalSetLimit;
+        set
+        {
+            _globalSetLimit = value;
+            RemainingGlobalSetLimit = _globalSetLimit;
+        }
+    }
+
+    [IgnoreIncludeAll]
+    [JsonIgnore]
+    public int? RemainingGlobalSetLimit { get; set; }
 
     [IgnoreIncludeAll]
     public int PrizeGroupId { get; set; }

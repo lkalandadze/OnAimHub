@@ -15,10 +15,10 @@ public class ApplicationResult<T>
     }
 }
 
-public class ApplicationResult : ApplicationResult<dynamic>
-{
-    public new static ApplicationResult Default()
-    {
-        return new ApplicationResult();
-    }
-}
+//public class ApplicationResult : ApplicationResult<dynamic>
+//{
+//    public new static ApplicationResult Default()
+//    {
+//        return new ApplicationResult();
+//    }
+//}

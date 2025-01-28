@@ -3,7 +3,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Feature.UserFeature.Commands.Registration;
 
-public class RegistrationCommand : ICommand<ApplicationResult>
+public class RegistrationCommand : ICommand<ApplicationResult<bool>>
 {
     public string Email { get; set; }
     public string Password { get; set; }

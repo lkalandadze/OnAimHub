@@ -1,12 +1,6 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
-using OnAim.Admin.APP.Services.Hub.ClientServices;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using ValidationException = OnAim.Admin.CrossCuttingConcerns.Exceptions.ValidationException;

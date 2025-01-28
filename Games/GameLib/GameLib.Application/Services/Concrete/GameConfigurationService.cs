@@ -19,24 +19,28 @@ public class GameConfigurationService : IGameConfigurationService
     private readonly IUnitOfWork _unitOfWork;
     private readonly EntityGenerator _entityGenerator;
     private readonly ConfigurationHolder _configurationHolder;
+    private readonly GeneratorHolder _generatorHolder;
 
     public GameConfigurationService(
         IGameConfigurationRepository configurationRepository,
         IPriceRepository priceRepository,
         IUnitOfWork unitOfWork,
         EntityGenerator entityGenerator,
-        ConfigurationHolder configurationHolder)
+        ConfigurationHolder configurationHolder,
+        GeneratorHolder generatorHolder)
     {
         _configurationRepository = configurationRepository;
         _priceRepository = priceRepository;
         _unitOfWork = unitOfWork;
         _entityGenerator = entityGenerator;
         _configurationHolder = configurationHolder;
+        _generatorHolder = generatorHolder;
     }
 
-    public void ResetGenerators()
+    public void ResetInMemoryData()
     {
-        _configurationHolder.ResetGenerators();
+        _configurationHolder.ResetGameConfigurations();
+        _generatorHolder.ResetGenerators();
     }
 
     public Response<EntityMetadata?> GetConfigurationMetaData()
@@ -95,16 +99,17 @@ public class GameConfigurationService : IGameConfigurationService
                 nameof(BasePrize.CoinId),
                 (string coinId) => $"{configuration.PromotionId}_{coinId}");
 
-            lock (_configurationHolder.GameConfigurations)
-            {
-                _configurationHolder.GameConfigurations.Add(configuration.PromotionId, configuration);
-            }
-
             configuration.IsActive = true;
+
+            //Save to database
             _configurationRepository.InsertConfigurationTree(configuration);
             await _unitOfWork.SaveAsync();
 
+            //Generate sequence and save in database
             await GeneratePrizeSequenceAsync(configuration);
+
+            //Save in memory
+            ResetInMemoryData();
         }
         catch (Exception ex)
         {

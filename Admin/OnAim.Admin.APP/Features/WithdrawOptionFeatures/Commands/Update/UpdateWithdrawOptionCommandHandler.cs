@@ -4,7 +4,7 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.WithdrawOptionFeatures.Commands.Update;
 
-public sealed class UpdateWithdrawOptionCommandHandler : ICommandHandler<UpdateWithdrawOptionCommand, ApplicationResult>
+public sealed class UpdateWithdrawOptionCommandHandler : ICommandHandler<UpdateWithdrawOptionCommand, ApplicationResult<object>>
 {
     private readonly ICoinService _coinService;
 
@@ -13,10 +13,8 @@ public sealed class UpdateWithdrawOptionCommandHandler : ICommandHandler<UpdateW
         _coinService = coinService;
     }
 
-    public async Task<ApplicationResult> Handle(UpdateWithdrawOptionCommand request, CancellationToken cancellationToken)
+    public async Task<ApplicationResult<object>> Handle(UpdateWithdrawOptionCommand request, CancellationToken cancellationToken)
     {
-        var res = await _coinService.UpdateWithdrawOption(request.Command);
-
-        return new ApplicationResult { Data = res.Data, Success = res.Success };
+        return await _coinService.UpdateWithdrawOption(request.Command);
     }
 }

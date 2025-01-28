@@ -1,16 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using OnAim.Admin.Contracts.ApplicationInfrastructure;
-using OnAim.Admin.CrossCuttingConcerns.Exceptions;
-using System.Net.Http.Headers;
-using System.Text;
+﻿using System.Net.Http.Headers;
 
 namespace OnAim.Admin.APP.Services.FileServices;
 
 public class FileManagementService : IFileManagementService
 {
-    public async Task<ApplicationResult> UploadImage(UploadImageRequestModel file)
+    public async Task<ApplicationResult<object>> UploadImage(UploadImageRequestModel file)
     {
         try
         {
@@ -21,7 +15,7 @@ public class FileManagementService : IFileManagementService
 
             var imageUrl = responseObject?.Data?.Image;
 
-            return new ApplicationResult { Success = true, Data = imageUrl };
+            return new ApplicationResult<object> { Success = true, Data = imageUrl };
         }
         catch (Exception ex)
         {

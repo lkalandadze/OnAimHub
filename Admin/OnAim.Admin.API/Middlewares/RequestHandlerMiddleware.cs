@@ -76,7 +76,7 @@ public class RequestHandlerMiddleware
             }
         });
 
-        var result = new ApplicationResult
+        var result = new ApplicationResult<object>
         {
             Success = false,
             Data = null,

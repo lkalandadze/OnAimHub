@@ -3,4 +3,4 @@ using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.APP.Features.PlayerFeatures.Commands.RevokePlayerBan;
 
-public record RevokePlayerBanCommand(int Id) : ICommand<ApplicationResult>;
+public record RevokePlayerBanCommand(int Id) : ICommand<ApplicationResult<bool>>;
