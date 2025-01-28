@@ -21,23 +21,16 @@ public class GeneratorHolder
         SetGenerators();
     }
 
-    private void SetGenerators()
+    public void ResetGenerators()
     {
-        prizeGroupTypes.ForEach(type =>
+        lock (_sync)
         {
-            var prizeGroups = RepositoryManager.PrizeGroupRepository(type).QueryWithPrizes();
-
-            foreach (var prizeGroup in prizeGroups)
-            {
-                var genType = _prizeGenerationConfig.PrizeGenerationType;
-                var generator = Generator.Create(prizeGroup, _prizeGenerationConfig.PrizeGenerationType);
-
-                Generators.Add(prizeGroup, generator);
-            }
-        });
+            Generators.Clear();
+            SetGenerators();
+        }
     }
 
-    public static async Task<TPrize> GetPrizeAsync<TPrize>(int prizeGroupId, int playerId, Predicate<BasePrizeGroup>? predicate = null)
+    public static TPrize GetPrize<TPrize>(int prizeGroupId, int playerId, Predicate<BasePrizeGroup>? predicate = null)
         where TPrize : BasePrize
     {
         var generator = GetGenerator<TPrize>(prizeGroupId, predicate);
@@ -85,5 +78,21 @@ public class GeneratorHolder
                 .First(x => predicate?.Invoke(x.Key) ?? true)
                 .Value!;
         }
+    }
+
+    private void SetGenerators()
+    {
+        prizeGroupTypes.ForEach(type =>
+        {
+            var prizeGroups = RepositoryManager.PrizeGroupRepository(type).QueryWithPrizes();
+
+            foreach (var prizeGroup in prizeGroups)
+            {
+                var genType = _prizeGenerationConfig.PrizeGenerationType;
+                var generator = Generator.Create(prizeGroup, _prizeGenerationConfig.PrizeGenerationType);
+
+                Generators.Add(prizeGroup, generator);
+            }
+        });
     }
 }

@@ -105,7 +105,7 @@ public class WheelService : IWheelService
 
         await _hubService.BetTransactionAsync(configuration.Id, "Wheel", promotionId, price.Value);
 
-        var prize = await GetPrizeFromGeneratorAsync<TPrize>(promotionId);
+        var prize = GetPrizeFromGenerator<TPrize>(promotionId);
         
         if (prize.Value > 0)
         {
@@ -124,10 +124,10 @@ public class WheelService : IWheelService
         };
     }
 
-    private async Task<WheelPrize> GetPrizeFromGeneratorAsync<TPrize>(int promotionId) where TPrize : BasePrize
+    private WheelPrize GetPrizeFromGenerator<TPrize>(int promotionId) where TPrize : BasePrize
     {
         var prizeGroup = _configurationHolder.GetPrizeGroups(promotionId).Cast<WheelPrizeGroup>().FirstOrDefault();
-        var prize = (await GeneratorHolder.GetPrizeAsync<TPrize>(prizeGroup!.Id, _authService.GetCurrentPlayerId()) as WheelPrize)!;
+        var prize = (GeneratorHolder.GetPrize<TPrize>(prizeGroup!.Id, _authService.GetCurrentPlayerId()) as WheelPrize)!;
         
         if (prize == null)
         {
