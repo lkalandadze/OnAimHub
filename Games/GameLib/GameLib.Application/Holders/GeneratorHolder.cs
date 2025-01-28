@@ -9,15 +9,15 @@ namespace GameLib.Application.Holders;
 public class GeneratorHolder
 {
     internal static Dictionary<BasePrizeGroup, Generator> Generators = [];
-    internal List<Type> prizeGroupTypes;
+    internal Dictionary<Type, Type> prizePairTypes;
 
     private readonly PrizeGenerationConfiguration _prizeGenerationConfig;
     private static object _sync = new();
 
-    public GeneratorHolder(IOptions<PrizeGenerationConfiguration> prizeGenerationConfig, List<Type> prizeGroupTypes)
+    public GeneratorHolder(IOptions<PrizeGenerationConfiguration> prizeGenerationConfig, Dictionary<Type, Type> prizePairTypes)
     {
         _prizeGenerationConfig = prizeGenerationConfig.Value;
-        this.prizeGroupTypes = prizeGroupTypes;
+        this.prizePairTypes = prizePairTypes;
         SetGenerators();
     }
 
@@ -51,9 +51,10 @@ public class GeneratorHolder
 
     private void SetGenerators()
     {
-        prizeGroupTypes.ForEach(type =>
+        foreach (var pair in prizePairTypes)
         {
-            var prizeGroups = RepositoryManager.PrizeGroupRepository(type).QueryWithPrizes();
+            var prizeGroupType = pair.Value;
+            var prizeGroups = RepositoryManager.PrizeGroupRepository(prizeGroupType).QueryWithPrizes();
 
             foreach (var prizeGroup in prizeGroups)
             {
@@ -62,6 +63,6 @@ public class GeneratorHolder
 
                 Generators.Add(prizeGroup, generator);
             }
-        });
+        }
     }
 }

@@ -71,8 +71,12 @@ public class Startup
 
         services.AddScoped<IPenaltyService, PenaltyService>();
 
-        var prizeGroupTypes = new List<Type> { typeof(PenaltyPrizeGroup) };
-        services.ResolveGameLibServices<PenaltyConfiguration>(Configuration, prizeGroupTypes);
+        var prizePairTypes = new Dictionary<Type, Type>
+        {
+            { typeof(PenaltyPrize), typeof(PenaltyPrizeGroup) },
+        };
+
+        services.ResolveGameLibServices<PenaltyConfiguration>(Configuration, prizePairTypes);
 
         ConfigureMassTransit(services, Configuration, env, consumerAssemblyMarkerType: typeof(Program));
         services.AddMassTransitHostedService();

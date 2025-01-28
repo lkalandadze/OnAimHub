@@ -22,6 +22,12 @@ public class RepositoryManager
         return new PrizeGroupRepositoryProxy(genericType);
     }
 
+    internal static PrizeRepositoryProxy PrizeRepository(Type type)
+    {
+        var genericType = _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService(typeof(IPrizeRepository<>).MakeGenericType(type));
+        return new PrizeRepositoryProxy(genericType);
+    }
+
     internal static IGameConfigurationRepository GameConfigurationRepository()
     {
         return _serviceScopeFactory.CreateScope().ServiceProvider.GetRequiredService<IGameConfigurationRepository>();
@@ -80,6 +86,34 @@ internal class PrizeGroupRepositoryProxy(object repository)
         if (updateMethod != null && saveAsyncMethod != null)
         {
             _ = (IEnumerable<BasePrizeGroup>)updateMethod.Invoke(repository, [prizeGroup])!;
+            _ = saveAsyncMethod.Invoke(repository, []);
+        }
+    }
+}
+
+internal class PrizeRepositoryProxy(object repository)
+{
+    internal async Task<BasePrize> OfIdAsync(int id)
+    {
+        var ofIdAsyncMethod = repository.GetType().GetMethod(nameof(IPrizeRepository<BasePrize>.OfIdAsync));
+
+        if (ofIdAsyncMethod != null)
+        {
+            var task = (dynamic)ofIdAsyncMethod.Invoke(repository, [id])!;
+            return (BasePrize)await task;
+        }
+
+        throw new InvalidCastException();
+    }
+
+    internal void Update(BasePrize prize)
+    {
+        var updateMethod = repository.GetType().GetMethod(nameof(IPrizeRepository<BasePrize>.Update));
+        var saveAsyncMethod = repository.GetType().GetMethod(nameof(IPrizeRepository<BasePrize>.SaveAsync));
+
+        if (updateMethod != null && saveAsyncMethod != null)
+        {
+            _ = (IEnumerable<BasePrize>)updateMethod.Invoke(repository, [prize])!;
             _ = saveAsyncMethod.Invoke(repository, []);
         }
     }

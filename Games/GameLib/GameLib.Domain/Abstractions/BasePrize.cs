@@ -19,7 +19,7 @@ public abstract class BasePrize : BaseEntity<int>
     public int Probability { get; set; }
     public string CoinId { get; set; }
 
-    public int? PerPlayerSetLimit { get; set; }
+    public int? PerPlayerLimit { get; set; }
     public int? GlobalLimit
     {
         get => _globalLimit;
@@ -35,6 +35,7 @@ public abstract class BasePrize : BaseEntity<int>
     public int? RemainingGlobalLimit { get; set; }
 
     public int? SetSize { get; set; }
+    public int? PerPlayerSetLimit { get; set; }
     public int? GlobalSetLimit
     {
         get => _globalSetLimit;
@@ -54,12 +55,20 @@ public abstract class BasePrize : BaseEntity<int>
 
     //public PrizeType PrizeType { get; set; }
     //public int PrizeTypeId { get; set; }
-    
+
     public void DecrementRemainingGlobalLimit()
     {
         if (RemainingGlobalLimit != null && RemainingGlobalLimit > 0)
         {
             RemainingGlobalLimit--;
+        }
+    }
+
+    public void UpdateRemainingGlobalSetLimit(int? newSetLimit)
+    {
+        if (RemainingGlobalSetLimit != null && RemainingGlobalSetLimit > 0)
+        {
+            RemainingGlobalSetLimit = newSetLimit;
         }
     }
 }
