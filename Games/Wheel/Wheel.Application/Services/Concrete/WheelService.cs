@@ -88,40 +88,46 @@ public class WheelService : IWheelService
         //        "The game is currently inactive and cannot be played. Please try again later."
         //    );
         //}
-
-        var configuration = _configurationHolder.GetConfiguration<WheelConfiguration>(promotionId);
-
-        if (configuration == null)
+        try
         {
-            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Configuration with the specified promotion ID: [{promotionId}] was not found.");
+            var configuration = _configurationHolder.GetConfiguration<WheelConfiguration>(promotionId);
+
+            if (configuration == null)
+            {
+                throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Configuration with the specified promotion ID: [{promotionId}] was not found.");
+            }
+
+            var price = await _priceRepository.Query(p => p.Id == betPriceId).FirstOrDefaultAsync();
+
+            if (price == null)
+            {
+                throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Price with the specified ID: [{betPriceId}] was not found.");
+            }
+
+            await _hubService.BetTransactionAsync(configuration.Id, "Wheel", promotionId, price.Value);
+
+            var prize = GetPrizeFromGenerator<TPrize>(promotionId);
+
+            if (prize.Value > 0)
+            {
+                await _hubService.WinTransactionAsync(configuration.Id, "Wheel", prize.CoinId, promotionId, price.Multiplier * prize.Value);
+            }
+
+            //var @event = new UpdatePlayerExperienceEvent(Guid.NewGuid(), model.Amount, model.CurrencyId, _authService.GetCurrentPlayerId());
+            //await _messageBus.Publish(@event);
+
+            return new PlayResponseModel
+            {
+                IsWin = prize.Value > 0,
+                PrizeId = prize.Id,
+                WheelIndex = prize.WheelIndex,
+                WinAmount = prize.Value > 0 ? price.Multiplier * prize.Value : null
+            };
         }
-
-        var price = await _priceRepository.Query(p => p.Id == betPriceId).FirstOrDefaultAsync();
-
-        if (price == null)
+        catch (Exception ex)
         {
-            throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Price with the specified ID: [{betPriceId}] was not found.");
+            throw new Exception($"Something happened {ex.ToString()}");
         }
-
-        await _hubService.BetTransactionAsync(configuration.Id, "Wheel", promotionId, price.Value);
-
-        var prize = GetPrizeFromGenerator<TPrize>(promotionId);
-        
-        if (prize.Value > 0)
-        {
-            await _hubService.WinTransactionAsync(configuration.Id, "Wheel", prize.CoinId, promotionId, price.Multiplier * prize.Value);
-        }
-
-        //var @event = new UpdatePlayerExperienceEvent(Guid.NewGuid(), model.Amount, model.CurrencyId, _authService.GetCurrentPlayerId());
-        //await _messageBus.Publish(@event);
-
-        return new PlayResponseModel
-        {
-            IsWin = prize.Value > 0,
-            PrizeId = prize.Id,
-            WheelIndex = prize.WheelIndex,
-            WinAmount = prize.Value > 0 ? price.Multiplier * prize.Value : null
-        };
     }
 
     private WheelPrize GetPrizeFromGenerator<TPrize>(int promotionId) where TPrize : BasePrize

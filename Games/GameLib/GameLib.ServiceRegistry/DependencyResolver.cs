@@ -34,7 +34,7 @@ namespace GameLib.ServiceRegistry;
 
 public static class DependencyResolver
 {
-    public static IServiceCollection ResolveGameLibServices<TGameConfiguration>(this IServiceCollection services, IConfiguration configuration, List<Type> prizeGroupTypes)
+    public static IServiceCollection ResolveGameLibServices<TGameConfiguration>(this IServiceCollection services, IConfiguration configuration, Dictionary<Type, Type> prizePairTypes)
         where TGameConfiguration : GameConfiguration<TGameConfiguration>
     {
         var apiName = configuration["GameInfoConfiguration:ApiName"];
@@ -49,11 +49,12 @@ public static class DependencyResolver
         services.AddSingleton<EntityGenerator>();
         services.AddSingleton<CommandGenerator>();
 
-        services.AddSingleton(prizeGroupTypes);
+        services.AddSingleton(prizePairTypes);
 
-        foreach (var type in prizeGroupTypes)
+        foreach (var pair in prizePairTypes)
         {
-            services.AddScoped(typeof(IPrizeGroupRepository<>).MakeGenericType(type), typeof(PrizeGroupRepository<>).MakeGenericType(type));
+            services.AddScoped(typeof(IPrizeRepository<>).MakeGenericType(pair.Key), typeof(PrizeRepository<>).MakeGenericType(pair.Key));
+            services.AddScoped(typeof(IPrizeGroupRepository<>).MakeGenericType(pair.Value), typeof(PrizeGroupRepository<>).MakeGenericType(pair.Value));
         }
 
         services.AddHttpClient();

@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using PenaltyKicks.Infrastructure.DataAccess;
+using Wheel.Infrastructure.DataAccess;
 
 #nullable disable
 
-namespace PenaltyKicks.Infrastructure.Migrations
+namespace Wheel.Infrastructure.Migrations
 {
-    [DbContext(typeof(PenaltyConfigDbContext))]
-    [Migration("20250120081657_Initial")]
+    [DbContext(typeof(WheelConfigDbContext))]
+    [Migration("20250128111035_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace PenaltyKicks.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -46,6 +46,24 @@ namespace PenaltyKicks.Infrastructure.Migrations
                     b.ToTable("GameSettings");
                 });
 
+            modelBuilder.Entity("GameLib.Domain.Entities.LimitedPrizeCountsByPlayer", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PrizeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Count")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("PlayerId", "PrizeId");
+
+                    b.ToTable("LimitedPrizeCountsByPlayer");
+                });
+
             modelBuilder.Entity("GameLib.Domain.Entities.Price", b =>
                 {
                     b.Property<int>("Id")
@@ -61,20 +79,20 @@ namespace PenaltyKicks.Infrastructure.Migrations
                     b.Property<decimal>("Multiplier")
                         .HasColumnType("numeric");
 
-                    b.Property<int?>("PenaltyConfigurationId")
-                        .HasColumnType("integer");
-
                     b.Property<decimal>("Value")
                         .HasColumnType("numeric");
 
+                    b.Property<int?>("WheelConfigurationId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("PenaltyConfigurationId");
+                    b.HasIndex("WheelConfigurationId");
 
                     b.ToTable("Prices");
                 });
 
-            modelBuilder.Entity("PenaltyKicks.Domain.Entities.PenaltyConfiguration", b =>
+            modelBuilder.Entity("Wheel.Domain.Entities.WheelConfiguration", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,14 +104,14 @@ namespace PenaltyKicks.Infrastructure.Migrations
                     b.Property<Guid?>("CorrelationId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<string>("FromTemplateId")
                         .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
-
-                    b.Property<int>("KicksCount")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -109,60 +127,7 @@ namespace PenaltyKicks.Infrastructure.Migrations
                     b.ToTable("GameConfigurations");
                 });
 
-            modelBuilder.Entity("PenaltyKicks.Domain.Entities.PenaltyGame", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnOrder(1);
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BetPriceId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("CoinId")
-                        .HasColumnType("text");
-
-                    b.Property<int>("CurrentKickIndex")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset?>("EndDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("GameState")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("GoalsScored")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsFinished")
-                        .HasColumnType("boolean");
-
-                    b.Property<List<bool>>("KickSequence")
-                        .HasColumnType("boolean[]");
-
-                    b.Property<int>("PlayerId")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("PriceMultiplier")
-                        .HasColumnType("numeric");
-
-                    b.Property<int>("PrizeId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PrizeValue")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset>("StartDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PenaltyGame");
-                });
-
-            modelBuilder.Entity("PenaltyKicks.Domain.Entities.PenaltyPrize", b =>
+            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrize", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -173,9 +138,21 @@ namespace PenaltyKicks.Infrastructure.Migrations
 
                     b.Property<string>("CoinId")
                         .HasColumnType("text");
+
+                    b.Property<int?>("GlobalLimit")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("GlobalSetLimit")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<int?>("PerPlayerLimit")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PerPlayerSetLimit")
+                        .HasColumnType("integer");
 
                     b.Property<int>("PrizeGroupId")
                         .HasColumnType("integer");
@@ -183,17 +160,29 @@ namespace PenaltyKicks.Infrastructure.Migrations
                     b.Property<int>("Probability")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("RemainingGlobalLimit")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("RemainingGlobalSetLimit")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("SetSize")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Value")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("WheelIndex")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PrizeGroupId");
 
-                    b.ToTable("PenaltyPrizes");
+                    b.ToTable("WheelPrizes");
                 });
 
-            modelBuilder.Entity("PenaltyKicks.Domain.Entities.PenaltyPrizeGroup", b =>
+            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrizeGroup", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -205,6 +194,9 @@ namespace PenaltyKicks.Infrastructure.Migrations
                     b.Property<int>("ConfigurationId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
                     b.Property<int?>("NextPrizeIndex")
                         .HasColumnType("integer");
 
@@ -215,19 +207,19 @@ namespace PenaltyKicks.Infrastructure.Migrations
 
                     b.HasIndex("ConfigurationId");
 
-                    b.ToTable("PenaltyPrizeGroups");
+                    b.ToTable("WheelPrizeGroups");
                 });
 
             modelBuilder.Entity("GameLib.Domain.Entities.Price", b =>
                 {
-                    b.HasOne("PenaltyKicks.Domain.Entities.PenaltyConfiguration", null)
+                    b.HasOne("Wheel.Domain.Entities.WheelConfiguration", null)
                         .WithMany("Prices")
-                        .HasForeignKey("PenaltyConfigurationId");
+                        .HasForeignKey("WheelConfigurationId");
                 });
 
-            modelBuilder.Entity("PenaltyKicks.Domain.Entities.PenaltyPrize", b =>
+            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrize", b =>
                 {
-                    b.HasOne("PenaltyKicks.Domain.Entities.PenaltyPrizeGroup", "PrizeGroup")
+                    b.HasOne("Wheel.Domain.Entities.WheelPrizeGroup", "PrizeGroup")
                         .WithMany("Prizes")
                         .HasForeignKey("PrizeGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -236,10 +228,10 @@ namespace PenaltyKicks.Infrastructure.Migrations
                     b.Navigation("PrizeGroup");
                 });
 
-            modelBuilder.Entity("PenaltyKicks.Domain.Entities.PenaltyPrizeGroup", b =>
+            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrizeGroup", b =>
                 {
-                    b.HasOne("PenaltyKicks.Domain.Entities.PenaltyConfiguration", "Configuration")
-                        .WithMany("PenaltyPrizeGroups")
+                    b.HasOne("Wheel.Domain.Entities.WheelConfiguration", "Configuration")
+                        .WithMany("WheelPrizeGroups")
                         .HasForeignKey("ConfigurationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -247,14 +239,14 @@ namespace PenaltyKicks.Infrastructure.Migrations
                     b.Navigation("Configuration");
                 });
 
-            modelBuilder.Entity("PenaltyKicks.Domain.Entities.PenaltyConfiguration", b =>
+            modelBuilder.Entity("Wheel.Domain.Entities.WheelConfiguration", b =>
                 {
-                    b.Navigation("PenaltyPrizeGroups");
-
                     b.Navigation("Prices");
+
+                    b.Navigation("WheelPrizeGroups");
                 });
 
-            modelBuilder.Entity("PenaltyKicks.Domain.Entities.PenaltyPrizeGroup", b =>
+            modelBuilder.Entity("Wheel.Domain.Entities.WheelPrizeGroup", b =>
                 {
                     b.Navigation("Prizes");
                 });

@@ -41,9 +41,7 @@ public class TransactionService : ITransactionService
         var player = await _playerRepository.OfIdAsync(playerId);
 
         if (player == null)
-        {
             throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Player with the specified ID: [{playerId}] was not found.");
-        }
 
         if (!player.HasPlayed)
             player.UpdateHasPlayed();
@@ -55,6 +53,8 @@ public class TransactionService : ITransactionService
 
         await _transactionRepository.InsertAsync(transaction);
         await _unitOfWork.SaveAsync();
+
+        await SendAggregationEventAsync(keyId, sourceServiceName, coinId, amount, fromAccount, toAccount, transactionType, promotionId, playerId);
 
         return new TransactionResponseModel
         {
@@ -70,9 +70,7 @@ public class TransactionService : ITransactionService
         var player = await _playerRepository.OfIdAsync(playerId);
 
         if (player == null)
-        {
             throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Player with the specified ID: [{playerId}] was not found.");
-        }
 
         if (!player.HasPlayed)
             player.UpdateHasPlayed();
@@ -89,32 +87,13 @@ public class TransactionService : ITransactionService
         };
     }
 
-    public async Task<TransactionResponseModel> CreateTransactionWithEventAsync(int? keyId, string sourceServiceName, string coinId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType, int promotionId, string eventDetails)
+    public async Task SendAggregationEventAsync(int? keyId, string sourceServiceName, string coinId, decimal amount, AccountType fromAccount, AccountType toAccount, TransactionType transactionType, int promotionId, int playerId)
     {
-        try
+        if (transactionType == TransactionType.Bet || transactionType == TransactionType.Win)
         {
-            var playerId = _authService.GetCurrentPlayerId();
-
-            var player = await _playerRepository.OfIdAsync(playerId);
-
-            if (player == null)
-                throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Player with the specified ID: [{playerId}] was not found.");
-
-            if (!player.HasPlayed)
-                player.UpdateHasPlayed();
-
-            await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, coinId, fromAccount, toAccount, amount, promotionId);
-
-            var transaction = new Transaction(amount, keyId, sourceServiceName, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, promotionId);
-
-            await _transactionRepository.InsertAsync(transaction);
-            await _unitOfWork.SaveAsync();
-
-            if (transactionType == TransactionType.Bet || transactionType == TransactionType.Win)
-            {
-                var @events = new AggregationTriggerEvent(
-                   data: JsonConvert.SerializeObject(new Dictionary<string, string>
-                   {
+            var @events = new AggregationTriggerEvent(
+               data: JsonConvert.SerializeObject(new Dictionary<string, string>
+               {
                             { "customerId", playerId.ToString() },
                             { "transactionType", transactionType.Name.ToString() },
                             { "timestamp", DateTime.Now.ToString() },
@@ -123,24 +102,43 @@ public class TransactionService : ITransactionService
                             { "value", amount.ToString() },
                             { "deviceType" , "Mobile" },
                             { "coin", coinId }
-                   }),
+               }),
 
-                  producer: "Hub"
-                );
+              producer: "Hub"
+            );
 
-                await _messageBus.Publish(@events);
-                Console.WriteLine(@events.Data);
-            }
-
-            return new TransactionResponseModel
-            {
-                Id = transaction.Id,
-                Success = true,
-            };
+            await _messageBus.Publish(@events);
+            Console.WriteLine(@events.Data);
         }
-        catch (Exception Ex)
-        {
-            throw new Exception($"Test12345 + {Ex}");
-        }
+        //try
+        //{
+        //    var playerId = _authService.GetCurrentPlayerId();
+
+        //    var player = await _playerRepository.OfIdAsync(playerId);
+
+        //    if (player == null)
+        //        throw new ApiException(ApiExceptionCodeTypes.KeyNotFound, $"Player with the specified ID: [{playerId}] was not found.");
+
+        //    if (!player.HasPlayed)
+        //        player.UpdateHasPlayed();
+
+        //    await _playerBalanceService.ApplyPlayerBalanceOperationAsync(playerId, coinId, fromAccount, toAccount, amount, promotionId);
+
+        //    var transaction = new Transaction(amount, keyId, sourceServiceName, playerId, fromAccount, toAccount, coinId, TransactionStatus.Created, transactionType, promotionId);
+
+        //    await _transactionRepository.InsertAsync(transaction);
+        //    await _unitOfWork.SaveAsync();
+
+
+        //    return new TransactionResponseModel
+        //    {
+        //        Id = transaction.Id,
+        //        Success = true,
+        //    };
+        //}
+        //catch (Exception Ex)
+        //{
+        //    throw new Exception($"Test12345 + {Ex}");
+        //}
     }
 }

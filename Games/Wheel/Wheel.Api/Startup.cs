@@ -65,8 +65,12 @@ public class Startup
         services.AddScoped<IWheelConfigurationRepository, WheelConfigurationRepository>();
         services.AddScoped<IMessageBus, MessageBus>();
 
-        var prizeGroupTypes = new List<Type> { typeof(WheelPrizeGroup) };
-        services.ResolveGameLibServices<WheelConfiguration>(Configuration, prizeGroupTypes);
+        var prizePairTypes = new Dictionary<Type, Type>
+        {
+            { typeof(WheelPrize), typeof(WheelPrizeGroup) },
+        };
+
+        services.ResolveGameLibServices<WheelConfiguration>(Configuration, prizePairTypes);
 
         services.AddScoped<IWheelService, WheelService>();
 

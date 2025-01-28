@@ -7,6 +7,8 @@ namespace GameLib.Application.Generators;
 
 internal abstract class Generator
 {
+    private ILimitedPrizeCountsByPlayerRepository _limitedPlayerPrizeRepository;
+
     internal BasePrizeGroup PrizeGroup { get; }
     internal List<BasePrize> Prizes = [];
 
@@ -27,36 +29,39 @@ internal abstract class Generator
 
     internal BasePrize GetPrize(int playerId)
     {
-        int attempts = 0;
+        _limitedPlayerPrizeRepository = RepositoryManager.LimitedPrizeCountsByPlayerRepository();
+        var maxAttempts = Prizes.Count + (Prizes.Count / 2);
 
-        do
+        for (int i = 0; i < maxAttempts; i++)
         {
             var prize = GeneratePrize();
             var limitedPlayerPrize = GetLimitedPlayerPrize(prize.Id, playerId);
 
             if (IsPrizeValid(prize, playerId, limitedPlayerPrize))
             {
+                UpdateRemainingGlobalLimits(prize);
                 UpdatePlayerPrizeLimits(prize, playerId, limitedPlayerPrize);
+
                 return prize;
             }
-
-            attempts++;
         }
-        while (attempts < 15);
-
+        
         throw new Exception("Exceeded maximum retry attempts to get a valid prize");
     }
 
     private bool IsPrizeValid(BasePrize prize, int playerId, LimitedPrizeCountsByPlayer? limitedPlayerPrize)
     {
-        if (prize == null ||
-            prize.RemainingGlobalLimit <= 0 ||
-            prize.RemainingGlobalSetLimit <= 0)
+        if (prize == null) //null check
         {
             return false;
         }
 
-        if (limitedPlayerPrize?.Count >= prize.PerPlayerSetLimit)
+        if (prize.RemainingGlobalLimit <= 0 || limitedPlayerPrize?.Count >= prize.PerPlayerLimit) //global limit checks
+        {
+            return false;
+        }
+
+        if (prize.RemainingGlobalSetLimit <= 0 || limitedPlayerPrize?.Count >= prize.PerPlayerSetLimit * prize.SetSize) //set limit checks
         {
             return false;
         }
@@ -66,48 +71,44 @@ internal abstract class Generator
 
     private void UpdatePlayerPrizeLimits(BasePrize prize, int playerId, LimitedPrizeCountsByPlayer? limitedPlayerPrize)
     {
-        var repository = RepositoryManager.LimitedPrizeCountsByPlayerRepository();
-
-        prize.DecrementRemainingGlobalLimit();
-
         if (limitedPlayerPrize != null)
         {
             limitedPlayerPrize.IncreaseCount();
-            repository.Update(limitedPlayerPrize);
+            _limitedPlayerPrizeRepository.Update(limitedPlayerPrize);
         }
         else
         {
             var newLimitedPrize = new LimitedPrizeCountsByPlayer(playerId, prize.Id);
             newLimitedPrize.IncreaseCount();
-            repository.InsertAsync(newLimitedPrize);
+            _limitedPlayerPrizeRepository.InsertAsync(newLimitedPrize);
         }
 
-        UpdateGlobalSetLimit(prize, playerId, repository);
-
-        //TODO: RemainingGlobalLimit - save to database
-
-        repository.SaveAsync();
+        _limitedPlayerPrizeRepository.SaveAsync();
     }
 
-    private void UpdateGlobalSetLimit(BasePrize prize, int playerId, ILimitedPrizeCountsByPlayerRepository repository)
+    private void UpdateRemainingGlobalLimits(BasePrize prize)
     {
-        var totalSetWinCount = repository.Query(pp => pp.PrizeId == prize.Id && pp.Count >= prize.SetSize)
-                                         .Count();
+        var totalSetWinCount = _limitedPlayerPrizeRepository.Query(pp => pp.PrizeId == prize.Id && pp.Count >= prize.SetSize)
+                                                            .Count();
 
-        var remainingSetLimit = prize.GlobalSetLimit - totalSetWinCount;
+        var latestRemainingSetLimit = prize.GlobalSetLimit - totalSetWinCount;
 
-        if (remainingSetLimit < prize.RemainingGlobalSetLimit)
+        if (prize.RemainingGlobalSetLimit > latestRemainingSetLimit)
         {
-            prize.RemainingGlobalSetLimit = remainingSetLimit;
+            prize.UpdateRemainingGlobalSetLimit(latestRemainingSetLimit);
         }
 
-        //TODO: RemainingGlobalSetLimit - save to database
+        prize.DecrementRemainingGlobalLimit();
+
+        var repo = RepositoryManager.PrizeRepository(prize.GetType());
+        repo.Update(prize);
+
+        //TODO: RemainingGlobalSetLimit & RemainingGlobalLimit - save to database (Prize table)
     }
 
     private LimitedPrizeCountsByPlayer? GetLimitedPlayerPrize(int prizeId, int playerId)
     {
-        var repository = RepositoryManager.LimitedPrizeCountsByPlayerRepository();
-        return repository.Query(pp => pp.PrizeId == prizeId && pp.PlayerId == playerId).FirstOrDefault();
+        return _limitedPlayerPrizeRepository.Query(pp => pp.PrizeId == prizeId && pp.PlayerId == playerId).FirstOrDefault();
     }
 
     internal abstract BasePrize GeneratePrize();

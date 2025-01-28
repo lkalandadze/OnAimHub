@@ -24,8 +24,8 @@ public class DbEnum<T, U> : DbEnum<T> where U : DbEnum<T>, new()
         return (obj as DbEnum<T, U>)?.Id.Equals(Id) ?? false;
     }
 
-    public static U FromId(T id)
+    public static U FromId(T id, string name = null)
     {
-        return new U { Id = id };
+        return new U { Id = id, Name = name };
     }
 }
