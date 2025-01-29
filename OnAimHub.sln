@@ -351,6 +351,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "penaltykicksapi-k8s", "pena
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8D766890-C1A1-4053-BAD1-45C17A37BEC0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AggregationService.Tests", "CoreModules\AggregationService\AggregationService.Tests\AggregationService.Tests.csproj", "{C2008E6B-F525-4949-96F6-C633BD449B3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -621,6 +623,10 @@ Global
 		{8D766890-C1A1-4053-BAD1-45C17A37BEC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D766890-C1A1-4053-BAD1-45C17A37BEC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D766890-C1A1-4053-BAD1-45C17A37BEC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2008E6B-F525-4949-96F6-C633BD449B3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2008E6B-F525-4949-96F6-C633BD449B3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2008E6B-F525-4949-96F6-C633BD449B3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2008E6B-F525-4949-96F6-C633BD449B3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -726,6 +732,7 @@ Global
 		{2677DF34-8F2B-4F41-B870-5C54C260798D} = {D3581D6D-E32F-4BEC-A272-8B94B6D18647}
 		{3E820445-AF3F-4755-95C7-4328041369FD} = {A41788BA-A633-452E-B173-F2F8393FC2D3}
 		{40214696-81B6-431B-9A75-3AD2116E35E2} = {4DE19697-5278-4A2E-8052-1C3F7F3B4BA8}
+		{C2008E6B-F525-4949-96F6-C633BD449B3C} = {4997A204-600A-4280-AC7D-BBEC16062EF3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2083D19C-3851-4364-95A9-449C10AD54E0}
