@@ -11,6 +11,7 @@ public class CoinTemplateListDto
     public CoinType CoinType { get; set; }
     public string ImgUrl { get; set; }
     public bool IsDeleted { get; set; }
+    public decimal? Value { get; set; }
     public List<WithdrawOptionCoinTempDto> WithdrawOptions { get; set; }
     public List<WithdrawOptionGroupCoinTempDto> WithdrawOptionGroups { get; set; }
     public List<AggregationConfiguration> Configurations { get; set; }

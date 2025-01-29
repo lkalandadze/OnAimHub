@@ -50,6 +50,7 @@ public class CoinTemplateService : ICoinTemplateService
                 Description = x.Description,
                 CoinType = (Contracts.Dtos.Coin.CoinType)x.CoinType,
                 ImgUrl = x.ImageUrl,
+                Value = x.Value,
             };
 
             if (x.CoinType == Domain.HubEntities.Enum.CoinType.Out)
@@ -176,7 +177,8 @@ public class CoinTemplateService : ICoinTemplateService
                     Description = coin.Description,
                     CoinType = (CoinType)coin.CoinType,
                     ImageUrl = coin.ImageUrl,
-                    IsDeleted = coin.IsDeleted
+                    IsDeleted = coin.IsDeleted,
+                    Value = coin.Value
                 },
                 Success = true
             };
@@ -270,7 +272,7 @@ public class CoinTemplateService : ICoinTemplateService
             throw new NotFoundException($"Coin template with the specified ID: [{update.Id}] was not found.");
         }
 
-        coinTemplate.Update(update.Name, update.Description, update.ImageUrl, (Domain.HubEntities.Enum.CoinType)update.CoinType);
+        coinTemplate.Update(update.Name, update.Description, update.ImageUrl, (Domain.HubEntities.Enum.CoinType)update.CoinType, update.Value);
 
         if (update.WithdrawOptionIds != null && update.WithdrawOptionIds.Any() &&
         (Domain.HubEntities.Enum.CoinType)coinTemplate.CoinType == Domain.HubEntities.Enum.CoinType.Out)

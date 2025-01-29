@@ -44,13 +44,13 @@ public class CoinTemplate : Coin
     public decimal? Value { get; set; }
     public int Usage { get; set; }
 
-    public void Update(string name, string description, string imageUrl, CoinType coinType, IEnumerable<CoinTemplateWithdrawOption> withdrawOptions = null)
+    public void Update(string name, string description, string imageUrl, CoinType coinType, decimal? value, IEnumerable<CoinTemplateWithdrawOption> withdrawOptions = null)
     {
         Name = name;
         Description = description;
         ImageUrl = imageUrl;
         CoinType = coinType;
-
+        Value = value;
         if (withdrawOptions != null)
         {
             UpdateWithdrawOptions(withdrawOptions);

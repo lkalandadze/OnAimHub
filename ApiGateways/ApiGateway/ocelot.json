@@ -1,23 +1,6 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/hubapi/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "hubapi",
-          "Port": 8080
-        }
-      ],
-      "UpstreamPathTemplate": "/hubapi/{everything}",
-      "UpstreamHttpMethod": [
-        "Get",
-        "Post",
-        "Put",
-        "Delete"
-      ]
-    },
-    {
       "DownstreamPathTemplate": "/leaderboardapi/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -27,6 +10,23 @@
         }
       ],
       "UpstreamPathTemplate": "/leaderboardapi/{everything}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/hubapi/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hubapi",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/hubapi/{everything}",
       "UpstreamHttpMethod": [
         "Get",
         "Post",
