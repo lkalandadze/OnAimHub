@@ -59,6 +59,7 @@ public class PromotionService : BaseService, IPromotionService
         _options = options.Value;
     }
 
+    //dfdfsdf
     public async Task<ApplicationResult<PaginatedResult<PromotionDto>>> GetAllPromotions(PromotionFilter filter)
     {
         var promotions = _promotionRepository.Query(
