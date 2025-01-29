@@ -4,7 +4,7 @@ namespace Leaderboard.Application.Features.LeaderboardProgressFeatures.DataModel
 
 public sealed record UserLeaderboardProgressModel
 {
-    public int LeaderboardRecordId { get; set; }
+    public int Id { get; set; }
     public int Amount { get; set; }
     public int Placement { get; set; }
     public int Score { get; set; }
@@ -26,7 +26,7 @@ public sealed record UserLeaderboardProgressModel
     {
         return new UserLeaderboardProgressModel
         {
-            LeaderboardRecordId = leaderboardProgress.LeaderboardRecordId,
+            Id = leaderboardProgress.LeaderboardRecordId,
             Amount = leaderboardProgress.Amount,
             Placement = placement,
             Score = score,
