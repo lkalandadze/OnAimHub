@@ -287,4 +287,10 @@ public class TestController : ApiControllerBase
 
         return Ok();
     }
+
+    [HttpGet]
+    public async Task<IActionResult> get()
+    {
+        return Ok();    
+    }
 }
