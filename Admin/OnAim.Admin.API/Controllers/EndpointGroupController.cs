@@ -16,12 +16,12 @@ public class EndpointGroupController : ApiControllerBase
 {
     [HttpPost(nameof(Create))]
     [ProducesResponseType(typeof(CreateEndpointGroupCommand), (int)HttpStatusCode.Created)]
-    [ProducesResponseType(typeof(Contracts.ApplicationInfrastructure.Error), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Create([FromBody] CreateEndpointGroupCommand command)
+    [ProducesResponseType(typeof(Error), (int)HttpStatusCode.BadRequest)]
+    public async Task<ActionResult<ApplicationResult<string>>> Create([FromBody] CreateEndpointGroupCommand command)
        => Ok(await Mediator.Send(command));
 
     [HttpPut(nameof(Update) + "/{id}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateEndpointGroupRequest model)
+    public async Task<ActionResult<ApplicationResult<string>>> Update([FromRoute] int id, [FromBody] UpdateEndpointGroupRequest model)
         => Ok(await Mediator.Send(new UpdateEndpointGroupCommand(id, model)));
 
     [HttpGet(nameof(GetAll))]
@@ -33,6 +33,6 @@ public class EndpointGroupController : ApiControllerBase
         => Ok(await Mediator.Send(new GetEndpointGroupByIdQuery(id)));
 
     [HttpPost(nameof(Delete))]
-    public async Task<IActionResult> Delete([FromBody] List<int> ids)
+    public async Task<ActionResult<ApplicationResult<bool>>> Delete([FromBody] List<int> ids)
         => Ok(await Mediator.Send(new DeleteEndpointGroupCommand(ids)));
 }

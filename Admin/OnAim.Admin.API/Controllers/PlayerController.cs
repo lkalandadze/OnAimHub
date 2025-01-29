@@ -15,6 +15,7 @@ using OnAim.Admin.APP.Services.Hub.Player;
 using OnAim.Admin.APP.Services.HubServices.Player;
 using OnAim.Admin.Contracts.ApplicationInfrastructure;
 using OnAim.Admin.Contracts.Dtos.Base;
+using OnAim.Admin.Contracts.Dtos.LeaderBoard;
 using OnAim.Admin.Contracts.Dtos.Player;
 using OnAim.Admin.Contracts.Dtos.Transaction;
 using OnAim.Admin.Contracts.Paging;
@@ -45,7 +46,7 @@ public class PlayerController : ApiControllerBase
         => Ok(await Mediator.Send(new GetPlayerBalanceQuery(id)));
 
     [HttpPost(nameof(AddBalanceToPlayer))]
-    public async Task<IActionResult> AddBalanceToPlayer([FromBody] AddBalanceDto command)
+    public async Task<ActionResult<ApplicationResult<bool>>> AddBalanceToPlayer([FromBody] AddBalanceDto command)
         => Ok(await Mediator.Send(new AddBalanceToPlayerCommand(command)));
 
     [HttpGet(nameof(GetPlayerProgress) + "/{id}")]
@@ -73,14 +74,14 @@ public class PlayerController : ApiControllerBase
         => Ok(await Mediator.Send(new GetBannedPlayerQuery(id)));
 
     [HttpPost(nameof(BanPlayer))]
-    public async Task<IActionResult> BanPlayer([FromBody] BanPlayerCommand command)
+    public async Task<ActionResult<ApplicationResult<bool>>> BanPlayer([FromBody] BanPlayerCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpPut(nameof(RevokePlayerBan))]
-    public async Task<IActionResult> RevokePlayerBan([FromBody] int id)
+    public async Task<ActionResult<ApplicationResult<bool>>> RevokePlayerBan([FromBody] int id)
         => Ok(await Mediator.Send(new RevokePlayerBanCommand(id)));
 
     [HttpPut(nameof(UpdateBannedPlayer))]
-    public async Task<IActionResult> UpdateBannedPlayer([FromBody] UpdatePlayerBanCommand command)
+    public async Task<ActionResult<ApplicationResult<bool>>> UpdateBannedPlayer([FromBody] UpdatePlayerBanCommand command)
         => Ok(await Mediator.Send(command));
 }

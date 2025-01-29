@@ -27,7 +27,7 @@ namespace OnAim.Admin.API.Controllers;
 public class UsersController : ApiControllerBase
 {
     [HttpGet(nameof(GetMe))]
-    public async Task<IActionResult> GetMe()
+    public async Task<ActionResult<ApplicationResult<GetUserModel>>> GetMe()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return Ok(await Mediator.Send(new GetUserByIdQuery(Convert.ToInt32(userId))));
@@ -55,7 +55,7 @@ public class UsersController : ApiControllerBase
     [AllowAnonymous]
     [ProducesResponseType(typeof(RegistrationCommand), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(Contracts.ApplicationInfrastructure.Validation.Error), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Register([FromBody] RegistrationCommand command)
+    public async Task<ActionResult<ApplicationResult<bool>>> Register([FromBody] RegistrationCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpPost(nameof(Login))]
@@ -67,44 +67,44 @@ public class UsersController : ApiControllerBase
 
     [HttpPost(nameof(VerifyOtp))]
     [AllowAnonymous]
-    public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpCommand command)
+    public async Task<ActionResult<AuthResultDto>> VerifyOtp([FromBody] VerifyOtpCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpPost(nameof(ChangePassword))]
     [AllowAnonymous]
-    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+    public async Task<ActionResult<ApplicationResult<bool>>> ChangePassword([FromBody] ChangePasswordCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpPut(nameof(Update) + "/{id}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserRequest model)
+    public async Task<ActionResult<ApplicationResult<string>>> Update([FromRoute] int id, [FromBody] UpdateUserRequest model)
         => Ok(await Mediator.Send(new UpdateUserCommand(id, model)));
 
     [HttpPut(nameof(ProfileUpdate) + "/{id}")]
-    public async Task<IActionResult> ProfileUpdate([FromRoute] int id, [FromBody] ProfileUpdateRequest profile)
+    public async Task<ActionResult<ApplicationResult<bool>>> ProfileUpdate([FromRoute] int id, [FromBody] ProfileUpdateRequest profile)
         => Ok(await Mediator.Send(new UserProfileUpdateCommand(id, profile)));
 
     [HttpPost(nameof(Delete))]
-    public async Task<IActionResult> Delete([FromBody] List<int> ids)
+    public async Task<ActionResult<ApplicationResult<bool>>> Delete([FromBody] List<int> ids)
         => Ok(await Mediator.Send(new DeleteUserCommand(ids)));
 
     [HttpPost(nameof(RefreshToken))]
     [AllowAnonymous]
-    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand request)
+    public async Task<ActionResult<AuthResultDto>> RefreshToken([FromBody] RefreshTokenCommand request)
         => Ok(await Mediator.Send(request));
 
     [HttpPost(nameof(ActivateAccount))]
     [AllowAnonymous]
-    public async Task<IActionResult> ActivateAccount([FromBody] ActivateAccountCommand command)
+    public async Task<ActionResult<ApplicationResult<string>>> ActivateAccount([FromBody] ActivateAccountCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpPost(nameof(ForgotPasswordRequest))]
     [AllowAnonymous]
-    public async Task<IActionResult> ForgotPasswordRequest([FromBody] ForgotPasswordCommand command)
+    public async Task<ActionResult<ApplicationResult<bool>>> ForgotPasswordRequest([FromBody] ForgotPasswordCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpPost(nameof(ForgotPassword))]
     [AllowAnonymous]
-    public async Task<IActionResult> ForgotPassword([FromBody] ResetPassword command)
+    public async Task<ActionResult<ApplicationResult<bool>>> ForgotPassword([FromBody] ResetPassword command)
         => Ok(await Mediator.Send(command));
 
 }

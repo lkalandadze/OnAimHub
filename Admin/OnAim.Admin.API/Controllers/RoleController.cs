@@ -17,7 +17,7 @@ public class RoleController : ApiControllerBase
     [HttpPost(nameof(Create))]
     [ProducesResponseType(typeof(CreateRoleCommand), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(Contracts.ApplicationInfrastructure.Validation.Error), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Create([FromBody] CreateRoleCommand roleModel)
+    public async Task<ActionResult<ApplicationResult<string>>> Create([FromBody] CreateRoleCommand roleModel)
        => Ok(await Mediator.Send(roleModel));
 
     [HttpGet(nameof(GetAll))]
@@ -29,10 +29,10 @@ public class RoleController : ApiControllerBase
         => Ok(await Mediator.Send(new GetRoleByIdQuery(id)));
 
     [HttpPut(nameof(Update) + "/{id}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRoleRequest model)
+    public async Task<ActionResult<ApplicationResult<string>>> Update([FromRoute] int id, [FromBody] UpdateRoleRequest model)
         => Ok(await Mediator.Send(new UpdateRoleCommand(id, model)));
 
     [HttpPost(nameof(Delete))]
-    public async Task<IActionResult> Delete([FromBody] List<int> ids)
+    public async Task<ActionResult<ApplicationResult<bool>>> Delete([FromBody] List<int> ids)
         => Ok(await Mediator.Send(new DeleteRoleCommand(ids)));
 }

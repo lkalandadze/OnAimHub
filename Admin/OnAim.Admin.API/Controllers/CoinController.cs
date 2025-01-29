@@ -64,11 +64,11 @@ public class CoinController : ApiControllerBase
         => Ok(await Mediator.Send(new DeleteWithdrawOptiongroupCommand(id)));
 
     [HttpGet(nameof(GetAllWithdrawOptionGroups))]
-    public async Task<IActionResult> GetAllWithdrawOptionGroups([FromQuery] BaseFilter filter)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<WithdrawOptionGroupDto>>>> GetAllWithdrawOptionGroups([FromQuery] BaseFilter filter)
         => Ok(await Mediator.Send(new GetAllWithdrawOptionGroupsQuery(filter)));
 
     [HttpGet(nameof(GetWithdrawOptionGroupById))]
-    public async Task<ActionResult<ApplicationResult<PaginatedResult<WithdrawOptionGroupDto>>>> GetWithdrawOptionGroupById([FromQuery] int id)
+    public async Task<ActionResult<ApplicationResult<WithdrawOptionGroupDto>>> GetWithdrawOptionGroupById([FromQuery] int id)
         => Ok(await Mediator.Send(new GetWithdrawOptionGroupByIdQuery(id)));
 
     [HttpPost(nameof(CreateWithdrawOptionEndpoint))]
@@ -95,15 +95,15 @@ public class CoinController : ApiControllerBase
     #region coin template
 
     [HttpPost(nameof(CreateCoinTemplate))]
-    public async Task<IActionResult> CreateCoinTemplate([FromBody] CreateCoinTemplateCommand coinTemplate)
+    public async Task<ActionResult<bool>> CreateCoinTemplate([FromBody] CreateCoinTemplateCommand coinTemplate)
         => Ok(await Mediator.Send(coinTemplate));
 
     [HttpPut(nameof(UpdateCoinTemplate))]
-    public async Task<IActionResult> UpdateCoinTemplate([FromBody] UpdateCoinTemplateCommand coinTemplate)
+    public async Task<ActionResult<ApplicationResult<bool>>> UpdateCoinTemplate([FromBody] UpdateCoinTemplateCommand coinTemplate)
         => Ok(await Mediator.Send(coinTemplate));
 
     [HttpDelete(nameof(DeleteCoinTemplate))]
-    public async Task<IActionResult> DeleteCoinTemplate([FromQuery] DeleteCoinTemplateCommand command)
+    public async Task<ActionResult<ApplicationResult<bool>>> DeleteCoinTemplate([FromQuery] DeleteCoinTemplateCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpGet(nameof(GetAllCoinTemplates))]

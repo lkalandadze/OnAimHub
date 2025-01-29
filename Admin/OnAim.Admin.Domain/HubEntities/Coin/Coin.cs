@@ -4,7 +4,7 @@ using OnAim.Admin.Domain.HubEntities.Enum;
 
 namespace OnAim.Admin.Domain.HubEntities.Coin;
 
-[BsonKnownTypes(typeof(InCoin), typeof(OutCoin))]
+[BsonKnownTypes(typeof(InCoin), typeof(OutCoin), typeof(AssetCoin), typeof(InternalCoin))]
 [BsonDiscriminator("Coin")]
 public abstract class Coin
 {

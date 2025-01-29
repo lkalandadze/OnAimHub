@@ -52,11 +52,11 @@ public class SegmentController : ApiControllerBase
         => Ok(await Mediator.Send(new GetBlackListedPlayersBySegmentIdQuery(segmentId, filter)));
 
     [HttpGet(nameof(GetActivePlayers) + "/{segmentId}")]
-    public async Task<IActionResult> GetActivePlayers([FromRoute] string segmentId, [FromQuery] FilterBy filter)
+    public async Task<ActionResult<ApplicationResult<PaginatedResult<SegmentPlayerDto>>>> GetActivePlayers([FromRoute] string segmentId, [FromQuery] FilterBy filter)
     => Ok(await Mediator.Send(new GetActivePlayersBySegmentIdQuery(segmentId, filter)));
 
     [HttpGet(nameof(GetSegmentActsById) + "/{segmentId}")]
-    public async Task<ActionResult<ApplicationResult<PaginatedResult<SegmentPlayerDto>>>> GetSegmentActsById([FromRoute] string segmentId)
+    public async Task<ActionResult<ApplicationResult<IEnumerable<ActsDto>>>> GetSegmentActsById([FromRoute] string segmentId)
         => Ok(await Mediator.Send(new GetSegmentActsByIdQuery(segmentId)));
 
     [HttpGet(nameof(GetSegmentActsHistoryById) + "/{playerSegmentActId}")]
@@ -64,27 +64,27 @@ public class SegmentController : ApiControllerBase
         => Ok(await Mediator.Send(new GetSegmentActsHistoryByIdQuery(playerSegmentActId)));
 
     [HttpPost(nameof(Create))]
-    public async Task<IActionResult> Create([FromBody] CreateSegmentCommand command)
+    public async Task<ActionResult<ApplicationResult<bool>>> Create([FromBody] CreateSegmentCommand command)
         => Ok(await _segmentService.CreateSegment(command.Id, command.Description, command.PriorityLevel));
 
     [HttpPut(nameof(Update))]
-    public async Task<IActionResult> Update([FromBody] UpdateSegmentCommand command)
+    public async Task<ActionResult<ApplicationResult<bool>>> Update([FromBody] UpdateSegmentCommand command)
         => Ok(await _segmentService.UpdateSegment(command.Id, command.Description, command.PriorityLevel));
 
     [HttpDelete(nameof(Delete) + "/{id}")]
-    public async Task<IActionResult> Delete([FromRoute] string id)
+    public async Task<ActionResult<ApplicationResult<bool>>> Delete([FromRoute] string id)
         => Ok(await _segmentService.DeleteSegment(id));
 
     [HttpPost(nameof(AssignPlayerToSegment))]
-    public async Task<IActionResult> AssignPlayerToSegment([FromBody] AssignPlayerCommand command)
+    public async Task<ActionResult<ApplicationResult<bool>>> AssignPlayerToSegment([FromBody] AssignPlayerCommand command)
         => Ok(await _segmentService.AssignSegmentToPlayer(command.SegmentId, command.PlayerId));
 
     [HttpPost(nameof(UnAssignPlayer))]
-    public async Task<IActionResult> UnAssignPlayer([FromBody] UnAssignPlayerCommand command)
+    public async Task<ActionResult<ApplicationResult<bool>>> UnAssignPlayer([FromBody] UnAssignPlayerCommand command)
         => Ok(await _segmentService.UnAssignSegmentForPlayer(command.SegmentId, command.PlayerId));
 
     [HttpPost(nameof(AssignSegmentToPlayers))]
-    public async Task<IActionResult> AssignSegmentToPlayers(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
+    public async Task<ActionResult<object>> AssignSegmentToPlayers(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
     {
         try
         {
@@ -102,7 +102,7 @@ public class SegmentController : ApiControllerBase
     }
 
     [HttpPost(nameof(UnAssignPlayersToSegment))]
-    public async Task<IActionResult> UnAssignPlayersToSegment(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
+    public async Task<ActionResult<object>> UnAssignPlayersToSegment(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
     {
         try
         {
@@ -120,15 +120,15 @@ public class SegmentController : ApiControllerBase
     }
 
     [HttpPost(nameof(BlockSegmentForPlayer))]
-    public async Task<IActionResult> BlockSegmentForPlayer([FromBody] BlockSegmentForPlayerCommand command)
+    public async Task<ActionResult<ApplicationResult<bool>>> BlockSegmentForPlayer([FromBody] BlockSegmentForPlayerCommand command)
         => Ok(await _segmentService.BlockSegmentForPlayer(command.SegmentId, command.PlayerId));
 
     [HttpPost(nameof(UnBlockSegmentForPlayer))]
-    public async Task<IActionResult> UnBlockSegmentForPlayer([FromBody] UnBlockSegmentForPlayerCommand command)
+    public async Task<ActionResult<ApplicationResult<bool>>> UnBlockSegmentForPlayer([FromBody] UnBlockSegmentForPlayerCommand command)
         => Ok(await _segmentService.UnBlockSegmentForPlayer(command.SegmentId, command.PlayerId));
 
     [HttpPost(nameof(BlockSegmentForPlayers))]
-    public async Task<IActionResult> BlockSegmentForPlayers(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
+    public async Task<ActionResult<object>> BlockSegmentForPlayers(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
     {
         try
         {
@@ -146,7 +146,7 @@ public class SegmentController : ApiControllerBase
     }
 
     [HttpPost(nameof(UnBlockSegmentForPlayers))]
-    public async Task<IActionResult> UnBlockSegmentForPlayers(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
+    public async Task<ActionResult<object>> UnBlockSegmentForPlayers(IFormFile formFile, [FromForm] IEnumerable<string> segmentId)
     {
         try
         {

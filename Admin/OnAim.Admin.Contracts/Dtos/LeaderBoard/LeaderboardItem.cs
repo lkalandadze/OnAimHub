@@ -2,7 +2,7 @@
 
 public class LeaderboardItem
 {
-    public int LeaderboardRecordId { get; set; }
+    public int Id { get; set; }
     public int Amount { get; set; }
     public int Placement { get; set; }
     public int Score { get; set; }

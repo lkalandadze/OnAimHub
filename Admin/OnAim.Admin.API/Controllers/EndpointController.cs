@@ -18,11 +18,11 @@ public class EndpointController : ApiControllerBase
     [HttpPost(nameof(Create))]
     [ProducesResponseType(typeof(CreateEndpointCommand), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(Contracts.ApplicationInfrastructure.Error), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Create([FromBody] CreateEndpointCommand command)
+    public async Task<ActionResult<ApplicationResult<string>>> Create([FromBody] CreateEndpointCommand command)
          => Ok(await Mediator.Send(command));
 
     [HttpPut(nameof(Update) + "/{id}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateEndpointDto model)
+    public async Task<ActionResult<ApplicationResult<string>>> Update([FromRoute] int id, [FromBody] UpdateEndpointDto model)
         => Ok(await Mediator.Send(new UpdateEndpointCommand { Id = id, Endpoint = model }));
 
     [HttpGet(nameof(GetAll))]
@@ -34,6 +34,6 @@ public class EndpointController : ApiControllerBase
         => Ok(await Mediator.Send(new GetEndpointByIdQuery(id)));
 
     [HttpPost(nameof(Delete))]
-    public async Task<IActionResult> Delete([FromBody] List<int> ids)
+    public async Task<ActionResult<ApplicationResult<bool>>> Delete([FromBody] List<int> ids)
         => Ok(await Mediator.Send(new DeleteEndpointCommand(ids)));
 }

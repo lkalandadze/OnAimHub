@@ -46,7 +46,7 @@ namespace OnAim.Admin.API.Controllers
             => Ok(await Mediator.Send(new GetPromotionByIdQuery(id)));
 
         [HttpGet(nameof(GetAllPromotionGames) + "/{id}")]
-        public async Task<ActionResult<ApplicationResult<PromotionDto>>> GetAllPromotionGames([FromRoute] int id, [FromQuery] BaseFilter filter)
+        public async Task<ActionResult<object>> GetAllPromotionGames([FromRoute] int id, [FromQuery] BaseFilter filter)
             => Ok(await _promotionService.GetAllPromotionGames(id, filter));
 
         [HttpGet(nameof(GetPromotionPlayers) + "/{id}")]
@@ -54,11 +54,11 @@ namespace OnAim.Admin.API.Controllers
             => Ok(await _promotionService.GetPromotionPlayers(id, filter));
 
         [HttpGet(nameof(GetPromotionPlayerTransaction) + "/{id}")]
-        public async Task<IActionResult> GetPromotionPlayerTransaction([FromRoute] int id)
+        public async Task<ActionResult<ApplicationResult<PaginatedResult<PlayerTransactionDto>>>> GetPromotionPlayerTransaction([FromRoute] int id)
             => Ok(await _promotionService.GetPromotionPlayerTransaction(id, new PlayerTransactionFilter()));
 
         [HttpGet(nameof(GetPromotionLeaderboards) + "/{id}")]
-        public async Task<ActionResult<ApplicationResult<PaginatedResult<PlayerTransactionDto>>>> GetPromotionLeaderboards([FromRoute] int id, [FromQuery] BaseFilter filter)
+        public async Task<ActionResult<ApplicationResult<PromotionLeaderboardDto<object>>>> GetPromotionLeaderboards([FromRoute] int id, [FromQuery] BaseFilter filter)
             => Ok(await _promotionService.GetPromotionLeaderboards(id, filter));
 
         [HttpGet(nameof(GetPromotionLeaderboardDetails) + "/{id}")]
@@ -66,15 +66,15 @@ namespace OnAim.Admin.API.Controllers
             => Ok(await _promotionService.GetPromotionLeaderboardDetails(id, filter));
 
         [HttpPost(nameof(CreatePromotionView))]
-        public async Task<IActionResult> CreatePromotionView([FromBody] CreatePromotionView create)
+        public async Task<ActionResult<object>> CreatePromotionView([FromBody] CreatePromotionView create)
             => Ok(await _promotionService.CreatePromotionView(create));
 
         [HttpPut(nameof(UpdatePromotionStatus))]
-        public async Task<IActionResult> UpdatePromotionStatus([FromBody] UpdatePromotionStatusDto update)
+        public async Task<ActionResult<object>> UpdatePromotionStatus([FromBody] UpdatePromotionStatusDto update)
             => Ok(await _promotionService.UpdatePromotionStatus(update));
 
         [HttpDelete(nameof(DeletePromotion))]
-        public async Task<IActionResult> DeletePromotion([FromQuery] int id)
+        public async Task<ActionResult<object>> DeletePromotion([FromQuery] int id)
             => Ok(await _promotionService.DeletePromotion(id));
 
         [HttpGet(nameof(GetAllService))]
@@ -86,7 +86,7 @@ namespace OnAim.Admin.API.Controllers
         #region Promotion Template
 
         [HttpPost(nameof(CreatePromotionTemplate))]
-        public async Task<IActionResult> CreatePromotionTemplate([FromBody] CreatePromotionTemplateCommand command)
+        public async Task<ActionResult<object>> CreatePromotionTemplate([FromBody] CreatePromotionTemplateCommand command)
             => Ok(await Mediator.Send(command));
 
         [HttpGet(nameof(GetAllPromotionTemplates))]
@@ -98,7 +98,7 @@ namespace OnAim.Admin.API.Controllers
             => Ok(await Mediator.Send(new GetPromotionTemplateByIdQuery(id)));
 
         [HttpDelete(nameof(DeletePromotionTemplate))]
-        public async Task<IActionResult> DeletePromotionTemplate([FromQuery] DeletePromotionTemplateCommand command)
+        public async Task<ActionResult<object>> DeletePromotionTemplate([FromQuery] DeletePromotionTemplateCommand command)
             => Ok(await Mediator.Send(command));
 
         #endregion
@@ -114,18 +114,18 @@ namespace OnAim.Admin.API.Controllers
             => Ok(await Mediator.Send(new GetPromotionViewTemplateByIdQuery(id)));
 
         [HttpPost(nameof(CreatePromotionViewTemplate))]
-        public async Task<IActionResult> CreatePromotionViewTemplate([FromBody] CreatePromotionViewTemplateCommand command)
+        public async Task<ActionResult<object>> CreatePromotionViewTemplate([FromBody] CreatePromotionViewTemplateCommand command)
             => Ok(await Mediator.Send(command));
 
         [HttpDelete(nameof(DeletePromotionViewTemplate))]
-        public async Task<IActionResult> DeletePromotionViewTemplate([FromQuery] DeletePromotionViewTemplateCommand command)
+        public async Task<ActionResult<object>> DeletePromotionViewTemplate([FromQuery] DeletePromotionViewTemplateCommand command)
             => Ok(await Mediator.Send(command));
 
         #endregion
 
 
         [HttpGet(nameof(GetJsonFiles))]
-        public async Task<IActionResult> GetJsonFiles()
+        public async Task<ActionResult<object>> GetJsonFiles()
         {
             if (!Directory.Exists(_dataDirectory))
             {

@@ -1,0 +1,91 @@
+2025-01-29 10:20:41.760 +04:00 [INF] Starting database migration. Connection String: Host=postgres;Port=5432;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;
+2025-01-29 10:20:44.162 +04:00 [ERR] An error occurred while applying migrations.
+System.Net.Sockets.SocketException (0x00002AF9): No such host is known.
+   at System.Net.Dns.GetHostEntryOrAddressesCore(String hostName, Boolean justAddresses, AddressFamily addressFamily, Nullable`1 startingTimestamp)
+   at System.Net.Dns.GetHostAddresses(String hostNameOrAddress, AddressFamily family)
+   at Npgsql.Internal.NpgsqlConnector.Connect(NpgsqlTimeout timeout)
+   at Npgsql.Internal.NpgsqlConnector.RawOpen(SslMode sslMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken, Boolean isFirstAttempt)
+   at Npgsql.Internal.NpgsqlConnector.<Open>g__OpenCore|213_1(NpgsqlConnector conn, SslMode sslMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken, Boolean isFirstAttempt)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.UnpooledDataSource.Get(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|42_0(Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.Open()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenDbConnection(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternal(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open(Boolean errorsExpected)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlDatabaseCreator.Exists(Boolean async, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlDatabaseCreator.Exists(Boolean async, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlDatabaseCreator.Exists()
+   at Microsoft.EntityFrameworkCore.Migrations.HistoryRepository.Exists()
+   at Microsoft.EntityFrameworkCore.Migrations.HistoryRepository.GetAppliedMigrations()
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Migrations.Internal.NpgsqlMigrator.Migrate(String targetMigration)
+   at Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.Migrate(DatabaseFacade databaseFacade)
+   at OnAim.Admin.API.Extensions.MigrationExtensions.ApplyMigrations(IApplicationBuilder app) in C:\Users\user\Desktop\Work\OnAimHub\Admin\OnAim.Admin.API\Extensions\MigrationExtensions.cs:line 19
+2025-01-29 10:20:44.492 +04:00 [INF] User profile is available. Using 'C:\Users\user\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-01-29 10:20:44.749 +04:00 [INF] Now listening on: https://localhost:7126
+2025-01-29 10:20:44.750 +04:00 [INF] Now listening on: http://localhost:5192
+2025-01-29 10:20:44.800 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-01-29 10:20:44.802 +04:00 [INF] Hosting environment: Development
+2025-01-29 10:20:44.803 +04:00 [INF] Content root path: C:\Users\user\Desktop\Work\OnAimHub\Admin\OnAim.Admin.API
+2025-01-29 10:20:45.377 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/swagger - null null
+2025-01-29 10:20:45.470 +04:00 [INF] HTTP GET /swagger responded 302 in 0.5713 ms
+2025-01-29 10:20:45.473 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/swagger - 302 0 null 100.3931ms
+2025-01-29 10:20:45.476 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/swagger/index.html - null null
+2025-01-29 10:20:45.517 +04:00 [INF] HTTP GET /swagger/index.html responded 200 in 36.8949 ms
+2025-01-29 10:20:45.518 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/swagger/index.html - 200 null text/html;charset=utf-8 42.5889ms
+2025-01-29 10:20:45.520 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/_framework/aspnetcore-browser-refresh.js - null null
+2025-01-29 10:20:45.522 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/_vs/browserLink - null null
+2025-01-29 10:20:45.525 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 5.712ms
+2025-01-29 10:20:45.543 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/_vs/browserLink - 200 null text/javascript; charset=UTF-8 22.1993ms
+2025-01-29 10:20:45.567 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/swagger/v1/swagger.json - null null
+2025-01-29 10:20:46.220 +04:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 650.8448 ms
+2025-01-29 10:20:46.221 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 654.0487ms
+2025-01-29 10:28:07.880 +04:00 [INF] Starting database migration. Connection String: Host=postgres;Port=5432;Database=OnAimAdmin;Username=postgres;Password=Test1234!;Pooling=true;
+2025-01-29 10:28:10.252 +04:00 [ERR] An error occurred while applying migrations.
+System.Net.Sockets.SocketException (0x00002AF9): No such host is known.
+   at System.Net.Dns.GetHostEntryOrAddressesCore(String hostName, Boolean justAddresses, AddressFamily addressFamily, Nullable`1 startingTimestamp)
+   at System.Net.Dns.GetHostAddresses(String hostNameOrAddress, AddressFamily family)
+   at Npgsql.Internal.NpgsqlConnector.Connect(NpgsqlTimeout timeout)
+   at Npgsql.Internal.NpgsqlConnector.RawOpen(SslMode sslMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken, Boolean isFirstAttempt)
+   at Npgsql.Internal.NpgsqlConnector.<Open>g__OpenCore|213_1(NpgsqlConnector conn, SslMode sslMode, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken, Boolean isFirstAttempt)
+   at Npgsql.Internal.NpgsqlConnector.Open(NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.UnpooledDataSource.Get(NpgsqlConnection conn, NpgsqlTimeout timeout, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.<Open>g__OpenAsync|42_0(Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlConnection.Open()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenDbConnection(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternal(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open(Boolean errorsExpected)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlDatabaseCreator.Exists(Boolean async, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlDatabaseCreator.Exists(Boolean async, CancellationToken cancellationToken)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlDatabaseCreator.Exists()
+   at Microsoft.EntityFrameworkCore.Migrations.HistoryRepository.Exists()
+   at Microsoft.EntityFrameworkCore.Migrations.HistoryRepository.GetAppliedMigrations()
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Migrations.Internal.NpgsqlMigrator.Migrate(String targetMigration)
+   at Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.Migrate(DatabaseFacade databaseFacade)
+   at OnAim.Admin.API.Extensions.MigrationExtensions.ApplyMigrations(IApplicationBuilder app) in C:\Users\user\Desktop\Work\OnAimHub\Admin\OnAim.Admin.API\Extensions\MigrationExtensions.cs:line 19
+2025-01-29 10:28:10.427 +04:00 [INF] User profile is available. Using 'C:\Users\user\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-01-29 10:28:10.545 +04:00 [INF] Now listening on: https://localhost:7126
+2025-01-29 10:28:10.546 +04:00 [INF] Now listening on: http://localhost:5192
+2025-01-29 10:28:10.590 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-01-29 10:28:10.591 +04:00 [INF] Hosting environment: Development
+2025-01-29 10:28:10.592 +04:00 [INF] Content root path: C:\Users\user\Desktop\Work\OnAimHub\Admin\OnAim.Admin.API
+2025-01-29 10:28:11.354 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/swagger - null null
+2025-01-29 10:28:11.407 +04:00 [INF] HTTP GET /swagger responded 302 in 0.4961 ms
+2025-01-29 10:28:11.409 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/swagger - 302 0 null 57.4318ms
+2025-01-29 10:28:11.412 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/swagger/index.html - null null
+2025-01-29 10:28:11.451 +04:00 [INF] HTTP GET /swagger/index.html responded 200 in 35.8455 ms
+2025-01-29 10:28:11.453 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/swagger/index.html - 200 null text/html;charset=utf-8 40.8505ms
+2025-01-29 10:28:11.455 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/_vs/browserLink - null null
+2025-01-29 10:28:11.455 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/_framework/aspnetcore-browser-refresh.js - null null
+2025-01-29 10:28:11.463 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 9.1412ms
+2025-01-29 10:28:11.475 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/_vs/browserLink - 200 null text/javascript; charset=UTF-8 20.8385ms
+2025-01-29 10:28:11.498 +04:00 [INF] Request starting HTTP/2 GET https://localhost:7126/swagger/v1/swagger.json - null null
+2025-01-29 10:28:11.879 +04:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 379.5113 ms
+2025-01-29 10:28:11.880 +04:00 [INF] Request finished HTTP/2 GET https://localhost:7126/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 382.2641ms
+2025-01-29 10:28:16.569 +04:00 [INF] Request starting HTTP/1.1 HEAD https://localhost:7126/ - null null
+2025-01-29 10:28:16.571 +04:00 [INF] HTTP HEAD / responded 302 in 0.0512 ms
+2025-01-29 10:28:16.573 +04:00 [INF] Request finished HTTP/1.1 HEAD https://localhost:7126/ - 302 null null 4.6619ms
+2025-01-29 10:28:16.575 +04:00 [INF] Request starting HTTP/1.1 HEAD https://localhost:7126/swagger/index.html - null null
+2025-01-29 10:28:16.833 +04:00 [INF] HTTP HEAD /swagger/index.html responded 404 in 255.8393 ms
+2025-01-29 10:28:16.834 +04:00 [INF] Request finished HTTP/1.1 HEAD https://localhost:7126/swagger/index.html - 404 null null 258.3011ms
+2025-01-29 10:28:16.836 +04:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: HEAD https://localhost:7126/swagger/index.html, Response status code: 404

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnAim.Admin.API.Controllers.Abstract;
 using OnAim.Admin.APP.Services.FileServices;
+using OnAim.Admin.Contracts.ApplicationInfrastructure;
 
 namespace OnAim.Admin.API.Controllers;
 
@@ -14,14 +15,14 @@ public class FileController : ApiControllerBase
     }
 
     [HttpPost(nameof(UploadImage))]
-    public async Task<IActionResult> UploadImage([FromForm] UploadImageRequestModel request)
+    public async Task<ActionResult<ApplicationResult<object>>> UploadImage([FromForm] UploadImageRequestModel request)
     {
         try
         {
 
             var response = await _fileManagementService.UploadImage(request);
 
-            return Ok(response);
+            return response;
         }
         catch (Exception ex)
         {

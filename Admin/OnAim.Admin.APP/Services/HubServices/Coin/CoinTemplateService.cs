@@ -191,6 +191,7 @@ public class CoinTemplateService : ICoinTemplateService
             CoinType = (Domain.HubEntities.Enum.CoinType)coinTemplate.CoinType,
             Description = coinTemplate.Description,
             ImageUrl = coinTemplate.ImageUrl,
+            Value = coinTemplate.Value
         };
 
         if (coinTemplate.WithdrawOptionIds != null && coinTemplate.WithdrawOptionIds.Any() &&

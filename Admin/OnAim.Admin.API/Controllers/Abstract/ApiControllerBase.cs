@@ -23,8 +23,8 @@ public class ApiControllerBase : ControllerBase
         }
     }
 
-    //protected ActionResult<T> Ok<T>(T result)
-    //{
-    //    return base.Ok(result);
-    //}
+    protected ActionResult<T> Ok<T>(T result)
+    {
+        return base.Ok(result);
+    }
 }

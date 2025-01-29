@@ -15,6 +15,7 @@ public class CoinTemplate : Coin
         string description,
         string imageUrl,
         CoinType coinType,
+        decimal? value,
         IEnumerable<CoinTemplateWithdrawOption>? withdrawOptions = null,
         IEnumerable<CoinTemplateWithdrawOptionGroup>? withdrawOptionGroups = null,
         IEnumerable<AggregationConfiguration> aggregationConfigurations = null
@@ -25,6 +26,7 @@ public class CoinTemplate : Coin
         Description = description;
         ImageUrl = imageUrl;
         CoinType = coinType;
+        Value = value ?? 0;
         WithdrawOptions = withdrawOptions?.ToList() ?? [];
         WithdrawOptionGroups = withdrawOptionGroups?.ToList();
         AggregationConfiguration = aggregationConfigurations?.ToList() ?? [];
@@ -39,6 +41,7 @@ public class CoinTemplate : Coin
     [BsonIgnoreIfNull]
     public ICollection<AggregationConfiguration> AggregationConfiguration { get; set; }
 
+    public decimal? Value { get; set; }
     public int Usage { get; set; }
 
     public void Update(string name, string description, string imageUrl, CoinType coinType, IEnumerable<CoinTemplateWithdrawOption> withdrawOptions = null)

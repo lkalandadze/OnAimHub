@@ -32,47 +32,47 @@ public class GamesController : ApiControllerBase
     #region game
 
     [HttpGet(nameof(GetAll))]
-    public async Task<IActionResult> GetAll([FromQuery] FilterGamesDto filter)
+    public async Task<ActionResult<object>> GetAll([FromQuery] FilterGamesDto filter)
         => Ok(await _gameService.GetAll(filter));
 
     [HttpGet(nameof(GetGameShortInfo))]
-    public async Task<IActionResult> GetGameShortInfo([FromQuery] string name)
+    public async Task<ActionResult<object>> GetGameShortInfo([FromQuery] string name)
         => Ok(await Mediator.Send(new GetGameQuery(name)));
 
     [HttpGet(nameof(GetGameStatus))]
-    public async Task<IActionResult> GetGameStatus([FromQuery] string name)
+    public async Task<ActionResult<object>> GetGameStatus([FromQuery] string name)
         => Ok(await _gameService.GameStatus(name));
 
     [HttpGet(nameof(GetGameConfigurations))]
-    public async Task<IActionResult> GetGameConfigurations([FromQuery] ConfigurationsRequest request)
+    public async Task<ActionResult<object>> GetGameConfigurations([FromQuery] ConfigurationsRequest request)
         => Ok(await _gameService.GetConfigurations(request.Name, request.PromotionId, request.ConfigurationId));
 
     [HttpGet(nameof(GetGameConfigurationMetadata))]
-    public async Task<IActionResult> GetGameConfigurationMetadata([FromQuery] string name)
+    public async Task<ActionResult<object>> GetGameConfigurationMetadata([FromQuery] string name)
         => Ok(await Mediator.Send(new GetConfigurationMetadataQuery(name)));
 
     [HttpPost(nameof(ActivateGame))]
-    public async Task<IActionResult> ActivateGame(string name)
+    public async Task<ActionResult<object>> ActivateGame(string name)
         => Ok(await _gameService.ActivateGame(name));
 
     [HttpPost(nameof(DeactivateGame))]
-    public async Task<IActionResult> DeactivateGame(string name)
+    public async Task<ActionResult<object>> DeactivateGame(string name)
         => Ok(await _gameService.DeactivateGame(name));
 
     [HttpPost(nameof(CreateConfiguration))]
-    public async Task<IActionResult> CreateConfiguration([FromQuery] string gameName, [FromBody] object configurationJson)
+    public async Task<ActionResult<object>> CreateConfiguration([FromQuery] string gameName, [FromBody] object configurationJson)
         => Ok(await Mediator.Send(new CreateConfigurationCommand(gameName, configurationJson)));
 
     [HttpPut(nameof(UpdateConfiguration))]
-    public async Task<IActionResult> UpdateConfiguration([FromQuery] string gameName, [FromBody] GameConfigurationDto configurationJson)
+    public async Task<ActionResult<object>> UpdateConfiguration([FromQuery] string gameName, [FromBody] GameConfigurationDto configurationJson)
         => Ok(await Mediator.Send(new UpdateConfigurationCommand(gameName, configurationJson)));
 
     [HttpPatch(nameof(ActivateConfiguration))]
-    public async Task<IActionResult> ActivateConfiguration([FromQuery] ConfigurationRequest request)
+    public async Task<ActionResult<object>> ActivateConfiguration([FromQuery] ConfigurationRequest request)
         => Ok(await Mediator.Send(new ActivateConfigurationCommand(request.Name, request.Id)));
 
     [HttpPatch(nameof(DeactivateConfiguration))]
-    public async Task<IActionResult> DeactivateConfiguration([FromQuery] ConfigurationRequest request)
+    public async Task<ActionResult<object>> DeactivateConfiguration([FromQuery] ConfigurationRequest request)
         => Ok(await Mediator.Send(new DeactivateConfigurationCommand(request.Name, request.Id)));
 
     #endregion
@@ -84,7 +84,7 @@ public class GamesController : ApiControllerBase
         => Ok(await Mediator.Send(new CreateGameConfigurationTemplateCommand(gameName, command)));
 
     [HttpDelete(nameof(DeleteGameConfigurationTemplate))]
-    public async Task<IActionResult> DeleteGameConfigurationTemplate([FromQuery] DeleteGameConfigurationTemplateCommand command)
+    public async Task<ActionResult<object>> DeleteGameConfigurationTemplate([FromQuery] DeleteGameConfigurationTemplateCommand command)
         => Ok(await Mediator.Send(command));
 
     [HttpGet(nameof(GetAllGameConfigurationTemplates))]
